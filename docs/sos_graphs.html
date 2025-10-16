@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Strength of Schedule — Win% vs SoS</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body { margin: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #f7f7f7; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 16px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .controls { display: flex; align-items: center; gap: 10px; margin: 6px 0 8px; }
+    .panel { margin: 12px 0 14px; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; }
+    .panel > summary { padding: 10px 14px; background: #f5f7fa; border-bottom: 1px solid #ebeff5; font-weight: 600; cursor: pointer; user-select: none; list-style: none; }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
+    .chart-wrap { padding: 8px 8px 0; }
+    .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 0 10px 10px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+    .avg { background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb; }
+    .red { background: var(--red); opacity: .5; }
+    .blue { background: var(--blue); opacity: .5; }
+    .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; }
+    .info { background: #f3f6fa; border: 1px solid #e1e7ef; border-radius: 8px; padding: 10px 14px; color: #243246; font-size: 14px; margin: 8px 0 12px; }
+    .info summary { font-weight: 600; cursor: pointer; }
+  </style>
+  <!-- Serve from repo root: python3 -m http.server 8000 -->
+  <script>
+    // Small helper: robust CSV loader trying multiple relative paths
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function toPct(x) { return d3.format('.1%')(x); }
+    function fmt3(x) { return d3.format('.3f')(x); }
+
+    // Least-squares regression for points [x, y]
+    function regression(points) {
+      let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0;
+      for (const [x0, y0] of points) {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        n++; sx += x; sy += y; sxy += x*y; sxx += x*x;
+      }
+      if (n < 2) return { m: 0, b: sy / (n || 1) };
+      const denom = n * sxx - sx * sx;
+      const m = denom !== 0 ? (n * sxy - sx * sy) / denom : 0;
+      const b = (sy - m * sx) / n;
+      return { m, b };
+    }
+
+    async function loadData() {
+      const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
+      const sos = await tryCsv(['../output/ranked_sos_by_conference.csv', 'output/ranked_sos_by_conference.csv', '/output/ranked_sos_by_conference.csv']);
+
+      const teamMap = new Map();
+      for (const t of teams) {
+        if (!t.displayName) continue;
+        const w = +t.totalWins||0, l = +t.totalLosses||0, ti = +t.totalTies||0;
+        const tot = w + l + ti, wp = tot>0 ? (w + 0.5*ti)/tot : null;
+        teamMap.set(String(t.displayName).trim(), {
+          logoId: t.logoId,
+          conf: t.conferenceName || t.conference,
+          winPct: (typeof t.winPct==='number' && !Number.isNaN(t.winPct))? t.winPct : wp,
+        });
+      }
+
+      for (const row of sos) {
+        const meta = teamMap.get(String(row.team).trim());
+        const W = +row.W, L = +row.L; const g = (Number.isFinite(W)?W:0) + (Number.isFinite(L)?L:0);
+        row.winPct = g>0 ? (W/g) : (meta? meta.winPct : null);
+        row.conference = row.conference || (meta? meta.conf : null);
+        row.logoUrl = meta && meta.logoId!=='' && meta.logoId!=null ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null;
+      }
+      return sos;
+    }
+
+    function drawScatter(holder, rows, cfg) {
+      // Filter valid
+      const data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d.winPct));
+
+      const margin = { top: 20, right: 24, bottom: 46, left: 56 };
+      const width = 1080, height = 340;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      // Build panel
+      const panel = holder.append('details').attr('class', 'panel').attr('open', true);
+      panel.append('summary').text(cfg.title);
+      const wrap = panel.append('div').attr('class', 'chart-wrap');
+      const svg = wrap.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      // Scales
+      const yVals = data.map(d => +d[cfg.key]);
+      const yPad = (d3.max(yVals) - d3.min(yVals)) * 0.06 || 0.02;
+      const y = d3.scaleLinear().domain([d3.min(yVals)-yPad, d3.max(yVals)+yPad]).nice().range([innerH, 0]);
+
+      const xVals = data.map(d => +d.winPct);
+      const xMin = d3.min(xVals), xMax = d3.max(xVals), xPad = (xMax-xMin)*0.08 || 0.02;
+      const x = d3.scaleLinear().domain([Math.max(0,xMin-xPad), Math.min(1,xMax+xPad)]).nice().range([0, innerW]);
+
+      // Axes + grid
+      g.append('g').attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).ticks(8, '%').tickSize(-innerH).tickPadding(8))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#e2e2e2'))
+        .call(s => s.select('.domain').attr('stroke', '#9aa0a6'));
+      g.append('g')
+        .call(d3.axisLeft(y).ticks(5).tickSize(-innerW).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+      // Means
+      const yAvg = d3.mean(yVals), xAvg = d3.mean(xVals);
+      g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(yAvg)).attr('y2', y(yAvg))
+        .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('line').attr('x1', x(xAvg)).attr('x2', x(xAvg)).attr('y1', 0).attr('y2', innerH)
+        .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('text').attr('x', 6).attr('y', y(yAvg)-6).attr('fill', '#555').attr('font-size', 11).text('Avg Y ' + fmt3(yAvg));
+      g.append('text').attr('x', x(xAvg)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11).text('Avg X ' + toPct(xAvg));
+
+      // Trend line
+      const { m, b } = regression(data.map(d => [+d.winPct, +d[cfg.key]]));
+      const xL = x.domain()[0], xR = x.domain()[1];
+      g.append('line')
+        .attr('x1', x(xL)).attr('y1', y(m*xL + b))
+        .attr('x2', x(xR)).attr('y2', y(m*xR + b))
+        .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
+
+      // Tooltip
+      const tip = d3.select('body').append('div').attr('class', 'tooltip').style('display', 'none');
+
+      const size = 30;
+      const node = g.selectAll('.team').data(data, d => d.team).join('g').attr('class', 'team')
+        .attr('transform', d => `translate(${x(d.winPct)},${y(d[cfg.key])})`)
+        .on('mouseenter', function(evt, d){
+          const trend = m * d.winPct + b; const res = d[cfg.key] - trend;
+          tip.style('display','block').html(`<strong>${d.team}</strong>`+
+            `<br>${cfg.title}: ${fmt3(d[cfg.key])}`+
+            `<br>Win%: ${toPct(d.winPct)}`+
+            `<br>Δ vs trend: ${(res>=0?'+':'')+fmt3(res)}`);
+        })
+        .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+        .on('mouseleave', ()=> tip.style('display','none'));
+
+      // Colored square behind the logo — ABOVE TREND = RED, BELOW = BLUE
+      node.append('rect')
+        .attr('x', -(size/2 + 2)).attr('y', -(size/2 + 2))
+        .attr('width', size + 4).attr('height', size + 4)
+        .attr('rx', 4).attr('ry', 4)
+        .attr('fill', d => (+d[cfg.key] >= m*+d.winPct + b) ? 'var(--red)' : 'var(--blue)')
+        .attr('opacity', .16);
+
+      node.append('image')
+        .attr('href', d => d.logoUrl || null)
+        .attr('x', -size/2).attr('y', -size/2)
+        .attr('width', size).attr('height', size)
+        .attr('opacity', .95);
+
+      // Labels
+      svg.append('text').attr('x', margin.left + innerW/2).attr('y', height-10)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text('Win/Loss Percentage');
+      svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`) 
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text(cfg.yLabel || (cfg.title + ' (higher is tougher)'));
+
+      // Legend
+      const legend = panel.append('div').attr('class', 'legend');
+      legend.html('')
+        .append('span').html(`<span class="swatch avg"></span>Avg X & Y`);
+      legend.append('span').html(`<span class="swatch red"></span>Above trend (higher is tougher)`);
+      legend.append('span').html(`<span class="swatch blue"></span>Below trend`);
+      legend.append('span').style('margin-left','16px').text('Trend line in gray');
+    }
+
+    function render() {
+      loadData().then(allRows => {
+        const charts = [
+          { key: 'ranked_sos_avg', title: 'Remaining Race SoS' },
+          { key: 'past_ranked_sos_avg', title: 'Completed SoS' },
+          { key: 'total_ranked_sos', title: 'Total SoS for the Season' },
+        ];
+
+        const root = d3.select('#root');
+
+        // Conference filter
+        const sel = d3.select('#conf');
+        function redraw() {
+          const conf = sel.node().value;
+          root.selectAll('*').remove();
+          const rows = allRows.filter(r => conf === 'ALL' || (r.conference||'').toUpperCase() === conf);
+          charts.forEach(cfg => drawScatter(root, rows, cfg));
+        }
+        sel.on('change', redraw);
+        redraw();
+      }).catch(err => {
+        d3.select('#root').append('div').style('color','crimson').text('Failed to load data: '+err);
+        console.error(err);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Strength of Schedule — Three Graphics</h1>
+    <div class="subtitle">X = Win/Loss %, Y = SoS. Colored squares: red if above the trend line (tougher), blue if below. Dashed lines show mean X and mean Y. Trend line in gray.</div>
+    <div class="controls">
+      <label for="conf">Conference:</label>
+      <select id="conf">
+        <option value="ALL" selected>All Conferences</option>
+        <option value="AFC">AFC only</option>
+        <option value="NFC">NFC only</option>
+      </select>
+    </div>
+    <details class="info" open>
+      <summary>Что показывают графики</summary>
+      <p>
+        На странице три диаграммы рассеяния — по одной для каждой метрики сложности календаря (SoS). 
+        По горизонтали (ось X) — процент побед команды (Win/Loss %). По вертикали (ось Y) — выбранная метрика SoS; 
+        подсказка на подписи оси напоминает, что «выше — сложнее».
+      </p>
+      <ul>
+        <li><strong>Пунктирные линии</strong>: средние значения по X (вертикальная) и по Y (горизонтальная).</li>
+        <li><strong>Серая наклонная линия</strong>: общий <em>тренд</em> (линейная регрессия) между Win% и метрикой SoS.</li>
+        <li><strong>Цвет квадратов</strong>: красный — точка <em>выше линии тренда</em> (тяжелее, чем ожидается по тренду), синий — <em>ниже тренда</em> (проще).</li>
+        <li><strong>Фильтр «Conference»</strong>: оставляет AFC, NFC или все команды сразу — применимо ко всем трём графикам.</li>
+        <li><strong>Подсказка при наведении</strong> показывает: метрику SoS, Win% и разницу до тренда (Δ vs trend).</li>
+      </ul>
+      <p><strong>Как читать квадранты (относительно средних X и Y):</strong></p>
+      <ul>
+        <li>Правый верхний — высокий Win% и высокая сложность: сильная форма при сложном календаре.</li>
+        <li>Правый нижний — высокий Win%, но низкая сложность: результат достигнут на более лёгком отрезке.</li>
+        <li>Левый верхний — низкий Win%, но высокая сложность: тяжелый календарь относительно текущей формы.</li>
+        <li>Левый нижний — низкий Win% и низкая сложность: результаты ниже ожиданий даже при простом графике.</li>
+      </ul>
+      <p><strong>Метрики графиков:</strong></p>
+      <ul>
+        <li><em>Remaining Race SoS</em> — средняя сложность оставшихся матчей.</li>
+        <li><em>Completed SoS</em> — средняя сложность уже сыгранных матчей.</li>
+        <li><em>Total SoS for the Season</em> — совокупная сложность сезона (сыгранные + оставшиеся).</li>
+      </ul>
+    </details>
+    <div id="root"></div>
+    <div class="subtitle">Data: output/ranked_sos_by_conference.csv + MEGA_teams.csv</div>
+  </div>
+</body>
+</html>
