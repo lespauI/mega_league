@@ -104,6 +104,25 @@ def get_playoff_picture(divs, probabilities):
     
     return leaders, wc_candidates
 
+def get_draft_race(afc_divs, nfc_divs):
+    all_teams = []
+    
+    for div_name in afc_divs:
+        for team in afc_divs[div_name]:
+            team_copy = team.copy()
+            team_copy['conf'] = 'AFC'
+            all_teams.append(team_copy)
+    
+    for div_name in nfc_divs:
+        for team in nfc_divs[div_name]:
+            team_copy = team.copy()
+            team_copy['conf'] = 'NFC'
+            all_teams.append(team_copy)
+    
+    all_teams.sort(key=lambda x: (x['win_pct'], -x['remaining_sos']))
+    
+    return all_teams[:16]
+
 def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc_wc):
     html = []
     html.append('''<!DOCTYPE html>
@@ -117,7 +136,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
                padding: 20px; color: #333; }
-        .container { max-width: 1400px; margin: 0 auto; background: white; 
+        .container { max-width: 100%; margin: 0 auto; background: white; 
                      border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         h1 { text-align: center; color: #1e293b; margin-bottom: 10px; font-size: 2.5em; }
         .subtitle { text-align: center; color: #64748b; margin-bottom: 30px; font-size: 1.1em; }
@@ -135,6 +154,9 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         .seed-wc { border-left: 5px solid #22c55e; }
         .seed-bubble { border-left: 5px solid #eab308; }
         .seed-out { border-left: 5px solid #ef4444; opacity: 0.7; }
+        .pick-top3 { border-left: 5px solid #dc2626; }
+        .pick-top10 { border-left: 5px solid #f59e0b; }
+        .pick-rest { border-left: 5px solid #84cc16; }
         .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .team-name { font-size: 1.2em; font-weight: bold; color: #1e293b; }
         .team-record { font-size: 1.1em; color: #475569; font-weight: 600; }
@@ -149,6 +171,9 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         .badge-wc { background: #22c55e; color: white; }
         .badge-bubble { background: #eab308; color: white; }
         .badge-out { background: #ef4444; color: white; }
+        .badge-pick-top3 { background: #dc2626; color: white; }
+        .badge-pick-top10 { background: #f59e0b; color: white; }
+        .badge-pick-rest { background: #84cc16; color: white; }
         .divisions { margin-top: 30px; }
         .division { background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; }
         .division h3 { color: #0f172a; margin-bottom: 15px; padding-bottom: 8px; 
@@ -158,6 +183,9 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         .analysis { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
                     border-radius: 15px; padding: 25px; margin: 30px 0; }
         .analysis h2 { color: #92400e; margin-bottom: 15px; }
+        .draft-analysis { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+                    border-radius: 15px; padding: 25px; margin: 30px 0; }
+        .draft-analysis h2 { color: #7f1d1d; margin-bottom: 15px; }
         .analysis-item { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
         .analysis-item h3 { color: #1e293b; margin-bottom: 10px; }
         .legend { display: flex; gap: 20px; justify-content: center; margin: 30px 0; 
@@ -261,7 +289,87 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     
     html.append('        </div>')
     
+    bottom_teams = get_draft_race(afc_divs, nfc_divs)
+    
     html.append('''        
+        <div class="draft-analysis">
+            <h2>📉 Гонка за топ-пиками драфта</h2>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 1.1em;">Команды борются за лучшие позиции в драфте. Чем меньше побед = выше выбор в драфте!</p>
+            
+            <div class="legend" style="margin-bottom: 20px;">
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #dc2626;"></div>
+                    <span>Топ-3 Пики (QB Территория)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #f59e0b;"></div>
+                    <span>Топ-10 (Премиум Таланты)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #84cc16;"></div>
+                    <span>Пики 11-16 (Нормальная Цена)</span>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">''')
+    
+    for i, team in enumerate(bottom_teams, 1):
+        if i <= 3:
+            pick_class = 'pick-top3'
+            badge_class = 'badge-pick-top3'
+        elif i <= 10:
+            pick_class = 'pick-top10'
+            badge_class = 'badge-pick-top10'
+        else:
+            pick_class = 'pick-rest'
+            badge_class = 'badge-pick-rest'
+        
+        sos_class = ''
+        if team['remaining_sos'] < 0.45:
+            sos_class = 'sos-easy'
+            sos_note = '⚠️ Риск побед!'
+        elif team['remaining_sos'] > 0.55:
+            sos_class = 'sos-hard'
+            sos_note = '✓ Танк надёжен'
+        else:
+            sos_note = '→ Средняк'
+        
+        expected_final_losses = team['L'] + (team['remaining_games'] * team['remaining_sos'])
+        
+        html.append(f'                <div class="playoff-team {pick_class}">')
+        html.append(f'                    <div class="team-header">')
+        html.append(f'                        <div>')
+        html.append(f'                            <span class="seed-badge {badge_class}">Пик {i}</span>')
+        html.append(f'                            <span class="team-name">{team["team"]}</span>')
+        html.append(f'                        </div>')
+        html.append(f'                        <span class="team-record">{team["W"]}-{team["L"]}</span>')
+        html.append(f'                    </div>')
+        html.append(f'                    <div class="team-details">')
+        html.append(f'                        <span>{team["conf"]}</span>')
+        html.append(f'                        <span>•</span>')
+        html.append(f'                        <span class="sos-badge {sos_class}">SOS: {team["remaining_sos"]:.3f}</span>')
+        html.append(f'                        <span>•</span>')
+        html.append(f'                        <span>{sos_note}</span>')
+        html.append(f'                    </div>')
+        html.append(f'                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">')
+        html.append(f'                        Прогноз: ~{team["W"] + team["remaining_games"] * (1.0 - team["remaining_sos"]):.1f}-{expected_final_losses:.1f}')
+        html.append(f'                    </div>')
+        html.append(f'                </div>')
+    
+    html.append('''            </div>
+            
+            <div class="analysis-item" style="margin-top: 25px;">
+                <h3>💡 Как работает драфт-порядок?</h3>
+                <p style="margin-bottom: 10px;">В отличие от плей-офф, здесь <strong>ХУДШИЕ</strong> команды получают преимущество:</p>
+                <ul style="margin-left: 25px; margin-bottom: 10px;">
+                    <li><strong>Меньше побед</strong> → Выше пик в драфте</li>
+                    <li><strong>Лёгкое расписание (SOS < 0.45)</strong> → Риск выиграть и потерять позицию! ⚠️</li>
+                    <li><strong>Жёсткое расписание (SOS > 0.55)</strong> → Танк надёжен, пик гарантирован! ✓</li>
+                </ul>
+                <p><strong>Пример:</strong> Команда 2-11 с SOS 0.650 почти гарантированно получит топ-3 пик, так как их ждут только сильные соперники.</p>
+            </div>
+        </div>
+        
         <div class="analysis">
             <h2>🔥 На что смотреть: Самые горячие гонки</h2>
             
@@ -557,22 +665,22 @@ def main():
     afc_leaders, afc_wc = get_playoff_picture(afc_divs, probabilities)
     nfc_leaders, nfc_wc = get_playoff_picture(nfc_divs, probabilities)
     
-    os.makedirs('output/playoff_race', exist_ok=True)
+    os.makedirs('docs', exist_ok=True)
     
     html_report = create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc_wc)
-    with open('output/playoff_race/playoff_race.html', 'w', encoding='utf-8') as f:
+    with open('docs/playoff_race.html', 'w', encoding='utf-8') as f:
         f.write(html_report)
     
     markdown_report = create_markdown_report(afc_leaders, afc_wc, nfc_leaders, nfc_wc)
-    with open('output/playoff_race/playoff_race_report.md', 'w', encoding='utf-8') as f:
+    with open('docs/playoff_race_report.md', 'w', encoding='utf-8') as f:
         f.write(markdown_report)
     
     print("\n" + "="*80)
     print("PLAYOFF RACE ANALYSIS COMPLETE!")
     print("="*80)
     print("\nGenerated files:")
-    print("  ✓ output/playoff_race/playoff_race.html")
-    print("  ✓ output/playoff_race/playoff_race_report.md")
+    print("  ✓ docs/playoff_race.html")
+    print("  ✓ docs/playoff_race_report.md")
     print("\nKey findings:")
     print("  • AFC: Five teams at 6-7 battling for Wild Card spots")
     print("  • NFC South: Four teams within one game - complete chaos!")
