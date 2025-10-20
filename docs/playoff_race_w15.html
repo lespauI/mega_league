@@ -27,6 +27,9 @@
         .seed-wc { border-left: 5px solid #22c55e; }
         .seed-bubble { border-left: 5px solid #eab308; }
         .seed-out { border-left: 5px solid #ef4444; opacity: 0.7; }
+        .pick-top3 { border-left: 5px solid #dc2626; }
+        .pick-top10 { border-left: 5px solid #f59e0b; }
+        .pick-rest { border-left: 5px solid #84cc16; }
         .team-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
         .team-name { font-size: 1.2em; font-weight: bold; color: #1e293b; }
         .team-record { font-size: 1.1em; color: #475569; font-weight: 600; }
@@ -41,6 +44,9 @@
         .badge-wc { background: #22c55e; color: white; }
         .badge-bubble { background: #eab308; color: white; }
         .badge-out { background: #ef4444; color: white; }
+        .badge-pick-top3 { background: #dc2626; color: white; }
+        .badge-pick-top10 { background: #f59e0b; color: white; }
+        .badge-pick-rest { background: #84cc16; color: white; }
         .divisions { margin-top: 30px; }
         .division { background: white; border-radius: 10px; padding: 20px; margin-bottom: 15px; }
         .division h3 { color: #0f172a; margin-bottom: 15px; padding-bottom: 8px; 
@@ -50,6 +56,9 @@
         .analysis { background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); 
                     border-radius: 15px; padding: 25px; margin: 30px 0; }
         .analysis h2 { color: #92400e; margin-bottom: 15px; }
+        .draft-analysis { background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%); 
+                    border-radius: 15px; padding: 25px; margin: 30px 0; }
+        .draft-analysis h2 { color: #7f1d1d; margin-bottom: 15px; }
         .analysis-item { background: white; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
         .analysis-item h3 { color: #1e293b; margin-bottom: 10px; }
         .legend { display: flex; gap: 20px; justify-content: center; margin: 30px 0; 
@@ -468,6 +477,344 @@
                         <span>4 games left</span>
                     </div>
                 </div>
+            </div>
+        </div>
+        
+        <div class="draft-analysis">
+            <h2>📉 Гонка за топ-пиками драфта</h2>
+            <p style="text-align: center; margin-bottom: 20px; font-size: 1.1em;">Команды борются за лучшие позиции в драфте. Чем меньше побед = выше выбор в драфте!</p>
+            
+            <div class="legend" style="margin-bottom: 20px;">
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #dc2626;"></div>
+                    <span>Топ-3 Пики (QB Территория)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #f59e0b;"></div>
+                    <span>Топ-10 (Премиум Таланты)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-box" style="background: #84cc16;"></div>
+                    <span>Пики 11-16 (Нормальная Цена)</span>
+                </div>
+            </div>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                <div class="playoff-team pick-top3">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top3">Пик 1</span>
+                            <span class="team-name">Cardinals</span>
+                        </div>
+                        <span class="team-record">1-12</span>
+                    </div>
+                    <div class="team-details">
+                        <span>NFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.527</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~2.9-14.1
+                    </div>
+                </div>
+                <div class="playoff-team pick-top3">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top3">Пик 2</span>
+                            <span class="team-name">Eagles</span>
+                        </div>
+                        <span class="team-record">2-11</span>
+                    </div>
+                    <div class="team-details">
+                        <span>NFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.484</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~4.1-12.9
+                    </div>
+                </div>
+                <div class="playoff-team pick-top3">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top3">Пик 3</span>
+                            <span class="team-name">Packers</span>
+                        </div>
+                        <span class="team-record">3-10</span>
+                    </div>
+                    <div class="team-details">
+                        <span>NFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-hard">SOS: 0.566</span>
+                        <span>•</span>
+                        <span>✓ Танк надёжен</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~4.7-12.3
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 4</span>
+                            <span class="team-name">Colts</span>
+                        </div>
+                        <span class="team-record">3-10</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.544</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~4.8-12.2
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 5</span>
+                            <span class="team-name">Bills</span>
+                        </div>
+                        <span class="team-record">3-10</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.470</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~5.1-11.9
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 6</span>
+                            <span class="team-name">Chiefs</span>
+                        </div>
+                        <span class="team-record">4-9</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-hard">SOS: 0.681</span>
+                        <span>•</span>
+                        <span>✓ Танк надёжен</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~5.3-11.7
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 7</span>
+                            <span class="team-name">Jets</span>
+                        </div>
+                        <span class="team-record">4-9</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.541</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~5.8-11.2
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 8</span>
+                            <span class="team-name">Vikings</span>
+                        </div>
+                        <span class="team-record">5-8</span>
+                    </div>
+                    <div class="team-details">
+                        <span>NFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-hard">SOS: 0.559</span>
+                        <span>•</span>
+                        <span>✓ Танк надёжен</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~6.8-10.2
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 9</span>
+                            <span class="team-name">Rams</span>
+                        </div>
+                        <span class="team-record">5-8</span>
+                    </div>
+                    <div class="team-details">
+                        <span>NFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.527</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~6.9-10.1
+                    </div>
+                </div>
+                <div class="playoff-team pick-top10">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-top10">Пик 10</span>
+                            <span class="team-name">Browns</span>
+                        </div>
+                        <span class="team-record">5-8</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-easy">SOS: 0.443</span>
+                        <span>•</span>
+                        <span>⚠️ Риск побед!</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~7.2-9.8
+                    </div>
+                </div>
+                <div class="playoff-team pick-rest">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-rest">Пик 11</span>
+                            <span class="team-name">Jaguars</span>
+                        </div>
+                        <span class="team-record">6-7</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-hard">SOS: 0.562</span>
+                        <span>•</span>
+                        <span>✓ Танк надёжен</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~7.8-9.2
+                    </div>
+                </div>
+                <div class="playoff-team pick-rest">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-rest">Пик 12</span>
+                            <span class="team-name">Steelers</span>
+                        </div>
+                        <span class="team-record">6-7</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.545</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~7.8-9.2
+                    </div>
+                </div>
+                <div class="playoff-team pick-rest">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-rest">Пик 13</span>
+                            <span class="team-name">Dolphins</span>
+                        </div>
+                        <span class="team-record">6-7</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge ">SOS: 0.540</span>
+                        <span>•</span>
+                        <span>→ Средняк</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~7.8-9.2
+                    </div>
+                </div>
+                <div class="playoff-team pick-rest">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-rest">Пик 14</span>
+                            <span class="team-name">Texans</span>
+                        </div>
+                        <span class="team-record">6-7</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-easy">SOS: 0.418</span>
+                        <span>•</span>
+                        <span>⚠️ Риск побед!</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~8.3-8.7
+                    </div>
+                </div>
+                <div class="playoff-team pick-rest">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-rest">Пик 15</span>
+                            <span class="team-name">Bengals</span>
+                        </div>
+                        <span class="team-record">6-7</span>
+                    </div>
+                    <div class="team-details">
+                        <span>AFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-easy">SOS: 0.381</span>
+                        <span>•</span>
+                        <span>⚠️ Риск побед!</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~8.5-8.5
+                    </div>
+                </div>
+                <div class="playoff-team pick-rest">
+                    <div class="team-header">
+                        <div>
+                            <span class="seed-badge badge-pick-rest">Пик 16</span>
+                            <span class="team-name">Panthers</span>
+                        </div>
+                        <span class="team-record">7-6</span>
+                    </div>
+                    <div class="team-details">
+                        <span>NFC</span>
+                        <span>•</span>
+                        <span class="sos-badge sos-hard">SOS: 0.573</span>
+                        <span>•</span>
+                        <span>✓ Танк надёжен</span>
+                    </div>
+                    <div style="margin-top: 8px; font-size: 0.85em; color: #64748b;">
+                        Прогноз: ~8.7-8.3
+                    </div>
+                </div>
+            </div>
+            
+            <div class="analysis-item" style="margin-top: 25px;">
+                <h3>💡 Как работает драфт-порядок?</h3>
+                <p style="margin-bottom: 10px;">В отличие от плей-офф, здесь <strong>ХУДШИЕ</strong> команды получают преимущество:</p>
+                <ul style="margin-left: 25px; margin-bottom: 10px;">
+                    <li><strong>Меньше побед</strong> → Выше пик в драфте</li>
+                    <li><strong>Лёгкое расписание (SOS < 0.45)</strong> → Риск выиграть и потерять позицию! ⚠️</li>
+                    <li><strong>Жёсткое расписание (SOS > 0.55)</strong> → Танк надёжен, пик гарантирован! ✓</li>
+                </ul>
+                <p><strong>Пример:</strong> Команда 2-11 с SOS 0.650 почти гарантированно получит топ-3 пик, так как их ждут только сильные соперники.</p>
             </div>
         </div>
         
