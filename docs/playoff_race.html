@@ -7,8 +7,8 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-               padding: 20px; color: #333; }
+               background: transparent; 
+               padding: 0; margin: 0; color: #333; overflow-x: hidden; }
         .container { max-width: 100%; margin: 0 auto; background: white; 
                      border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         h1 { text-align: center; color: #1e293b; margin-bottom: 10px; font-size: 2.5em; }
@@ -35,9 +35,76 @@
         .team-record { font-size: 1.1em; color: #475569; font-weight: 600; }
         .team-details { display: flex; gap: 15px; font-size: 0.9em; color: #64748b; }
         .sos-badge { background: #dbeafe; color: #1e40af; padding: 4px 12px; 
-                     border-radius: 20px; font-weight: 600; }
+                     border-radius: 20px; font-weight: 600; position: relative; cursor: help; }
         .sos-easy { background: #d1fae5; color: #065f46; }
         .sos-hard { background: #fee2e2; color: #991b1b; }
+        
+        .sos-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+        
+        .sos-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1a1a1a;
+        }
+        
+        .sos-badge:hover .sos-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tooltip-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 6px;
+        }
+        
+        .opponent-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0;
+            font-size: 0.95em;
+        }
+        
+        .opponent-name {
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .opponent-details {
+            font-size: 0.9em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .rank-elite { color: #dc2626; }
+        .rank-mid { color: #eab308; }
+        .rank-weak { color: #16a34a; }
         .seed-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; 
                       font-weight: bold; font-size: 0.85em; margin-right: 10px; }
         .badge-div { background: #3b82f6; color: white; }
@@ -66,8 +133,17 @@
         .legend-item { display: flex; align-items: center; gap: 8px; padding: 10px 20px;
                        background: #f1f5f9; border-radius: 10px; }
         .legend-box { width: 20px; height: 20px; border-radius: 4px; }
+        .table-embed {
+            width: 100%;
+            border: none;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: 1300px;
+        }
         @media (max-width: 1024px) {
             .conferences { grid-template-columns: 1fr; }
+            .table-embed { height: 2400px; }
         }
     </style>
 </head>
@@ -75,6 +151,8 @@
     <div class="container">
         <h1>🏈 MEGA League Playoff Race</h1>
         <div class="subtitle">Week 14 Standings - Remaining Strength of Schedule Analysis</div>
+        
+        <iframe src="playoff_race_table.html" class="table-embed" id="tableFrame"></iframe>
         
         <div class="legend">
             <div class="legend-item">
@@ -107,9 +185,9 @@
                         <span class="team-record">12-1</span>
                     </div>
                     <div class="team-details">
-                        <span>Playoff Chance: 98.0%</span>
+                        <span>Playoff Chance: 100.0%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.448</span>
+                        <span class="sos-badge sos-easy">SOS: 0.448<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Packers</span><span class="opponent-details rank-weak">#28</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Jaguars</span><span class="opponent-details rank-weak">#21</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Chiefs</span><span class="opponent-details rank-weak">#27</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Chargers</span><span class="opponent-details rank-mid">#16</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • West</span>
@@ -124,9 +202,9 @@
                         <span class="team-record">11-2</span>
                     </div>
                     <div class="team-details">
-                        <span>Playoff Chance: 98.0%</span>
+                        <span>Playoff Chance: 100.0%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.545</span>
+                        <span class="sos-badge ">SOS: 0.545<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: 49ers</span><span class="opponent-details rank-mid">#13</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Chiefs</span><span class="opponent-details rank-weak">#27</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Saints</span><span class="opponent-details rank-mid">#12</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Jaguars</span><span class="opponent-details rank-weak">#21</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • South</span>
@@ -141,9 +219,9 @@
                         <span class="team-record">10-3</span>
                     </div>
                     <div class="team-details">
-                        <span>Playoff Chance: 98.0%</span>
+                        <span>Playoff Chance: 100.0%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.459</span>
+                        <span class="sos-badge ">SOS: 0.459<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Bills</span><span class="opponent-details rank-weak">#30</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Ravens</span><span class="opponent-details rank-elite">#4</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Jets</span><span class="opponent-details rank-weak">#26</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Dolphins</span><span class="opponent-details rank-mid">#18</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • East</span>
@@ -158,9 +236,9 @@
                         <span class="team-record">10-3</span>
                     </div>
                     <div class="team-details">
-                        <span>Playoff Chance: 98.0%</span>
+                        <span>Playoff Chance: 100.0%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.541</span>
+                        <span class="sos-badge ">SOS: 0.541<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Bengals</span><span class="opponent-details rank-mid">#19</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Patriots</span><span class="opponent-details rank-elite">#5</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Packers</span><span class="opponent-details rank-weak">#28</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Steelers</span><span class="opponent-details rank-mid">#20</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • North</span>
@@ -177,7 +255,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 95.0%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.436</span>
+                        <span class="sos-badge sos-easy">SOS: 0.436<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Eagles</span><span class="opponent-details rank-weak">#31</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Texans</span><span class="opponent-details rank-weak">#22</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Giants</span><span class="opponent-details rank-elite">#6</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Chiefs</span><span class="opponent-details rank-weak">#27</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -193,7 +271,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 95.0%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.494</span>
+                        <span class="sos-badge ">SOS: 0.494<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Chiefs</span><span class="opponent-details rank-weak">#27</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Cowboys</span><span class="opponent-details rank-elite">#7</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Texans</span><span class="opponent-details rank-weak">#22</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Broncos</span><span class="opponent-details rank-elite">#1</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -209,7 +287,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 79.1%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.381</span>
+                        <span class="sos-badge sos-easy">SOS: 0.381<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Ravens</span><span class="opponent-details rank-elite">#4</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Dolphins</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Cardinals</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Browns</span><span class="opponent-details rank-weak">#24</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -225,7 +303,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 46.1%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.418</span>
+                        <span class="sos-badge sos-easy">SOS: 0.418<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Cardinals</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Raiders</span><span class="opponent-details rank-elite">#10</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Chargers</span><span class="opponent-details rank-mid">#16</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Colts</span><span class="opponent-details rank-weak">#29</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -241,7 +319,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 48.8%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.540</span>
+                        <span class="sos-badge ">SOS: 0.540<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Steelers</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Bengals</span><span class="opponent-details rank-mid">#19</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Patriots</span><span class="opponent-details rank-elite">#5</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -257,7 +335,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 63.1%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.545</span>
+                        <span class="sos-badge ">SOS: 0.545<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Dolphins</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Lions</span><span class="opponent-details rank-elite">#2</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Browns</span><span class="opponent-details rank-weak">#24</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Ravens</span><span class="opponent-details rank-elite">#4</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -273,7 +351,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 33.4%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.562</span>
+                        <span class="sos-badge sos-hard">SOS: 0.562<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Jets</span><span class="opponent-details rank-weak">#26</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Broncos</span><span class="opponent-details rank-elite">#1</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Colts</span><span class="opponent-details rank-weak">#29</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Titans</span><span class="opponent-details rank-elite">#3</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -289,7 +367,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 27.2%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.443</span>
+                        <span class="sos-badge sos-easy">SOS: 0.443<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Bears</span><span class="opponent-details rank-mid">#15</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Bills</span><span class="opponent-details rank-weak">#30</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Steelers</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Bengals</span><span class="opponent-details rank-mid">#19</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -306,9 +384,9 @@
                         <span class="team-record">9-4</span>
                     </div>
                     <div class="team-details">
-                        <span>Playoff Chance: 99.0%</span>
+                        <span>Playoff Chance: 100.0%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.436</span>
+                        <span class="sos-badge sos-easy">SOS: 0.436<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Rams</span><span class="opponent-details rank-weak">#23</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Steelers</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Vikings</span><span class="opponent-details rank-weak">#25</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Bears</span><span class="opponent-details rank-mid">#15</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • North</span>
@@ -325,7 +403,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 95.0%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.499</span>
+                        <span class="sos-badge ">SOS: 0.499<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Commanders</span><span class="opponent-details rank-mid">#14</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Vikings</span><span class="opponent-details rank-weak">#25</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Raiders</span><span class="opponent-details rank-elite">#10</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Cowboys</span><span class="opponent-details rank-elite">#7</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • East</span>
@@ -342,7 +420,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 73.5%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.612</span>
+                        <span class="sos-badge sos-hard">SOS: 0.612<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Panthers</span><span class="opponent-details rank-mid">#17</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Jets</span><span class="opponent-details rank-weak">#26</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Titans</span><span class="opponent-details rank-elite">#3</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Falcons</span><span class="opponent-details rank-mid">#11</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • South</span>
@@ -357,9 +435,9 @@
                         <span class="team-record">8-5</span>
                     </div>
                     <div class="team-details">
-                        <span>Playoff Chance: 98.1%</span>
+                        <span>Playoff Chance: 100.0%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.567</span>
+                        <span class="sos-badge sos-hard">SOS: 0.567<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Colts</span><span class="opponent-details rank-weak">#29</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Rams</span><span class="opponent-details rank-weak">#23</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Panthers</span><span class="opponent-details rank-mid">#17</span></div><div class="opponent-row"><span class="opponent-name">Week 17: 49ers</span><span class="opponent-details rank-mid">#13</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                         <span> • West</span>
@@ -376,7 +454,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 79.7%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.433</span>
+                        <span class="sos-badge sos-easy">SOS: 0.433<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Cardinals</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Rams</span><span class="opponent-details rank-weak">#23</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Saints</span><span class="opponent-details rank-mid">#12</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -392,7 +470,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 95.4%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.468</span>
+                        <span class="sos-badge ">SOS: 0.468<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Vikings</span><span class="opponent-details rank-weak">#25</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Chargers</span><span class="opponent-details rank-mid">#16</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Commanders</span><span class="opponent-details rank-mid">#14</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Giants</span><span class="opponent-details rank-elite">#6</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -408,7 +486,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 93.2%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.582</span>
+                        <span class="sos-badge sos-hard">SOS: 0.582<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Falcons</span><span class="opponent-details rank-mid">#11</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Panthers</span><span class="opponent-details rank-mid">#17</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Dolphins</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Panthers</span><span class="opponent-details rank-mid">#17</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -424,7 +502,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 31.4%</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.482</span>
+                        <span class="sos-badge ">SOS: 0.482<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Giants</span><span class="opponent-details rank-elite">#6</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Eagles</span><span class="opponent-details rank-weak">#31</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Cowboys</span><span class="opponent-details rank-elite">#7</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Eagles</span><span class="opponent-details rank-weak">#31</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -440,7 +518,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 27.0%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.562</span>
+                        <span class="sos-badge sos-hard">SOS: 0.562<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Browns</span><span class="opponent-details rank-weak">#24</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Packers</span><span class="opponent-details rank-weak">#28</span></div><div class="opponent-row"><span class="opponent-name">Week 16: 49ers</span><span class="opponent-details rank-mid">#13</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Lions</span><span class="opponent-details rank-elite">#2</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -456,7 +534,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 46.5%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.572</span>
+                        <span class="sos-badge sos-hard">SOS: 0.572<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Titans</span><span class="opponent-details rank-elite">#3</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Colts</span><span class="opponent-details rank-weak">#29</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Bears</span><span class="opponent-details rank-mid">#15</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Seahawks</span><span class="opponent-details rank-elite">#8</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -472,7 +550,7 @@
                     <div class="team-details">
                         <span>Playoff Chance: 36.4%</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.573</span>
+                        <span class="sos-badge sos-hard">SOS: 0.573<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Saints</span><span class="opponent-details rank-mid">#12</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Seahawks</span><span class="opponent-details rank-elite">#8</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div></div></span>
                         <span>•</span>
                         <span>4 games left</span>
                     </div>
@@ -511,7 +589,7 @@
                     <div class="team-details">
                         <span>NFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.527</span>
+                        <span class="sos-badge ">SOS: 0.527<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Texans</span><span class="opponent-details rank-weak">#22</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Falcons</span><span class="opponent-details rank-mid">#11</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Bengals</span><span class="opponent-details rank-mid">#19</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Rams</span><span class="opponent-details rank-weak">#23</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -530,7 +608,7 @@
                     <div class="team-details">
                         <span>NFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.484</span>
+                        <span class="sos-badge ">SOS: 0.484<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Raiders</span><span class="opponent-details rank-elite">#10</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Commanders</span><span class="opponent-details rank-mid">#14</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Bills</span><span class="opponent-details rank-weak">#30</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Commanders</span><span class="opponent-details rank-mid">#14</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -549,7 +627,7 @@
                     <div class="team-details">
                         <span>NFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.566</span>
+                        <span class="sos-badge sos-hard">SOS: 0.566<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Broncos</span><span class="opponent-details rank-elite">#1</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Bears</span><span class="opponent-details rank-mid">#15</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Ravens</span><span class="opponent-details rank-elite">#4</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Vikings</span><span class="opponent-details rank-weak">#25</span></div></div></span>
                         <span>•</span>
                         <span>✓ Танк надёжен</span>
                     </div>
@@ -568,7 +646,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.544</span>
+                        <span class="sos-badge ">SOS: 0.544<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Seahawks</span><span class="opponent-details rank-elite">#8</span></div><div class="opponent-row"><span class="opponent-name">Week 15: 49ers</span><span class="opponent-details rank-mid">#13</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Jaguars</span><span class="opponent-details rank-weak">#21</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Texans</span><span class="opponent-details rank-weak">#22</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -587,7 +665,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.470</span>
+                        <span class="sos-badge ">SOS: 0.470<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Patriots</span><span class="opponent-details rank-elite">#5</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Browns</span><span class="opponent-details rank-weak">#24</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Eagles</span><span class="opponent-details rank-weak">#31</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Jets</span><span class="opponent-details rank-weak">#26</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -606,7 +684,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.681</span>
+                        <span class="sos-badge sos-hard">SOS: 0.681<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Chargers</span><span class="opponent-details rank-mid">#16</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Titans</span><span class="opponent-details rank-elite">#3</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Broncos</span><span class="opponent-details rank-elite">#1</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Raiders</span><span class="opponent-details rank-elite">#10</span></div></div></span>
                         <span>•</span>
                         <span>✓ Танк надёжен</span>
                     </div>
@@ -625,7 +703,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.541</span>
+                        <span class="sos-badge ">SOS: 0.541<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Jaguars</span><span class="opponent-details rank-weak">#21</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Saints</span><span class="opponent-details rank-mid">#12</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Patriots</span><span class="opponent-details rank-elite">#5</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Bills</span><span class="opponent-details rank-weak">#30</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -644,7 +722,7 @@
                     <div class="team-details">
                         <span>NFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.559</span>
+                        <span class="sos-badge sos-hard">SOS: 0.559<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Cowboys</span><span class="opponent-details rank-elite">#7</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Giants</span><span class="opponent-details rank-elite">#6</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Lions</span><span class="opponent-details rank-elite">#2</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Packers</span><span class="opponent-details rank-weak">#28</span></div></div></span>
                         <span>•</span>
                         <span>✓ Танк надёжен</span>
                     </div>
@@ -663,7 +741,7 @@
                     <div class="team-details">
                         <span>NFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.527</span>
+                        <span class="sos-badge ">SOS: 0.527<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Lions</span><span class="opponent-details rank-elite">#2</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Seahawks</span><span class="opponent-details rank-elite">#8</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Falcons</span><span class="opponent-details rank-mid">#11</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Cardinals</span><span class="opponent-details rank-weak">#32</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -682,7 +760,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.443</span>
+                        <span class="sos-badge sos-easy">SOS: 0.443<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Bears</span><span class="opponent-details rank-mid">#15</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Bills</span><span class="opponent-details rank-weak">#30</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Steelers</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Bengals</span><span class="opponent-details rank-mid">#19</span></div></div></span>
                         <span>•</span>
                         <span>⚠️ Риск побед!</span>
                     </div>
@@ -701,7 +779,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.562</span>
+                        <span class="sos-badge sos-hard">SOS: 0.562<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Jets</span><span class="opponent-details rank-weak">#26</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Broncos</span><span class="opponent-details rank-elite">#1</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Colts</span><span class="opponent-details rank-weak">#29</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Titans</span><span class="opponent-details rank-elite">#3</span></div></div></span>
                         <span>•</span>
                         <span>✓ Танк надёжен</span>
                     </div>
@@ -720,7 +798,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.545</span>
+                        <span class="sos-badge ">SOS: 0.545<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Dolphins</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Lions</span><span class="opponent-details rank-elite">#2</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Browns</span><span class="opponent-details rank-weak">#24</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Ravens</span><span class="opponent-details rank-elite">#4</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -739,7 +817,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge ">SOS: 0.540</span>
+                        <span class="sos-badge ">SOS: 0.540<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Steelers</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Bengals</span><span class="opponent-details rank-mid">#19</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Patriots</span><span class="opponent-details rank-elite">#5</span></div></div></span>
                         <span>•</span>
                         <span>→ Средняк</span>
                     </div>
@@ -758,7 +836,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.418</span>
+                        <span class="sos-badge sos-easy">SOS: 0.418<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Cardinals</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Raiders</span><span class="opponent-details rank-elite">#10</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Chargers</span><span class="opponent-details rank-mid">#16</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Colts</span><span class="opponent-details rank-weak">#29</span></div></div></span>
                         <span>•</span>
                         <span>⚠️ Риск побед!</span>
                     </div>
@@ -777,7 +855,7 @@
                     <div class="team-details">
                         <span>AFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-easy">SOS: 0.381</span>
+                        <span class="sos-badge sos-easy">SOS: 0.381<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Ravens</span><span class="opponent-details rank-elite">#4</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Dolphins</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Cardinals</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Browns</span><span class="opponent-details rank-weak">#24</span></div></div></span>
                         <span>•</span>
                         <span>⚠️ Риск побед!</span>
                     </div>
@@ -796,7 +874,7 @@
                     <div class="team-details">
                         <span>NFC</span>
                         <span>•</span>
-                        <span class="sos-badge sos-hard">SOS: 0.573</span>
+                        <span class="sos-badge sos-hard">SOS: 0.573<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 14: Saints</span><span class="opponent-details rank-mid">#12</span></div><div class="opponent-row"><span class="opponent-name">Week 15: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 16: Seahawks</span><span class="opponent-details rank-elite">#8</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Buccaneers</span><span class="opponent-details rank-elite">#9</span></div></div></span>
                         <span>•</span>
                         <span>✓ Танк надёжен</span>
                     </div>
@@ -984,5 +1062,17 @@
             <p style="margin-top: 10px;">Высокий SOS = Тяжёлое расписание | Низкий SOS = Лёгкий путь в плей-офф</p>
         </div>
     </div>
+    <script>
+        function sendHeight() {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height }, '*');
+        }
+        
+        window.addEventListener('load', function() {
+            setTimeout(sendHeight, 200);
+        });
+        
+        window.addEventListener('resize', sendHeight);
+    </script>
 </body>
 </html>

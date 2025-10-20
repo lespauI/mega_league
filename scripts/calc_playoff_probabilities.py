@@ -244,6 +244,90 @@ def calculate_playoff_probability(team_name, teams_info, stats, sos_data, remain
     
     expected_wins = team_remaining * (1.0 - team_sos)
     projected_wins = current_wins + expected_wins
+    max_possible_wins = current_wins + team_remaining
+    
+    # Check for mathematical elimination (can't make playoffs even if win all remaining)
+    if is_div_leader:
+        # Check if any division rival can still catch us
+        can_be_caught = False
+        for rival in div_teams:
+            if rival == team_name:
+                continue
+            rival_remaining = int(sos_data[rival]['remaining_games']) if rival in sos_data else remaining_games
+            rival_max_wins = stats[rival]['W'] + rival_remaining
+            # If rival can match or exceed our max wins, we haven't clinched
+            if rival_max_wins >= max_possible_wins:
+                can_be_caught = True
+                break
+        
+        # If no one can catch us, we've clinched division = 100% playoff
+        if not can_be_caught:
+            return 100.0
+    else:
+        # Not division leader - check if we can still make playoffs via division or WC
+        # First check if we can still win division
+        div_leader = div_leaders[div]
+        leader_wins = stats[div_leader]['W']
+        # If leader already has more wins than we can possibly get, we can't win division
+        can_win_division = (max_possible_wins > leader_wins)
+        
+        # Check wild card possibility
+        # Get all non-division leaders
+        all_wc_candidates = []
+        for t in conf_teams:
+            if t not in div_leaders.values():
+                t_remaining = int(sos_data[t]['remaining_games']) if t in sos_data else remaining_games
+                all_wc_candidates.append({
+                    'team': t,
+                    'wins': stats[t]['W'],
+                    'max_wins': stats[t]['W'] + t_remaining
+                })
+        
+        # Sort by current wins
+        all_wc_candidates.sort(key=lambda x: -x['wins'])
+        
+        # Count how many teams will definitely finish ahead of our max wins
+        teams_definitely_ahead = 0
+        for candidate in all_wc_candidates:
+            if candidate['team'] == team_name:
+                continue
+            # If their current wins already exceed our max possible, they're definitely ahead
+            if candidate['wins'] > max_possible_wins:
+                teams_definitely_ahead += 1
+        
+        # If 7+ teams are definitely ahead (4 division winners + 3 WC), we're eliminated
+        # Actually need to count division leaders too
+        if teams_definitely_ahead >= 7:
+            return 0.0
+    
+    # Check if eliminated from division and wild card
+    if not is_div_leader:
+        # Count teams that will finish ahead even if we win all remaining
+        div_leader_wins = stats[div_leaders[div]]['W']
+        
+        # Get wild card contenders
+        wc_candidates = [t for t in conf_teams if t not in div_leaders.values()]
+        teams_ahead_of_max = sum(1 for t in wc_candidates if t != team_name and stats[t]['W'] > max_possible_wins)
+        
+        # If 3+ WC candidates already have more wins than our max, we're eliminated
+        if teams_ahead_of_max >= 3 and div_leader_wins > max_possible_wins:
+            return 0.0
+        
+        # Check if we've clinched a wild card spot
+        # We've clinched if at most 2 other non-division-leaders can reach our minimum wins
+        min_guaranteed_wins = current_wins  # We have at least this many
+        teams_that_can_catch = 0
+        for t in wc_candidates:
+            if t == team_name:
+                continue
+            t_max = stats[t]['W'] + (int(sos_data[t]['remaining_games']) if t in sos_data else remaining_games)
+            if t_max > min_guaranteed_wins:
+                teams_that_can_catch += 1
+        
+        # If only 2 or fewer teams can finish with more wins than we have now, we've clinched WC
+        # (assuming division leaders all finish ahead)
+        if teams_that_can_catch <= 2:
+            return 100.0
     
     if is_div_leader:
         base_prob = 95.0

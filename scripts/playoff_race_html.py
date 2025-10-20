@@ -13,6 +13,27 @@ def read_standings():
             div = row.get('divisionName', '').strip()
             conf = row.get('conferenceName', '').strip()
             teams_div[team] = {'division': div, 'conference': conf}
+    
+    team_rankings = {}
+    with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            team = row['displayName'].strip()
+            team_rankings[team] = {
+                'rank': int(row['rank']) if row.get('rank') else 99
+            }
+    
+    remaining_opponents = defaultdict(list)
+    with open('MEGA_games.csv', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            status = row.get('status', '').strip()
+            if status == '1':
+                home = row['homeTeam'].strip()
+                away = row['awayTeam'].strip()
+                week = int(row.get('weekIndex', 0))
+                remaining_opponents[home].append({'opponent': away, 'week': week})
+                remaining_opponents[away].append({'opponent': home, 'week': week})
 
     with open('output/ranked_sos_by_conference.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -29,6 +50,19 @@ def read_standings():
         
         if team in teams_div:
             div = teams_div[team]['division']
+            opponents = remaining_opponents.get(team, [])
+            opponent_details = []
+            for opp_data in opponents:
+                opp_name = opp_data['opponent']
+                opp_week = opp_data['week']
+                if opp_name in team_rankings:
+                    opp_rank_data = team_rankings[opp_name]
+                    opponent_details.append({
+                        'name': opp_name,
+                        'rank': opp_rank_data['rank'],
+                        'week': opp_week
+                    })
+            
             team_data = {
                 'team': team,
                 'W': w,
@@ -37,7 +71,8 @@ def read_standings():
                 'remaining_sos': float(row['ranked_sos_avg']),
                 'past_sos': float(row['past_ranked_sos_avg']),
                 'total_sos': float(row['total_ranked_sos']),
-                'remaining_games': int(row['remaining_games'])
+                'remaining_games': int(row['remaining_games']),
+                'remaining_opponents': opponent_details
             }
             
             if conf == 'AFC':
@@ -80,6 +115,14 @@ def calculate_playoff_chances(team, all_contenders, cutoff_position):
         base_chance = min(85, base_chance + 10)
     
     return round(base_chance, 1)
+
+def get_rank_class(rank):
+    if rank <= 10:
+        return 'rank-elite'
+    elif rank <= 20:
+        return 'rank-mid'
+    else:
+        return 'rank-weak'
 
 def get_playoff_picture(divs, probabilities):
     leaders = []
@@ -134,8 +177,8 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
-               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-               padding: 20px; color: #333; }
+               background: transparent; 
+               padding: 0; margin: 0; color: #333; overflow-x: hidden; }
         .container { max-width: 100%; margin: 0 auto; background: white; 
                      border-radius: 20px; padding: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
         h1 { text-align: center; color: #1e293b; margin-bottom: 10px; font-size: 2.5em; }
@@ -162,9 +205,76 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         .team-record { font-size: 1.1em; color: #475569; font-weight: 600; }
         .team-details { display: flex; gap: 15px; font-size: 0.9em; color: #64748b; }
         .sos-badge { background: #dbeafe; color: #1e40af; padding: 4px 12px; 
-                     border-radius: 20px; font-weight: 600; }
+                     border-radius: 20px; font-weight: 600; position: relative; cursor: help; }
         .sos-easy { background: #d1fae5; color: #065f46; }
         .sos-hard { background: #fee2e2; color: #991b1b; }
+        
+        .sos-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            white-space: nowrap;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            pointer-events: none;
+        }
+        
+        .sos-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1a1a1a;
+        }
+        
+        .sos-badge:hover .sos-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .tooltip-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #444;
+            padding-bottom: 6px;
+        }
+        
+        .opponent-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 0;
+            font-size: 0.95em;
+        }
+        
+        .opponent-name {
+            font-weight: 500;
+            flex: 1;
+        }
+        
+        .opponent-details {
+            font-size: 0.9em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+        
+        .rank-elite { color: #dc2626; }
+        .rank-mid { color: #eab308; }
+        .rank-weak { color: #16a34a; }
         .seed-badge { display: inline-block; padding: 4px 12px; border-radius: 6px; 
                       font-weight: bold; font-size: 0.85em; margin-right: 10px; }
         .badge-div { background: #3b82f6; color: white; }
@@ -193,8 +303,17 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         .legend-item { display: flex; align-items: center; gap: 8px; padding: 10px 20px;
                        background: #f1f5f9; border-radius: 10px; }
         .legend-box { width: 20px; height: 20px; border-radius: 4px; }
+        .table-embed {
+            width: 100%;
+            border: none;
+            margin: 30px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            height: 1300px;
+        }
         @media (max-width: 1024px) {
             .conferences { grid-template-columns: 1fr; }
+            .table-embed { height: 2400px; }
         }
     </style>
 </head>
@@ -202,6 +321,8 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     <div class="container">
         <h1>🏈 MEGA League Playoff Race</h1>
         <div class="subtitle">Week 14 Standings - Remaining Strength of Schedule Analysis</div>
+        
+        <iframe src="playoff_race_table.html" class="table-embed" id="tableFrame"></iframe>
         
         <div class="legend">
             <div class="legend-item">
@@ -260,6 +381,19 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
             elif team['remaining_sos'] > 0.55:
                 sos_class = 'sos-hard'
             
+            tooltip_html = ''
+            if 'remaining_opponents' in team and team['remaining_opponents']:
+                tooltip_html = '<div class="sos-tooltip">'
+                tooltip_html += '<div class="tooltip-title">Remaining Schedule</div>'
+                sorted_opps = sorted(team['remaining_opponents'], key=lambda x: x['week'])
+                for opp in sorted_opps:
+                    rank_class = get_rank_class(opp['rank'])
+                    tooltip_html += f'<div class="opponent-row">'
+                    tooltip_html += f'<span class="opponent-name">Week {opp["week"]}: {opp["name"]}</span>'
+                    tooltip_html += f'<span class="opponent-details {rank_class}">#{opp["rank"]}</span>'
+                    tooltip_html += '</div>'
+                tooltip_html += '</div>'
+            
             div_label = ''
             if 'division' in team:
                 div_label = f" • {team['division'].replace(conf_name + ' ', '')}"
@@ -277,7 +411,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
             html.append(f'                    <div class="team-details">')
             html.append(f'                        <span>Playoff Chance: {playoff_chance}%</span>')
             html.append(f'                        <span>•</span>')
-            html.append(f'                        <span class="sos-badge {sos_class}">SOS: {team["remaining_sos"]:.3f}</span>')
+            html.append(f'                        <span class="sos-badge {sos_class}">SOS: {team["remaining_sos"]:.3f}{tooltip_html}</span>')
             html.append(f'                        <span>•</span>')
             html.append(f'                        <span>{team["remaining_games"]} games left</span>')
             if div_label:
@@ -334,6 +468,19 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         else:
             sos_note = '→ Средняк'
         
+        tooltip_html = ''
+        if 'remaining_opponents' in team and team['remaining_opponents']:
+            tooltip_html = '<div class="sos-tooltip">'
+            tooltip_html += '<div class="tooltip-title">Remaining Schedule</div>'
+            sorted_opps = sorted(team['remaining_opponents'], key=lambda x: x['week'])
+            for opp in sorted_opps:
+                rank_class = get_rank_class(opp['rank'])
+                tooltip_html += f'<div class="opponent-row">'
+                tooltip_html += f'<span class="opponent-name">Week {opp["week"]}: {opp["name"]}</span>'
+                tooltip_html += f'<span class="opponent-details {rank_class}">#{opp["rank"]}</span>'
+                tooltip_html += '</div>'
+            tooltip_html += '</div>'
+        
         expected_final_losses = team['L'] + (team['remaining_games'] * team['remaining_sos'])
         
         html.append(f'                <div class="playoff-team {pick_class}">')
@@ -347,7 +494,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         html.append(f'                    <div class="team-details">')
         html.append(f'                        <span>{team["conf"]}</span>')
         html.append(f'                        <span>•</span>')
-        html.append(f'                        <span class="sos-badge {sos_class}">SOS: {team["remaining_sos"]:.3f}</span>')
+        html.append(f'                        <span class="sos-badge {sos_class}">SOS: {team["remaining_sos"]:.3f}{tooltip_html}</span>')
         html.append(f'                        <span>•</span>')
         html.append(f'                        <span>{sos_note}</span>')
         html.append(f'                    </div>')
@@ -547,6 +694,18 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
             <p style="margin-top: 10px;">Высокий SOS = Тяжёлое расписание | Низкий SOS = Лёгкий путь в плей-офф</p>
         </div>
     </div>
+    <script>
+        function sendHeight() {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage({ type: 'resize', height: height }, '*');
+        }
+        
+        window.addEventListener('load', function() {
+            setTimeout(sendHeight, 200);
+        });
+        
+        window.addEventListener('resize', sendHeight);
+    </script>
 </body>
 </html>''')
     
