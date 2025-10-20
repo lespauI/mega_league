@@ -11,13 +11,14 @@
 
 ### **Тачдауны передачами**
 1. **Justin Fields** (Jets) - 26 TD
-2. **Joe Burrow** (Bengals) - 18 TD
-3. **Cam Ward** (Titans) - 18 TD
-4. **C.J. Stroud** (Texans) - 18 TD
-5. **Sam Darnold** (Seahawks) - 18 TD
-6. **Jared Goff** (Lions) - 18 TD
-7. **Joe Milton III** (Raiders) - 18 TD
-8. **Bryce Young** (Panthers) - 18 TD
+2. **Tua Tagovailoa** (Dolphins) - 19 TD
+3. **Joe Burrow** (Bengals) - 18 TD
+4. **Cam Ward** (Titans) - 18 TD
+5. **C.J. Stroud** (Texans) - 18 TD
+6. **Sam Darnold** (Seahawks) - 18 TD
+7. **Jared Goff** (Lions) - 18 TD
+8. **Joe Milton III** (Raiders) - 18 TD
+9. **Bryce Young** (Panthers) - 18 TD
 
 ### **Рейтинг пассера**
 1. **Joe Milton III** (Raiders) - 113.30
