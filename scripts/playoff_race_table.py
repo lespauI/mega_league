@@ -91,37 +91,10 @@ def read_standings():
     return afc_divs, nfc_divs, teams_div
 
 def get_division_leader_prob(team_name, div_teams, probabilities):
-    team = [t for t in div_teams if t['team'] == team_name][0]
-    if div_teams.index(team) == 0:
-        prob = probabilities.get(team_name, {}).get('playoff_probability', 99.0)
-        if prob >= 99:
-            return 100
-        return min(99, prob)
-    else:
-        leader = div_teams[0]
-        if leader['win_pct'] - team['win_pct'] >= 0.3:
-            return 0
-        return max(1, min(15, 100 - probabilities.get(leader['team'], {}).get('playoff_probability', 99)))
+    return probabilities.get(team_name, {}).get('division_win_probability', 0)
 
 def get_round1_bye_prob(team_name, all_div_leaders, probabilities):
-    playoff_prob = probabilities.get(team_name, {}).get('playoff_probability', 0)
-    if playoff_prob < 95:
-        return 0
-    
-    team_wins = probabilities.get(team_name, {}).get('W', 0)
-    top_teams = sorted(all_div_leaders, key=lambda t: probabilities.get(t['team'], {}).get('W', 0), reverse=True)
-    
-    if len(top_teams) < 2:
-        return 0
-    
-    position = next((i for i, t in enumerate(top_teams) if t['team'] == team_name), 10)
-    
-    if position == 0:
-        return min(95, playoff_prob)
-    elif position == 1:
-        return min(75, playoff_prob - 10)
-    else:
-        return max(0, min(25, playoff_prob - 60))
+    return probabilities.get(team_name, {}).get('bye_probability', 0)
 
 def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob):
     if playoff_prob < 50:
@@ -132,6 +105,102 @@ def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob):
         base = playoff_prob * 0.12
         bye_bonus = bye_prob * 0.05
         return round(base + bye_bonus, 1)
+
+def get_playoff_tooltip(playoff_prob, team_name, team_data):
+    wins = team_data['W']
+    losses = team_data['L']
+    remaining = team_data['remaining_games']
+    
+    return f'''<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: {playoff_prob:.0f}%</strong><br><br>
+        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        • Текущий счёт: {wins}-{losses}<br>
+        • Осталось игр: {remaining}<br>
+        • В {playoff_prob:.0f}% симуляций команда попала в топ-7 конференции<br><br>
+        Каждая симуляция случайным образом разыгрывает оставшиеся матчи на основе силы команд и домашнего преимущества.
+    </div>'''
+
+def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
+    team = [t for t in div_teams if t['team'] == team_name][0]
+    position = div_teams.index(team) + 1
+    wins = team['W']
+    losses = team['L']
+    
+    leader = div_teams[0]
+    leader_name = leader['team']
+    leader_prob = probabilities.get(leader_name, {}).get('division_win_probability', 0)
+    
+    if position == 1:
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: {div_prob:.0f}%</strong><br><br>
+            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            • Текущий счёт: {wins}-{losses}<br>
+            • Лидер дивизиона<br>
+            • В {div_prob:.0f}% симуляций команда выиграла дивизион<br><br>
+            Учитывается расписание, сила команд и тайбрейкеры.
+        </div>'''
+    else:
+        gap = leader['win_pct'] - team['win_pct']
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: {div_prob:.0f}%</strong><br><br>
+            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            • Текущий счёт: {wins}-{losses}<br>
+            • Лидер: {leader_name} ({leader['W']}-{leader['L']}, {leader_prob:.0f}%)<br>
+            • В {div_prob:.0f}% симуляций команда выиграла дивизион<br><br>
+            Учитывается расписание, сила команд и тайбрейкеры.
+        </div>'''
+
+def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
+    playoff_prob = probabilities.get(team_name, {}).get('playoff_probability', 0)
+    team_wins = probabilities.get(team_name, {}).get('W', 0)
+    
+    if bye_prob == 0:
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность первого раунда бай: 0%</strong><br><br>
+            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            • Текущий счёт: {team_wins} побед<br>
+            • В 0% симуляций команда была посевом #1<br><br>
+            Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде.
+        </div>'''
+    
+    return f'''<div class="prob-tooltip">
+        <strong>Вероятность первого раунда бай: {bye_prob:.0f}%</strong><br><br>
+        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        • Текущий счёт: {team_wins} побед<br>
+        • В {bye_prob:.0f}% симуляций команда была посевом #1<br><br>
+        Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
+    </div>'''
+
+def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob):
+    if playoff_prob < 50:
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность Суперкубка: {sb_prob:.0f}%</strong><br><br>
+            Низкая вероятность из-за слабых шансов на плей-офф.<br><br>
+            • Плей-офф: {playoff_prob:.0f}%<br>
+            • Формула: {playoff_prob:.0f}% × 5% = {sb_prob:.1f}%<br><br>
+            Команды с низкими шансами на плей-офф имеют минимальные шансы на титул.
+        </div>'''
+    elif playoff_prob < 90:
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность Суперкубка: {sb_prob:.0f}%</strong><br><br>
+            Средняя вероятность.<br><br>
+            • Плей-офф: {playoff_prob:.0f}%<br>
+            • Формула: {playoff_prob:.0f}% × 10% = {sb_prob:.1f}%<br><br>
+            Стабильные команды имеют реальные шансы.
+        </div>'''
+    else:
+        base = playoff_prob * 0.12
+        bye_bonus = bye_prob * 0.05
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность Суперкубка: {sb_prob:.0f}%</strong><br><br>
+            Высокая вероятность - элитная команда.<br><br>
+            • Плей-офф: {playoff_prob:.0f}%<br>
+            • Побед. в див.: {div_prob:.0f}%<br>
+            • Бай 1-го раунда: {bye_prob:.0f}%<br><br>
+            Формула:<br>
+            ({playoff_prob:.0f}% × 12%) + ({bye_prob:.0f}% × 5%)<br>
+            = {base:.1f}% + {bye_bonus:.1f}% = {sb_prob:.1f}%
+        </div>'''
 
 def get_rank_class(rank):
     if rank <= 10:
@@ -378,6 +447,70 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
             font-weight: 600;
             font-size: 1em;
             padding: 8px 8px !important;
+            position: relative;
+        }
+        
+        .prob-wrapper {
+            position: relative;
+            display: inline-block;
+            cursor: help;
+        }
+        
+        .prob-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            background: #1a1a1a;
+            color: white;
+            padding: 12px 14px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            white-space: normal;
+            min-width: 280px;
+            max-width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s, visibility 0.2s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            pointer-events: none;
+            text-align: left;
+            line-height: 1.5;
+        }
+        
+        .prob-tooltip::after {
+            content: '';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: #1a1a1a;
+        }
+        
+        .prob-wrapper:hover .prob-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .prob-tooltip strong {
+            color: #60a5fa;
+        }
+        
+        tbody td:nth-child(7) .prob-tooltip,
+        tbody td:nth-child(8) .prob-tooltip {
+            left: auto;
+            right: 0;
+            transform: none;
+        }
+        
+        tbody td:nth-child(7) .prob-tooltip::after,
+        tbody td:nth-child(8) .prob-tooltip::after {
+            left: auto;
+            right: 20px;
+            transform: none;
         }
         
         .prob-100 { background: #1e3a5f; color: white; }
@@ -440,7 +573,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
             thead th { padding: 8px 6px; font-size: 0.7em; }
             tbody td { padding: 10px 6px; }
             .team-logo { width: 24px; height: 24px; }
-            .sos-tooltip {
+            .sos-tooltip, .prob-tooltip {
                 left: auto;
                 right: 0;
                 transform: none;
@@ -540,15 +673,20 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 
                 logo_html = f'<img src="{logo_url}" class="team-logo" alt="{team_name}">' if logo_url else ''
                 
+                playoff_tooltip = get_playoff_tooltip(playoff_prob, team_name, team_data)
+                div_tooltip = get_division_tooltip(div_prob, team_name, teams, probabilities)
+                bye_tooltip = get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities)
+                sb_tooltip = get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob)
+                
                 html.append(f'                    <tr class="{row_class}">')
                 html.append(f'                        <td class="div-cell">{div_short if idx == 0 else ""}</td>')
                 html.append(f'                        <td><div class="team-cell">{logo_html}<span>{team_name}{status}</span></div></td>')
                 html.append(f'                        <td class="record-cell">{team_data["W"]}-{team_data["L"]}</td>')
                 html.append(f'                        <td class="record-cell"><span class="{sos_badge_class}">{sos:.3f}{tooltip_html}</span></td>')
-                html.append(f'                        <td class="prob-cell {get_prob_class(playoff_prob)}">{playoff_prob:.0f}%</td>')
-                html.append(f'                        <td class="prob-cell {get_prob_class(div_prob)}">{div_prob:.0f}%</td>')
-                html.append(f'                        <td class="prob-cell {get_prob_class(bye_prob)}">{bye_prob:.0f}%</td>')
-                html.append(f'                        <td class="prob-cell {get_prob_class(sb_prob)}">{sb_prob:.0f}%</td>')
+                html.append(f'                        <td class="prob-cell {get_prob_class(playoff_prob)}"><span class="prob-wrapper">{playoff_prob:.0f}%{playoff_tooltip}</span></td>')
+                html.append(f'                        <td class="prob-cell {get_prob_class(div_prob)}"><span class="prob-wrapper">{div_prob:.0f}%{div_tooltip}</span></td>')
+                html.append(f'                        <td class="prob-cell {get_prob_class(bye_prob)}"><span class="prob-wrapper">{bye_prob:.0f}%{bye_tooltip}</span></td>')
+                html.append(f'                        <td class="prob-cell {get_prob_class(sb_prob)}"><span class="prob-wrapper">{sb_prob:.0f}%{sb_tooltip}</span></td>')
                 html.append('                    </tr>')
         
         html.append('                </tbody>')

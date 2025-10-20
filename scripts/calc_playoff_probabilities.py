@@ -3,6 +3,7 @@ import csv
 import itertools
 from collections import defaultdict
 import json
+import random
 
 def load_data():
     teams_info = {}
@@ -19,12 +20,15 @@ def load_data():
     with open('MEGA_games.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            status = int(row['status']) if row['status'] else 1
             games.append({
                 'home': row['homeTeam'].strip(),
                 'away': row['awayTeam'].strip(),
-                'home_score': int(row['homeScore']) if row['homeScore'] else None,
-                'away_score': int(row['awayScore']) if row['awayScore'] else None,
-                'week': int(row['weekIndex']) if row['weekIndex'] else 0
+                'home_score': int(row['homeScore']) if row['homeScore'] else 0,
+                'away_score': int(row['awayScore']) if row['awayScore'] else 0,
+                'week': int(row['weekIndex']) if row['weekIndex'] else 0,
+                'status': status,
+                'completed': status in [2, 3]
             })
     
     with open('output/ranked_sos_by_conference.csv', 'r', encoding='utf-8') as f:
@@ -49,7 +53,7 @@ def calculate_team_stats(teams_info, games):
         }
     
     for game in games:
-        if game['home_score'] is None or game['away_score'] is None:
+        if not game['completed']:
             continue
         
         home = game['home']
@@ -220,6 +224,170 @@ def apply_tiebreakers(teams, stats, teams_info, is_division=False):
     
     return remaining[0] if remaining else teams[0]
 
+def simulate_remaining_games(teams_info, stats, sos_data, games):
+    completed_games = [g for g in games if g['completed']]
+    remaining_games = [g for g in games if not g['completed']]
+    
+    simulated_games = []
+    for game in remaining_games:
+        home = game['home']
+        away = game['away']
+        
+        if home not in stats or away not in stats:
+            continue
+        
+        home_win_pct = stats[home]['win_pct']
+        away_win_pct = stats[away]['win_pct']
+        
+        if home_win_pct + away_win_pct > 0:
+            base_home_prob = home_win_pct / (home_win_pct + away_win_pct)
+        else:
+            base_home_prob = 0.5
+        
+        home_advantage = 0.07
+        home_prob = base_home_prob + home_advantage
+        
+        home_prob = max(0.20, min(0.80, home_prob))
+        
+        rand_val = random.random()
+        if rand_val < home_prob:
+            winner = home
+            loser = away
+        else:
+            winner = away
+            loser = home
+        
+        simulated_games.append({
+            'home': home,
+            'away': away,
+            'winner': winner,
+            'loser': loser
+        })
+    
+    return simulated_games
+
+def determine_playoff_teams(teams_info, stats, simulated_games):
+    sim_stats = {}
+    for team in stats:
+        sim_stats[team] = {
+            'W': stats[team]['W'],
+            'L': stats[team]['L'],
+            'T': stats[team]['T'],
+            'conference_W': stats[team]['conference_W'],
+            'conference_L': stats[team]['conference_L'],
+            'conference_T': stats[team]['conference_T'],
+            'division_W': stats[team]['division_W'],
+            'division_L': stats[team]['division_L'],
+            'division_T': stats[team]['division_T'],
+            'head_to_head': defaultdict(lambda: {'W': 0, 'L': 0, 'T': 0}),
+            'points_for': stats[team]['points_for'],
+            'points_against': stats[team]['points_against']
+        }
+        for opp in stats[team]['head_to_head']:
+            sim_stats[team]['head_to_head'][opp] = dict(stats[team]['head_to_head'][opp])
+    
+    for game in simulated_games:
+        home = game['home']
+        away = game['away']
+        winner = game['winner']
+        loser = game['loser']
+        
+        sim_stats[winner]['W'] += 1
+        sim_stats[loser]['L'] += 1
+        sim_stats[winner]['head_to_head'][loser]['W'] += 1
+        sim_stats[loser]['head_to_head'][winner]['L'] += 1
+        
+        home_conf = teams_info[home]['conference']
+        away_conf = teams_info[away]['conference']
+        home_div = teams_info[home]['division']
+        away_div = teams_info[away]['division']
+        
+        if home_conf == away_conf:
+            sim_stats[winner]['conference_W'] += 1
+            sim_stats[loser]['conference_L'] += 1
+        
+        if home_div == away_div:
+            sim_stats[winner]['division_W'] += 1
+            sim_stats[loser]['division_L'] += 1
+    
+    for team in sim_stats:
+        total = sim_stats[team]['W'] + sim_stats[team]['L'] + sim_stats[team]['T']
+        sim_stats[team]['win_pct'] = (sim_stats[team]['W'] + 0.5 * sim_stats[team]['T']) / total if total > 0 else 0
+        
+        conf_total = sim_stats[team]['conference_W'] + sim_stats[team]['conference_L'] + sim_stats[team]['conference_T']
+        sim_stats[team]['conference_pct'] = (sim_stats[team]['conference_W'] + 0.5 * sim_stats[team]['conference_T']) / conf_total if conf_total > 0 else 0
+        
+        div_total = sim_stats[team]['division_W'] + sim_stats[team]['division_L'] + sim_stats[team]['division_T']
+        sim_stats[team]['division_pct'] = (sim_stats[team]['division_W'] + 0.5 * sim_stats[team]['division_T']) / div_total if div_total > 0 else 0
+    
+    playoff_teams = {}
+    division_winners = {}
+    bye_teams = {}
+    
+    for conf in ['AFC', 'NFC']:
+        conf_teams = [t for t in teams_info if teams_info[t]['conference'] == conf]
+        
+        div_leaders = {}
+        for division in set(teams_info[t]['division'] for t in conf_teams):
+            div_contenders = [t for t in conf_teams if teams_info[t]['division'] == division]
+            div_contenders.sort(key=lambda t: (
+                -sim_stats[t]['win_pct'],
+                -sim_stats[t]['division_pct'],
+                -sim_stats[t]['conference_pct'],
+                -sim_stats[t]['points_for']
+            ))
+            div_leaders[division] = div_contenders[0]
+        
+        division_winners[conf] = list(div_leaders.values())
+        
+        sorted_div_leaders = sorted(div_leaders.values(), key=lambda t: (
+            -sim_stats[t]['win_pct'],
+            -sim_stats[t]['conference_pct'],
+            -sim_stats[t]['points_for']
+        ))
+        
+        bye_teams[conf] = sorted_div_leaders[:1]
+        
+        wc_candidates = [t for t in conf_teams if t not in div_leaders.values()]
+        wc_candidates.sort(key=lambda t: (
+            -sim_stats[t]['win_pct'],
+            -sim_stats[t]['conference_pct'],
+            -sim_stats[t]['points_for']
+        ))
+        
+        playoff_teams[conf] = list(div_leaders.values()) + wc_candidates[:3]
+    
+    return playoff_teams, division_winners, bye_teams
+
+def calculate_playoff_probability_simulation(team_name, teams_info, stats, sos_data, games, num_simulations=10000):
+    playoff_count = 0
+    division_count = 0
+    bye_count = 0
+    conf = teams_info[team_name]['conference']
+    
+    for sim in range(num_simulations):
+        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games)
+        playoff_teams, division_winners, bye_teams = determine_playoff_teams(teams_info, stats, simulated_games)
+        
+        if team_name in playoff_teams[conf]:
+            playoff_count += 1
+        
+        if team_name in division_winners[conf]:
+            division_count += 1
+        
+        if team_name in bye_teams[conf]:
+            bye_count += 1
+    
+    playoff_probability = (playoff_count / num_simulations) * 100
+    division_probability = (division_count / num_simulations) * 100
+    bye_probability = (bye_count / num_simulations) * 100
+    
+    return {
+        'playoff_probability': playoff_probability,
+        'division_probability': division_probability,
+        'bye_probability': bye_probability
+    }
+
 def calculate_playoff_probability(team_name, teams_info, stats, sos_data, remaining_games):
     conf = teams_info[team_name]['conference']
     div = teams_info[team_name]['division']
@@ -237,6 +405,7 @@ def calculate_playoff_probability(team_name, teams_info, stats, sos_data, remain
     
     current_wins = stats[team_name]['W']
     current_losses = stats[team_name]['L']
+    current_ties = stats[team_name]['T']
     win_pct = stats[team_name]['win_pct']
     
     team_remaining = int(sos_data[team_name]['remaining_games']) if team_name in sos_data else remaining_games
@@ -245,154 +414,216 @@ def calculate_playoff_probability(team_name, teams_info, stats, sos_data, remain
     expected_wins = team_remaining * (1.0 - team_sos)
     projected_wins = current_wins + expected_wins
     max_possible_wins = current_wins + team_remaining
+    min_possible_wins = current_wins
     
-    # Check for mathematical elimination (can't make playoffs even if win all remaining)
     if is_div_leader:
-        # Check if any division rival can still catch us
-        can_be_caught = False
+        can_clinch = True
+        max_threat = 0
+        
         for rival in div_teams:
             if rival == team_name:
                 continue
+            
             rival_remaining = int(sos_data[rival]['remaining_games']) if rival in sos_data else remaining_games
             rival_max_wins = stats[rival]['W'] + rival_remaining
-            # If rival can match or exceed our max wins, we haven't clinched
-            if rival_max_wins >= max_possible_wins:
-                can_be_caught = True
-                break
+            rival_max_pct = (rival_max_wins + 0.5 * stats[rival]['T']) / (stats[rival]['W'] + stats[rival]['L'] + stats[rival]['T'] + rival_remaining)
+            
+            if rival_max_wins > min_possible_wins or (rival_max_wins == min_possible_wins and rival_max_pct >= win_pct):
+                can_clinch = False
+                max_threat = max(max_threat, rival_max_wins)
         
-        # If no one can catch us, we've clinched division = 100% playoff
-        if not can_be_caught:
+        if can_clinch:
             return 100.0
+        
+        base_prob = 70.0
+        
+        lead_size = min_possible_wins - max_threat
+        
+        if lead_size >= 2:
+            base_prob = 95.0
+        elif lead_size >= 1:
+            base_prob = 85.0
+        elif lead_size >= 0:
+            base_prob = 70.0
+        else:
+            base_prob = 55.0
+        
+        div_contenders = sorted(
+            [t for t in div_teams if t != team_name],
+            key=lambda t: -stats[t]['win_pct']
+        )
+        
+        if div_contenders:
+            closest_rival = div_contenders[0]
+            rival_wins = stats[closest_rival]['W']
+            rival_remaining = int(sos_data[closest_rival]['remaining_games']) if closest_rival in sos_data else remaining_games
+            rival_sos = float(sos_data[closest_rival]['ranked_sos_avg']) if closest_rival in sos_data else 0.5
+            rival_projected_wins = rival_wins + rival_remaining * (1.0 - rival_sos)
+            
+            win_diff = projected_wins - rival_projected_wins
+            
+            if win_diff >= 2.0:
+                base_prob = min(98.0, base_prob + 15)
+            elif win_diff >= 1.0:
+                base_prob = min(95.0, base_prob + 10)
+            elif win_diff >= 0.5:
+                base_prob = min(90.0, base_prob + 5)
+            elif win_diff >= 0:
+                base_prob = max(60.0, base_prob - 5)
+            elif win_diff >= -0.5:
+                base_prob = max(50.0, base_prob - 10)
+            else:
+                base_prob = max(40.0, base_prob - 20)
+            
+            h2h_record = stats[team_name]['head_to_head'][closest_rival]
+            h2h_total = h2h_record['W'] + h2h_record['L'] + h2h_record['T']
+            if h2h_total > 0:
+                h2h_pct = (h2h_record['W'] + 0.5 * h2h_record['T']) / h2h_total
+                if h2h_pct > 0.6:
+                    base_prob = min(98.0, base_prob + 5)
+                elif h2h_pct < 0.4:
+                    base_prob = max(35.0, base_prob - 5)
+        
+        games_remaining_factor = (team_remaining / 17.0) * 10
+        base_prob = base_prob - games_remaining_factor + 5
+        
+        return min(99.0, max(30.0, base_prob))
+    
     else:
-        # Not division leader - check if we can still make playoffs via division or WC
-        # First check if we can still win division
         div_leader = div_leaders[div]
         leader_wins = stats[div_leader]['W']
-        # If leader already has more wins than we can possibly get, we can't win division
+        leader_remaining = int(sos_data[div_leader]['remaining_games']) if div_leader in sos_data else remaining_games
+        leader_max_wins = leader_wins + leader_remaining
+        
         can_win_division = (max_possible_wins > leader_wins)
         
-        # Check wild card possibility
-        # Get all non-division leaders
-        all_wc_candidates = []
+        if not can_win_division and leader_remaining > 0:
+            leader_min_wins = leader_wins
+            can_win_division = (max_possible_wins >= leader_min_wins)
+        
+        all_conf_teams_info = []
         for t in conf_teams:
-            if t not in div_leaders.values():
-                t_remaining = int(sos_data[t]['remaining_games']) if t in sos_data else remaining_games
-                all_wc_candidates.append({
-                    'team': t,
-                    'wins': stats[t]['W'],
-                    'max_wins': stats[t]['W'] + t_remaining
-                })
+            t_remaining = int(sos_data[t]['remaining_games']) if t in sos_data else remaining_games
+            t_sos = float(sos_data[t]['remaining_sos']) if t in sos_data and 'remaining_sos' in sos_data[t] else 0.5
+            t_projected = stats[t]['W'] + t_remaining * (1.0 - t_sos)
+            
+            all_conf_teams_info.append({
+                'team': t,
+                'wins': stats[t]['W'],
+                'losses': stats[t]['L'],
+                'ties': stats[t]['T'],
+                'win_pct': stats[t]['win_pct'],
+                'remaining': t_remaining,
+                'max_wins': stats[t]['W'] + t_remaining,
+                'min_wins': stats[t]['W'],
+                'projected_wins': t_projected,
+                'is_div_leader': t in div_leaders.values()
+            })
         
-        # Sort by current wins
-        all_wc_candidates.sort(key=lambda x: -x['wins'])
+        all_conf_teams_info.sort(key=lambda x: (-x['win_pct'], -stats[x['team']]['conference_pct']))
         
-        # Count how many teams will definitely finish ahead of our max wins
-        teams_definitely_ahead = 0
-        for candidate in all_wc_candidates:
+        wc_candidates = [t for t in all_conf_teams_info if not t['is_div_leader']]
+        
+        teams_clearly_better = 0
+        for candidate in wc_candidates:
             if candidate['team'] == team_name:
                 continue
-            # If their current wins already exceed our max possible, they're definitely ahead
-            if candidate['wins'] > max_possible_wins:
-                teams_definitely_ahead += 1
+            if candidate['min_wins'] > max_possible_wins:
+                teams_clearly_better += 1
         
-        # If 7+ teams are definitely ahead (4 division winners + 3 WC), we're eliminated
-        # Actually need to count division leaders too
-        if teams_definitely_ahead >= 7:
-            return 0.0
-    
-    # Check if eliminated from division and wild card
-    if not is_div_leader:
-        # Count teams that will finish ahead even if we win all remaining
-        div_leader_wins = stats[div_leaders[div]]['W']
+        if teams_clearly_better >= 3:
+            if not can_win_division:
+                return 0.0
         
-        # Get wild card contenders
-        wc_candidates = [t for t in conf_teams if t not in div_leaders.values()]
-        teams_ahead_of_max = sum(1 for t in wc_candidates if t != team_name and stats[t]['W'] > max_possible_wins)
-        
-        # If 3+ WC candidates already have more wins than our max, we're eliminated
-        if teams_ahead_of_max >= 3 and div_leader_wins > max_possible_wins:
-            return 0.0
-        
-        # Check if we've clinched a wild card spot
-        # We've clinched if at most 2 other non-division-leaders can reach our minimum wins
-        min_guaranteed_wins = current_wins  # We have at least this many
-        teams_that_can_catch = 0
-        for t in wc_candidates:
-            if t == team_name:
+        teams_that_can_beat_us = 0
+        for candidate in wc_candidates:
+            if candidate['team'] == team_name:
                 continue
-            t_max = stats[t]['W'] + (int(sos_data[t]['remaining_games']) if t in sos_data else remaining_games)
-            if t_max > min_guaranteed_wins:
-                teams_that_can_catch += 1
+            if candidate['max_wins'] > min_possible_wins:
+                teams_that_can_beat_us += 1
         
-        # If only 2 or fewer teams can finish with more wins than we have now, we've clinched WC
-        # (assuming division leaders all finish ahead)
-        if teams_that_can_catch <= 2:
+        if teams_that_can_beat_us <= 2 and can_win_division:
             return 100.0
-    
-    if is_div_leader:
-        base_prob = 95.0
         
-        div_contenders = [t for t in div_teams if t != team_name and stats[t]['win_pct'] >= win_pct - 0.15]
-        if not div_contenders:
-            return min(99.0, base_prob + 3)
-        
-        closest_rival = max(div_contenders, key=lambda t: stats[t]['win_pct'])
-        rival_wins = stats[closest_rival]['W']
-        rival_remaining = int(sos_data[closest_rival]['remaining_games']) if closest_rival in sos_data else remaining_games
-        rival_sos = float(sos_data[closest_rival]['ranked_sos_avg']) if closest_rival in sos_data else 0.5
-        rival_projected_wins = rival_wins + rival_remaining * (1.0 - rival_sos)
-        
-        win_cushion = projected_wins - rival_projected_wins
-        cushion_factor = min(5, max(-5, win_cushion * 3))
-        
-        return min(99.0, max(85.0, base_prob + cushion_factor))
-    
-    else:
-        all_contenders = []
-        for t in conf_teams:
-            if t not in div_leaders.values():
-                all_contenders.append(t)
-        
-        all_contenders.sort(key=lambda t: (-stats[t]['win_pct'], -stats[t]['conference_pct'], stats[t]['strength_of_schedule']))
+        wc_candidates_sorted = sorted(wc_candidates, key=lambda x: -x['projected_wins'])
         
         try:
-            current_position = all_contenders.index(team_name)
-        except ValueError:
-            current_position = len(all_contenders) - 1
+            our_wc_position = next(i for i, c in enumerate(wc_candidates_sorted) if c['team'] == team_name)
+        except StopIteration:
+            our_wc_position = len(wc_candidates_sorted) - 1
         
-        if current_position < 3:
-            base_prob = 75 - (current_position * 15)
-        elif current_position < 6:
-            base_prob = 40 - ((current_position - 3) * 10)
+        if our_wc_position == 0:
+            base_wc_prob = 80.0
+        elif our_wc_position == 1:
+            base_wc_prob = 70.0
+        elif our_wc_position == 2:
+            base_wc_prob = 60.0
+        elif our_wc_position == 3:
+            base_wc_prob = 45.0
+        elif our_wc_position == 4:
+            base_wc_prob = 30.0
+        elif our_wc_position == 5:
+            base_wc_prob = 18.0
+        elif our_wc_position == 6:
+            base_wc_prob = 10.0
         else:
-            base_prob = 15 - min(10, (current_position - 6) * 2)
+            base_wc_prob = max(1.0, 10.0 - (our_wc_position - 6) * 2)
         
-        wc_cutoff_teams = all_contenders[2:5] if len(all_contenders) > 4 else all_contenders[:3]
-        avg_wc_sos = sum(float(sos_data[t]['ranked_sos_avg']) for t in wc_cutoff_teams if t in sos_data) / len(wc_cutoff_teams) if wc_cutoff_teams else 0.5
+        if our_wc_position < len(wc_candidates_sorted) - 1:
+            next_team = wc_candidates_sorted[our_wc_position + 1]
+            proj_diff = projected_wins - next_team['projected_wins']
+            if proj_diff > 1.5:
+                base_wc_prob = min(95.0, base_wc_prob + 15)
+            elif proj_diff > 0.5:
+                base_wc_prob = min(90.0, base_wc_prob + 8)
         
-        sos_advantage = (avg_wc_sos - team_sos) * 80
+        if our_wc_position > 0 and our_wc_position < 3:
+            prev_team = wc_candidates_sorted[our_wc_position - 1]
+            proj_diff = prev_team['projected_wins'] - projected_wins
+            if proj_diff > 1.5:
+                base_wc_prob = max(5.0, base_wc_prob - 15)
+            elif proj_diff > 0.5:
+                base_wc_prob = max(10.0, base_wc_prob - 8)
         
-        wc_cutoff_wins = [stats[t]['W'] for t in all_contenders[2:3]] if len(all_contenders) > 2 else [current_wins]
-        cutoff_win_level = wc_cutoff_wins[0] if wc_cutoff_wins else current_wins
-        wins_above_cutoff = (projected_wins - cutoff_win_level) * 12
+        div_prob = 0.0
+        if can_win_division:
+            win_diff_from_leader = projected_wins - (leader_wins + leader_remaining * (1.0 - float(sos_data[div_leader]['ranked_sos_avg']) if div_leader in sos_data else 0.5))
+            
+            if win_diff_from_leader >= 1.0:
+                div_prob = 25.0
+            elif win_diff_from_leader >= 0.5:
+                div_prob = 15.0
+            elif win_diff_from_leader >= 0:
+                div_prob = 8.0
+            elif win_diff_from_leader >= -0.5:
+                div_prob = 4.0
+            else:
+                div_prob = 1.0
         
-        conference_factor = (stats[team_name]['conference_pct'] - 0.5) * 20
+        combined_prob = base_wc_prob + div_prob * (1.0 - base_wc_prob / 100.0)
         
-        final_prob = base_prob + sos_advantage + wins_above_cutoff + conference_factor
+        conf_record_boost = (stats[team_name]['conference_pct'] - 0.5) * 10
+        combined_prob += conf_record_boost
         
-        return min(95.0, max(1.0, final_prob))
+        return min(98.0, max(0.5, combined_prob))
 
 def main():
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
+    
+    print("\n" + "="*80)
+    print("SIMULATING PLAYOFF SCENARIOS...")
+    print("="*80)
+    print("Running 1,000 simulations for each team's playoff chances...\n")
     
     results = {}
     
     for conf in ['AFC', 'NFC']:
         conf_teams = [t for t in teams_info if teams_info[t]['conference'] == conf]
         
-        for team in conf_teams:
-            prob = calculate_playoff_probability(team, teams_info, stats, sos_data, 4)
+        for i, team in enumerate(conf_teams, 1):
+            print(f"  [{i}/{len(conf_teams)}] Simulating {team}...")
+            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=1000)
             results[team] = {
                 'conference': conf,
                 'division': teams_info[team]['division'],
@@ -403,7 +634,9 @@ def main():
                 'division_pct': stats[team]['division_pct'],
                 'strength_of_victory': stats[team]['strength_of_victory'],
                 'strength_of_schedule': stats[team]['strength_of_schedule'],
-                'playoff_probability': round(prob, 1),
+                'playoff_probability': round(prob_results['playoff_probability'], 1),
+                'division_win_probability': round(prob_results['division_probability'], 1),
+                'bye_probability': round(prob_results['bye_probability'], 1),
                 'remaining_sos': float(sos_data[team]['ranked_sos_avg']) if team in sos_data else 0.5,
                 'remaining_games': int(sos_data[team]['remaining_games']) if team in sos_data else 4
             }
@@ -414,13 +647,14 @@ def main():
     print("\n" + "="*80)
     print("PLAYOFF PROBABILITY CALCULATION COMPLETE!")
     print("="*80)
-    print("\nCalculated probabilities for all 32 teams considering:")
+    print("\nUsing Monte Carlo simulation (1,000 iterations per team)")
+    print("Calculated probabilities for all 32 teams considering:")
+    print("  ✓ Current standings and records")
+    print("  ✓ Remaining game outcomes (simulated)")
+    print("  ✓ Division tiebreakers")
+    print("  ✓ Conference tiebreakers")
     print("  ✓ Head-to-head records")
-    print("  ✓ Division standings")
-    print("  ✓ Conference records")
-    print("  ✓ Strength of victory")
-    print("  ✓ Strength of schedule (past and remaining)")
-    print("  ✓ Projected final records")
+    print("  ✓ Team strength (win percentage)")
     print("\nOutput saved to: output/playoff_probabilities.json")
     print("\nTop AFC Contenders:")
     afc_teams = [(t, r['playoff_probability']) for t, r in results.items() if r['conference'] == 'AFC']
