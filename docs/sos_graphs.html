@@ -83,15 +83,48 @@
         row.conference = row.conference || (meta? meta.conf : null);
         row.logoUrl = meta && meta.logoId!=='' && meta.logoId!=null ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null;
       }
-      return sos;
+      return { sos, teamMap };
+    }
+
+    async function loadPlayoffData(teamMap) {
+      const paths = ['../output/playoff_probabilities.json', 'output/playoff_probabilities.json', '/output/playoff_probabilities.json'];
+      let data;
+      for (const p of paths) {
+        try { data = await d3.json(p); break; } catch (e) { }
+      }
+      if (!data) throw new Error('Unable to load playoff probabilities');
+
+      const playoffTeams = [];
+      for (const [name, stats] of Object.entries(data)) {
+        if (stats.playoff_probability > 5 && stats.playoff_probability < 99.5) {
+          const meta = teamMap.get(name);
+          playoffTeams.push({
+            team: name,
+            winPct: stats.win_pct,
+            playoff_probability: stats.playoff_probability,
+            remaining_sos: stats.remaining_sos,
+            conference: stats.conference,
+            logoUrl: meta && meta.logoId!=='' && meta.logoId!=null ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null
+          });
+        }
+      }
+      return playoffTeams;
     }
 
     function drawScatter(holder, rows, cfg) {
-      // Filter valid
-      const data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d.winPct));
+      // Determine X-axis key (default is winPct)
+      const xKey = cfg.xKey || 'winPct';
+      
+      // Filter valid data
+      let data;
+      if (xKey === 'playoff_probability') {
+        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] > 5 && +d[xKey] < 99.5);
+      } else {
+        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] >= 0.005 && +d[xKey] <= 0.995);
+      }
 
-      const margin = { top: 20, right: 24, bottom: 46, left: 56 };
-      const width = 1080, height = 340;
+      const margin = { top: 20, right: 24, bottom: 46, left: 60 };
+      const width = 1080, height = 480;
       const innerW = width - margin.left - margin.right;
       const innerH = height - margin.top - margin.bottom;
 
@@ -102,22 +135,70 @@
       const svg = wrap.append('svg').attr('width', width).attr('height', height);
       const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
-      // Scales
+      // Scales - Y axis with tighter domain for better spread
       const yVals = data.map(d => +d[cfg.key]);
-      const yPad = (d3.max(yVals) - d3.min(yVals)) * 0.06 || 0.02;
-      const y = d3.scaleLinear().domain([d3.min(yVals)-yPad, d3.max(yVals)+yPad]).nice().range([innerH, 0]);
+      const yMin = d3.min(yVals), yMax = d3.max(yVals);
+      const yRange = yMax - yMin;
+      const yPad = yRange * 0.15;
+      const y = d3.scaleLinear()
+        .domain([yMin - yPad, yMax + yPad])
+        .range([innerH, 0]);
 
-      const xVals = data.map(d => +d.winPct);
-      const xMin = d3.min(xVals), xMax = d3.max(xVals), xPad = (xMax-xMin)*0.08 || 0.02;
-      const x = d3.scaleLinear().domain([Math.max(0,xMin-xPad), Math.min(1,xMax+xPad)]).nice().range([0, innerW]);
+      const xVals = data.map(d => +d[xKey]);
+      
+      let x, xForValue;
+      if (xKey === 'playoff_probability') {
+        // For playoff probability (0-100 scale)
+        const xMin = d3.min(xVals), xMax = d3.max(xVals);
+        const xPad = (xMax - xMin) * 0.1 || 5;
+        
+        x = d3.scaleLinear()
+          .domain([Math.max(0, xMin - xPad), Math.min(100, xMax + xPad)])
+          .range([0, innerW]);
+        
+        xForValue = pct => x(pct);
+      } else {
+        // For win percentage (0-1 decimal)
+        const xMin = d3.min(xVals), xMax = d3.max(xVals);
+        const xPad = (xMax - xMin) * 0.1 || 0.05;
+        
+        x = d3.scaleLinear()
+          .domain([Math.max(0, xMin - xPad), Math.min(1, xMax + xPad)])
+          .range([0, innerW]);
+        
+        xForValue = wp => x(wp);
+      }
 
       // Axes + grid
+      let tickValues, tickFormat;
+      if (xKey === 'playoff_probability') {
+        tickValues = [10, 20, 30, 40, 50, 60, 70, 80, 90].filter(v => {
+          return v >= x.domain()[0] && v <= x.domain()[1];
+        });
+        tickFormat = v => v.toFixed(0) + '%';
+      } else {
+        tickValues = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].filter(v => {
+          return v >= x.domain()[0] && v <= x.domain()[1];
+        });
+        tickFormat = v => toPct(v);
+      }
+      
       g.append('g').attr('transform', `translate(0,${innerH})`)
-        .call(d3.axisBottom(x).ticks(8, '%').tickSize(-innerH).tickPadding(8))
+        .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(tickFormat).tickSize(-innerH).tickPadding(8))
         .call(s => s.selectAll('.tick line').attr('stroke', '#e2e2e2'))
         .call(s => s.select('.domain').attr('stroke', '#9aa0a6'));
+      
+      // Y-axis with finer tick steps (0.05 or adaptive based on range)
+      const yTickStep = yRange < 0.2 ? 0.025 : (yRange < 0.5 ? 0.05 : 0.1);
+      const yTickStart = Math.ceil(y.domain()[0] / yTickStep) * yTickStep;
+      const yTickEnd = Math.floor(y.domain()[1] / yTickStep) * yTickStep;
+      const yTickVals = [];
+      for (let v = yTickStart; v <= yTickEnd; v += yTickStep) {
+        yTickVals.push(Math.round(v * 1000) / 1000);
+      }
+      
       g.append('g')
-        .call(d3.axisLeft(y).ticks(5).tickSize(-innerW).tickPadding(6))
+        .call(d3.axisLeft(y).tickValues(yTickVals).tickFormat(d3.format('.3f')).tickSize(-innerW).tickPadding(6))
         .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
         .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
 
@@ -125,17 +206,19 @@
       const yAvg = d3.mean(yVals), xAvg = d3.mean(xVals);
       g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(yAvg)).attr('y2', y(yAvg))
         .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
-      g.append('line').attr('x1', x(xAvg)).attr('x2', x(xAvg)).attr('y1', 0).attr('y2', innerH)
+      g.append('line').attr('x1', xForValue(xAvg)).attr('x2', xForValue(xAvg)).attr('y1', 0).attr('y2', innerH)
         .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
       g.append('text').attr('x', 6).attr('y', y(yAvg)-6).attr('fill', '#555').attr('font-size', 11).text('Avg Y ' + fmt3(yAvg));
-      g.append('text').attr('x', x(xAvg)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11).text('Avg X ' + toPct(xAvg));
+      const xAvgLabel = xKey === 'playoff_probability' ? xAvg.toFixed(1) + '%' : toPct(xAvg);
+      g.append('text').attr('x', xForValue(xAvg)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11).text('Avg X ' + xAvgLabel);
 
       // Trend line
-      const { m, b } = regression(data.map(d => [+d.winPct, +d[cfg.key]]));
-      const xL = x.domain()[0], xR = x.domain()[1];
+      const { m, b } = regression(data.map(d => [+d[xKey], +d[cfg.key]]));
+      const xRange = [...xVals].sort((a,b) => a-b);
+      const xL = xRange[0], xR = xRange[xRange.length-1];
       g.append('line')
-        .attr('x1', x(xL)).attr('y1', y(m*xL + b))
-        .attr('x2', x(xR)).attr('y2', y(m*xR + b))
+        .attr('x1', xForValue(xL)).attr('y1', y(m*xL + b))
+        .attr('x2', xForValue(xR)).attr('y2', y(m*xR + b))
         .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
 
       // Tooltip
@@ -143,13 +226,21 @@
 
       const size = 30;
       const node = g.selectAll('.team').data(data, d => d.team).join('g').attr('class', 'team')
-        .attr('transform', d => `translate(${x(d.winPct)},${y(d[cfg.key])})`)
+        .attr('transform', d => `translate(${xForValue(d[xKey])},${y(d[cfg.key])})`)
         .on('mouseenter', function(evt, d){
-          const trend = m * d.winPct + b; const res = d[cfg.key] - trend;
-          tip.style('display','block').html(`<strong>${d.team}</strong>`+
-            `<br>${cfg.title}: ${fmt3(d[cfg.key])}`+
-            `<br>Win%: ${toPct(d.winPct)}`+
-            `<br>Δ vs trend: ${(res>=0?'+':'')+fmt3(res)}`);
+          const trend = m * d[xKey] + b; const res = d[cfg.key] - trend;
+          let html = `<strong>${d.team}</strong><br>${cfg.title}: ${fmt3(d[cfg.key])}`;
+          
+          if (xKey === 'playoff_probability') {
+            html += `<br>Playoff %: ${d.playoff_probability.toFixed(1)}%`;
+            if (d.winPct) html += `<br>Win%: ${toPct(d.winPct)}`;
+          } else {
+            html += `<br>Win%: ${toPct(d.winPct)}`;
+            if (d.playoff_probability) html += `<br>Playoff %: ${d.playoff_probability.toFixed(1)}%`;
+          }
+          
+          html += `<br>Δ vs trend: ${(res>=0?'+':'')+fmt3(res)}`;
+          tip.style('display','block').html(html);
         })
         .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
         .on('mouseleave', ()=> tip.style('display','none'));
@@ -159,7 +250,7 @@
         .attr('x', -(size/2 + 2)).attr('y', -(size/2 + 2))
         .attr('width', size + 4).attr('height', size + 4)
         .attr('rx', 4).attr('ry', 4)
-        .attr('fill', d => (+d[cfg.key] >= m*+d.winPct + b) ? 'var(--red)' : 'var(--blue)')
+        .attr('fill', d => (+d[cfg.key] >= m*+d[xKey] + b) ? 'var(--red)' : 'var(--blue)')
         .attr('opacity', .16);
 
       node.append('image')
@@ -169,9 +260,10 @@
         .attr('opacity', .95);
 
       // Labels
+      const xLabel = cfg.xLabel || (xKey === 'playoff_probability' ? 'Playoff Probability %' : 'Win/Loss Percentage');
       svg.append('text').attr('x', margin.left + innerW/2).attr('y', height-10)
         .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
-        .text('Win/Loss Percentage');
+        .text(xLabel);
       svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`) 
         .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
         .text(cfg.yLabel || (cfg.title + ' (higher is tougher)'));
@@ -186,7 +278,7 @@
     }
 
     function render() {
-      loadData().then(allRows => {
+      loadData().then(({ sos: allRows, teamMap }) => {
         const charts = [
           { key: 'ranked_sos_avg', title: 'Remaining Race SoS' },
           { key: 'past_ranked_sos_avg', title: 'Completed SoS' },
@@ -195,16 +287,37 @@
 
         const root = d3.select('#root');
 
-        // Conference filter
-        const sel = d3.select('#conf');
-        function redraw() {
-          const conf = sel.node().value;
-          root.selectAll('*').remove();
-          const rows = allRows.filter(r => conf === 'ALL' || (r.conference||'').toUpperCase() === conf);
-          charts.forEach(cfg => drawScatter(root, rows, cfg));
-        }
-        sel.on('change', redraw);
-        redraw();
+        loadPlayoffData(teamMap).then(playoffTeams => {
+          const sel = d3.select('#conf');
+          function redraw() {
+            const conf = sel.node().value;
+            root.selectAll('*').remove();
+            const rows = allRows.filter(r => conf === 'ALL' || (r.conference||'').toUpperCase() === conf);
+            charts.forEach(cfg => drawScatter(root, rows, cfg));
+
+            const playoffRows = playoffTeams.filter(r => conf === 'ALL' || (r.conference||'').toUpperCase() === conf);
+            drawScatter(root, playoffRows, { 
+              key: 'remaining_sos',
+              xKey: 'playoff_probability',
+              title: 'Remaining Race SoS vs Playoff Probability (5%-99.5%)', 
+              yLabel: 'Remaining Race SoS (higher is tougher)',
+              xLabel: 'Playoff Probability %'
+            });
+          }
+          sel.on('change', redraw);
+          redraw();
+        }).catch(err => {
+          console.warn('Playoff data not available:', err);
+          const sel = d3.select('#conf');
+          function redraw() {
+            const conf = sel.node().value;
+            root.selectAll('*').remove();
+            const rows = allRows.filter(r => conf === 'ALL' || (r.conference||'').toUpperCase() === conf);
+            charts.forEach(cfg => drawScatter(root, rows, cfg));
+          }
+          sel.on('change', redraw);
+          redraw();
+        });
       }).catch(err => {
         d3.select('#root').append('div').style('color','crimson').text('Failed to load data: '+err);
         console.error(err);
@@ -216,8 +329,8 @@
 </head>
 <body>
   <div class="container">
-    <h1>Strength of Schedule — Three Graphics</h1>
-    <div class="subtitle">X = Win/Loss %, Y = SoS. Colored squares: red if above the trend line (tougher), blue if below. Dashed lines show mean X and mean Y. Trend line in gray.</div>
+    <h1>Strength of Schedule — Four Graphics</h1>
+    <div class="subtitle">Graphs 1-3: X = Win% (10% steps), Y = SoS (fine scale). Graph 4: X = Playoff% (10% steps), Y = Remaining SoS (fine scale). Colored squares: red if above trend (tougher), blue if below. Dashed lines show means. Trend line in gray.</div>
     <div class="controls">
       <label for="conf">Conference:</label>
       <select id="conf">
@@ -229,33 +342,41 @@
     <details class="info" open>
       <summary>Что показывают графики</summary>
       <p>
-        На странице три диаграммы рассеяния — по одной для каждой метрики сложности календаря (SoS). 
-        По горизонтали (ось X) — процент побед команды (Win/Loss %). По вертикали (ось Y) — выбранная метрика SoS; 
-        подсказка на подписи оси напоминает, что «выше — сложнее».
+        На странице четыре диаграммы рассеяния. <strong>Графики 1-3</strong> показывают все команды (кроме экстремальных): по оси X — процент побед (Win%) с шагом 10%, по оси Y — разные метрики SoS. 
+        <strong>График 4</strong> показывает только команды с шансами на плей-офф от 5% до 99.5%: по оси X — вероятность плей-офф (Playoff %) с шагом 10%, по оси Y — сложность оставшихся матчей (Remaining Race SoS).
       </p>
       <ul>
+        <li><strong>Линейная шкала X</strong>: ось X использует стандартную линейную шкалу с делениями через 10% (0%, 10%, 20%... 90%, 100%).</li>
+        <li><strong>Детализированная шкала Y</strong>: увеличенное количество делений (шаг 0.025-0.05) и оптимизированный диапазон для лучшего распределения кластеризованных команд.</li>
         <li><strong>Пунктирные линии</strong>: средние значения по X (вертикальная) и по Y (горизонтальная).</li>
-        <li><strong>Серая наклонная линия</strong>: общий <em>тренд</em> (линейная регрессия) между Win% и метрикой SoS.</li>
-        <li><strong>Цвет квадратов</strong>: красный — точка <em>выше линии тренда</em> (тяжелее, чем ожидается по тренду), синий — <em>ниже тренда</em> (проще).</li>
-        <li><strong>Фильтр «Conference»</strong>: оставляет AFC, NFC или все команды сразу — применимо ко всем трём графикам.</li>
-        <li><strong>Подсказка при наведении</strong> показывает: метрику SoS, Win% и разницу до тренда (Δ vs trend).</li>
+        <li><strong>Серая наклонная линия</strong>: общий <em>тренд</em> (линейная регрессия) между X и Y метриками.</li>
+        <li><strong>Цвет квадратов</strong>: красный — точка <em>выше линии тренда</em>, синий — <em>ниже тренда</em>.</li>
+        <li><strong>Фильтр «Conference»</strong>: оставляет AFC, NFC или все команды сразу — применимо ко всем четырём графикам.</li>
+        <li><strong>Подсказка при наведении</strong> показывает: метрику, Win%, вероятность плей-офф (для 4-го графика) и разницу до тренда (Δ vs trend).</li>
       </ul>
       <p><strong>Как читать квадранты (относительно средних X и Y):</strong></p>
       <ul>
-        <li>Правый верхний — высокий Win% и высокая сложность: сильная форма при сложном календаре.</li>
-        <li>Правый нижний — высокий Win%, но низкая сложность: результат достигнут на более лёгком отрезке.</li>
-        <li>Левый верхний — низкий Win%, но высокая сложность: тяжелый календарь относительно текущей формы.</li>
-        <li>Левый нижний — низкий Win% и низкая сложность: результаты ниже ожиданий даже при простом графике.</li>
+        <li><strong>Графики 1-3 (Win% vs SoS):</strong></li>
+        <li style="margin-left: 20px;">Правый верхний — высокий Win% и высокая сложность: сильная форма при сложном календаре.</li>
+        <li style="margin-left: 20px;">Правый нижний — высокий Win%, но низкая сложность: результат достигнут на более лёгком отрезке.</li>
+        <li style="margin-left: 20px;">Левый верхний — низкий Win%, но высокая сложность: тяжелый календарь относительно текущей формы.</li>
+        <li style="margin-left: 20px;">Левый нижний — низкий Win% и низкая сложность: результаты ниже ожиданий даже при простом графике.</li>
+        <li><strong>График 4 (Playoff% vs Remaining SoS):</strong></li>
+        <li style="margin-left: 20px;">Правый верхний — высокая вероятность плей-офф, но тяжелый остаток: нужно сохранить позицию при сложных матчах.</li>
+        <li style="margin-left: 20px;">Правый нижний — высокая вероятность плей-офф и лёгкий остаток: благоприятная ситуация для выхода в плей-офф.</li>
+        <li style="margin-left: 20px;">Левый верхний — низкая вероятность плей-офф и тяжелый остаток: сложная борьба за место.</li>
+        <li style="margin-left: 20px;">Левый нижний — низкая вероятность плей-офф, но лёгкий остаток: шанс улучшить позицию при удачном финише.</li>
       </ul>
       <p><strong>Метрики графиков:</strong></p>
       <ul>
-        <li><em>Remaining Race SoS</em> — средняя сложность оставшихся матчей.</li>
-        <li><em>Completed SoS</em> — средняя сложность уже сыгранных матчей.</li>
-        <li><em>Total SoS for the Season</em> — совокупная сложность сезона (сыгранные + оставшиеся).</li>
+        <li><em>График 1 — Remaining Race SoS vs Win%</em>: средняя сложность оставшихся матчей (все команды).</li>
+        <li><em>График 2 — Completed SoS vs Win%</em>: средняя сложность уже сыгранных матчей (все команды).</li>
+        <li><em>График 3 — Total SoS vs Win%</em>: совокупная сложность сезона (все команды).</li>
+        <li><em>График 4 — Remaining Race SoS vs Playoff%</em>: сложность оставшихся матчей в зависимости от шансов плей-офф (5%-99.5%).</li>
       </ul>
     </details>
     <div id="root"></div>
-    <div class="subtitle">Data: output/ranked_sos_by_conference.csv + MEGA_teams.csv</div>
+    <div class="subtitle">Data: output/ranked_sos_by_conference.csv + MEGA_teams.csv + output/playoff_probabilities.json</div>
   </div>
 </body>
 </html>
