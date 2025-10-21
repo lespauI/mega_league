@@ -2,7 +2,8 @@
 import os
 from pathlib import Path
 
-DOCS_DIR = Path(__file__).parent.parent / "docs"
+ROOT_DIR = Path(__file__).parent.parent
+DOCS_DIR = ROOT_DIR / "docs"
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -164,7 +165,7 @@ def generate_section(title, files):
     for filename in files:
         resource_title = format_title(filename)
         resource_desc = get_file_description(filename)
-        items.append(f"""                <a href="{filename}" class="resource-item">
+        items.append(f"""                <a href="docs/{filename}" class="resource-item">
                     <div class="resource-title">{resource_title}</div>
                     <div class="resource-desc">{resource_desc}</div>
                 </a>""")
@@ -187,11 +188,11 @@ def main():
     
     html_content = HTML_TEMPLATE.format(sections='\n        \n'.join(sections))
     
-    output_path = DOCS_DIR / "index.html"
+    output_path = ROOT_DIR / "index.html"
     with open(output_path, 'w', encoding='utf-8') as f:
         f.write(html_content)
     
-    print(f"Generated index.html with {sum(len(files) for files in categories.values())} files")
+    print(f"Generated index.html in root with {sum(len(files) for files in categories.values())} files from docs/")
     for category, files in categories.items():
         print(f"  {category}: {len(files)} files")
 
