@@ -248,6 +248,7 @@ def main():
     print("="*80)
     
     scripts = [
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False),
         ('scripts/calc_playoff_probabilities.py', 'Playoff Probability Calculation', False),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False),
         ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False),
@@ -274,6 +275,7 @@ def main():
         print("ALL SCRIPTS COMPLETED SUCCESSFULLY!")
         print("="*80)
         print("\nGenerated files:")
+        print("  • output/ranked_sos_by_conference.csv - Strength of schedule data")
         print("  • output/playoff_probabilities.json - Playoff probabilities data")
         print("  • docs/playoff_race_table.html - Interactive playoff race table")
         print("  • docs/playoff_race.html - Full playoff analysis report (with embedded table)")
