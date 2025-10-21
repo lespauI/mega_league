@@ -211,7 +211,7 @@ def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_
     if quality_bonus > 0:
         formula_parts.append(f"+ бонус за качество побед: {quality_bonus:.1f}%")
     if seed_bonus > 0:
-        formula_parts.append(f"+ бонус за посев #1: {seed_bonus:.1f}%")
+        formula_parts.append(f"+ бонус за фаворита #1 сид: {seed_bonus:.1f}%")
     
     return f'''<div class="prob-tooltip">
         <strong>Вероятность Суперкубка: {sb_prob:.1f}%</strong><br><br>
@@ -623,6 +623,19 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
             if divs[div_name]:
                 all_div_leaders.append(divs[div_name][0])
         
+        all_conf_teams = []
+        for div_name in divs:
+            all_conf_teams.extend(divs[div_name])
+        
+        top_bye_team = None
+        max_bye_prob = 0
+        for team_data in all_conf_teams:
+            team_name = team_data['team']
+            bye_prob = get_round1_bye_prob(team_name, all_div_leaders, probabilities)
+            if bye_prob > max_bye_prob:
+                max_bye_prob = bye_prob
+                top_bye_team = team_name
+        
         html.append(f'        <div class="conference-section">')
         html.append(f'            <div class="conference-header">{conf_name}</div>')
         html.append('            <table>')
@@ -652,7 +665,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 div_prob = get_division_leader_prob(team_name, teams, probabilities)
                 bye_prob = get_round1_bye_prob(team_name, all_div_leaders, probabilities)
                 quality_of_wins = team_data.get('past_ranked_sos_avg', 0.5)
-                is_top_seed = bye_prob >= 80
+                is_top_seed = (team_name == top_bye_team)
                 sb_prob = calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed)
                 
                 sos = team_data['remaining_sos']
