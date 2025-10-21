@@ -7,41 +7,41 @@
 ### AFC Playoff Standings
 
 **Division Leaders:**
-- **Seed 1:** Broncos (12-1) - West | Playoff: 99.5% | SOS: 0.459
+- **Seed 1:** Broncos (12-1) - West | Playoff: 99.5% | SOS: 0.461
 - **Seed 2:** Titans (12-2) - South | Playoff: 99.5% | SOS: 0.509
-- **Seed 3:** Patriots (10-3) - East | Playoff: 99.5% | SOS: 0.430
-- **Seed 4:** Ravens (10-4) - North | Playoff: 99.5% | SOS: 0.538
+- **Seed 3:** Patriots (10-3) - East | Playoff: 99.5% | SOS: 0.434
+- **Seed 4:** Ravens (10-4) - North | Playoff: 99.5% | SOS: 0.541
 
 **Wild Card Race:**
-- **Seed 5:** Raiders (8-5) | Playoff: 93.1% | SOS: 0.453
-- **Seed 6:** Chargers (7-6) | Playoff: 47.8% | SOS: 0.530
-- **Seed 7:** Bengals (7-7) | Playoff: 70.6% | SOS: 0.270
-- **Seed 8:** Jaguars (7-7) | Playoff: 20.9% | SOS: 0.630
-- **Seed 9:** Texans (6-7) | Playoff: 19.7% | SOS: 0.384
+- **Seed 5:** Raiders (8-5) | Playoff: 94.9% | SOS: 0.457
+- **Seed 6:** Chargers (7-6) | Playoff: 49.6% | SOS: 0.531
+- **Seed 7:** Bengals (7-7) | Playoff: 69.2% | SOS: 0.276
+- **Seed 8:** Jaguars (7-7) | Playoff: 19.6% | SOS: 0.638
+- **Seed 9:** Texans (6-7) | Playoff: 18.1% | SOS: 0.391
 
 **On the Bubble:**
-- **10.** Steelers (6-7) | Playoff: 21.8% | SOS: 0.547
-- **11.** Dolphins (6-7) | Playoff: 20.4% | SOS: 0.584
-- **12.** Browns (6-8) | Playoff: 2.8% | SOS: 0.449
+- **10.** Steelers (6-7) | Playoff: 22.0% | SOS: 0.553
+- **11.** Dolphins (6-7) | Playoff: 24.3% | SOS: 0.592
+- **12.** Browns (6-8) | Playoff: 3.5% | SOS: 0.455
 
 ### NFC Playoff Standings
 
 **Division Leaders:**
-- **Seed 1:** Lions (9-4) - North | Playoff: 99.5% | SOS: 0.431
-- **Seed 2:** Buccaneers (9-5) - South | Playoff: 99.5% | SOS: 0.555
-- **Seed 3:** Giants (8-5) - East | Playoff: 99.5% | SOS: 0.484
-- **Seed 4:** Seahawks (8-5) - West | Playoff: 99.5% | SOS: 0.525
+- **Seed 1:** Lions (10-4) - North | Playoff: 99.5% | SOS: 0.425
+- **Seed 2:** Buccaneers (9-5) - South | Playoff: 99.5% | SOS: 0.557
+- **Seed 3:** Giants (8-5) - East | Playoff: 99.5% | SOS: 0.486
+- **Seed 4:** Seahawks (8-6) - West | Playoff: 99.5% | SOS: 0.582
 
 **Wild Card Race:**
-- **Seed 5:** Saints (8-5) | Playoff: 75.3% | SOS: 0.566
-- **Seed 6:** Falcons (8-6) | Playoff: 65.9% | SOS: 0.393
-- **Seed 7:** Cowboys (8-6) | Playoff: 67.9% | SOS: 0.535
-- **Seed 8:** Commanders (7-6) | Playoff: 45.2% | SOS: 0.461
-- **Seed 9:** Panthers (7-6) | Playoff: 28.3% | SOS: 0.614
+- **Seed 5:** Saints (8-5) | Playoff: 74.5% | SOS: 0.573
+- **Seed 6:** Falcons (8-6) | Playoff: 63.6% | SOS: 0.390
+- **Seed 7:** Cowboys (8-6) | Playoff: 66.0% | SOS: 0.544
+- **Seed 8:** Commanders (7-6) | Playoff: 45.7% | SOS: 0.466
+- **Seed 9:** Panthers (7-6) | Playoff: 27.5% | SOS: 0.593
 
 **On the Bubble:**
-- **10.** 49ers (7-7) | Playoff: 44.8% | SOS: 0.531
-- **11.** Bears (7-7) | Playoff: 22.3% | SOS: 0.626
+- **10.** 49ers (7-7) | Playoff: 42.2% | SOS: 0.494
+- **11.** Bears (7-7) | Playoff: 23.2% | SOS: 0.621
 - **12.** Vikings (6-8) | Playoff: 0.9% | SOS: 0.594
 
 ---
@@ -52,9 +52,9 @@
 
 **INTENSE 6-7 LOGJAM!** Five teams at 6-7 fighting for the last playoff spots:
 
-- **Texans**: Playoff 19.7% | SOS 0.384 🟢 Best path
-- **Steelers**: Playoff 21.8% | SOS 0.547 🟡 Balanced
-- **Dolphins**: Playoff 20.4% | SOS 0.584 🔴 Brutal
+- **Texans**: Playoff 18.1% | SOS 0.391 🟢 Best path
+- **Steelers**: Playoff 22.0% | SOS 0.553 🔴 Brutal
+- **Dolphins**: Playoff 24.3% | SOS 0.592 🔴 Brutal
 
 **Analysis:** Bengals and Texans have easiest schedules - they're positioned to surge!
 
@@ -62,10 +62,10 @@
 
 Three teams at 8-5, one at 7-6. Anyone can win this division:
 
-- **Buccaneers** (9-5): Playoff 95.9% | SOS 0.555
-- **Saints** (8-5): Playoff 75.3% | SOS 0.566
-- **Falcons** (8-6): Playoff 65.9% | SOS 0.393
-- **Panthers** (7-6): Playoff 28.3% | SOS 0.614
+- **Buccaneers** (9-5): Playoff 95.2% | SOS 0.557
+- **Saints** (8-5): Playoff 74.5% | SOS 0.573
+- **Falcons** (8-6): Playoff 63.6% | SOS 0.390
+- **Panthers** (7-6): Playoff 27.5% | SOS 0.593
 
 **Analysis:** Falcons (0.433) vs Saints (0.612) - massive 0.179 SOS gap could flip the division!
 
@@ -73,7 +73,7 @@ Three teams at 8-5, one at 7-6. Anyone can win this division:
 
 Four teams at 7-6 fighting for final spots:
 
-- **Commanders**: Playoff 45.2% | SOS 0.461
-- **Panthers**: Playoff 28.3% | SOS 0.614
+- **Commanders**: Playoff 45.7% | SOS 0.466
+- **Panthers**: Playoff 27.5% | SOS 0.593
 
 **Analysis:** Commanders have easiest remaining schedule - prime position to sneak in!

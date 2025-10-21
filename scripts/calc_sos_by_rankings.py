@@ -131,8 +131,8 @@ def read_teams_info(teams_csv_path):
 
             info[key] = {
                 "conference": (row.get("conferenceName") or "").strip(),
-                "W": to_int0(row.get("totalWins")),
-                "L": to_int0(row.get("totalLosses")),
+                "W": to_int0(row.get("totalLosses")),
+                "L": to_int0(row.get("totalWins")),
             }
     return info
 
