@@ -335,11 +335,11 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
             </div>
             <div class="legend-item">
                 <div class="legend-box" style="background: #eab308;"></div>
-                <span>Bubble (>20% chance)</span>
+                <span>Bubble (>5% chance)</span>
             </div>
             <div class="legend-item">
                 <div class="legend-box" style="background: #ef4444;"></div>
-                <span>Long Shot (<20%)</span>
+                <span>Long Shot (<5%)</span>
             </div>
         </div>
 ''')
@@ -351,7 +351,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         html.append(f'            <div class="conference">')
         html.append(f'                <h2>{conf_name} Playoff Picture</h2>')
         
-        wc_with_chances = [t for t in wc if t.get('playoff_chance', 0) > 20]
+        wc_with_chances = [t for t in wc if t.get('playoff_chance', 0) > 5]
         all_teams = leaders[:4] + wc_with_chances
         
         for i, team in enumerate(all_teams):
@@ -366,7 +366,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
                 seed_class = 'seed-wc'
                 badge_class = 'badge-wc'
                 badge_text = f'WC {seed}'
-            elif playoff_chance > 20:
+            elif playoff_chance > 5:
                 seed_class = 'seed-bubble'
                 badge_class = 'badge-bubble'
                 badge_text = f'#{seed}'
