@@ -244,11 +244,11 @@ In the receiving game, Los Angeles’ Ladd McConkey has 8 receptions for 132 yar
 5391810,544735488,MEGA,Buccaneers,Saints,17,21,False,False,0,1,13,3,False,False,False,,0.0,0.0,,
 5391822,544735500,MEGA,Chargers,Eagles,14,28,False,False,0,1,13,3,False,False,False,,0.0,0.0,,
 5391835,544735513,MEGA,49ers,Titans,28,27,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
-5391834,544735512,MEGA,Broncos,Packers,0,0,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
-5391832,544735510,MEGA,Saints,Panthers,0,0,False,False,0,1,14,1,False,False,False,,0.0,0.0,,
+5391834,544735512,MEGA,Broncos,Packers,10,35,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
+5391832,544735510,MEGA,Saints,Panthers,25,28,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
 5391836,544735514,MEGA,Rams,Lions,34,27,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
 5391837,544735515,MEGA,Cowboys,Vikings,31,24,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
-5391831,544735509,MEGA,Texans,Cardinals,0,0,False,False,0,1,14,1,False,False,False,,0.0,0.0,,"The Arizona Cardinals visit the Houston Texans in a matchup featuring contrasting team performances this season. Houston enters with a 6-7 record, averaging 322 total yards per game, including 245 passing yards and 77 rushing yards. The Texans have been relatively disciplined with only 2 turnovers per game. In contrast, Arizona holds a 1-12 record and averages 207 total yards per game, with 133 passing yards and 74 rushing yards, but struggles with ball security, committing 4 turnovers per game.
+5391831,544735509,MEGA,Texans,Cardinals,7,31,False,False,0,1,14,3,False,False,False,,0.0,0.0,,"The Arizona Cardinals visit the Houston Texans in a matchup featuring contrasting team performances this season. Houston enters with a 6-7 record, averaging 322 total yards per game, including 245 passing yards and 77 rushing yards. The Texans have been relatively disciplined with only 2 turnovers per game. In contrast, Arizona holds a 1-12 record and averages 207 total yards per game, with 133 passing yards and 74 rushing yards, but struggles with ball security, committing 4 turnovers per game.
 
 Houston’s offense is led by quarterback C.J. Stroud, who has posted strong numbers with 340 yards, 3 touchdowns, and 1 interception in one game, and 326 yards, 4 touchdowns, and no interceptions in another. Running back Joe Mixon has been effective on the ground, rushing for 149 yards and 1 touchdown on 14 attempts in one outing, and 123 yards with 2 touchdowns on 23 attempts in another. Wide receiver Trey McBride has been a key target, recording 10 receptions for 179 yards in one game and 5 receptions for 161 yards and 1 touchdown in another.
 
@@ -257,11 +257,11 @@ Defensively, Houston’s Jalen Pitre leads with 6 total tackles, while Baron Bro
 5391824,544735502,MEGA,Bengals,Ravens,7,40,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
 5391838,544735516,MEGA,Steelers,Dolphins,28,21,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
 5391826,544735504,MEGA,Giants,Commanders,23,27,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
-5391825,544735503,MEGA,Chiefs,Chargers,0,0,False,False,0,1,14,1,False,False,False,,0.0,0.0,,
+5391825,544735503,MEGA,Chiefs,Chargers,16,13,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
 5391827,544735505,MEGA,Bears,Browns,22,20,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
 5391828,544735506,MEGA,Jaguars,Jets,12,37,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
-5391829,544735507,MEGA,Patriots,Bills,0,0,False,False,0,1,14,1,False,False,False,,0.0,0.0,,
-5391830,544735508,MEGA,Eagles,Raiders,0,0,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
+5391829,544735507,MEGA,Patriots,Bills,22,38,False,False,0,1,14,3,False,False,False,,0.0,0.0,,
+5391830,544735508,MEGA,Eagles,Raiders,20,14,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
 5391833,544735511,MEGA,Seahawks,Colts,37,31,False,False,0,1,14,2,False,False,False,,0.0,0.0,,
 5391844,544735522,MEGA,Browns,Bills,0,0,False,False,0,1,15,1,False,False,False,,0.0,0.0,,
 5391841,544735519,MEGA,Bears,Packers,0,0,False,False,0,1,15,1,False,False,False,,0.0,0.0,,
@@ -278,7 +278,7 @@ Defensively, Houston’s Jalen Pitre leads with 6 total tackles, while Baron Bro
 5391853,544735531,MEGA,Dolphins,Bengals,0,0,False,False,0,1,15,1,False,False,False,,0.0,0.0,,
 5391854,544735532,MEGA,Colts,49ers,0,0,False,False,0,1,15,1,False,False,False,,0.0,0.0,,
 5391840,544735518,MEGA,Commanders,Eagles,0,0,False,False,0,1,15,1,False,False,False,,0.0,0.0,,
-5391839,544735517,MEGA,Seahawks,Rams,0,0,False,False,0,1,15,1,False,False,False,,0.0,0.0,,
+5391839,544735517,MEGA,Seahawks,Rams,0,0,True,False,0,1,15,1,False,False,False,,0.0,0.0,,
 5391860,544735538,MEGA,Bengals,Cardinals,0,0,False,False,0,1,16,1,False,False,False,,0.0,0.0,,
 5391863,544735541,MEGA,Colts,Jaguars,0,0,False,False,0,1,16,1,False,False,False,,0.0,0.0,,
 5391866,544735544,MEGA,Panthers,Seahawks,0,0,False,False,0,1,16,1,False,False,False,,0.0,0.0,,

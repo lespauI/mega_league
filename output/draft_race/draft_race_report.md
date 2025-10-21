@@ -25,7 +25,7 @@
 - **Pick 13:** Jaguars (AFC) - 7-7 | Remaining SOS: 0.646 🔴 Brutal
 - **Pick 14:** Dolphins (AFC) - 7-7 | Remaining SOS: 0.645 🔴 Brutal
 - **Pick 15:** Bears (NFC) - 7-7 | Remaining SOS: 0.616 🔴 Brutal
-- **Pick 16:** 49ers (NFC) - 7-7 | Remaining SOS: 0.495 🟡 Balanced
+- **Pick 16:** Panthers (NFC) - 7-7 | Remaining SOS: 0.576 🔴 Brutal
 
 ---
 
