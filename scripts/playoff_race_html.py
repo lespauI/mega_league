@@ -734,9 +734,7 @@ def create_markdown_report(afc_leaders, afc_wc, nfc_leaders, nfc_wc):
 def main():
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
-    print("Calculating playoff probabilities with tiebreaker rules...")
-    os.system('python3 scripts/calc_playoff_probabilities.py')
-    
+    print("Loading playoff probabilities...")
     with open('output/playoff_probabilities.json', 'r', encoding='utf-8') as f:
         probabilities = json.load(f)
     

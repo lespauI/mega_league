@@ -129,7 +129,7 @@ def get_playoff_tooltip(playoff_prob, team_name, team_data):
         • Текущий счёт: {wins}-{losses}<br>
         • Осталось игр: {remaining}<br>
         • В {playoff_prob:.0f}% симуляций команда попала в топ-7 конференции<br><br>
-        Каждая симуляция случайным образом разыгрывает оставшиеся матчи на основе силы команд и домашнего преимущества.
+        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
     </div>'''
 
 def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
