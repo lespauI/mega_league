@@ -74,7 +74,8 @@ def read_standings():
                 'remaining_sos': float(row['ranked_sos_avg']),
                 'remaining_games': int(row['remaining_games']),
                 'logo_url': teams_div[team]['logo_url'],
-                'remaining_opponents': opponent_details
+                'remaining_opponents': opponent_details,
+                'past_ranked_sos_avg': float(row['past_ranked_sos_avg'])
             }
             
             if conf == 'AFC':
@@ -96,15 +97,26 @@ def get_division_leader_prob(team_name, div_teams, probabilities):
 def get_round1_bye_prob(team_name, all_div_leaders, probabilities):
     return probabilities.get(team_name, {}).get('bye_probability', 0)
 
-def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob):
+def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed):
+    if playoff_prob == 0:
+        return 0.0
+    
     if playoff_prob < 50:
-        return round(playoff_prob * 0.05, 1)
+        base_multiplier = 3.0
     elif playoff_prob < 90:
-        return round(playoff_prob * 0.10, 1)
+        base_multiplier = 5.0
+    elif playoff_prob < 95:
+        base_multiplier = 7.0
     else:
-        base = playoff_prob * 0.12
-        bye_bonus = bye_prob * 0.05
-        return round(base + bye_bonus, 1)
+        base_multiplier = 9.0
+    
+    quality_bonus = max(0, min(10.0, ((quality_of_wins - 0.45) / (0.58 - 0.45)) * 10.0))
+    
+    seed_bonus = 5.0 if is_top_seed else 0.0
+    
+    total_multiplier = base_multiplier + quality_bonus + seed_bonus
+    
+    return round(playoff_prob * total_multiplier / 100, 1)
 
 def get_playoff_tooltip(playoff_prob, team_name, team_data):
     wins = team_data['W']
@@ -171,36 +183,47 @@ def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div>'''
 
-def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob):
+def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed):
+    if playoff_prob == 0:
+        return f'''<div class="prob-tooltip">
+            <strong>Вероятность Суперкубка: 0%</strong><br><br>
+            Команда не попадает в плей-офф.
+        </div>'''
+    
     if playoff_prob < 50:
-        return f'''<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: {sb_prob:.0f}%</strong><br><br>
-            Низкая вероятность из-за слабых шансов на плей-офф.<br><br>
-            • Плей-офф: {playoff_prob:.0f}%<br>
-            • Формула: {playoff_prob:.0f}% × 5% = {sb_prob:.1f}%<br><br>
-            Команды с низкими шансами на плей-офф имеют минимальные шансы на титул.
-        </div>'''
+        base_mult = 3.0
+        tier_desc = "Низкая вероятность - аутсайдер плей-офф"
     elif playoff_prob < 90:
-        return f'''<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: {sb_prob:.0f}%</strong><br><br>
-            Средняя вероятность.<br><br>
-            • Плей-офф: {playoff_prob:.0f}%<br>
-            • Формула: {playoff_prob:.0f}% × 10% = {sb_prob:.1f}%<br><br>
-            Стабильные команды имеют реальные шансы.
-        </div>'''
+        base_mult = 5.0
+        tier_desc = "Средняя вероятность - претендент на плей-офф"
+    elif playoff_prob < 95:
+        base_mult = 7.0
+        tier_desc = "Высокая вероятность - сильный претендент"
     else:
-        base = playoff_prob * 0.12
-        bye_bonus = bye_prob * 0.05
-        return f'''<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: {sb_prob:.0f}%</strong><br><br>
-            Высокая вероятность - элитная команда.<br><br>
-            • Плей-офф: {playoff_prob:.0f}%<br>
-            • Побед. в див.: {div_prob:.0f}%<br>
-            • Бай 1-го раунда: {bye_prob:.0f}%<br><br>
-            Формула:<br>
-            ({playoff_prob:.0f}% × 12%) + ({bye_prob:.0f}% × 5%)<br>
-            = {base:.1f}% + {bye_bonus:.1f}% = {sb_prob:.1f}%
-        </div>'''
+        base_mult = 9.0
+        tier_desc = "Очень высокая вероятность - элитная команда"
+    
+    quality_bonus = max(0, min(10.0, ((quality_of_wins - 0.45) / (0.58 - 0.45)) * 10.0))
+    seed_bonus = 5.0 if is_top_seed else 0.0
+    total_mult = base_mult + quality_bonus + seed_bonus
+    
+    formula_parts = [f"{playoff_prob:.0f}% × {base_mult:.1f}% = {playoff_prob * base_mult / 100:.1f}%"]
+    if quality_bonus > 0:
+        formula_parts.append(f"+ бонус за качество побед: {quality_bonus:.1f}%")
+    if seed_bonus > 0:
+        formula_parts.append(f"+ бонус за посев #1: {seed_bonus:.1f}%")
+    
+    return f'''<div class="prob-tooltip">
+        <strong>Вероятность Суперкубка: {sb_prob:.1f}%</strong><br><br>
+        {tier_desc}.<br><br>
+        • Плей-офф: {playoff_prob:.0f}%<br>
+        • Побед. в див.: {div_prob:.0f}%<br>
+        • Бай 1-го раунда: {bye_prob:.0f}%<br>
+        • Качество побед: {quality_of_wins:.3f}<br><br>
+        Формула:<br>
+        {"<br>".join(formula_parts)}<br>
+        = {sb_prob:.1f}%
+    </div>'''
 
 def get_rank_class(rank):
     if rank <= 10:
@@ -628,7 +651,9 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 playoff_prob = prob_data.get('playoff_probability', 0)
                 div_prob = get_division_leader_prob(team_name, teams, probabilities)
                 bye_prob = get_round1_bye_prob(team_name, all_div_leaders, probabilities)
-                sb_prob = calculate_superbowl_prob(playoff_prob, div_prob, bye_prob)
+                quality_of_wins = team_data.get('past_ranked_sos_avg', 0.5)
+                is_top_seed = bye_prob >= 80
+                sb_prob = calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed)
                 
                 sos = team_data['remaining_sos']
                 logo_url = team_data.get('logo_url', '')
@@ -676,7 +701,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 playoff_tooltip = get_playoff_tooltip(playoff_prob, team_name, team_data)
                 div_tooltip = get_division_tooltip(div_prob, team_name, teams, probabilities)
                 bye_tooltip = get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities)
-                sb_tooltip = get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob)
+                sb_tooltip = get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed)
                 
                 html.append(f'                    <tr class="{row_class}">')
                 html.append(f'                        <td class="div-cell">{div_short if idx == 0 else ""}</td>')
