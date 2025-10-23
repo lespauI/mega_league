@@ -112,6 +112,7 @@ def get_file_description(filename):
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
         'team_stats_explorer.html': '📊 Interactive Win% correlation explorer with 20+ team metrics',
         'team_stats_correlations.html': '🔍 34 cross-metric correlation graphs revealing strategic insights',
+        'team_player_usage.html': '👥 10 player usage distribution graphs (WR/RB/TE target shares, bellcow vs committee)',
         'afc_race.png': 'AFC playoff standings and race visualization',
         'afc_compl.png': 'AFC season completion metrics',
         'nfc_race.png': 'NFC playoff standings and race visualization',
@@ -183,25 +184,31 @@ def generate_section(title, files):
     return section
 
 def run_aggregation_script():
-    """Run the team stats aggregation script to generate CSV data."""
-    script_path = ROOT_DIR / "stats_scripts" / "aggregate_team_stats.py"
-    if script_path.exists():
-        print("Running team stats aggregation script...")
-        try:
-            result = subprocess.run(
-                ["python3", str(script_path)],
-                cwd=str(ROOT_DIR),
-                capture_output=True,
-                text=True
-            )
-            if result.returncode == 0:
-                print("✓ Team stats aggregated successfully")
-            else:
-                print(f"⚠ Aggregation script warning: {result.stderr}")
-        except Exception as e:
-            print(f"⚠ Could not run aggregation script: {e}")
-    else:
-        print("⚠ Aggregation script not found, skipping")
+    """Run the team stats aggregation scripts to generate CSV data."""
+    scripts = [
+        ("stats_scripts/aggregate_team_stats.py", "Team stats"),
+        ("stats_scripts/aggregate_player_usage.py", "Player usage")
+    ]
+    
+    for script_rel, name in scripts:
+        script_path = ROOT_DIR / script_rel
+        if script_path.exists():
+            print(f"Running {name} aggregation script...")
+            try:
+                result = subprocess.run(
+                    ["python3", str(script_path)],
+                    cwd=str(ROOT_DIR),
+                    capture_output=True,
+                    text=True
+                )
+                if result.returncode == 0:
+                    print(f"✓ {name} aggregated successfully")
+                else:
+                    print(f"⚠ {name} aggregation warning: {result.stderr}")
+            except Exception as e:
+                print(f"⚠ Could not run {name} aggregation: {e}")
+        else:
+            print(f"⚠ {name} aggregation script not found, skipping")
 
 def main():
     run_aggregation_script()
