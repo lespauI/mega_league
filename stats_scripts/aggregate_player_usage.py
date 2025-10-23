@@ -38,11 +38,17 @@ def aggregate_player_usage(base_path):
     receiving = load_csv(base_path / 'MEGA_receiving.csv')
     rushing = load_csv(base_path / 'MEGA_rushing.csv')
     teams_csv = load_csv(base_path / 'MEGA_teams.csv')
+    team_stats = load_csv(base_path / 'output' / 'team_aggregated_stats.csv')
     
     teams_map = {}
     for t in teams_csv:
         if t.get('displayName'):
             teams_map[t['displayName']] = t
+    
+    stats_map = {}
+    for s in team_stats:
+        if s.get('team'):
+            stats_map[s['team']] = s
     
     team_names = sorted(teams_map.keys())
     
@@ -148,6 +154,26 @@ def aggregate_player_usage(base_path):
         
         usage_data['pass_distribution_style'] = 'Concentrated' if usage_data['pass_concentration'] > 1500 else ('Balanced' if usage_data['pass_concentration'] > 1000 else 'Spread')
         usage_data['rush_distribution_style'] = 'Bellcow' if usage_data['rb1_share'] > 70 else ('RBBC' if usage_data['rbbc'] else 'Feature Back')
+        
+        team_stat = stats_map.get(team, {})
+        usage_data['qb_rating'] = safe_float(team_stat.get('qb_rating'))
+        usage_data['pass_int_pct'] = safe_float(team_stat.get('pass_int_pct'))
+        usage_data['sack_rate'] = safe_float(team_stat.get('sack_rate'))
+        usage_data['pass_td_pct'] = safe_float(team_stat.get('pass_td_pct'))
+        usage_data['pass_comp_pct'] = safe_float(team_stat.get('pass_comp_pct'))
+        usage_data['rush_broken_tackle_rate'] = safe_float(team_stat.get('rush_broken_tackle_rate'))
+        usage_data['rush_yds_per_att'] = safe_float(team_stat.get('rush_yds_per_att'))
+        usage_data['pass_yds_per_att'] = safe_float(team_stat.get('pass_yds_per_att'))
+        usage_data['yds_per_play'] = safe_float(team_stat.get('yds_per_play'))
+        usage_data['td_per_play'] = safe_float(team_stat.get('td_per_play'))
+        usage_data['turnover_diff'] = safe_float(team_stat.get('turnover_diff'))
+        usage_data['explosive_plays_per_game'] = safe_float(team_stat.get('explosive_plays_per_game'))
+        usage_data['def_sacks_per_game'] = safe_float(team_stat.get('def_sacks_per_game'))
+        usage_data['rush_td_pct'] = safe_float(team_stat.get('rush_td_pct'))
+        usage_data['drop_rate'] = safe_float(team_stat.get('drop_rate'))
+        usage_data['rec_yac_pct'] = safe_float(team_stat.get('rec_yac_pct'))
+        usage_data['total_turnovers'] = safe_float(team_stat.get('total_turnovers'))
+        usage_data['pass_rush_ratio'] = safe_float(team_stat.get('pass_rush_ratio'))
         
         team_usage.append(usage_data)
     

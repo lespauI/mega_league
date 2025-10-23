@@ -308,6 +308,169 @@
             xFormat: fmt1,
             title: 'Running Back Committee Analysis',
             insight: 'Top-right quadrant = true RBBC (both get work). High X, low Y = clear bellcow.'
+          },
+          {
+            xKey: 'wr1_share',
+            yKey: 'pass_int_pct',
+            xLabel: 'WR1 Target Share (%)',
+            yLabel: 'INT Rate (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Star WR Dependency vs Interception Risk',
+            insight: 'Does forcing the ball to one receiver make passing predictable? Check if high WR1 usage = more INTs.',
+            extraInfo: d => `WR1: ${d.wr1_name} - ${fmt2(d.pass_int_pct)}% INT rate`
+          },
+          {
+            xKey: 'rb1_share',
+            yKey: 'rush_broken_tackle_rate',
+            xLabel: 'RB1 Rush Share (%)',
+            yLabel: 'Broken Tackles per Rush (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Bellcow Power: Workload vs Physicality',
+            insight: 'Do feature backs break more tackles because they\'re elite, or do committees stay fresher?',
+            extraInfo: d => `RB1: ${d.rb1_name} - ${fmt2(d.rush_broken_tackle_rate)}% broken tackle rate`
+          },
+          {
+            xKey: 'pass_concentration',
+            yKey: 'sack_rate',
+            xLabel: 'Pass Concentration Index',
+            yLabel: 'Sack Rate (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Predictability Tax: Target Concentration vs Sacks',
+            insight: 'Concentrated passing = defenders know where ball goes = more pressure? Or is it just bad O-lines?'
+          },
+          {
+            xKey: 'te_target_share',
+            yKey: 'sack_rate',
+            xLabel: 'TE Target Share (%)',
+            yLabel: 'Sack Rate (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 TE Usage: Weapon or Safety Blanket?',
+            insight: 'High TE usage with low sacks = protection weapon. High TE + high sacks = last resort checkdown.'
+          },
+          {
+            xKey: 'top3_share',
+            yKey: 'yds_per_play',
+            xLabel: 'Top 3 Target Share (%)',
+            yLabel: 'Yards per Play',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Star Power vs Offensive Efficiency',
+            insight: 'Elite receivers unlock efficiency? Or does spreading it around keep defenses honest?'
+          },
+          {
+            xKey: 'rush_concentration',
+            yKey: 'rush_yds_per_att',
+            xLabel: 'Rush Concentration Index',
+            yLabel: 'Rush Yards per Attempt',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Bellcow Effectiveness Test',
+            insight: 'Does feeding one back work? Or do fresh legs from RBBC produce better yards per carry?'
+          },
+          {
+            xKey: 'wr1_share',
+            yKey: 'qb_rating',
+            xLabel: 'WR1 Target Share (%)',
+            yLabel: 'QB Rating',
+            xFormat: fmt1,
+            yFormat: fmt1,
+            title: '💥 Star WR Impact on QB Performance',
+            insight: 'Elite WR1 elevates QB play? Or does elite QB make his WR1 look great? Chicken or egg?',
+            extraInfo: d => `${d.wr1_name}: ${fmt1(d.wr1_share)}% share → ${fmt1(d.qb_rating)} QB rating`
+          },
+          {
+            xKey: 'rb_target_share',
+            yKey: 'pass_yds_per_att',
+            xLabel: 'RB Target Share (%)',
+            yLabel: 'Pass Yards per Attempt',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 RB Checkdown Strategy: Smart or Desperate?',
+            insight: 'High RB targets + high Y/A = designed weapon. High RB targets + low Y/A = QB under pressure dumping off.'
+          },
+          {
+            xKey: 'pass_concentration',
+            yKey: 'explosive_plays_per_game',
+            xLabel: 'Pass Concentration Index',
+            yLabel: 'Explosive Plays (20+) per Game',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Distribution Strategy vs Big Plays',
+            insight: 'Does spreading the ball create more explosive opportunities? Or do stars make the big plays?'
+          },
+          {
+            xKey: 'rush_concentration',
+            yKey: 'total_turnovers',
+            xLabel: 'Rush Concentration Index',
+            yLabel: 'Total Turnovers',
+            xFormat: fmt1,
+            yFormat: fmt1,
+            title: '💥 Ball Security: Bellcow vs Committee',
+            insight: 'Feature backs fumble more from fatigue? Or do committees have worse ball security?'
+          },
+          {
+            xKey: 'wr_target_share',
+            yKey: 'pass_td_pct',
+            xLabel: 'WR Target Share (%)',
+            yLabel: 'Pass TD Rate (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 WR-Heavy Offense Scoring Efficiency',
+            insight: 'WR-centric attacks score more TDs? Or are TEs/RBs better in the red zone?'
+          },
+          {
+            xKey: 'te_target_share',
+            yKey: 'pass_comp_pct',
+            xLabel: 'TE Target Share (%)',
+            yLabel: 'Completion Percentage',
+            xFormat: fmt1,
+            yFormat: fmt1,
+            title: '💥 TE Usage: High-Percentage Safety Valve',
+            insight: 'TEs are easier throws = higher completion %? Proof that TEs are the ultimate security blanket.'
+          },
+          {
+            xKey: 'top3_share',
+            yKey: 'turnover_diff',
+            xLabel: 'Top 3 Target Share (%)',
+            yLabel: 'Turnover Differential',
+            xFormat: fmt1,
+            yFormat: fmt1,
+            title: '💥 Star Receivers & Ball Protection',
+            insight: 'Elite receivers protect the ball better? Or are teams with top WRs just better overall?'
+          },
+          {
+            xKey: 'rb1_share',
+            yKey: 'rush_td_pct',
+            xLabel: 'RB1 Rush Share (%)',
+            yLabel: 'Rush TD Rate (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Goal Line Back: Who Gets the Glory?',
+            insight: 'Bellcows dominate goal-line work? Or do committees rotate in fresh power backs for TDs?'
+          },
+          {
+            xKey: 'pass_concentration',
+            yKey: 'drop_rate',
+            xLabel: 'Pass Concentration Index',
+            yLabel: 'Drop Rate (%)',
+            xFormat: fmt1,
+            yFormat: fmt2,
+            title: '💥 Target Overload: Does WR1 Drop More?',
+            insight: 'Feeding one receiver = more drops from fatigue? Or do elite WRs have better hands?'
+          },
+          {
+            xKey: 'rb_target_share',
+            yKey: 'rec_yac_pct',
+            xLabel: 'RB Target Share (%)',
+            yLabel: 'YAC % (of receiving yards)',
+            xFormat: fmt1,
+            yFormat: fmt1,
+            title: '💥 RB Receptions: YAC Machines or Dump-offs?',
+            insight: 'High RB targets + high YAC% = dynamic weapons. High RB + low YAC% = desperation checkdowns at LOS.'
           }
         ];
 
@@ -333,8 +496,8 @@
   <div class="container">
     <h1>Team Player Usage Patterns</h1>
     <div class="subtitle">
-      10 graphs showing how teams distribute touches across players. Red = above trend, Blue = below trend.
-      Reveals star-driven vs committee approaches.
+      25 graphs combining player usage distribution with team performance. Red = above trend, Blue = below trend.
+      Reveals star-driven vs committee approaches and their impact on efficiency, turnovers, and scoring.
     </div>
     <div class="controls">
       <label for="conf">Conference:</label>

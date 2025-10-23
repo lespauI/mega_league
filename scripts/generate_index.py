@@ -112,7 +112,7 @@ def get_file_description(filename):
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
         'team_stats_explorer.html': '📊 Interactive Win% correlation explorer with 20+ team metrics',
         'team_stats_correlations.html': '🔍 34 cross-metric correlation graphs revealing strategic insights',
-        'team_player_usage.html': '👥 10 player usage distribution graphs (WR/RB/TE target shares, bellcow vs committee)',
+        'team_player_usage.html': '👥 25 player usage graphs (target distribution + performance impact: INTs, sacks, efficiency, TDs)',
         'afc_race.png': 'AFC playoff standings and race visualization',
         'afc_compl.png': 'AFC season completion metrics',
         'nfc_race.png': 'NFC playoff standings and race visualization',

@@ -64,7 +64,7 @@ def main():
         print("="*80)
         print("\nGenerated files:")
         print("  • output/team_aggregated_stats.csv - Team statistics (84 metrics)")
-        print("  • output/team_player_usage.csv - Player usage distribution (30 metrics)")
+        print("  • output/team_player_usage.csv - Player usage distribution (48 metrics)")
         print("  • docs/index.html - Main navigation page")
         print("\nOpen docs/index.html in your browser to view all visualizations!")
     else:
