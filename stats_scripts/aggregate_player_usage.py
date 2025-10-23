@@ -100,9 +100,11 @@ def aggregate_player_usage(base_path):
             usage_data['wr1_share'] = (receivers_sorted[0][0] / total_catches * 100) if total_catches > 0 and len(receivers_sorted) > 0 else 0
             
             usage_data['wr2_catches'] = receivers_sorted[1][0] if len(receivers_sorted) > 1 else 0
+            usage_data['wr2_name'] = receivers_sorted[1][1] if len(receivers_sorted) > 1 else ''
             usage_data['wr2_share'] = (receivers_sorted[1][0] / total_catches * 100) if total_catches > 0 and len(receivers_sorted) > 1 else 0
             
             usage_data['wr3_catches'] = receivers_sorted[2][0] if len(receivers_sorted) > 2 else 0
+            usage_data['wr3_name'] = receivers_sorted[2][1] if len(receivers_sorted) > 2 else ''
             usage_data['wr3_share'] = (receivers_sorted[2][0] / total_catches * 100) if total_catches > 0 and len(receivers_sorted) > 2 else 0
             
             usage_data['top3_share'] = usage_data['wr1_share'] + usage_data['wr2_share'] + usage_data['wr3_share']
@@ -112,13 +114,23 @@ def aggregate_player_usage(base_path):
             usage_data['wr1_position'] = ''
             usage_data['wr1_share'] = 0
             usage_data['wr2_catches'] = 0
+            usage_data['wr2_name'] = ''
             usage_data['wr2_share'] = 0
             usage_data['wr3_catches'] = 0
+            usage_data['wr3_name'] = ''
             usage_data['wr3_share'] = 0
             usage_data['top3_share'] = 0
         
         rec_shares = [safe_float(r.get('recTotalCatches')) / total_catches for r in team_receiving if total_catches > 0 and safe_float(r.get('recTotalCatches')) > 0]
         usage_data['pass_concentration'] = calculate_herfindahl_index(rec_shares) * 10000
+        
+        te_sorted = sorted(
+            [(safe_float(r.get('recTotalCatches')), r.get('player__fullName', '')) 
+             for r in team_receiving if r.get('player__position') == 'TE'],
+            reverse=True
+        )
+        usage_data['te1_name'] = te_sorted[0][1] if len(te_sorted) > 0 else ''
+        usage_data['te1_catches'] = te_sorted[0][0] if len(te_sorted) > 0 else 0
         
         total_rushes = sum(safe_float(r.get('rushTotalAtt')) for r in team_rushing)
         total_rush_yds = sum(safe_float(r.get('rushTotalYds')) for r in team_rushing)
@@ -137,6 +149,7 @@ def aggregate_player_usage(base_path):
             usage_data['rb1_share'] = (rushers_sorted[0][0] / total_rushes * 100) if total_rushes > 0 and len(rushers_sorted) > 0 else 0
             
             usage_data['rb2_rushes'] = rushers_sorted[1][0] if len(rushers_sorted) > 1 else 0
+            usage_data['rb2_name'] = rushers_sorted[1][1] if len(rushers_sorted) > 1 else ''
             usage_data['rb2_share'] = (rushers_sorted[1][0] / total_rushes * 100) if total_rushes > 0 and len(rushers_sorted) > 1 else 0
             
             usage_data['rbbc'] = usage_data['rb1_share'] < 60 and usage_data['rb2_share'] > 25
@@ -146,6 +159,7 @@ def aggregate_player_usage(base_path):
             usage_data['rb1_position'] = ''
             usage_data['rb1_share'] = 0
             usage_data['rb2_rushes'] = 0
+            usage_data['rb2_name'] = ''
             usage_data['rb2_share'] = 0
             usage_data['rbbc'] = False
         

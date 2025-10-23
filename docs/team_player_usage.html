@@ -246,6 +246,7 @@
             yFormat: toPct,
             title: 'Tight End Usage vs Winning',
             insight: 'Elite TEs are game-changers. Do teams that feature their TE win more?',
+            extraInfo: d => `TE1: ${d.te1_name || 'N/A'}`,
             metricHelp: '<strong>TE Target Share:</strong> Процент приёмов тайт-эндом от общего числа приёмов команды. Высокий процент (>20%) = TE как главное оружие в пасовой игре.'
           },
           {
@@ -257,6 +258,7 @@
             yFormat: toPct,
             title: 'Running Back Receiving Usage',
             insight: 'Pass-catching RBs create mismatches. Does featuring RBs in passing game correlate with wins?',
+            extraInfo: d => `RB1: ${d.rb1_name}, RB2: ${d.rb2_name || 'N/A'}`,
             metricHelp: '<strong>RB Target Share:</strong> Процент приёмов RB от общего числа приёмов. Высокий процент (>25%) = активное использование RB в пасовой игре или сброс мяча под давлением.'
           },
           {
@@ -268,6 +270,7 @@
             yFormat: toPct,
             title: 'Passing Target Distribution',
             insight: 'Concentrated (high) = one star. Spread (low) = balanced. Which strategy wins more?',
+            extraInfo: d => `Top 3: ${d.wr1_name}, ${d.wr2_name || 'N/A'}, ${d.wr3_name || 'N/A'}`,
             metricHelp: '<strong>Herfindahl Index:</strong> Индекс концентрации распределения передач (0-10000). >1500 = концентрация на одном игроке, 1000-1500 = баланс, <1000 = равномерное распределение между многими игроками.'
           },
           {
@@ -291,6 +294,7 @@
             yFormat: toPct,
             title: 'Top 3 Receiver Dominance',
             insight: 'High concentration in top 3 = star-driven offense. Low = depth & spreading the ball.',
+            extraInfo: d => `Top 3: ${d.wr1_name}, ${d.wr2_name || 'N/A'}, ${d.wr3_name || 'N/A'}`,
             metricHelp: '<strong>Top 3 Share:</strong> Суммарный процент приёмов топ-3 принимающих от общего числа. >75% = концентрация на звёздах, <60% = глубокий состав с равномерным распределением.'
           },
           {
@@ -301,6 +305,7 @@
             xFormat: fmt1,
             title: 'Offensive Philosophy: Concentration Strategy',
             insight: 'Top-right = star-driven (both pass & rush). Bottom-left = committee approach on both.',
+            extraInfo: d => `Pass: ${d.wr1_name} | Rush: ${d.rb1_name}`,
             metricHelp: '<strong>Философия нападения:</strong> Сравнение концентрации в пасовой и беговой игре. Верхний правый угол = звёздная тактика, нижний левый = коллективный подход.'
           },
           {
@@ -311,6 +316,7 @@
             xFormat: fmt1,
             title: 'WR vs TE Usage Balance',
             insight: 'WR-heavy offense (high X, low Y) vs TE-heavy (low X, high Y). Strategic preference.',
+            extraInfo: d => `WR1: ${d.wr1_name} | TE1: ${d.te1_name || 'N/A'}`,
             metricHelp: '<strong>Баланс WR/TE:</strong> Сравнивает использование широких принимающих (WR) против тайт-эндов (TE). Показывает стратегические предпочтения команды в пасовой игре.'
           },
           {
@@ -321,6 +327,7 @@
             xFormat: fmt1,
             title: 'Alpha Receiver vs Supporting Cast',
             insight: 'High both = one star + good #2/#3. High top3, low WR1 = balanced trio.',
+            extraInfo: d => `Top 3: ${d.wr1_name}, ${d.wr2_name || 'N/A'}, ${d.wr3_name || 'N/A'}`,
             metricHelp: '<strong>Альфа-приёмник:</strong> Зависимость от WR1 относительно топ-3. Высокие оба значения = одна звезда + хорошие #2/#3. Высокий топ-3, низкий WR1 = сбалансированное трио.'
           },
           {
@@ -331,6 +338,7 @@
             xFormat: fmt1,
             title: 'Running Back Committee Analysis',
             insight: 'Top-right quadrant = true RBBC (both get work). High X, low Y = clear bellcow.',
+            extraInfo: d => `RB1: ${d.rb1_name} | RB2: ${d.rb2_name || 'N/A'}`,
             metricHelp: '<strong>Комитет RB:</strong> Анализ распределения выносов между RB1 и RB2. Верхний правый квадрант = настоящий RBBC (оба получают работу), высокий X низкий Y = явный bellcow.'
           },
           {
@@ -365,6 +373,7 @@
             yFormat: fmt2,
             title: '💥 Predictability Tax: Target Concentration vs Sacks',
             insight: 'Concentrated passing = defenders know where ball goes = more pressure? Or is it just bad O-lines?',
+            extraInfo: d => `WR1: ${d.wr1_name} - ${fmt2(d.sack_rate)}% sack rate`,
             metricHelp: '<strong>Sack Rate:</strong> Процент сэков от (попытки + сэки). Концентрация на одном приёмнике = предсказуемость = больше сэков?'
           },
           {
@@ -376,6 +385,7 @@
             yFormat: fmt2,
             title: '💥 TE Usage: Weapon or Safety Blanket?',
             insight: 'High TE usage with low sacks = protection weapon. High TE + high sacks = last resort checkdown.',
+            extraInfo: d => `TE1: ${d.te1_name || 'N/A'} - ${fmt2(d.sack_rate)}% sack rate`,
             metricHelp: '<strong>TE + Sacks:</strong> Высокое использование TE с низкими сэками = оружие защиты. Высокие оба = последнее средство под давлением.'
           },
           {
@@ -387,6 +397,7 @@
             yFormat: fmt2,
             title: '💥 Star Power vs Offensive Efficiency',
             insight: 'Elite receivers unlock efficiency? Or does spreading it around keep defenses honest?',
+            extraInfo: d => `Top 3: ${d.wr1_name}, ${d.wr2_name || 'N/A'}, ${d.wr3_name || 'N/A'}`,
             metricHelp: '<strong>Yards per Play:</strong> Средние ярды за розыгрыш. Элитные приёмники разблокируют эффективность или распределение мяча держит защиту в напряжении?'
           },
           {
@@ -398,6 +409,7 @@
             yFormat: fmt2,
             title: '💥 Bellcow Effectiveness Test',
             insight: 'Does feeding one back work? Or do fresh legs from RBBC produce better yards per carry?',
+            extraInfo: d => `RB1: ${d.rb1_name} - ${fmt2(d.rush_yds_per_att)} Y/A`,
             metricHelp: '<strong>Rush Y/A:</strong> Ярды за вынос. Проверка эффективности: один бегун vs свежие ноги комитета - кто производит больше ярдов?'
           },
           {
@@ -421,6 +433,7 @@
             yFormat: fmt2,
             title: '💥 RB Checkdown Strategy: Smart or Desperate?',
             insight: 'High RB targets + high Y/A = designed weapon. High RB targets + low Y/A = QB under pressure dumping off.',
+            extraInfo: d => `RB1: ${d.rb1_name} - ${fmt2(d.pass_yds_per_att)} Y/A`,
             metricHelp: '<strong>Pass Y/A:</strong> Ярды за попытку паса. Высокие передачи RB + высокий Y/A = оружие. Высокие RB + низкий Y/A = сброс под давлением.'
           },
           {
@@ -432,6 +445,7 @@
             yFormat: fmt2,
             title: '💥 Distribution Strategy vs Big Plays',
             insight: 'Does spreading the ball create more explosive opportunities? Or do stars make the big plays?',
+            extraInfo: d => `WR1: ${d.wr1_name} - ${fmt2(d.explosive_plays_per_game)} explosive plays/game`,
             metricHelp: '<strong>Explosive Plays:</strong> Розыгрыши 20+ ярдов за игру. Распределение мяча создаёт больше взрывных моментов или звёзды делают большие игры?'
           },
           {
@@ -443,6 +457,7 @@
             yFormat: fmt1,
             title: '💥 Ball Security: Bellcow vs Committee',
             insight: 'Feature backs fumble more from fatigue? Or do committees have worse ball security?',
+            extraInfo: d => `RB1: ${d.rb1_name} | RB2: ${d.rb2_name || 'N/A'}`,
             metricHelp: '<strong>Turnovers:</strong> Общие потери мяча. Основные бегуны теряют больше от усталости или у комитетов хуже контроль мяча?'
           },
           {
@@ -454,6 +469,7 @@
             yFormat: fmt2,
             title: '💥 WR-Heavy Offense Scoring Efficiency',
             insight: 'WR-centric attacks score more TDs? Or are TEs/RBs better in the red zone?',
+            extraInfo: d => `WR1: ${d.wr1_name} | TE1: ${d.te1_name || 'N/A'}`,
             metricHelp: '<strong>Pass TD Rate:</strong> Процент тачдаунов от попыток передач. WR-центричные атаки забивают больше TD или TE/RB лучше в красной зоне?'
           },
           {
@@ -465,6 +481,7 @@
             yFormat: fmt1,
             title: '💥 TE Usage: High-Percentage Safety Valve',
             insight: 'TEs are easier throws = higher completion %? Proof that TEs are the ultimate security blanket.',
+            extraInfo: d => `TE1: ${d.te1_name || 'N/A'} - ${fmt1(d.pass_comp_pct)}% comp`,
             metricHelp: '<strong>Completion %:</strong> Процент завершённых передач. TE = более лёгкие броски = выше процент? Доказательство, что TE - ultimate подстраховка.'
           },
           {
@@ -476,6 +493,7 @@
             yFormat: fmt1,
             title: '💥 Star Receivers & Ball Protection',
             insight: 'Elite receivers protect the ball better? Or are teams with top WRs just better overall?',
+            extraInfo: d => `Top 3: ${d.wr1_name}, ${d.wr2_name || 'N/A'}, ${d.wr3_name || 'N/A'}`,
             metricHelp: '<strong>Turnover Diff:</strong> Разница потерь мяча (отборы - отдачи). Элитные приёмники лучше защищают мяч или команды с топ-WR просто лучше в целом?'
           },
           {
@@ -487,6 +505,7 @@
             yFormat: fmt2,
             title: '💥 Goal Line Back: Who Gets the Glory?',
             insight: 'Bellcows dominate goal-line work? Or do committees rotate in fresh power backs for TDs?',
+            extraInfo: d => `RB1: ${d.rb1_name} | RB2: ${d.rb2_name || 'N/A'}`,
             metricHelp: '<strong>Rush TD Rate:</strong> Процент тачдаунов от выносов. Bellcow доминируют на линии ворот или комитеты ротируют силовых бегунов для TD?'
           },
           {
@@ -498,6 +517,7 @@
             yFormat: fmt2,
             title: '💥 Target Overload: Does WR1 Drop More?',
             insight: 'Feeding one receiver = more drops from fatigue? Or do elite WRs have better hands?',
+            extraInfo: d => `WR1: ${d.wr1_name} - ${fmt2(d.drop_rate)}% drop rate`,
             metricHelp: '<strong>Drop Rate:</strong> Процент потерянных передач от целей. Кормление одного приёмника = больше потерь от усталости или у элитных WR лучше руки?'
           },
           {
@@ -509,6 +529,7 @@
             yFormat: fmt1,
             title: '💥 RB Receptions: YAC Machines or Dump-offs?',
             insight: 'High RB targets + high YAC% = dynamic weapons. High RB + low YAC% = desperation checkdowns at LOS.',
+            extraInfo: d => `RB1: ${d.rb1_name} - ${fmt1(d.rec_yac_pct)}% YAC`,
             metricHelp: '<strong>YAC %:</strong> Процент ярдов после приёма. Высокие передачи RB + высокий YAC% = динамичное оружие. Высокий RB + низкий YAC% = сброс на линии.'
           }
         ];
