@@ -152,16 +152,22 @@ def aggregate_team_stats(base_path):
         team_data['turnover_diff'] = team_data['total_takeaways'] - team_data['total_turnovers']
         
         games = max(team_data['wins'] + team_data['losses'] + team_data['ties'], 1)
+        
+        qb_games = sum(safe_float(p.get('gamesPlayed')) for p in team_passing)
+        rb_games = sum(safe_float(r.get('gamesPlayed')) for r in team_rushing)
+        def_games = sum(safe_float(d.get('gamesPlayed')) for d in team_defense)
+        punter_games = sum(safe_float(p.get('gamesPlayed')) for p in team_punting)
+        
         team_data['off_yds_per_game'] = team_data['total_off_yds'] / games
-        team_data['pass_att_per_game'] = team_data['pass_att'] / games
-        team_data['rush_att_per_game'] = team_data['rush_att'] / games
-        team_data['punts_per_game'] = team_data['punts'] / games
-        team_data['def_sacks_per_game'] = team_data['def_sacks'] / games
-        team_data['def_ints_per_game'] = team_data['def_ints'] / games
-        team_data['pass_ints_per_game'] = team_data['pass_ints'] / games
-        team_data['sacks_allowed_per_game'] = team_data['pass_sacks'] / games
+        team_data['pass_att_per_game'] = team_data['pass_att'] / qb_games if qb_games > 0 else 0
+        team_data['rush_att_per_game'] = team_data['rush_att'] / rb_games if rb_games > 0 else 0
+        team_data['punts_per_game'] = team_data['punts'] / punter_games if punter_games > 0 else 0
+        team_data['def_sacks_per_game'] = team_data['def_sacks'] / def_games if def_games > 0 else 0
+        team_data['def_ints_per_game'] = team_data['def_ints'] / def_games if def_games > 0 else 0
+        team_data['pass_ints_per_game'] = team_data['pass_ints'] / qb_games if qb_games > 0 else 0
+        team_data['sacks_allowed_per_game'] = team_data['pass_sacks'] / qb_games if qb_games > 0 else 0
         team_data['explosive_plays'] = team_data['rush_20plus']
-        team_data['explosive_plays_per_game'] = team_data['explosive_plays'] / games
+        team_data['explosive_plays_per_game'] = team_data['explosive_plays'] / rb_games if rb_games > 0 else 0
         
         team_data['pass_rush_ratio'] = team_data['pass_att'] / team_data['rush_att'] if team_data['rush_att'] > 0 else 0
         team_data['fg_pct'] = team_data['fg_made'] / team_data['fg_att'] * 100 if team_data['fg_att'] > 0 else 0
