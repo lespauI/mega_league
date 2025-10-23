@@ -17,9 +17,9 @@
     .container { max-width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 16px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
     h1 { margin: 0 0 10px; font-size: 22px; }
     .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
-    .controls { display: flex; align-items: center; gap: 16px; margin: 6px 0 12px; flex-wrap: wrap; }
-    .control-group { display: flex; align-items: center; gap: 8px; }
     .panel { margin: 12px 0 14px; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; }
+    .panel > summary { padding: 10px 14px; background: #f5f7fa; border-bottom: 1px solid #ebeff5; font-weight: 600; cursor: pointer; user-select: none; list-style: none; }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
     .chart-wrap { padding: 8px 8px 0; }
     .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 0 10px 10px; }
     .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
@@ -27,13 +27,11 @@
     .red { background: var(--red); opacity: .5; }
     .blue { background: var(--blue); opacity: .5; }
     .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; }
-    select { padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; background: #fff; }
-    .correlation-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-left: 12px; }
+    .correlation-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
     .corr-strong { background: #dcfce7; color: #166534; }
     .corr-moderate { background: #fef3c7; color: #854d0e; }
     .corr-weak { background: #fee2e2; color: #991b1b; }
-    .metric-label { position: relative; display: inline-block; }
-    .help-icon { display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; color: white; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 4px; cursor: help; vertical-align: middle; }
+    .help-icon { display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; color: white; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 8px; cursor: help; vertical-align: middle; }
     .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
   </style>
   <script>
@@ -118,11 +116,8 @@
       return stats;
     }
 
-    function drawScatter(holder, rows, metricKey) {
-      holder.selectAll('*').remove();
-
-      const metric = METRICS.find(m => m.key === metricKey);
-      if (!metric) return;
+    function drawScatter(holder, rows, metric) {
+      const metricKey = metric.key;
 
       const data = rows.filter(d => 
         Number.isFinite(+d.win_pct) && 
@@ -130,18 +125,30 @@
         +d.win_pct >= 0.005 && +d.win_pct <= 0.995
       );
 
-      if (data.length < 2) {
-        holder.append('div').style('padding', '40px').style('text-align', 'center')
-          .style('color', '#999').text('Not enough data to display');
-        return;
+      if (data.length < 2) return;
+
+      const panel = holder.append('details').attr('class', 'panel').attr('open', true);
+      const summary = panel.append('summary');
+      summary.append('span').text(`${metric.label} vs Win%`);
+      
+      if (metric.help) {
+        const helpIcon = summary.append('span').attr('class', 'help-icon').text('?');
+        const metricTip = d3.select('body').append('div').attr('class', 'metric-tooltip').style('display', 'none');
+        helpIcon.on('mouseenter', function(evt) {
+          metricTip.style('display', 'block').html('<strong>' + metric.label + ':</strong><br>' + metric.help);
+        }).on('mousemove', (evt) => {
+          metricTip.style('left', (evt.pageX + 12) + 'px').style('top', (evt.pageY - 28) + 'px');
+        }).on('mouseleave', () => {
+          metricTip.style('display', 'none');
+        });
       }
 
       const margin = { top: 20, right: 24, bottom: 46, left: 70 };
-      const width = 1080, height = 500;
+      const width = 1080, height = 480;
       const innerW = width - margin.left - margin.right;
       const innerH = height - margin.top - margin.bottom;
 
-      const wrap = holder.append('div').attr('class', 'chart-wrap');
+      const wrap = panel.append('div').attr('class', 'chart-wrap');
       const svg = wrap.append('svg').attr('width', width).attr('height', height);
       const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
@@ -203,7 +210,30 @@
           let html = `<strong>${d.team}</strong><br>`;
           html += `${metric.label}: ${metric.format(d[metricKey])}<br>`;
           html += `Win%: ${toPct(d.win_pct)}<br>`;
-          html += `Δ vs trend: ${(res>=0?'+':'') + metric.format(res)}`;
+          html += `Δ vs trend: ${(res>=0?'+':'') + metric.format(res)}<br>`;
+          
+          const qx = +d.win_pct >= xAvg;
+          const qy = +d[metricKey] >= yAvg;
+          let quadrant = '';
+          
+          if (metric.higherBetter === true) {
+            if (qx && qy) quadrant = '<em>✅ Побеждают + хороший показатель метрика</em>';
+            else if (!qx && qy) quadrant = '<em>🤔 Хороший метрик, но мало побед - не хватает чего-то ещё</em>';
+            else if (!qx && !qy) quadrant = '<em>😔 Проигрывают + слабый метрик - нужны улучшения</em>';
+            else quadrant = '<em>💪 Побеждают несмотря на слабый метрик - компенсируют в других зонах</em>';
+          } else if (metric.higherBetter === false) {
+            if (qx && qy) quadrant = '<em>⚠️ Побеждают несмотря на высокий негативный показатель</em>';
+            else if (!qx && qy) quadrant = '<em>😔 Высокий негативный показатель + мало побед - двойная проблема</em>';
+            else if (!qx && !qy) quadrant = '<em>🤔 Низкий негатив, но побед мало - проблемы в другом</em>';
+            else quadrant = '<em>✅ Низкий негатив + много побед - правильный подход</em>';
+          } else {
+            if (qx && qy) quadrant = '<em>Правый верхний: высокий Win%, высокий метрик</em>';
+            else if (!qx && qy) quadrant = '<em>Левый верхний: низкий Win%, высокий метрик</em>';
+            else if (!qx && !qy) quadrant = '<em>Левый нижний: низкий Win%, низкий метрик</em>';
+            else quadrant = '<em>Правый нижний: высокий Win%, низкий метрик</em>';
+          }
+          html += quadrant;
+          
           tip.style('display','block').html(html);
         })
         .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
@@ -234,59 +264,27 @@
         .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
         .text(metric.label);
 
-      const legend = holder.append('div').attr('class', 'legend');
-      legend.append('span').html(`<span class="swatch avg"></span>Avg X & Y`);
-      legend.append('span').html(`<span class="swatch red"></span>Better than trend`);
-      legend.append('span').html(`<span class="swatch blue"></span>Worse than trend`);
-      legend.append('span').style('margin-left','16px').text('Trend line in gray');
+      const legend = panel.append('div').attr('class', 'legend');
+      legend.append('span').html(`<span class="swatch red"></span> Better than trend`);
+      legend.append('span').html(`<span class="swatch blue"></span> Worse than trend`);
+      legend.append('span').html(`<span class="swatch avg"></span> Average Lines`);
 
       let corrClass = 'corr-weak', corrLabel = 'Weak';
       if (r2 >= 0.5) { corrClass = 'corr-strong'; corrLabel = 'Strong'; }
       else if (r2 >= 0.25) { corrClass = 'corr-moderate'; corrLabel = 'Moderate'; }
       
-      legend.append('span').attr('class', `correlation-badge ${corrClass}`)
-        .html(`<strong>R²: ${fmt3(r2)}</strong> (${corrLabel} correlation)`);
+      summary.append('span').attr('class', `correlation-badge ${corrClass}`)
+        .style('margin-left', '12px')
+        .html(`R²=${fmt3(r2)} (${corrLabel})`);
     }
 
     function render() {
       loadData().then(allRows => {
-        const confSel = d3.select('#conf');
-        const metricSel = d3.select('#metric');
         const root = d3.select('#root');
-
-        const helpIcon = d3.select('#metricHelp');
-        const metricTip = d3.select('body').append('div').attr('class', 'metric-tooltip').style('display', 'none');
         
-        function updateHelpIcon() {
-          const metricKey = metricSel.node().value;
-          const metric = METRICS.find(m => m.key === metricKey);
-          if (metric && metric.help) {
-            helpIcon.style('display', 'inline-block')
-              .on('mouseenter', function(evt) {
-                metricTip.style('display', 'block').html('<strong>' + metric.label + ':</strong><br>' + metric.help);
-              })
-              .on('mousemove', (evt) => {
-                metricTip.style('left', (evt.pageX + 12) + 'px').style('top', (evt.pageY - 28) + 'px');
-              })
-              .on('mouseleave', () => {
-                metricTip.style('display', 'none');
-              });
-          }
-        }
-
-        function redraw() {
-          const conf = confSel.node().value;
-          const metricKey = metricSel.node().value;
-          const rows = allRows.filter(r => 
-            conf === 'ALL' || (r.conference || '').toUpperCase() === conf
-          );
-          drawScatter(root, rows, metricKey);
-          updateHelpIcon();
-        }
-
-        confSel.on('change', redraw);
-        metricSel.on('change', redraw);
-        redraw();
+        METRICS.forEach(metric => {
+          drawScatter(root, allRows, metric);
+        });
       }).catch(err => {
         d3.select('#root').append('div').style('color','crimson').text('Failed to load data: '+err);
         console.error(err);
@@ -300,51 +298,11 @@
   <div class="container">
     <h1>Team Statistics Explorer — Win% Correlations</h1>
     <div class="subtitle">
-      Explore how different team metrics correlate with winning percentage. 
-      Red squares = better than expected based on wins, Blue = worse than expected.
+      28 comprehensive graphs showing how different team metrics correlate with winning percentage. 
+      Red squares = better than expected for their win%, Blue = worse than expected.
       R² shows correlation strength (0=none, 1=perfect).
     </div>
-    <div class="controls">
-      <div class="control-group">
-        <label for="metric"><strong>Y-Axis Metric:</strong></label>
-        <span id="metricHelp" class="help-icon" style="display:none;">?</span>
-        <select id="metric">
-          <option value="pass_yds_per_att">Pass Yards per Attempt</option>
-          <option value="rush_yds_per_att">Rush Yards per Attempt</option>
-          <option value="qb_rating">QB Rating</option>
-          <option value="pass_int_pct">Interception Rate (%)</option>
-          <option value="sack_rate">Sack Rate (%)</option>
-          <option value="turnover_diff" selected>Turnover Differential</option>
-          <option value="td_per_play">TD per Play</option>
-          <option value="yds_per_play">Yards per Play</option>
-          <option value="def_sacks_per_game">Defensive Sacks per Game</option>
-          <option value="def_ints_per_game">Defensive INTs per Game</option>
-          <option value="pass_ints_per_game">INTs Thrown per Game</option>
-          <option value="sacks_allowed_per_game">Sacks Allowed per Game</option>
-          <option value="punts_per_game">Punts per Game</option>
-          <option value="explosive_plays_per_game">20+ Yard Plays per Game</option>
-          <option value="rush_broken_tackle_rate">Broken Tackles per Rush</option>
-          <option value="rush_yac_pct">Rush YAC %</option>
-          <option value="rec_yac_pct">Receiving YAC %</option>
-          <option value="pass_comp_pct">Completion %</option>
-          <option value="pass_td_pct">TD Rate (%)</option>
-          <option value="drop_rate">Drop Rate (%)</option>
-          <option value="pass_rush_ratio">Pass/Rush Ratio</option>
-          <option value="off_yds_per_game">Offensive Yards per Game</option>
-        </select>
-      </div>
-      <div class="control-group">
-        <label for="conf"><strong>Conference:</strong></label>
-        <select id="conf">
-          <option value="ALL" selected>All Conferences</option>
-          <option value="AFC">AFC only</option>
-          <option value="NFC">NFC only</option>
-        </select>
-      </div>
-    </div>
-    <div class="panel">
-      <div id="root"></div>
-    </div>
+    <div id="root"></div>
     <div class="subtitle">Data: stats_scripts/output/team_aggregated_stats.csv (aggregated from MEGA_*.csv files)</div>
   </div>
 </body>

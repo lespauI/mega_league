@@ -177,7 +177,24 @@
           html += `${cfg.yLabel}: ${(cfg.yFormat || fmt2)(d[cfg.yKey])}<br>`;
           html += `Win%: ${toPct(d.win_pct)}<br>`;
           if (cfg.extraInfo) html += cfg.extraInfo(d) + '<br>';
-          html += `Δ vs trend: ${(res>=0?'+':'') + fmt2(res)}`;
+          html += `Δ vs trend: ${(res>=0?'+':'') + fmt2(res)}<br>`;
+          
+          const qx = +d[cfg.xKey] >= xAvg;
+          const qy = +d[cfg.yKey] >= yAvg;
+          let quadrant = '';
+          if (cfg.quadrantHelp) {
+            if (qx && qy) quadrant = '<em>' + cfg.quadrantHelp.topRight + '</em>';
+            else if (!qx && qy) quadrant = '<em>' + cfg.quadrantHelp.topLeft + '</em>';
+            else if (!qx && !qy) quadrant = '<em>' + cfg.quadrantHelp.bottomLeft + '</em>';
+            else quadrant = '<em>' + cfg.quadrantHelp.bottomRight + '</em>';
+          } else {
+            if (qx && qy) quadrant = '<em>Правый верхний: высокий X, высокий Y</em>';
+            else if (!qx && qy) quadrant = '<em>Левый верхний: низкий X, высокий Y</em>';
+            else if (!qx && !qy) quadrant = '<em>Левый нижний: низкий X, низкий Y</em>';
+            else quadrant = '<em>Правый нижний: высокий X, низкий Y</em>';
+          }
+          html += quadrant;
+          
           tip.style('display','block').html(html);
         })
         .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
@@ -235,7 +252,13 @@
             title: 'Star Receiver Dependency',
             insight: 'Do teams need a dominant WR1 to win? Or is spreading the ball better?',
             extraInfo: d => `WR1: ${d.wr1_name} (${d.wr1_position})`,
-            metricHelp: '<strong>WR1 Target Share:</strong> Процент передач, брошенных главному WR команды от общего числа передач. Высокий процент (>30%) = зависимость от звезды.'
+            metricHelp: '<strong>WR1 Target Share:</strong> Процент передач, брошенных главному WR команды от общего числа передач. Высокий процент (>30%) = зависимость от звезды.',
+            quadrantHelp: {
+              topRight: '⭐ Звёздная стратегия работает - большая зависимость от WR1 + много побед',
+              topLeft: '🎯 Успех через распределение - мяч раскидан, но побед много',
+              bottomLeft: '😔 Нет звезды и побед мало - проблемы в пасовой игре',
+              bottomRight: '🤔 Парадокс: есть звезда WR1, но мало побед - возможно проблемы в других зонах'
+            }
           },
           {
             xKey: 'te_target_share',
