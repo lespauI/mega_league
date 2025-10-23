@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Team Statistics Explorer — Universal Win% Correlations</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body { margin: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #f7f7f7; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 16px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .controls { display: flex; align-items: center; gap: 16px; margin: 6px 0 12px; flex-wrap: wrap; }
+    .control-group { display: flex; align-items: center; gap: 8px; }
+    .panel { margin: 12px 0 14px; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; }
+    .chart-wrap { padding: 8px 8px 0; }
+    .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 0 10px 10px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+    .avg { background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb; }
+    .red { background: var(--red); opacity: .5; }
+    .blue { background: var(--blue); opacity: .5; }
+    .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; }
+    select { padding: 6px 10px; border: 1px solid #ccc; border-radius: 6px; font-size: 13px; background: #fff; }
+    .correlation-badge { display: inline-block; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 600; margin-left: 12px; }
+    .corr-strong { background: #dcfce7; color: #166534; }
+    .corr-moderate { background: #fef3c7; color: #854d0e; }
+    .corr-weak { background: #fee2e2; color: #991b1b; }
+  </style>
+  <script>
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function toPct(x) { return d3.format('.1%')(x); }
+    function fmt2(x) { return d3.format('.2f')(x); }
+    function fmt3(x) { return d3.format('.3f')(x); }
+
+    function regression(points) {
+      let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
+      for (const [x0, y0] of points) {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        n++; sx += x; sy += y; sxy += x*y; sxx += x*x; syy += y*y;
+      }
+      if (n < 2) return { m: 0, b: sy / (n || 1), r2: 0 };
+      const denom = n * sxx - sx * sx;
+      const m = denom !== 0 ? (n * sxy - sx * sy) / denom : 0;
+      const b = (sy - m * sx) / n;
+      
+      const ssr = points.reduce((sum, [x0, y0]) => {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return sum;
+        return sum + Math.pow(y - (m * x + b), 2);
+      }, 0);
+      const sst = syy - (sy * sy) / n;
+      const r2 = sst !== 0 ? Math.max(0, 1 - ssr / sst) : 0;
+      
+      return { m, b, r2 };
+    }
+
+    const METRICS = [
+      { key: 'pass_yds_per_att', label: 'Pass Yards per Attempt', format: fmt2, higherBetter: true },
+      { key: 'rush_yds_per_att', label: 'Rush Yards per Attempt', format: fmt2, higherBetter: true },
+      { key: 'qb_rating', label: 'QB Rating', format: fmt2, higherBetter: true },
+      { key: 'pass_int_pct', label: 'Interception Rate (%)', format: fmt2, higherBetter: false },
+      { key: 'sack_rate', label: 'Sack Rate (%)', format: fmt2, higherBetter: false },
+      { key: 'turnover_diff', label: 'Turnover Differential', format: fmt2, higherBetter: true },
+      { key: 'td_per_play', label: 'TD per Play', format: fmt3, higherBetter: true },
+      { key: 'yds_per_play', label: 'Yards per Play', format: fmt2, higherBetter: true },
+      { key: 'def_sacks_per_game', label: 'Defensive Sacks per Game', format: fmt2, higherBetter: true },
+      { key: 'def_ints_per_game', label: 'Defensive INTs per Game', format: fmt2, higherBetter: true },
+      { key: 'pass_ints_per_game', label: 'INTs Thrown per Game', format: fmt2, higherBetter: false },
+      { key: 'sacks_allowed_per_game', label: 'Sacks Allowed per Game', format: fmt2, higherBetter: false },
+      { key: 'punts_per_game', label: 'Punts per Game', format: fmt2, higherBetter: false },
+      { key: 'explosive_plays_per_game', label: '20+ Yard Plays per Game', format: fmt2, higherBetter: true },
+      { key: 'rush_broken_tackle_rate', label: 'Broken Tackles per Rush', format: fmt3, higherBetter: true },
+      { key: 'rush_yac_pct', label: 'Rush YAC %', format: fmt2, higherBetter: true },
+      { key: 'rec_yac_pct', label: 'Receiving YAC %', format: fmt2, higherBetter: true },
+      { key: 'pass_comp_pct', label: 'Completion %', format: fmt2, higherBetter: true },
+      { key: 'pass_td_pct', label: 'TD Rate (%)', format: fmt2, higherBetter: true },
+      { key: 'drop_rate', label: 'Drop Rate (%)', format: fmt2, higherBetter: false },
+      { key: 'pass_rush_ratio', label: 'Pass/Rush Ratio', format: fmt2, higherBetter: null },
+      { key: 'off_yds_per_game', label: 'Offensive Yards per Game', format: fmt2, higherBetter: true },
+      { key: 'punt_avg', label: 'Punt Average (Yards)', format: fmt2, higherBetter: true },
+      { key: 'punt_net_avg', label: 'Punt Net Average (Yards)', format: fmt2, higherBetter: true },
+      { key: 'punts_in_20_pct', label: 'Punts Inside 20 (%)', format: fmt2, higherBetter: true },
+      { key: 'fg_pct', label: 'Field Goal %', format: fmt2, higherBetter: true },
+      { key: 'fg_50plus_pct', label: '50+ Yard FG %', format: fmt2, higherBetter: true },
+      { key: 'xp_pct', label: 'Extra Point %', format: fmt2, higherBetter: true },
+    ];
+
+    async function loadData() {
+      const stats = await tryCsv([
+        '../output/team_aggregated_stats.csv',
+        'output/team_aggregated_stats.csv',
+        '/output/team_aggregated_stats.csv'
+      ]);
+
+      for (const row of stats) {
+        row.logoUrl = row.logoId && row.logoId !== '' ? 
+          `https://cdn.neonsportz.com/teamlogos/256/${row.logoId}.png` : null;
+      }
+
+      return stats;
+    }
+
+    function drawScatter(holder, rows, metricKey) {
+      holder.selectAll('*').remove();
+
+      const metric = METRICS.find(m => m.key === metricKey);
+      if (!metric) return;
+
+      const data = rows.filter(d => 
+        Number.isFinite(+d.win_pct) && 
+        Number.isFinite(+d[metricKey]) &&
+        +d.win_pct >= 0.005 && +d.win_pct <= 0.995
+      );
+
+      if (data.length < 2) {
+        holder.append('div').style('padding', '40px').style('text-align', 'center')
+          .style('color', '#999').text('Not enough data to display');
+        return;
+      }
+
+      const margin = { top: 20, right: 24, bottom: 46, left: 70 };
+      const width = 1080, height = 500;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      const wrap = holder.append('div').attr('class', 'chart-wrap');
+      const svg = wrap.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const yVals = data.map(d => +d[metricKey]);
+      const yMin = d3.min(yVals), yMax = d3.max(yVals);
+      const yRange = yMax - yMin;
+      const yPad = yRange * 0.15 || 0.5;
+      const y = d3.scaleLinear()
+        .domain([yMin - yPad, yMax + yPad])
+        .range([innerH, 0]);
+
+      const xVals = data.map(d => +d.win_pct);
+      const xMin = d3.min(xVals), xMax = d3.max(xVals);
+      const xPad = (xMax - xMin) * 0.1 || 0.05;
+      const x = d3.scaleLinear()
+        .domain([Math.max(0, xMin - xPad), Math.min(1, xMax + xPad)])
+        .range([0, innerW]);
+
+      const tickValues = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].filter(v =>
+        v >= x.domain()[0] && v <= x.domain()[1]
+      );
+
+      g.append('g').attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(toPct).tickSize(-innerH).tickPadding(8))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#e2e2e2'))
+        .call(s => s.select('.domain').attr('stroke', '#9aa0a6'));
+
+      const yTickCount = 10;
+      g.append('g')
+        .call(d3.axisLeft(y).ticks(yTickCount).tickFormat(metric.format).tickSize(-innerW).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+      const yAvg = d3.mean(yVals), xAvg = d3.mean(xVals);
+      g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(yAvg)).attr('y2', y(yAvg))
+        .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('line').attr('x1', x(xAvg)).attr('x2', x(xAvg)).attr('y1', 0).attr('y2', innerH)
+        .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('text').attr('x', 6).attr('y', y(yAvg)-6).attr('fill', '#555').attr('font-size', 11)
+        .text('Avg Y: ' + metric.format(yAvg));
+      g.append('text').attr('x', x(xAvg)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11)
+        .text('Avg X: ' + toPct(xAvg));
+
+      const { m, b, r2 } = regression(data.map(d => [+d.win_pct, +d[metricKey]]));
+      const xRange = [d3.min(xVals), d3.max(xVals)];
+      g.append('line')
+        .attr('x1', x(xRange[0])).attr('y1', y(m*xRange[0] + b))
+        .attr('x2', x(xRange[1])).attr('y2', y(m*xRange[1] + b))
+        .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
+
+      const tip = d3.select('body').append('div').attr('class', 'tooltip').style('display', 'none');
+
+      const size = 30;
+      const node = g.selectAll('.team').data(data, d => d.team).join('g').attr('class', 'team')
+        .attr('transform', d => `translate(${x(d.win_pct)},${y(d[metricKey])})`)
+        .on('mouseenter', function(evt, d){
+          const trend = m * d.win_pct + b;
+          const res = d[metricKey] - trend;
+          let html = `<strong>${d.team}</strong><br>`;
+          html += `${metric.label}: ${metric.format(d[metricKey])}<br>`;
+          html += `Win%: ${toPct(d.win_pct)}<br>`;
+          html += `Δ vs trend: ${(res>=0?'+':'') + metric.format(res)}`;
+          tip.style('display','block').html(html);
+        })
+        .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+        .on('mouseleave', ()=> tip.style('display','none'));
+
+      node.append('rect')
+        .attr('x', -(size/2 + 2)).attr('y', -(size/2 + 2))
+        .attr('width', size + 4).attr('height', size + 4)
+        .attr('rx', 4).attr('ry', 4)
+        .attr('fill', d => {
+          const predicted = m * d.win_pct + b;
+          const above = +d[metricKey] >= predicted;
+          return (metric.higherBetter !== false && above) || (metric.higherBetter === false && !above) ? 
+            'var(--red)' : 'var(--blue)';
+        })
+        .attr('opacity', .16);
+
+      node.append('image')
+        .attr('href', d => d.logoUrl || null)
+        .attr('x', -size/2).attr('y', -size/2)
+        .attr('width', size).attr('height', size)
+        .attr('opacity', .95);
+
+      svg.append('text').attr('x', margin.left + innerW/2).attr('y', height-10)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text('Win Percentage');
+      svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text(metric.label);
+
+      const legend = holder.append('div').attr('class', 'legend');
+      legend.append('span').html(`<span class="swatch avg"></span>Avg X & Y`);
+      legend.append('span').html(`<span class="swatch red"></span>Better than trend`);
+      legend.append('span').html(`<span class="swatch blue"></span>Worse than trend`);
+      legend.append('span').style('margin-left','16px').text('Trend line in gray');
+
+      let corrClass = 'corr-weak', corrLabel = 'Weak';
+      if (r2 >= 0.5) { corrClass = 'corr-strong'; corrLabel = 'Strong'; }
+      else if (r2 >= 0.25) { corrClass = 'corr-moderate'; corrLabel = 'Moderate'; }
+      
+      legend.append('span').attr('class', `correlation-badge ${corrClass}`)
+        .html(`<strong>R²: ${fmt3(r2)}</strong> (${corrLabel} correlation)`);
+    }
+
+    function render() {
+      loadData().then(allRows => {
+        const confSel = d3.select('#conf');
+        const metricSel = d3.select('#metric');
+        const root = d3.select('#root');
+
+        function redraw() {
+          const conf = confSel.node().value;
+          const metricKey = metricSel.node().value;
+          const rows = allRows.filter(r => 
+            conf === 'ALL' || (r.conference || '').toUpperCase() === conf
+          );
+          drawScatter(root, rows, metricKey);
+        }
+
+        confSel.on('change', redraw);
+        metricSel.on('change', redraw);
+        redraw();
+      }).catch(err => {
+        d3.select('#root').append('div').style('color','crimson').text('Failed to load data: '+err);
+        console.error(err);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Team Statistics Explorer — Win% Correlations</h1>
+    <div class="subtitle">
+      Explore how different team metrics correlate with winning percentage. 
+      Red squares = better than expected based on wins, Blue = worse than expected.
+      R² shows correlation strength (0=none, 1=perfect).
+    </div>
+    <div class="controls">
+      <div class="control-group">
+        <label for="metric"><strong>Y-Axis Metric:</strong></label>
+        <select id="metric">
+          <option value="pass_yds_per_att">Pass Yards per Attempt</option>
+          <option value="rush_yds_per_att">Rush Yards per Attempt</option>
+          <option value="qb_rating">QB Rating</option>
+          <option value="pass_int_pct">Interception Rate (%)</option>
+          <option value="sack_rate">Sack Rate (%)</option>
+          <option value="turnover_diff" selected>Turnover Differential</option>
+          <option value="td_per_play">TD per Play</option>
+          <option value="yds_per_play">Yards per Play</option>
+          <option value="def_sacks_per_game">Defensive Sacks per Game</option>
+          <option value="def_ints_per_game">Defensive INTs per Game</option>
+          <option value="pass_ints_per_game">INTs Thrown per Game</option>
+          <option value="sacks_allowed_per_game">Sacks Allowed per Game</option>
+          <option value="punts_per_game">Punts per Game</option>
+          <option value="explosive_plays_per_game">20+ Yard Plays per Game</option>
+          <option value="rush_broken_tackle_rate">Broken Tackles per Rush</option>
+          <option value="rush_yac_pct">Rush YAC %</option>
+          <option value="rec_yac_pct">Receiving YAC %</option>
+          <option value="pass_comp_pct">Completion %</option>
+          <option value="pass_td_pct">TD Rate (%)</option>
+          <option value="drop_rate">Drop Rate (%)</option>
+          <option value="pass_rush_ratio">Pass/Rush Ratio</option>
+          <option value="off_yds_per_game">Offensive Yards per Game</option>
+        </select>
+      </div>
+      <div class="control-group">
+        <label for="conf"><strong>Conference:</strong></label>
+        <select id="conf">
+          <option value="ALL" selected>All Conferences</option>
+          <option value="AFC">AFC only</option>
+          <option value="NFC">NFC only</option>
+        </select>
+      </div>
+    </div>
+    <div class="panel">
+      <div id="root"></div>
+    </div>
+    <div class="subtitle">Data: stats_scripts/output/team_aggregated_stats.csv (aggregated from MEGA_*.csv files)</div>
+  </div>
+</body>
+</html>
