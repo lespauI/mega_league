@@ -79,7 +79,7 @@
       ]);
 
       for (const row of stats) {
-        row.logoUrl = row.logoId && row.logoId !== '' ? 
+        row.logoUrl = (row.logoId !== '' && row.logoId != null) ? 
           `https://cdn.neonsportz.com/teamlogos/256/${row.logoId}.png` : null;
       }
 
