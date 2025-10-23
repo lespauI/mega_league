@@ -32,6 +32,9 @@
     .corr-strong { background: #dcfce7; color: #166534; }
     .corr-moderate { background: #fef3c7; color: #854d0e; }
     .corr-weak { background: #fee2e2; color: #991b1b; }
+    .metric-label { position: relative; display: inline-block; }
+    .help-icon { display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; color: white; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 4px; cursor: help; vertical-align: middle; }
+    .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
   </style>
   <script>
     async function tryCsv(paths) {
@@ -70,34 +73,34 @@
     }
 
     const METRICS = [
-      { key: 'pass_yds_per_att', label: 'Pass Yards per Attempt', format: fmt2, higherBetter: true },
-      { key: 'rush_yds_per_att', label: 'Rush Yards per Attempt', format: fmt2, higherBetter: true },
-      { key: 'qb_rating', label: 'QB Rating', format: fmt2, higherBetter: true },
-      { key: 'pass_int_pct', label: 'Interception Rate (%)', format: fmt2, higherBetter: false },
-      { key: 'sack_rate', label: 'Sack Rate (%)', format: fmt2, higherBetter: false },
-      { key: 'turnover_diff', label: 'Turnover Differential', format: fmt2, higherBetter: true },
-      { key: 'td_per_play', label: 'TD per Play', format: fmt3, higherBetter: true },
-      { key: 'yds_per_play', label: 'Yards per Play', format: fmt2, higherBetter: true },
-      { key: 'def_sacks_per_game', label: 'Defensive Sacks per Game', format: fmt2, higherBetter: true },
-      { key: 'def_ints_per_game', label: 'Defensive INTs per Game', format: fmt2, higherBetter: true },
-      { key: 'pass_ints_per_game', label: 'INTs Thrown per Game', format: fmt2, higherBetter: false },
-      { key: 'sacks_allowed_per_game', label: 'Sacks Allowed per Game', format: fmt2, higherBetter: false },
-      { key: 'punts_per_game', label: 'Punts per Game', format: fmt2, higherBetter: false },
-      { key: 'explosive_plays_per_game', label: '20+ Yard Plays per Game', format: fmt2, higherBetter: true },
-      { key: 'rush_broken_tackle_rate', label: 'Broken Tackles per Rush', format: fmt3, higherBetter: true },
-      { key: 'rush_yac_pct', label: 'Rush YAC %', format: fmt2, higherBetter: true },
-      { key: 'rec_yac_pct', label: 'Receiving YAC %', format: fmt2, higherBetter: true },
-      { key: 'pass_comp_pct', label: 'Completion %', format: fmt2, higherBetter: true },
-      { key: 'pass_td_pct', label: 'TD Rate (%)', format: fmt2, higherBetter: true },
-      { key: 'drop_rate', label: 'Drop Rate (%)', format: fmt2, higherBetter: false },
-      { key: 'pass_rush_ratio', label: 'Pass/Rush Ratio', format: fmt2, higherBetter: null },
-      { key: 'off_yds_per_game', label: 'Offensive Yards per Game', format: fmt2, higherBetter: true },
-      { key: 'punt_avg', label: 'Punt Average (Yards)', format: fmt2, higherBetter: true },
-      { key: 'punt_net_avg', label: 'Punt Net Average (Yards)', format: fmt2, higherBetter: true },
-      { key: 'punts_in_20_pct', label: 'Punts Inside 20 (%)', format: fmt2, higherBetter: true },
-      { key: 'fg_pct', label: 'Field Goal %', format: fmt2, higherBetter: true },
-      { key: 'fg_50plus_pct', label: '50+ Yard FG %', format: fmt2, higherBetter: true },
-      { key: 'xp_pct', label: 'Extra Point %', format: fmt2, higherBetter: true },
+      { key: 'pass_yds_per_att', label: 'Pass Yards per Attempt', format: fmt2, higherBetter: true, help: 'Средние ярды за попытку паса. Измеряет эффективность пасовой игры - чем выше, тем лучше качество передач.' },
+      { key: 'rush_yds_per_att', label: 'Rush Yards per Attempt', format: fmt2, higherBetter: true, help: 'Средние ярды за вынос. Показывает эффективность беговой игры и качество линии нападения.' },
+      { key: 'qb_rating', label: 'QB Rating', format: fmt2, higherBetter: true, help: 'Комплексный рейтинг QB (0-158). Учитывает completion%, ярды, TD и INT. Выше 100 = отлично, ниже 80 = плохо.' },
+      { key: 'pass_int_pct', label: 'Interception Rate (%)', format: fmt2, higherBetter: false, help: 'Процент перехватов от попыток передач. Низкий процент = хорошая защита мяча, высокий = рискованные решения.' },
+      { key: 'sack_rate', label: 'Sack Rate (%)', format: fmt2, higherBetter: false, help: 'Процент сэков от (попытки + сэки). Измеряет качество защиты линии нападения и мобильность QB.' },
+      { key: 'turnover_diff', label: 'Turnover Differential', format: fmt2, higherBetter: true, help: 'Разница между отборами и отдачами мяча. Самый сильный предсказатель побед - положительный diff = больше побед.' },
+      { key: 'td_per_play', label: 'TD per Play', format: fmt3, higherBetter: true, help: 'Тачдауны на розыгрыш. Измеряет эффективность красной зоны - способность финишировать драйвы TD вместо FG.' },
+      { key: 'yds_per_play', label: 'Yards per Play', format: fmt2, higherBetter: true, help: 'Средние ярды за розыгрыш (пас + бег). Общая эффективность нападения - 5.5+ = хорошо, 6.0+ = отлично.' },
+      { key: 'def_sacks_per_game', label: 'Defensive Sacks per Game', format: fmt2, higherBetter: true, help: 'Сэки защиты за игру. Показывает давление на QB соперника - 2.5+ = хороший pass rush, 3.0+ = отличный.' },
+      { key: 'def_ints_per_game', label: 'Defensive INTs per Game', format: fmt2, higherBetter: true, help: 'Перехваты защиты за игру. Создание турноверов - ключ к победам. 1.0+ = хорошо, 1.5+ = elite defense.' },
+      { key: 'pass_ints_per_game', label: 'INTs Thrown per Game', format: fmt2, higherBetter: false, help: 'Отданные перехваты за игру. Низкий показатель = хорошая защита мяча. <1.0 = хорошо, <0.7 = отлично.' },
+      { key: 'sacks_allowed_per_game', label: 'Sacks Allowed per Game', format: fmt2, higherBetter: false, help: 'Полученные сэки за игру. Измеряет качество защиты O-line. <2.0 = хорошо, <1.5 = elite protection.' },
+      { key: 'punts_per_game', label: 'Punts per Game', format: fmt2, higherBetter: false, help: 'Панты за игру. Низкий показатель = эффективное нападение с sustained drives. <4.0 = хорошо, <3.5 = отлично.' },
+      { key: 'explosive_plays_per_game', label: '20+ Yard Plays per Game', format: fmt2, higherBetter: true, help: 'Розыгрыши 20+ ярдов за игру. Взрывные моменты поддерживают драйвы. 5+ = хорошо, 7+ = elite playmakers.' },
+      { key: 'rush_broken_tackle_rate', label: 'Broken Tackles per Rush', format: fmt3, higherBetter: true, help: 'Процент сломанных захватов при выносе. Измеряет силу и ловкость RB. 0.10+ = хорошо, 0.15+ = elite power.' },
+      { key: 'rush_yac_pct', label: 'Rush YAC %', format: fmt2, higherBetter: true, help: 'Процент ярдов после контакта при беге. Показывает физическую игру RB. 30%+ = хорошо, 35%+ = мощный runner.' },
+      { key: 'rec_yac_pct', label: 'Receiving YAC %', format: fmt2, higherBetter: true, help: 'Процент ярдов после приёма (YAC). Способность приёмников создавать ярды после catch. 40%+ = динамичные WR.' },
+      { key: 'pass_comp_pct', label: 'Completion %', format: fmt2, higherBetter: true, help: 'Процент завершённых передач. Точность QB и схема offense. 65%+ = хорошо, 70%+ = elite accuracy.' },
+      { key: 'pass_td_pct', label: 'TD Rate (%)', format: fmt2, higherBetter: true, help: 'Процент тачдаунов от попыток передач. Эффективность красной зоны через воздух. 5%+ = хорошо, 6%+ = elite scoring.' },
+      { key: 'drop_rate', label: 'Drop Rate (%)', format: fmt2, higherBetter: false, help: 'Процент потерянных передач. Надёжность receiving corps. <5% = хорошие руки, <3% = elite hands.' },
+      { key: 'pass_rush_ratio', label: 'Pass/Rush Ratio', format: fmt2, higherBetter: null, help: 'Соотношение пасов к выносам. 1.5 = сбалансированно. >2.0 = pass-heavy, <1.2 = run-heavy offense.' },
+      { key: 'off_yds_per_game', label: 'Offensive Yards per Game', format: fmt2, higherBetter: true, help: 'Общие ярды нападения за игру. 350+ = хорошо, 400+ = elite offense. Объём производства.' },
+      { key: 'punt_avg', label: 'Punt Average (Yards)', format: fmt2, higherBetter: true, help: 'Средняя дальность панта. Сила ноги панкера. 45+ = хорошо, 47+ = elite leg.' },
+      { key: 'punt_net_avg', label: 'Punt Net Average (Yards)', format: fmt2, higherBetter: true, help: 'Чистая средняя (с учётом возвратов). Реальное влияние на field position. 40+ = хорошо, 42+ = elite placement.' },
+      { key: 'punts_in_20_pct', label: 'Punts Inside 20 (%)', format: fmt2, higherBetter: true, help: 'Процент пантов внутрь 20 ярдов. Точность размещения - coffin corner punting. 40%+ = хорошо, 50%+ = elite.' },
+      { key: 'fg_pct', label: 'Field Goal %', format: fmt2, higherBetter: true, help: 'Процент попаданий field goals. Надёжность киккера. 85%+ = хорошо, 90%+ = elite kicker.' },
+      { key: 'fg_50plus_pct', label: '50+ Yard FG %', format: fmt2, higherBetter: true, help: 'Процент попаданий с 50+ ярдов. Сила ноги на дальних расстояниях. 50%+ = хорошо, 70%+ = elite range.' },
+      { key: 'xp_pct', label: 'Extra Point %', format: fmt2, higherBetter: true, help: 'Процент попаданий extra points. Должно быть 95%+. Ниже = проблемы под давлением или техника.' },
     ];
 
     async function loadData() {
@@ -251,6 +254,26 @@
         const metricSel = d3.select('#metric');
         const root = d3.select('#root');
 
+        const helpIcon = d3.select('#metricHelp');
+        const metricTip = d3.select('body').append('div').attr('class', 'metric-tooltip').style('display', 'none');
+        
+        function updateHelpIcon() {
+          const metricKey = metricSel.node().value;
+          const metric = METRICS.find(m => m.key === metricKey);
+          if (metric && metric.help) {
+            helpIcon.style('display', 'inline-block')
+              .on('mouseenter', function(evt) {
+                metricTip.style('display', 'block').html('<strong>' + metric.label + ':</strong><br>' + metric.help);
+              })
+              .on('mousemove', (evt) => {
+                metricTip.style('left', (evt.pageX + 12) + 'px').style('top', (evt.pageY - 28) + 'px');
+              })
+              .on('mouseleave', () => {
+                metricTip.style('display', 'none');
+              });
+          }
+        }
+
         function redraw() {
           const conf = confSel.node().value;
           const metricKey = metricSel.node().value;
@@ -258,6 +281,7 @@
             conf === 'ALL' || (r.conference || '').toUpperCase() === conf
           );
           drawScatter(root, rows, metricKey);
+          updateHelpIcon();
         }
 
         confSel.on('change', redraw);
@@ -283,6 +307,7 @@
     <div class="controls">
       <div class="control-group">
         <label for="metric"><strong>Y-Axis Metric:</strong></label>
+        <span id="metricHelp" class="help-icon" style="display:none;">?</span>
         <select id="metric">
           <option value="pass_yds_per_att">Pass Yards per Attempt</option>
           <option value="rush_yds_per_att">Rush Yards per Attempt</option>
