@@ -111,7 +111,7 @@ def get_file_description(filename):
         'playoff_race_table.html': 'Detailed playoff race table',
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
         'team_stats_explorer.html': '📊 Interactive Win% correlation explorer with 20+ team metrics',
-        'team_stats_correlations.html': '🔍 14 cross-metric correlation graphs revealing strategic insights',
+        'team_stats_correlations.html': '🔍 34 cross-metric correlation graphs revealing strategic insights',
         'afc_race.png': 'AFC playoff standings and race visualization',
         'afc_compl.png': 'AFC season completion metrics',
         'nfc_race.png': 'NFC playoff standings and race visualization',

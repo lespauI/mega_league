@@ -324,6 +324,170 @@
             yLabel: 'Extra Point %',
             title: 'Scoring Frequency vs XP Accuracy',
             insight: 'High-scoring teams attempt more XPs. Does volume increase pressure and lead to more misses?'
+          },
+          {
+            xKey: 'sack_rate',
+            yKey: 'qb_rating',
+            xLabel: 'Sack Rate (%)',
+            yLabel: 'QB Rating',
+            title: 'QB Protection vs Efficiency',
+            insight: 'Better pass protection leads to better QB performance. Measures offensive line impact on QB success.'
+          },
+          {
+            xKey: 'def_ints_per_game',
+            yKey: 'win_pct',
+            xLabel: 'Defensive INTs per Game',
+            yLabel: 'Win Percentage',
+            yFormat: toPct,
+            title: 'Defensive Turnover Creation vs Winning',
+            insight: 'Defense wins championships? Creating turnovers is one of the strongest predictors of winning.'
+          },
+          {
+            xKey: 'pass_int_pct',
+            yKey: 'win_pct',
+            xLabel: 'Interception Rate (%)',
+            yLabel: 'Win Percentage',
+            yFormat: toPct,
+            title: 'Ball Security vs Winning',
+            insight: 'Teams that protect the ball win games. Lower INT rate = more wins.'
+          },
+          {
+            xKey: 'pass_yds_per_att',
+            yKey: 'rush_explosive_rate',
+            xLabel: 'Pass Yards per Attempt',
+            yLabel: 'Rush Explosive Play Rate (%)',
+            title: 'Explosive Offense Philosophy',
+            insight: 'Do teams with explosive passing also have explosive running? Or specialize in one?'
+          },
+          {
+            xKey: 'pass_yds_per_att',
+            yKey: 'rush_yds_per_att',
+            xLabel: 'Pass Yards per Attempt',
+            yLabel: 'Rush Yards per Attempt',
+            title: 'Offensive Efficiency Balance',
+            insight: 'Balanced efficiency vs specialized offense. Top-right = elite at both. Others = one-dimensional.'
+          },
+          {
+            xKey: 'td_per_play',
+            yKey: 'win_pct',
+            xLabel: 'Touchdowns per Play',
+            yLabel: 'Win Percentage',
+            yFormat: toPct,
+            title: 'Red Zone Scoring Efficiency vs Winning',
+            insight: 'Finishing drives with TDs (not FGs) wins games. Measures red zone effectiveness.'
+          },
+          {
+            xKey: 'def_sacks_per_game',
+            yKey: 'pass_comp_pct',
+            xLabel: 'Defensive Sacks per Game',
+            yLabel: 'Team Completion %',
+            title: 'Defensive Pressure Impact',
+            insight: 'Does generating sacks correlate with opponent incompletions? Pass rush vs coverage.'
+          },
+          {
+            xKey: 'rush_att_per_game',
+            yKey: 'pass_ints_per_game',
+            xLabel: 'Rush Attempts per Game',
+            yLabel: 'INTs Thrown per Game',
+            title: 'Ball Control Strategy',
+            insight: 'Running teams protect the ball better. Time of possession = fewer risky throws = fewer turnovers.'
+          },
+          {
+            xKey: 'rec_catches',
+            yKey: 'rec_yds_per_catch',
+            xLabel: 'Total Receptions',
+            yLabel: 'Yards per Catch',
+            title: 'Receiving Efficiency vs Volume',
+            insight: 'High-volume short passing (bottom-right) vs low-volume deep passing (top-left). West Coast vs vertical.'
+          },
+          {
+            xKey: 'sack_rate',
+            yKey: 'pass_comp_pct',
+            xLabel: 'Sack Rate (%)',
+            yLabel: 'Completion %',
+            title: 'QB Accuracy Under Pressure',
+            insight: 'Can QBs maintain accuracy when facing pressure? Mental toughness and pocket presence test.'
+          },
+          {
+            xKey: 'def_forced_fum',
+            yKey: 'def_fum_rec',
+            xLabel: 'Fumbles Forced',
+            yLabel: 'Fumbles Recovered',
+            title: 'Fumble Recovery Luck',
+            insight: 'Fumbles are 50/50 balls. Teams above trend = lucky, below trend = unlucky. Regression candidate.'
+          },
+          {
+            xKey: 'rec_catches',
+            yKey: 'drop_rate',
+            xLabel: 'Total Receptions',
+            yLabel: 'Drop Rate (%)',
+            title: 'Receiving Corps Reliability',
+            insight: 'Do high-volume receivers drop more passes? Fatigue vs concentration at high workloads.'
+          },
+          {
+            xKey: 'def_deflections',
+            yKey: 'def_ints',
+            xLabel: 'Pass Deflections',
+            yLabel: 'Defensive Interceptions',
+            title: 'Defensive Playmaking',
+            insight: 'Creating INTs requires getting hands on the ball first. Coverage quality indicator.'
+          },
+          {
+            xKey: 'rush_broken_tackles',
+            yKey: 'rush_tds',
+            xLabel: 'Broken Tackles (Rushing)',
+            yLabel: 'Rushing Touchdowns',
+            title: 'Run Game Physicality',
+            insight: 'Power runners break tackles AND score TDs. Physical dominance at the goal line.'
+          },
+          {
+            xKey: 'punt_net_avg',
+            yKey: 'win_pct',
+            xLabel: 'Punt Net Average (Yards)',
+            yLabel: 'Win Percentage',
+            yFormat: toPct,
+            title: 'Special Teams Field Position Impact',
+            insight: 'Better punting creates better field position. Hidden yards that contribute to winning.'
+          },
+          {
+            xKey: 'pass_att_per_game',
+            yKey: 'sacks_allowed_per_game',
+            xLabel: 'Pass Attempts per Game',
+            yLabel: 'Sacks Allowed per Game',
+            title: 'Pass Protection Breakdown Rate',
+            insight: 'More dropbacks = more sacks? Pass-heavy offense fatigue on offensive line.'
+          },
+          {
+            xKey: 'def_tackles',
+            yKey: 'def_sacks',
+            xLabel: 'Total Tackles',
+            yLabel: 'Defensive Sacks',
+            title: 'Defensive Tackle Efficiency',
+            insight: 'High tackle teams chase plays. Low tackle + high sack teams make disruptive plays.'
+          },
+          {
+            xKey: 'yds_per_play',
+            yKey: 'explosive_plays_per_game',
+            xLabel: 'Yards per Play',
+            yLabel: 'Explosive Plays (20+) per Game',
+            title: 'Offensive Consistency vs Explosiveness',
+            insight: 'Consistent efficient offense (left) vs boom-or-bust explosive offense (right).'
+          },
+          {
+            xKey: 'total_turnovers',
+            yKey: 'total_takeaways',
+            xLabel: 'Turnovers (Giveaways)',
+            yLabel: 'Takeaways',
+            title: 'Turnover Differential Components',
+            insight: 'Top-right = aggressive both ways. Bottom-left = conservative. Diagonal = turnover margin.'
+          },
+          {
+            xKey: 'rec_yac_pct',
+            yKey: 'rec_yds_per_catch',
+            xLabel: 'Receiving YAC %',
+            yLabel: 'Yards per Catch',
+            title: 'Receiving YAC Creation',
+            insight: 'YAC from short passes (high YAC%, low Y/C) vs downfield catches (low YAC%, high Y/C). Scheme design.'
           }
         ];
 
@@ -354,7 +518,7 @@
   <div class="container">
     <h1>Team Statistics — Interesting Correlations</h1>
     <div class="subtitle">
-      10 non-obvious relationships between team metrics. Red = above trend, Blue = below trend.
+      34 non-obvious relationships between team metrics. Red = above trend, Blue = below trend.
       R² shows correlation strength. Each graph reveals strategic insights.
     </div>
     <div class="controls">
