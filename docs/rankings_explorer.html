@@ -36,10 +36,10 @@
     .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
     .quadrant-label { fill: #999; font-size: 11px; font-weight: 500; text-anchor: middle; }
     .axis-label { font-size: 12px; font-weight: 500; fill: #666; }
-    .team-dot { stroke: #fff; stroke-width: 1.5; cursor: pointer; }
-    .team-dot:hover { stroke: #000; stroke-width: 2; }
-    .regression-line { stroke: #333; stroke-width: 2; stroke-dasharray: 5,5; opacity: 0.5; }
-    .zero-line { stroke: #999; stroke-width: 1; stroke-dasharray: 3,3; opacity: 0.5; }
+    .red { background: var(--red); opacity: .5; }
+    .blue { background: var(--blue); opacity: .5; }
+    .regression-line { stroke: #777; stroke-width: 2; opacity: 0.95; }
+    .zero-line { stroke: #999; stroke-width: 1; stroke-dasharray: 6,4; opacity: 0.5; }
     .stats-summary { background: #f8fafc; padding: 12px; border-radius: 8px; margin: 12px; font-size: 13px; }
     .stats-row { display: flex; justify-content: space-between; margin: 4px 0; }
     .stats-label { color: #64748b; }
@@ -57,6 +57,7 @@
     function fmt2(x) { return d3.format('.2f')(x); }
     function fmt3(x) { return d3.format('.3f')(x); }
     function fmtInt(x) { return d3.format(',d')(x); }
+    function toPct(x) { return d3.format('.1%')(x); }
 
     function regression(points) {
       let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
@@ -256,7 +257,7 @@
       return stats;
     }
 
-    function drawScatter(holder, rows, config) {
+    function drawScatter(holder, rows, config, isOpen = false) {
       const data = rows.filter(d => {
         const x = +d[config.xMetric];
         const y = +d[config.yMetric];
@@ -265,7 +266,7 @@
 
       if (data.length < 2) return;
 
-      const panel = holder.append('details').attr('class', 'panel').attr('open', false);
+      const panel = holder.append('details').attr('class', 'panel').attr('open', isOpen);
       const summary = panel.append('summary');
       summary.append('span').text(config.title);
       
@@ -349,131 +350,119 @@
         .style('stroke-dasharray', '2,2')
         .style('opacity', 0.3);
 
-      // Add midpoint lines for quadrants
-      const xMid = (xExtent[0] + xExtent[1]) / 2;
-      const yMid = (yExtent[0] + yExtent[1]) / 2;
+      // Add average lines
+      const avgX = d3.mean(data, d => +d[config.xMetric]);
+      const avgY = d3.mean(data, d => +d[config.yMetric]);
       
-      g.append('line')
-        .attr('class', 'zero-line')
-        .attr('x1', xScale(xMid))
-        .attr('x2', xScale(xMid))
-        .attr('y1', 0)
-        .attr('y2', innerH);
+      g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', yScale(avgY)).attr('y2', yScale(avgY))
+        .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('line').attr('x1', xScale(avgX)).attr('x2', xScale(avgX)).attr('y1', 0).attr('y2', innerH)
+        .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
       
-      g.append('line')
-        .attr('class', 'zero-line')
-        .attr('x1', 0)
-        .attr('x2', innerW)
-        .attr('y1', yScale(yMid))
-        .attr('y2', yScale(yMid));
-
-      // Quadrant labels
-      if (config.quadrants) {
-        const qPadding = 15;
-        g.append('text').attr('class', 'quadrant-label')
-          .attr('x', innerW / 4).attr('y', qPadding)
-          .text(config.quadrants.topLeft);
-        g.append('text').attr('class', 'quadrant-label')
-          .attr('x', 3 * innerW / 4).attr('y', qPadding)
-          .text(config.quadrants.topRight);
-        g.append('text').attr('class', 'quadrant-label')
-          .attr('x', innerW / 4).attr('y', innerH - qPadding/2)
-          .text(config.quadrants.bottomLeft);
-        g.append('text').attr('class', 'quadrant-label')
-          .attr('x', 3 * innerW / 4).attr('y', innerH - qPadding/2)
-          .text(config.quadrants.bottomRight);
-      }
+      // Add average labels
+      const xAvgLabel = config.xMetric.includes('Rank') ? `Avg: #${Math.round(avgX)}` : `Avg: ${fmt2(avgX)}`;
+      const yAvgLabel = config.yMetric.includes('Rank') ? `Avg: #${Math.round(avgY)}` : `Avg: ${fmt2(avgY)}`;
+      
+      g.append('text').attr('x', 6).attr('y', yScale(avgY)-6).attr('fill', '#555').attr('font-size', 11)
+        .text(yAvgLabel);
+      g.append('text').attr('x', xScale(avgX)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11)
+        .text(xAvgLabel);
 
       // Regression line
       if (reg.r2 > 0.05) {
-        const lineGen = d3.line()
-          .x(d => xScale(d))
-          .y(d => yScale(reg.m * d + reg.b));
-        
-        g.append('path')
-          .datum(xExtent)
-          .attr('class', 'regression-line')
-          .attr('d', lineGen);
+        const xRange = [xExtent[0], xExtent[1]];
+        g.append('line')
+          .attr('x1', xScale(xRange[0])).attr('y1', yScale(reg.m*xRange[0] + reg.b))
+          .attr('x2', xScale(xRange[1])).attr('y2', yScale(reg.m*xRange[1] + reg.b))
+          .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
       }
 
       // Axes
       g.append('g')
         .attr('transform', `translate(0,${innerH})`)
-        .call(d3.axisBottom(xScale));
+        .call(d3.axisBottom(xScale).tickSize(-innerH).tickPadding(8))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#e2e2e2'))
+        .call(s => s.select('.domain').attr('stroke', '#9aa0a6'));
 
       g.append('g')
-        .call(d3.axisLeft(yScale));
+        .call(d3.axisLeft(yScale).tickSize(-innerW).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
 
       // Axis labels
-      g.append('text')
-        .attr('class', 'axis-label')
-        .attr('transform', 'rotate(-90)')
-        .attr('y', -margin.left + 15)
-        .attr('x', -innerH / 2)
-        .attr('text-anchor', 'middle')
+      svg.append('text').attr('x', margin.left + innerW/2).attr('y', height-10)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text(config.xLabel);
+      svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
         .text(config.yLabel);
 
-      g.append('text')
-        .attr('class', 'axis-label')
-        .attr('x', innerW / 2)
-        .attr('y', innerH + margin.bottom - 5)
-        .attr('text-anchor', 'middle')
-        .text(config.xLabel);
-
-      // Color scale
-      const colorScale = d3.scaleSequential(d3.interpolateRdBu)
-        .domain([0, 1]);
-
       // Tooltip
-      const tooltip = d3.select('body').append('div').attr('class', 'tooltip');
+      const tooltip = d3.select('body').append('div').attr('class', 'tooltip').style('display', 'none');
 
-      // Data points
-      g.selectAll('.team-dot')
-        .data(data)
-        .enter().append('circle')
-        .attr('class', 'team-dot')
-        .attr('cx', d => xScale(+d[config.xMetric]))
-        .attr('cy', d => yScale(+d[config.yMetric]))
-        .attr('r', 6)
-        .attr('fill', d => colorScale(+d.win_pct))
+      // Data points with team logos
+      const size = 30;
+      const node = g.selectAll('.team').data(data, d => d.team).join('g').attr('class', 'team')
+        .attr('transform', d => `translate(${xScale(+d[config.xMetric])},${yScale(+d[config.yMetric])})`)
         .on('mouseenter', function(evt, d) {
-          d3.select(this).attr('r', 8);
-          let xVal = config.xMetric.includes('rank') ? `#${Math.round(d[config.xMetric])}` : fmt2(d[config.xMetric]);
-          let yVal = config.yMetric.includes('rank') ? `#${Math.round(d[config.yMetric])}` : fmt2(d[config.yMetric]);
+          const trend = reg.m * d[config.xMetric] + reg.b;
+          const res = d[config.yMetric] - trend;
           
-          tooltip.style('display', 'block')
-            .html(`<strong>${d.team}</strong><br>` +
-                  `${config.xLabel}: ${xVal}<br>` +
-                  `${config.yLabel}: ${yVal}<br>` +
-                  `Win %: ${fmt2(d.win_pct * 100)}%`);
+          // Format values based on metric type
+          let xVal = config.xMetric.includes('Rank') ? `#${Math.round(d[config.xMetric])}` : 
+                     config.xMetric.includes('Pct') || config.xMetric === 'winPct' ? toPct(d[config.xMetric]) :
+                     fmt2(d[config.xMetric]);
+          let yVal = config.yMetric.includes('Rank') ? `#${Math.round(d[config.yMetric])}` :
+                     config.yMetric.includes('Pct') || config.yMetric === 'winPct' ? toPct(d[config.yMetric]) :
+                     fmt2(d[config.yMetric]);
+          
+          let html = `<strong>${d.team}</strong><br>`;
+          html += `${config.xLabel}: ${xVal}<br>`;
+          html += `${config.yLabel}: ${yVal}<br>`;
+          
+          // Format delta based on metric type
+          let deltaVal = config.yMetric.includes('Rank') ? (res>=0?'+':'') + fmt2(res) :
+                        config.yMetric.includes('Pct') || config.yMetric === 'winPct' ? (res>=0?'+':'') + toPct(res) :
+                        (res>=0?'+':'') + fmt2(res);
+          html += `Δ vs trend: ${deltaVal}`;
+          
+          tooltip.style('display','block').html(html);
         })
         .on('mousemove', (evt) => {
-          tooltip.style('left', (evt.pageX + 12) + 'px')
-            .style('top', (evt.pageY - 28) + 'px');
+          tooltip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px');
         })
-        .on('mouseleave', function(evt, d) {
-          d3.select(this).attr('r', 6);
-          tooltip.style('display', 'none');
+        .on('mouseleave', () => {
+          tooltip.style('display','none');
         });
+
+      // Background rectangle for each team
+      node.append('rect')
+        .attr('x', -(size/2 + 2)).attr('y', -(size/2 + 2))
+        .attr('width', size + 4).attr('height', size + 4)
+        .attr('rx', 4).attr('ry', 4)
+        .attr('fill', d => {
+          const predicted = reg.m * d[config.xMetric] + reg.b;
+          const above = +d[config.yMetric] >= predicted;
+          // Adjust for inverted scales
+          const shouldBeRed = (config.inverted === true || config.inverted === 'both' || config.inverted === 'y') ? !above : above;
+          return shouldBeRed ? 'var(--red)' : 'var(--blue)';
+        })
+        .attr('opacity', .16);
+
+      // Team logo image
+      node.append('image')
+        .attr('href', d => d.logoUrl || null)
+        .attr('x', -size/2).attr('y', -size/2)
+        .attr('width', size).attr('height', size)
+        .attr('opacity', .95);
 
       // Legend
       const legend = wrap.append('div').attr('class', 'legend');
-      legend.append('span').html('<span class="swatch" style="background: #b2182b"></span>Low Win %');
-      legend.append('span').html('<span class="swatch avg"></span>Average');
-      legend.append('span').html('<span class="swatch" style="background: #2166ac"></span>High Win %');
+      legend.append('span').html(`<span class="swatch red"></span>Better than trend`);
+      legend.append('span').html(`<span class="swatch blue"></span>Worse than trend`);
+      legend.append('span').html(`<span class="swatch avg"></span>Average Lines`);
 
-      // Statistics summary
-      const statsDiv = panel.append('div').attr('class', 'stats-summary');
-      const avgX = d3.mean(data, d => +d[config.xMetric]);
-      const avgY = d3.mean(data, d => +d[config.yMetric]);
-      const correlation = Math.sqrt(reg.r2) * (reg.m > 0 ? 1 : -1);
-      
-      statsDiv.append('div').attr('class', 'stats-row')
-        .html(`<span class="stats-label">Correlation:</span><span class="stats-value">${fmt3(correlation)}</span>`);
-      statsDiv.append('div').attr('class', 'stats-row')
-        .html(`<span class="stats-label">Avg ${config.xLabel}:</span><span class="stats-value">${config.xMetric.includes('rank') ? '#' + Math.round(avgX) : fmt2(avgX)}</span>`);
-      statsDiv.append('div').attr('class', 'stats-row')
-        .html(`<span class="stats-label">Avg ${config.yLabel}:</span><span class="stats-value">${config.yMetric.includes('rank') ? '#' + Math.round(avgY) : fmt2(avgY)}</span>`);
+
     }
 
     async function main() {
@@ -482,12 +471,9 @@
       try {
         const data = await loadData();
         
-        for (const chart of CHARTS) {
-          drawScatter(container, data, chart);
-        }
-        
-        // Open first panel by default
-        container.select('.panel').attr('open', true);
+        CHARTS.forEach((chart, index) => {
+          drawScatter(container, data, chart, index === 0);  // Open first panel
+        });
         
       } catch (error) {
         console.error('Failed to load data:', error);
@@ -504,8 +490,13 @@
 <body>
   <div class="container">
     <h1>Team Rankings Explorer — Strategic Patterns & Performance Correlations</h1>
-    <div class="subtitle">Analyzing team rankings, statistical relationships, and strategic philosophies across offense, defense, and special teams</div>
+    <div class="subtitle">
+      12 comprehensive graphs showing team rankings correlations and strategic patterns.
+      Red squares = better than trend, Blue = worse than trend. 
+      R² shows correlation strength (0=none, 1=perfect).
+    </div>
     <div id="container"></div>
+    <div class="subtitle">Data: output/team_rankings_stats.csv (combined rankings and team statistics)</div>
   </div>
 </body>
 </html>
