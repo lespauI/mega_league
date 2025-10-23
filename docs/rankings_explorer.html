@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Team Rankings Explorer — Strategic Patterns & Performance Correlations</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --green: #22c55e;
+      --orange: #f97316;
+      --purple: #8b5cf6;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body { margin: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #f7f7f7; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 16px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .panel { margin: 12px 0 14px; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; }
+    .panel > summary { padding: 10px 14px; background: #f5f7fa; border-bottom: 1px solid #ebeff5; font-weight: 600; cursor: pointer; user-select: none; list-style: none; }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
+    .chart-wrap { padding: 8px 8px 0; }
+    .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 0 10px 10px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+    .avg { background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb; }
+    .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; white-space: nowrap; }
+    .correlation-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+    .corr-strong { background: #dcfce7; color: #166534; }
+    .corr-moderate { background: #fef3c7; color: #854d0e; }
+    .corr-weak { background: #fee2e2; color: #991b1b; }
+    .help-icon { display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; color: white; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 8px; cursor: help; vertical-align: middle; }
+    .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
+    .quadrant-label { fill: #999; font-size: 11px; font-weight: 500; text-anchor: middle; }
+    .axis-label { font-size: 12px; font-weight: 500; fill: #666; }
+    .team-dot { stroke: #fff; stroke-width: 1.5; cursor: pointer; }
+    .team-dot:hover { stroke: #000; stroke-width: 2; }
+    .regression-line { stroke: #333; stroke-width: 2; stroke-dasharray: 5,5; opacity: 0.5; }
+    .zero-line { stroke: #999; stroke-width: 1; stroke-dasharray: 3,3; opacity: 0.5; }
+    .stats-summary { background: #f8fafc; padding: 12px; border-radius: 8px; margin: 12px; font-size: 13px; }
+    .stats-row { display: flex; justify-content: space-between; margin: 4px 0; }
+    .stats-label { color: #64748b; }
+    .stats-value { font-weight: 600; color: #1e293b; }
+  </style>
+  <script>
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function fmt2(x) { return d3.format('.2f')(x); }
+    function fmt3(x) { return d3.format('.3f')(x); }
+    function fmtInt(x) { return d3.format(',d')(x); }
+
+    function regression(points) {
+      let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
+      for (const [x0, y0] of points) {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        n++; sx += x; sy += y; sxy += x*y; sxx += x*x; syy += y*y;
+      }
+      if (n < 2) return { m: 0, b: sy / (n || 1), r2: 0 };
+      const denom = n * sxx - sx * sx;
+      const m = denom !== 0 ? (n * sxy - sx * sy) / denom : 0;
+      const b = (sy - m * sx) / n;
+      
+      const ssr = points.reduce((sum, [x0, y0]) => {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return sum;
+        return sum + Math.pow(y - (m * x + b), 2);
+      }, 0);
+      const sst = syy - (sy * sy) / n;
+      const r2 = sst !== 0 ? Math.max(0, 1 - ssr / sst) : 0;
+      
+      return { m, b, r2 };
+    }
+
+    const CHARTS = [
+      // Core Balance Charts
+      { 
+        title: 'Offensive vs Defensive Balance', 
+        xMetric: 'offTotalYdsRank', yMetric: 'defTotalYdsRank', 
+        xLabel: 'Offensive Rank', yLabel: 'Defensive Rank',
+        inverted: true,
+        help: 'Complete team balance - elite teams excel on both sides, specialized teams dominate one side',
+        quadrants: {
+          topLeft: 'Elite Defense, Poor Offense: Defense wins championships philosophy',
+          topRight: 'Poor Everything: Rebuilding mode, draft pick positioning',
+          bottomLeft: 'Elite Balance: Championship contenders with no weaknesses',
+          bottomRight: 'Elite Offense, Poor Defense: Track meet teams, shootout specialists'
+        }
+      },
+      { 
+        title: 'Pass vs Rush Philosophy', 
+        xMetric: 'offPassYdsRank', yMetric: 'offRushYdsRank', 
+        xLabel: 'Pass Offense Rank', yLabel: 'Rush Offense Rank',
+        inverted: true,
+        help: 'Offensive philosophy - modern passing attacks vs ground-and-pound approaches',
+        quadrants: {
+          topLeft: 'Elite Passing, Poor Rushing: Air raid offense, spread formations',
+          topRight: 'Poor Total Offense: Struggling to move the ball any way',
+          bottomLeft: 'Balanced Excellence: Multiple ways to beat you',
+          bottomRight: 'Elite Rushing, Poor Passing: Smashmouth football, clock control'
+        }
+      },
+      { 
+        title: 'Scoring vs Yardage Efficiency', 
+        xMetric: 'offTotalYdsRank', yMetric: 'ptsForRank', 
+        xLabel: 'Total Yards Rank', yLabel: 'Scoring Rank',
+        inverted: true,
+        help: 'Red zone efficiency - do yards translate to points?',
+        quadrants: {
+          topLeft: 'Move Ball, Can\'t Score: Red zone struggles, settling for FGs',
+          topRight: 'Offensive Disaster: Can\'t move or score',
+          bottomLeft: 'Offensive Machine: Yards and points, complete dominance',
+          bottomRight: 'Efficient Scoring: Short fields, capitalize on turnovers'
+        }
+      },
+
+      // Strategic Mismatches
+      { 
+        title: 'Pass Defense vs Rush Defense Balance', 
+        xMetric: 'defPassYdsRank', yMetric: 'defRushYdsRank', 
+        xLabel: 'Pass Defense Rank', yLabel: 'Rush Defense Rank',
+        inverted: true,
+        help: 'Defensive balance - where are you stronger?',
+        quadrants: {
+          topLeft: 'Elite Pass D, Weak Rush D: Teams will run at you',
+          topRight: 'Poor Overall Defense: Vulnerable everywhere',
+          bottomLeft: 'Elite Complete Defense: No weaknesses to exploit',
+          bottomRight: 'Elite Rush D, Weak Pass D: Pass-heavy teams attack'
+        }
+      },
+      { 
+        title: 'Turnover Differential vs Win Impact', 
+        xMetric: 'tODiff', yMetric: 'winPct', 
+        xLabel: 'Turnover Differential', yLabel: 'Win Percentage',
+        help: 'The strongest predictor of wins - protect the ball and create turnovers',
+        quadrants: {
+          topRight: 'Positive TO Diff, Winning: Classic winning formula',
+          topLeft: 'Negative TO Diff, Winning: Overcoming turnovers through excellence',
+          bottomLeft: 'Negative TO Diff, Losing: Turnovers killing team',
+          bottomRight: 'Positive TO Diff, Losing: Wasting turnover advantages'
+        }
+      },
+
+      // Efficiency Metrics
+      { 
+        title: 'Yards to Points Conversion', 
+        xMetric: 'offTotalYds', yMetric: 'ptsFor', 
+        xLabel: 'Total Yards', yLabel: 'Points Scored',
+        help: 'Scoring efficiency - elite teams maximize points from yards gained',
+        quadrants: {
+          topRight: 'High Yards, High Points: Offensive juggernaut',
+          topLeft: 'Low Yards, High Points: Incredibly efficient, short fields',
+          bottomLeft: 'Low Yards, Low Points: Offensive struggles',
+          bottomRight: 'High Yards, Low Points: Empty yards, red zone failures'
+        }
+      },
+      { 
+        title: 'Offensive vs Defensive Efficiency', 
+        xMetric: 'offYdsPerPt', yMetric: 'defYdsPerPt', 
+        xLabel: 'Yards per Point (Offense)', yLabel: 'Yards per Point Allowed (Defense)',
+        help: 'Efficiency on both sides - lower is better',
+        quadrants: {
+          topRight: 'Inefficient O, Inefficient D: Bad both ways',
+          topLeft: 'Efficient O, Inefficient D: Score easily, defend poorly',
+          bottomLeft: 'Efficient O, Efficient D: Elite both ways',
+          bottomRight: 'Inefficient O, Efficient D: Defense keeps you in games'
+        }
+      },
+      { 
+        title: 'Pass/Rush Balance', 
+        xMetric: 'passRushRatio', yMetric: 'winPct', 
+        xLabel: 'Pass/Rush Ratio', yLabel: 'Win Percentage',
+        help: 'Offensive balance impact on winning',
+        quadrants: {
+          topRight: 'Pass Heavy, Winning: Modern offense success',
+          topLeft: 'Run Heavy, Winning: Ground control working',
+          bottomLeft: 'Run Heavy, Losing: Predictable offense',
+          bottomRight: 'Pass Heavy, Losing: One-dimensional struggles'
+        }
+      },
+
+      // Advanced Analytics
+      { 
+        title: 'Combined Rank vs Win %', 
+        xMetric: 'combinedRank', yMetric: 'winPct', 
+        xLabel: 'Combined Offensive + Defensive Rank', yLabel: 'Win Percentage',
+        inverted: 'x',
+        help: 'Overall team strength correlation with wins',
+        quadrants: {
+          topLeft: 'Poor Ranks, Winning: Overachieving',
+          topRight: 'Good Ranks, Winning: Meeting expectations',
+          bottomLeft: 'Poor Ranks, Losing: As expected',
+          bottomRight: 'Good Ranks, Losing: Underachieving'
+        }
+      },
+      { 
+        title: 'Rank Volatility vs Performance', 
+        xMetric: 'rankVolatility', yMetric: 'winPct', 
+        xLabel: 'Rank Volatility', yLabel: 'Win Percentage',
+        help: 'Consistency vs boom-bust teams',
+        quadrants: {
+          topRight: 'High Volatility, Winning: Streaky but successful',
+          topLeft: 'Low Volatility, Winning: Consistent excellence',
+          bottomLeft: 'Low Volatility, Losing: Consistently bad',
+          bottomRight: 'High Volatility, Losing: Unpredictable struggles'
+        }
+      },
+      { 
+        title: 'Cap Efficiency', 
+        xMetric: 'capSpentMillions', yMetric: 'winPct', 
+        xLabel: 'Cap Spent (Millions)', yLabel: 'Win Percentage',
+        help: 'Getting wins per dollar spent',
+        quadrants: {
+          topRight: 'High Spend, Winning: Money well spent',
+          topLeft: 'Low Spend, Winning: Great value',
+          bottomLeft: 'Low Spend, Losing: Get what you pay for',
+          bottomRight: 'High Spend, Losing: Wasting money'
+        }
+      },
+      { 
+        title: 'Home vs Away Performance', 
+        xMetric: 'homeWinPct', yMetric: 'awayWinPct', 
+        xLabel: 'Home Win %', yLabel: 'Away Win %',
+        help: 'Home field advantage or road warriors?',
+        quadrants: {
+          topRight: 'Good Home, Good Away: Complete team',
+          topLeft: 'Bad Home, Good Away: Road warriors',
+          bottomLeft: 'Bad Home, Bad Away: Struggling everywhere',
+          bottomRight: 'Good Home, Bad Away: Home cooking only'
+        }
+      }
+    ];
+
+    async function loadData() {
+      const stats = await tryCsv([
+        '../output/team_rankings_stats.csv',
+        'output/team_rankings_stats.csv',
+        '/output/team_rankings_stats.csv'
+      ]);
+
+      for (const row of stats) {
+        row.logoUrl = (row.logoId !== '' && row.logoId != null) ? 
+          `https://cdn.neonsportz.com/teamlogos/256/${row.logoId}.png` : null;
+        row.capSpentMillions = row.capSpent / 1000000;  // Convert to millions for display
+      }
+
+      return stats;
+    }
+
+    function drawScatter(holder, rows, config) {
+      const data = rows.filter(d => {
+        const x = +d[config.xMetric];
+        const y = +d[config.yMetric];
+        return Number.isFinite(x) && Number.isFinite(y);
+      });
+
+      if (data.length < 2) return;
+
+      const panel = holder.append('details').attr('class', 'panel').attr('open', false);
+      const summary = panel.append('summary');
+      summary.append('span').text(config.title);
+      
+      const reg = regression(data.map(d => [+d[config.xMetric], +d[config.yMetric]]));
+      const corrBadge = summary.append('span').attr('class', 'correlation-badge');
+      const r2Val = reg.r2;
+      if (r2Val > 0.3) {
+        corrBadge.attr('class', 'correlation-badge corr-strong').text(`R² = ${fmt3(r2Val)}`);
+      } else if (r2Val > 0.1) {
+        corrBadge.attr('class', 'correlation-badge corr-moderate').text(`R² = ${fmt3(r2Val)}`);
+      } else {
+        corrBadge.attr('class', 'correlation-badge corr-weak').text(`R² = ${fmt3(r2Val)}`);
+      }
+      
+      if (config.help) {
+        const helpIcon = summary.append('span').attr('class', 'help-icon').text('?');
+        const metricTip = d3.select('body').append('div').attr('class', 'metric-tooltip').style('display', 'none');
+        helpIcon.on('mouseenter', function(evt) {
+          metricTip.style('display', 'block').html('<strong>' + config.title + ':</strong><br>' + config.help);
+        }).on('mousemove', (evt) => {
+          metricTip.style('left', (evt.pageX + 12) + 'px').style('top', (evt.pageY - 28) + 'px');
+        }).on('mouseleave', () => {
+          metricTip.style('display', 'none');
+        });
+      }
+
+      const margin = { top: 20, right: 24, bottom: 46, left: 70 };
+      const width = 1080, height = 480;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      const wrap = panel.append('div').attr('class', 'chart-wrap');
+      const svg = wrap.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      // Scales
+      const xExtent = d3.extent(data, d => +d[config.xMetric]);
+      const yExtent = d3.extent(data, d => +d[config.yMetric]);
+      
+      // Add padding
+      const xPadding = (xExtent[1] - xExtent[0]) * 0.1;
+      const yPadding = (yExtent[1] - yExtent[0]) * 0.1;
+      
+      let xScale = d3.scaleLinear()
+        .domain([xExtent[0] - xPadding, xExtent[1] + xPadding])
+        .range([0, innerW]);
+      
+      let yScale = d3.scaleLinear()
+        .domain([yExtent[0] - yPadding, yExtent[1] + yPadding])
+        .range([innerH, 0]);
+
+      // Handle inverted scales for rankings (lower is better)
+      if (config.inverted === true || config.inverted === 'both') {
+        xScale = d3.scaleLinear()
+          .domain([xExtent[1] + xPadding, xExtent[0] - xPadding])
+          .range([0, innerW]);
+        yScale = d3.scaleLinear()
+          .domain([yExtent[1] + yPadding, yExtent[0] - yPadding])
+          .range([innerH, 0]);
+      } else if (config.inverted === 'x') {
+        xScale = d3.scaleLinear()
+          .domain([xExtent[1] + xPadding, xExtent[0] - xPadding])
+          .range([0, innerW]);
+      } else if (config.inverted === 'y') {
+        yScale = d3.scaleLinear()
+          .domain([yExtent[1] + yPadding, yExtent[0] - yPadding])
+          .range([innerH, 0]);
+      }
+
+      // Grid
+      g.append('g')
+        .attr('class', 'grid')
+        .attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(xScale).tickSize(-innerH).tickFormat(''))
+        .style('stroke-dasharray', '2,2')
+        .style('opacity', 0.3);
+
+      g.append('g')
+        .attr('class', 'grid')
+        .call(d3.axisLeft(yScale).tickSize(-innerW).tickFormat(''))
+        .style('stroke-dasharray', '2,2')
+        .style('opacity', 0.3);
+
+      // Add midpoint lines for quadrants
+      const xMid = (xExtent[0] + xExtent[1]) / 2;
+      const yMid = (yExtent[0] + yExtent[1]) / 2;
+      
+      g.append('line')
+        .attr('class', 'zero-line')
+        .attr('x1', xScale(xMid))
+        .attr('x2', xScale(xMid))
+        .attr('y1', 0)
+        .attr('y2', innerH);
+      
+      g.append('line')
+        .attr('class', 'zero-line')
+        .attr('x1', 0)
+        .attr('x2', innerW)
+        .attr('y1', yScale(yMid))
+        .attr('y2', yScale(yMid));
+
+      // Quadrant labels
+      if (config.quadrants) {
+        const qPadding = 15;
+        g.append('text').attr('class', 'quadrant-label')
+          .attr('x', innerW / 4).attr('y', qPadding)
+          .text(config.quadrants.topLeft);
+        g.append('text').attr('class', 'quadrant-label')
+          .attr('x', 3 * innerW / 4).attr('y', qPadding)
+          .text(config.quadrants.topRight);
+        g.append('text').attr('class', 'quadrant-label')
+          .attr('x', innerW / 4).attr('y', innerH - qPadding/2)
+          .text(config.quadrants.bottomLeft);
+        g.append('text').attr('class', 'quadrant-label')
+          .attr('x', 3 * innerW / 4).attr('y', innerH - qPadding/2)
+          .text(config.quadrants.bottomRight);
+      }
+
+      // Regression line
+      if (reg.r2 > 0.05) {
+        const lineGen = d3.line()
+          .x(d => xScale(d))
+          .y(d => yScale(reg.m * d + reg.b));
+        
+        g.append('path')
+          .datum(xExtent)
+          .attr('class', 'regression-line')
+          .attr('d', lineGen);
+      }
+
+      // Axes
+      g.append('g')
+        .attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(xScale));
+
+      g.append('g')
+        .call(d3.axisLeft(yScale));
+
+      // Axis labels
+      g.append('text')
+        .attr('class', 'axis-label')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', -margin.left + 15)
+        .attr('x', -innerH / 2)
+        .attr('text-anchor', 'middle')
+        .text(config.yLabel);
+
+      g.append('text')
+        .attr('class', 'axis-label')
+        .attr('x', innerW / 2)
+        .attr('y', innerH + margin.bottom - 5)
+        .attr('text-anchor', 'middle')
+        .text(config.xLabel);
+
+      // Color scale
+      const colorScale = d3.scaleSequential(d3.interpolateRdBu)
+        .domain([0, 1]);
+
+      // Tooltip
+      const tooltip = d3.select('body').append('div').attr('class', 'tooltip');
+
+      // Data points
+      g.selectAll('.team-dot')
+        .data(data)
+        .enter().append('circle')
+        .attr('class', 'team-dot')
+        .attr('cx', d => xScale(+d[config.xMetric]))
+        .attr('cy', d => yScale(+d[config.yMetric]))
+        .attr('r', 6)
+        .attr('fill', d => colorScale(+d.win_pct))
+        .on('mouseenter', function(evt, d) {
+          d3.select(this).attr('r', 8);
+          let xVal = config.xMetric.includes('rank') ? `#${Math.round(d[config.xMetric])}` : fmt2(d[config.xMetric]);
+          let yVal = config.yMetric.includes('rank') ? `#${Math.round(d[config.yMetric])}` : fmt2(d[config.yMetric]);
+          
+          tooltip.style('display', 'block')
+            .html(`<strong>${d.team}</strong><br>` +
+                  `${config.xLabel}: ${xVal}<br>` +
+                  `${config.yLabel}: ${yVal}<br>` +
+                  `Win %: ${fmt2(d.win_pct * 100)}%`);
+        })
+        .on('mousemove', (evt) => {
+          tooltip.style('left', (evt.pageX + 12) + 'px')
+            .style('top', (evt.pageY - 28) + 'px');
+        })
+        .on('mouseleave', function(evt, d) {
+          d3.select(this).attr('r', 6);
+          tooltip.style('display', 'none');
+        });
+
+      // Legend
+      const legend = wrap.append('div').attr('class', 'legend');
+      legend.append('span').html('<span class="swatch" style="background: #b2182b"></span>Low Win %');
+      legend.append('span').html('<span class="swatch avg"></span>Average');
+      legend.append('span').html('<span class="swatch" style="background: #2166ac"></span>High Win %');
+
+      // Statistics summary
+      const statsDiv = panel.append('div').attr('class', 'stats-summary');
+      const avgX = d3.mean(data, d => +d[config.xMetric]);
+      const avgY = d3.mean(data, d => +d[config.yMetric]);
+      const correlation = Math.sqrt(reg.r2) * (reg.m > 0 ? 1 : -1);
+      
+      statsDiv.append('div').attr('class', 'stats-row')
+        .html(`<span class="stats-label">Correlation:</span><span class="stats-value">${fmt3(correlation)}</span>`);
+      statsDiv.append('div').attr('class', 'stats-row')
+        .html(`<span class="stats-label">Avg ${config.xLabel}:</span><span class="stats-value">${config.xMetric.includes('rank') ? '#' + Math.round(avgX) : fmt2(avgX)}</span>`);
+      statsDiv.append('div').attr('class', 'stats-row')
+        .html(`<span class="stats-label">Avg ${config.yLabel}:</span><span class="stats-value">${config.yMetric.includes('rank') ? '#' + Math.round(avgY) : fmt2(avgY)}</span>`);
+    }
+
+    async function main() {
+      const container = d3.select('#container');
+      
+      try {
+        const data = await loadData();
+        
+        for (const chart of CHARTS) {
+          drawScatter(container, data, chart);
+        }
+        
+        // Open first panel by default
+        container.select('.panel').attr('open', true);
+        
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        container.append('div')
+          .style('color', 'red')
+          .style('padding', '20px')
+          .text('Error loading data: ' + error.message);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', main);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Team Rankings Explorer — Strategic Patterns & Performance Correlations</h1>
+    <div class="subtitle">Analyzing team rankings, statistical relationships, and strategic philosophies across offense, defense, and special teams</div>
+    <div id="container"></div>
+  </div>
+</body>
+</html>

@@ -250,10 +250,10 @@
             insight: 'Bad pass protection forces hurried throws, leading to more interceptions',
             metricHelp: '<strong>Sacks vs INTs:</strong> Плохая защита линии = спешные броски = больше перехватов. Связывает работу O-line с ошибками QB.',
             quadrantHelp: {
-              topRight: '😱 Полный коллапс карманной защиты (3+ сэка/игру + 1.5+ INT/игру): O-line превратилась в решето, QB под постоянным давлением паникует и бросает в coverage. Команды в этом квадранте теряют 2+ турновера через пас каждую игру. Координатор должен срочно переходить на max protect схемы или quick game',
-              topLeft: '🤔 QB сам себе враг (<1.5 сэка, но 1.5+ INT): Линия держит pocket чистым, но квотербек читает защиту как детскую книжку задом наперёд. Классика "герой хочет все решить сам" - форсирует броски в тройное перекрытие. Нужна работа с прогрессиями и checkdown дисциплиной',
-              bottomLeft: '✅ Элитная синхронизация (<1.5 сэка + <1 INT): O-line создаёт крепость времени 3+ секунд, QB спокойно проходит прогрессии. Это команды с 65%+ completion и 8+ Y/A - идеальный баланс защиты и принятия решений',
-              bottomRight: '⚠️ QB-Houdini под огнём (3+ сэка, но <1 INT): Квотербек как эквилибрист на канате - линия рушится каждый второй snap, но он умудряется выбрасывать мяч безопасно. Долго так не протянуть - либо травма, либо fumbles начнутся от слепых хитов'
+              topRight: 'High sacks allowed + high interceptions: Pass protection breakdown combined with poor QB decision-making. Teams here experience multiple passing turnovers per game from pressure-induced mistakes. Requires immediate adjustment to max protection schemes or quick-release passing concepts',
+              topLeft: 'Low sacks but high interceptions: Clean pocket protection yet quarterback makes poor reads. Indicates decision-making issues rather than protection problems - forcing throws into coverage despite having time. Needs improvement in progression reads and checkdown discipline',
+              bottomLeft: 'Low sacks + low interceptions: Optimal pass protection and decision-making. Offensive line provides consistent pocket time while QB makes smart choices. These teams typically show high completion percentage and yards per attempt through balanced execution',
+              bottomRight: 'High sacks but low interceptions: QB maintains ball security despite constant pressure. While the offensive line struggles, the quarterback effectively manages pressure through throwaway decisions. This approach is unsustainable long-term due to injury risk and potential fumbles'
             }
           },
           {
@@ -265,10 +265,10 @@
             insight: 'Teams in top-right = high-variance style (aggressive on both sides). Bottom-left = conservative.',
             metricHelp: '<strong>Баланс потерь:</strong> Верхний правый угол = агрессивный стиль (риск с обеих сторон). Нижний левый = консервативный контроль мяча.',
             quadrantHelp: {
-              topRight: '🎲 Казино-футбол (2.5+ DEF INT + 1.5+ OFF INT): Агрессивная защита с постоянным blitz и jump routes создаёт 3+ отбора, но QB тоже рискует на вертикальных маршрутах. Каждая игра - качели с 4+ общими турноверами. Идеально для underdog команд против фаворитов',
-              topLeft: '😔 Одностороннее движение (<1.5 DEF INT + 1.5+ OFF INT): Защитные бэки играют в статуи - 30%+ cushion coverage без агрессии на мяче, пока собственный QB раздаёт подарки как Дед Мороз. Turnover differential -1.0 или хуже гарантирован',
-              bottomLeft: '🛡️ Шахматная партия (<1.5 DEF INT + <1 OFF INT): Обе стороны играют консервативно - защита в prevent, нападение в ball-control режиме. Игры решаются field position и field goals. Скучно смотреть, но эффективно при лидерстве',
-              bottomRight: '🏆 Машина отбора мячей (2.5+ DEF INT + <1 OFF INT): Защита как пираньи - DBs с 15+ PBU агрессивно атакуют catch point, создавая +2.0 turnover margin. При этом offense защищает мяч через короткие timing routes. Формула чемпионов'
+              topRight: 'High defensive INTs + high offensive INTs: High-variance football with aggressive play on both sides. Defense creates turnovers through aggressive coverage while offense takes risks downfield. Results in multiple combined turnovers per game - effective strategy for underdog teams',
+              topLeft: 'Low defensive INTs + high offensive INTs: Defensive backs play passive coverage while offense gives ball away frequently. Creates negative turnover differential as defense cannot compensate for offensive turnovers. Indicates imbalanced unit performance',
+              bottomLeft: 'Low defensive INTs + low offensive INTs: Conservative approach on both sides. Defense plays prevent coverage while offense focuses on ball control. Games decided by field position and field goals rather than turnovers. Low-scoring affairs',
+              bottomRight: 'High defensive INTs + low offensive INTs: Defense aggressively attacks passing lanes while offense protects ball through short timing routes. Creates positive turnover margin through defensive playmaking and offensive ball security. Championship formula'
             }
           },
           {
@@ -280,10 +280,10 @@
             insight: 'Pass-heavy teams often trail in games, leading to more 3-and-outs and punts',
             metricHelp: '<strong>Pass Attempts vs Punts:</strong> Команды с частыми передачами часто проигрывают = больше пантов. Игровая ситуация влияет на статистику.',
             quadrantHelp: {
-              topRight: '😔 Отчаянные попытки догнать (40+ пасов + 6+ пантов): Классический garbage time сценарий - отстают на 14+ очков, вынуждены бросать каждый down, но 3-and-out rate выше 40%. Линия устаёт, routes становятся предсказуемыми, защита сидит в nickel/dime и ждёт пас',
-              topLeft: '🤔 Беговое упрямство без результата (<30 пасов + 6+ пантов): Пытаются установить run game, но набирают <3.5 Y/A. Защита stackует box с 8+ игроками, но координатор упорно долбит в стену. Time of possession иллюзия - драйвы длятся 3 plays',
-              bottomLeft: '🏆 Контроль через power run (<30 пасов + <4 пантов): Доминирующая O-line создаёт 5+ Y/A на земле, контролируя clock и field position. Play-action работает на 12+ Y/A когда используется. Защита соперника устаёт к 4й четверти',
-              bottomRight: '🎯 Air raid эффективность (40+ пасов + <4 пантов): Современная passing game машина - quick game, RPOs и YAC создают 7+ Y/A. Third down conversion 45%+, red zone TD rate 60%+. Защита не может подстроиться под темп'
+              topRight: 'High pass attempts + high punts: Trailing game script forces pass-heavy approach but drives stall frequently. High three-and-out rate despite passing volume. Offensive line fatigue and predictable passing situations allow defense to sit in nickel/dime coverage',
+              topLeft: 'Low pass attempts + high punts: Run-heavy approach failing to sustain drives. Defense stacking box against predictable run game. Short drives despite time of possession focus. Indicates inability to establish effective ground game',
+              bottomLeft: 'Low pass attempts + low punts: Successful ground control offense. Dominant offensive line creates consistent rushing yards, enabling clock control and field position advantages. Play-action becomes highly effective when used. Defense wears down in fourth quarter',
+              bottomRight: 'High pass attempts + low punts: Efficient modern passing attack. Quick game concepts and RPOs generate consistent yards. High third down conversion rate and red zone efficiency. Defense cannot adjust to tempo and spacing'
             }
           },
           {
@@ -295,10 +295,10 @@
             insight: 'Elite RBs break tackles AND generate yards after contact. Top-right = power runners.',
             metricHelp: '<strong>Физическая игра:</strong> Элитные RB ломают захваты И набирают ярды после контакта. Верхний правый = мощные бегуны.',
             quadrantHelp: {
-              topRight: '💪 Человек-танк в backfield (>55% YAC + >0.15 broken tackles/rush): RB как грузовик с реактивным двигателем - contact balance элитный, leg drive после удара добавляет 3+ ярда. Защитники отскакивают как от бетонной стены. Goal line и 3rd&short автоматический first down',
-              topLeft: '🏃 Барри Сандерс стиль (<45% YAC + >0.15 broken tackles/rush): Evasion rating 90+ - jump cuts, spin moves делают защитников похожими на пьяных. Но когда ловят - сразу down. Нужны конкретные схемы с outside zone и sweeps',
-              bottomLeft: '😔 Бег в никуда (<45% YAC + <0.08 broken tackles/rush): O-line проигрывает в окопах, RB встречает 2+ защитников в backfield. Средний контакт на линии скриммеджа или раньше. Power/inside zone success rate ниже 35%',
-              bottomRight: '🎯 Чистые коридоры от O-line (>55% YAC, но <0.08 broken tackles): Линия создаёт автострады - RB набирает 4+ ярда до первого контакта. Но сам бегун "падает от ветра" при касании. Работает пока O-line доминирует, против сильной защиты провал'
+              topRight: 'High YAC% + high broken tackle rate: Power running back with elite contact balance and leg drive. Consistently gains additional yards after contact. Highly effective in goal line and short yardage situations. Physical running style wears down defenses',
+              topLeft: 'Low YAC% + high broken tackle rate: Elusive running style focused on avoiding initial contact through cuts and moves. When contact occurs, runner goes down quickly. Requires outside zone and sweep schemes to maximize effectiveness',
+              bottomLeft: 'Low YAC% + low broken tackle rate: Offensive line losing battles at line of scrimmage. Running back regularly meets multiple defenders in backfield. Average contact point at or behind line of scrimmage. Inside zone success rate significantly below average',
+              bottomRight: 'High YAC% but low broken tackle rate: Offensive line creates clean running lanes with significant yards before contact. Runner lacks power to break tackles when contacted. Effective when line dominates but vulnerable against strong defensive fronts'
             }
           },
           {
@@ -311,10 +311,10 @@
             insight: 'Turnover differential is the single strongest predictor of wins in football',
             metricHelp: '<strong>Turnover Diff:</strong> Самый сильный предсказатель побед в футболе. Разница отборов-отдач мяча напрямую коррелирует с процентом побед.',
             quadrantHelp: {
-              topRight: '🏆 Математика чемпионства (+1.0 TO diff + >60% wins): Каждый турновер worth ~3.5 очка и 14% win probability. Команды здесь выигрывают короткие поля после отборов, конвертируя 70%+ в очки. Defense creates 2.5+ takeaways/game, offense теряет <1.5. Это и есть "complementary football"',
-              topLeft: '😔 Героический offense (TO diff <-0.5, но >50% wins): Нападение набирает 400+ Y/G чтобы компенсировать -1.0 turnover margin. QB должен быть MVP-калибра с 35+ TD. Неустойчивая модель - в playoffs такое не работает против хороших защит',
-              bottomLeft: '💀 Спираль смерти (TO diff <-0.5 + <40% wins): Отдают 2+ владения/игру через турноверы И не могут забивать. Средняя starting field position opponent 40-yard line. Защита на поле 35+ минут устаёт. Нужен полный rebuild философии ball security',
-              bottomRight: '🤔 Загадка недореализации (TO diff >+1.0, но <40% wins): Создают отборы но не капитализируют - scoring после турноверов <30%. Либо special teams disasters (missed FGs, punt returns против), либо red zone offense <40% TD rate. Талант есть, execution хромает'
+              topRight: 'Positive turnover differential + high win percentage: Strong correlation between turnover margin and winning. Teams convert short fields after turnovers into points efficiently. Defense creates multiple takeaways per game while offense limits giveaways. Exemplifies complementary football',
+              topLeft: 'Negative turnover differential but winning: Offense compensates for turnover disadvantage through high yardage production. Requires exceptional quarterback play and offensive efficiency. This model typically proves unsustainable in playoff scenarios against strong defenses',
+              bottomLeft: 'Negative turnover differential + low win percentage: Multiple turnovers per game without scoring ability. Poor average starting field position for opponents. Defense faces extended time on field leading to fatigue. Fundamental issues with ball security require systematic changes',
+              bottomRight: 'Positive turnover differential but losing: Creating turnovers without capitalizing through scoring. Low scoring percentage after takeaways indicates red zone inefficiency or special teams failures. Execution problems despite creating opportunities'
             }
           },
           {
@@ -326,10 +326,10 @@
             insight: 'High completion% + low Y/C = dink-and-dunk. Low completion% + high Y/C = vertical passing.',
             metricHelp: '<strong>Философия паса:</strong> Высокий completion% + низкие Y/C = короткие передачи. Низкий completion% + высокие Y/C = глубокий пас.',
             quadrantHelp: {
-              topRight: '🎯 Совершенство пасовой игры (>67% comp + >14 Y/C): Идеальный timing с deep shots - play-action на 20+ yards бьёт в 45%+ случаев. QB обрабатывает leverage и throwing windows как хирург. Защита не может сидеть в underneath zones. YPA легко пробивает 8.5+',
-              topLeft: '🚀 Вертикальная рулетка (<60% comp, но >14 Y/C): "Fuck it, он где-то там внизу" философия - 50/50 balls и go routes составляют 30%+ плейбука. Работает с elite WRs с catch radius и contested catch ability. PI penalties как бонусные ярды',
-              bottomLeft: '😔 Квотербек-калека (<60% comp + <11 Y/C): Не может ни точно бросить, ни растянуть поле. Checkdowns под давлением, sailed passes над головами. Защита сжимает поле в коробку 20x20 ярдов. Third down conversion <30%',
-              bottomRight: '🏃 Death by thousand cuts (>67% comp + <11 Y/C): West Coast на стероидах - slants, drags, hitches до тошноты. Ball out in 2.5 seconds, YAC должен быть 50%+ от total yards. Работает пока защита не начнёт jump routes в 4й четверти'
+              topRight: 'High completion% + high yards per catch: Optimal passing efficiency combining accuracy with depth. Effective play-action creates deep opportunities. Quarterback processes leverage and windows efficiently. Defense cannot sit in underneath coverage. High yards per attempt through balanced attack',
+              topLeft: 'Low completion% but high yards per catch: Vertical passing philosophy emphasizing contested catches and deep routes. Relies on receivers with strong catch radius and contested catch ability. Lower percentage plays but higher reward when successful',
+              bottomLeft: 'Low completion% + low yards per catch: Ineffective passing attack lacking both accuracy and depth. Frequent checkdowns under pressure with poor ball placement. Defense compresses field knowing deep threat is minimal. Poor third down conversion rate',
+              bottomRight: 'High completion% + low yards per catch: Short passing game emphasizing quick releases and yards after catch. High percentage throws with rapid ball distribution. Requires significant YAC production for effectiveness. Vulnerable to aggressive route jumping by defense'
             }
           },
           {
@@ -341,10 +341,10 @@
             insight: 'Run-first teams unlock play-action, creating better passing opportunities',
             metricHelp: '<strong>Беговая игра:</strong> Команды с частым бегом разблокируют play-action, создавая лучшие возможности для паса.',
             quadrantHelp: {
-              topRight: '🎯 Play-action paradise (25+ rushes + >7.5 Y/A pass): Бег на 4.5+ YPC заставляет LBs честно играть gaps, создавая throwing windows размером с автобус. PA pass success rate 55%+, bootlegs и rollouts дают QB easy reads. Safeties не могут быстро вернуться в deep zones',
-              topLeft: '🚀 Air Raid чистой воды (<20 rushes + >7.5 Y/A pass): 11 personnel на 75%+ snaps, 4-5 wide receivers растягивают защиту горизонтально. Quick game и RPO заменяют традиционный run. Работает пока O-line держит 5-man protection',
-              bottomLeft: '😔 Полный коллапс offense (<20 rushes + <6.0 Y/A pass): Не могут ни бегать ни пасовать - defense plays с 2-high shells и никого не боится. Negative plays на 25%+ snaps. Third and long каждая серия. Time of possession ниже 27 минут',
-              bottomRight: '⚠️ Упрямство без результата (25+ rushes, но <6.0 Y/A pass): Долбят run в stacked boxes из принципа, но play-action не работает потому что defense не респектит бег. Становятся предсказуемыми - run on 1st, pass on 3rd. Никакой explosive plays'
+              topRight: 'High rush attempts + high pass Y/A: Effective run game creates play-action opportunities. Linebackers must respect gaps, creating larger passing windows. High play-action success rate with bootlegs and rollouts providing easier reads. Safeties cannot quickly return to deep coverage',
+              topLeft: 'Low rush attempts + high pass Y/A: Pure passing attack with minimal run game. Heavy use of multiple receiver sets spreading defense horizontally. Quick game and RPOs replace traditional running plays. Effective while pass protection holds',
+              bottomLeft: 'Low rush attempts + low pass Y/A: Offensive inefficiency in both phases. Defense plays balanced coverage without fear of either threat. High rate of negative plays leading to unfavorable down and distance. Poor time of possession',
+              bottomRight: 'High rush attempts but low pass Y/A: Predictable run-heavy approach without play-action effectiveness. Defense stacks box knowing pass threat is minimal. Becomes predictable by down and distance. Lacks explosive play potential'
             }
           },
           {
@@ -356,10 +356,10 @@
             insight: 'Does pressure create INTs, or does coverage give time for sacks? Both work!',
             metricHelp: '<strong>Pass Rush vs Coverage:</strong> Давление создаёт перехваты или покрытие даёт время для сэков? Оба работают!',
             quadrantHelp: {
-              topRight: '🏆 Legion of Boom 2.0 (3+ sacks + 1.5+ INT/game): Pass rush в 2.5 секунд + coverage держит 3.5+ секунд = QB кошмар. Pressure rate 35%+ заставляет поспешные броски в coverage. Third down stops на 70%+. Защита забирает игры',
-              topLeft: '🎯 Coverage sack машина (<2 sacks, но 1.5+ INT): DBs как клей - receivers не открываются 4+ секунды, QB держит мяч и либо бросает в coverage либо scrambles. Zone coverage disguise создаёт confusion. Red zone INT rate зашкаливает',
-              bottomLeft: '😔 Швейцарский сыр (<2 sacks + <1 INT): Rush не доходит, coverage не держит - QB completion 70%+ с clean pocket. Quick game разрывает на части. Offense противника конвертирует 50%+ third downs. 400+ yards allowed норма',
-              bottomRight: '💪 Блицкриг без награды (3+ sacks, но <1 INT): Edge rushers доминируют с <2.5 sec pressure, но DBs играют off-coverage. Sacks приходят до того как routes развиваются для INT. Hot routes и screens наказывают агрессию'
+              topRight: 'High sacks + high interceptions: Elite defense combining pass rush and coverage. Quick pressure forces hurried throws into tight coverage. High third down stop rate through defensive dominance. Defense controls game outcomes',
+              topLeft: 'Low sacks but high interceptions: Coverage-driven defense creating turnovers. Tight coverage forces quarterbacks to hold ball or throw into traffic. Zone disguises create confusion and interception opportunities. Red zone interception rate particularly high',
+              bottomLeft: 'Low sacks + low interceptions: Ineffective pass defense lacking both rush and coverage. Quarterbacks complete high percentage from clean pockets. Quick game attacks exploit defensive weaknesses. High third down conversion rate allowed',
+              bottomRight: 'High sacks but low interceptions: Strong pass rush without coverage support. Edge rushers generate quick pressure but defensive backs play off coverage. Sacks occur before routes develop for interceptions. Vulnerable to screens and hot routes'
             }
           },
           {
@@ -371,10 +371,10 @@
             insight: 'Big plays sustain drives and reduce punting frequency. Explosive offense = fewer punts.',
             metricHelp: '<strong>Большие игры:</strong> Взрывные розыгрыши поддерживают драйвы и уменьшают частоту пантов. Взрывное нападение = меньше пантов.',
             quadrantHelp: {
-              topRight: '🤔 Джекилл и Хайд offense (4+ explosive + 6+ punts): Home run или strikeout - explosive rate 15%+ но success rate <40%. Вертикальные shots создают 2-3 big plays, но между ними идут three-and-outs. Защита adjusts к 2nd half и shut down происходит',
-              topLeft: '😔 Анемичное нападение (<2 explosive + 6+ punts): Максимальная игра 15 ярдов, defense сжимает поле без страха deep ball. Средняя длина драйва 4 plays. Red zone appearances <2 за игру. Punter - MVP команды по snaps',
-              bottomLeft: '🎯 Методичный марш (<2 explosive, но <4 punts): Nickel and dime путь - 12+ play drives съедают 7+ минут. Third down efficiency 50%+ на коротких дистанциях. Ball control философия с 32+ минутами владения',
-              bottomRight: '🏆 Cheat code offense (4+ explosive + <4 punts): Explosive plays на 15%+ snaps И поддерживают drives между ними. Chunk plays в критические моменты - 3rd&7 конвертируют в 25-yarder. Scoring на 70%+ владений'
+              topRight: 'High explosive plays + high punts: Boom-or-bust offense with inconsistent execution. High explosive play rate but low overall success rate. Vertical shots create big plays but frequent three-and-outs between them. Defense adjusts successfully in second half',
+              topLeft: 'Low explosive plays + high punts: Offensive inefficiency without big play ability. Defense compresses field without deep ball threat. Short average drive length with limited red zone appearances. Punter sees highest snap count on team',
+              bottomLeft: 'Low explosive plays but low punts: Methodical offensive approach through sustained drives. Long drives consuming significant clock time. High third down efficiency on short distances. Ball control philosophy with extended time of possession',
+              bottomRight: 'High explosive plays + low punts: Elite offensive production combining explosiveness with consistency. Explosive plays complemented by sustained drives. Critical down conversions through chunk plays. High scoring percentage on possessions'
             }
           },
           {
@@ -387,10 +387,10 @@
             insight: 'Do teams pass because they\'re losing? Or run because they\'re winning? Causation vs correlation.',
             metricHelp: '<strong>Игровая ситуация:</strong> Команды пасуют, потому что проигрывают, или бегут, потому что выигрывают? Причинность vs корреляция.',
             quadrantHelp: {
-              topRight: '🎯 Modern offensive juggernaut (>1.8 ratio + >60% wins): Pass-first BY CHOICE, не necessity. 65%+ pass rate даже при лидерстве. EPA/pass в топ-10 лиги. Quick strike capability с 2-minute offense в любой момент. Defense respects pass, создавая draw/screen opportunities',
-              topLeft: '🏃 Ground and pound winners (<1.3 ratio + >60% wins): Физическое доминирование - 30+ rushes контролируют clock и деморализуют defense. Выигрывают time of possession 34+ минут. 4я четверть принадлежит им когда defense устала',
-              bottomLeft: '😔 Offensive futility (<1.3 ratio + <40% wins): Пытаются run-first, но получают 3.0 Y/A. Не могут перейти на pass потому что play-action не работает без run threat. Stuck между стульями - никакая философия не работает',
-              bottomRight: '⚠️ Chasing games syndrome (>1.8 ratio + <40% wins): Отстают 10+ очков к halftime в 75%+ игр. Вынужденный abandon the run создаёт предсказуемость. Pass rush pins ears back, sack rate взлетает до 10%+. Garbage time stats misleading'
+              topRight: 'High pass ratio + high win%: Pass-first offense by strategic choice rather than necessity. Maintains high pass rate even when leading. Strong efficiency metrics support approach. Quick strike capability allows scoring from any field position',
+              topLeft: 'Low pass ratio + high win%: Ground control offense dominating through physical play. Heavy rush attempts control clock and wear down defenses. Wins time of possession battle significantly. Fourth quarter dominance through defensive fatigue',
+              bottomLeft: 'Low pass ratio + low win%: Ineffective run-first approach with poor yards per attempt. Cannot transition to passing game due to lack of play-action threat. Offensive philosophy lacks effectiveness in either phase',
+              bottomRight: 'High pass ratio + low win%: Trailing game scripts force pass-heavy approach. Frequently behind by multiple scores at halftime. Predictable passing situations lead to high pressure rates. Statistics inflated by garbage time production'
             }
           },
           {
@@ -403,10 +403,10 @@
             insight: 'Games are won by 3 points. Field goal accuracy matters more in close games.',
             metricHelp: '<strong>Field Goal %:</strong> Процент попаданий по воротам. Игры выигрываются 3 очками - точность киккера важна в близких матчах.',
             quadrantHelp: {
-              topRight: '🎯 Clutch kicker advantage (>85% FG + >60% wins): Автоматический внутри 50 ярдов, 60%+ с 50+. В close games (≤7 очков) конвертируют 90%+ FG attempts. "Ice in veins" в 4й четверти. Те самые 3 очка решают 2-3 игры в сезон',
-              topLeft: '💪 TD or nothing mentality (<75% FG, но >60% wins): Red zone TD rate 65%+ делает FG неважными. Идут на 4th down внутри 5 вместо чип-шота. Агрессивная философия окупается через momentum и деморализацию defense',
-              bottomLeft: '😔 Double whammy (<75% FG + <40% wins): Киккер стоит 3-6 очков за игру И offense не может компенсировать touchdowns. Missed FGs убивают momentum. Соперники начинают drives с лучшей позиции после промахов',
-              bottomRight: '🤔 Wasted weapon (>85% FG, но <40% wins): Киккер - единственное светлое пятно, но offense приводит его только для 50+ yarders после stalled drives. Не могут дойти до red zone. Defense сдаёт 30+ очков, делая FGs бессмысленными'
+              topRight: 'High FG% + high win%: Reliable kicking provides crucial points in close games. High conversion rate inside normal range with strong performance from distance. Critical fourth quarter execution. These marginal points often decide close games',
+              topLeft: 'Low FG% but high win%: High red zone touchdown rate minimizes field goal importance. Aggressive fourth down decisions instead of field goal attempts. Offensive efficiency compensates for kicking deficiencies through touchdown production',
+              bottomLeft: 'Low FG% + low win%: Kicking game costs multiple points per game while offense cannot compensate with touchdowns. Missed field goals create negative momentum shifts. Opponents gain favorable field position after misses',
+              bottomRight: 'High FG% but low win%: Strong kicking performance wasted by offensive and defensive inefficiency. Limited red zone opportunities result in long field goal attempts. Defense allows excessive points making field goals insufficient'
             }
           },
           {
@@ -418,10 +418,10 @@
             insight: 'Better punting pins opponents deep, forcing riskier throws and creating turnover opportunities.',
             metricHelp: '<strong>Punt Net vs DEF INTs:</strong> Лучший пантинг прижимает соперников глубоко, заставляя рисковать пасами и создавая перехваты.',
             quadrantHelp: {
-              topRight: '🏆 Field position dominance (>43 net + 1.5+ INT): Coffin corner artist прижимает к своей 20, заставляя conservative play-calling. Длинные поля = больше pass attempts = больше INT opportunities. Defense начинает 60%+ drives с opponent territory <25',
-              topLeft: '🎯 Coverage overcomes position (<38 net, но 1.5+ INT): Пантер бьёт touchbacks или line drives, но elite DBs создают turnovers независимо от позиции. Pattern matching и disguised coverage создают confusion даже на коротких полях',
-              bottomLeft: '😔 Special teams disaster (<38 net + <1 INT): Пантер outkicks coverage или shanks под давлением. Opponents начинают с 35+ yard line в среднем. Defense не может capitalize даже на хорошей позиции. Hidden yardage убивает',
-              bottomRight: '🤔 Wasted field position (>43 net, но <1 INT): Пантер делает свою работу - hang time 4.5+ секунд, внутри 20 на 45%+ attempts. Но defense играет soft coverage, давая easy completions underneath. Field position advantage испаряется за 2 plays'
+              topRight: 'High punt net + high defensive INTs: Superior field position creates turnover opportunities. Long fields force conservative play-calling and more passing attempts. Defense capitalizes on favorable starting position with high interception rate',
+              topLeft: 'Low punt net but high defensive INTs: Coverage excellence overcomes poor field position. Elite defensive backs create turnovers regardless of starting position. Pattern matching and disguised coverages generate confusion even on short fields',
+              bottomLeft: 'Low punt net + low defensive INTs: Special teams failure compounds defensive struggles. Poor punt coverage or shanked punts give opponents favorable starting position. Defense cannot capitalize even when given opportunities',
+              bottomRight: 'High punt net but low defensive INTs: Strong punting performance wasted by passive defense. Quality hang time and placement inside twenty not utilized. Soft coverage allows easy completions negating field position advantage'
             }
           },
           {
@@ -433,10 +433,10 @@
             insight: 'Coffin-corner punts force conservative play-calling, giving pass rush more opportunities.',
             metricHelp: '<strong>Punts in 20:</strong> Панты внутрь 20 заставляют консервативный плейколлинг, давая pass rush больше возможностей.',
             quadrantHelp: {
-              topRight: '🏆 Complementary football (>45% inside-20 + 3+ sacks): Coffin corner specialist + elite pass rush = nightmare combo. Backed up offenses вынуждены max protect, оставляя fewer receivers. Predictable play-calling из глубины создаёт pin-your-ears-back rushing',
-              topLeft: '💪 Pass rush carries team (<30% inside-20, но 3+ sacks): Edge rushers с <2.3 sec pressure не нуждаются в помощи позиции. Win rate 25%+ независимо от field position. Stunts и twists создают free rushers даже с short fields',
-              bottomLeft: '😔 No pressure points (<30% inside-20 + <2 sacks): Не могут ни прижать пантами ни создать pass rush. Opponents получают rhythm throws с clean pockets. Average starting position midfield даёт короткие поля для scoring',
-              bottomRight: '🤔 Positional advantage wasted (>45% inside-20, но <2 sacks): Пантер - weapon, но pass rush не может воспользоваться. Opponents используют quick game и screens чтобы нейтрализовать длинное поле. 3-step drops не дают время для sacks'
+              topRight: 'High punts inside 20% + high defensive sacks: Complementary special teams and defense. Backed up offenses forced into predictable passing situations. Limited receiver options due to max protection requirements. Creates ideal pass rush opportunities',
+              topLeft: 'Low punts inside 20% but high defensive sacks: Elite pass rush performs independently of field position. High pressure rate regardless of starting position. Creative rush schemes generate pressure even from short fields',
+              bottomLeft: 'Low punts inside 20% + low defensive sacks: Neither special teams nor pass rush creating pressure. Opponents execute rhythm passing from favorable field position. Average starting position near midfield provides scoring opportunities',
+              bottomRight: 'High punts inside 20% but low defensive sacks: Strong punt placement not utilized by pass rush. Opponents neutralize field position disadvantage through quick game and screens. Short drops prevent sack opportunities'
             }
           },
           {
@@ -448,10 +448,10 @@
             insight: 'High-scoring teams attempt more XPs. Does volume increase pressure and lead to more misses?',
             metricHelp: '<strong>TDs vs XP%:</strong> Высокорезультативные команды пытаются больше XP. Объём увеличивает давление и ведёт к большим промахам?',
             quadrantHelp: {
-              topRight: '🎯 Scoring machine perfection (35+ TDs + >95% XP): Red zone TD rate 65%+, explosive plays для 6+ TDs с 50+ yards. Киккер в rhythm с 40+ attempts, automatic после celebrations. Total scoring 30+ PPG легко',
-              topLeft: '😔 Grinding for points (<25 TDs, но >95% XP): Борются за каждый TD, settling для FGs часто. Киккер sharp из-за малого объёма и важности каждого очка. Games decided by <7 points. Every XP критичен',
-              bottomLeft: '💀 Offensive disaster (<25 TDs + <90% XP): Не могут ни забить TD ни конвертировать когда забивают. Оставляют 2-4 очка на поле от missed XPs. В close games эти очки haunting. Momentum killers после редких TDs',
-              bottomRight: '⚠️ Volume pressure cracks (35+ TDs, но <90% XP): High-octane offense, но киккер wilts под объёмом. Fatigue или mental pressure от частых attempts. Теряют 3-5 XP за сезон = potential tie-breakers в standings'
+              topRight: 'High offensive TDs + high XP%: Elite scoring efficiency with reliable conversion. High red zone touchdown rate combined with explosive scoring plays. Consistent extra point execution maintains full scoring value. Total scoring output exceeds league averages significantly',
+              topLeft: 'Low offensive TDs but high XP%: Limited touchdown production with reliable kicking when needed. Frequently settling for field goals instead of touchdowns. Extra point accuracy maintained despite low volume. Games typically decided by single score margins',
+              bottomLeft: 'Low offensive TDs + low XP%: Scoring struggles compounded by conversion failures. Unable to generate touchdowns or convert when scored. Leaving points on field through missed extra points. Critical points lost in close game situations',
+              bottomRight: 'High offensive TDs but low XP%: High-volume scoring with conversion issues. Offensive production undermined by extra point failures. Volume potentially creating mental pressure or fatigue. Lost points could impact playoff seeding'
             }
           },
           {
@@ -463,10 +463,10 @@
             insight: 'Better pass protection leads to better QB performance. Measures offensive line impact on QB success.',
             metricHelp: '<strong>Sack Rate vs QB Rating:</strong> Лучшая защита паса = лучшая работа QB. Измеряет влияние O-line на успех квотербека.',
             quadrantHelp: {
-              topRight: '😱 Escape artist excellence (>8% sack rate + >95 rating): QB - Houdini с pocket presence, превращает broken plays в positive yards. Scramble ability создаёт 5+ секунд для coverage-beaters. Sacks случаются, но между ними идут explosive plays на broken coverage',
-              topLeft: '🏆 Clean pocket clinic (<5% sack rate + >95 rating): Fortress O-line даёт 3.5+ clean seconds, QB surgical с reads. Quick release <2.5 sec на timing routes. Play-action success rate 60%+ с такой защитой. Классическая pocket passing',
-              bottomLeft: '😔 QB проблема, не O-line (<5% sack rate + <85 rating): Линия держит, но QB видит ghosts - happy feet, bailing from clean pockets. Пропускает open receivers, форсирует в coverage. Нужна mental conditioning или замена',
-              bottomRight: '💀 Turnstile protection (>8% sack rate + <85 rating): O-line - вращающаяся дверь, QB shell-shocked к середине сезона. Internal clock сломан, механика разваливается под pressure. Strip sacks и intentional grounding как норма'
+              topRight: 'High sack rate + high QB rating: Quarterback maintains efficiency despite pressure. Exceptional pocket presence and scrambling ability creates extended plays. Sacks occur but explosive plays compensate between pressures. Unique skill set overcomes protection issues',
+              topLeft: 'Low sack rate + high QB rating: Optimal pass protection enables elite quarterback play. Clean pockets allow progression reads and timing routes. High play-action success rate with protection. Classic pocket passing executed at high level',
+              bottomLeft: 'Low sack rate + low QB rating: Protection adequate but quarterback performance poor. Missing open receivers and forcing into coverage despite time. Indicates processing or accuracy issues rather than protection problems. Mental or mechanical adjustments needed',
+              bottomRight: 'High sack rate + low QB rating: Poor offensive line protection destroying quarterback performance. Internal clock disrupted and mechanics breaking down under pressure. High rates of strip sacks and intentional grounding. Confidence erosion throughout season'
             }
           },
           {
@@ -479,10 +479,10 @@
             insight: 'Defense wins championships? Creating turnovers is one of the strongest predictors of winning.',
             metricHelp: '<strong>DEF INTs vs Wins:</strong> Защита выигрывает чемпионаты? Создание перехватов - один из сильнейших предсказателей побед.',
             quadrantHelp: {
-              topRight: '🏆 Defense wins championships (1.5+ INT + >60% wins): Ball-hawking DBs создают 25+ turnovers за сезон. Short fields после INT конвертируют в 10+ PPG. Momentum swings от pick-6s и red zone INTs. Clutch INTs в 4й четверти seal games',
-              topLeft: '💪 Offensive juggernaut (<1 INT + >60% wins): Забивают 30+ PPG, делая turnovers менее важными. Explosive offense компенсирует отсутствие defensive playmaking. Но в playoffs против elite defenses это не работает',
-              bottomLeft: '😔 Defensive liability (<1 INT + <40% wins): DBs играют scared - soft coverage, не attacking ball at catch point. QBs имеют 70%+ completion против них. Без turnovers defense на поле 33+ минут и ломается в 4й четверти',
-              bottomRight: '🤔 Empty calories INTs (1.5+ INT, но <40% wins): Создают turnovers но offense идёт 3-and-out после них. Scoring после turnovers <20%. INTs в garbage time когда игра решена. Offense не может capitalize на defensive efforts'
+              topRight: 'High defensive INTs + high win%: Ball-hawking defense creates game-changing turnovers. Short fields after interceptions convert to significant points. Momentum swings from defensive scores and red zone takeaways. Fourth quarter interceptions seal victories',
+              topLeft: 'Low defensive INTs but high win%: Offensive production compensates for lack of defensive turnovers. High scoring offense makes turnovers less critical. This model often struggles in playoffs against elite defenses',
+              bottomLeft: 'Low defensive INTs + low win%: Passive defensive back play without ball disruption. High completion percentage allowed due to soft coverage. Extended defensive time on field leads to fourth quarter fatigue',
+              bottomRight: 'High defensive INTs but low win%: Defense creates turnovers but offense cannot capitalize. Low scoring percentage after takeaways. Interceptions often occur in garbage time. Offensive inefficiency wastes defensive efforts'
             }
           },
           {
@@ -495,10 +495,10 @@
             insight: 'Teams that protect the ball win games. Lower INT rate = more wins.',
             metricHelp: '<strong>INT Rate vs Wins:</strong> Команды, защищающие мяч, выигрывают игры. Низкий процент перехватов = больше побед.',
             quadrantHelp: {
-              topRight: '😱 Gunslinger paradox (>3% INT rate + >60% wins): QB бросает 20+ INTs но 40+ TDs компенсируют. Big play ability (15+ Y/C) превышает turnover негатив. Playing with fire - работает в regular season, burns в playoffs',
-              topLeft: '🏆 Smart football wins (<1.5% INT rate + >60% wins): Game manager excellence - защищают мяч, контролируют clock, выигрывают field position. Boring но effective. Third down efficiency через ball control. Championships built here',
-              bottomLeft: '😔 Conservative futility (<1.5% INT rate + <40% wins): Защищают мяч но не могут двигаться - dink and dunk без YAC. Risk aversion становится predictability. Defense sits on short routes. No explosive plays = no scoring',
-              bottomRight: '💀 Turnover machine (>3% INT rate + <40% wins): Каждый 30й пас - подарок сопернику. Red zone INTs, pick-6s убивают momentum. QB forcing into tight windows без arm talent. Coaching нужно переоценить risk/reward'
+              topRight: 'High INT rate + high win%: Risk-taking quarterback play offset by touchdown production. Big play ability compensates for turnover negative value. This high-variance approach works in regular season but typically fails in playoffs',
+              topLeft: 'Low INT rate + high win%: Ball security philosophy leads to winning. Game management approach controls clock and field position. Third down efficiency through ball control. Championship-caliber approach',
+              bottomLeft: 'Low INT rate + low win%: Conservative passing without offensive production. Risk aversion leads to predictability. Defense sits on short routes knowing deep threat minimal. Lack of explosive plays limits scoring',
+              bottomRight: 'High INT rate + low win%: Excessive turnovers destroying win probability. Red zone interceptions and defensive scores create negative momentum. Poor decision-making without supporting arm talent. Risk-reward balance needs recalibration'
             }
           },
           {
@@ -510,10 +510,10 @@
             insight: 'Do teams with explosive passing also have explosive running? Or specialize in one?',
             metricHelp: '<strong>Pass vs Rush Explosives:</strong> Команды с взрывным пасом также имеют взрывной бег? Или специализируются на одном?',
             quadrantHelp: {
-              topRight: '💥 Total chaos offense (>7.5 Y/A pass + >8% rush explosive): Кошмар defensive coordinators - must defend every blade of grass. 20+ yard plays от BOTH run и pass на 20%+ drives. Score от anywhere на field в 2 plays',
-              topLeft: '🏃 Ground explosion specialists (<6.5 Y/A pass + >8% rush explosive): Outside zone с speed backs hitting home runs. Но passing game - checkdowns и screens. Defenses load box после big runs, shutting down repeatability',
-              bottomLeft: '😔 Methodical grind (<6.5 Y/A pass + <5% rush explosive): Death by thousand papercuts - 4 yard gains до nausea. No plays over 20 yards. Требуют 15+ play drives для scoring. One penalty kills entire possession',
-              bottomRight: '🚀 Vertical pass, patient run (>7.5 Y/A pass + <5% rush explosive): Deep shots и play-action создают explosive passing. Run game - ball control между bombs. Gap/power schemes для 3-4 yards. Predictable но effective если QB accurate deep'
+              topRight: 'High pass Y/A + high rush explosive rate: Elite offensive balance forcing defenses to defend entire field. Explosive plays from both run and pass on significant percentage of drives. Capable of scoring from any field position quickly',
+              topLeft: 'Low pass Y/A + high rush explosive rate: Ground game specialization with explosive running plays. Outside zone schemes with speed backs creating home runs. Passing game limited to checkdowns and screens. Defenses adjust by loading box',
+              bottomLeft: 'Low pass Y/A + low rush explosive rate: Methodical offensive approach without big play ability. Consistent short gains requiring extended drives for scoring. Single penalty can derail entire possession. Limited scoring potential',
+              bottomRight: 'High pass Y/A + low rush explosive rate: Vertical passing attack with patient running game. Deep shots and play-action create explosive passing plays. Run game focuses on ball control between passing attempts. Effective when quarterback accurate downfield'
             }
           },
           {
@@ -525,10 +525,10 @@
             insight: 'Balanced efficiency vs specialized offense. Top-right = elite at both. Others = one-dimensional.',
             metricHelp: '<strong>Pass Y/A vs Rush Y/A:</strong> Сбалансированная эффективность vs специализированное нападение. Верхний правый = элита в обоих.',
             quadrantHelp: {
-              topRight: '🏆 Unstoppable force (>7.5 pass Y/A + >4.5 rush Y/A): Pick your poison defense - stack box? 8.5+ Y/A passing. Play coverage? 5+ YPC на ground. Perfectly balanced как Thanos. Red zone TD rate 70%+ от multiple formations',
-              topLeft: '🏃 Ground and pound identity (<6.5 pass Y/A + >4.5 rush Y/A): Физическое доминирование с 5+ YPC, но passing game exists только для play-action. Работает пока не отстают by 14+. Clock control masters но limited comeback ability',
-              bottomLeft: '😔 Offensive wasteland (<6.5 pass Y/A + <3.8 rush Y/A): Не могут ничего - ни stretch field ни control line. Predictable by situation - obvious pass на 3rd&long, obvious run на 3rd&short. Scoring drives - accidents. Under 20 PPG guaranteed',
-              bottomRight: '🚀 Modern passing attack (>7.5 pass Y/A + <3.8 rush Y/A): Spread formations, RPOs, quick game на 8+ Y/A. Rush - afterthought для occasional draws. Работает в shootouts но struggles в cold/wind. Playoff liability без balance'
+              topRight: 'High pass Y/A + high rush Y/A: Elite offensive efficiency in both phases. Defense must respect both threats equally. High red zone touchdown rate from multiple formations. Balanced attack creates favorable matchups',
+              topLeft: 'Low pass Y/A + high rush Y/A: Physical ground game dominance with limited passing. Effective rushing creates play-action opportunities. Clock control philosophy limits comeback ability. Vulnerable when trailing significantly',
+              bottomLeft: 'Low pass Y/A + low rush Y/A: Offensive inefficiency in both phases. Predictable play-calling by down and distance. Scoring drives occur rarely and often by accident. Below average points per game production',
+              bottomRight: 'High pass Y/A + low rush Y/A: Modern spread passing attack with minimal run game. RPOs and quick game generate high yards per attempt. Effective in shootouts but vulnerable in adverse weather. Lack of balance creates playoff liability'
             }
           },
           {
@@ -541,10 +541,10 @@
             insight: 'Finishing drives with TDs (not FGs) wins games. Measures red zone effectiveness.',
             metricHelp: '<strong>TD per Play:</strong> Финиш драйвов тачдаунами (не FG) выигрывает игры. Измеряет эффективность красной зоны.',
             quadrantHelp: {
-              topRight: '🏆 Red zone assassins (>0.035 TD/play + >60% wins): Конвертируют 70%+ red zone trips в 6 points. Fade routes, RPOs, QB sneaks - arsenal готов. Settling для FG - редкость. 28+ PPG через efficiency не volume',
-              topLeft: '💪 Defensive fortress (<0.025 TD/play + >60% wins): Выигрывают 17-14 тип игр. Defense создаёт short fields но offense kicks FGs. Ugly wins но wins nonetheless. Weather games - их specialty',
-              bottomLeft: '😔 Red zone allergic (<0.025 TD/play + <40% wins): Drives умирают inside 20 - penalties, sacks, drops. FG attempts вместо TDs = losing football. Red zone TD% ниже 40%. Оставляют 4 points per trip минимум',
-              bottomRight: '🤔 Empty calories TDs (>0.035 TD/play + <40% wins): Забивают в garbage time или дают 35+ defensively. No lead safe с такой защитой. Quick strike TDs но defense на поле сразу возвращает. Time of possession кошмар'
+              topRight: 'High TD/play + high win%: Elite red zone efficiency converting trips to touchdowns. Multiple scoring options including fade routes, RPOs, and short yardage plays. Rarely settling for field goals. High points per game through efficiency rather than volume',
+              topLeft: 'Low TD/play but high win%: Defensive-oriented victories with low-scoring games. Defense creates short fields but offense settles for field goals. Winning through field position and defensive stops. Effective in weather games',
+              bottomLeft: 'Low TD/play + low win%: Red zone inefficiency killing drives inside twenty. Penalties, sacks, and drops preventing touchdown conversions. Settling for field goal attempts instead of touchdowns. Leaving significant points on field',
+              bottomRight: 'High TD/play but low win%: Scoring touchdowns without winning games. Often scoring in garbage time or allowing excessive defensive points. Quick strike touchdowns but poor time of possession. Defense immediately returns field to opponent'
             }
           },
           {
@@ -556,10 +556,10 @@
             insight: 'Does generating sacks correlate with opponent incompletions? Pass rush vs coverage.',
             metricHelp: '<strong>DEF Sacks vs Completion%:</strong> Генерация сэков коррелирует с incompletions соперника? Pass rush vs coverage.',
             quadrantHelp: {
-              topRight: '🤔 Quick game neutralizer (3+ DEF sacks + >65% OFF comp%): Defense generates pressure но offense counters с <2.3 sec release quick game. Slants, hitches, screens negate pass rush. Sacks come на obvious passing downs только',
-              topLeft: '✅ Clean pocket paradise (<2 DEF sacks + >65% OFF comp%): O-line - Great Wall, QB has picnic в pocket. Может пройти full progressions, найти checkdowns. 7-step drops без страха. Completion% inflated от времени',
-              bottomLeft: '💪 Coverage drives incompletions (<2 DEF sacks + <60% OFF comp%): Sticky coverage заставляет contested throws. Windows закрыты, QB форсирует. Pattern matching и disguised zones создают confusion без blitzing',
-              bottomRight: '🏆 Total defensive dominance (3+ DEF sacks + <60% OFF comp%): Pass rush в 2.5 sec + tight coverage = offensive nightmare. QB под pressure бросает off-platform в coverage. Batted passes, strips sacks common. Third down - automatic punt'
+              topRight: 'High defensive sacks + high offensive completion%: Defense generates pressure but offense counters with quick release passing. Short routes and screens neutralize pass rush. Sacks primarily occur on obvious passing downs',
+              topLeft: 'Low defensive sacks + high offensive completion%: Offensive line provides excellent protection allowing full progressions. Quarterback has time to find checkdowns and secondary options. Completion percentage inflated by extended time in pocket',
+              bottomLeft: 'Low defensive sacks + low offensive completion%: Tight coverage forces contested throws without pressure. Pattern matching and disguised zones create confusion. Coverage drives incompletions rather than pass rush',
+              bottomRight: 'High defensive sacks + low offensive completion%: Total defensive dominance combining rush and coverage. Quick pressure forces off-platform throws into coverage. High rates of batted passes and strip sacks. Third down conversions rarely successful'
             }
           },
           {
@@ -571,10 +571,10 @@
             insight: 'Running teams protect the ball better. Time of possession = fewer risky throws = fewer turnovers.',
             metricHelp: '<strong>Rush Att vs INTs:</strong> Беговые команды лучше защищают мяч. Контроль владения = меньше рискованных бросков = меньше перехватов.',
             quadrantHelp: {
-              topRight: '⚠️ Run-heavy but reckless (25+ rushes + 1.5+ INT): Establish run с 30+ attempts но play-action backfires. QB forcing deep shots off PA fakes в loaded coverage. Predictable formations telegraph intentions. Run success не translating в passing efficiency',
-              topLeft: '🚀 Air raid precision (<20 rushes + <1 INT): Pure passing attack с quick release и hot routes. Ball out в 2.5 sec before pressure. High percentage throws, avoiding risky deep shots. System QB executing perfectly',
-              bottomLeft: '😔 Conservative passing (<20 rushes + <1 INT): Forced в one-dimensional passing но protecting ball. Checkdowns и underneath routes только. No explosive potential. Nickel and diming без touchdown threats',
-              bottomRight: '🏆 Ball control mastery (25+ rushes + <1 INT): Time of possession 33+ минут, limiting opponent opportunities. Play-action на 50/50 splits deadly. QB под no pressure в obvious pass situations. Formula championship teams'
+              topRight: 'High rush attempts + high interceptions: Run-heavy approach but poor play-action execution. Quarterback forcing deep shots off play-action into loaded coverage. Predictable formations telegraph intentions. Run success not translating to passing efficiency',
+              topLeft: 'Low rush attempts + low interceptions: Pure passing attack with quick release and hot routes. Ball out quickly before pressure arrives. High percentage throws avoiding risky deep shots. System quarterback executing efficiently',
+              bottomLeft: 'Low rush attempts + high interceptions: Pass-heavy approach with poor ball security. One-dimensional offense becomes predictable. Defense sits in passing formations. Multiple turnovers despite limited rushing threat',
+              bottomRight: 'High rush attempts + low interceptions: Ball control mastery through time of possession. Play-action highly effective off balanced run-pass splits. Quarterback faces minimal pressure in obvious passing situations. Championship-caliber formula'
             }
           },
           {
@@ -586,10 +586,10 @@
             insight: 'High-volume short passing (bottom-right) vs low-volume deep passing (top-left). West Coast vs vertical.',
             metricHelp: '<strong>Receptions vs Y/C:</strong> Высокообъёмный короткий пас (нижний правый) vs низкообъёмный глубокий (верхний левый). West Coast vs vertical.',
             quadrantHelp: {
-              topRight: '🚀 Volume vertical attack (300+ catches + >14 Y/C): Rare combination - high volume И deep passing. Multiple receivers с 15+ Y/C averages. Spread formations stretching field both ways. 400+ pass attempts feeding everyone',
-              topLeft: '🎯 Boom or bust vertical (<250 catches + >14 Y/C): Low volume deep shots - 20%+ targets are 20+ yards downfield. Go routes, posts, corners dominate. Требует elite QB arm и WR speed. High variance week-to-week',
-              bottomLeft: '😔 Passing game dysfunction (<250 catches + <11 Y/C): Cannot complete passes efficiently ИЛИ stretch field. Routes breaking at 5-7 yards. No YAC creation. Defense sitting on everything. Under 200 passing yards norm',
-              bottomRight: '🏃 Death by papercuts (300+ catches + <11 Y/C): West Coast на maximum - 400+ completions на season но average 8 yards. Ball control через volume не efficiency. Требует perfect execution и YAC masters'
+              topRight: 'High catches + high Y/C: Rare combination of volume and depth in passing game. Multiple receivers averaging significant yards per catch. Spread formations stretching field vertically and horizontally. High pass attempts distributed across multiple targets',
+              topLeft: 'Low catches + high Y/C: Low-volume vertical passing attack. High percentage of targets traveling downfield. Deep routes dominate route tree. Requires elite quarterback arm strength and receiver speed. High week-to-week variance',
+              bottomLeft: 'Low catches + low Y/C: Inefficient passing game lacking both volume and depth. Short breaking routes without YAC generation. Defense sits on short zones. Below average passing yards per game',
+              bottomRight: 'High catches + low Y/C: High-volume short passing game. Numerous completions but limited yards per reception. Ball control through volume rather than efficiency. Requires perfect execution and YAC production'
             }
           },
           {
@@ -601,10 +601,10 @@
             insight: 'Can QBs maintain accuracy when facing pressure? Mental toughness and pocket presence test.',
             metricHelp: '<strong>Sack Rate vs Completion%:</strong> QB поддерживают точность под давлением? Тест ментальной силы и работы в кармане.',
             quadrantHelp: {
-              topRight: '😱 Pressure-proof QB (>8% sack rate + >65% comp): Rare breed - maintains mechanics под chaos. Climbs pocket, keeps eyes downfield во время contact. Internal clock adjusted для pressure. Completion% не падает despite hits',
-              topLeft: '🏆 Perfect environment (<5% sack rate + >65% comp): Fortress protection + accurate QB = offensive excellence. Clean pocket на 75%+ dropbacks. Can work through full progression. Deep balls и touch passes on time',
-              bottomLeft: '😔 Accuracy issues persist (<5% sack rate + <60% comp): Protection есть но QB не может hit broadside of barn. Sailing throws, dirt balls с clean feet. Mechanical issues или processing problems. Нужен QB coach или bench',
-              bottomRight: '💀 Shell-shocked disaster (>8% sack rate + <60% comp): Постоянное pressure сломало QB mentally. Happy feet, bailing early, seeing ghosts. Accuracy mechanics destroyed от anticipating hits. Confidence shattered by Week 8'
+              topRight: 'High sack rate + high completion%: Quarterback maintains accuracy despite pressure. Exceptional pocket presence and eye discipline under duress. Internal clock adjusted for pressure situations. Completion percentage remains high despite hits',
+              topLeft: 'Low sack rate + high completion%: Optimal protection enables accurate passing. Clean pockets on majority of dropbacks allow full progressions. Deep balls and touch passes delivered on time. Classic pocket passing environment',
+              bottomLeft: 'Low sack rate + low completion%: Adequate protection but poor quarterback accuracy. Missing open receivers despite clean pockets. Mechanical or processing issues evident. Requires fundamental quarterback development',
+              bottomRight: 'High sack rate + low completion%: Constant pressure destroying quarterback mechanics. Internal clock disrupted leading to poor footwork. Accuracy deteriorates from anticipated contact. Confidence erosion affects overall performance'
             }
           },
           {
@@ -616,10 +616,10 @@
             insight: 'Fumbles are 50/50 balls. Teams above trend = lucky, below trend = unlucky. Regression candidate.',
             metricHelp: '<strong>Forced vs Recovered:</strong> Фамблы - 50/50 мячи. Команды выше тренда = удачливые, ниже = неудачливые. Кандидаты на регрессию.',
             quadrantHelp: {
-              topRight: '🍀 Luck magnets (15+ forced + 10+ recovered): Recovery rate >60% - статистическая аномалия. Bounce luck, hustle to ball, или home cooking? Strip-sack specialists И gang tackling создают И отбирают. Regression coming но ride wave',
-              topLeft: '😔 Statistical impossibility (<10 forced + 10+ recovered): Как это вообще? Отбирают чужие forced fumbles? Или scorer ошибается? Проверьте data integrity. Если real - максимальная удача без усилий',
-              bottomLeft: '⚠️ Passive tackling (<10 forced + <5 recovered): Arm tackles, no punch attempts на ball. Защитники focused на stopping не stripping. Conservative coaching philosophy. Leaving plays на field каждую игру',
-              bottomRight: '😱 Cursed recovery rate (15+ forced, но <5 recovered): Punch out masters но ball bounces к opponents. <35% recovery rate - due для positive regression. Peanut Tillman punches без Lucky recoveries. Heartbreaking near-turnovers'
+              topRight: 'High forced fumbles + high recoveries: Above-average recovery rate indicating favorable variance. Combination of strip techniques and gang tackling creates and recovers fumbles. Statistical regression likely but currently benefiting from luck',
+              topLeft: 'Low forced fumbles + high recoveries: Statistical anomaly with more recoveries than forced. Potentially recovering opponent-forced fumbles or data recording issues. Unsustainable recovery rate without forcing fumbles',
+              bottomLeft: 'Low forced fumbles + low recoveries: Passive tackling approach without ball disruption attempts. Defenders focused on stopping rather than stripping. Conservative defensive philosophy leaving turnovers opportunities unexploited',
+              bottomRight: 'High forced fumbles + low recoveries: Creating fumbles without recovering them. Below-average recovery rate indicating negative variance. Due for positive regression toward mean recovery rate. Execution without results'
             }
           },
           {
@@ -631,10 +631,10 @@
             insight: 'Do high-volume receivers drop more passes? Fatigue vs concentration at high workloads.',
             metricHelp: '<strong>Receptions vs Drop Rate:</strong> Принимающие с высоким объёмом теряют больше передач? Усталость vs концентрация при высоких нагрузках.',
             quadrantHelp: {
-              topRight: '⚠️ Volume fatigue showing (300+ catches + >6% drops): High usage создаёт concentration lapses. 4я четверть drop rate doubles. Cold weather games - disaster. WRs need JUGS machine overtime или rotation для rest',
-              topLeft: '😔 Stone hands syndrome (<250 catches + >6% drops): Cannot catch cold в Miami. Open drops, contested drops, всё drops. QB trust eroding - stops looking their way. Need new receiving corps ASAP',
-              bottomLeft: '✅ Limited but reliable (<250 catches + <3% drops): Low volume но sure hands когда called upon. Role players doing job. Third down security blankets. Not spectacular но dependable',
-              bottomRight: '🏆 Elite hands factory (300+ catches + <3% drops): Catching everything - behind, high, low, contested. QB trusts в tight windows. YAC starts с secure catches. 50/50 balls становятся 70/30 с такими руками'
+              topRight: 'High catches + high drop rate: Volume-related concentration issues appearing. Drop rate increases in fourth quarter situations. Weather conditions exacerbate problems. Fatigue affecting reliability',
+              topLeft: 'Low catches + high drop rate: Poor hands regardless of volume. Drops occurring on both open and contested catches. Quarterback trust diminishing over time. Receiving corps needs significant improvement',
+              bottomLeft: 'Low catches + low drop rate: Limited volume but reliable when targeted. Role players executing assignments effectively. Dependable third down targets. Consistent if not spectacular production',
+              bottomRight: 'High catches + low drop rate: Elite receiving corps reliability at high volume. Maintaining concentration through heavy usage. Quarterback trust enables tight window throws. Contested catch success rate well above average'
             }
           },
           {
@@ -646,10 +646,10 @@
             insight: 'Creating INTs requires getting hands on the ball first. Coverage quality indicator.',
             metricHelp: '<strong>Deflections vs INTs:</strong> Создание перехватов требует сначала достать мяч руками. Индикатор качества покрытия.',
             quadrantHelp: {
-              topRight: '🏆 Ball-hawk paradise (40+ deflections + 15+ INTs): DBs с elite ball skills - high point, track, catch. 40%+ deflection-to-INT rate. Practice tip drills paying off. Creating turnovers через aggression И execution',
-              topLeft: '🎯 Opportunistic hunters (<25 deflections + 15+ INTs): Не много attempts на ball но capitalize когда делают. Reading QB eyes, jumping routes perfectly. Quality over quantity approach. Disguised coverage creating easy INTs',
-              bottomLeft: '😔 Coverage breakdown (<25 deflections + <10 INTs): Cannot get hands on balls - always step behind. Cushion too soft, breaks too late. QBs completing at will. Need faster DBs или scheme change',
-              bottomRight: '⚠️ Butterfingers DBs (40+ deflections + <10 INTs): Stone hands disease - hitting balls но не catching. Would-be All-Pros если could catch. 20% conversion rate criminal. Need JUGS machine для DBs срочно'
+              topRight: 'High deflections + high interceptions: Elite ball skills creating turnovers. High deflection-to-interception conversion rate. Aggressive play at catch point paying dividends. Creating turnovers through both effort and execution',
+              topLeft: 'Low deflections + high interceptions: Opportunistic defense capitalizing on limited chances. Reading quarterback eyes and jumping routes effectively. Quality over quantity approach to turnovers. Disguised coverages creating easy interception opportunities',
+              bottomLeft: 'Low deflections + low interceptions: Coverage ineffectiveness preventing ball disruption. Defensive backs consistently out of position. Quarterbacks completing passes without challenge. Scheme or personnel changes needed',
+              bottomRight: 'High deflections + low interceptions: Creating opportunities without finishing plays. Poor hands preventing interception conversions. Low deflection-to-interception rate indicates execution issues. Defensive backs need ball skills development'
             }
           },
           {
@@ -661,10 +661,10 @@
             insight: 'Power runners break tackles AND score TDs. Physical dominance at the goal line.',
             metricHelp: '<strong>Broken Tackles vs Rush TDs:</strong> Мощные бегуны ломают захваты И забивают TD. Физическое доминирование на линии ворот.',
             quadrantHelp: {
-              topRight: '💪 Goal line bulldozers (50+ broken + 15+ rush TDs): Power backs с elite contact balance. Red zone conversion 75%+ on ground. Defenders bounce off в goal line situations. 4th&1 automatic. Physical dominance wearing down defenses',
-              topLeft: '🏃 Finesse finishers (<30 broken + 15+ rush TDs): Speed to edge или perfect vision между tackles. Not breaking tackles но avoiding them. Outside zone и sweeps в red zone. TDs от scheme не power',
-              bottomLeft: '😔 No push anywhere (<30 broken + <8 rush TDs): Cannot move pile или break arm tackles. Goal line stuffed regularly. Settling для pass или FG в red zone. RBs going down на first contact',
-              bottomRight: '⚠️ Between 20s warrior (50+ broken + <8 rush TDs): Breaking tackles between 20s но не finishing. Red zone efficiency crashes - predictable, no passing threat. Drive-killing penalties или fumbles near goal line'
+              topRight: 'High broken tackles + high rushing TDs: Power running dominance through contact. Elite red zone conversion rate on ground. Physical running style wearing down defenses. Short yardage and goal line success',
+              topLeft: 'Low broken tackles + high rushing TDs: Scoring through speed and vision rather than power. Avoiding contact while finding end zone. Outside zone and sweep success in red zone. Scheme creating touchdown opportunities',
+              bottomLeft: 'Low broken tackles + low rushing TDs: Ineffective power running game. Unable to break tackles or score on ground. Goal line struggles leading to passing or field goal attempts. Running backs going down on first contact',
+              bottomRight: 'High broken tackles + low rushing TDs: Breaking tackles without scoring touchdowns. Red zone inefficiency despite physical running. Predictability or penalties killing scoring drives. Unable to finish drives with touchdowns'
             }
           },
           {
@@ -677,10 +677,10 @@
             insight: 'Better punting creates better field position. Hidden yards that contribute to winning.',
             metricHelp: '<strong>Punt Net vs Win%:</strong> Лучший пантинг создаёт лучшую позицию поля. Скрытые ярды, которые способствуют победам.',
             quadrantHelp: {
-              topRight: '🏆 Hidden yardage wins (>42 net + >60% wins): Field position battle выигран каждую игру. 10+ yard advantage в starting position. Complementary football - punt coverage elite too. Those 40 hidden yards = 3-6 points difference',
-              topLeft: '💪 Overcoming bad punts (<38 net + >60% wins): Offense/defense так dominant что field position не важна. Scoring от anywhere, stopping everyone. Но в close playoff games это vulnerability',
-              bottomLeft: '😔 Field position kills (<38 net + <40% wins): Starting -10 yards behind каждый drive. Opponents getting short fields. Punter outkicking coverage или shanking под pressure. Hidden yardage costing games',
-              bottomRight: '🤔 Wasted weapon (>42 net + <40% wins): Elite punter flipping field но offense/defense не capitalizing. Perfect coffin corners followed by 80-yard TD drives allowed. Special teams excellence в vacuum'
+              topRight: 'High punt net + high win%: Superior field position contributing to victories. Significant starting field position advantage each game. Complementary special teams and coverage units. Hidden yardage translating to scoring differential',
+              topLeft: 'Low punt net but high win%: Winning despite poor field position. Offense and defense performance overcoming special teams deficiency. Vulnerability in close games where field position matters',
+              bottomLeft: 'Low punt net + low win%: Poor field position compounding team struggles. Opponents consistently starting with short fields. Punter issues with coverage or consistency. Hidden yardage deficit affecting outcomes',
+              bottomRight: 'High punt net but low win%: Elite punting performance wasted by team inefficiency. Excellent field position not converted to points. Special teams excellence without complementary unit support'
             }
           },
           {
@@ -692,10 +692,10 @@
             insight: 'More dropbacks = more sacks? Pass-heavy offense fatigue on offensive line.',
             metricHelp: '<strong>Pass Att vs Sacks Allowed:</strong> Больше дропбэков = больше сэков? Усталость пасовой защиты O-line при частых пасах.',
             quadrantHelp: {
-              topRight: '😱 Volume breakdown (40+ attempts + 3+ sacks): O-line gassed by 4th quarter от pass protection. 600+ pass block snaps wearing down. Predictable passing situations. Defense teeing off с exotic pressures. Sack rate climbing каждый quarter',
-              topLeft: '⚠️ Cannot protect period (<30 attempts + 3+ sacks): Even limited passing приводит к sacks. 10%+ sack rate disaster. Quick game не helping. O-line needs complete overhaul - scheme, personnel, или both',
-              bottomLeft: '🏃 Run-first protection (<30 attempts + <1.5 sacks): Limited pass attempts = fresh O-line когда passing. Play-action с 8-man box easier to block. Low sack rate от selective passing не elite protection',
-              bottomRight: '🏆 Elite pass pro unit (40+ attempts + <1.5 sacks): Brick wall holding up под volume. <4% sack rate despite 600+ dropbacks. Perfect communication, slide protection, picking up stunts. QB comfortable taking deep shots'
+              topRight: 'High pass attempts + high sacks allowed: Volume-related protection breakdown. Offensive line fatigue from excessive pass blocking. Predictable passing situations allowing defensive adjustments. Protection deteriorating throughout game',
+              topLeft: 'Low pass attempts + high sacks allowed: Poor protection regardless of volume. High sack rate even on limited attempts. Quick game ineffective at mitigating pressure. Fundamental protection issues requiring scheme or personnel changes',
+              bottomLeft: 'Low pass attempts + low sacks allowed: Run-first approach preserving offensive line. Fresh protection when passing off play-action. Low sack rate from selective passing rather than elite protection',
+              bottomRight: 'High pass attempts + low sacks allowed: Elite pass protection sustaining through volume. Low sack rate despite heavy passing load. Excellent communication and stunt pickup. Quarterback comfortable in pocket'
             }
           },
           {
@@ -707,10 +707,10 @@
             insight: 'High tackle teams chase plays. Low tackle + high sack teams make disruptive plays.',
             metricHelp: '<strong>Tackles vs Sacks:</strong> Команды с большим числом tackles гонятся за игрой. Низкие tackles + высокие sacks = разрушительные игры.',
             quadrantHelp: {
-              topRight: '💪 Swarm defense (800+ tackles + 40+ sacks): Gang tackling И pass rush dominance. Multiple hats to ball каждый snap. Pursuit angles elite. Creating negative plays через numbers И penetration. Exhausting но effective',
-              topLeft: '🏆 Disruptive front (< 700 tackles + 40+ sacks): TFLs и sacks stopping plays behind LOS. No need for many tackles когда offense going backwards. 3-and-outs через penetration. Ultimate efficiency',
-              bottomLeft: '😔 Ghost defense (<700 tackles + <30 sacks): Missing tackles, no pressure, offense doing whatever. Players out of position или lacking effort. 30+ first downs allowed. Offensive coordinators licking lips',
-              bottomRight: '⚠️ Chase mode (<800 tackles + <30 sacks): Always tackling 5+ yards downfield. No penetration, reactive только. Offense dictating tempo. Bend-but-not-break становится break eventually. Need scheme change'
+              topRight: 'High tackles + high sacks: Aggressive defense with gang tackling and pass rush. Multiple defenders to ball carrier each play. Creating negative plays through numbers and penetration. High effort but exhausting style',
+              topLeft: 'Low tackles + high sacks: Disruptive defense stopping plays behind line. Tackles for loss and sacks preventing forward progress. Three-and-outs through penetration. Ultimate defensive efficiency',
+              bottomLeft: 'Low tackles + low sacks: Ineffective defense with missed tackles and no pressure. Players out of position or lacking effort. High first down rate allowed. Offense controlling game flow',
+              bottomRight: 'High tackles + low sacks: Reactive defense making tackles downfield. No penetration or disruption at line. Offense dictating tempo and field position. Bend-but-not-break philosophy failing'
             }
           },
           {
@@ -722,10 +722,10 @@
             insight: 'Consistent efficient offense (left) vs boom-or-bust explosive offense (right).',
             metricHelp: '<strong>Y/Play vs Explosive Plays:</strong> Последовательное эффективное нападение (слева) vs boom-or-bust взрывное (справа).',
             quadrantHelp: {
-              topRight: '🏆 Total domination (>6.0 Y/play + 4+ explosive): Efficient И explosive - averaging 6+ yards И hitting home runs. First downs automatic, big plays bonus. 30+ PPG легко. Defense cannot key на anything',
-              topLeft: '🎯 Feast or famine (<5.2 Y/play + 4+ explosive): Living на big plays только - между explosives идут 3-and-outs. Unsustainable variance. One game 400 yards, next game 200. Требует perfect execution на explosives',
-              bottomLeft: '😔 Offensive poverty (<5.2 Y/play + <2 explosive): Cannot move ball consistently ИЛИ explosively. Punting championship. Under 250 total yards норма. Defense на field 35+ minutes getting worn down',
-              bottomRight: '💪 Steady march (>6.0 Y/play + <2 explosive): Methodical efficiency - no big plays но consistent gains. Death by thousand cuts. Long drives eating clock. Effective но vulnerable to turnovers killing drives'
+              topRight: 'High yards/play + high explosive plays: Total offensive dominance with efficiency and explosiveness. Automatic first downs with bonus big plays. High scoring output. Defense cannot focus on any single threat',
+              topLeft: 'Low yards/play + high explosive plays: Boom-or-bust offense relying on big plays. Three-and-outs between explosive gains. High variance performance week to week. Requires perfect execution on explosive opportunities',
+              bottomLeft: 'Low yards/play + low explosive plays: Offensive inefficiency without big play ability. Frequent punting with minimal yardage production. Defense on field for extended time leading to fatigue',
+              bottomRight: 'High yards/play + low explosive plays: Methodical offensive efficiency without big plays. Consistent gains through systematic approach. Long sustained drives controlling clock. Vulnerable to drive-killing turnovers'
             }
           },
           {
@@ -737,10 +737,10 @@
             insight: 'Top-right = aggressive both ways. Bottom-left = conservative. Diagonal = turnover margin.',
             metricHelp: '<strong>Giveaways vs Takeaways:</strong> Верхний правый = агрессивность с обеих сторон. Нижний левый = консервативность. Диагональ = turnover margin.',
             quadrantHelp: {
-              topRight: '🎲 Riverboat gambling (25+ giveaways + 25+ takeaways): Living dangerously - forcing turnovers И giving them. Every game - rollercoaster с 5+ combined turnovers. Works если takeaway TDs > giveaway points. Coin flip football',
-              topLeft: '🏆 Turnover masters (<15 giveaways + 25+ takeaways): +10 или better turnover differential. Ball security на offense + ball-hawking defense. Short fields one way. Championship formula когда sustained',
-              bottomLeft: '🛡️ Risk averse (<15 giveaways + <15 takeaways): Conservative both ways - protecting ball, not attacking it. Low scoring affairs. Field position и special teams decide games. Boring но safe',
-              bottomRight: '💀 Turnover donation center (25+ giveaways + <15 takeaways): -10 или worse differential. Giving possessions без getting back. Cannot overcome -2 per game margin. Season over by Week 10'
+              topRight: 'High giveaways + high takeaways: High-variance turnover game on both sides. Multiple combined turnovers each game. Success depends on converting takeaways more efficiently than opponent. Volatile game-to-game results',
+              topLeft: 'Low giveaways + high takeaways: Elite turnover differential through ball security and defensive playmaking. Creating short fields while protecting possessions. Championship-caliber turnover margin when sustained',
+              bottomLeft: 'Low giveaways + low takeaways: Conservative approach minimizing turnovers both ways. Low-scoring games decided by field position. Special teams importance elevated. Risk-averse philosophy',
+              bottomRight: 'High giveaways + low takeaways: Severe negative turnover differential. Giving away possessions without creating them. Cannot overcome multiple possession disadvantage. Fundamental ball security issues'
             }
           },
           {
@@ -752,10 +752,10 @@
             insight: 'YAC from short passes (high YAC%, low Y/C) vs downfield catches (low YAC%, high Y/C). Scheme design.',
             metricHelp: '<strong>YAC% vs Y/C:</strong> YAC от коротких передач (высокий YAC%, низкий Y/C) vs ловля на глубине (низкий YAC%, высокий Y/C). Схема дизайна.',
             quadrantHelp: {
-              topRight: '🏆 YAC monsters everywhere (>50% YAC + >14 Y/C): Catching downfield И breaking tackles. Slants turning into 60-yarders. Deep crosses с RAC ability. Elite receiver talent making plays after catch. Defensive nightmare',
-              topLeft: '🚀 Air yards specialists (<35% YAC + >14 Y/C): Pure vertical passing - catching balls 15+ yards downfield falling down. Jump balls, back shoulders, deep posts. No YAC needed когда catching в end zone',
-              bottomLeft: '😔 Dead yards (<35% YAC + <11 Y/C): Short passes с immediate tackles. No separation, no space, no YAC. Contested catches на curls/hitches. Defense sitting on routes, rallying to ball',
-              bottomRight: '🏃 YAC scheme masters (>50% YAC + <11 Y/C): Designed YAC - screens, drags, tunnels. Catching at 3 yards, running for 8. Scheme creating space, athletes maximizing. Modern West Coast evolution'
+              topRight: 'High YAC% + high Y/C: Elite combination of downfield catching and after-catch ability. Receivers creating additional yards on all route types. Scheme and talent maximizing both air yards and YAC. Defensive matchup nightmare',
+              topLeft: 'Low YAC% + high Y/C: Vertical passing attack with minimal after-catch yards. Deep completions with immediate tackles. Jump balls and contested catches downfield. Yards generated through air rather than YAC',
+              bottomLeft: 'Low YAC% + low Y/C: Inefficient passing with immediate tackles. Short completions without separation or space. Defense rallying quickly to ball. Neither air yards nor YAC production',
+              bottomRight: 'High YAC% + low Y/C: Scheme-based YAC production on short passes. Screens and quick game creating yards after catch. Limited air yards compensated by YAC ability. Modern short passing evolution'
             }
           }
         ];

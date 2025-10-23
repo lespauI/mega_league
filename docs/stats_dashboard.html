@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEGA League Stats Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+            padding: 30px;
+        }
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.95;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.25);
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        .card-icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        .card-title {
+            font-size: 1.5em;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        .card-subtitle {
+            color: #64748b;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+        .card-description {
+            color: #475569;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .metrics-list {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 15px;
+            margin-top: 15px;
+        }
+        .metrics-title {
+            font-size: 0.85em;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        .metric-item {
+            display: inline-block;
+            background: #f1f5f9;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            margin: 3px;
+        }
+        .explore-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 20px;
+            color: #667eea;
+            font-weight: 600;
+            font-size: 1em;
+        }
+        .explore-btn::after {
+            content: '→';
+            transition: transform 0.3s;
+        }
+        .stat-card:hover .explore-btn::after {
+            transform: translateX(5px);
+        }
+        .footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+            opacity: 0.9;
+        }
+        .quick-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .quick-stat {
+            text-align: center;
+        }
+        .quick-stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #fbbf24;
+        }
+        .quick-stat-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 MEGA League Stats Dashboard</h1>
+            <p>Comprehensive Team Analytics & Performance Visualizations</p>
+            <div class="quick-stats">
+                <div class="quick-stat">
+                    <div class="quick-stat-value">32</div>
+                    <div class="quick-stat-label">Teams Analyzed</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value">140+</div>
+                    <div class="quick-stat-label">Metrics Tracked</div>
+                </div>
+                <div class="quick-stat">
+                    <div class="quick-stat-value">91</div>
+                    <div class="quick-stat-label">Interactive Charts</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <a href="team_stats_explorer.html" class="stat-card">
+                <div class="card-icon">🎯</div>
+                <h2 class="card-title">Team Stats Explorer</h2>
+                <div class="card-subtitle">Win% Correlation Analysis</div>
+                <p class="card-description">
+                    Interactive scatter plots revealing how 20+ team metrics correlate with winning percentage. 
+                    Each chart includes trend lines, R² values, and quadrant analysis showing different team 
+                    philosophies and their impact on success.
+                </p>
+                <div class="metrics-list">
+                    <div class="metrics-title">Key Metrics</div>
+                    <span class="metric-item">Pass Yards/Attempt</span>
+                    <span class="metric-item">Rush Efficiency</span>
+                    <span class="metric-item">QB Rating</span>
+                    <span class="metric-item">Turnover Differential</span>
+                    <span class="metric-item">3rd Down %</span>
+                    <span class="metric-item">Red Zone Efficiency</span>
+                    <span class="metric-item">Sack Rate</span>
+                    <span class="metric-item">Explosive Plays</span>
+                </div>
+                <div class="explore-btn">Explore Win Correlations</div>
+            </a>
+
+            <a href="team_stats_correlations.html" class="stat-card">
+                <div class="card-icon">🔍</div>
+                <h2 class="card-title">Cross-Metric Correlations</h2>
+                <div class="card-subtitle">34 Statistical Relationships</div>
+                <p class="card-description">
+                    Deep dive into relationships between different metrics. Discover how passing efficiency 
+                    affects scoring, how turnovers impact field position, and which defensive metrics predict 
+                    offensive struggles. Includes advanced efficiency calculations and strategic insights.
+                </p>
+                <div class="metrics-list">
+                    <div class="metrics-title">Analysis Types</div>
+                    <span class="metric-item">Offense vs Defense</span>
+                    <span class="metric-item">Pass vs Rush Balance</span>
+                    <span class="metric-item">Efficiency Metrics</span>
+                    <span class="metric-item">Situational Success</span>
+                    <span class="metric-item">Pressure vs Coverage</span>
+                    <span class="metric-item">Field Position Impact</span>
+                </div>
+                <div class="explore-btn">View Correlations</div>
+            </a>
+
+            <a href="team_player_usage.html" class="stat-card">
+                <div class="card-icon">👥</div>
+                <h2 class="card-title">Player Usage Distribution</h2>
+                <div class="card-subtitle">25 Target & Touch Visualizations</div>
+                <p class="card-description">
+                    Comprehensive analysis of how teams distribute targets and touches among players. 
+                    Visualize WR/TE/RB target shares, concentration metrics, and how usage patterns 
+                    correlate with team performance including turnovers, sacks, and scoring efficiency.
+                </p>
+                <div class="metrics-list">
+                    <div class="metrics-title">Usage Insights</div>
+                    <span class="metric-item">WR1 Target Share</span>
+                    <span class="metric-item">TE Utilization</span>
+                    <span class="metric-item">RB Touch Distribution</span>
+                    <span class="metric-item">Target Concentration</span>
+                    <span class="metric-item">Slot vs Outside</span>
+                    <span class="metric-item">Red Zone Targets</span>
+                </div>
+                <div class="explore-btn">Analyze Player Usage</div>
+            </a>
+
+            <a href="rankings_explorer.html" class="stat-card">
+                <div class="card-icon">🏆</div>
+                <h2 class="card-title">Rankings Explorer</h2>
+                <div class="card-subtitle">12 Strategic Pattern Visualizations</div>
+                <p class="card-description">
+                    Strategic analysis combining team rankings with performance metrics. Explore offensive 
+                    vs defensive balance, identify team philosophies, and discover how rankings translate 
+                    to wins. Includes efficiency patterns, cap space analysis, and volatility tracking.
+                </p>
+                <div class="metrics-list">
+                    <div class="metrics-title">Strategic Views</div>
+                    <span class="metric-item">Off vs Def Balance</span>
+                    <span class="metric-item">Pass/Rush Philosophy</span>
+                    <span class="metric-item">Yards to Points</span>
+                    <span class="metric-item">Rank Volatility</span>
+                    <span class="metric-item">Cap Efficiency</span>
+                    <span class="metric-item">Home/Away Splits</span>
+                </div>
+                <div class="explore-btn">Explore Rankings</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>MEGA League Statistical Analysis Hub</p>
+            <p style="font-size: 0.9em; margin-top: 10px; opacity: 0.8;">
+                All visualizations are interactive • Hover for details • Click panels to expand
+            </p>
+        </div>
+    </div>
+</body>
+</html>
