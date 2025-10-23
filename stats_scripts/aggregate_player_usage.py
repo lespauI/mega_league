@@ -111,7 +111,7 @@ def aggregate_player_usage(base_path):
             usage_data['wr3_share'] = 0
             usage_data['top3_share'] = 0
         
-        rec_shares = [safe_float(r.get('recTotalCatches')) / total_catches for r in team_receiving if total_catches > 0]
+        rec_shares = [safe_float(r.get('recTotalCatches')) / total_catches for r in team_receiving if total_catches > 0 and safe_float(r.get('recTotalCatches')) > 0]
         usage_data['pass_concentration'] = calculate_herfindahl_index(rec_shares) * 10000
         
         total_rushes = sum(safe_float(r.get('rushTotalAtt')) for r in team_rushing)
@@ -143,7 +143,7 @@ def aggregate_player_usage(base_path):
             usage_data['rb2_share'] = 0
             usage_data['rbbc'] = False
         
-        rush_shares = [safe_float(r.get('rushTotalAtt')) / total_rushes for r in team_rushing if total_rushes > 0]
+        rush_shares = [safe_float(r.get('rushTotalAtt')) / total_rushes for r in team_rushing if total_rushes > 0 and safe_float(r.get('rushTotalAtt')) > 0]
         usage_data['rush_concentration'] = calculate_herfindahl_index(rush_shares) * 10000
         
         usage_data['pass_distribution_style'] = 'Concentrated' if usage_data['pass_concentration'] > 1500 else ('Balanced' if usage_data['pass_concentration'] > 1000 else 'Spread')
