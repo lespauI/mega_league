@@ -83,6 +83,65 @@
     }
 
     const CHARTS = [
+      // High-value, non-rank metrics
+      {
+        title: 'Points For vs Points Allowed (per game)',
+        xMetric: 'ptsForPg', yMetric: 'ptsAgainstPg',
+        xLabel: 'Points Scored per Game', yLabel: 'Points Allowed per Game',
+        inverted: 'y',
+        help: 'Overall team quality: score more while allowing fewer points'
+      },
+      {
+        title: 'Net Points per Game vs Win %',
+        xMetric: 'netPtsPg', yMetric: 'winPct',
+        xLabel: 'Net Points per Game', yLabel: 'Win Percentage',
+        help: 'Point differential per game correlates strongly with winning'
+      },
+      {
+        title: 'Pythagorean Expectation vs Actual',
+        xMetric: 'pythExpWinPct', yMetric: 'winPct',
+        xLabel: 'Expected Win % (Pythagorean)', yLabel: 'Actual Win %',
+        help: 'How closely actual results match points-based expectation'
+      },
+      {
+        title: 'Over/Under Pythagorean vs Turnover Margin/G',
+        xMetric: 'tODiffPerGame', yMetric: 'pythOverUnder',
+        xLabel: 'Turnover Differential per Game', yLabel: 'Actual − Expected Win %',
+        help: 'Do turnovers explain over- or under-performance vs expectation?'
+      },
+      {
+        title: 'Scoring Efficiency: Points per 100 Yards vs Win %',
+        xMetric: 'ptsPer100Yds', yMetric: 'winPct',
+        xLabel: 'Points per 100 Offensive Yards', yLabel: 'Win Percentage',
+        help: 'Do teams convert yardage into points effectively?'
+      },
+      {
+        title: 'Pass Share vs Win %',
+        xMetric: 'passShare', yMetric: 'winPct',
+        xLabel: 'Pass Share of Total Offense', yLabel: 'Win Percentage',
+        help: 'Style vs success: pass-heavy vs balanced approaches'
+      },
+      {
+        title: 'Team Strength Index (Z) vs Win %',
+        xMetric: 'teamStrengthIndex', yMetric: 'winPct',
+        xLabel: 'Team Strength Index (Z-score)', yLabel: 'Win Percentage',
+        help: 'Composite Z-score: offense (PPG) + defense (inverse PPG allowed)'
+      },
+      {
+        title: 'Offense: Yards/G vs Points/G',
+        xMetric: 'offTotalYdsPg', yMetric: 'ptsForPg',
+        xLabel: 'Offensive Yards per Game', yLabel: 'Points per Game',
+        help: 'Yardage production vs scoring output'
+      },
+      {
+        title: 'Defense: Yards Allowed/G vs Points Allowed/G',
+        xMetric: 'defTotalYdsPg', yMetric: 'ptsAgainstPg',
+        xLabel: 'Defensive Yards Allowed per Game', yLabel: 'Points Allowed per Game',
+        inverted: 'y',
+        help: 'Bend-don\'t-break vs leaky defenses'
+      },
+
+      // Existing rank-based comparisons (kept for reference)
       // Core Balance Charts
       { 
         title: 'Offensive vs Defensive Balance', 
@@ -491,7 +550,7 @@
   <div class="container">
     <h1>Team Rankings Explorer — Strategic Patterns & Performance Correlations</h1>
     <div class="subtitle">
-      12 comprehensive graphs showing team rankings correlations and strategic patterns.
+      Insightful per-game and efficiency charts plus rank-based references.
       Red squares = better than trend, Blue = worse than trend. 
       R² shows correlation strength (0=none, 1=perfect).
     </div>
