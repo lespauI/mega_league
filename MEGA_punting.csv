@@ -1,18 +1,18 @@
 team__displayName,team__abbrName,team__logoId,team__logo,player__position,player__rosterId,player__fullName,player__yearsPro,player__injuryLength,player__portraitId,player__jerseyNum,gamesPlayed,puntsTotalBlocked,puntsTotalIn20,puntTotalLongest,puntTotalTBs,puntAvgNetYdsPerAtt,puntTotalNetYds,puntTotalAtt,puntAvgYdsPerAtt,puntTotalYds
 49ers,SF,14,,P,553387862,Thomas Morstead,16,0,2184,7,12,0,5,52,1,30.47,579,19,35.32,671
-Bears,CHI,0,,P,553388585,Tory Taylor,1,0,10262,19,13,0,4,57,6,32.38,939,29,39.00,1131
+Bears,CHI,0,,P,553388585,Tory Taylor,1,0,10262,19,14,0,4,65,7,33.06,1025,31,40.26,1248
 Bengals,CIN,1,,P,553388192,Ryan Rehkow,1,0,10223,8,13,1,5,72,8,36.41,1056,29,43.66,1266
 Bills,BUF,2,,P,553388234,Brad Robbins,2,0,2370,40,14,0,4,60,4,34.91,1222,35,41.74,1461
 Broncos,DEN,3,,P,553386533,Jeremy Crawshaw,0,0,10530,16,10,0,3,62,2,33.80,507,15,42.20,633
 Browns,CLE,4,,P,553386223,Corey Bojorquez,7,0,9325,13,13,0,6,70,3,31.91,1085,34,40.35,1372
 Buccaneers,TB,5,,P,553386651,Riley Dixon,9,0,7978,9,15,0,9,55,2,34.18,1128,33,39.88,1316
 Cardinals,ARI,6,,P,553386913,Blake Gillikin,5,0,878,12,14,0,6,73,2,31.02,1427,46,36.89,1697
-Chargers,LAC,7,,P,553388348,J.K. Scott,7,0,9052,16,13,0,4,56,2,35.35,813,23,41.70,959
+Chargers,LAC,7,,P,553388348,J.K. Scott,7,0,9052,16,14,0,4,56,2,35.33,848,24,41.71,1001
 Chiefs,KC,8,,P,553386072,Matt Araiza,3,0,1140,14,15,0,14,69,5,42.38,1568,37,45.54,1685
 Colts,IND,9,,P,553388317,Rigoberto Sanchez,8,0,9282,8,15,0,6,67,4,30.41,882,29,37.69,1093
 Commanders,WAS,25,,K,553386895,Matt Gay,6,0,9469,16,2,0,0,34,0,32.50,65,2,33.00,66
 Commanders,WAS,25,,P,553387366,Cameron Johnston,7,0,8608,7,11,0,6,49,0,33.05,661,20,37.95,759
-Cowboys,DAL,10,,P,553386065,Bryan Anger,13,0,5023,5,13,0,2,67,3,31.13,934,30,36.77,1103
+Cowboys,DAL,10,,P,553386065,Bryan Anger,13,0,5023,5,14,0,2,67,3,31.16,997,32,37.31,1194
 Dolphins,MIA,11,,P,553386105,Jake Bailey,6,0,9373,16,13,0,6,58,5,32.40,972,30,40.67,1220
 Eagles,PHI,12,,P,553387649,Braden Mann,5,0,442,10,13,0,8,68,8,44.09,1455,33,47.76,1576
 Falcons,ATL,13,,P,553388105,Bradley Pinion,10,0,7281,13,13,0,4,74,4,34.56,1175,34,43.50,1479
@@ -20,7 +20,7 @@ Giants,NYG,15,,P,553388523,Ryan Stonehouse,3,0,5015,4,13,0,8,68,5,35.07,982,28,4
 Jaguars,JAX,16,,P,553386506,Logan Cooke,7,0,9331,9,14,0,9,60,4,33.69,1078,32,41.66,1333
 Jets,NYJ,17,,P,553387763,Austin McNamara,1,0,10938,14,9,0,2,66,4,34.71,590,17,42.12,716
 Lions,DET,18,,P,553386841,Jack Fox,7,0,9460,3,11,0,5,56,6,33.67,606,18,43.50,783
-Packers,GB,19,,P,553388845,Daniel Whelan,2,0,5263,19,13,1,7,65,9,34.62,1108,32,41.38,1324
+Packers,GB,19,,P,553388845,Daniel Whelan,2,0,5263,19,14,1,8,65,10,35.09,1193,34,42.15,1433
 Panthers,CAR,20,,P,553387662,Sam Martin,12,0,6649,6,12,0,4,50,1,26.42,634,24,35.96,863
 Patriots,NE,21,,P,553386124,Bryce Baringer,2,0,2645,17,12,0,10,67,3,39.33,1298,33,44.76,1477
 Raiders,LV,22,,P,553386479,A.J. Cole,6,0,220,6,11,0,7,74,5,43.25,865,20,48.40,968

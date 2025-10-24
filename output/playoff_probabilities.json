@@ -7,14 +7,14 @@
     "win_pct": 0.5,
     "conference_pct": 0.6,
     "division_pct": 0.6,
-    "strength_of_victory": 0.45578231292517,
-    "strength_of_schedule": 0.5125850340136054,
-    "playoff_probability": 48.2,
+    "strength_of_victory": 0.45374149659863944,
+    "strength_of_schedule": 0.5139455782312925,
+    "playoff_probability": 52.7,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.3031,
+    "remaining_sos": 0.3063,
     "remaining_games": 3,
-    "past_sos": 0.5116
+    "past_sos": 0.5123
   },
   "Bills": {
     "conference": "AFC",
@@ -29,9 +29,9 @@
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.3927,
+    "remaining_sos": 0.399,
     "remaining_games": 3,
-    "past_sos": 0.5435
+    "past_sos": 0.544
   },
   "Broncos": {
     "conference": "AFC",
@@ -41,14 +41,14 @@
     "win_pct": 0.9333333333333333,
     "conference_pct": 0.9,
     "division_pct": 0.75,
-    "strength_of_victory": 0.4666666666666667,
-    "strength_of_schedule": 0.4736507936507936,
+    "strength_of_victory": 0.46768707482993194,
+    "strength_of_schedule": 0.472063492063492,
     "playoff_probability": 100.0,
     "division_win_probability": 100.0,
-    "bye_probability": 95.4,
-    "remaining_sos": 0.4641,
+    "bye_probability": 96.4,
+    "remaining_sos": 0.4297,
     "remaining_games": 2,
-    "past_sos": 0.519
+    "past_sos": 0.5167
   },
   "Browns": {
     "conference": "AFC",
@@ -58,31 +58,31 @@
     "win_pct": 0.42857142857142855,
     "conference_pct": 0.2222222222222222,
     "division_pct": 0.25,
-    "strength_of_victory": 0.44841269841269843,
-    "strength_of_schedule": 0.5554421768707483,
-    "playoff_probability": 4.3,
+    "strength_of_victory": 0.4515873015873016,
+    "strength_of_schedule": 0.5568027210884353,
+    "playoff_probability": 4.6,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.4438,
+    "remaining_sos": 0.4448,
     "remaining_games": 3,
-    "past_sos": 0.5775
+    "past_sos": 0.5777
   },
   "Chargers": {
     "conference": "AFC",
     "division": "AFC West",
     "W": 8,
-    "L": 6,
-    "win_pct": 0.5714285714285714,
+    "L": 7,
+    "win_pct": 0.5333333333333333,
     "conference_pct": 0.6,
     "division_pct": 0.6,
     "strength_of_victory": 0.40535714285714286,
-    "strength_of_schedule": 0.49727891156462584,
-    "playoff_probability": 74.1,
+    "strength_of_schedule": 0.5041269841269841,
+    "playoff_probability": 64.3,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5865,
-    "remaining_games": 3,
-    "past_sos": 0.4991
+    "remaining_sos": 0.6516,
+    "remaining_games": 2,
+    "past_sos": 0.4992
   },
   "Chiefs": {
     "conference": "AFC",
@@ -92,14 +92,14 @@
     "win_pct": 0.26666666666666666,
     "conference_pct": 0.2,
     "division_pct": 0.25,
-    "strength_of_victory": 0.5869047619047619,
-    "strength_of_schedule": 0.5587301587301587,
+    "strength_of_victory": 0.594047619047619,
+    "strength_of_schedule": 0.5555555555555556,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.7,
+    "remaining_sos": 0.7094,
     "remaining_games": 2,
-    "past_sos": 0.5583
+    "past_sos": 0.5548
   },
   "Colts": {
     "conference": "AFC",
@@ -110,13 +110,13 @@
     "conference_pct": 0.2,
     "division_pct": 0.0,
     "strength_of_victory": 0.3595238095238095,
-    "strength_of_schedule": 0.5415873015873015,
+    "strength_of_schedule": 0.539047619047619,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.4938,
+    "remaining_sos": 0.4906,
     "remaining_games": 2,
-    "past_sos": 0.5375
+    "past_sos": 0.5363
   },
   "Dolphins": {
     "conference": "AFC",
@@ -127,13 +127,13 @@
     "conference_pct": 0.6,
     "division_pct": 0.8,
     "strength_of_victory": 0.327891156462585,
-    "strength_of_schedule": 0.4510204081632653,
-    "playoff_probability": 34.1,
+    "strength_of_schedule": 0.44829931972789117,
+    "playoff_probability": 37.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.6375,
+    "remaining_sos": 0.6396,
     "remaining_games": 3,
-    "past_sos": 0.4777
+    "past_sos": 0.4759
   },
   "Jaguars": {
     "conference": "AFC",
@@ -144,13 +144,13 @@
     "conference_pct": 0.4,
     "division_pct": 0.75,
     "strength_of_victory": 0.3653061224489796,
-    "strength_of_schedule": 0.4892063492063492,
-    "playoff_probability": 7.2,
+    "strength_of_schedule": 0.48666666666666664,
+    "playoff_probability": 11.3,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5813,
+    "remaining_sos": 0.5891,
     "remaining_games": 2,
-    "past_sos": 0.535
+    "past_sos": 0.5333
   },
   "Jets": {
     "conference": "AFC",
@@ -161,13 +161,13 @@
     "conference_pct": 0.3,
     "division_pct": 0.0,
     "strength_of_victory": 0.4988095238095238,
-    "strength_of_schedule": 0.5489795918367347,
+    "strength_of_schedule": 0.5510204081632654,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
     "remaining_sos": 0.5406,
     "remaining_games": 3,
-    "past_sos": 0.5241
+    "past_sos": 0.5292
   },
   "Patriots": {
     "conference": "AFC",
@@ -182,9 +182,9 @@
     "playoff_probability": 100.0,
     "division_win_probability": 100.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.4062,
+    "remaining_sos": 0.4031,
     "remaining_games": 2,
-    "past_sos": 0.5244
+    "past_sos": 0.5294
   },
   "Raiders": {
     "conference": "AFC",
@@ -194,14 +194,14 @@
     "win_pct": 0.6428571428571429,
     "conference_pct": 0.5,
     "division_pct": 0.4,
-    "strength_of_victory": 0.4804232804232804,
-    "strength_of_schedule": 0.5537414965986395,
-    "playoff_probability": 96.3,
+    "strength_of_victory": 0.47883597883597884,
+    "strength_of_schedule": 0.5527210884353742,
+    "playoff_probability": 97.9,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5042,
+    "remaining_sos": 0.501,
     "remaining_games": 3,
-    "past_sos": 0.5424
+    "past_sos": 0.5375
   },
   "Ravens": {
     "conference": "AFC",
@@ -211,14 +211,14 @@
     "win_pct": 0.7333333333333333,
     "conference_pct": 0.8181818181818182,
     "division_pct": 0.6,
-    "strength_of_victory": 0.43246753246753245,
-    "strength_of_schedule": 0.44825396825396824,
+    "strength_of_victory": 0.4354978354978355,
+    "strength_of_schedule": 0.4504761904761905,
     "playoff_probability": 100.0,
     "division_win_probability": 100.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.4125,
+    "remaining_sos": 0.3969,
     "remaining_games": 2,
-    "past_sos": 0.4852
+    "past_sos": 0.4863
   },
   "Steelers": {
     "conference": "AFC",
@@ -228,14 +228,14 @@
     "win_pct": 0.4,
     "conference_pct": 0.5,
     "division_pct": 0.5,
-    "strength_of_victory": 0.4166666666666667,
-    "strength_of_schedule": 0.4787301587301587,
-    "playoff_probability": 0.9,
+    "strength_of_victory": 0.4079365079365079,
+    "strength_of_schedule": 0.4774603174603174,
+    "playoff_probability": 0.5,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5516,
+    "remaining_sos": 0.5641,
     "remaining_games": 2,
-    "past_sos": 0.5233
+    "past_sos": 0.5198
   },
   "Texans": {
     "conference": "AFC",
@@ -247,12 +247,12 @@
     "division_pct": 0.2,
     "strength_of_victory": 0.3360544217687075,
     "strength_of_schedule": 0.5204081632653061,
-    "playoff_probability": 26.8,
+    "playoff_probability": 35.4,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5292,
+    "remaining_sos": 0.5135,
     "remaining_games": 3,
-    "past_sos": 0.5176
+    "past_sos": 0.5203
   },
   "Titans": {
     "conference": "AFC",
@@ -262,14 +262,14 @@
     "win_pct": 0.8666666666666667,
     "conference_pct": 0.8181818181818182,
     "division_pct": 1.0,
-    "strength_of_victory": 0.41904761904761906,
-    "strength_of_schedule": 0.47428571428571425,
+    "strength_of_victory": 0.41611721611721614,
+    "strength_of_schedule": 0.47174603174603175,
     "playoff_probability": 100.0,
     "division_win_probability": 100.0,
-    "bye_probability": 4.3,
-    "remaining_sos": 0.5391,
+    "bye_probability": 4.2,
+    "remaining_sos": 0.5375,
     "remaining_games": 2,
-    "past_sos": 0.5017
+    "past_sos": 0.499
   },
   "49ers": {
     "conference": "NFC",
@@ -281,29 +281,29 @@
     "division_pct": 1.0,
     "strength_of_victory": 0.3261904761904762,
     "strength_of_schedule": 0.4634920634920635,
-    "playoff_probability": 43.2,
-    "division_win_probability": 36.9,
+    "playoff_probability": 37.7,
+    "division_win_probability": 33.8,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5797,
+    "remaining_sos": 0.5844,
     "remaining_games": 2,
-    "past_sos": 0.474
+    "past_sos": 0.4781
   },
   "Bears": {
     "conference": "NFC",
     "division": "NFC North",
-    "W": 7,
+    "W": 8,
     "L": 7,
-    "win_pct": 0.5,
-    "conference_pct": 0.5555555555555556,
-    "division_pct": 0.75,
-    "strength_of_victory": 0.4333333333333333,
-    "strength_of_schedule": 0.49829931972789115,
-    "playoff_probability": 21.0,
+    "win_pct": 0.5333333333333333,
+    "conference_pct": 0.6,
+    "division_pct": 0.8,
+    "strength_of_victory": 0.4023809523809524,
+    "strength_of_schedule": 0.4793650793650794,
+    "playoff_probability": 29.2,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.6177,
-    "remaining_games": 3,
-    "past_sos": 0.5156
+    "remaining_sos": 0.7078,
+    "remaining_games": 2,
+    "past_sos": 0.5104
   },
   "Buccaneers": {
     "conference": "NFC",
@@ -316,11 +316,11 @@
     "strength_of_victory": 0.4280952380952381,
     "strength_of_schedule": 0.4695238095238095,
     "playoff_probability": 100.0,
-    "division_win_probability": 80.6,
-    "bye_probability": 26.7,
-    "remaining_sos": 0.5203,
+    "division_win_probability": 81.8,
+    "bye_probability": 24.4,
+    "remaining_sos": 0.5188,
     "remaining_games": 2,
-    "past_sos": 0.5179
+    "past_sos": 0.5204
   },
   "Cardinals": {
     "conference": "NFC",
@@ -331,13 +331,13 @@
     "conference_pct": 0.1,
     "division_pct": 0.2,
     "strength_of_victory": 0.3333333333333333,
-    "strength_of_schedule": 0.5187074829931972,
+    "strength_of_schedule": 0.5197278911564626,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5406,
+    "remaining_sos": 0.5448,
     "remaining_games": 3,
-    "past_sos": 0.5618
+    "past_sos": 0.5638
   },
   "Commanders": {
     "conference": "NFC",
@@ -347,31 +347,31 @@
     "win_pct": 0.5,
     "conference_pct": 0.4444444444444444,
     "division_pct": 0.0,
-    "strength_of_victory": 0.4551020408163265,
-    "strength_of_schedule": 0.5598639455782313,
-    "playoff_probability": 19.2,
+    "strength_of_victory": 0.4523809523809524,
+    "strength_of_schedule": 0.5605442176870749,
+    "playoff_probability": 14.8,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.4115,
+    "remaining_sos": 0.424,
     "remaining_games": 3,
-    "past_sos": 0.5467
+    "past_sos": 0.5451
   },
   "Cowboys": {
     "conference": "NFC",
     "division": "NFC East",
-    "W": 8,
+    "W": 9,
     "L": 6,
-    "win_pct": 0.5714285714285714,
+    "win_pct": 0.6,
     "conference_pct": 0.7,
     "division_pct": 0.75,
-    "strength_of_victory": 0.29047619047619044,
-    "strength_of_schedule": 0.4261904761904762,
-    "playoff_probability": 67.6,
-    "division_win_probability": 15.9,
+    "strength_of_victory": 0.31957671957671957,
+    "strength_of_schedule": 0.4346031746031746,
+    "playoff_probability": 75.0,
+    "division_win_probability": 24.8,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5594,
-    "remaining_games": 3,
-    "past_sos": 0.4772
+    "remaining_sos": 0.5438,
+    "remaining_games": 2,
+    "past_sos": 0.4785
   },
   "Eagles": {
     "conference": "NFC",
@@ -382,11 +382,11 @@
     "conference_pct": 0.1,
     "division_pct": 0.25,
     "strength_of_victory": 0.4666666666666667,
-    "strength_of_schedule": 0.5527210884353742,
+    "strength_of_schedule": 0.5554421768707483,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.4115,
+    "remaining_sos": 0.401,
     "remaining_games": 3,
     "past_sos": 0.5339
   },
@@ -400,8 +400,8 @@
     "division_pct": 0.2,
     "strength_of_victory": 0.41785714285714287,
     "strength_of_schedule": 0.4959183673469388,
-    "playoff_probability": 74.4,
-    "division_win_probability": 3.8,
+    "playoff_probability": 68.2,
+    "division_win_probability": 3.9,
     "bye_probability": 0.1,
     "remaining_sos": 0.376,
     "remaining_games": 3,
@@ -415,14 +415,14 @@
     "win_pct": 0.6666666666666666,
     "conference_pct": 0.7272727272727273,
     "division_pct": 0.8,
-    "strength_of_victory": 0.4666666666666667,
-    "strength_of_schedule": 0.49238095238095236,
+    "strength_of_victory": 0.46761904761904766,
+    "strength_of_schedule": 0.493015873015873,
     "playoff_probability": 100.0,
-    "division_win_probability": 82.6,
-    "bye_probability": 2.9,
-    "remaining_sos": 0.5516,
+    "division_win_probability": 77.2,
+    "bye_probability": 4.7,
+    "remaining_sos": 0.5766,
     "remaining_games": 2,
-    "past_sos": 0.5275
+    "past_sos": 0.521
   },
   "Lions": {
     "conference": "NFC",
@@ -432,31 +432,31 @@
     "win_pct": 0.7333333333333333,
     "conference_pct": 0.6,
     "division_pct": 0.5,
-    "strength_of_victory": 0.42337662337662335,
-    "strength_of_schedule": 0.43587301587301586,
+    "strength_of_victory": 0.4246753246753247,
+    "strength_of_schedule": 0.4380952380952381,
     "playoff_probability": 100.0,
     "division_win_probability": 100.0,
-    "bye_probability": 61.4,
-    "remaining_sos": 0.4141,
+    "bye_probability": 62.4,
+    "remaining_sos": 0.4125,
     "remaining_games": 2,
-    "past_sos": 0.4746
+    "past_sos": 0.4731
   },
   "Packers": {
     "conference": "NFC",
     "division": "NFC North",
     "W": 3,
-    "L": 11,
-    "win_pct": 0.21428571428571427,
-    "conference_pct": 0.3,
-    "division_pct": 0.25,
+    "L": 12,
+    "win_pct": 0.2,
+    "conference_pct": 0.2727272727272727,
+    "division_pct": 0.2,
     "strength_of_victory": 0.31587301587301586,
-    "strength_of_schedule": 0.5034013605442177,
+    "strength_of_schedule": 0.5095238095238095,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5052,
-    "remaining_games": 3,
-    "past_sos": 0.5136
+    "remaining_sos": 0.5078,
+    "remaining_games": 2,
+    "past_sos": 0.5173
   },
   "Panthers": {
     "conference": "NFC",
@@ -466,14 +466,14 @@
     "win_pct": 0.4666666666666667,
     "conference_pct": 0.5,
     "division_pct": 0.4,
-    "strength_of_victory": 0.35918367346938773,
-    "strength_of_schedule": 0.46793650793650793,
-    "playoff_probability": 5.5,
+    "strength_of_victory": 0.35714285714285715,
+    "strength_of_schedule": 0.46888888888888886,
+    "playoff_probability": 4.1,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5906,
+    "remaining_sos": 0.5984,
     "remaining_games": 2,
-    "past_sos": 0.475
+    "past_sos": 0.476
   },
   "Rams": {
     "conference": "NFC",
@@ -488,9 +488,9 @@
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.2875,
+    "remaining_sos": 0.2953,
     "remaining_games": 2,
-    "past_sos": 0.5621
+    "past_sos": 0.5648
   },
   "Saints": {
     "conference": "NFC",
@@ -501,13 +501,13 @@
     "conference_pct": 0.6363636363636364,
     "division_pct": 0.6,
     "strength_of_victory": 0.4650793650793651,
-    "strength_of_schedule": 0.4993197278911565,
-    "playoff_probability": 92.5,
-    "division_win_probability": 14.9,
-    "bye_probability": 5.8,
-    "remaining_sos": 0.5635,
+    "strength_of_schedule": 0.5017006802721088,
+    "playoff_probability": 90.1,
+    "division_win_probability": 14.4,
+    "bye_probability": 4.7,
+    "remaining_sos": 0.574,
     "remaining_games": 3,
-    "past_sos": 0.5103
+    "past_sos": 0.5121
   },
   "Seahawks": {
     "conference": "NFC",
@@ -519,10 +519,10 @@
     "division_pct": 0.6,
     "strength_of_victory": 0.3904761904761905,
     "strength_of_schedule": 0.4415873015873016,
-    "playoff_probability": 81.6,
-    "division_win_probability": 62.6,
-    "bye_probability": 2.1,
-    "remaining_sos": 0.6313,
+    "playoff_probability": 80.3,
+    "division_win_probability": 64.0,
+    "bye_probability": 1.7,
+    "remaining_sos": 0.6297,
     "remaining_games": 2,
     "past_sos": 0.445
   },
@@ -534,13 +534,13 @@
     "win_pct": 0.4,
     "conference_pct": 0.4,
     "division_pct": 0.5,
-    "strength_of_victory": 0.3880952380952381,
-    "strength_of_schedule": 0.5088888888888888,
+    "strength_of_victory": 0.396031746031746,
+    "strength_of_schedule": 0.5117460317460317,
     "playoff_probability": 0.0,
     "division_win_probability": 0.0,
     "bye_probability": 0.0,
-    "remaining_sos": 0.5969,
+    "remaining_sos": 0.5828,
     "remaining_games": 2,
-    "past_sos": 0.5379
+    "past_sos": 0.5369
   }
 }
