@@ -89,7 +89,7 @@ def aggregate_player_usage(base_path):
         
         receivers_sorted = sorted(
             [(safe_float(r.get('recTotalCatches')), r.get('player__fullName', ''), r.get('player__position', '')) 
-             for r in team_receiving],
+             for r in team_receiving if safe_float(r.get('recTotalCatches')) >= 5],
             reverse=True
         )
         
@@ -121,12 +121,12 @@ def aggregate_player_usage(base_path):
             usage_data['wr3_share'] = 0
             usage_data['top3_share'] = 0
         
-        rec_shares = [safe_float(r.get('recTotalCatches')) / total_catches for r in team_receiving if total_catches > 0 and safe_float(r.get('recTotalCatches')) > 0]
+        rec_shares = [safe_float(r.get('recTotalCatches')) / total_catches for r in team_receiving if total_catches > 0 and safe_float(r.get('recTotalCatches')) >= 5]
         usage_data['pass_concentration'] = calculate_herfindahl_index(rec_shares) * 10000
         
         te_sorted = sorted(
             [(safe_float(r.get('recTotalCatches')), r.get('player__fullName', '')) 
-             for r in team_receiving if r.get('player__position') == 'TE'],
+             for r in team_receiving if r.get('player__position') == 'TE' and safe_float(r.get('recTotalCatches')) >= 5],
             reverse=True
         )
         usage_data['te1_name'] = te_sorted[0][1] if len(te_sorted) > 0 else ''
@@ -138,7 +138,7 @@ def aggregate_player_usage(base_path):
         
         rushers_sorted = sorted(
             [(safe_float(r.get('rushTotalAtt')), r.get('player__fullName', ''), r.get('player__position', '')) 
-             for r in team_rushing],
+             for r in team_rushing if safe_float(r.get('rushTotalAtt')) >= 10],
             reverse=True
         )
         
@@ -163,7 +163,7 @@ def aggregate_player_usage(base_path):
             usage_data['rb2_share'] = 0
             usage_data['rbbc'] = False
         
-        rush_shares = [safe_float(r.get('rushTotalAtt')) / total_rushes for r in team_rushing if total_rushes > 0 and safe_float(r.get('rushTotalAtt')) > 0]
+        rush_shares = [safe_float(r.get('rushTotalAtt')) / total_rushes for r in team_rushing if total_rushes > 0 and safe_float(r.get('rushTotalAtt')) >= 10]
         usage_data['rush_concentration'] = calculate_herfindahl_index(rush_shares) * 10000
         
         usage_data['pass_distribution_style'] = 'Concentrated' if usage_data['pass_concentration'] > 1500 else ('Balanced' if usage_data['pass_concentration'] > 1000 else 'Spread')
