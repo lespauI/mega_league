@@ -84,7 +84,7 @@ def aggregate_team_stats(base_path):
         team_data['pass_tds'] = sum(safe_float(p.get('passTotalTDs')) for p in team_passing)
         team_data['pass_ints'] = sum(safe_float(p.get('passTotalInts')) for p in team_passing)
         team_data['pass_sacks'] = sum(safe_float(p.get('passTotalSacks')) for p in team_passing)
-        team_data['qb_rating'] = safe_mean([p.get('passerAvgRating') for p in team_passing])
+        team_data['qb_rating'] = safe_mean([p.get('passerAvgRating') for p in team_passing if safe_float(p.get('passTotalAtt')) >= 20])
         team_data['pass_yds_per_game'] = safe_mean([p.get('passAvgYdsPerGame') for p in team_passing])
         
         team_data['rush_att'] = sum(safe_float(r.get('rushTotalAtt')) for r in team_rushing)

@@ -156,7 +156,7 @@ Paste this code (replace the URL with YOUR GitHub Pages URL):
     style="width: 100%; height: 380vh; border: 0;"
     loading="lazy"
     referrerpolicy="no-referrer"
-    sandbox="allow-scripts allow-same-origin">
+    sandbox="allow-scripts allow-same-origin allow-popups">
 </iframe>
 ```
 
