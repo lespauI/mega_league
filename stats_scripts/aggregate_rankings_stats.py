@@ -128,11 +128,12 @@ def aggregate_rankings_stats(base_path):
         row['awayWins'] = safe_int(team_data.get('awayWins'))
         row['awayLosses'] = safe_int(team_data.get('awayLosses'))
         
-        # Calculate home/away win percentages
+        # Calculate games and home/away win percentages
         home_games = row['homeWins'] + row['homeLosses']
         away_games = row['awayWins'] + row['awayLosses']
         row['homeWinPct'] = row['homeWins'] / home_games if home_games > 0 else 0
         row['awayWinPct'] = row['awayWins'] / away_games if away_games > 0 else 0
+        row['games'] = row['totalWins'] + row['totalLosses'] + row['totalTies']
         
         # Raw offensive stats
         row['offPassYds'] = safe_int(team_data.get('offPassYds'))
@@ -235,6 +236,23 @@ def aggregate_rankings_stats(base_path):
             row['offYdsPct'] = 0
             row['defYdsPct'] = 0
         
+        # Per-game rates (guard for missing games)
+        g = row['games'] if row['games'] > 0 else 0
+        row['offTotalYdsPg'] = (row['offTotalYds'] / g) if g else 0
+        row['defTotalYdsPg'] = (row['defTotalYds'] / g) if g else 0
+        row['ptsForPg'] = (row['ptsFor'] / g) if g else 0
+        row['ptsAgainstPg'] = (row['ptsAgainst'] / g) if g else 0
+        row['netPtsPg'] = (row['netPts'] / g) if g else 0
+        row['tODiffPerGame'] = (row['tODiff'] / g) if g else 0
+
+        # Scoring efficiency variants
+        row['ptsPer100Yds'] = (row['ptsFor'] / row['offTotalYds'] * 100) if row['offTotalYds'] > 0 else 0
+        row['oppPtsPer100Yds'] = (row['ptsAgainst'] / row['defTotalYds'] * 100) if row['defTotalYds'] > 0 else 0
+
+        # Pass share of offense
+        row['passShare'] = (row['offPassYds'] / row['offTotalYds']) if row['offTotalYds'] > 0 else 0
+        row['rushShare'] = (row['offRushYds'] / row['offTotalYds']) if row['offTotalYds'] > 0 else 0
+
         # Cap efficiency
         if row['capSpent'] > 0:
             row['winsPerMillion'] = row['totalWins'] / (row['capSpent'] / 1000000)
@@ -242,6 +260,17 @@ def aggregate_rankings_stats(base_path):
         else:
             row['winsPerMillion'] = 0
             row['ovrPerMillion'] = 0
+
+        # Pythagorean expectation (NFL commonly ~2.3-2.37)
+        try:
+            exp = 2.37
+            pf = float(row['ptsFor'])
+            pa = float(row['ptsAgainst'])
+            denom = (pf ** exp + pa ** exp)
+            row['pythExpWinPct'] = (pf ** exp) / denom if denom > 0 else 0
+        except Exception:
+            row['pythExpWinPct'] = 0
+        row['pythOverUnder'] = row['winPct'] - row.get('pythExpWinPct', 0)
         
         # Rank efficiency (lower is better for ranks)
         row['ptsRankEfficiency'] = row['ptsForRank'] - row['offTotalYdsRank'] if row['ptsForRank'] and row['offTotalYdsRank'] else 0
@@ -256,6 +285,24 @@ def aggregate_rankings_stats(base_path):
     output_file = output_dir / 'team_rankings_stats.csv'
     
     if combined_stats:
+        # Compute z-scores for select per-game metrics
+        def mean_std(values):
+            vals = [v for v in values if isinstance(v, (int, float))]
+            if not vals:
+                return 0.0, 1.0
+            m = sum(vals) / len(vals)
+            var = sum((x - m) ** 2 for x in vals) / len(vals)
+            s = var ** 0.5
+            return m, (s if s > 1e-9 else 1.0)
+
+        off_ppg_mean, off_ppg_std = mean_std([r['ptsForPg'] for r in combined_stats])
+        def_ppg_mean, def_ppg_std = mean_std([r['ptsAgainstPg'] for r in combined_stats])
+
+        for r in combined_stats:
+            r['offenseIndexZ'] = (r['ptsForPg'] - off_ppg_mean) / off_ppg_std
+            # Defense better when allowing fewer points; invert sign so higher is better
+            r['defenseIndexZ'] = (def_ppg_mean - r['ptsAgainstPg']) / def_ppg_std
+            r['teamStrengthIndex'] = r['offenseIndexZ'] + r['defenseIndexZ']
         # Sort by overall rank
         combined_stats.sort(key=lambda x: x.get('rank', 99))
         
@@ -272,9 +319,10 @@ def aggregate_rankings_stats(base_path):
         print("\nSample metrics available:")
         key_metrics = [
             'rank', 'offTotalYdsRank', 'defTotalYdsRank',
-            'offTotalYds', 'defTotalYds', 'ptsFor', 'ptsAgainst',
-            'netPts', 'tODiff', 'winPct', 'combinedRank',
-            'offYdsPerPt', 'defYdsPerPt', 'passRushRatio'
+            'offTotalYdsPg', 'defTotalYdsPg', 'ptsForPg', 'ptsAgainstPg',
+            'netPtsPg', 'tODiffPerGame', 'winPct', 'combinedRank',
+            'ptsPer100Yds', 'oppPtsPer100Yds', 'passShare', 'pythExpWinPct',
+            'pythOverUnder', 'teamStrengthIndex'
         ]
         for metric in key_metrics:
             if metric in fieldnames:
