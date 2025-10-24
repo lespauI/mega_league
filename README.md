@@ -13,7 +13,6 @@ MEGA_neonsportz_stats/
 │   ├── calc_playoff_probabilities.py # Calculate playoff chances with Monte Carlo simulation
 │   ├── playoff_race_table.py         # Generate interactive playoff race table
 │   ├── playoff_race_html.py          # Generate full playoff race HTML report
-│   ├── playoff_race_analysis.py      # Generate playoff race visualizations (requires matplotlib)
 │   ├── top_pick_race_analysis.py     # Generate draft pick race analysis
 │   └── generate_index.py             # Generate index.html for GitHub Pages
 ├── docs/                              # GitHub Pages output (HTML, images)
@@ -23,7 +22,6 @@ MEGA_neonsportz_stats/
 ├── output/                            # Data processing results
 │   ├── ranked_sos_by_conference.csv  # SOS calculations
 │   ├── playoff_probabilities.json    # Playoff probability data
-│   ├── playoff_race/                 # Playoff visualizations (PNG)
 │   └── draft_race/                   # Draft pick analysis
 ├── MEGA_*.csv                         # Source data files (from Neon Export)
 ├── index.html                         # GitHub Pages landing page
@@ -36,7 +34,6 @@ MEGA_neonsportz_stats/
 
 - **Python 3.7+**
 - **No external dependencies required** for core functionality (uses only standard library)
-- **Optional:** `matplotlib` for visualization images (playoff_race_analysis.py)
 
 ### Step 1: Export Data from Neon Sports
 
@@ -63,7 +60,6 @@ This single command automatically:
 3. ✅ Generates interactive playoff race table
 4. ✅ Generates full playoff race HTML report
 5. ✅ Generates draft pick race analysis
-6. ⚠️ Generates playoff visualizations (optional - requires matplotlib)
 
 **Output files:**
 - `docs/playoff_race.html` - Full playoff analysis report (open in browser)
@@ -188,18 +184,7 @@ python3 scripts/playoff_race_html.py
 - Detailed commentary on key races
 - SOS difficulty indicators
 
-### 7. Generate Playoff Race Visualizations (Optional)
-
-```bash
-python3 scripts/playoff_race_analysis.py
-```
-
-**What it does:**
-- Creates PNG visualizations of playoff races
-- Generates bubble charts for Wild Card battles
-- **Requires matplotlib** (optional dependency)
-
-**Output:** `output/playoff_race/*.png`
+### 7. Generate Draft Pick Race Analysis
 
 ### 8. Generate Draft Pick Race Analysis
 
@@ -422,12 +407,7 @@ Check that your CSV files have the expected column names:
 3. Check that all scripts completed without errors
 4. Run `python3 scripts/run_all_playoff_analysis.py` to regenerate all files
 
-### "ModuleNotFoundError: matplotlib"
-
-**Solution:**
-- This is expected for `playoff_race_analysis.py` (optional script)
-- Install matplotlib: `pip3 install matplotlib`
-- Or skip this script - it's not required for core functionality
+ 
 
 ### Probabilities seem incorrect
 
@@ -479,8 +459,7 @@ When running scripts individually (not using `run_all_playoff_analysis.py`):
 3. **Third:** `playoff_race_table.py` - Generates interactive table
 4. **Fourth:** `playoff_race_html.py` - Generates full report
 5. **Optional:** `top_pick_race_analysis.py` - Draft analysis
-6. **Optional:** `playoff_race_analysis.py` - PNG visualizations (requires matplotlib)
-7. **Optional:** `generate_index.py` - GitHub Pages landing page
+6. **Optional:** `generate_index.py` - GitHub Pages landing page
 
 ---
 
