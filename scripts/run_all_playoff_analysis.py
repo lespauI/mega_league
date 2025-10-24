@@ -210,7 +210,7 @@ def run_script(script_name, description, optional=False):
     print("\n" + "="*80)
     print(f"Running: {description}")
     if optional:
-        print("(Optional - requires matplotlib)")
+        print("(Optional)")
     print("="*80)
     
     try:
