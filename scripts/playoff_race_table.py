@@ -684,7 +684,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 status = ''
                 if playoff_prob >= 95:
                     status = '<span class="team-status clinched">✓</span>'
-                elif playoff_prob < 20:
+                elif playoff_prob < 5:
                     status = '<span class="team-status eliminated">✗</span>'
                 
                 sos_badge_class = 'sos-badge'
@@ -772,7 +772,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
             </div>
             <div style="margin-top: 12px; font-size: 0.75em; color: #666;">
                 <strong>✓</strong> Clinched playoff spot (≥95%) | 
-                <strong>✗</strong> Eliminated (&lt;20%)
+                <strong>✗</strong> Eliminated (&lt;5%)
             </div>
         </div>
     </div>
