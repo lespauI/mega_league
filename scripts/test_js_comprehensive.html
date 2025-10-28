@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comprehensive JavaScript NFL Playoff Tests</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            background: #1e1e1e;
+            color: #d4d4d4;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+        .test-pass {
+            background: #0e4429;
+            border-left: 4px solid #26a641;
+        }
+        .test-fail {
+            background: #5a1e1e;
+            border-left: 4px solid #f85149;
+        }
+        .summary {
+            margin: 20px 0;
+            padding: 15px;
+            background: #2d2d2d;
+            border-radius: 4px;
+            font-size: 1.2em;
+        }
+        h1 { color: #58a6ff; }
+        h2 { color: #8b949e; margin-top: 30px; }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #252525;
+            border-radius: 6px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🏈 Comprehensive JavaScript NFL Playoff Tests</h1>
+    <div id="results"></div>
+    <div id="summary" class="summary"></div>
+
+    <script>
+        const teamsInfo = {
+            'Cowboys': { division: 'NFC East', conference: 'NFC', logo_url: '' },
+            'Giants': { division: 'NFC East', conference: 'NFC', logo_url: '' },
+            'Eagles': { division: 'NFC East', conference: 'NFC', logo_url: '' },
+            'WFT': { division: 'NFC East', conference: 'NFC', logo_url: '' },
+            'Bears': { division: 'NFC North', conference: 'NFC', logo_url: '' },
+            'Packers': { division: 'NFC North', conference: 'NFC', logo_url: '' },
+            'Vikings': { division: 'NFC North', conference: 'NFC', logo_url: '' },
+            'Lions': { division: 'NFC North', conference: 'NFC', logo_url: '' },
+            '49ers': { division: 'NFC West', conference: 'NFC', logo_url: '' },
+            'Seahawks': { division: 'NFC West', conference: 'NFC', logo_url: '' },
+            'Rams': { division: 'NFC West', conference: 'NFC', logo_url: '' },
+            'Cardinals': { division: 'NFC West', conference: 'NFC', logo_url: '' },
+            'Buccaneers': { division: 'NFC South', conference: 'NFC', logo_url: '' },
+            'Saints': { division: 'NFC South', conference: 'NFC', logo_url: '' },
+            'Panthers': { division: 'NFC South', conference: 'NFC', logo_url: '' },
+            'Falcons': { division: 'NFC South', conference: 'NFC', logo_url: '' }
+        };
+
+        let passCount = 0;
+        let failCount = 0;
+        const resultsDiv = document.getElementById('results');
+
+        function logTest(name, passed, message = '') {
+            const div = document.createElement('div');
+            div.className = `test-result test-${passed ? 'pass' : 'fail'}`;
+            div.textContent = `${passed ? '✓' : '✗'} ${name}${message ? ': ' + message : ''}`;
+            resultsDiv.appendChild(div);
+            if (passed) passCount++; else failCount++;
+        }
+
+        function logSection(title) {
+            const section = document.createElement('div');
+            section.className = 'test-section';
+            section.innerHTML = `<h2>${title}</h2>`;
+            resultsDiv.appendChild(section);
+        }
+
+        function createTeamStats(overrides = {}) {
+            const defaults = {
+                W: 10, L: 7, T: 0, win_pct: 0.588,
+                division_W: 3, division_L: 3, division_T: 0, division_pct: 0.5,
+                conference_W: 7, conference_L: 5, conference_T: 0, conference_pct: 0.583,
+                head_to_head: {},
+                opponents: [],
+                game_results: [],
+                defeated_opponents: [],
+                strength_of_victory: 0.5,
+                strength_of_schedule: 0.5,
+                points_for: 350,
+                points_against: 320,
+                conference_points_for: 200,
+                conference_points_against: 180,
+                touchdowns: 40
+            };
+            return { ...defaults, ...overrides };
+        }
+
+        // ============================================================
+        // TIEBREAKER FUNCTIONS (from week18_simulator.py)
+        // ============================================================
+        
+        function breakTwoTeamDivisionTie(teams, stats) {
+            const [team1, team2] = teams;
+            
+            const h2h1 = stats[team1].head_to_head[team2] || { W: 0, L: 0, T: 0 };
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return { winner: team1, tiebreaker: `Head-to-head: won ${h2h1.W}-${h2h1.L}` };
+                if (h2h2Pct > h2h1Pct) return { winner: team2, tiebreaker: `Head-to-head: won ${h2h1.L}-${h2h1.W}` };
+            }
+            
+            if (stats[team1].division_pct > stats[team2].division_pct) {
+                return { winner: team1, tiebreaker: `Division record: ${stats[team1].division_W}-${stats[team1].division_L}` };
+            }
+            if (stats[team2].division_pct > stats[team1].division_pct) {
+                return { winner: team2, tiebreaker: `Division record: ${stats[team2].division_W}-${stats[team2].division_L}` };
+            }
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common1T = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common1Total = common1W + common1L + common1T;
+                const common1Pct = common1Total > 0 ? (common1W + 0.5 * common1T) / common1Total : 0;
+                
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2T = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common2Total = common2W + common2L + common2T;
+                const common2Pct = common2Total > 0 ? (common2W + 0.5 * common2T) / common2Total : 0;
+                
+                if (common1Pct > common2Pct) {
+                    return { winner: team1, tiebreaker: `Common games: ${common1W}-${common1L}-${common1T}` };
+                }
+                if (common2Pct > common1Pct) {
+                    return { winner: team2, tiebreaker: `Common games: ${common2W}-${common2L}-${common2T}` };
+                }
+            }
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {
+                return { winner: team1, tiebreaker: `Conference record: ${stats[team1].conference_W}-${stats[team1].conference_L}` };
+            }
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {
+                return { winner: team2, tiebreaker: `Conference record: ${stats[team2].conference_W}-${stats[team2].conference_L}` };
+            }
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {
+                return { winner: team1, tiebreaker: `Strength of victory: ${stats[team1].strength_of_victory.toFixed(3)}` };
+            }
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {
+                return { winner: team2, tiebreaker: `Strength of victory: ${stats[team2].strength_of_victory.toFixed(3)}` };
+            }
+            
+            return { winner: team1, tiebreaker: 'Coin toss' };
+        }
+
+        function breakTwoTeamWildcardTie(teams, stats) {
+            const [team1, team2] = teams;
+            
+            const h2h1 = stats[team1].head_to_head[team2] || { W: 0, L: 0, T: 0 };
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return { winner: team1, tiebreaker: `Head-to-head: won ${h2h1.W}-${h2h1.L}` };
+                if (h2h2Pct > h2h1Pct) return { winner: team2, tiebreaker: `Head-to-head: won ${h2h1.L}-${h2h1.W}` };
+            }
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {
+                return { winner: team1, tiebreaker: `Conference record: ${stats[team1].conference_W}-${stats[team1].conference_L}` };
+            }
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {
+                return { winner: team2, tiebreaker: `Conference record: ${stats[team2].conference_W}-${stats[team2].conference_L}` };
+            }
+            
+            return { winner: team1, tiebreaker: 'Strength of victory' };
+        }
+
+        function applyDivisionTiebreaker(tiedTeams, stats) {
+            if (tiedTeams.length === 0) return { ranked: [], tiebreaker: null };
+            if (tiedTeams.length === 1) return { ranked: tiedTeams, tiebreaker: null };
+            
+            if (tiedTeams.length === 2) {
+                const result = breakTwoTeamDivisionTie(tiedTeams, stats);
+                return { ranked: [result.winner, tiedTeams.find(t => t !== result.winner)], tiebreaker: result.tiebreaker };
+            }
+            
+            return { ranked: tiedTeams, tiebreaker: null };
+        }
+
+        function applyWildcardTiebreaker(tiedTeams, stats) {
+            if (tiedTeams.length === 0) return { ranked: [], tiebreaker: null };
+            if (tiedTeams.length === 1) return { ranked: tiedTeams, tiebreaker: null };
+            
+            const sameDivision = tiedTeams.every(t => teamsInfo[t].division === teamsInfo[tiedTeams[0]].division);
+            if (sameDivision) {
+                return applyDivisionTiebreaker(tiedTeams, stats);
+            }
+            
+            if (tiedTeams.length === 2) {
+                const result = breakTwoTeamWildcardTie(tiedTeams, stats);
+                return { ranked: [result.winner, tiedTeams.find(t => t !== result.winner)], tiebreaker: result.tiebreaker };
+            }
+            
+            return { ranked: tiedTeams, tiebreaker: null };
+        }
+
+        // ============================================================
+        // WILD CARD SELECTION LOGIC (from week18_simulator.py)
+        // ============================================================
+        
+        function selectWildCards(divisionWinners, allTeams, stats) {
+            const divWinnerNames = divisionWinners.map(dw => dw.team);
+            const wildCardPool = allTeams.filter(t => !divWinnerNames.includes(t));
+            
+            wildCardPool.sort((a, b) => {
+                if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
+                return stats[b].W - stats[a].W;
+            });
+            
+            const wildCards = [];
+            let processed = new Set();
+            
+            for (const team of wildCardPool) {
+                if (wildCards.length >= 3) break;
+                if (processed.has(team)) continue;
+                
+                const candidates = wildCardPool.filter(t => 
+                    !processed.has(t) && 
+                    Math.abs(stats[t].win_pct - stats[team].win_pct) < 0.001
+                );
+                
+                let rankedCandidates, tiebreakerInfo = null;
+                if (candidates.length > 1) {
+                    const result = applyWildcardTiebreaker(candidates, stats);
+                    rankedCandidates = result.ranked;
+                    tiebreakerInfo = result.tiebreaker;
+                } else {
+                    rankedCandidates = candidates;
+                }
+                
+                const spotsRemaining = 3 - wildCards.length;
+                const teamsToAdd = rankedCandidates.slice(0, spotsRemaining);
+                
+                teamsToAdd.forEach(t => {
+                    wildCards.push({
+                        team: t,
+                        record: `${stats[t].W}-${stats[t].L}-${stats[t].T}`,
+                        tiebreaker: tiebreakerInfo
+                    });
+                });
+                
+                candidates.forEach(t => processed.add(t));
+            }
+            
+            return wildCards;
+        }
+
+        // ============================================================
+        // TEST CASES
+        // ============================================================
+
+        logSection('🎯 Wild Card Selection - Record Priority Tests');
+
+        function test_10_7_beats_9_8() {
+            const stats = {
+                'Cowboys': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Bears': createTeamStats({ W: 9, L: 8, win_pct: 0.529 }),
+                'Seahawks': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Cardinals': createTeamStats({ W: 8, L: 9, win_pct: 0.471 })
+            };
+            
+            const divWinners = [
+                { team: '49ers', record: '12-5' },
+                { team: 'Buccaneers', record: '12-5' },
+                { team: 'Giants', record: '11-6' },
+                { team: 'Packers', record: '11-6' }
+            ];
+            
+            const allTeams = ['Cowboys', 'Bears', 'Seahawks', 'Cardinals', '49ers', 'Buccaneers', 'Giants', 'Packers'];
+            const wildCards = selectWildCards(divWinners, allTeams, stats);
+            
+            const wcTeams = wildCards.map(wc => wc.team);
+            const bearsIndex = wcTeams.indexOf('Bears');
+            const cowboysIndex = wcTeams.indexOf('Cowboys');
+            const seahawksIndex = wcTeams.indexOf('Seahawks');
+            
+            const passed = cowboysIndex !== -1 && seahawksIndex !== -1 && (bearsIndex === -1 || bearsIndex > cowboysIndex);
+            logTest('10-7 teams MUST be selected before 9-8 teams', passed, 
+                `Wild cards: ${wcTeams.join(', ')} | Cowboys: ${cowboysIndex}, Bears: ${bearsIndex}`);
+        }
+
+        function test_wild_card_pool_sorting() {
+            const stats = {
+                'Team A': createTeamStats({ W: 11, L: 6, win_pct: 0.647 }),
+                'Team B': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Team C': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Team D': createTeamStats({ W: 9, L: 8, win_pct: 0.529 }),
+                'Team E': createTeamStats({ W: 8, L: 9, win_pct: 0.471 })
+            };
+            
+            const teams = Object.keys(stats);
+            teams.sort((a, b) => {
+                if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
+                return stats[b].W - stats[a].W;
+            });
+            
+            const passed = teams[0] === 'Team A' && teams[1] === 'Team B' && 
+                          teams[3] === 'Team D' && teams[4] === 'Team E';
+            logTest('Wild card pool sorts by win percentage correctly', passed, `Order: ${teams.join(' → ')}`);
+        }
+
+        function test_duplicate_prevention() {
+            const stats = {
+                'Cowboys': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Seahawks': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Saints': createTeamStats({ W: 9, L: 8, win_pct: 0.529 })
+            };
+            
+            const divWinners = [
+                { team: '49ers', record: '13-4' },
+                { team: 'Buccaneers', record: '12-5' },
+                { team: 'Giants', record: '11-6' },
+                { team: 'Packers', record: '11-6' }
+            ];
+            
+            const allTeams = Object.keys(stats).concat(['49ers', 'Buccaneers', 'Giants', 'Packers']);
+            const wildCards = selectWildCards(divWinners, allTeams, stats);
+            
+            const wcTeams = wildCards.map(wc => wc.team);
+            const uniqueTeams = new Set(wcTeams);
+            const passed = uniqueTeams.size === wcTeams.length;
+            logTest('No duplicate teams in wild card selection', passed, 
+                `Wild cards: ${wcTeams.join(', ')} | Unique count: ${uniqueTeams.size}`);
+        }
+
+        function test_all_3_wild_cards_filled() {
+            const stats = {
+                'Cowboys': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Seahawks': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Saints': createTeamStats({ W: 9, L: 8, win_pct: 0.529 }),
+                'Cardinals': createTeamStats({ W: 9, L: 8, win_pct: 0.529 }),
+                'Bears': createTeamStats({ W: 8, L: 9, win_pct: 0.471 })
+            };
+            
+            const divWinners = [
+                { team: '49ers', record: '13-4' },
+                { team: 'Buccaneers', record: '12-5' },
+                { team: 'Giants', record: '11-6' },
+                { team: 'Packers', record: '11-6' }
+            ];
+            
+            const allTeams = Object.keys(stats).concat(['49ers', 'Buccaneers', 'Giants', 'Packers']);
+            const wildCards = selectWildCards(divWinners, allTeams, stats);
+            
+            const passed = wildCards.length === 3;
+            logTest('Exactly 3 wild card spots filled', passed, 
+                `Wild cards: ${wildCards.map(wc => `${wc.team} (${wc.record})`).join(', ')}`);
+        }
+
+        function test_tied_teams_at_same_record() {
+            const stats = {
+                'Cowboys': createTeamStats({ 
+                    W: 10, L: 7, win_pct: 0.588,
+                    conference_W: 8, conference_L: 4, conference_pct: 0.667
+                }),
+                'Seahawks': createTeamStats({ 
+                    W: 10, L: 7, win_pct: 0.588,
+                    conference_W: 7, conference_L: 5, conference_pct: 0.583
+                }),
+                'Saints': createTeamStats({ W: 9, L: 8, win_pct: 0.529 })
+            };
+            
+            const divWinners = [
+                { team: '49ers', record: '13-4' },
+                { team: 'Buccaneers', record: '12-5' },
+                { team: 'Giants', record: '11-6' },
+                { team: 'Packers', record: '11-6' }
+            ];
+            
+            const allTeams = Object.keys(stats).concat(['49ers', 'Buccaneers', 'Giants', 'Packers']);
+            const wildCards = selectWildCards(divWinners, allTeams, stats);
+            
+            const wcTeams = wildCards.map(wc => wc.team);
+            const cowboysIdx = wcTeams.indexOf('Cowboys');
+            const seahawksIdx = wcTeams.indexOf('Seahawks');
+            
+            const passed = cowboysIdx < seahawksIdx && wcTeams[0] === 'Cowboys';
+            logTest('Tiebreaker applied between 10-7 teams (conference record)', passed,
+                `Order: ${wcTeams.join(' → ')} | Cowboys conf: 8-4, Seahawks conf: 7-5`);
+        }
+
+        logSection('🔄 Tiebreaker Function Tests');
+
+        function test_head_to_head_tiebreaker() {
+            const stats = {
+                'Cowboys': createTeamStats({
+                    head_to_head: { 'Eagles': { W: 2, L: 0, T: 0 } }
+                }),
+                'Eagles': createTeamStats({
+                    head_to_head: { 'Cowboys': { W: 0, L: 2, T: 0 } }
+                })
+            };
+            
+            const result = breakTwoTeamDivisionTie(['Cowboys', 'Eagles'], stats);
+            const passed = result.winner === 'Cowboys';
+            logTest('Head-to-head tiebreaker (2-0 record)', passed, `Winner: ${result.winner}`);
+        }
+
+        function test_conference_record_tiebreaker() {
+            const stats = {
+                'Cowboys': createTeamStats({
+                    conference_W: 8, conference_L: 4, conference_pct: 0.667
+                }),
+                'Eagles': createTeamStats({
+                    conference_W: 7, conference_L: 5, conference_pct: 0.583
+                })
+            };
+            
+            const result = breakTwoTeamWildcardTie(['Cowboys', 'Eagles'], stats);
+            const passed = result.winner === 'Cowboys';
+            logTest('Conference record tiebreaker (8-4 vs 7-5)', passed, 
+                `Winner: ${result.winner} | Tiebreaker: ${result.tiebreaker}`);
+        }
+
+        function test_division_record_tiebreaker() {
+            const stats = {
+                'Cowboys': createTeamStats({
+                    division_W: 5, division_L: 1, division_pct: 0.833
+                }),
+                'Eagles': createTeamStats({
+                    division_W: 3, division_L: 3, division_pct: 0.5
+                })
+            };
+            
+            const result = breakTwoTeamDivisionTie(['Cowboys', 'Eagles'], stats);
+            const passed = result.winner === 'Cowboys';
+            logTest('Division record tiebreaker (5-1 vs 3-3)', passed, 
+                `Winner: ${result.winner} | Tiebreaker: ${result.tiebreaker}`);
+        }
+
+        logSection('⚠️ Edge Case Tests');
+
+        function test_many_teams_at_same_record() {
+            const stats = {
+                'Team A': createTeamStats({ W: 10, L: 7, win_pct: 0.588, conference_pct: 0.700 }),
+                'Team B': createTeamStats({ W: 10, L: 7, win_pct: 0.588, conference_pct: 0.650 }),
+                'Team C': createTeamStats({ W: 10, L: 7, win_pct: 0.588, conference_pct: 0.600 }),
+                'Team D': createTeamStats({ W: 10, L: 7, win_pct: 0.588, conference_pct: 0.550 }),
+                'Team E': createTeamStats({ W: 9, L: 8, win_pct: 0.529 })
+            };
+            
+            const divWinners = [
+                { team: 'Div1', record: '13-4' },
+                { team: 'Div2', record: '12-5' },
+                { team: 'Div3', record: '11-6' },
+                { team: 'Div4', record: '11-6' }
+            ];
+            
+            const allTeams = Object.keys(stats).concat(['Div1', 'Div2', 'Div3', 'Div4']);
+            const wildCards = selectWildCards(divWinners, allTeams, stats);
+            
+            const passed = wildCards.length === 3 && wildCards.every(wc => stats[wc.team].W === 10);
+            logTest('4 teams tied at 10-7, all should make playoffs over 9-8 team', passed,
+                `Wild cards: ${wildCards.map(wc => `${wc.team} (${wc.record})`).join(', ')}`);
+        }
+
+        function test_processed_set_prevents_duplicates() {
+            const stats = {
+                'Cowboys': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Seahawks': createTeamStats({ W: 10, L: 7, win_pct: 0.588 }),
+                'Saints': createTeamStats({ W: 10, L: 7, win_pct: 0.588 })
+            };
+            
+            const divWinners = [{ team: '49ers', record: '13-4' }];
+            const allTeams = Object.keys(stats).concat(['49ers']);
+            const wildCards = selectWildCards(divWinners, allTeams, stats);
+            
+            const uniqueTeams = new Set(wildCards.map(wc => wc.team));
+            const passed = uniqueTeams.size === 3 && wildCards.length === 3;
+            logTest('Processed set correctly prevents duplicate wild card entries', passed,
+                `Selected ${wildCards.length} teams, ${uniqueTeams.size} unique`);
+        }
+
+        // ============================================================
+        // RUN ALL TESTS
+        // ============================================================
+
+        console.log('Running Comprehensive JavaScript NFL Playoff Tests...');
+        
+        test_10_7_beats_9_8();
+        test_wild_card_pool_sorting();
+        test_duplicate_prevention();
+        test_all_3_wild_cards_filled();
+        test_tied_teams_at_same_record();
+        
+        test_head_to_head_tiebreaker();
+        test_conference_record_tiebreaker();
+        test_division_record_tiebreaker();
+        
+        test_many_teams_at_same_record();
+        test_processed_set_prevents_duplicates();
+
+        // Display summary
+        const total = passCount + failCount;
+        const summaryDiv = document.getElementById('summary');
+        summaryDiv.innerHTML = `
+            <strong>Test Summary:</strong> ${passCount}/${total} tests passed (${((passCount/total)*100).toFixed(1)}%)
+            ${failCount > 0 ? `<br><span style="color: #f85149;">⚠️ ${failCount} test(s) FAILED - CRITICAL BUGS DETECTED</span>` : '<br><span style="color: #26a641;">✓ All tests passed!</span>'}
+        `;
+        
+        console.log(`Tests completed: ${passCount}/${total} passed`);
+        if (failCount > 0) {
+            console.error(`❌ ${failCount} CRITICAL TEST FAILURES - DO NOT DEPLOY`);
+        }
+    </script>
+</body>
+</html>
