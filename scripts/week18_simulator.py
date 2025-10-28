@@ -1142,6 +1142,8 @@ def generate_html():
                     return stats[b].W - stats[a].W;
                 }});
                 
+                console.log(`${{conf}} Wild Card Pool:`, wildCardPool.map(t => `${{t}} (${{stats[t].W}}-${{stats[t].L}}-${{stats[t].T}}, ${{stats[t].win_pct.toFixed(3)}})`));
+                
                 const wildCards = [];
                 let processed = new Set();
                 
@@ -1187,6 +1189,8 @@ def generate_html():
                     
                     candidates.forEach(t => processed.add(t));
                 }}
+                
+                console.log(`${{conf}} Wild Cards Selected:`, wildCards.map(wc => `${{wc.team}} (${{wc.record}})`));
                 
                 const playoffTeamNames = new Set([
                     ...divisionWinners.map(d => d.team),
