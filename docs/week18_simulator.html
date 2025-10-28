@@ -221,6 +221,17 @@
             overflow-wrap: break-word;
             line-height: 1.5;
         }
+        .qualification-info {
+            margin-top: 8px;
+            padding: 8px;
+            background: #d1fae5;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #065f46;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
         .elimination-info {
             margin-top: 8px;
             padding: 8px;
@@ -902,11 +913,17 @@
                         winner = sameRecordTeams[0];
                     }
                     
+                    let qualification = 'Division winner';
+                    if (tiebreaker) {
+                        qualification = `Division winner (won tiebreaker: ${tiebreaker})`;
+                    }
+                    
                     divisionWinners.push({
                         team: winner,
                         record: `${stats[winner].W}-${stats[winner].L}-${stats[winner].T}`,
                         tiebreaker: tiebreaker,
-                        division: div
+                        division: div,
+                        qualification: qualification
                     });
                 }
                 
@@ -942,19 +959,27 @@
                     
                     teamsToAdd.forEach((t, idx) => {
                         let tiebreaker = null;
+                        let qualification = 'Wild card';
+                        
                         if (candidates.length === 2 && idx === 0) {
                             const sameDivision = candidates.every(team => teamsInfo[team].division === teamsInfo[candidates[0]].division);
                             const result = sameDivision ? 
                                 breakTwoTeamDivisionTie(candidates, stats) : 
                                 breakTwoTeamWildcardTie(candidates, stats);
                             tiebreaker = result.tiebreaker;
+                            if (tiebreaker) {
+                                qualification = `Wild card (won tiebreaker: ${tiebreaker})`;
+                            }
+                        } else if (candidates.length > 2) {
+                            qualification = `Wild card (won ${candidates.length}-team tiebreaker)`;
                         }
                         
                         wildCards.push({
                             team: t,
                             record: `${stats[t].W}-${stats[t].L}-${stats[t].T}`,
                             tiebreaker: tiebreaker,
-                            division: teamsInfo[t].division
+                            division: teamsInfo[t].division,
+                            qualification: qualification
                         });
                     });
                     
@@ -968,10 +993,44 @@
                 
                 confTeams.forEach(team => {
                     if (!playoffTeamNames.has(team)) {
+                        let reason = '';
+                        const teamDiv = teamsInfo[team].division;
+                        const divWinner = divisionWinners.find(dw => dw.division === teamDiv);
+                        
+                        if (divWinner && divWinner.team !== team) {
+                            if (Math.abs(stats[team].win_pct - stats[divWinner.team].win_pct) < 0.001) {
+                                reason = `Lost division to ${divWinner.team}`;
+                                if (divWinner.tiebreaker) {
+                                    reason += ` (${divWinner.tiebreaker})`;
+                                }
+                            } else {
+                                const winDiff = stats[divWinner.team].W - stats[team].W;
+                                reason = `${winDiff} game${winDiff !== 1 ? 's' : ''} behind ${divWinner.team} in division`;
+                            }
+                        }
+                        
+                        if (wildCards.length > 0) {
+                            const lastWC = wildCards[wildCards.length - 1];
+                            const wcWinPct = stats[lastWC.team].win_pct;
+                            
+                            if (stats[team].win_pct < wcWinPct) {
+                                const winDiff = stats[lastWC.team].W - stats[team].W;
+                                if (reason) reason += '; ';
+                                reason += `${winDiff} game${winDiff !== 1 ? 's' : ''} behind wild card (${lastWC.team}: ${lastWC.record})`;
+                            } else if (Math.abs(stats[team].win_pct - wcWinPct) < 0.001) {
+                                if (reason) reason += '; ';
+                                reason += `Lost wild card tiebreaker`;
+                            }
+                        }
+                        
+                        if (!reason) {
+                            reason = 'Insufficient record for playoffs';
+                        }
+                        
                         eliminated[conf].push({
                             team: team,
                             record: `${stats[team].W}-${stats[team].L}-${stats[team].T}`,
-                            reason: 'Did not qualify for playoffs'
+                            reason: reason
                         });
                     }
                 });
@@ -1015,7 +1074,7 @@
                             <img src="${teamLogo}" class="team-logo" alt="${seed.team}">
                             <span>${seed.team}${divLabel}</span>
                         </div>
-                        ${seed.tiebreaker ? `<div class="tiebreaker-info">🔧 Tiebreaker: ${seed.tiebreaker}</div>` : ''}
+                        <div class="qualification-info">✓ ${seed.qualification || 'Qualified'}</div>
                     `;
                     container.appendChild(seedDiv);
                 });
