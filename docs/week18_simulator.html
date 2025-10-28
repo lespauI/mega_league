@@ -583,6 +583,18 @@
                 const topWildCards = rankedWildCards.slice(0, 3);
                 const missedWildCards = rankedWildCards.slice(3);
                 
+                const topWildCardTeamNames = topWildCards.map(wc => wc.team);
+                
+                divisionRunnerUps.forEach(runnerUp => {
+                    if (!topWildCardTeamNames.includes(runnerUp.team)) {
+                        eliminated[conf].push({
+                            team: runnerUp.team,
+                            record: runnerUp.record,
+                            reason: runnerUp.reason
+                        });
+                    }
+                });
+                
                 missedWildCards.forEach((team, index) => {
                     const wcRank = index + 4;
                     eliminated[conf].push({
