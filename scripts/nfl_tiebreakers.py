@@ -313,40 +313,46 @@ def calculate_playoff_seeding(teams_info, stats):
     nfc_wildcard_pool.sort(key=lambda t: (-stats[t]['win_pct'], -stats[t]['W']))
     
     afc_wildcards = []
-    for i in range(min(3, len(afc_wildcard_pool))):
-        candidates = [afc_wildcard_pool[i]]
-        for j in range(i + 1, len(afc_wildcard_pool)):
-            if abs(stats[afc_wildcard_pool[j]]['win_pct'] - stats[candidates[0]]['win_pct']) < 0.001:
-                candidates.append(afc_wildcard_pool[j])
-            else:
-                break
-        
-        if len(candidates) > 1:
-            ranked = apply_wildcard_tiebreaker(candidates, stats, teams_info)
-            afc_wildcards.append(ranked[0])
-        else:
-            afc_wildcards.append(candidates[0])
-        
+    processed = set()
+    for team in afc_wildcard_pool:
         if len(afc_wildcards) >= 3:
             break
-    
-    nfc_wildcards = []
-    for i in range(min(3, len(nfc_wildcard_pool))):
-        candidates = [nfc_wildcard_pool[i]]
-        for j in range(i + 1, len(nfc_wildcard_pool)):
-            if abs(stats[nfc_wildcard_pool[j]]['win_pct'] - stats[candidates[0]]['win_pct']) < 0.001:
-                candidates.append(nfc_wildcard_pool[j])
-            else:
-                break
+        if team in processed:
+            continue
+        
+        candidates = [t for t in afc_wildcard_pool 
+                     if t not in processed and abs(stats[t]['win_pct'] - stats[team]['win_pct']) < 0.001]
         
         if len(candidates) > 1:
             ranked = apply_wildcard_tiebreaker(candidates, stats, teams_info)
-            nfc_wildcards.append(ranked[0])
         else:
-            nfc_wildcards.append(candidates[0])
+            ranked = candidates
         
+        spots_remaining = 3 - len(afc_wildcards)
+        teams_to_add = ranked[:spots_remaining]
+        afc_wildcards.extend(teams_to_add)
+        processed.update(candidates)
+    
+    nfc_wildcards = []
+    processed = set()
+    for team in nfc_wildcard_pool:
         if len(nfc_wildcards) >= 3:
             break
+        if team in processed:
+            continue
+        
+        candidates = [t for t in nfc_wildcard_pool 
+                     if t not in processed and abs(stats[t]['win_pct'] - stats[team]['win_pct']) < 0.001]
+        
+        if len(candidates) > 1:
+            ranked = apply_wildcard_tiebreaker(candidates, stats, teams_info)
+        else:
+            ranked = candidates
+        
+        spots_remaining = 3 - len(nfc_wildcards)
+        teams_to_add = ranked[:spots_remaining]
+        nfc_wildcards.extend(teams_to_add)
+        processed.update(candidates)
     
     return {
         'AFC': {

@@ -1121,16 +1121,16 @@ def generate_html():
                 }});
                 
                 const wildCards = [];
-                let wcIndex = 0;
-                while (wildCards.length < 3 && wcIndex < wildCardPool.length) {{
-                    const candidates = [wildCardPool[wcIndex]];
-                    for (let j = wcIndex + 1; j < wildCardPool.length; j++) {{
-                        if (Math.abs(stats[wildCardPool[j]].win_pct - stats[candidates[0]].win_pct) < 0.001) {{
-                            candidates.push(wildCardPool[j]);
-                        }} else {{
-                            break;
-                        }}
-                    }}
+                let processed = new Set();
+                
+                for (const team of wildCardPool) {{
+                    if (wildCards.length >= 3) break;
+                    if (processed.has(team)) continue;
+                    
+                    const candidates = wildCardPool.filter(t => 
+                        !processed.has(t) && 
+                        Math.abs(stats[t].win_pct - stats[team].win_pct) < 0.001
+                    );
                     
                     let rankedCandidates;
                     if (candidates.length > 1) {{
@@ -1142,10 +1142,10 @@ def generate_html():
                     const spotsRemaining = 3 - wildCards.length;
                     const teamsToAdd = rankedCandidates.slice(0, spotsRemaining);
                     
-                    teamsToAdd.forEach((team, idx) => {{
+                    teamsToAdd.forEach((t, idx) => {{
                         let tiebreaker = null;
                         if (candidates.length === 2 && idx === 0) {{
-                            const sameDivision = candidates.every(t => teamsInfo[t].division === teamsInfo[candidates[0]].division);
+                            const sameDivision = candidates.every(team => teamsInfo[team].division === teamsInfo[candidates[0]].division);
                             const result = sameDivision ? 
                                 breakTwoTeamDivisionTie(candidates, stats) : 
                                 breakTwoTeamWildcardTie(candidates, stats);
@@ -1153,14 +1153,14 @@ def generate_html():
                         }}
                         
                         wildCards.push({{
-                            team: team,
-                            record: `${{stats[team].W}}-${{stats[team].L}}-${{stats[team].T}}`,
+                            team: t,
+                            record: `${{stats[t].W}}-${{stats[t].L}}-${{stats[t].T}}`,
                             tiebreaker: tiebreaker,
-                            division: teamsInfo[team].division
+                            division: teamsInfo[t].division
                         }});
                     }});
                     
-                    wcIndex += candidates.length;
+                    candidates.forEach(t => processed.add(t));
                 }}
                 
                 const playoffTeamNames = new Set([
@@ -1201,7 +1201,7 @@ def generate_html():
                 playoffSeeds[conf].forEach((seed, index) => {{
                     const seedNum = index + 1;
                     const seedClass = seedNum <= 4 ? `seed-${{seedNum}}` : 'seed-wc';
-                    const seedLabel = seedNum <= 4 ? `Seed ${{seedNum}}` : `WC ${{seedNum}}`;
+                    const seedLabel = `Seed ${{seedNum}}`;
                     
                     const divLabel = seed.division ? ` • ${{seed.division.replace(conf + ' ', '')}}` : '';
                     const teamLogo = teamsInfo[seed.team].logo_url;
