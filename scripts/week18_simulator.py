@@ -1132,26 +1132,32 @@ def generate_html():
                         }}
                     }}
                     
-                    let wcWinner, tiebreaker = null;
+                    let rankedCandidates;
                     if (candidates.length > 1) {{
-                        const ranked = applyWildcardTiebreaker(candidates, stats);
-                        wcWinner = ranked[0];
-                        if (candidates.length === 2) {{
+                        rankedCandidates = applyWildcardTiebreaker(candidates, stats);
+                    }} else {{
+                        rankedCandidates = candidates;
+                    }}
+                    
+                    const spotsRemaining = 3 - wildCards.length;
+                    const teamsToAdd = rankedCandidates.slice(0, spotsRemaining);
+                    
+                    teamsToAdd.forEach((team, idx) => {{
+                        let tiebreaker = null;
+                        if (candidates.length === 2 && idx === 0) {{
                             const sameDivision = candidates.every(t => teamsInfo[t].division === teamsInfo[candidates[0]].division);
                             const result = sameDivision ? 
                                 breakTwoTeamDivisionTie(candidates, stats) : 
                                 breakTwoTeamWildcardTie(candidates, stats);
                             tiebreaker = result.tiebreaker;
                         }}
-                    }} else {{
-                        wcWinner = candidates[0];
-                    }}
-                    
-                    wildCards.push({{
-                        team: wcWinner,
-                        record: `${{stats[wcWinner].W}}-${{stats[wcWinner].L}}-${{stats[wcWinner].T}}`,
-                        tiebreaker: tiebreaker,
-                        division: teamsInfo[wcWinner].division
+                        
+                        wildCards.push({{
+                            team: team,
+                            record: `${{stats[team].W}}-${{stats[team].L}}-${{stats[team].T}}`,
+                            tiebreaker: tiebreaker,
+                            division: teamsInfo[team].division
+                        }});
                     }});
                     
                     wcIndex += candidates.length;
