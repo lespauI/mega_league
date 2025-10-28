@@ -846,20 +846,22 @@ def generate_html():
             const uniqueH2HPercentages = new Set(Object.values(h2hRecords));
             if (uniqueH2HPercentages.size === remaining.length) {{
                 remaining.sort((a, b) => h2hRecords[b] - h2hRecords[a]);
-                return remaining;
+                return {{ ranked: remaining, tiebreaker: 'Head-to-head record' }};
             }}
             
             remaining.sort((a, b) => stats[b].division_pct - stats[a].division_pct);
             if (stats[remaining[0]].division_pct > stats[remaining[1]].division_pct) {{
                 const winner = remaining[0];
                 const rest = remaining.slice(1);
+                const tiebreaker = `Division record (${{stats[winner].division_pct.toFixed(3)}})`;
                 if (rest.length === 1) {{
-                    return [winner, rest[0]];
+                    return {{ ranked: [winner, rest[0]], tiebreaker }};
                 }} else if (rest.length === 2) {{
                     const result = breakTwoTeamDivisionTie(rest, stats);
-                    return [winner, result.winner, rest.find(t => t !== result.winner)];
+                    return {{ ranked: [winner, result.winner, rest.find(t => t !== result.winner)], tiebreaker }};
                 }} else {{
-                    return [winner, ...breakMultiTeamDivisionTie(rest, stats)];
+                    const subResult = breakMultiTeamDivisionTie(rest, stats);
+                    return {{ ranked: [winner, ...subResult.ranked], tiebreaker }};
                 }}
             }}
             
@@ -867,13 +869,15 @@ def generate_html():
             if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {{
                 const winner = remaining[0];
                 const rest = remaining.slice(1);
+                const tiebreaker = `Conference record (${{stats[winner].conference_pct.toFixed(3)}})`;
                 if (rest.length === 1) {{
-                    return [winner, rest[0]];
+                    return {{ ranked: [winner, rest[0]], tiebreaker }};
                 }} else if (rest.length === 2) {{
                     const result = breakTwoTeamDivisionTie(rest, stats);
-                    return [winner, result.winner, rest.find(t => t !== result.winner)];
+                    return {{ ranked: [winner, result.winner, rest.find(t => t !== result.winner)], tiebreaker }};
                 }} else {{
-                    return [winner, ...breakMultiTeamDivisionTie(rest, stats)];
+                    const subResult = breakMultiTeamDivisionTie(rest, stats);
+                    return {{ ranked: [winner, ...subResult.ranked], tiebreaker }};
                 }}
             }}
             
@@ -883,7 +887,7 @@ def generate_html():
                 }}
                 return stats[b].win_pct - stats[a].win_pct;
             }});
-            return remaining;
+            return {{ ranked: remaining, tiebreaker: `Strength of victory (${{stats[remaining[0]].strength_of_victory.toFixed(3)}})` }};
         }}
         
         function breakTwoTeamWildcardTie(teams, stats) {{
@@ -982,8 +986,8 @@ def generate_html():
             const divWinners = {{}};
             for (const [div, divTeams] of Object.entries(divisions)) {{
                 if (divTeams.length > 1) {{
-                    const ranked = applyDivisionTiebreaker(divTeams, stats);
-                    divWinners[div] = ranked[0];
+                    const result = applyDivisionTiebreaker(divTeams, stats);
+                    divWinners[div] = result.ranked[0];
                 }} else {{
                     divWinners[div] = divTeams[0];
                 }}
@@ -991,10 +995,10 @@ def generate_html():
             
             remaining = Object.values(divWinners);
             
-            if (remaining.length === 1) return remaining;
+            if (remaining.length === 1) return {{ ranked: remaining, tiebreaker: null }};
             if (remaining.length === 2) {{
                 const result = breakTwoTeamWildcardTie(remaining, stats);
-                return [result.winner, remaining.find(t => t !== result.winner)];
+                return {{ ranked: [result.winner, remaining.find(t => t !== result.winner)], tiebreaker: result.tiebreaker }};
             }}
             
             let h2hSweep = null;
@@ -1013,9 +1017,10 @@ def generate_html():
             if (h2hSweep) {{
                 const rest = remaining.filter(t => t !== h2hSweep);
                 if (rest.length === 1) {{
-                    return [h2hSweep, rest[0]];
+                    return {{ ranked: [h2hSweep, rest[0]], tiebreaker: 'Head-to-head sweep' }};
                 }} else {{
-                    return [h2hSweep, ...breakMultiTeamWildcardTie(rest, stats)];
+                    const subResult = breakMultiTeamWildcardTie(rest, stats);
+                    return {{ ranked: [h2hSweep, ...subResult.ranked], tiebreaker: 'Head-to-head sweep' }};
                 }}
             }}
             
@@ -1023,13 +1028,15 @@ def generate_html():
             if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {{
                 const winner = remaining[0];
                 const rest = remaining.slice(1);
+                const tiebreaker = `Conference record (${{stats[winner].conference_pct.toFixed(3)}})`;
                 if (rest.length === 1) {{
-                    return [winner, rest[0]];
+                    return {{ ranked: [winner, rest[0]], tiebreaker }};
                 }} else if (rest.length === 2) {{
                     const result = breakTwoTeamWildcardTie(rest, stats);
-                    return [winner, result.winner, rest.find(t => t !== result.winner)];
+                    return {{ ranked: [winner, result.winner, rest.find(t => t !== result.winner)], tiebreaker }};
                 }} else {{
-                    return [winner, ...breakMultiTeamWildcardTie(rest, stats)];
+                    const subResult = breakMultiTeamWildcardTie(rest, stats);
+                    return {{ ranked: [winner, ...subResult.ranked], tiebreaker }};
                 }}
             }}
             
@@ -1039,24 +1046,24 @@ def generate_html():
                 }}
                 return stats[b].win_pct - stats[a].win_pct;
             }});
-            return remaining;
+            return {{ ranked: remaining, tiebreaker: `Strength of victory (${{stats[remaining[0]].strength_of_victory.toFixed(3)}})` }};
         }}
         
         function applyDivisionTiebreaker(tiedTeams, stats) {{
-            if (tiedTeams.length === 0) return [];
-            if (tiedTeams.length === 1) return tiedTeams;
+            if (tiedTeams.length === 0) return {{ ranked: [], tiebreaker: null }};
+            if (tiedTeams.length === 1) return {{ ranked: tiedTeams, tiebreaker: null }};
             
             if (tiedTeams.length === 2) {{
                 const result = breakTwoTeamDivisionTie(tiedTeams, stats);
-                return [result.winner];
+                return {{ ranked: [result.winner], tiebreaker: result.tiebreaker }};
             }} else {{
                 return breakMultiTeamDivisionTie(tiedTeams, stats);
             }}
         }}
         
         function applyWildcardTiebreaker(tiedTeams, stats) {{
-            if (tiedTeams.length === 0) return [];
-            if (tiedTeams.length === 1) return tiedTeams;
+            if (tiedTeams.length === 0) return {{ ranked: [], tiebreaker: null }};
+            if (tiedTeams.length === 1) return {{ ranked: tiedTeams, tiebreaker: null }};
             
             const sameDivision = tiedTeams.every(t => teamsInfo[t].division === teamsInfo[tiedTeams[0]].division);
             if (sameDivision) {{
@@ -1065,7 +1072,7 @@ def generate_html():
             
             if (tiedTeams.length === 2) {{
                 const result = breakTwoTeamWildcardTie(tiedTeams, stats);
-                return [result.winner];
+                return {{ ranked: [result.winner], tiebreaker: result.tiebreaker }};
             }} else {{
                 return breakMultiTeamWildcardTie(tiedTeams, stats);
             }}
@@ -1105,12 +1112,9 @@ def generate_html():
                     
                     let winner, tiebreaker = null;
                     if (sameRecordTeams.length > 1) {{
-                        const ranked = applyDivisionTiebreaker(sameRecordTeams, stats);
-                        winner = ranked[0];
-                        if (sameRecordTeams.length === 2) {{
-                            const result = breakTwoTeamDivisionTie(sameRecordTeams, stats);
-                            tiebreaker = result.tiebreaker;
-                        }}
+                        const result = applyDivisionTiebreaker(sameRecordTeams, stats);
+                        winner = result.ranked[0];
+                        tiebreaker = result.tiebreaker;
                     }} else {{
                         winner = sameRecordTeams[0];
                     }}
@@ -1123,7 +1127,6 @@ def generate_html():
                     divisionWinners.push({{
                         team: winner,
                         record: `${{stats[winner].W}}-${{stats[winner].L}}-${{stats[winner].T}}`,
-                        tiebreaker: tiebreaker,
                         division: div,
                         qualification: qualification
                     }});
@@ -1149,9 +1152,11 @@ def generate_html():
                         Math.abs(stats[t].win_pct - stats[team].win_pct) < 0.001
                     );
                     
-                    let rankedCandidates;
+                    let rankedCandidates, tiebreakerInfo = null;
                     if (candidates.length > 1) {{
-                        rankedCandidates = applyWildcardTiebreaker(candidates, stats);
+                        const result = applyWildcardTiebreaker(candidates, stats);
+                        rankedCandidates = result.ranked;
+                        tiebreakerInfo = result.tiebreaker;
                     }} else {{
                         rankedCandidates = candidates;
                     }}
@@ -1160,26 +1165,17 @@ def generate_html():
                     const teamsToAdd = rankedCandidates.slice(0, spotsRemaining);
                     
                     teamsToAdd.forEach((t, idx) => {{
-                        let tiebreaker = null;
                         let qualification = 'Wild card';
                         
-                        if (candidates.length === 2 && idx === 0) {{
-                            const sameDivision = candidates.every(team => teamsInfo[team].division === teamsInfo[candidates[0]].division);
-                            const result = sameDivision ? 
-                                breakTwoTeamDivisionTie(candidates, stats) : 
-                                breakTwoTeamWildcardTie(candidates, stats);
-                            tiebreaker = result.tiebreaker;
-                            if (tiebreaker) {{
-                                qualification = `Wild card (won tiebreaker: ${{tiebreaker}})`;
-                            }}
-                        }} else if (candidates.length > 2) {{
+                        if (idx === 0 && tiebreakerInfo) {{
+                            qualification = `Wild card (won tiebreaker: ${{tiebreakerInfo}})`;
+                        }} else if (idx === 0 && candidates.length > 2 && !tiebreakerInfo) {{
                             qualification = `Wild card (won ${{candidates.length}}-team tiebreaker)`;
                         }}
                         
                         wildCards.push({{
                             team: t,
                             record: `${{stats[t].W}}-${{stats[t].L}}-${{stats[t].T}}`,
-                            tiebreaker: tiebreaker,
                             division: teamsInfo[t].division,
                             qualification: qualification
                         }});
@@ -1201,9 +1197,11 @@ def generate_html():
                         
                         if (divWinner && divWinner.team !== team) {{
                             if (Math.abs(stats[team].win_pct - stats[divWinner.team].win_pct) < 0.001) {{
-                                reason = `Lost division to ${{divWinner.team}}`;
-                                if (divWinner.tiebreaker) {{
-                                    reason += ` (${{divWinner.tiebreaker}})`;
+                                const qualMatch = divWinner.qualification.match(/won tiebreaker: (.+)\\)/);
+                                if (qualMatch) {{
+                                    reason = `Lost division to ${{divWinner.team}} (${{qualMatch[1]}})`;
+                                }} else {{
+                                    reason = `Lost division to ${{divWinner.team}}`;
                                 }}
                             }} else {{
                                 const winDiff = stats[divWinner.team].W - stats[team].W;
