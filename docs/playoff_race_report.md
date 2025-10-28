@@ -14,13 +14,13 @@
 
 **Wild Card Race:**
 - **Seed 5:** Raiders (11-5) | Playoff: 100.0% | SOS: 0.328
-- **Seed 6:** Bengals (9-7) | Playoff: 98.0% | SOS: 0.353
-- **Seed 7:** Chargers (8-7) | Playoff: 61.2% | SOS: 0.673
-- **Seed 8:** Jaguars (8-8) | Playoff: 19.1% | SOS: 0.822
-- **Seed 9:** Texans (7-8) | Playoff: 15.9% | SOS: 0.438
+- **Seed 6:** Bengals (9-7) | Playoff: 96.5% | SOS: 0.353
+- **Seed 7:** Chargers (8-7) | Playoff: 60.5% | SOS: 0.673
+- **Seed 8:** Jaguars (8-8) | Playoff: 21.1% | SOS: 0.822
+- **Seed 9:** Texans (7-8) | Playoff: 15.6% | SOS: 0.438
 
 **On the Bubble:**
-- **10.** Dolphins (7-9) | Playoff: 2.5% | SOS: 0.709
+- **10.** Dolphins (7-9) | Playoff: 3.5% | SOS: 0.709
 - **11.** Browns (7-9) | Playoff: 0.0% | SOS: 0.731
 - **12.** Steelers (6-10) | Playoff: 0.0% | SOS: 0.744
 
@@ -34,10 +34,10 @@
 
 **Wild Card Race:**
 - **Seed 5:** Saints (10-5) | Playoff: 100.0% | SOS: 0.689
-- **Seed 6:** Commanders (9-7) | Playoff: 36.1% | SOS: 0.403
-- **Seed 7:** Falcons (9-7) | Playoff: 63.2% | SOS: 0.637
-- **Seed 8:** Cowboys (9-7) | Playoff: 38.8% | SOS: 0.644
-- **Seed 9:** 49ers (9-7) | Playoff: 53.6% | SOS: 0.691
+- **Seed 6:** Commanders (9-7) | Playoff: 38.0% | SOS: 0.403
+- **Seed 7:** Falcons (9-7) | Playoff: 64.2% | SOS: 0.637
+- **Seed 8:** Cowboys (9-7) | Playoff: 39.7% | SOS: 0.644
+- **Seed 9:** 49ers (9-7) | Playoff: 56.1% | SOS: 0.691
 
 **On the Bubble:**
 - **10.** Bears (8-8) | Playoff: 4.6% | SOS: 0.762
@@ -61,7 +61,7 @@ Three teams at 8-5, one at 7-6. Anyone can win this division:
 
 - **Buccaneers** (11-5): Playoff 100.0% | SOS 0.588
 - **Saints** (10-5): Playoff 100.0% | SOS 0.689
-- **Falcons** (9-7): Playoff 63.2% | SOS 0.637
+- **Falcons** (9-7): Playoff 64.2% | SOS 0.637
 - **Panthers** (7-9): Playoff 0.0% | SOS 0.550
 
 **Analysis:** Falcons (0.433) vs Saints (0.612) - massive 0.179 SOS gap could flip the division!
