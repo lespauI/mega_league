@@ -724,6 +724,342 @@ def generate_html():
             }}
         }}
         
+        function breakTwoTeamDivisionTie(teams, stats) {{
+            const [team1, team2] = teams;
+            
+            const h2h1 = stats[team1].head_to_head[team2] || {{ W: 0, L: 0, T: 0 }};
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {{
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return {{ winner: team1, tiebreaker: `Head-to-head: won ${{h2h1.W}}-${{h2h1.L}}` }};
+                if (h2h2Pct > h2h1Pct) return {{ winner: team2, tiebreaker: `Head-to-head: won ${{h2h1.L}}-${{h2h1.W}}` }};
+            }}
+            
+            if (stats[team1].division_pct > stats[team2].division_pct) {{
+                return {{ winner: team1, tiebreaker: `Division record: ${{stats[team1].division_pct.toFixed(3)}}` }};
+            }}
+            if (stats[team2].division_pct > stats[team1].division_pct) {{
+                return {{ winner: team2, tiebreaker: `Division record: ${{stats[team2].division_pct.toFixed(3)}}` }};
+            }}
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {{
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common1T = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common1Total = common1W + common1L + common1T;
+                const common1Pct = common1Total > 0 ? (common1W + 0.5 * common1T) / common1Total : 0;
+                
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2T = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common2Total = common2W + common2L + common2T;
+                const common2Pct = common2Total > 0 ? (common2W + 0.5 * common2T) / common2Total : 0;
+                
+                if (common1Pct > common2Pct) {{
+                    return {{ winner: team1, tiebreaker: `Common games: ${{common1W}}-${{common1L}}-${{common1T}}` }};
+                }}
+                if (common2Pct > common1Pct) {{
+                    return {{ winner: team2, tiebreaker: `Common games: ${{common2W}}-${{common2L}}-${{common2T}}` }};
+                }}
+            }}
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {{
+                return {{ winner: team1, tiebreaker: `Conference record: ${{stats[team1].conference_pct.toFixed(3)}}` }};
+            }}
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {{
+                return {{ winner: team2, tiebreaker: `Conference record: ${{stats[team2].conference_pct.toFixed(3)}}` }};
+            }}
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {{
+                return {{ winner: team1, tiebreaker: `Strength of victory: ${{stats[team1].strength_of_victory.toFixed(3)}}` }};
+            }}
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {{
+                return {{ winner: team2, tiebreaker: `Strength of victory: ${{stats[team2].strength_of_victory.toFixed(3)}}` }};
+            }}
+            
+            if (stats[team1].strength_of_schedule > stats[team2].strength_of_schedule) {{
+                return {{ winner: team1, tiebreaker: `Strength of schedule: ${{stats[team1].strength_of_schedule.toFixed(3)}}` }};
+            }}
+            if (stats[team2].strength_of_schedule > stats[team1].strength_of_schedule) {{
+                return {{ winner: team2, tiebreaker: `Strength of schedule: ${{stats[team2].strength_of_schedule.toFixed(3)}}` }};
+            }}
+            
+            const commonNet1 = stats[team1].game_results.filter(g => commonOpps.has(g.opponent)).reduce((sum, g) => sum + (g.pf - g.pa), 0);
+            const commonNet2 = stats[team2].game_results.filter(g => commonOpps.has(g.opponent)).reduce((sum, g) => sum + (g.pf - g.pa), 0);
+            if (commonNet1 > commonNet2) {{
+                return {{ winner: team1, tiebreaker: `Net points in common games: +${{commonNet1}}` }};
+            }}
+            if (commonNet2 > commonNet1) {{
+                return {{ winner: team2, tiebreaker: `Net points in common games: +${{commonNet2}}` }};
+            }}
+            
+            const net1 = stats[team1].points_for - stats[team1].points_against;
+            const net2 = stats[team2].points_for - stats[team2].points_against;
+            if (net1 > net2) {{
+                return {{ winner: team1, tiebreaker: `Net points in all games: +${{net1}}` }};
+            }}
+            if (net2 > net1) {{
+                return {{ winner: team2, tiebreaker: `Net points in all games: +${{net2}}` }};
+            }}
+            
+            if (stats[team1].touchdowns > stats[team2].touchdowns) {{
+                return {{ winner: team1, tiebreaker: `Net touchdowns: ${{stats[team1].touchdowns}}` }};
+            }}
+            if (stats[team2].touchdowns > stats[team1].touchdowns) {{
+                return {{ winner: team2, tiebreaker: `Net touchdowns: ${{stats[team2].touchdowns}}` }};
+            }}
+            
+            return {{ winner: team1, tiebreaker: 'Coin toss' }};
+        }}
+        
+        function breakMultiTeamDivisionTie(teams, stats) {{
+            let remaining = [...teams];
+            
+            const h2hRecords = {{}};
+            for (const team of remaining) {{
+                let h2hW = 0, h2hL = 0, h2hT = 0;
+                for (const opp of remaining) {{
+                    if (team !== opp) {{
+                        const h2h = stats[team].head_to_head[opp] || {{ W: 0, L: 0, T: 0 }};
+                        h2hW += h2h.W;
+                        h2hL += h2h.L;
+                        h2hT += h2h.T;
+                    }}
+                }}
+                const h2hTotal = h2hW + h2hL + h2hT;
+                h2hRecords[team] = h2hTotal > 0 ? (h2hW + 0.5 * h2hT) / h2hTotal : 0;
+            }}
+            
+            const uniqueH2HPercentages = new Set(Object.values(h2hRecords));
+            if (uniqueH2HPercentages.size === remaining.length) {{
+                remaining.sort((a, b) => h2hRecords[b] - h2hRecords[a]);
+                return remaining;
+            }}
+            
+            remaining.sort((a, b) => stats[b].division_pct - stats[a].division_pct);
+            if (stats[remaining[0]].division_pct > stats[remaining[1]].division_pct) {{
+                const winner = remaining[0];
+                const rest = remaining.slice(1);
+                if (rest.length === 1) {{
+                    return [winner, rest[0]];
+                }} else if (rest.length === 2) {{
+                    const result = breakTwoTeamDivisionTie(rest, stats);
+                    return [winner, result.winner, rest.find(t => t !== result.winner)];
+                }} else {{
+                    return [winner, ...breakMultiTeamDivisionTie(rest, stats)];
+                }}
+            }}
+            
+            remaining.sort((a, b) => stats[b].conference_pct - stats[a].conference_pct);
+            if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {{
+                const winner = remaining[0];
+                const rest = remaining.slice(1);
+                if (rest.length === 1) {{
+                    return [winner, rest[0]];
+                }} else if (rest.length === 2) {{
+                    const result = breakTwoTeamDivisionTie(rest, stats);
+                    return [winner, result.winner, rest.find(t => t !== result.winner)];
+                }} else {{
+                    return [winner, ...breakMultiTeamDivisionTie(rest, stats)];
+                }}
+            }}
+            
+            remaining.sort((a, b) => {{
+                if (stats[b].strength_of_victory !== stats[a].strength_of_victory) {{
+                    return stats[b].strength_of_victory - stats[a].strength_of_victory;
+                }}
+                return stats[b].win_pct - stats[a].win_pct;
+            }});
+            return remaining;
+        }}
+        
+        function breakTwoTeamWildcardTie(teams, stats) {{
+            const [team1, team2] = teams;
+            
+            const h2h1 = stats[team1].head_to_head[team2] || {{ W: 0, L: 0, T: 0 }};
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {{
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return {{ winner: team1, tiebreaker: `Head-to-head: won ${{h2h1.W}}-${{h2h1.L}}` }};
+                if (h2h2Pct > h2h1Pct) return {{ winner: team2, tiebreaker: `Head-to-head: won ${{h2h1.L}}-${{h2h1.W}}` }};
+            }}
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {{
+                return {{ winner: team1, tiebreaker: `Conference record: ${{stats[team1].conference_pct.toFixed(3)}}` }};
+            }}
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {{
+                return {{ winner: team2, tiebreaker: `Conference record: ${{stats[team2].conference_pct.toFixed(3)}}` }};
+            }}
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {{
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common1T = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common1Total = common1W + common1L + common1T;
+                const common1Pct = common1Total > 0 ? (common1W + 0.5 * common1T) / common1Total : 0;
+                
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2T = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common2Total = common2W + common2L + common2T;
+                const common2Pct = common2Total > 0 ? (common2W + 0.5 * common2T) / common2Total : 0;
+                
+                if (common1Pct > common2Pct) {{
+                    return {{ winner: team1, tiebreaker: `Common games: ${{common1W}}-${{common1L}}-${{common1T}}` }};
+                }}
+                if (common2Pct > common1Pct) {{
+                    return {{ winner: team2, tiebreaker: `Common games: ${{common2W}}-${{common2L}}-${{common2T}}` }};
+                }}
+            }}
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {{
+                return {{ winner: team1, tiebreaker: `Strength of victory: ${{stats[team1].strength_of_victory.toFixed(3)}}` }};
+            }}
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {{
+                return {{ winner: team2, tiebreaker: `Strength of victory: ${{stats[team2].strength_of_victory.toFixed(3)}}` }};
+            }}
+            
+            if (stats[team1].strength_of_schedule > stats[team2].strength_of_schedule) {{
+                return {{ winner: team1, tiebreaker: `Strength of schedule: ${{stats[team1].strength_of_schedule.toFixed(3)}}` }};
+            }}
+            if (stats[team2].strength_of_schedule > stats[team1].strength_of_schedule) {{
+                return {{ winner: team2, tiebreaker: `Strength of schedule: ${{stats[team2].strength_of_schedule.toFixed(3)}}` }};
+            }}
+            
+            const confNet1 = stats[team1].conference_points_for - stats[team1].conference_points_against;
+            const confNet2 = stats[team2].conference_points_for - stats[team2].conference_points_against;
+            if (confNet1 > confNet2) {{
+                return {{ winner: team1, tiebreaker: `Net points in conference: +${{confNet1}}` }};
+            }}
+            if (confNet2 > confNet1) {{
+                return {{ winner: team2, tiebreaker: `Net points in conference: +${{confNet2}}` }};
+            }}
+            
+            const net1 = stats[team1].points_for - stats[team1].points_against;
+            const net2 = stats[team2].points_for - stats[team2].points_against;
+            if (net1 > net2) {{
+                return {{ winner: team1, tiebreaker: `Net points in all games: +${{net1}}` }};
+            }}
+            if (net2 > net1) {{
+                return {{ winner: team2, tiebreaker: `Net points in all games: +${{net2}}` }};
+            }}
+            
+            if (stats[team1].touchdowns > stats[team2].touchdowns) {{
+                return {{ winner: team1, tiebreaker: `Net touchdowns: ${{stats[team1].touchdowns}}` }};
+            }}
+            if (stats[team2].touchdowns > stats[team1].touchdowns) {{
+                return {{ winner: team2, tiebreaker: `Net touchdowns: ${{stats[team2].touchdowns}}` }};
+            }}
+            
+            return {{ winner: team1, tiebreaker: 'Coin toss' }};
+        }}
+        
+        function breakMultiTeamWildcardTie(teams, stats) {{
+            let remaining = [...teams];
+            
+            const divisions = {{}};
+            for (const team of remaining) {{
+                const div = teamsInfo[team].division;
+                if (!divisions[div]) divisions[div] = [];
+                divisions[div].push(team);
+            }}
+            
+            const divWinners = {{}};
+            for (const [div, divTeams] of Object.entries(divisions)) {{
+                if (divTeams.length > 1) {{
+                    const ranked = applyDivisionTiebreaker(divTeams, stats);
+                    divWinners[div] = ranked[0];
+                }} else {{
+                    divWinners[div] = divTeams[0];
+                }}
+            }}
+            
+            remaining = Object.values(divWinners);
+            
+            if (remaining.length === 1) return remaining;
+            if (remaining.length === 2) {{
+                const result = breakTwoTeamWildcardTie(remaining, stats);
+                return [result.winner, remaining.find(t => t !== result.winner)];
+            }}
+            
+            let h2hSweep = null;
+            for (const team of remaining) {{
+                const beatsAll = remaining.every(opp => {{
+                    if (opp === team) return true;
+                    const h2h = stats[team].head_to_head[opp] || {{ W: 0 }};
+                    return h2h.W > 0;
+                }});
+                if (beatsAll) {{
+                    h2hSweep = team;
+                    break;
+                }}
+            }}
+            
+            if (h2hSweep) {{
+                const rest = remaining.filter(t => t !== h2hSweep);
+                if (rest.length === 1) {{
+                    return [h2hSweep, rest[0]];
+                }} else {{
+                    return [h2hSweep, ...breakMultiTeamWildcardTie(rest, stats)];
+                }}
+            }}
+            
+            remaining.sort((a, b) => stats[b].conference_pct - stats[a].conference_pct);
+            if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {{
+                const winner = remaining[0];
+                const rest = remaining.slice(1);
+                if (rest.length === 1) {{
+                    return [winner, rest[0]];
+                }} else if (rest.length === 2) {{
+                    const result = breakTwoTeamWildcardTie(rest, stats);
+                    return [winner, result.winner, rest.find(t => t !== result.winner)];
+                }} else {{
+                    return [winner, ...breakMultiTeamWildcardTie(rest, stats)];
+                }}
+            }}
+            
+            remaining.sort((a, b) => {{
+                if (stats[b].strength_of_victory !== stats[a].strength_of_victory) {{
+                    return stats[b].strength_of_victory - stats[a].strength_of_victory;
+                }}
+                return stats[b].win_pct - stats[a].win_pct;
+            }});
+            return remaining;
+        }}
+        
+        function applyDivisionTiebreaker(tiedTeams, stats) {{
+            if (tiedTeams.length === 0) return [];
+            if (tiedTeams.length === 1) return tiedTeams;
+            
+            if (tiedTeams.length === 2) {{
+                const result = breakTwoTeamDivisionTie(tiedTeams, stats);
+                return [result.winner];
+            }} else {{
+                return breakMultiTeamDivisionTie(tiedTeams, stats);
+            }}
+        }}
+        
+        function applyWildcardTiebreaker(tiedTeams, stats) {{
+            if (tiedTeams.length === 0) return [];
+            if (tiedTeams.length === 1) return tiedTeams;
+            
+            const sameDivision = tiedTeams.every(t => teamsInfo[t].division === teamsInfo[tiedTeams[0]].division);
+            if (sameDivision) {{
+                return applyDivisionTiebreaker(tiedTeams, stats);
+            }}
+            
+            if (tiedTeams.length === 2) {{
+                const result = breakTwoTeamWildcardTie(tiedTeams, stats);
+                return [result.winner];
+            }} else {{
+                return breakMultiTeamWildcardTie(tiedTeams, stats);
+            }}
+        }}
+        
         function determinePlayoffSeeding(stats) {{
             const results = {{ AFC: [], NFC: [] }};
             const eliminated = {{ AFC: [], NFC: [] }};
@@ -739,610 +1075,109 @@ def generate_html():
                 }});
                 
                 const divisionWinners = [];
-                const divisionRunnerUps = [];
                 
                 for (let div in divisions) {{
                     const divTeams = divisions[div];
-                    const ranked = applyTiebreakers(divTeams, stats, true, divTeams.length);
-                    if (ranked && ranked.length > 0) {{
-                        divisionWinners.push({{
-                            team: ranked[0].team,
-                            record: ranked[0].record,
-                            tiebreaker: ranked[0].tiebreaker,
-                            division: div
-                        }});
-                        
-                        for (let i = 1; i < ranked.length; i++) {{
-                            divisionRunnerUps.push({{
-                                team: ranked[i].team,
-                                record: ranked[i].record,
-                                division: div,
-                                divRank: i + 1,
-                                reason: `${{div.replace(conf + ' ', '')}}: Finished #${{i + 1}} in division${{ranked[i].tiebreaker ? ' (' + ranked[i].tiebreaker + ')' : ''}}`
-                            }});
+                    divTeams.sort((a, b) => {{
+                        if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
+                        return stats[b].W - stats[a].W;
+                    }});
+                    
+                    const sameRecordTeams = [divTeams[0]];
+                    for (let i = 1; i < divTeams.length; i++) {{
+                        if (Math.abs(stats[divTeams[i]].win_pct - stats[sameRecordTeams[0]].win_pct) < 0.001) {{
+                            sameRecordTeams.push(divTeams[i]);
+                        }} else {{
+                            break;
                         }}
                     }}
+                    
+                    let winner, tiebreaker = null;
+                    if (sameRecordTeams.length > 1) {{
+                        const ranked = applyDivisionTiebreaker(sameRecordTeams, stats);
+                        winner = ranked[0];
+                        if (sameRecordTeams.length === 2) {{
+                            const result = breakTwoTeamDivisionTie(sameRecordTeams, stats);
+                            tiebreaker = result.tiebreaker;
+                        }}
+                    }} else {{
+                        winner = sameRecordTeams[0];
+                    }}
+                    
+                    divisionWinners.push({{
+                        team: winner,
+                        record: `${{stats[winner].W}}-${{stats[winner].L}}-${{stats[winner].T}}`,
+                        tiebreaker: tiebreaker,
+                        division: div
+                    }});
                 }}
                 
-                divisionWinners.sort((a, b) => {{
-                    if (!stats[a.team] || !stats[b.team]) {{
-                        console.error('Missing stats for teams:', a.team, b.team);
-                        return 0;
-                    }}
-                    const aPct = stats[a.team].win_pct;
-                    const bPct = stats[b.team].win_pct;
-                    return bPct - aPct;
+                divisionWinners.sort((a, b) => stats[b.team].win_pct - stats[a.team].win_pct);
+                
+                const wildCardPool = confTeams.filter(t => !divisionWinners.find(dw => dw.team === t));
+                wildCardPool.sort((a, b) => {{
+                    if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
+                    return stats[b].W - stats[a].W;
                 }});
                 
-                const wildCardTeams = [];
+                const wildCards = [];
+                for (let i = 0; i < Math.min(3, wildCardPool.length); i++) {{
+                    const candidates = [wildCardPool[i]];
+                    for (let j = i + 1; j < wildCardPool.length; j++) {{
+                        if (Math.abs(stats[wildCardPool[j]].win_pct - stats[candidates[0]].win_pct) < 0.001) {{
+                            candidates.push(wildCardPool[j]);
+                        }} else {{
+                            break;
+                        }}
+                    }}
+                    
+                    let wcWinner, tiebreaker = null;
+                    if (candidates.length > 1) {{
+                        const ranked = applyWildcardTiebreaker(candidates, stats);
+                        wcWinner = ranked[0];
+                        if (candidates.length === 2) {{
+                            const sameDivision = candidates.every(t => teamsInfo[t].division === teamsInfo[candidates[0]].division);
+                            const result = sameDivision ? 
+                                breakTwoTeamDivisionTie(candidates, stats) : 
+                                breakTwoTeamWildcardTie(candidates, stats);
+                            tiebreaker = result.tiebreaker;
+                        }}
+                    }} else {{
+                        wcWinner = candidates[0];
+                    }}
+                    
+                    wildCards.push({{
+                        team: wcWinner,
+                        record: `${{stats[wcWinner].W}}-${{stats[wcWinner].L}}-${{stats[wcWinner].T}}`,
+                        tiebreaker: tiebreaker,
+                        division: teamsInfo[wcWinner].division
+                    }});
+                    
+                    if (wildCards.length >= 3) break;
+                }}
+                
+                const playoffTeamNames = new Set([
+                    ...divisionWinners.map(d => d.team),
+                    ...wildCards.map(w => w.team)
+                ]);
+                
                 confTeams.forEach(team => {{
-                    if (!divisionWinners.find(dw => dw.team === team)) {{
-                        wildCardTeams.push(team);
-                    }}
-                }});
-                
-                const rankedWildCards = applyTiebreakers(wildCardTeams, stats, false, wildCardTeams.length);
-                const topWildCards = rankedWildCards.slice(0, 3);
-                const missedWildCards = rankedWildCards.slice(3);
-                
-                const topWildCardTeamNames = topWildCards.map(wc => wc.team);
-                
-                divisionRunnerUps.forEach(runnerUp => {{
-                    if (!topWildCardTeamNames.includes(runnerUp.team)) {{
+                    if (!playoffTeamNames.has(team)) {{
                         eliminated[conf].push({{
-                            team: runnerUp.team,
-                            record: runnerUp.record,
-                            reason: runnerUp.reason
+                            team: team,
+                            record: `${{stats[team].W}}-${{stats[team].L}}-${{stats[team].T}}`,
+                            reason: 'Did not qualify for playoffs'
                         }});
                     }}
-                }});
-                
-                missedWildCards.forEach((team, index) => {{
-                    const wcRank = index + 4;
-                    eliminated[conf].push({{
-                        team: team.team,
-                        record: team.record,
-                        reason: `Wild Card: Finished #${{wcRank}} in conference${{team.tiebreaker ? ' (' + team.tiebreaker + ')' : ''}}`
-                    }});
                 }});
                 
                 results[conf] = [
                     ...divisionWinners.slice(0, 4),
-                    ...topWildCards
+                    ...wildCards
                 ];
             }});
             
             return {{ playoffs: results, eliminated }};
-        }}
-        
-        function applyTiebreakers(teams, stats, isDivision = false, limit = 1) {{
-            if (teams.length === 0) return [];
-            if (teams.length === 1) return [{{ team: teams[0], record: `${{stats[teams[0]].W}}-${{stats[teams[0]].L}}-${{stats[teams[0]].T}}`, tiebreaker: null }}];
-            
-            const winPctGroups = {{}};
-            teams.forEach(team => {{
-                const pct = stats[team].win_pct;
-                if (!winPctGroups[pct]) winPctGroups[pct] = [];
-                winPctGroups[pct].push(team);
-            }});
-            
-            const sortedPcts = Object.keys(winPctGroups).map(Number).sort((a, b) => b - a);
-            const results = [];
-            
-            for (let pct of sortedPcts) {{
-                const tiedTeams = winPctGroups[pct];
-                
-                if (tiedTeams.length === 1) {{
-                    results.push({{
-                        team: tiedTeams[0],
-                        record: `${{stats[tiedTeams[0]].W}}-${{stats[tiedTeams[0]].L}}-${{stats[tiedTeams[0]].T}}`,
-                        tiebreaker: null
-                    }});
-                }} else {{
-                    const resolved = resolveTie(tiedTeams, stats, isDivision);
-                    results.push(...resolved);
-                }}
-                
-                if (results.length >= limit) break;
-            }}
-            
-            return results.slice(0, limit);
-        }}
-        
-        function resolveTie(teams, stats, isDivision) {{
-            if (teams.length === 2) {{
-                return resolveTwoTeamTie(teams, stats, isDivision);
-            }} else {{
-                return resolveMultiTeamTie(teams, stats, isDivision);
-            }}
-        }}
-        
-        function resolveTwoTeamTie(teams, stats, isDivision) {{
-            const t1 = teams[0];
-            const t2 = teams[1];
-            let winner = null;
-            let tiebreaker = '';
-            
-            const h2h = checkHeadToHead([t1, t2], stats);
-            if (h2h.winner) {{
-                winner = h2h.winner;
-                tiebreaker = `Head-to-head: won ${{h2h.wins}}-${{h2h.losses}}`;
-                return formatTiebreakerResults([winner], teams.filter(t => t !== winner), stats, tiebreaker);
-            }}
-            
-            if (isDivision) {{
-                const result = checkBestInGroup(teams, stats, 'division_pct');
-                if (result.winner) {{
-                    return formatTiebreakerResults([result.winner], teams.filter(t => t !== result.winner), stats, 
-                        `Division record: ${{result.value.toFixed(3)}}`);
-                }}
-            }}
-            
-            const commonGames = getCommonGames(teams, stats);
-            if (commonGames.length >= 4) {{
-                const result = checkCommonGamesRecord(teams, stats, commonGames);
-                if (result.winner) {{
-                    return formatTiebreakerResults([result.winner], teams.filter(t => t !== result.winner), stats, 
-                        result.detail);
-                }}
-            }}
-            
-            const confResult = checkBestInGroup(teams, stats, 'conference_pct');
-            if (confResult.winner) {{
-                return formatTiebreakerResults([confResult.winner], teams.filter(t => t !== confResult.winner), stats, 
-                    `Conference record: ${{confResult.value.toFixed(3)}}`);
-            }}
-            
-            const sovResult = checkBestInGroup(teams, stats, 'strength_of_victory');
-            if (sovResult.winner) {{
-                return formatTiebreakerResults([sovResult.winner], teams.filter(t => t !== sovResult.winner), stats, 
-                    `Strength of victory: ${{sovResult.value.toFixed(3)}}`);
-            }}
-            
-            const sosResult = checkBestInGroup(teams, stats, 'strength_of_schedule');
-            if (sosResult.winner) {{
-                return formatTiebreakerResults([sosResult.winner], teams.filter(t => t !== sosResult.winner), stats, 
-                    `Strength of schedule: ${{sosResult.value.toFixed(3)}}`);
-            }}
-            
-            const confRanking = calculateCombinedRanking(teams, stats, true);
-            if (confRanking.winner) {{
-                return formatTiebreakerResults([confRanking.winner], teams.filter(t => t !== confRanking.winner), stats, 
-                    `Combined ranking (conf): ${{confRanking.score}}`);
-            }}
-            
-            const allRanking = calculateCombinedRanking(teams, stats, false);
-            if (allRanking.winner) {{
-                return formatTiebreakerResults([allRanking.winner], teams.filter(t => t !== allRanking.winner), stats, 
-                    `Combined ranking (all): ${{allRanking.score}}`);
-            }}
-            
-            if (isDivision) {{
-                const netPtsCommon = calculateNetPoints(teams, stats, commonGames);
-                if (netPtsCommon.winner) {{
-                    return formatTiebreakerResults([netPtsCommon.winner], teams.filter(t => t !== netPtsCommon.winner), stats, 
-                        netPtsCommon.detail);
-                }}
-            }} else {{
-                const netPtsConf = calculateNetPointsConference(teams, stats);
-                if (netPtsConf.winner) {{
-                    return formatTiebreakerResults([netPtsConf.winner], teams.filter(t => t !== netPtsConf.winner), stats, 
-                        `Net points in conference games: ${{netPtsConf.value > 0 ? '+' : ''}}${{netPtsConf.value}}`);
-                }}
-            }}
-            
-            const netPtsAll = calculateNetPointsAll(teams, stats);
-            if (netPtsAll.winner) {{
-                return formatTiebreakerResults([netPtsAll.winner], teams.filter(t => t !== netPtsAll.winner), stats, 
-                    `Net points in all games: ${{netPtsAll.value > 0 ? '+' : ''}}${{netPtsAll.value}}`);
-            }}
-            
-            const netTds = calculateNetTouchdowns(teams, stats);
-            if (netTds.winner) {{
-                return formatTiebreakerResults([netTds.winner], teams.filter(t => t !== netTds.winner), stats, 
-                    `Net touchdowns: ${{netTds.value > 0 ? '+' : ''}}${{netTds.value}}`);
-            }}
-            
-            return formatTiebreakerResults(teams, [], stats, 'Coin toss');
-        }}
-        
-        function resolveMultiTeamTie(teams, stats, isDivision) {{
-            let remaining = [...teams];
-            const eliminated = [];
-            let tiebreaker = '';
-            
-            if (teams.length >= 2) {{
-                const h2hSweep = checkHeadToHeadSweep(remaining, stats);
-                if (h2hSweep.winner) {{
-                    return formatTiebreakerResults([h2hSweep.winner], remaining.filter(t => t !== h2hSweep.winner), stats, 
-                        `Head-to-head sweep`);
-                }}
-            }}
-            
-            if (isDivision) {{
-                const divResult = eliminateByMetric(remaining, stats, 'division_pct');
-                if (divResult.remaining.length < remaining.length) {{
-                    remaining = divResult.remaining;
-                    if (remaining.length === 1) {{
-                        return formatTiebreakerResults(remaining, teams.filter(t => !remaining.includes(t)), stats, 
-                            `Division record: ${{divResult.topValue.toFixed(3)}}`);
-                    }} else if (remaining.length === 2) {{
-                        return resolveTwoTeamTie(remaining, stats, isDivision);
-                    }}
-                }}
-            }}
-            
-            const commonGames = getCommonGames(remaining, stats);
-            if (commonGames.length >= 4) {{
-                const cgResult = eliminateByCommonGames(remaining, stats, commonGames);
-                if (cgResult.remaining.length < remaining.length) {{
-                    remaining = cgResult.remaining;
-                    if (remaining.length === 1) {{
-                        return formatTiebreakerResults(remaining, teams.filter(t => !remaining.includes(t)), stats, 
-                            cgResult.detail);
-                    }} else if (remaining.length === 2) {{
-                        return resolveTwoTeamTie(remaining, stats, isDivision);
-                    }}
-                }}
-            }}
-            
-            const confResult = eliminateByMetric(remaining, stats, 'conference_pct');
-            if (confResult.remaining.length < remaining.length) {{
-                remaining = confResult.remaining;
-                if (remaining.length === 1) {{
-                    return formatTiebreakerResults(remaining, teams.filter(t => !remaining.includes(t)), stats, 
-                        `Conference record: ${{confResult.topValue.toFixed(3)}}`);
-                }} else if (remaining.length === 2) {{
-                    return resolveTwoTeamTie(remaining, stats, isDivision);
-                }}
-            }}
-            
-            const sovResult = eliminateByMetric(remaining, stats, 'strength_of_victory');
-            if (sovResult.remaining.length < remaining.length) {{
-                remaining = sovResult.remaining;
-                if (remaining.length === 1) {{
-                    return formatTiebreakerResults(remaining, teams.filter(t => !remaining.includes(t)), stats, 
-                        `Strength of victory: ${{sovResult.topValue.toFixed(3)}}`);
-                }} else if (remaining.length === 2) {{
-                    return resolveTwoTeamTie(remaining, stats, isDivision);
-                }}
-            }}
-            
-            const sosResult = eliminateByMetric(remaining, stats, 'strength_of_schedule');
-            if (sosResult.remaining.length < remaining.length) {{
-                remaining = sosResult.remaining;
-                if (remaining.length === 1) {{
-                    return formatTiebreakerResults(remaining, teams.filter(t => !remaining.includes(t)), stats, 
-                        `Strength of schedule: ${{sosResult.topValue.toFixed(3)}}`);
-                }} else if (remaining.length === 2) {{
-                    return resolveTwoTeamTie(remaining, stats, isDivision);
-                }}
-            }}
-            
-            return formatTiebreakerResults(remaining, teams.filter(t => !remaining.includes(t)), stats, 'Multiple tiebreakers');
-        }}
-        
-        function formatTiebreakerResults(winners, losers, stats, tiebreaker) {{
-            const results = [];
-            winners.forEach(team => {{
-                results.push({{
-                    team,
-                    record: `${{stats[team].W}}-${{stats[team].L}}-${{stats[team].T}}`,
-                    tiebreaker
-                }});
-            }});
-            losers.forEach(team => {{
-                results.push({{
-                    team,
-                    record: `${{stats[team].W}}-${{stats[team].L}}-${{stats[team].T}}`,
-                    tiebreaker: null
-                }});
-            }});
-            return results;
-        }}
-        
-        function checkHeadToHead(teams, stats) {{
-            if (teams.length !== 2) return {{ winner: null }};
-            
-            const t1 = teams[0];
-            const t2 = teams[1];
-            
-            const h2h = stats[t1].head_to_head[t2];
-            if (!h2h || h2h.W + h2h.L === 0) return {{ winner: null }};
-            
-            if (h2h.W > h2h.L) {{
-                return {{ winner: t1, wins: h2h.W, losses: h2h.L }};
-            }} else if (h2h.L > h2h.W) {{
-                return {{ winner: t2, wins: h2h.L, losses: h2h.W }};
-            }}
-            
-            return {{ winner: null }};
-        }}
-        
-        function checkHeadToHeadSweep(teams, stats) {{
-            for (let team of teams) {{
-                let swept = true;
-                for (let opp of teams) {{
-                    if (team === opp) continue;
-                    const h2h = stats[team].head_to_head[opp];
-                    if (!h2h || h2h.W === 0 || h2h.L > 0) {{
-                        swept = false;
-                        break;
-                    }}
-                }}
-                if (swept) return {{ winner: team }};
-            }}
-            return {{ winner: null }};
-        }}
-        
-        function checkBestInGroup(teams, stats, metric) {{
-            let bestTeam = null;
-            let bestValue = -1;
-            let uniqueBest = true;
-            
-            teams.forEach(team => {{
-                const value = stats[team][metric];
-                if (value > bestValue) {{
-                    bestValue = value;
-                    bestTeam = team;
-                    uniqueBest = true;
-                }} else if (Math.abs(value - bestValue) < 0.001) {{
-                    uniqueBest = false;
-                }}
-            }});
-            
-            return uniqueBest ? {{ winner: bestTeam, value: bestValue }} : {{ winner: null }};
-        }}
-        
-        function eliminateByMetric(teams, stats, metric) {{
-            if (teams.length === 0) return {{ remaining: [], topValue: 0 }};
-            
-            let bestValue = -1;
-            teams.forEach(team => {{
-                const value = stats[team][metric];
-                if (value > bestValue) bestValue = value;
-            }});
-            
-            const remaining = teams.filter(team => {{
-                return Math.abs(stats[team][metric] - bestValue) < 0.001;
-            }});
-            
-            return {{ remaining, topValue: bestValue }};
-        }}
-        
-        function getCommonGames(teams, stats) {{
-            if (teams.length < 2) return [];
-            
-            const opponentSets = teams.map(team => new Set(stats[team].opponents));
-            const commonOpponents = [...opponentSets[0]].filter(opp => {{
-                return opponentSets.every(set => set.has(opp));
-            }});
-            
-            return commonOpponents;
-        }}
-        
-        function checkCommonGamesRecord(teams, stats, commonGames) {{
-            if (commonGames.length < 4) return {{ winner: null }};
-            
-            const records = teams.map(team => {{
-                let w = 0, l = 0, t = 0;
-                const gameDetails = [];
-                stats[team].game_results.forEach(game => {{
-                    if (commonGames.includes(game.opponent)) {{
-                        let result = '';
-                        if (game.pf > game.pa) {{
-                            w++;
-                            result = 'W';
-                        }} else if (game.pf < game.pa) {{
-                            l++;
-                            result = 'L';
-                        }} else {{
-                            t++;
-                            result = 'T';
-                        }}
-                        gameDetails.push({{ opp: game.opponent, result, score: `${{game.pf}}-${{game.pa}}` }});
-                    }}
-                }});
-                const pct = (w + 0.5 * t) / (w + l + t);
-                return {{ team, w, l, t, pct, gameDetails }};
-            }});
-            
-            records.sort((a, b) => b.pct - a.pct);
-            
-            if (records[0].pct > records[1].pct) {{
-                const commonOppList = commonGames.sort().join(', ');
-                let detailStr = `Common games (${{commonGames.length}} opponents: ${{commonOppList}}): `;
-                
-                records.forEach((rec, idx) => {{
-                    if (idx > 0) detailStr += ' vs ';
-                    detailStr += `${{rec.team}} ${{rec.w}}-${{rec.l}}`;
-                    if (rec.t > 0) detailStr += `-${{rec.t}}`;
-                    detailStr += ` (`;
-                    rec.gameDetails.forEach((game, gidx) => {{
-                        if (gidx > 0) detailStr += ', ';
-                        detailStr += `${{game.result}} vs ${{game.opp}} ${{game.score}}`;
-                    }});
-                    detailStr += `)`;
-                }});
-                
-                return {{ winner: records[0].team, record: `${{records[0].w}}-${{records[0].l}}-${{records[0].t}}`, detail: detailStr }};
-            }}
-            
-            return {{ winner: null }};
-        }}
-        
-        function eliminateByCommonGames(teams, stats, commonGames) {{
-            if (commonGames.length < 4) return {{ remaining: teams, detail: null }};
-            
-            const records = teams.map(team => {{
-                let w = 0, l = 0, t = 0;
-                const gameDetails = [];
-                stats[team].game_results.forEach(game => {{
-                    if (commonGames.includes(game.opponent)) {{
-                        let result = '';
-                        if (game.pf > game.pa) {{
-                            w++;
-                            result = 'W';
-                        }} else if (game.pf < game.pa) {{
-                            l++;
-                            result = 'L';
-                        }} else {{
-                            t++;
-                            result = 'T';
-                        }}
-                        gameDetails.push({{ opp: game.opponent, result, score: `${{game.pf}}-${{game.pa}}` }});
-                    }}
-                }});
-                const pct = (w + 0.5 * t) / (w + l + t);
-                return {{ team, w, l, t, pct, gameDetails }};
-            }});
-            
-            const maxPct = Math.max(...records.map(r => r.pct));
-            const remaining = records.filter(r => Math.abs(r.pct - maxPct) < 0.001).map(r => r.team);
-            
-            const commonOppList = commonGames.sort().join(', ');
-            let detailStr = `Common games (${{commonGames.length}} opponents: ${{commonOppList}}): `;
-            
-            records.sort((a, b) => b.pct - a.pct);
-            records.forEach((rec, idx) => {{
-                if (idx > 0) detailStr += ' vs ';
-                detailStr += `${{rec.team}} ${{rec.w}}-${{rec.l}}`;
-                if (rec.t > 0) detailStr += `-${{rec.t}}`;
-                detailStr += ` (`;
-                rec.gameDetails.forEach((game, gidx) => {{
-                    if (gidx > 0) detailStr += ', ';
-                    detailStr += `${{game.result}} vs ${{game.opp}} ${{game.score}}`;
-                }});
-                detailStr += `)`;
-            }});
-            
-            return {{ remaining, detail: detailStr }};
-        }}
-        
-        function calculateCombinedRanking(teams, stats, conferenceOnly) {{
-            const conf = teamsInfo[teams[0]].conference;
-            const confTeams = Object.keys(teamsInfo).filter(t => teamsInfo[t].conference === conf);
-            
-            const allTeams = conferenceOnly ? confTeams : Object.keys(teamsInfo);
-            
-            const pfRanking = [...allTeams].sort((a, b) => stats[b].points_for - stats[a].points_for);
-            const paRanking = [...allTeams].sort((a, b) => stats[a].points_against - stats[b].points_against);
-            
-            const rankings = teams.map(team => {{
-                let pfRank = pfRanking.indexOf(team) + 1;
-                let paRank = paRanking.indexOf(team) + 1;
-                
-                for (let i = 0; i < pfRanking.length; i++) {{
-                    if (pfRanking[i] === team) break;
-                    if (i > 0 && stats[pfRanking[i]].points_for === stats[pfRanking[i-1]].points_for) {{
-                        pfRank = pfRanking.indexOf(pfRanking[i-1]) + 1;
-                    }}
-                }}
-                
-                for (let i = 0; i < paRanking.length; i++) {{
-                    if (paRanking[i] === team) break;
-                    if (i > 0 && stats[paRanking[i]].points_against === stats[paRanking[i-1]].points_against) {{
-                        paRank = paRanking.indexOf(paRanking[i-1]) + 1;
-                    }}
-                }}
-                
-                return {{ team, score: pfRank + paRank }};
-            }});
-            
-            rankings.sort((a, b) => a.score - b.score);
-            
-            if (rankings[0].score < rankings[1].score) {{
-                return {{ winner: rankings[0].team, score: rankings[0].score }};
-            }}
-            
-            return {{ winner: null }};
-        }}
-        
-        function calculateNetPoints(teams, stats, commonGames) {{
-            if (commonGames.length < 4) return {{ winner: null }};
-            
-            const netPoints = teams.map(team => {{
-                let pf = 0, pa = 0;
-                const gameDetails = [];
-                stats[team].game_results.forEach(game => {{
-                    if (commonGames.includes(game.opponent)) {{
-                        pf += game.pf;
-                        pa += game.pa;
-                        gameDetails.push({{ opp: game.opponent, score: `${{game.pf}}-${{game.pa}}` }});
-                    }}
-                }});
-                return {{ team, net: pf - pa, pf, pa, gameDetails }};
-            }});
-            
-            netPoints.sort((a, b) => b.net - a.net);
-            
-            if (netPoints[0].net > netPoints[1].net) {{
-                const commonOppList = commonGames.sort().join(', ');
-                let detailStr = `Net points in common games (vs ${{commonOppList}}): `;
-                
-                netPoints.forEach((np, idx) => {{
-                    if (idx > 0) detailStr += ' vs ';
-                    detailStr += `${{np.team}} ${{np.net > 0 ? '+' : ''}}${{np.net}} (PF:${{np.pf}}, PA:${{np.pa}} - `;
-                    np.gameDetails.forEach((game, gidx) => {{
-                        if (gidx > 0) detailStr += ', ';
-                        detailStr += `${{game.opp}} ${{game.score}}`;
-                    }});
-                    detailStr += `)`;
-                }});
-                
-                return {{ winner: netPoints[0].team, value: netPoints[0].net, detail: detailStr }};
-            }}
-            
-            return {{ winner: null }};
-        }}
-        
-        function calculateNetPointsConference(teams, stats) {{
-            const netPoints = teams.map(team => {{
-                const net = stats[team].conference_points_for - stats[team].conference_points_against;
-                return {{ team, net }};
-            }});
-            
-            netPoints.sort((a, b) => b.net - a.net);
-            
-            if (netPoints[0].net > netPoints[1].net) {{
-                return {{ winner: netPoints[0].team, value: netPoints[0].net }};
-            }}
-            
-            return {{ winner: null }};
-        }}
-        
-        function calculateNetPointsAll(teams, stats) {{
-            const netPoints = teams.map(team => {{
-                const net = stats[team].points_for - stats[team].points_against;
-                return {{ team, net }};
-            }});
-            
-            netPoints.sort((a, b) => b.net - a.net);
-            
-            if (netPoints[0].net > netPoints[1].net) {{
-                return {{ winner: netPoints[0].team, value: netPoints[0].net }};
-            }}
-            
-            return {{ winner: null }};
-        }}
-        
-        function calculateNetTouchdowns(teams, stats) {{
-            const netTds = teams.map(team => {{
-                let ownTds = stats[team].touchdowns;
-                let oppTds = 0;
-                stats[team].game_results.forEach(game => {{
-                    oppTds += Math.floor(game.pa / 7);
-                }});
-                return {{ team, net: ownTds - oppTds }};
-            }});
-            
-            netTds.sort((a, b) => b.net - a.net);
-            
-            if (netTds[0].net > netTds[1].net) {{
-                return {{ winner: netTds[0].team, value: netTds[0].net }};
-            }}
-            
-            return {{ winner: null }};
         }}
         
         function displayResults(playoffSeeds, eliminated, stats) {{
@@ -1418,6 +1253,7 @@ def generate_html():
 </body>
 </html>
 '''
+    
     
     with open('docs/week18_simulator.html', 'w', encoding='utf-8') as f:
         f.write(html)
