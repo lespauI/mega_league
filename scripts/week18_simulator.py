@@ -748,10 +748,10 @@ def generate_html():
             }}
             
             if (stats[team1].division_pct > stats[team2].division_pct) {{
-                return {{ winner: team1, tiebreaker: `Division record: ${{stats[team1].division_pct.toFixed(3)}}` }};
+                return {{ winner: team1, tiebreaker: `Division record: ${{stats[team1].division_W}}-${{stats[team1].division_L}}` }};
             }}
             if (stats[team2].division_pct > stats[team1].division_pct) {{
-                return {{ winner: team2, tiebreaker: `Division record: ${{stats[team2].division_pct.toFixed(3)}}` }};
+                return {{ winner: team2, tiebreaker: `Division record: ${{stats[team2].division_W}}-${{stats[team2].division_L}}` }};
             }}
             
             const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
@@ -777,10 +777,10 @@ def generate_html():
             }}
             
             if (stats[team1].conference_pct > stats[team2].conference_pct) {{
-                return {{ winner: team1, tiebreaker: `Conference record: ${{stats[team1].conference_pct.toFixed(3)}}` }};
+                return {{ winner: team1, tiebreaker: `Conference record: ${{stats[team1].conference_W}}-${{stats[team1].conference_L}}` }};
             }}
             if (stats[team2].conference_pct > stats[team1].conference_pct) {{
-                return {{ winner: team2, tiebreaker: `Conference record: ${{stats[team2].conference_pct.toFixed(3)}}` }};
+                return {{ winner: team2, tiebreaker: `Conference record: ${{stats[team2].conference_W}}-${{stats[team2].conference_L}}` }};
             }}
             
             if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {{
@@ -853,7 +853,7 @@ def generate_html():
             if (stats[remaining[0]].division_pct > stats[remaining[1]].division_pct) {{
                 const winner = remaining[0];
                 const rest = remaining.slice(1);
-                const tiebreaker = `Division record (${{stats[winner].division_pct.toFixed(3)}})`;
+                const tiebreaker = `Division record: ${{stats[winner].division_W}}-${{stats[winner].division_L}}`;
                 if (rest.length === 1) {{
                     return {{ ranked: [winner, rest[0]], tiebreaker }};
                 }} else if (rest.length === 2) {{
@@ -869,7 +869,7 @@ def generate_html():
             if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {{
                 const winner = remaining[0];
                 const rest = remaining.slice(1);
-                const tiebreaker = `Conference record (${{stats[winner].conference_pct.toFixed(3)}})`;
+                const tiebreaker = `Conference record: ${{stats[winner].conference_W}}-${{stats[winner].conference_L}}`;
                 if (rest.length === 1) {{
                     return {{ ranked: [winner, rest[0]], tiebreaker }};
                 }} else if (rest.length === 2) {{
@@ -903,10 +903,10 @@ def generate_html():
             }}
             
             if (stats[team1].conference_pct > stats[team2].conference_pct) {{
-                return {{ winner: team1, tiebreaker: `Conference record: ${{stats[team1].conference_pct.toFixed(3)}}` }};
+                return {{ winner: team1, tiebreaker: `Conference record: ${{stats[team1].conference_W}}-${{stats[team1].conference_L}}` }};
             }}
             if (stats[team2].conference_pct > stats[team1].conference_pct) {{
-                return {{ winner: team2, tiebreaker: `Conference record: ${{stats[team2].conference_pct.toFixed(3)}}` }};
+                return {{ winner: team2, tiebreaker: `Conference record: ${{stats[team2].conference_W}}-${{stats[team2].conference_L}}` }};
             }}
             
             const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
@@ -1028,7 +1028,7 @@ def generate_html():
             if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {{
                 const winner = remaining[0];
                 const rest = remaining.slice(1);
-                const tiebreaker = `Conference record (${{stats[winner].conference_pct.toFixed(3)}})`;
+                const tiebreaker = `Conference record: ${{stats[winner].conference_W}}-${{stats[winner].conference_L}}`;
                 if (rest.length === 1) {{
                     return {{ ranked: [winner, rest[0]], tiebreaker }};
                 }} else if (rest.length === 2) {{
@@ -1128,7 +1128,9 @@ def generate_html():
                         team: winner,
                         record: `${{stats[winner].W}}-${{stats[winner].L}}-${{stats[winner].T}}`,
                         division: div,
-                        qualification: qualification
+                        qualification: qualification,
+                        divRecord: `${{stats[winner].division_W}}-${{stats[winner].division_L}}`,
+                        confRecord: `${{stats[winner].conference_W}}-${{stats[winner].conference_L}}`
                     }});
                 }}
                 
@@ -1177,7 +1179,9 @@ def generate_html():
                             team: t,
                             record: `${{stats[t].W}}-${{stats[t].L}}-${{stats[t].T}}`,
                             division: teamsInfo[t].division,
-                            qualification: qualification
+                            qualification: qualification,
+                            divRecord: `${{stats[t].division_W}}-${{stats[t].division_L}}`,
+                            confRecord: `${{stats[t].conference_W}}-${{stats[t].conference_L}}`
                         }});
                     }});
                     
@@ -1230,7 +1234,9 @@ def generate_html():
                         eliminated[conf].push({{
                             team: team,
                             record: `${{stats[team].W}}-${{stats[team].L}}-${{stats[team].T}}`,
-                            reason: reason
+                            reason: reason,
+                            divRecord: `${{stats[team].division_W}}-${{stats[team].division_L}}`,
+                            confRecord: `${{stats[team].conference_W}}-${{stats[team].conference_L}}`
                         }});
                     }}
                 }});
@@ -1274,6 +1280,9 @@ def generate_html():
                             <img src="${{teamLogo}}" class="team-logo" alt="${{seed.team}}">
                             <span>${{seed.team}}${{divLabel}}</span>
                         </div>
+                        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+                            Div: ${{seed.divRecord}} | Conf: ${{seed.confRecord}}
+                        </div>
                         <div class="qualification-info">✓ ${{seed.qualification || 'Qualified'}}</div>
                     `;
                     container.appendChild(seedDiv);
@@ -1303,6 +1312,9 @@ def generate_html():
                             <div class="team-name">
                                 <img src="${{teamLogo}}" class="team-logo" alt="${{team.team}}">
                                 <span>${{team.team}}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+                                Div: ${{team.divRecord}} | Conf: ${{team.confRecord}}
                             </div>
                             <div class="elimination-info">❌ ${{team.reason}}</div>
                         `;
