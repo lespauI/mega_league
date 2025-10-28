@@ -1121,9 +1121,10 @@ def generate_html():
                 }});
                 
                 const wildCards = [];
-                for (let i = 0; i < Math.min(3, wildCardPool.length); i++) {{
-                    const candidates = [wildCardPool[i]];
-                    for (let j = i + 1; j < wildCardPool.length; j++) {{
+                let wcIndex = 0;
+                while (wildCards.length < 3 && wcIndex < wildCardPool.length) {{
+                    const candidates = [wildCardPool[wcIndex]];
+                    for (let j = wcIndex + 1; j < wildCardPool.length; j++) {{
                         if (Math.abs(stats[wildCardPool[j]].win_pct - stats[candidates[0]].win_pct) < 0.001) {{
                             candidates.push(wildCardPool[j]);
                         }} else {{
@@ -1153,7 +1154,7 @@ def generate_html():
                         division: teamsInfo[wcWinner].division
                     }});
                     
-                    if (wildCards.length >= 3) break;
+                    wcIndex += candidates.length;
                 }}
                 
                 const playoffTeamNames = new Set([
