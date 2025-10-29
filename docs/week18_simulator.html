@@ -941,36 +941,40 @@
                 });
                 
                 const wildCards = [];
-                let processed = new Set();
+                let currentIndex = 0;
                 
-                for (const team of wildCardPool) {
-                    if (wildCards.length >= 3) break;
-                    if (processed.has(team)) continue;
+                while (wildCards.length < 3 && currentIndex < wildCardPool.length) {
+                    const currentTeam = wildCardPool[currentIndex];
+                    const currentWinPct = stats[currentTeam].win_pct;
                     
-                    const candidates = wildCardPool.filter(t => 
-                        !processed.has(t) && 
-                        Math.abs(stats[t].win_pct - stats[team].win_pct) < 0.001
-                    );
+                    const tiedTeams = [];
+                    for (let i = currentIndex; i < wildCardPool.length; i++) {
+                        if (Math.abs(stats[wildCardPool[i]].win_pct - currentWinPct) < 0.001) {
+                            tiedTeams.push(wildCardPool[i]);
+                        } else {
+                            break;
+                        }
+                    }
                     
-                    let rankedCandidates, tiebreakerInfo = null;
-                    if (candidates.length > 1) {
-                        const result = applyWildcardTiebreaker(candidates, stats);
-                        rankedCandidates = result.ranked;
+                    let rankedTeams, tiebreakerInfo = null;
+                    if (tiedTeams.length > 1) {
+                        const result = applyWildcardTiebreaker(tiedTeams, stats);
+                        rankedTeams = result.ranked;
                         tiebreakerInfo = result.tiebreaker;
                     } else {
-                        rankedCandidates = candidates;
+                        rankedTeams = tiedTeams;
                     }
                     
                     const spotsRemaining = 3 - wildCards.length;
-                    const teamsToAdd = rankedCandidates.slice(0, spotsRemaining);
+                    const teamsToAdd = rankedTeams.slice(0, spotsRemaining);
                     
                     teamsToAdd.forEach((t, idx) => {
                         let qualification = 'Wild card';
                         
-                        if (idx === 0 && tiebreakerInfo) {
+                        if (idx === 0 && tiebreakerInfo && tiedTeams.length > 1) {
                             qualification = `Wild card (won tiebreaker: ${tiebreakerInfo})`;
-                        } else if (idx === 0 && candidates.length > 2 && !tiebreakerInfo) {
-                            qualification = `Wild card (won ${candidates.length}-team tiebreaker)`;
+                        } else if (idx === 0 && tiedTeams.length > 2 && !tiebreakerInfo) {
+                            qualification = `Wild card (won ${tiedTeams.length}-team tiebreaker)`;
                         }
                         
                         wildCards.push({
@@ -983,7 +987,7 @@
                         });
                     });
                     
-                    teamsToAdd.forEach(t => processed.add(t));
+                    currentIndex += tiedTeams.length;
                 }
                 
                 const playoffTeamNames = new Set([
