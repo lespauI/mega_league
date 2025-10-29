@@ -876,6 +876,77 @@
             }
         }
         
+        function getSeedingTiebreaker(team1, team2, stats) {
+            if (stats[team1].win_pct > stats[team2].win_pct) {
+                return `Better record (${stats[team1].W}-${stats[team1].L} vs ${stats[team2].W}-${stats[team2].L})`;
+            }
+            
+            const h2h1 = stats[team1].head_to_head[team2] || { W: 0, L: 0, T: 0 };
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return `Head-to-head (${h2h1.W}-${h2h1.L})`;
+                if (h2h2Pct > h2h1Pct) return null;
+            }
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {
+                return `Conference record (${stats[team1].conference_W}-${stats[team1].conference_L} vs ${stats[team2].conference_W}-${stats[team2].conference_L})`;
+            }
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {
+                return null;
+            }
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                
+                const common1Pct = common1W / (common1W + common1L) || 0;
+                const common2Pct = common2W / (common2W + common2L) || 0;
+                
+                if (common1Pct > common2Pct) {
+                    return `Common games (${common1W}-${common1L} vs ${common2W}-${common2L})`;
+                }
+                if (common2Pct > common1Pct) {
+                    return null;
+                }
+            }
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {
+                return `Strength of victory (${stats[team1].strength_of_victory.toFixed(3)} vs ${stats[team2].strength_of_victory.toFixed(3)})`;
+            }
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {
+                return null;
+            }
+            
+            if (stats[team1].strength_of_schedule > stats[team2].strength_of_schedule) {
+                return `Strength of schedule (${stats[team1].strength_of_schedule.toFixed(3)} vs ${stats[team2].strength_of_schedule.toFixed(3)})`;
+            }
+            if (stats[team2].strength_of_schedule > stats[team1].strength_of_schedule) {
+                return null;
+            }
+            
+            const confNet1 = stats[team1].conference_points_for - stats[team1].conference_points_against;
+            const confNet2 = stats[team2].conference_points_for - stats[team2].conference_points_against;
+            if (confNet1 > confNet2) {
+                return `Conference net points (+${confNet1} vs +${confNet2})`;
+            }
+            if (confNet2 > confNet1) {
+                return null;
+            }
+            
+            const net1 = stats[team1].points_for - stats[team1].points_against;
+            const net2 = stats[team2].points_for - stats[team2].points_against;
+            if (net1 > net2) {
+                return `Net points (+${net1} vs +${net2})`;
+            }
+            
+            return null;
+        }
+        
         function determinePlayoffSeeding(stats) {
             const results = { AFC: [], NFC: [] };
             const eliminated = { AFC: [], NFC: [] };
@@ -987,7 +1058,7 @@
                         });
                     });
                     
-                    currentIndex += tiedTeams.length;
+                    currentIndex += teamsToAdd.length;
                 }
                 
                 const playoffTeamNames = new Set([
@@ -1047,6 +1118,17 @@
                     ...divisionWinners.slice(0, 4),
                     ...wildCards
                 ];
+                
+                for (let i = 0; i < results[conf].length; i++) {
+                    if (i < results[conf].length - 1) {
+                        const currentSeed = results[conf][i];
+                        const nextSeed = results[conf][i + 1];
+                        const reason = getSeedingTiebreaker(currentSeed.team, nextSeed.team, stats);
+                        if (reason) {
+                            currentSeed.seedingReason = reason;
+                        }
+                    }
+                }
             });
             
             return { playoffs: results, eliminated };
@@ -1073,6 +1155,12 @@
                     
                     const seedDiv = document.createElement('div');
                     seedDiv.className = `seed-team ${seedClass}`;
+                    
+                    let seedingReasonHtml = '';
+                    if (seed.seedingReason) {
+                        seedingReasonHtml = `<div class="tiebreaker-info" style="margin-top: 8px;">🏆 Seed ${seedNum}: ${seed.seedingReason}</div>`;
+                    }
+                    
                     seedDiv.innerHTML = `
                         <div class="seed-header">
                             <span class="seed-badge">${seedLabel}</span>
@@ -1086,6 +1174,7 @@
                             Div: ${seed.divRecord} | Conf: ${seed.confRecord}
                         </div>
                         <div class="qualification-info">✓ ${seed.qualification || 'Qualified'}</div>
+                        ${seedingReasonHtml}
                     `;
                     container.appendChild(seedDiv);
                 });
