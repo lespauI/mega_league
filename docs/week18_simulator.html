@@ -1003,7 +1003,41 @@
                     });
                 }
                 
-                divisionWinners.sort((a, b) => stats[b.team].win_pct - stats[a.team].win_pct);
+                divisionWinners.sort((a, b) => {
+                    if (stats[b.team].win_pct !== stats[a.team].win_pct) {
+                        return stats[b.team].win_pct - stats[a.team].win_pct;
+                    }
+                    
+                    const h2h_a = stats[a.team].head_to_head[b.team] || { W: 0, L: 0, T: 0 };
+                    const h2hTotal = h2h_a.W + h2h_a.L + h2h_a.T;
+                    if (h2hTotal > 0) {
+                        const h2h_a_pct = (h2h_a.W + 0.5 * h2h_a.T) / h2hTotal;
+                        if (h2h_a_pct > 0.5) return -1;
+                        if (h2h_a_pct < 0.5) return 1;
+                    }
+                    
+                    if (stats[a.team].conference_pct !== stats[b.team].conference_pct) {
+                        return stats[b.team].conference_pct - stats[a.team].conference_pct;
+                    }
+                    
+                    if (stats[a.team].strength_of_victory !== stats[b.team].strength_of_victory) {
+                        return stats[b.team].strength_of_victory - stats[a.team].strength_of_victory;
+                    }
+                    
+                    if (stats[a.team].strength_of_schedule !== stats[b.team].strength_of_schedule) {
+                        return stats[b.team].strength_of_schedule - stats[a.team].strength_of_schedule;
+                    }
+                    
+                    const confNet_a = stats[a.team].conference_points_for - stats[a.team].conference_points_against;
+                    const confNet_b = stats[b.team].conference_points_for - stats[b.team].conference_points_against;
+                    if (confNet_a !== confNet_b) {
+                        return confNet_b - confNet_a;
+                    }
+                    
+                    const net_a = stats[a.team].points_for - stats[a.team].points_against;
+                    const net_b = stats[b.team].points_for - stats[b.team].points_against;
+                    return net_b - net_a;
+                });
                 
                 const wildCardPool = confTeams.filter(t => !divisionWinners.find(dw => dw.team === t));
                 wildCardPool.sort((a, b) => {
