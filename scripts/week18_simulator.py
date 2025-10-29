@@ -1369,6 +1369,21 @@ def generate_html():
                         }}
                     }}
                 }}
+                
+                if (results[conf].length > 0 && eliminated[conf].length > 0) {{
+                    const lastSeed = results[conf][results[conf].length - 1];
+                    
+                    eliminated[conf].sort((a, b) => {{
+                        if (stats[b.team].win_pct !== stats[a.team].win_pct) return stats[b.team].win_pct - stats[a.team].win_pct;
+                        return stats[b.team].W - stats[a.team].W;
+                    }});
+                    
+                    const firstEliminated = eliminated[conf][0];
+                    const reason = getSeedingTiebreaker(lastSeed.team, firstEliminated.team, stats);
+                    if (reason) {{
+                        lastSeed.seedingReason = reason;
+                    }}
+                }}
             }});
             
             return {{ playoffs: results, eliminated }};
