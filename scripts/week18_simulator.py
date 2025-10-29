@@ -693,8 +693,8 @@ def generate_html():
             if (home_score > away_score) {{
                 stats[home].defeated_opponents.push(away);
                 
-                if (!stats[home].head_to_head[away]) stats[home].head_to_head[away] = {{ W: 0, L: 0 }};
-                if (!stats[away].head_to_head[home]) stats[away].head_to_head[home] = {{ W: 0, L: 0 }};
+                if (!stats[home].head_to_head[away]) stats[home].head_to_head[away] = {{ W: 0, L: 0, T: 0 }};
+                if (!stats[away].head_to_head[home]) stats[away].head_to_head[home] = {{ W: 0, L: 0, T: 0 }};
                 stats[home].head_to_head[away].W++;
                 stats[away].head_to_head[home].L++;
                 
@@ -714,8 +714,8 @@ def generate_html():
             }} else if (away_score > home_score) {{
                 stats[away].defeated_opponents.push(home);
                 
-                if (!stats[home].head_to_head[away]) stats[home].head_to_head[away] = {{ W: 0, L: 0 }};
-                if (!stats[away].head_to_head[home]) stats[away].head_to_head[home] = {{ W: 0, L: 0 }};
+                if (!stats[home].head_to_head[away]) stats[home].head_to_head[away] = {{ W: 0, L: 0, T: 0 }};
+                if (!stats[away].head_to_head[home]) stats[away].head_to_head[home] = {{ W: 0, L: 0, T: 0 }};
                 stats[away].head_to_head[home].W++;
                 stats[home].head_to_head[away].L++;
                 
@@ -1083,13 +1083,15 @@ def generate_html():
                 return `Better record (${{stats[team1].W}}-${{stats[team1].L}} vs ${{stats[team2].W}}-${{stats[team2].L}})`;
             }}
             
-            const h2h1 = stats[team1].head_to_head[team2] || {{ W: 0, L: 0, T: 0 }};
-            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
-            if (h2hTotal > 0) {{
-                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
-                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
-                if (h2h1Pct > h2h2Pct) return `Head-to-head (${{h2h1.W}}-${{h2h1.L}})`;
-                if (h2h2Pct > h2h1Pct) return null;
+            const h2h1 = stats[team1].head_to_head[team2];
+            if (h2h1) {{
+                const h2hTotal = h2h1.W + h2h1.L + (h2h1.T || 0);
+                if (h2hTotal > 0) {{
+                    const h2h1Pct = (h2h1.W + 0.5 * (h2h1.T || 0)) / h2hTotal;
+                    const h2h2Pct = (h2h1.L + 0.5 * (h2h1.T || 0)) / h2hTotal;
+                    if (h2h1Pct > h2h2Pct) return `Head-to-head (${{h2h1.W}}-${{h2h1.L}})`;
+                    if (h2h2Pct > h2h1Pct) return null;
+                }}
             }}
             
             if (stats[team1].conference_pct > stats[team2].conference_pct) {{
@@ -1210,12 +1212,14 @@ def generate_html():
                         return stats[b.team].win_pct - stats[a.team].win_pct;
                     }}
                     
-                    const h2h_a = stats[a.team].head_to_head[b.team] || {{ W: 0, L: 0, T: 0 }};
-                    const h2hTotal = h2h_a.W + h2h_a.L + h2h_a.T;
-                    if (h2hTotal > 0) {{
-                        const h2h_a_pct = (h2h_a.W + 0.5 * h2h_a.T) / h2hTotal;
-                        if (h2h_a_pct > 0.5) return -1;
-                        if (h2h_a_pct < 0.5) return 1;
+                    const h2h_a = stats[a.team].head_to_head[b.team];
+                    if (h2h_a) {{
+                        const h2hTotal = h2h_a.W + h2h_a.L + (h2h_a.T || 0);
+                        if (h2hTotal > 0) {{
+                            const h2h_a_pct = (h2h_a.W + 0.5 * (h2h_a.T || 0)) / h2hTotal;
+                            if (h2h_a_pct > 0.5) return -1;
+                            if (h2h_a_pct < 0.5) return 1;
+                        }}
                     }}
                     
                     if (stats[a.team].conference_pct !== stats[b.team].conference_pct) {{
