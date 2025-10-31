@@ -1072,7 +1072,8 @@ def generate_html():
             
             if (tiedTeams.length === 2) {{
                 const result = breakTwoTeamWildcardTie(tiedTeams, stats);
-                return {{ ranked: [result.winner], tiebreaker: result.tiebreaker }};
+                const loser = tiedTeams.find(t => t !== result.winner);
+                return {{ ranked: [result.winner, loser], tiebreaker: result.tiebreaker }};
             }} else {{
                 return breakMultiTeamWildcardTie(tiedTeams, stats);
             }}
