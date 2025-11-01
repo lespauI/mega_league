@@ -1246,27 +1246,22 @@ def generate_html():
                     return net_b - net_a;
                 }});
                 
-                const wildCardPool = confTeams.filter(t => !divisionWinners.find(dw => dw.team === t));
+                let wildCardPool = confTeams.filter(t => !divisionWinners.find(dw => dw.team === t));
                 wildCardPool.sort((a, b) => {{
                     if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
                     return stats[b].W - stats[a].W;
                 }});
                 
                 const wildCards = [];
-                let currentIndex = 0;
+                const qualifiedTeams = new Set(divisionWinners.map(dw => dw.team));
                 
-                while (wildCards.length < 3 && currentIndex < wildCardPool.length) {{
-                    const currentTeam = wildCardPool[currentIndex];
+                while (wildCards.length < 3 && wildCardPool.length > 0) {{
+                    const currentTeam = wildCardPool[0];
                     const currentWinPct = stats[currentTeam].win_pct;
                     
-                    const tiedTeams = [];
-                    for (let i = currentIndex; i < wildCardPool.length; i++) {{
-                        if (Math.abs(stats[wildCardPool[i]].win_pct - currentWinPct) < 0.001) {{
-                            tiedTeams.push(wildCardPool[i]);
-                        }} else {{
-                            break;
-                        }}
-                    }}
+                    const tiedTeams = wildCardPool.filter(t => 
+                        Math.abs(stats[t].win_pct - currentWinPct) < 0.001
+                    );
                     
                     let rankedTeams, tiebreakerInfo = null;
                     if (tiedTeams.length > 1) {{
@@ -1297,9 +1292,11 @@ def generate_html():
                             divRecord: `${{stats[t].division_W}}-${{stats[t].division_L}}`,
                             confRecord: `${{stats[t].conference_W}}-${{stats[t].conference_L}}`
                         }});
+                        
+                        qualifiedTeams.add(t);
                     }});
                     
-                    currentIndex += teamsToAdd.length;
+                    wildCardPool = wildCardPool.filter(t => !qualifiedTeams.has(t));
                 }}
                 
                 const playoffTeamNames = new Set([
