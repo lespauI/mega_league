@@ -4,7 +4,7 @@ Verify the generated Draft Class Analytics HTML against CSV data.
 
 Checks:
 - Recompute rookies for the given year from MEGA_players.csv
-- Compute KPIs (total, avg OVR, dev counts, elite count and %)
+- Compute KPIs (total, avg OVR, hidden count and %)
 - Parse HTML and assert KPI numbers match
 - Assert no unresolved placeholders like __PLACEHOLDER__ remain
 - Assert title/header includes the correct year
@@ -89,18 +89,16 @@ def compute_kpis(rows: list[dict]) -> dict:
     xf = dev_counts.get("3", 0)
     ss = dev_counts.get("2", 0)
     star = dev_counts.get("1", 0)
-    elite = xf + ss
+    hidden = xf + ss + star
     # mirror generator behavior (handles total==0 safely)
     denom = total or 1
-    elite_pct = round(100.0 * elite / denom, 1)
+    hidden_pct = round(100.0 * hidden / denom, 1)
     return {
         "total": total,
         "avg_ovr": avg_ovr,
-        "xf": xf,
-        "ss": ss,
-        "star": star,
-        "elite": elite,
-        "elite_pct": elite_pct,
+        "hidden": hidden,
+        "normal": dev_counts.get("0", 0),
+        "hidden_pct": hidden_pct,
     }
 
 
@@ -114,24 +112,21 @@ def parse_html_kpis(html_text: str) -> dict:
     k = {}
     k["total"] = extract("Total rookies")
     k["avg_ovr"] = extract("Avg overall")
-    k["xf"] = extract("X-Factors")
-    k["ss"] = extract("Superstars")
-    k["star"] = extract("Stars")
+    k["hidden"] = extract("Hidden")
+    k["normal"] = extract("Normal")
 
-    # Elites share: value is "<elite> (<pct>%)"
-    m = re.search(r"<b>Elites share</b><span>([^<]+)</span>", html_text)
+    # Hidden share: value is "<hidden> (<pct>%)"
+    m = re.search(r"<b>Hidden share</b><span>([^<]+)</span>", html_text)
     if m:
         piece = m.group(1).strip()  # e.g., "17 (23.6%)"
         m2 = re.match(r"(\d+)\s*\(([-+]?[0-9]*\.?[0-9]+)%\)", piece)
         if m2:
-            k["elite"] = m2.group(1)
-            k["elite_pct"] = m2.group(2)
+            k["hidden"] = m2.group(1)  # count already captured above; tolerate overwrite
+            k["hidden_pct"] = m2.group(2)
         else:
-            k["elite"] = None
-            k["elite_pct"] = None
+            k["hidden_pct"] = None
     else:
-        k["elite"] = None
-        k["elite_pct"] = None
+        k["hidden_pct"] = None
     return k
 
 
@@ -193,15 +188,13 @@ def main():
 
     cmp_int("total", kpis["total"])  # Total rookies
     cmp_float_str("avg_ovr", kpis["avg_ovr"])  # Avg overall
-    cmp_int("xf", kpis["xf"])  # X-Factors
-    cmp_int("ss", kpis["ss"])  # Superstars
-    cmp_int("star", kpis["star"])  # Stars
-    cmp_int("elite", kpis["elite"])  # Elites count
+    cmp_int("hidden", kpis["hidden"])  # Hidden
+    cmp_int("normal", kpis["normal"])  # Normal
 
-    # Elite pct as string with 1 decimal, compare string form to avoid locale/format surprises
-    elite_pct_str = f"{kpis['elite_pct']}"
-    if html_kpis.get("elite_pct") != elite_pct_str:
-        mismatches.append(f"elite_pct: expected {elite_pct_str}, found {html_kpis.get('elite_pct')}")
+    # Hidden pct as string with 1 decimal, compare as string
+    hidden_pct_str = f"{kpis['hidden_pct']}"
+    if html_kpis.get("hidden_pct") != hidden_pct_str:
+        mismatches.append(f"hidden_pct: expected {hidden_pct_str}, found {html_kpis.get('hidden_pct')}")
 
     if mismatches:
         print("verify: FAILED — mismatches detected:", file=sys.stderr)
@@ -211,10 +204,9 @@ def main():
 
     # Success
     print(
-        f"verify: OK — year {year}, total {kpis['total']}, elites {kpis['elite']} ({kpis['elite_pct']}%), avg {kpis['avg_ovr']}"
+        f"verify: OK — year {year}, total {kpis['total']}, hidden {kpis['hidden']} ({kpis['hidden_pct']}%), avg {kpis['avg_ovr']}"
     )
 
 
 if __name__ == "__main__":
     main()
-

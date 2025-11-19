@@ -243,8 +243,14 @@ Deliverables
 Verification
 - Open `README.md` and confirm section exists with accurate commands; optionally run commands to validate.
 
-### [ ] Step: hide elits
+### [x] Step: hide elits
+<!-- chat-id: cbcb6185-48a5-44da-b0bc-cc40e38000fc -->
 
 We need to do a refactoring to hide the real dev trait, if its 3 2 or 1 we show its as a Hiden, if its normal we showing as a normal. 
 
 Update representation and documentations
+
+### [ ] Step: Elites Spotlight — X-Factors and Superstars
+
+we need to show the pick where they picked like 
+Cardinals Clyde Stackhouse HB · Cardinals OVR 85 round 1 pick 8 and etc

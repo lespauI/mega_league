@@ -219,13 +219,13 @@ python3 scripts/top_pick_race_analysis.py
 
 - Output
   - Generates `docs/draft_class_<YEAR>.html` (e.g., `docs/draft_class_2026.html`) with:
-    - KPIs: Total rookies, Avg overall, X-Factors, Superstars, Stars, Elites share
-    - Elites Spotlight (X-Factor + Superstar cards)
-    - Team draft quality table (Avg OVR, Best OVR, dev distribution)
-    - Most hiddens leaderboard (XF+SS+Star)
-    - Position strength table and elite-heavy positions list
+    - KPIs: Total rookies, Avg overall, Hidden, Normal, Hidden share
+    - Hidden Spotlight (cards list; dev tiers masked as "Hidden")
+    - Team draft quality table (Avg OVR, Best OVR, Hidden/Normal distribution)
+    - Most hiddens leaderboard (Hidden = dev 3/2/1)
+    - Position strength table and hidden-heavy positions list
   - Team logos appear when `MEGA_teams.csv` provides a resolvable `logoId`; renders fine without it.
-  - Dev trait mapping: `3 = X-Factor`, `2 = Superstar`, `1 = Star`, `0 = Normal`.
+  - Dev trait handling: raw data uses `3 = X-Factor`, `2 = Superstar`, `1 = Star`, `0 = Normal`; UI masks 3/2/1 as "Hidden" and shows 0 as "Normal".
 
 - Verification
   - Generate for 2026:
