@@ -890,6 +890,14 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
         except Exception:
             notes_html = ''
 
+        # Real pick evaluation section (always shown)
+        real_eval_html = (
+            "<div class=\"real-eval-block\">"
+            "  <div class=\"real-eval-title\">Оценка реального пика</div>"
+            f"  <div class=\"real-eval\">Оценка: <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
+            "</div>"
+        )
+
         cards.append(
             (
                 "<div class=\"r1-card\">"
@@ -900,6 +908,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
                 f"  <div class=\"attrs\">{attrs_html}</div>"
                 f"  <div class=\"traits\">{traits_html}</div>"
                 f"  {notes_html}"
+                f"  {real_eval_html}"
                 "</div>"
             )
         )
@@ -1200,6 +1209,10 @@ def generate_html(
     .mock-notes-block { margin-top:8px; }
     .mock-notes-title { cursor:default; color:#475569; font-weight:600; }
     .mock-notes { white-space: pre-wrap; color:#475569; font-size:12px; margin-top:6px; }
+    /* Real pick evaluation */
+    .real-eval-block { margin-top:8px; }
+    .real-eval-title { color:#475569; font-weight:600; }
+    .real-eval { color:#475569; font-size:12px; margin-top:6px; }
 
     /* Responsive tweaks */
     @media (max-width: 1100px) {
