@@ -118,7 +118,8 @@ Verification
 - Confirm output directory creation and script summary printed.
 - Check file exists: `test -s docs/draft_class_2026.html`.
 
-### [ ] Step: Rookie Filtering & Normalization
+### [x] Step: Rookie Filtering & Normalization
+<!-- chat-id: 0aa06abb-aed5-4c7c-96e7-321f886f5198 -->
 Task definition
 - Implement `gather_rookies(players, year)` to filter `rookieYear == year` and normalize fields: `name`, `team` (default `FA`), `position` (default `?`), `ovr` (prefer `playerBestOvr` then `playerSchemeOvr`, default 0), `dev` (map unknown to 0).
 - Name derivation order: `fullName` > `cleanName` > `firstName + lastName`.

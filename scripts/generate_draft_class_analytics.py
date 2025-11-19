@@ -77,22 +77,53 @@ def build_team_logo_map(teams_rows: list[dict]) -> dict:
 
 
 def gather_rookies(players: list[dict], year: int) -> list[dict]:
+    """Filter rookies by year and normalize core fields for analytics.
+
+    Normalization rules:
+    - name: fullName > cleanName > firstName + lastName; trimmed
+    - team: trimmed; default 'FA' when missing/blank
+    - position: trimmed; default '?' when missing/blank
+    - ovr: prefer playerBestOvr, then playerSchemeOvr; default 0
+    - dev: keep as string in {'3','2','1','0'}; map unknowns to '0'
+    """
     out = []
     for r in players:
-        if str(r.get('rookieYear','')) != str(year):
+        if str(r.get('rookieYear', '')).strip() != str(year):
             continue
+
+        # Overall rating with fallback
         ovr = safe_int(r.get('playerBestOvr'), None)
         if ovr is None:
             ovr = safe_int(r.get('playerSchemeOvr'), 0)
-        dev = str(r.get('devTrait','0'))
+        if ovr is None:
+            ovr = 0
+
+        # Dev trait mapping (unknown -> '0')
+        dev_raw = r.get('devTrait', '0')
+        dev = str(dev_raw).strip() if dev_raw is not None else '0'
+        if dev not in DEV_LABELS:
+            dev = '0'
+
+        # Name derivation and trimming
+        fn = (r.get('fullName') or '').strip()
+        cn = (r.get('cleanName') or '').strip()
+        first = (r.get('firstName') or '').strip()
+        last = (r.get('lastName') or '').strip()
+        name = fn or cn or (f"{first} {last}".strip())
+
+        # Team and position normalization
+        team = (r.get('team') or '').strip() or 'FA'
+        pos = (r.get('position') or '').strip() or '?'
+
         out.append({
             'id': r.get('id'),
-            'name': r.get('fullName') or r.get('cleanName') or (r.get('firstName','').strip() + ' ' + r.get('lastName','').strip()).strip(),
-            'team': r.get('team') or 'FA',
-            'position': r.get('position') or '?',
-            'ovr': ovr or 0,
-            'dev': dev if dev in DEV_LABELS else '0',
+            'name': name,
+            'team': team,
+            'position': pos,
+            'ovr': int(ovr),
+            'dev': dev,
         })
+    # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
     return out
 
