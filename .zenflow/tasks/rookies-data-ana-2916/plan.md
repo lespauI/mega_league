@@ -100,7 +100,8 @@ Task instructions
 
 "Step:" prefix is important, do not omit it!
 
-### [ ] Step: Scaffold deterministic fixture generator
+### [x] Step: Scaffold deterministic fixture generator
+<!-- chat-id: cb88ec18-2dfd-4895-b19e-075c0a5534f4 -->
 Task definition
 - Add `scripts/fixtures/generate_tiny_draft.py` to produce a tiny, reproducible rookies CSV covering all dev tiers (3,2,1,0), multiple teams, positions, and first 3–4 rounds.
 
