@@ -263,7 +263,15 @@ def badge_for_dev(dev: str) -> str:
 
 def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: dict, *, title_suffix: str | None = None, title_override: str | None = None) -> str:
     elites = [r for r in rows if r['dev'] in ('3','2')]
-    elites.sort(key=lambda r: (-int(r['dev']), -int(r['ovr']), r['name']))
+    # Order cards by draft pick: round asc, pick asc; missing picks last
+    def elite_sort_key(r: dict):
+        rd = r.get('draft_round')
+        pk = r.get('draft_pick')
+        missing = 0 if (rd is not None and pk is not None) else 1
+        rdv = int(rd) if rd is not None else 999
+        pkv = int(pk) if pk is not None else 999
+        return (missing, rdv, pkv, -int(r['ovr']), r['name'])
+    elites.sort(key=elite_sort_key)
 
     def logo_img(team: str) -> str:
         # Try exact then case-insensitive lookup
