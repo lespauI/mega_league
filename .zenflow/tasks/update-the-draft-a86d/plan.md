@@ -164,7 +164,7 @@ Create HTML validator for Round 1 and intro blocks.
 - Verification:
   - Run: `python3 scripts/verify_draft_round1_recap.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html` and expect zero errors (non-zero exit on failure).
 
-### [ ] Step: Smoke Script Update
+### [x] Step: Smoke Script Update
 <!-- chat-id: 295cea33-30d8-4c5c-bf3e-6363d786474b -->
 Extend smoke script to include new verification.
 
