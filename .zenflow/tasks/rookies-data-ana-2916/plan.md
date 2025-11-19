@@ -244,3 +244,20 @@ Verification
 Remove Below-target bage
 
 change Elites share to show all destribitun on one scale XF red color, SS gold collor, S silver, normal as bronze
+
+### [x] Step: Change card
+<!-- chat-id: 3f7c849b-3382-44c0-a784-b1b1281c95a8 -->
+
+Right now we have
+
+Saints_logo OVR 75 1.2
+Emmett Newby
+Superstar
+QB · Wyoming
+
+i want to have 
+
+Saints_logo OVR 75 1.2
+Emmett Newby, QB (just text, not bage)
+Superstar (bage), 22 y/o (text)
+ · Wyoming

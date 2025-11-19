@@ -148,6 +148,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
     - ovr: prefer playerBestOvr, then playerSchemeOvr; default 0
     - dev: keep as string in {'3','2','1','0'}; map unknowns to '0'
     - draftRound/draftPick: parsed to ints when available (used in Elites Spotlight)
+    - age: parsed to int when available; used on elite cards
     - college: if present, used in the meta line instead of current team
     """
     out = []
@@ -190,6 +191,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
             'draft_round': safe_int(r.get('draftRound'), None),
             'draft_pick': safe_int(r.get('draftPick'), None),
             'college': college,
+            'age': safe_int(r.get('age'), None),
         })
     # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
@@ -393,14 +395,16 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         pick_badge = f"<span class=\"pick-badge\">{int(rd)}.{int(pk)}</span>" if (rd is not None and pk is not None) else ""
         ovr_badge = f"<span class=\"ovr-badge\">OVR {int(r['ovr'])}</span>"
         school = (r.get('college') or '').strip() or r['team']
+        age = r.get('age')
+        age_txt = f", {int(age)} y/o" if isinstance(age, int) else ""
 
         elite_cards.append(
             (
                 '<div class="player">'
                 f"<div class=\"hdr\">{logo_img(r['team'])}<div class=\"tags\">{ovr_badge}{pick_badge}</div></div>"
-                f"<div class=\"nm\">{html.escape(r['name'])}</div>"
-                f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
-                f"<div class=\"meta\">{pos_chip(r['position'])}<span class=\"dot\">·</span>{html.escape(school)}</div>"
+                f"<div class=\"nm\">{html.escape(r['name'])}, {html.escape(str(r['position']))}</div>"
+                f"<div class=\"dev\">{badge_for_dev(r['dev'])}{age_txt}</div>"
+                f"<div class=\"meta\"><span class=\"dot\">·</span>{html.escape(school)}</div>"
                 '</div>'
             )
         )
