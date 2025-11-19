@@ -219,18 +219,28 @@ python3 scripts/top_pick_race_analysis.py
 
 - Output
   - Generates `docs/draft_class_<YEAR>.html` (e.g., `docs/draft_class_2026.html`) with:
-    - KPIs: Total rookies, Avg OVR, Hidden, Normal, Hidden share
-    - Hidden Spotlight (dev 3/2 only, masked as "Hidden"), each card now shows draft round and pick appended to OVR (e.g., `OVR 85 round 1 pick 8`)
-    - Team draft quality table (Avg OVR, Best OVR, Hidden/Normal distribution)
-    - Round Hidden distribution graphic: by round and team, how many Hidden picks (dev > 0)
-    - Most Hiddens leaderboard (Hidden = dev 3/2/1)
-    - Position strength table and Hidden-heavy positions list
+    - KPIs: Total rookies, Avg OVR, XF%, SS%, Star%, Normal%; plus an “Elites share” bar where Elites = XF + SS
+    - Grading badges for XF% (target ≥ 10%) and SS% (target ≥ 15%): labels “On-target”, “Near-target”, or “Below-target” with classes `grade-on`, `grade-near`, `grade-below`
+    - Elites Spotlight (title exactly: “Elites Spotlight”) featuring only X‑Factor and Superstar players; Stars are excluded. Player cards include visible dev badges and show draft round and pick appended to OVR (e.g., `OVR 85 round 1 pick 8`)
+    - Team draft quality table (Avg OVR, Best OVR, and dev distribution columns XF/SS/Star/Normal)
+    - Position strength table with dev distribution columns XF/SS/Star/Normal
+    - Dual rounds view:
+      - “Hit = XF/SS/Star” (non‑Normal) by round and team
+      - “Hit = Elites (XF/SS)” by round and team
+      - Notes/footers clarify definitions and that displays may be limited to first 10 rounds
+    - Most elites leaderboard (title: “Most elites (XF+SS) — by team”) where elites = XF + SS
   - Team logos appear when `MEGA_teams.csv` provides a resolvable `logoId`; renders fine without it.
-  - Dev trait handling: raw data uses `3 = X-Factor`, `2 = Superstar`, `1 = Star`, `0 = Normal`; UI masks 3/2/1 as "Hidden" and shows 0 as "Normal".
+  - Dev trait handling: raw data uses `3 = X‑Factor (XF)`, `2 = Superstar (SS)`, `1 = Star`, `0 = Normal`; UI renders explicit dev badges (no masking).
+
+- Visual badges and classes
+  - Rendering helper: badges appear as `<span class="dev-badge dev-<tier>">Label</span>`
+  - CSS classes used: `.dev-xf`, `.dev-ss`, `.dev-star`, `.dev-norm`
+  - Grading badges: `.grade`, `.grade-on`, `.grade-near`, `.grade-below`
 
 - Tables and Interactivity
   - All analytics tables have centered headers and cells
   - Click any column header to sort ascending/descending (client-side, no dependencies)
+  - Updated headers include the four dev columns: `XF`, `SS`, `Star`, `Normal`
 
 - Verification
   - Generate for 2026:
@@ -238,6 +248,14 @@ python3 scripts/top_pick_race_analysis.py
   - Quick checks:
     - `test -s docs/draft_class_2026.html`
     - `rg -n "Draft Class 2026 — Analytics Report" docs/draft_class_2026.html`
+    - `rg -n "Elites Spotlight" docs/draft_class_2026.html`
+    - `rg -n "class=\"dev-(xf|ss|star|norm)\"" docs/draft_class_2026.html`
+    - `rg -n "class=\"grade-(on|near|below)\"" docs/draft_class_2026.html`
+    - `rg -n "Most elites \(XF\+SS\) — by team" docs/draft_class_2026.html`
+    - `rg -n "Team.*\|.*XF.*\|.*SS.*\|.*Star.*\|.*Normal" docs/draft_class_2026.html`
+    - `rg -n "Position.*\|.*XF.*\|.*SS.*\|.*Star.*\|.*Normal" docs/draft_class_2026.html`
+    - `rg -n "Hit = XF/SS/Star" docs/draft_class_2026.html`
+    - `rg -n "Hit = Elites \(XF/SS\)" docs/draft_class_2026.html`
     - `! rg -n "__[A-Z_]+__" docs/draft_class_2026.html`
   - Sanity compare rookies count vs CSV:
     - `python3 - << 'PY'\nimport csv;rows=[r for r in csv.DictReader(open('MEGA_players.csv',newline='',encoding='utf-8')) if str(r.get('rookieYear'))=='2026'];print(len(rows))\nPY`
@@ -248,8 +266,9 @@ python3 scripts/top_pick_race_analysis.py
     - `bash scripts/smoke_generate_draft_2026.sh`
 
 Additional checks (optional):
-- Ensure Round Hidden section exists:
-  - `rg -n "Round Hidden" docs/draft_class_2026.html`
+- Ensure dual rounds sections exist:
+  - `rg -n "Hit = XF/SS/Star" docs/draft_class_2026.html`
+  - `rg -n "Hit = Elites \(XF/SS\)" docs/draft_class_2026.html`
 - Ensure sortable headers are present:
   - `rg -n "data-sort" docs/draft_class_2026.html`
 

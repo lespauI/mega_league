@@ -116,6 +116,7 @@ Verification
 - Run: `python3 scripts/fixtures/generate_tiny_draft.py` and confirm `output/tiny_players.csv` exists and contains at least one row for each dev tier 3/2/1/0.
 
 ### [ ] Step: Unmask dev badges and spotlight
+<!-- chat-id: 7aceaebd-b2f6-46a5-8028-c8ed229788bc -->
 Task definition
 - Replace masking with explicit dev rendering across the page. Update spotlight to “Elites Spotlight” and include only X‑Factor and Superstar players. Add visible badges on cards.
 
@@ -132,6 +133,7 @@ Verification
 - Check: grep for `Elites Spotlight`, and for classes `dev-xf|dev-ss|dev-star|dev-norm`. Ensure no “Hidden” remains.
 
 ### [ ] Step: KPI overhaul with grading and elites share
+<!-- chat-id: cd4fe048-89bf-45ac-941e-31103afa89d3 -->
 Task definition
 - Replace Hidden/Normal KPIs with XF/SS/Star/Normal KPIs. Compute percentages and add “Elites share” ((XF+SS)/Total) progress bar. Add grading badges for XF and SS vs targets (XF ≥10%, SS ≥15%).
 
@@ -148,6 +150,7 @@ Verification
 - Grep for `class="grade-(on|near|below)"` and for labels `On-target|Near-target|Below-target`.
 
 ### [ ] Step: Update team and positions tables
+<!-- chat-id: 219151a2-1941-49dc-977d-57b502a9d3c3 -->
 Task definition
 - Extend tables to include four dev columns (XF, SS, Star, Normal). Keep sortable behavior. Rename “Most hiddens” to “Most elites (XF+SS) — by team”.
 
@@ -164,6 +167,7 @@ Verification
 - Confirm the elites table title and that counts equal XF+SS per team.
 
 ### [ ] Step: Add dual rounds tables (non-Normal and elites-only)
+<!-- chat-id: 863e659f-80ce-40db-8e0a-fe967e05c207 -->
 Task definition
 - Keep existing per-round hits table where hit = non‑Normal (3/2/1). Add a second table where hit = elites only (3/2). Limit display to first 10 rounds if needed. Add clarifying subtitles/footnotes.
 
@@ -178,6 +182,7 @@ Verification
 - Visually confirm two tables and bar visualizations in the HTML.
 
 ### [ ] Step: Update verification script to new checks
+<!-- chat-id: 9141bd4e-3566-45e7-99d8-2943f8a6d6fb -->
 Task definition
 - Modify `scripts/verify_draft_class_analytics.py` to validate new KPIs, elites share, grading badges, spotlight title, updated table headers, and presence of two rounds tables. Ensure non-zero exit on failure.
 
@@ -191,7 +196,8 @@ Verification
 - Run: `python3 scripts/verify_draft_class_analytics.py 2026 --html docs/draft_class_2026_test.html` and expect success.
 - Intentionally alter HTML (e.g., remove a header) and ensure the verifier exits non-zero.
 
-### [ ] Step: Refresh smoke script and messaging
+### [x] Step: Refresh smoke script and messaging
+<!-- chat-id: 347c640e-fc80-400b-be34-8514dfa99721 -->
 Task definition
 - Adjust `scripts/smoke_generate_draft_2026.sh` to run the generator and updated verifier; tweak echo messages to match new terminology (Elites, XF/SS/Star/Normal).
 
@@ -204,7 +210,8 @@ Deliverable
 Verification
 - Run: `bash scripts/smoke_generate_draft_2026.sh` and confirm success.
 
-### [ ] Step: Update README documentation
+### [x] Step: Update README documentation
+<!-- chat-id: c9f21e89-334e-49ed-b486-e3e1d8db20c5 -->
 Task definition
 - Update the Draft Class Analytics section to remove “Hidden” terminology, describe explicit dev tiers, new KPIs, elites share, table changes, and dual rounds view.
 
@@ -218,6 +225,7 @@ Verification
 - Manual review; ensure commands and section names match the generator and verifier output.
 
 ### [ ] Step: Cleanup and consistency pass
+<!-- chat-id: 027912e5-53e9-4d8c-9c3b-564cdfd43083 -->
 Task definition
 - Remove any lingering “Hidden” references in code/templates; ensure classes and labels are consistent. Run a quick lint/format if available.
 
