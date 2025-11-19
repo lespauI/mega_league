@@ -824,53 +824,53 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
             trait_lines.append(f"<span class=\"trait\">{esc(t)}</span>")
         traits_html = ''.join(trait_lines)
 
-        # Analytics notes (expanded, no spoiler)
+        # Build projection deltas and analytics notes together inside one block
         notes_html = ''
-        try:
-            pick = e.get('pick')
-            player_norm = _normalize_player_name_for_match(e.get('name', ''))
-            notes_list = []
-            # Prefer player-specific notes when available; otherwise fall back to pick-based notes
-            if player_norm and player_norm in mock_by_player:
-                notes_list = list(mock_by_player.get(player_norm, []))
-            elif isinstance(pick, int) and pick in mock_by_pick:
-                notes_list = list(mock_by_pick.get(pick, []))
-            if notes_list:
-                joined = '\n\n'.join(notes_list)
-                notes_html = (
-                    "<div class=\"mock-notes-block\">"
-                    "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
-                    f"  <div class=\"mock-notes\">{esc(joined)}</div>"
-                    "</div>"
-                )
-        except Exception:
-            notes_html = ''
-
-        # Projection deltas: highlight differences between analytics projections and actual selection
         proj_html = ''
         try:
             pick = e.get('pick')
             actual_team = e.get('team')
             player_norm = _normalize_player_name_for_match(e.get('name', ''))
+
+            # Collect projection messages
             msgs = []
-            # Projected team for this player
             team_proj_player = team_by_player.get(player_norm)
             if team_proj_player and team_proj_player != actual_team:
                 msgs.append(f"Проекция команды: {esc(team_proj_player)} → выбран {esc(actual_team)}")
-            # Projected team for this pick
             if isinstance(pick, int) and pick in team_by_pick:
                 team_proj_pick = team_by_pick.get(pick)
                 if team_proj_pick and team_proj_pick != actual_team:
                     msgs.append(f"У прогноза на пик #{pick}: {esc(team_proj_pick)} → фактически {esc(actual_team)}")
-            # Projected player for this pick (show first variant if different)
             if isinstance(pick, int) and pick in player_by_pick:
                 projected_players = [p for p in player_by_pick.get(pick, []) if p]
                 if projected_players and player_norm not in projected_players:
                     msgs.append(f"Прогноз игрока на этот пик: {esc(projected_players[0])}")
             if msgs:
                 proj_html = "<div class=\"proj\">" + "<br/>".join(msgs) + "</div>"
+
+            # Gather analytics notes
+            notes_list = []
+            if player_norm and player_norm in mock_by_player:
+                notes_list = list(mock_by_player.get(player_norm, []))
+            elif isinstance(pick, int) and pick in mock_by_pick:
+                notes_list = list(mock_by_pick.get(pick, []))
+
+            # Render section only if we have projections or notes
+            if msgs or notes_list:
+                parts = []
+                if proj_html:
+                    parts.append(proj_html)
+                if notes_list:
+                    joined = '\n\n'.join(notes_list)
+                    parts.append(f"<div class=\\\"mock-notes\\\">{esc(joined)}</div>")
+                notes_html = (
+                    "<div class=\"mock-notes-block\">"
+                    "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
+                    + ''.join(parts) +
+                    "</div>"
+                )
         except Exception:
-            proj_html = ''
+            notes_html = ''
 
         cards.append(
             (
@@ -879,7 +879,6 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
                 f"  <div class=\"head\">{photo_html}<div class=\"pick\">Pick {esc(e.get('pick',''))}</div></div>"
                 f"  <div class=\"name\"><b>{esc(e['name'])}</b> <span class=\"pos\">{esc(e['position'])}</span> <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
                 f"  <div class=\"meta\">Team: {esc(e['team'])} &nbsp; • &nbsp; OVR {int(e.get('ovr',0))}</div>"
-                f"  {proj_html}"
                 f"  <div class=\"attrs\">{attrs_html}</div>"
                 f"  <div class=\"traits\">{traits_html}</div>"
                 f"  {notes_html}"
