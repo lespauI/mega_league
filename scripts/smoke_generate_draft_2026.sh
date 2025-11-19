@@ -7,12 +7,14 @@ YEAR=2026
 PLAYERS=${PLAYERS:-MEGA_players.csv}
 TEAMS=${TEAMS:-MEGA_teams.csv}
 OUT=${OUT:-docs/draft_class_${YEAR}.html}
+INTROS=${INTROS:-scripts/fixtures/section_intros_example.json}
 
-echo "[smoke] Generating Draft Class ${YEAR} analytics (Elites, XF/SS/Star/Normal)..." >&2
+echo "[smoke] Generating Draft Class ${YEAR} analytics (with section intros, Elites, XF/SS/Star/Normal)..." >&2
 python3 scripts/generate_draft_class_analytics.py \
   --year "${YEAR}" \
   --players "${PLAYERS}" \
   --teams "${TEAMS}" \
+  --section-intros "${INTROS}" \
   --out "${OUT}"
 
 echo "[smoke] Generated: ${OUT}" >&2
@@ -24,4 +26,10 @@ python3 scripts/verify_draft_class_analytics.py "${YEAR}" \
   --teams "${TEAMS}" \
   --html "${OUT}"
 
-echo "[smoke] OK — verification passed. HTML at ${OUT}" >&2
+echo "[smoke] Verifying Round 1 recap section and section-intro blocks..." >&2
+python3 scripts/verify_draft_round1_recap.py "${YEAR}" \
+  --players "${PLAYERS}" \
+  --teams "${TEAMS}" \
+  --html "${OUT}"
+
+echo "[smoke] OK — all verifications passed. HTML at ${OUT}" >&2
