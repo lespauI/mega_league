@@ -181,7 +181,7 @@ Verification
 - Grep titles: one includes `Hit = XF/SS/Star` and the other `Hit = Elites (XF/SS)`.
 - Visually confirm two tables and bar visualizations in the HTML.
 
-### [ ] Step: Update verification script to new checks
+### [x] Step: Update verification script to new checks
 <!-- chat-id: 9141bd4e-3566-45e7-99d8-2943f8a6d6fb -->
 Task definition
 - Modify `scripts/verify_draft_class_analytics.py` to validate new KPIs, elites share, grading badges, spotlight title, updated table headers, and presence of two rounds tables. Ensure non-zero exit on failure.

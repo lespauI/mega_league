@@ -114,44 +114,51 @@ def compute_kpis(rows: list[dict]) -> dict:
 
 
 def parse_html_kpis(html_text: str) -> dict:
-    """Extract KPI values from HTML.
+    """Extract KPI values from HTML (new layout, tolerant of nested spans)."""
+    def extract_first_number_after_label(label: str) -> str | None:
+        pat = rf"<div[^>]*class=\"kpi\"[^>]*>.*?<b>\s*{re.escape(label)}\s*</b>(?P<tail>.*?)</div>"
+        m = re.search(pat, html_text, re.IGNORECASE | re.DOTALL)
+        if not m:
+            return None
+        tail = m.group('tail')
+        m2 = re.search(r"(\d+)", tail)
+        return m2.group(1) if m2 else None
 
-    Looks for labels rendered as <b>Label</b><span>VALUE</span>.
-    Returns string values for robustness; caller compares appropriately.
-    """
-    def extract(label: str) -> str | None:
-        # tolerate whitespace variations
-        m = re.search(rf"<b>\s*{re.escape(label)}\s*</b>\s*<span>([^<]+)</span>", html_text)
-        return m.group(1).strip() if m else None
+    def extract_text_after_label(label: str) -> str | None:
+        pat = rf"<div[^>]*class=\"kpi\"[^>]*>.*?<b>\s*{re.escape(label)}\s*</b>(?P<tail>.*?)</div>"
+        m = re.search(pat, html_text, re.IGNORECASE | re.DOTALL)
+        if not m:
+            return None
+        tail = m.group('tail')
+        # first text-like number token (may include dot)
+        m2 = re.search(r"([-+]?[0-9]*\.?[0-9]+)", tail)
+        return m2.group(1) if m2 else None
 
     k: dict[str, str | None] = {}
-    k["total"] = extract("Total rookies")
-    k["avg_ovr"] = extract("Avg overall")
+    k["total"] = extract_first_number_after_label("Total rookies")
+    k["avg_ovr"] = extract_text_after_label("Avg overall")
     # New explicit KPIs (support both long and short labels)
-    k["xf"] = extract("X-Factors") or extract("XF")
-    k["ss"] = extract("Superstars") or extract("SS")
-    k["star"] = extract("Stars") or extract("Star")
-    k["norm"] = extract("Normal")  # optional in newer layout
+    k["xf"] = extract_first_number_after_label("X-Factors") or extract_first_number_after_label("XF")
+    k["ss"] = extract_first_number_after_label("Superstars") or extract_first_number_after_label("SS")
+    k["star"] = extract_first_number_after_label("Stars") or extract_first_number_after_label("Star")
+    k["norm"] = extract_first_number_after_label("Normal")  # optional in newer layout
 
     # Elites share: "<count> (<pct>%)" OR just "<pct>%"
-    m = re.search(r"<b>\s*Elites share\s*</b>\s*<span>([^<]+)</span>", html_text)
+    # Extract elites share from the same KPI block
+    share_tail_pat = r"<div[^>]*class=\"kpi\"[^>]*>.*?<b>\s*Elites share\s*</b>(?P<tail>.*?)</div>"
+    m = re.search(share_tail_pat, html_text, re.IGNORECASE | re.DOTALL)
+    k["elites"] = None
+    k["elites_pct"] = None
     if m:
-        piece = m.group(1).strip()
-        m2 = re.match(r"(\d+)\s*\(([-+]?[0-9]*\.?[0-9]+)%\)", piece)
+        tail = m.group('tail')
+        m2 = re.search(r"(\d+)\s*\(([-+]?[0-9]*\.?[0-9]+)%\)", tail)
         if m2:
             k["elites"] = m2.group(1)
             k["elites_pct"] = m2.group(2)
         else:
-            m3 = re.match(r"([-+]?[0-9]*\.?[0-9]+)%\s*$", piece)
+            m3 = re.search(r"([-+]?[0-9]*\.?[0-9]+)%", tail)
             if m3:
-                k["elites"] = None
                 k["elites_pct"] = m3.group(1)
-            else:
-                k["elites"] = None
-                k["elites_pct"] = None
-    else:
-        k["elites"] = None
-        k["elites_pct"] = None
     return k
 
 
@@ -299,12 +306,12 @@ def main():
 
     if is_new_layout:
         # Teams table: requires dev columns present in a thead that has 'Team'
-        teams_ok_new = thead_contains(r"<thead>.*?<th>\s*Team\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
+        teams_ok_new = thead_contains(r"<thead>.*?<th>\s*Team\s*</th>.*?</thead>", ["XF", "SS", "Star", "Normal"])
         teams_ok_legacy = thead_contains(r"<thead>.*?<th>\s*Team\s*</th>.*?</thead>", ["Non‑Normal", "Normal"])
         if not (teams_ok_new or teams_ok_legacy):
             mismatches.append("Teams table header missing expected columns (either dev columns or Non‑Normal/Normal)")
         # Positions table: requires dev columns present in a thead that has 'Pos' or 'Position'
-        pos_ok = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
+        pos_ok = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Normal"])
         if not pos_ok:
             mismatches.append("Positions table header missing dev columns XF/SS/Star/Norm")
     else:
@@ -313,7 +320,7 @@ def main():
         if not teams_ok_legacy:
             mismatches.append("Legacy teams table header missing Non‑Normal/Normal columns")
         # Positions header may already have dev columns in some legacy files — allow either form
-        pos_ok_new = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
+        pos_ok_new = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Normal"])
         pos_ok_legacy = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["Non‑Normal", "Normal"]) or thead_contains(r"<thead>.*?<th>\s*Position\s*</th>.*?</thead>", ["Non‑Normal", "Normal"])
         if not (pos_ok_new or pos_ok_legacy):
             mismatches.append("Positions table header missing expected columns (either dev columns or Non‑Normal/Normal)")
