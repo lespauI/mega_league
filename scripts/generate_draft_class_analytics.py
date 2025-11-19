@@ -846,7 +846,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
             msgs = []
             team_proj_player = team_by_player.get(player_norm)
             if team_proj_player and _norm_team(team_proj_player) != _norm_team(actual_team):
-                msgs.append(f"Проекция команды: {esc(team_proj_player)} → выбран {esc(actual_team)}")
+                msgs.append(f"Прогнозируемая команда: {esc(team_proj_player)} → выбран {esc(actual_team)}")
             if isinstance(pick, int) and pick in team_by_pick:
                 team_proj_pick = team_by_pick.get(pick)
                 if team_proj_pick and _norm_team(team_proj_pick) != _norm_team(actual_team):
