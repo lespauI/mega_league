@@ -502,6 +502,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .round-cell.high .hit { background:#22c55e; }
     .round-cell.zero .hit { background:#e5e7eb; }
     .round-cell .label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#334155; }
+    .np-badge { display:inline-block; padding:2px 8px; border-radius:999px; background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; font-size:11px; font-weight:600; }
 
     /* Sticky sub-nav */
     .subnav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: saturate(120%) blur(6px); border-bottom: 1px solid #eef2f7; padding: 8px 12px; display:flex; flex-wrap:wrap; gap: 8px; }
@@ -654,7 +655,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         for r in rounds:
             cell = per_team.get(r)
             if not cell:
-                cells.append("<td class='num muted'>—</td>")
+                cells.append("<td><span class='np-badge' title='No pick'>NP</span></td>")
                 continue
             hit = int(cell.get('hit', 0))
             total = int(cell.get('total', 0))
