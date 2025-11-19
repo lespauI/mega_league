@@ -101,6 +101,7 @@ Task instructions
 "Step:" prefix is important, do not omit it!
 
 ### [ ] Step: Wire Section Intros Support
+<!-- chat-id: 2bb29916-cd13-4ef5-bfb3-0890613ddce1 -->
 Implement optional, multi-line intro text blocks for key sections.
 
 - Definition:
@@ -117,6 +118,7 @@ Implement optional, multi-line intro text blocks for key sections.
   - Open `docs/draft_class_2026.html` and confirm `.section-intro` blocks exist in each targeted section.
 
 ### [ ] Step: Extend Rookie Data + Attr/Traits Mapping
+<!-- chat-id: 6de8b2bb-e2b0-4307-b461-97101b2a5751 -->
 Add data fields and mappings needed for Round 1 player cards.
 
 - Definition:
@@ -130,6 +132,7 @@ Add data fields and mappings needed for Round 1 player cards.
   - Quick run generation; inspect one rookie of QB/WR/CB in the Round 1 output later to ensure attributes/traits appear and missing keys don’t crash.
 
 ### [ ] Step: Build and Render Round 1 Recap
+<!-- chat-id: f905f5df-9c89-40ac-8899-3d39ca012c92 -->
 Append end-of-page recap with every first-round pick in order.
 
 - Definition:
@@ -145,6 +148,7 @@ Append end-of-page recap with every first-round pick in order.
   - Run generator and confirm a `Round 1` section exists with N cards (N≥1), sorted by pick, and images render when `portraitId` exists.
 
 ### [ ] Step: Add Verification Script
+<!-- chat-id: 2b72305e-5e46-460f-962e-c4acab184fbe -->
 Create HTML validator for Round 1 and intro blocks.
 
 - Definition:
@@ -160,7 +164,8 @@ Create HTML validator for Round 1 and intro blocks.
 - Verification:
   - Run: `python3 scripts/verify_draft_round1_recap.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html` and expect zero errors (non-zero exit on failure).
 
-### [ ] Step: Smoke Script Update
+### [x] Step: Smoke Script Update
+<!-- chat-id: 295cea33-30d8-4c5c-bf3e-6363d786474b -->
 Extend smoke script to include new verification.
 
 - Definition:
