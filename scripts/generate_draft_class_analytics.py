@@ -15,9 +15,11 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import csv
 import html
 import os
+import re
 import sys
 import statistics as st
 from collections import Counter
@@ -67,6 +69,40 @@ def read_csv(path: str) -> list[dict]:
     except Exception as e:
         print(f"error: failed to read CSV '{path}': {e}", file=sys.stderr)
         sys.exit(2)
+
+
+def read_section_intros(path: str | None) -> dict:
+    """Load optional section intros JSON mapping.
+
+    Expected keys (all optional): 'kpis', 'elites', 'team_quality', 'positions', 'round1'.
+    Values should be strings; lists will be joined by newlines. Other types are
+    coerced to strings. On any error, returns an empty mapping without exiting.
+    """
+    mapping: dict[str, str] = {}
+    if not path:
+        return mapping
+    try:
+        if not os.path.exists(path):
+            print(f"warn: section intros file not found: {path}", file=sys.stderr)
+            return mapping
+        with open(path, 'r', encoding='utf-8') as fh:
+            data = json.load(fh)
+        if not isinstance(data, dict):
+            print("warn: section intros JSON is not an object; ignoring", file=sys.stderr)
+            return mapping
+        for k in ('kpis', 'elites', 'team_quality', 'positions', 'round1'):
+            if k not in data:
+                continue
+            v = data.get(k)
+            if isinstance(v, list):
+                v = "\n".join(str(x) for x in v)
+            elif not isinstance(v, str):
+                v = str(v)
+            mapping[k] = v
+    except Exception as e:
+        print(f"warn: failed to read section intros: {e}", file=sys.stderr)
+        return {}
+    return mapping
 
 
 def warn_missing_columns(rows: list[dict], required: list[str], context: str) -> None:
@@ -190,12 +226,153 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
             'dev': dev,
             'draft_round': safe_int(r.get('draftRound'), None),
             'draft_pick': safe_int(r.get('draftPick'), None),
+            # Optional portrait identifier (used for Round 1 recap photos)
+            'portrait_id': (lambda v: (str(v) if v is not None else None))(safe_int(r.get('portraitId'), None)),
             'college': college,
             'age': safe_int(r.get('age'), None),
         })
     # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
     return out
+
+
+def _normalize_pos_for_mapping(pos: str) -> str:
+    """Normalize a raw position into a mapping class for attrs/traits.
+
+    Groups logical equivalents (e.g., LE/RE -> DE, LT/RT/LG/RG/C -> OL, FS/SS -> S).
+    """
+    p = (pos or '').strip().upper()
+    if not p:
+        return '?'
+    # Offense
+    if p in {'HB', 'RB'}:
+        return 'RB'
+    if p == 'FB':
+        return 'FB'
+    if p == 'WR':
+        return 'WR'
+    if p == 'TE':
+        return 'TE'
+    if p in {'LT', 'RT', 'LG', 'RG', 'C', 'OL', 'T', 'G'}:
+        return 'OL'
+    if p == 'QB':
+        return 'QB'
+    if p in {'K', 'P'}:
+        return p
+    # Defense
+    if p in {'LE', 'RE', 'DE'}:
+        return 'DE'
+    if p in {'DT'}:
+        return 'DT'
+    if p in {'MLB', 'LOLB', 'ROLB', 'OLB', 'LB'}:
+        return 'LB'
+    if p in {'FS', 'SS'}:
+        return 'S'
+    if p in {'CB'}:
+        return 'CB'
+    # Fallback
+    return p
+
+
+def get_attr_keys_for_pos(pos: str) -> list[str]:
+    """Return up to ~10 key rating fields to display for a given position.
+
+    Keys match columns in MEGA_players.csv. Missing columns/values should be
+    skipped by callers. Order expresses priority.
+    """
+    p = _normalize_pos_for_mapping(pos)
+    mapping = {
+        # QB passing, pressure, mobility, awareness
+        'QB': [
+            'throwAccShortRating', 'throwAccMidRating', 'throwAccDeepRating',
+            'throwPowerRating', 'throwUnderPressureRating', 'throwOnRunRating',
+            'playActionRating', 'awareRating', 'speedRating', 'breakSackRating',
+        ],
+        # RB/HB elusiveness + carrying/vision + receiving
+        'RB': [
+            'speedRating', 'accelRating', 'agilityRating',
+            'breakTackleRating', 'truckRating', 'jukeMoveRating', 'spinMoveRating',
+            'stiffArmRating', 'carryRating', 'catchRating', 'bCVRating',
+        ],
+        # FB blocking + strength + short-yardage
+        'FB': [
+            'runBlockRating', 'leadBlockRating', 'impactBlockRating',
+            'strengthRating', 'truckRating', 'catchRating',
+        ],
+        # WR receiving, route running, release, agility
+        'WR': [
+            'catchRating', 'cITRating', 'routeRunShortRating', 'routeRunMedRating',
+            'routeRunDeepRating', 'speedRating', 'releaseRating', 'agilityRating',
+            'changeOfDirectionRating',
+        ],
+        # TE balanced catching + blocking + strength
+        'TE': [
+            'catchRating', 'cITRating', 'runBlockRating', 'passBlockRating',
+            'speedRating', 'routeRunShortRating', 'routeRunMedRating',
+            'strengthRating', 'specCatchRating',
+        ],
+        # Offensive Line (T/G/C): pass/run, power/finesse + strength/awareness/impact
+        'OL': [
+            'passBlockRating', 'passBlockPowerRating', 'passBlockFinesseRating',
+            'runBlockRating', 'runBlockPowerRating', 'runBlockFinesseRating',
+            'strengthRating', 'awareRating', 'impactBlockRating',
+        ],
+        # Edge rushers: moves + shed + pursuit + tackle + speed
+        'DE': [
+            'powerMovesRating', 'finesseMovesRating', 'blockShedRating',
+            'pursuitRating', 'tackleRating', 'strengthRating', 'speedRating', 'hitPowerRating',
+        ],
+        # Interior DL: power + shed + strength + tackle + pursuit + hit power
+        'DT': [
+            'powerMovesRating', 'blockShedRating', 'strengthRating',
+            'tackleRating', 'pursuitRating', 'hitPowerRating',
+        ],
+        # Linebackers: tackle + pursuit + hit + shed + recognition + coverage + speed
+        'LB': [
+            'tackleRating', 'pursuitRating', 'hitPowerRating', 'blockShedRating',
+            'playRecRating', 'zoneCoverRating', 'manCoverRating', 'speedRating', 'awareRating',
+        ],
+        # Cornerbacks: man/zone + speed/accel/agility + press + recognition + ball skills
+        'CB': [
+            'manCoverRating', 'zoneCoverRating', 'speedRating', 'accelRating',
+            'agilityRating', 'pressRating', 'playRecRating', 'catchRating', 'changeOfDirectionRating',
+        ],
+        # Safeties: zone + tackle + hit + speed + recognition + pursuit + man + awareness + hands
+        'S': [
+            'zoneCoverRating', 'tackleRating', 'hitPowerRating', 'speedRating',
+            'playRecRating', 'pursuitRating', 'manCoverRating', 'awareRating', 'catchRating',
+        ],
+        # Specialists
+        'K': ['kickPowerRating', 'kickAccRating'],
+        'P': ['kickPowerRating', 'kickAccRating'],
+    }
+    return mapping.get(p, [])
+
+
+def get_trait_keys_for_pos(pos: str) -> list[str]:
+    """Return a list of trait fields to display for a given position.
+
+    Uses role-based groupings per spec; skips missing fields gracefully downstream.
+    """
+    p = _normalize_pos_for_mapping(pos)
+    # Core groups
+    qb_traits = ['clutchTrait', 'sensePressureTrait', 'throwAwayTrait', 'tightSpiralTrait', 'forcePassTrait']
+    ball_carrier_traits = ['coverBallTrait', 'fightForYardsTrait', 'runStyle']
+    receiver_traits = ['feetInBoundsTrait', 'posCatchTrait', 'yACCatchTrait', 'dropOpenPassTrait']  # 'specCatchTrait' not present in CSV
+    defender_core = ['bigHitTrait', 'stripBallTrait', 'playBallTrait']
+    dl_moves = ['dLBullRushTrait', 'dLSpinTrait', 'dLSwimTrait']
+
+    if p == 'QB':
+        return qb_traits
+    if p in {'RB', 'FB'}:
+        return ball_carrier_traits
+    if p in {'WR', 'TE'}:
+        return receiver_traits
+    if p in {'DE', 'DT'}:
+        return dl_moves + defender_core
+    if p in {'LB', 'CB', 'S'}:
+        return defender_core
+    return []
 
 
 def compute_analytics(rows: list[dict]):
@@ -334,6 +511,447 @@ def compute_analytics(rows: list[dict]):
     }
 
 
+def _pos_key(pos: str) -> str:
+    try:
+        return (pos or '').strip().upper()
+    except Exception:
+        return ''
+
+
+def get_attr_keys_for_pos(pos: str) -> list[str]:
+    """Return ordered attribute keys for a given position.
+
+    Keys correspond to CSV column names. For readability on cards, labels will
+    have the trailing 'Rating' removed at render time (e.g., speedRating → speed).
+    """
+    p = _pos_key(pos)
+    # QB
+    if p == 'QB':
+        return [
+            'throwAccShortRating','throwAccMidRating','throwAccDeepRating','throwPowerRating',
+            'throwUnderPressureRating','throwOnRunRating','playActionRating','awareRating',
+            'speedRating','breakSackRating',
+        ]
+    # RB/HB archetype (ball carrier)
+    if p in {'HB','RB'}:
+        return [
+            'speedRating','accelRating','agilityRating','breakTackleRating',
+            'truckRating','jukeMoveRating','spinMoveRating','stiffArmRating',
+            'carryRating','catchRating','bCVRating',
+        ]
+    if p == 'FB':
+        return ['runBlockRating','leadBlockRating','impactBlockRating','strengthRating','truckRating','catchRating']
+    if p == 'WR':
+        return [
+            'catchRating','specCatchRating','cITRating','speedRating',
+            'routeRunShortRating','routeRunMedRating','routeRunDeepRating',
+            'releaseRating','agilityRating','changeOfDirectionRating'
+        ]
+    if p == 'TE':
+        return [
+            'catchRating','cITRating','runBlockRating','passBlockRating',
+            'speedRating','routeRunShortRating','routeRunMedRating','strengthRating','specCatchRating'
+        ]
+    if p in {'LT','LG','RT','RG','T','G','C','OL'}:
+        return [
+            'passBlockRating','passBlockPowerRating','passBlockFinesseRating',
+            'runBlockRating','runBlockPowerRating','runBlockFinesseRating',
+            'strengthRating','awareRating','impactBlockRating'
+        ]
+    if p in {'LE','RE','DE','LEDGE','REDGE'}:
+        return ['powerMovesRating','finesseMovesRating','blockShedRating','pursuitRating','tackleRating','strengthRating','speedRating','hitPowerRating']
+    if p == 'DT':
+        return ['powerMovesRating','blockShedRating','strengthRating','tackleRating','pursuitRating','hitPowerRating']
+    if p in {'MLB','LOLB','ROLB','OLB','LB'}:
+        return ['tackleRating','pursuitRating','hitPowerRating','blockShedRating','playRecRating','zoneCoverRating','manCoverRating','speedRating','awareRating']
+    if p == 'CB':
+        return ['manCoverRating','zoneCoverRating','speedRating','accelRating','agilityRating','pressRating','playRecRating','catchRating','changeOfDirectionRating']
+    if p in {'FS','SS','S'}:
+        return ['zoneCoverRating','tackleRating','hitPowerRating','speedRating','playRecRating','pursuitRating','manCoverRating','awareRating','catchRating']
+    if p == 'K' or p == 'P':
+        return ['kickPowerRating','kickAccRating']
+    # Default: show common overall-relevant metrics if present
+    return ['speedRating','strengthRating','agilityRating','awareRating']
+
+
+def get_trait_keys_for_pos(pos: str) -> list[str]:
+    """Return ordered trait keys for a position.
+
+    Traits are boolean-ish fields in CSV (e.g., 'True', 'Yes', '1').
+    """
+    base_qb = ['clutchTrait','sensePressureTrait','throwAwayTrait','tightSpiralTrait','forcePassTrait']
+    base_ball = ['coverBallTrait','fightForYardsTrait','runStyle']
+    base_rec = ['feetInBoundsTrait','specCatchTrait','posCatchTrait','yACCatchTrait','dropOpenPassTrait']
+    base_def = ['bigHitTrait','stripBallTrait','playBallTrait']
+    base_dl = ['dLBullRushTrait','dLSpinTrait','dLSwimTrait']
+    p = _pos_key(pos)
+    if p == 'QB':
+        return base_qb
+    if p in {'HB','RB','FB'}:
+        return base_ball
+    if p in {'WR','TE'}:
+        return base_rec
+    if p in {'LE','RE','DE','DT','LEDGE','REDGE'}:
+        return base_def + base_dl
+    if p in {'MLB','LOLB','ROLB','OLB','LB','CB','FS','SS','S'}:
+        return base_def
+    return base_qb[:2] + base_def[:1]
+
+
+def _boolish(v) -> bool:
+    if v is None:
+        return False
+    s = str(v).strip().lower()
+    return s in {'1','true','yes','y','t'}
+
+
+def build_round1_entries(players_rows: list[dict], team_logo_map: dict, *, year: int | None = None) -> list[dict]:
+    """Select Round 1 rookies and build card data entries.
+
+    - Filters by rookieYear if year is provided.
+    - Sorts by draftPick ascending.
+    - Attaches team logoId, photo URL (if portraitId), attributes and traits.
+    """
+    entries: list[dict] = []
+    for r in players_rows:
+        if year is not None and str(r.get('rookieYear', '')).strip() != str(year):
+            continue
+        rd = safe_int(r.get('draftRound'), None)
+        pk = safe_int(r.get('draftPick'), None)
+        if rd != 1 or pk is None:
+            continue
+
+        # Name derivation mirrors gather_rookies
+        fn = (r.get('fullName') or '').strip()
+        cn = (r.get('cleanName') or '').strip()
+        first = (r.get('firstName') or '').strip()
+        last = (r.get('lastName') or '').strip()
+        name = fn or cn or (f"{first} {last}".strip())
+
+        team = (r.get('team') or '').strip() or 'FA'
+        pos = (r.get('position') or '').strip() or '?'
+        ovr = safe_int(r.get('playerBestOvr'), None)
+        if ovr is None:
+            ovr = safe_int(r.get('playerSchemeOvr'), 0) or 0
+        dev = str(r.get('devTrait') or '0').strip()
+        portrait_id = (r.get('portraitId') or '').strip()
+
+        # Team logo mapping -> URL fragment
+        lid = team_logo_map.get(team) or team_logo_map.get(team.lower()) or team_logo_map.get(team.upper())
+        logo_url = f"https://cdn.neonsportz.com/teamlogos/256/{lid}.png" if lid not in (None, '') else ''
+
+        # Attribute grid
+        attr_keys = get_attr_keys_for_pos(pos)
+        attrs = []
+        for k in attr_keys:
+            if k in r and str(r.get(k) or '').strip() != '':
+                try:
+                    val = int(float(str(r[k]).strip()))
+                except Exception:
+                    continue
+                attrs.append((k, val))
+        # Trait badges
+        trait_keys = get_trait_keys_for_pos(pos)
+        traits = []
+        for k in trait_keys:
+            if _boolish(r.get(k)):
+                traits.append(k)
+
+        photo_url = ''
+        if portrait_id.isdigit():
+            photo_url = f"https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/{portrait_id}.png"
+
+        entries.append({
+            'pick': pk,
+            'team': team,
+            'team_logo': logo_url,
+            'name': name,
+            'position': pos,
+            'ovr': int(ovr),
+            'dev': dev,
+            'photo': photo_url,
+            'attrs': attrs,
+            'traits': traits,
+        })
+
+    entries.sort(key=lambda e: (e['pick'] if e['pick'] is not None else 999))
+    return entries
+
+
+def _grade_for_ovr(ovr: int) -> tuple[str, str]:
+    """Return (label, css_class) for a simple pick grade derived from OVR.
+
+    - A (grade-on): 78+
+    - B (grade-near): 72–77
+    - C (grade-below): <72
+    """
+    try:
+        o = int(ovr)
+    except Exception:
+        o = 0
+    if o >= 78:
+        return ('A', 'grade-on')
+    if o >= 72:
+        return ('B', 'grade-near')
+    return ('C', 'grade-below')
+
+
+def _normalize_player_name_for_match(name: str) -> str:
+    """Normalize player name to match against mock draft markdown names.
+
+    - Strips Markdown emphasis (** **)
+    - Truncates at first ' (' to remove variant notes like '(вариант 1)'
+    - Trims whitespace
+    """
+    s = (name or '').strip()
+    # Remove variant suffix in parentheses first
+    if ' (' in s:
+        s = s.split(' (', 1)[0]
+    # Remove Markdown bold markers if present on either side
+    if s.startswith('**'):
+        s = s[2:]
+    if s.endswith('**'):
+        s = s[:-2]
+    return s.strip()
+
+
+def read_mock_draft_md(path: str | None) -> dict:
+    """Parse docs/draft_mock.md table into lookup maps.
+
+    Returns a dict with:
+      - 'by_pick': {int: [notes, ...]}
+      - 'by_player': {norm_name: [notes, ...]}
+      - 'team_by_pick': {int: team}
+      - 'team_by_player': {norm_name: team}
+      - 'player_by_pick': {int: [player_norm, ...]}
+
+    Safe on errors/missing file; returns empty maps.
+    """
+    out = {
+        'by_pick': {},
+        'by_player': {},
+        'team_by_pick': {},
+        'team_by_player': {},
+        'player_by_pick': {},
+    }
+    if not path:
+        return out
+    try:
+        if not os.path.exists(path):
+            return out
+        with open(path, 'r', encoding='utf-8') as fh:
+            lines = fh.read().splitlines()
+        # Find the markdown table (lines starting with '|') under "Первый Раунд"
+        in_table = False
+        for ln in lines:
+            if ln.strip().startswith('|'):
+                in_table = True
+                # Skip header and alignment rows
+                # Detect alignment by pattern like |:---|
+                parts = [p.strip() for p in ln.strip().strip('|').split('|')]
+                if len(parts) < 5:
+                    continue
+                # Heuristic: skip header (contains non-numeric in 1st col and typically words)
+                if parts[0] and not parts[0].isdigit():
+                    continue
+                if parts[1].lower().startswith('---') or parts[0].lower().startswith('---'):
+                    continue
+                # Data row: Pick | Player | Pos | Team | Notes
+                pick_raw, player_raw, pos_raw, team_raw, notes_raw = parts[:5]
+                # Clean fields
+                try:
+                    pick = int(float(pick_raw))
+                except Exception:
+                    # If pick is not parseable, try to match by player name only
+                    pick = None
+                player = player_raw.strip()
+                player_norm = _normalize_player_name_for_match(player)
+                notes = notes_raw.strip()
+                team_proj = team_raw.strip()
+                if notes:
+                    if pick is not None:
+                        out['by_pick'].setdefault(pick, []).append(notes)
+                    if player_norm:
+                        out['by_player'].setdefault(player_norm, []).append(notes)
+                # Team projections
+                if team_proj:
+                    if pick is not None and team_proj:
+                        out['team_by_pick'].setdefault(pick, team_proj)
+                    if player_norm:
+                        out['team_by_player'].setdefault(player_norm, team_proj)
+                # Projected player(s) per pick (allow variants)
+                if pick is not None and player_norm:
+                    lst = out['player_by_pick'].setdefault(pick, [])
+                    if player_norm not in lst:
+                        lst.append(player_norm)
+            else:
+                if in_table and ln.strip() == '':
+                    # End of contiguous table block
+                    in_table = False
+        return out
+    except Exception:
+        return {
+            'by_pick': {},
+            'by_player': {},
+            'team_by_pick': {},
+            'team_by_player': {},
+            'player_by_pick': {},
+        }
+
+
+def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) -> str:
+    """Render HTML for Round 1 recap cards.
+
+    Produces a responsive grid of cards with player photo header, pick number,
+    team logo pinned at top-right, name/pos, grade badge, attributes grid,
+    trait badges, analytics notes (expanded), and projection deltas.
+    """
+    if not entries:
+        return "<div class='muted'>No Round 1 picks found.</div>"
+
+    def esc(s: str) -> str:
+        return html.escape(str(s))
+    def _attr_label(key: str) -> str:
+        k = str(key or '')
+        # Strip a single trailing 'Rating' (6 chars)
+        if k.endswith('Rating'):
+            k = k[:-6]
+        # Special shorthand
+        if k == 'throwUnderPressure':
+            return 'TUP'
+        return k
+    def _val_cls(v: int) -> str:
+        try:
+            iv = int(v)
+        except Exception:
+            iv = 0
+        if iv >= 85:
+            return 'val-elite'
+        if iv >= 80:
+            return 'val-good'
+        if iv >= 75:
+            return 'val-warn'
+        return 'val-low'
+    def _norm_team(val: str | None) -> str:
+        if not val:
+            return ''
+        s = str(val).strip()
+        # Lower, remove extra spaces
+        s = ' '.join(s.split()).lower()
+        # Take mascot/last token to align "Pittsburgh Steelers" with "Steelers"
+        parts = [p for p in re.split(r"[\s\t]+", s) if p]
+        return parts[-1] if parts else s
+
+    cards = []
+    mock_by_pick = (mock_lookup or {}).get('by_pick', {})
+    mock_by_player = (mock_lookup or {}).get('by_player', {})
+    team_by_pick = (mock_lookup or {}).get('team_by_pick', {})
+    team_by_player = (mock_lookup or {}).get('team_by_player', {})
+    player_by_pick = (mock_lookup or {}).get('player_by_pick', {})
+    for e in entries:
+        grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
+        # Add '+' to grade for Superstar/X-Factor devs
+        try:
+            if str(e.get('dev')) in ('2','3'):
+                grade_label = f"{grade_label}+"
+        except Exception:
+            pass
+        # Team logo shown inline with the Pick number in header row
+        logo_img = f"<img class=\"team-logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
+        photo = e.get('photo')
+        # Prominent player photo in header
+        photo_html = f"<img class=\"r1-photo\" src=\"{esc(photo)}\" alt=\"{esc(e['name'])}\" />" if photo else ''
+
+        # Attributes grid (limit to 8-10 entries)
+        attr_lines = []
+        for k, v in (e.get('attrs') or [])[:10]:
+            label = _attr_label(k)
+            v_cls = _val_cls(v)
+            attr_lines.append(f"<div class=\"attr\"><span class=\"k\">{esc(label)}</span><span class=\"v {v_cls}\">{int(v)}</span></div>")
+        attrs_html = ''.join(attr_lines) if attr_lines else "<div class='muted' style='grid-column:1/-1;'>No attributes.</div>"
+
+        # Trait badges
+        trait_lines = []
+        for t in (e.get('traits') or []):
+            trait_lines.append(f"<span class=\"trait\">{esc(t)}</span>")
+        traits_html = ''.join(trait_lines)
+
+        # Build projection deltas and analytics notes together inside one block
+        notes_html = ''
+        proj_html = ''
+        try:
+            pick = e.get('pick')
+            actual_team = e.get('team')
+            player_norm = _normalize_player_name_for_match(e.get('name', ''))
+
+            # Collect projection messages
+            msgs = []
+            team_proj_player = team_by_player.get(player_norm)
+            if team_proj_player and _norm_team(team_proj_player) != _norm_team(actual_team):
+                msgs.append(f"Прогнозируемая команда: {esc(team_proj_player)} → выбран {esc(actual_team)}")
+            if isinstance(pick, int) and pick in team_by_pick:
+                team_proj_pick = team_by_pick.get(pick)
+                if team_proj_pick and _norm_team(team_proj_pick) != _norm_team(actual_team):
+                    msgs.append(f"У прогноза на пик #{pick}: {esc(team_proj_pick)} → фактически {esc(actual_team)}")
+            if isinstance(pick, int) and pick in player_by_pick:
+                projected_players = [p for p in player_by_pick.get(pick, []) if p]
+                if projected_players and player_norm not in projected_players:
+                    msgs.append(f"Прогноз игрока на этот пик: {esc(projected_players[0])}")
+            if msgs:
+                proj_html = "<div class=\"proj\">" + "<br/>".join(msgs) + "</div>"
+
+            # Gather analytics notes
+            notes_list = []
+            if player_norm and player_norm in mock_by_player:
+                notes_list = list(mock_by_player.get(player_norm, []))
+            elif isinstance(pick, int) and pick in mock_by_pick:
+                notes_list = list(mock_by_pick.get(pick, []))
+
+            # Render section only if we have projections or notes
+            if msgs or notes_list:
+                parts = []
+                if proj_html:
+                    parts.append(proj_html)
+                if notes_list:
+                    joined = '\n\n'.join(notes_list)
+                    parts.append(f"<div class=\"mock-notes\">{esc(joined)}</div>")
+                notes_html = (
+                    "<div class=\"mock-notes-block\">"
+                    "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
+                    + ''.join(parts) +
+                    "</div>"
+                )
+        except Exception:
+            notes_html = ''
+
+        # Real pick evaluation section (always shown)
+        # Dev badge
+        dev_badge = badge_for_dev(e.get('dev', '0'))
+        real_eval_html = (
+            "<div class=\"real-eval-block\">"
+            "  <div class=\"real-eval-title\">Оценка реального пика</div>"
+            f"  <div class=\"real-eval\">Оценка: <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
+            f"  <div class=\"real-eval\">OVR: <span class=\"ovr-badge\">{int(e.get('ovr',0))}</span></div>"
+            f"  <div class=\"real-eval\">DevTrait: {dev_badge}</div>"
+            "</div>"
+        )
+
+        cards.append(
+            (
+                "<div class=\"r1-card\">"
+                f"  <div class=\"head\">{photo_html}<div class=\"head-right\"><div class=\"pick\">Pick {esc(e.get('pick',''))}</div>{logo_img}</div></div>"
+                f"  <div class=\"name\"><b>{esc(e['name'])}</b> <span class=\"pos\">{esc(e['position'])}</span> <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
+                f"  <div class=\"meta\">Team: {esc(e['team'])} &nbsp; • &nbsp; OVR {int(e.get('ovr',0))}</div>"
+                f"  <div class=\"attrs\">{attrs_html}</div>"
+                f"  <div class=\"traits\">{traits_html}</div>"
+                f"  {notes_html}"
+                f"  {real_eval_html}"
+                "</div>"
+            )
+        )
+    return '<div class="r1-list">' + '\n'.join(cards) + '</div>'
+
+
 def badge_for_dev(dev: str) -> str:
     # Render explicit dev tiers
     mapping = {
@@ -346,7 +964,19 @@ def badge_for_dev(dev: str) -> str:
     return f'<span class="dev-badge {cls}">{html.escape(label)}</span>'
 
 
-def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: dict, *, title_suffix: str | None = None, title_override: str | None = None) -> str:
+def generate_html(
+    year: int,
+    rows: list[dict],
+    analytics: dict,
+    team_logo_map: dict,
+    *,
+    title_suffix: str | None = None,
+    title_override: str | None = None,
+    section_intros: dict | None = None,
+    intro_default: str | None = None,
+    round1_entries: list[dict] | None = None,
+    round1_mock: dict | None = None,
+) -> str:
     elites = [r for r in rows if r['dev'] in ('3','2')]
     # Order cards by draft pick: round asc, pick asc; missing picks last
     def elite_sort_key(r: dict):
@@ -508,6 +1138,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     h1 { margin:0; font-size: 22px; }
     .subtitle { color: var(--sub); margin:8px 0 6px; font-size: 13px; }
     .pill { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; border:1px solid #bfdbfe; background:#dbeafe; color:#1e3a8a; font-size:12px; }
+    .section-intro { white-space: pre-wrap; color: #334155; font-size: 13px; margin: 8px 0 12px; }
 
     .panel { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }
     .kpis { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; }
@@ -592,6 +1223,41 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .subnav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: saturate(120%) blur(6px); border-bottom: 1px solid #eef2f7; padding: 8px 12px; display:flex; flex-wrap:wrap; gap: 8px; }
     .subnav a { text-decoration:none; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:6px 10px; border-radius:999px; }
     .subnav a:hover { background:#e2e8f0; }
+
+    /* Round 1 recap cards */
+    .r1-list { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .r1-card { border:1px solid var(--grid); border-radius:10px; padding:12px; background:#fff; position:relative; }
+    .r1-card .head { display:flex; align-items:center; gap:8px; justify-content:space-between; }
+    .r1-card .head .head-right { display:flex; align-items:center; gap:8px; margin-left:auto; }
+    .r1-card .head img.r1-photo { width:56px; height:56px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .r1-card img.team-logo { width:24px; height:24px; border-radius:6px; box-shadow:0 0 0 1px rgba(0,0,0,.08); }
+    .r1-card .pick { margin-left:auto; font-weight:700; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:2px 8px; border-radius:999px; }
+    .r1-card .name { margin-top:4px; }
+    .r1-card .name .pos { color:#475569; font-weight:600; }
+    .r1-card .name .grade { margin-left:6px; padding:1px 6px; border-radius:999px; font-size:11px; border:1px solid #e5e7eb; }
+    .r1-card .name .grade.grade-on { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+    .r1-card .name .grade.grade-near { background:#fef9c3; color:#92400e; border-color:#fde68a; }
+    .r1-card .name .grade.grade-below { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .r1-card .meta { color:#64748b; font-size:12px; margin-top:2px; }
+    .r1-card .attrs { margin-top:6px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:6px; }
+    .r1-card .attr { display:flex; justify-content:space-between; gap:8px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:6px 8px; font-size:12px; }
+    .r1-card .attr .k { color:#334155; font-weight:600; }
+    .r1-card .attr .v { font-weight:700; border-radius:6px; padding:0 6px; border:1px solid transparent; }
+    .r1-card .attr .v.val-elite { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+    .r1-card .attr .v.val-good { background:#ecfdf5; color:#047857; border-color:#a7f3d0; }
+    .r1-card .attr .v.val-warn { background:#fef9c3; color:#92400e; border-color:#fde68a; }
+    .r1-card .attr .v.val-low { background:#f9f1e7; color:#7c3e00; border-color:#e7c3a5; }
+    .r1-card .traits { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+    .r1-card .trait { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; background:#eef2ff; color:#3730a3; border:1px solid #e0e7ff; }
+    .proj { color:#0f172a; font-size:12px; margin-top:6px; background:#fff7ed; border:1px solid #fde68a; border-radius:8px; padding:6px 8px; }
+    .mock-notes-block { margin-top:8px; }
+    .mock-notes-title { cursor:default; color:#475569; font-weight:600; }
+    .mock-notes { white-space: pre-wrap; color:#475569; font-size:12px; margin-top:6px; }
+    /* Real pick evaluation */
+    .real-eval-block { margin-top:8px; }
+    .real-eval-title { color:#475569; font-weight:600; }
+    .real-eval { color:#475569; font-size:12px; margin-top:6px; }
+    .ovr-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
 
     /* Responsive tweaks */
     @media (max-width: 1100px) {
@@ -685,10 +1351,12 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       <a href=\"#spotlight\">Spotlight</a>
       <a href=\"#teams\">Teams</a>
       <a href=\"#rounds\">Rounds</a>
+      <a href=\"#round1\">Round 1</a>
       <a href=\"#positions\">Positions</a>
     </nav>
 
     <section id=\"kpis\" class=\"panel\"> 
+      __INTRO_KPIS__
       <div class=\"kpis\"> 
         <div class=\"kpi\"><b>Total rookies</b><span>__TOTAL__</span></div>
         <div class=\"kpi\"><b>Avg overall</b><span>__AVG_OVR__</span></div>
@@ -708,8 +1376,18 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       </div>
     </section>
 
+    <section id=\"round1\" class=\"panel\"> 
+      <div class=\"section-title\">Round 1 Recap</div>
+      __INTRO_ROUND1__
+      <div class=\"card\"> 
+        __ROUND1_HTML__
+        <p class=\"muted\" style=\"margin-top:6px;\">__ROUND1_NOTE__</p>
+      </div>
+    </section>
+
     <section id=\"spotlight\" class=\"panel\"> 
       <div class=\"section-title\">Elites Spotlight</div>
+      __INTRO_ELITES__
       <div class=\"players\">__ELITE_CARDS__</div>
     </section>
 
@@ -717,6 +1395,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Team draft quality — by Avg OVR</h3>
+          __INTRO_TEAM_QUALITY__
           <table class=\"sortable\">
             <thead><tr><th>Team</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>#</th><th>Avg OVR</th><th>Best OVR</th></tr></thead>
             <tbody>__TEAM_TABLE__</tbody>
@@ -753,6 +1432,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     </section>
 
     <section id=\"positions\" class=\"panel\"> 
+      __INTRO_POSITIONS__
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Position strength</h3>
@@ -812,11 +1492,41 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__SS_GRADE_LABEL__', html.escape(ss_label_render))
     html_out = html_out.replace('__XF_GRADE_CLASS__', html.escape(xf_class_render))
     html_out = html_out.replace('__SS_GRADE_CLASS__', html.escape(ss_class_render))
+    # Section intros
+    section_intros = section_intros or {}
+    def render_intro(key: str) -> str:
+        txt = section_intros.get(key)
+        if txt is None:
+            txt = intro_default or ''
+        txt = (txt or '').strip()
+        if not txt:
+            return ''
+        return f'<div class="section-intro">{html.escape(txt)}</div>'
+
+    html_out = html_out.replace('__INTRO_KPIS__', render_intro('kpis'))
+    html_out = html_out.replace('__INTRO_ELITES__', render_intro('elites'))
+    html_out = html_out.replace('__INTRO_TEAM_QUALITY__', render_intro('team_quality'))
+    html_out = html_out.replace('__INTRO_POSITIONS__', render_intro('positions'))
+
     html_out = html_out.replace('__ELITE_CARDS__', elite_cards_html)
     html_out = html_out.replace('__TEAM_TABLE__', team_table_html)
     html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)
     html_out = html_out.replace('__POS_TABLE__', pos_table_html)
     html_out = html_out.replace('__TOP_POS__', top_pos_html)
+    # Round 1 recap injection
+    r1_entries = round1_entries or []
+    r1_html = render_round1_recap(r1_entries, round1_mock)
+    r1_note = ''
+    try:
+        n = len(r1_entries)
+        if n and n < 32:
+            r1_note = f"Showing {n} of 32 picks"
+    except Exception:
+        r1_note = ''
+    html_out = html_out.replace('__ROUND1_HTML__', r1_html)
+    html_out = html_out.replace('__ROUND1_NOTE__', html.escape(r1_note))
+    html_out = html_out.replace('__INTRO_ROUND1__', render_intro('round1'))
+
     # Round-by-team hidden/miss table injection
     rounds = analytics.get('rounds_sorted', [])
     # Limit the number of columns to keep layout sane (e.g., first 7 rounds)
@@ -889,6 +1599,9 @@ def main():
     ap.add_argument('--out', default=None, help='Output HTML path (default: docs/draft_class_<year>.html)')
     ap.add_argument('--league-prefix', default='MEGA League', help='Optional league/brand suffix for <title>')
     ap.add_argument('--title', dest='title_override', default=None, help='Optional full page <title> override string')
+    ap.add_argument('--section-intros', dest='section_intros', default=None, help='Path to JSON mapping for section intros')
+    ap.add_argument('--intro-default', dest='intro_default', default=None, help='Default intro text used when a section is missing in mapping')
+    ap.add_argument('--mock-md', dest='mock_md', default=None, help='Path to mock draft markdown (docs/draft_mock.md). If omitted and default exists, it will be used.')
     args = ap.parse_args()
 
     out_path = args.out or os.path.join('docs', f'draft_class_{args.year}.html')
@@ -915,9 +1628,24 @@ def main():
 
     rookies = gather_rookies(players, args.year)
     analytics = compute_analytics(rookies)
+    intros_map = read_section_intros(args.section_intros)
+    # Mock draft notes (optional)
+    mock_md_path = args.mock_md
+    if not mock_md_path:
+        default_md = os.path.join('docs', 'draft_mock.md')
+        if os.path.exists(default_md):
+            mock_md_path = default_md
+    mock_lookup = read_mock_draft_md(mock_md_path)
+    # Build round 1 entries from raw players to access full ratings/traits
+    round1_entries = build_round1_entries(players, team_logo_map, year=args.year)
     html_out = generate_html(
         args.year, rookies, analytics, team_logo_map,
-        title_suffix=args.league_prefix, title_override=args.title_override,
+        title_suffix=args.league_prefix,
+        title_override=args.title_override,
+        section_intros=intros_map,
+        intro_default=args.intro_default,
+        round1_entries=round1_entries,
+        round1_mock=mock_lookup,
     )
 
     out_dir = os.path.dirname(out_path)
