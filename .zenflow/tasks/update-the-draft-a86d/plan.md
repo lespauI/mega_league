@@ -179,7 +179,7 @@ Extend smoke script to include new verification.
 - Verification:
   - Execute the smoke script and confirm successful exit and presence of the new section.
 
-### [ ] Step: Provide Example Intros Fixture
+### [x] Step: Provide Example Intros Fixture
 Add sample JSON for analysts to edit.
 
 - Definition:
