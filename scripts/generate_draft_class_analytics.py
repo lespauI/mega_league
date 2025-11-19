@@ -158,13 +158,14 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         )
     team_table_html = '\n'.join(team_rows)
 
-    team_elite_rows = []
-    for team, stats in sorted(analytics['teams'].items(), key=lambda kv: -(kv[1]['dev'].get('3',0)+kv[1]['dev'].get('2',0))):
-        el = stats['dev'].get('3',0)+stats['dev'].get('2',0)
-        team_elite_rows.append(
-            f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{el}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
+    # Most hiddens: XF + SS + Star
+    team_hidden_rows = []
+    for team, stats in sorted(analytics['teams'].items(), key=lambda kv: -(kv[1]['dev'].get('3',0)+kv[1]['dev'].get('2',0)+kv[1]['dev'].get('1',0))):
+        hidden = stats['dev'].get('3',0) + stats['dev'].get('2',0) + stats['dev'].get('1',0)
+        team_hidden_rows.append(
+            f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{hidden}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
         )
-    team_elites_html = '\n'.join(team_elite_rows)
+    team_hiddens_html = '\n'.join(team_hidden_rows)
 
     # Positions table
     pos_rows = []
@@ -288,10 +289,10 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
           </table>
         </div>
         <div class=\"card\"> 
-          <h3>Most elites (XF+SS) — by team</h3>
+          <h3>Most hiddens (XF+SS+S) — by team</h3>
           <table>
-            <thead><tr><th>Team</th><th>Elites</th><th>#</th><th>Avg OVR</th></tr></thead>
-            <tbody>__TEAM_ELITES__</tbody>
+            <thead><tr><th>Team</th><th>Hiddens</th><th>#</th><th>Avg OVR</th></tr></thead>
+            <tbody>__TEAM_HIDDENS__</tbody>
           </table>
           <p class=\"muted\" style=\"margin-top:6px;\">Note: based on current team on roster.</p>
         </div>
@@ -330,7 +331,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__ELITE_PCT__', str(elite_pct))
     html_out = html_out.replace('__ELITE_CARDS__', elite_cards_html)
     html_out = html_out.replace('__TEAM_TABLE__', team_table_html)
-    html_out = html_out.replace('__TEAM_ELITES__', team_elites_html)
+    html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)
     html_out = html_out.replace('__POS_TABLE__', pos_table_html)
     html_out = html_out.replace('__TOP_POS__', top_pos_html)
     return html_out
