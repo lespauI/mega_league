@@ -273,3 +273,8 @@ Right now design of our HTML looks super simple, lets made it better, Do your be
 
 Refactor tables, headers and cels must be centralized. 
 Add ability to sort by each value of table
+
+### [x] Step: Documentation update
+<!-- chat-id: 030db4b5-37a9-4aee-bb0d-f799c4f30f1b -->
+
+Finilize documentation and specs update to be alligned with all our changes and reffactorring

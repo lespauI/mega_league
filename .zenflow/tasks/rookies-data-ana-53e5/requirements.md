@@ -4,23 +4,28 @@
 
 ### User Story 1 - Generate draft class analytics
 **Acceptance Scenarios**:
-1. Given MEGA_players.csv and MEGA_teams.csv are present in the project root, When I run `python3 scripts/generate_draft_class_analytics.py --year 2026`, Then an HTML file is generated at `docs/draft_class_2026.html` containing KPIs, an elites spotlight, and team/position analytics.
+1. Given MEGA_players.csv and MEGA_teams.csv are present in the project root, When I run `python3 scripts/generate_draft_class_analytics.py --year 2026`, Then an HTML file is generated at `docs/draft_class_2026.html` containing KPIs, a Hidden spotlight, Round Hidden graphic, and team/position analytics.
 2. Given a different output path is provided, When I run with `--out <path>`, Then the HTML is saved at the specified path and has the same contents/structure.
 
-### User Story 2 - Review elite rookies (manager)
+### User Story 2 - Review hidden elites (manager)
 **Acceptance Scenarios**:
-1. Given the generated page is open, When I view the “Elites Spotlight” section, Then I see rookies with dev traits 3 (X-Factor) and 2 (Superstar) only, each showing name, team, position, overall rating, and a dev badge.
-2. Given the “Elites Spotlight” section, When I scan the cards, Then the list is sorted by dev (X-Factor above Superstar), then by higher OVR, then by name.
+1. Given the generated page is open, When I view the “Hidden Spotlight” section, Then I see rookies with dev traits 3 (X-Factor) and 2 (Superstar) only, each showing name, team, position, overall rating, and draft round/pick appended; dev tiers are masked in UI as “Hidden”.
+2. Given the “Hidden Spotlight” section, When I scan the cards, Then the list is sorted by higher OVR and name deterministically within masked tier, and cards include logo if available.
 
 ### User Story 3 - Compare team draft outcomes (manager)
 **Acceptance Scenarios**:
-1. Given the generated page is open, When I view the “Team draft quality — by Avg OVR” table, Then I see for each team the total rookie count, average OVR, best OVR, and counts of each dev tier (XF/SS/Star/Normal) sorted by higher Avg OVR.
-2. Given the generated page is open, When I view the “Most hiddens (XF+SS+S) — by team” table, Then teams are ranked by total hiddens (XF + SS + Star) and I can see each team’s hidden count, total rookies, and average OVR.
+1. Given the generated page is open, When I view the “Team draft quality — by Avg OVR” table, Then I see for each team the total rookie count, average OVR, best OVR, and counts of Hidden/Normal (Hidden = dev 1/2/3), sorted by higher Avg OVR, with centered headers/cells.
+2. Given the generated page is open, When I view the “Most Hiddens — by team” table, Then teams are ranked by total Hiddens (dev 1/2/3) and I can see each team’s Hidden count, total rookies, and average OVR; I can sort by any column via header click.
 
 ### User Story 4 - Evaluate positional strength (manager)
 **Acceptance Scenarios**:
-1. Given the generated page is open, When I view the “Position strength” table, Then I see for each position the total rookies, average OVR, and counts of dev tiers (XF/SS/Star/Normal), sorted by higher Avg OVR and then by total.
-2. Given the generated page is open, When I view the “Elite-heavy positions” list, Then I see up to 6 positions with the most elites (XF + SS), breaking ties by Star count and then position code.
+1. Given the generated page is open, When I view the “Position strength” table, Then I see for each position the total rookies, average OVR, and counts of Hidden/Normal, sorted by higher Avg OVR and then by total; I can sort by each column; layout is centralized.
+2. Given the generated page is open, When I view the “Hidden-heavy positions” list, Then I see up to 6 positions with the most Hidden (dev > 0), breaking ties by position code.
+
+### User Story 5 - Round Hidden distribution (manager)
+**Acceptance Scenarios**:
+1. Given the generated page is open, When I view the “Round Hidden” section, Then I see a visual/table summary per team and round showing how many Hidden players were selected in each round for the class year.
+2. Given the “Round Hidden” section, When I sort by a column, Then the ordering updates client-side without page reload.
 
 ---
 
@@ -42,13 +47,14 @@
     - Dev trait: `devTrait` with mapping {3: X-Factor, 2: Superstar, 1: Star, 0: Normal}. Non-mapped values treated as 0.
 
 - Analytics and Presentation
-  - KPIs: total rookies, average OVR, counts of X-Factors, Superstars, Stars, and the elite share (XF+SS count and percentage).
-  - Elites Spotlight: grid of rookies with dev 3 or 2; show name, team, position, OVR, and a badge for dev tier; sorted by dev desc, OVR desc, name asc; include team logo if available.
-  - Team Analytics: table sorted by avg OVR desc then team name; columns include Team (with logo if available), # rookies, Avg OVR, Best OVR, XF, SS, Star, Normal.
-  - Most Hiddens: table ranking teams by (XF + SS + Star) desc; includes Team, Hiddens, #, Avg OVR; clarifies this is based on current roster team field.
-  - Position Analytics: table sorted by avg OVR desc, then total desc; columns include Pos, Total, Avg OVR, XF, SS, Star, Normal.
-  - Elite-heavy Positions: list of up to 6 positions with the most elites (XF + SS), tie-broken by Star count then position code.
-  - Styling: lightweight, responsive grid layout, inline CSS; clear badges for dev tiers; basic accessibility (alt text for logos, readable contrasts).
+  - KPIs: total rookies, average OVR, counts of Hidden and Normal, and Hidden share (Hidden / total).
+  - Hidden Spotlight: grid of rookies with dev 3 or 2; show name, team, position, OVR, draft round/pick; dev tier masked as “Hidden”; deterministic sort.
+  - Team Analytics: table sorted by avg OVR desc then team name; columns include Team (logo if available), # rookies, Avg OVR, Best OVR, Hidden, Normal; centered header/cells, sortable by any column.
+  - Round Hidden: distribution of Hidden picks by round per team (class year scope), presented as a compact sortable table or graphic.
+  - Most Hiddens: table ranking teams by Hidden count (dev 1/2/3) desc; includes Team, Hiddens, #, Avg OVR; clarifies this is based on current roster team field.
+  - Position Analytics: table sorted by avg OVR desc, then total desc; columns include Pos, Total, Avg OVR, Hidden, Normal; sortable columns.
+  - Hidden-heavy Positions: list of up to 6 positions with the most Hidden (dev > 0).
+  - Styling: improved but simple, responsive layout with inline CSS; masked dev badges; basic accessibility (alt text for logos, readable contrasts).
 
 - CLI & Automation
   - Script supports arguments: `--year`, `--players`, `--teams`, `--out`.
@@ -84,9 +90,9 @@
   - Teams and positions are correctly aggregated; logos appear where `logoId` exists and team name matches.
 
 - UX & Presentation
-  - Elites Spotlight shows only XF and SS rookies and is correctly sorted (dev desc → OVR desc → name asc).
-  - Tables are readable on desktop and reasonably usable on smaller screens.
-  - The page loads without external JS or CSS dependencies.
+  - Hidden Spotlight shows only dev 3/2 rookies (masked) and is correctly sorted deterministically; cards include draft round/pick.
+  - Tables have centered headers/cells and support client-side sorting via header clicks (lightweight inline JS only).
+  - The page loads without external CSS dependencies; includes a tiny inline JS sorter.
 
 - Robustness
   - If `MEGA_teams.csv` is absent or lacks `logoId`, the page still renders (logos omitted).
@@ -97,7 +103,5 @@
 Top Clarifications (please confirm):
 1. Output location: keep default `docs/draft_class_<year>.html` and link from `index.html`, or standalone? [NEEDS CLARIFICATION]
 2. Branding: should page title/branding use a configurable league name instead of “MEGA League”? [NEEDS CLARIFICATION]
-3. Interactivity: is a static page sufficient, or do you want basic client-side sorting/filtering? (Current scope: static) [NEEDS CLARIFICATION]
-4. Data fields: confirm `playerBestOvr` then `playerSchemeOvr` fallback is correct for OVR; any preference to exclude `FA` rookies from team tables? [NEEDS CLARIFICATION]
-5. Additional metrics: include draft metadata (round/pick from `MEGA_draft.csv`) or keep out of scope for this iteration? [NEEDS CLARIFICATION]
-
+3. FA handling: exclude `FA` rookies from team tables or include under `FA` bucket? [NEEDS CLARIFICATION]
+4. Round Hidden visualization: prefer compact sortable table (current) or add a small bar chart? [NEEDS CLARIFICATION]

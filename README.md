@@ -219,13 +219,18 @@ python3 scripts/top_pick_race_analysis.py
 
 - Output
   - Generates `docs/draft_class_<YEAR>.html` (e.g., `docs/draft_class_2026.html`) with:
-    - KPIs: Total rookies, Avg overall, Hidden, Normal, Hidden share
-    - Hidden Spotlight (cards list; dev tiers masked as "Hidden")
+    - KPIs: Total rookies, Avg OVR, Hidden, Normal, Hidden share
+    - Hidden Spotlight (dev 3/2 only, masked as "Hidden"), each card now shows draft round and pick appended to OVR (e.g., `OVR 85 round 1 pick 8`)
     - Team draft quality table (Avg OVR, Best OVR, Hidden/Normal distribution)
-    - Most hiddens leaderboard (Hidden = dev 3/2/1)
-    - Position strength table and hidden-heavy positions list
+    - Round Hidden distribution graphic: by round and team, how many Hidden picks (dev > 0)
+    - Most Hiddens leaderboard (Hidden = dev 3/2/1)
+    - Position strength table and Hidden-heavy positions list
   - Team logos appear when `MEGA_teams.csv` provides a resolvable `logoId`; renders fine without it.
   - Dev trait handling: raw data uses `3 = X-Factor`, `2 = Superstar`, `1 = Star`, `0 = Normal`; UI masks 3/2/1 as "Hidden" and shows 0 as "Normal".
+
+- Tables and Interactivity
+  - All analytics tables have centered headers and cells
+  - Click any column header to sort ascending/descending (client-side, no dependencies)
 
 - Verification
   - Generate for 2026:
@@ -241,6 +246,12 @@ python3 scripts/top_pick_race_analysis.py
     - `python3 scripts/verify_draft_class_analytics.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html`
   - Smoke test (end-to-end):
     - `bash scripts/smoke_generate_draft_2026.sh`
+
+Additional checks (optional):
+- Ensure Round Hidden section exists:
+  - `rg -n "Round Hidden" docs/draft_class_2026.html`
+- Ensure sortable headers are present:
+  - `rg -n "data-sort" docs/draft_class_2026.html`
 
 Notes:
 - If `MEGA_teams.csv` is missing, the page still renders without logos.
