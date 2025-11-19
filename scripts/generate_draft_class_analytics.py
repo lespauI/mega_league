@@ -3,9 +3,9 @@
 Generate an analytics-focused HTML page for a given draft class.
 
 Focus:
-- Hide real dev trait tiers in UI: show Hidden for dev 3/2/1, Normal for 0
-- Team draft analytics (who picked best OVR, how many rookies, hidden counts)
-- Position strength analytics (counts by Hidden/Normal, avg OVR)
+- Show explicit dev trait tiers in UI (XF/SS/Star/Normal)
+- Team draft analytics (who picked best OVR, how many rookies, counts by dev)
+- Position strength analytics (counts by Non‑Normal/Normal, avg OVR)
 
 Usage:
   python3 scripts/generate_draft_class_analytics.py --year 2026 \
@@ -23,8 +23,31 @@ import statistics as st
 from collections import Counter
 
 
-# Internal dev labels (raw). Rendering intentionally masks tiers 3/2/1 as "Hidden".
+# Internal dev labels (raw).
 DEV_LABELS = {"3": "X-Factor", "2": "Superstar", "1": "Star", "0": "Normal"}
+
+
+def grade_badge(tier: str, pct: float, target: float) -> tuple[str, str]:
+    """Return (label, css_class) for KPI grading badges.
+
+    - css_class in {'grade-on','grade-near','grade-below'}
+    - On-target: pct >= target
+    - Near-target: pct >= 0.75 * target
+    - Below-target: otherwise
+    """
+    try:
+        p = float(pct)
+        tgt = float(target)
+    except Exception:
+        p = 0.0
+        tgt = 0.0
+    if tgt <= 0:
+        return ("On-target", "grade-on")
+    if p >= tgt:
+        return ("On-target", "grade-on")
+    if p >= 0.75 * tgt:
+        return ("Near-target", "grade-near")
+    return ("Below-target", "grade-below")
 
 
 def read_csv(path: str) -> list[dict]:
@@ -235,14 +258,28 @@ def compute_analytics(rows: list[dict]):
     elites_count = dev_counts['3'] + dev_counts['2']
     elite_share_pct = round((100.0 * elites_count / total), 1) if total else 0.0
 
+    # Percentages by tier
+    def pct(v: int, denom: int) -> float:
+        return round(100.0 * v / denom, 1) if denom else 0.0
+
+    xf_pct = pct(dev_counts['3'], total)
+    ss_pct = pct(dev_counts['2'], total)
+    star_pct = pct(dev_counts['1'], total)
+    norm_pct = pct(dev_counts['0'], total)
+
+    # Grading (targets: XF ≥10%, SS ≥15%)
+    xf_grade_label, xf_grade_class = grade_badge('xf', xf_pct, 10.0)
+    ss_grade_label, ss_grade_class = grade_badge('ss', ss_pct, 15.0)
+
     # Pre-sorted helper views (not strictly required by renderer)
     teams_sorted = sorted(teams.items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0]))
     positions_sorted = sorted(positions.items(), key=lambda kv: (-kv[1]['avg_ovr'], -kv[1]['count'], kv[0]))
 
-    # Per-team per-round hidden hits/misses
+    # Per-team per-round hits/misses
     # Only include rows with a known draft_round
     rounds_present: set[int] = set()
     team_rounds: dict[str, dict[int, dict[str, int]]] = {}
+    team_rounds_elites: dict[str, dict[int, dict[str, int]]] = {}
     for r in rows:
         rd = r.get('draft_round')
         if rd is None:
@@ -257,6 +294,11 @@ def compute_analytics(rows: list[dict]):
         cell['total'] += 1
         if r['dev'] in ('3', '2', '1'):
             cell['hit'] += 1
+        # elites-only aggregation mirrors totals, counts hits for XF/SS only
+        cell_e = team_rounds_elites.setdefault(team, {}).setdefault(rdv, {'hit': 0, 'total': 0})
+        cell_e['total'] += 1
+        if r['dev'] in ('3', '2'):
+            cell_e['hit'] += 1
     rounds_sorted = sorted(rounds_present)
 
     return {
@@ -267,19 +309,37 @@ def compute_analytics(rows: list[dict]):
         'elite_count': elites_count,
         'elite_share_pct': elite_share_pct,
         'elites': elites,
+        # KPI percentages
+        'xf_pct': xf_pct,
+        'ss_pct': ss_pct,
+        'star_pct': star_pct,
+        'norm_pct': norm_pct,
+        # Grades
+        'xf_grade': 'on' if xf_grade_class.endswith('on') else ('near' if xf_grade_class.endswith('near') else 'below'),
+        'ss_grade': 'on' if ss_grade_class.endswith('on') else ('near' if ss_grade_class.endswith('near') else 'below'),
+        'xf_grade_label': xf_grade_label,
+        'ss_grade_label': ss_grade_label,
+        'xf_grade_class': xf_grade_class,
+        'ss_grade_class': ss_grade_class,
         'teams': teams,
         'teams_sorted': teams_sorted,
         'positions': positions,
         'positions_sorted': positions_sorted,
         'team_rounds': team_rounds,
+        'team_rounds_elites': team_rounds_elites,
         'rounds_sorted': rounds_sorted,
     }
 
 
 def badge_for_dev(dev: str) -> str:
-    # Mask actual dev tiers: any of 3/2/1 is displayed as Hidden; 0 as Normal
-    label = 'Hidden' if dev in {'3','2','1'} else 'Normal'
-    cls = 'dev-hidden' if dev in {'3','2','1'} else 'dev-norm'
+    # Render explicit dev tiers
+    mapping = {
+        '3': ('X-Factor', 'dev-xf'),
+        '2': ('Superstar', 'dev-ss'),
+        '1': ('Star', 'dev-star'),
+        '0': ('Normal', 'dev-norm'),
+    }
+    label, cls = mapping.get(str(dev), ('Normal', 'dev-norm'))
     return f'<span class="dev-badge {cls}">{html.escape(label)}</span>'
 
 
@@ -349,35 +409,35 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     team_rows = []
     for team, stats in sorted(analytics['teams'].items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0])):
         dev = stats['dev']
-        hidden = dev.get('3',0) + dev.get('2',0) + dev.get('1',0)
-        normal = dev.get('0',0)
+        xf = dev.get('3', 0)
+        ss = dev.get('2', 0)
+        star = dev.get('1', 0)
+        normal = dev.get('0', 0)
         team_rows.append(
             (
                 '<tr>'
                 f"<td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>"
+                f"<td class='num'>{xf}</td>"
+                f"<td class='num'>{ss}</td>"
+                f"<td class='num'>{star}</td>"
+                f"<td class='num'>{normal}</td>"
                 f"<td class='num'>{stats['count']}</td>"
                 f"<td class='num'>{stats['avg_ovr']:.2f}</td>"
                 f"<td class='num'>{stats['best_ovr']}</td>"
-                f"<td class='num'>{hidden}</td>"
-                f"<td class='num'>{normal}</td>"
                 '</tr>'
             )
         )
     team_table_html = '\n'.join(team_rows)
 
-    # Most hiddens: XF + SS + Star
+    # Most elites: XF + SS
     team_hidden_rows = []
     for team, stats in sorted(
         analytics['teams'].items(),
-        key=lambda kv: (-(kv[1]['dev'].get('3',0)+kv[1]['dev'].get('2',0)+kv[1]['dev'].get('1',0)), kv[0])
+        key=lambda kv: (-(kv[1]['dev'].get('3', 0) + kv[1]['dev'].get('2', 0)), kv[0])
     ):
-        hidden = (
-            stats['dev'].get('3',0)
-            + stats['dev'].get('2',0)
-            + stats['dev'].get('1',0)
-        )
+        elites = stats['dev'].get('3', 0) + stats['dev'].get('2', 0)
         team_hidden_rows.append(
-            f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{hidden}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
+            f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{elites}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
         )
     team_hiddens_html = '\n'.join(team_hidden_rows)
 
@@ -385,16 +445,20 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     pos_rows = []
     for pos, stats in sorted(analytics['positions'].items(), key=lambda kv: (-kv[1]['avg_ovr'], -kv[1]['count'], kv[0])):
         dev = stats['dev']
-        hidden = dev.get('3',0) + dev.get('2',0) + dev.get('1',0)
-        normal = dev.get('0',0)
+        xf = dev.get('3', 0)
+        ss = dev.get('2', 0)
+        star = dev.get('1', 0)
+        normal = dev.get('0', 0)
         pos_rows.append(
             (
                 '<tr>'
                 f"<td>{html.escape(pos)}</td>"
+                f"<td class='num'>{xf}</td>"
+                f"<td class='num'>{ss}</td>"
+                f"<td class='num'>{star}</td>"
+                f"<td class='num'>{normal}</td>"
                 f"<td class='num'>{stats['count']}</td>"
                 f"<td class='num'>{stats['avg_ovr']:.2f}</td>"
-                f"<td class='num'>{hidden}</td>"
-                f"<td class='num'>{normal}</td>"
                 '</tr>'
             )
         )
@@ -405,8 +469,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     ss_total = analytics['dev_counts'].get('2',0)
     star_total = analytics['dev_counts'].get('1',0)
     norm_total = analytics['dev_counts'].get('0',0)
-    hidden_total = xf_total + ss_total + star_total
-    hidden_pct = round(100*hidden_total/total, 1)
+    elites_total = xf_total + ss_total
 
     # Elite-heavy positions summary (show XF and SS separately)
     pos_elite_sorted = []
@@ -419,9 +482,8 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     pos_elite_sorted.sort(key=lambda x: (-x[4], -x[3], x[0]))
     top_pos_lines = []
     for p, xf_c, ss_c, star_c, elite_total in pos_elite_sorted[:6]:
-        # Do not reveal tiers in text; summarize as Hidden count
-        hidden = xf_c + ss_c + star_c
-        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {hidden} Hidden</li>")
+        non_normal = xf_c + ss_c + star_c
+        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {non_normal} non-normal</li>")
     top_pos_html = '\n'.join(top_pos_lines)
 
     html_out = """<!DOCTYPE html>
@@ -491,8 +553,15 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     td.team img.logo { width:18px; height:18px; border-radius:4px; box-shadow:0 0 0 1px rgba(0,0,0,.05); }
 
     .dev-badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
-    .dev-hidden { background:#fef3c7; color:#92400e; }
-    .dev-norm { background:#e5e7eb; color:#374151; }
+    .dev-xf { background:#fee2e2; color:#991b1b; border:1px solid #fecaca; }
+    .dev-ss { background:#dbeafe; color:#1e3a8a; border:1px solid #bfdbfe; }
+    .dev-star { background:#fef3c7; color:#92400e; border:1px solid #fde68a; }
+    .dev-norm { background:#e5e7eb; color:#374151; border:1px solid #d1d5db; }
+    /* Grade badges */
+    .grade { display:inline-block; margin-left:6px; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; border:1px solid transparent; }
+    .grade-on { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+    .grade-near { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+    .grade-below { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
 
     /* Round hit/miss visualization */
     .rounds-table th.rcol { text-align:center; }
@@ -605,18 +674,20 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       <a href=\"#positions\">Positions</a>
     </nav>
 
-    <section id=\"kpis\" class=\"panel\">
+    <section id=\"kpis\" class=\"panel\"> 
       <div class=\"kpis\"> 
         <div class=\"kpi\"><b>Total rookies</b><span>__TOTAL__</span></div>
         <div class=\"kpi\"><b>Avg overall</b><span>__AVG_OVR__</span></div>
-        <div class=\"kpi\"><b>Hidden</b><span>__HIDDEN__</span></div>
-        <div class=\"kpi\"><b>Normal</b><span>__NORMAL__</span></div>
-        <div class=\"kpi\"><b>Hidden share</b><span>__HIDDEN__ (__HIDDEN_PCT__%)</span><div class=\"gbar\"><div class=\"fill\" style=\"width: __HIDDEN_PCT__%;\"></div></div></div>
+        <div class=\"kpi\"><b>XF</b><span>__XF__ (__XF_PCT__%) <span class=\"grade __XF_GRADE_CLASS__\">__XF_GRADE_LABEL__</span></span></div>
+        <div class=\"kpi\"><b>SS</b><span>__SS__ (__SS_PCT__%) <span class=\"grade __SS_GRADE_CLASS__\">__SS_GRADE_LABEL__</span></span></div>
+        <div class=\"kpi\"><b>Star</b><span>__STAR__ (__STAR_PCT__%)</span></div>
+        <div class=\"kpi\"><b>Normal</b><span>__NORMAL__ (__NORM_PCT__%)</span></div>
+        <div class=\"kpi\"><b>Elites share</b><span>__ELITES_PCT__%</span><div class=\"gbar\"><div class=\"fill\" style=\"width: __ELITES_PCT__%;\"></div></div></div>
       </div>
     </section>
 
     <section id=\"spotlight\" class=\"panel\"> 
-      <div class=\"section-title\">Hidden Spotlight</div>
+      <div class=\"section-title\">Elites Spotlight</div>
       <div class=\"players\">__ELITE_CARDS__</div>
     </section>
 
@@ -625,14 +696,14 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"card\"> 
           <h3>Team draft quality — by Avg OVR</h3>
           <table class=\"sortable\">
-            <thead><tr><th>Team</th><th>#</th><th>Avg OVR</th><th>Best OVR</th><th>Hidden</th><th>Normal</th></tr></thead>
+            <thead><tr><th>Team</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>#</th><th>Avg OVR</th><th>Best OVR</th></tr></thead>
             <tbody>__TEAM_TABLE__</tbody>
           </table>
         </div>
         <div class=\"card\"> 
-          <h3>Most hiddens (XF+SS+S) — by team</h3>
+          <h3>Most elites (XF+SS) — by team</h3>
           <table class=\"sortable\">
-            <thead><tr><th>Team</th><th>Hiddens</th><th>#</th><th>Avg OVR</th></tr></thead>
+            <thead><tr><th>Team</th><th>Elites</th><th>#</th><th>Avg OVR</th></tr></thead>
             <tbody>__TEAM_HIDDENS__</tbody>
           </table>
           <p class=\"muted\" style=\"margin-top:6px;\">Note: based on current team on roster.</p>
@@ -642,7 +713,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     <section id=\"rounds\" class=\"panel\">
       <div class=\"card\">
-        <h3>Hidden by Round per team (Hit/Miss)</h3>
+        <h3>Per-Round Hits by Team — Hit = XF/SS/Star</h3>
         <table class=\"rounds-table\">
           <thead>
             <tr>
@@ -654,8 +725,9 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
             __ROUND_ROWS__
           </tbody>
         </table>
-        <p class=\"muted\" style=\"margin-top:6px;\">Cell shows Hidden/Total with a small hit bar. Empty means no picks in that round.</p>
+        <p class=\"muted\" style=\"margin-top:6px;\">Hit counts include XF/SS/Star (non-Normal). Cells show Hit/Total with a bar; empty = no picks.</p>
       </div>
+      <div class=\"card\" style=\"margin-top:16px;\">\n        <h3>Per-Round Hits by Team — Hit = Elites (XF/SS)</h3>\n        <table class=\"rounds-table\">\n          <thead>\n            <tr>\n              <th>Team</th>\n              __ROUND_HEADERS__\n            </tr>\n          </thead>\n          <tbody>\n            __ROUND_ROWS_ELITES__\n          </tbody>\n        </table>\n        <p class=\"muted\" style=\"margin-top:6px;\">Elites include only X-Factor and Superstar devs. Cells show Hit/Total with a bar; empty = no picks.</p>\n      </div>
     </section>
 
     <section id=\"positions\" class=\"panel\"> 
@@ -663,14 +735,14 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"card\"> 
           <h3>Position strength</h3>
           <table class=\"sortable\">
-            <thead><tr><th>Pos</th><th>Total</th><th>Avg OVR</th><th>Hidden</th><th>Normal</th></tr></thead>
+            <thead><tr><th>Position</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>Total</th><th>Avg OVR</th></tr></thead>
             <tbody>__POS_TABLE__</tbody>
           </table>
         </div>
         <div class=\"card\"> 
-          <h3>Hidden-heavy positions</h3>
+          <h3>Non‑Normal‑heavy positions</h3>
           <ul>__TOP_POS__</ul>
-          <p class=\"muted\" style=\"margin-top:6px;\">Hidden = X-Factor + Superstar + Star</p>
+          <p class=\"muted\" style=\"margin-top:6px;\">Non‑Normal = X‑Factor + Superstar + Star</p>
         </div>
       </div>
     </section>
@@ -692,9 +764,22 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__YEAR__', str(year))
     html_out = html_out.replace('__TOTAL__', str(total))
     html_out = html_out.replace('__AVG_OVR__', str(analytics['avg_ovr']))
-    html_out = html_out.replace('__HIDDEN__', str(hidden_total))
+    # KPI numbers and percentages
+    html_out = html_out.replace('__XF__', str(xf_total))
+    html_out = html_out.replace('__SS__', str(ss_total))
+    html_out = html_out.replace('__STAR__', str(star_total))
     html_out = html_out.replace('__NORMAL__', str(norm_total))
-    html_out = html_out.replace('__HIDDEN_PCT__', str(hidden_pct))
+    html_out = html_out.replace('__XF_PCT__', str(analytics.get('xf_pct', 0.0)))
+    html_out = html_out.replace('__SS_PCT__', str(analytics.get('ss_pct', 0.0)))
+    html_out = html_out.replace('__STAR_PCT__', str(analytics.get('star_pct', 0.0)))
+    html_out = html_out.replace('__NORM_PCT__', str(analytics.get('norm_pct', 0.0)))
+    # Grades
+    html_out = html_out.replace('__XF_GRADE_LABEL__', html.escape(analytics.get('xf_grade_label', '')))
+    html_out = html_out.replace('__SS_GRADE_LABEL__', html.escape(analytics.get('ss_grade_label', '')))
+    html_out = html_out.replace('__XF_GRADE_CLASS__', html.escape(analytics.get('xf_grade_class', 'grade-below')))
+    html_out = html_out.replace('__SS_GRADE_CLASS__', html.escape(analytics.get('ss_grade_class', 'grade-below')))
+    # Elites share
+    html_out = html_out.replace('__ELITES_PCT__', str(analytics.get('elite_share_pct', 0.0)))
     html_out = html_out.replace('__ELITE_CARDS__', elite_cards_html)
     html_out = html_out.replace('__TEAM_TABLE__', team_table_html)
     html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)
@@ -727,7 +812,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
             pct = int(round(100.0 * hit / total)) if total else 0
             rate_cls = 'high' if pct >= 75 else ('med' if pct >= 40 else ('low' if pct > 0 else 'zero'))
             bar = (
-                f"<div class='round-cell {rate_cls}' title='Hidden {hit} of {total}'>"
+                f"<div class='round-cell {rate_cls}' title='Hit {hit} of {total}'>"
                 f"<div class='hit' style='width:{pct}%'></div>"
                 f"<div class='label'>{hit}/{total}</div>"
                 f"</div>"
@@ -736,6 +821,31 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         row_html = f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>{''.join(cells)}</tr>"
         round_rows.append(row_html)
     html_out = html_out.replace('__ROUND_ROWS__', '\n'.join(round_rows))
+    # Elites-only round table rows
+    team_rounds_elites = analytics.get('team_rounds_elites', {})
+    round_rows_elites = []
+    for team, stats in sorted(analytics['teams'].items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0])):
+        cells = []
+        per_team = team_rounds_elites.get(team, {})
+        for r in rounds:
+            cell = per_team.get(r)
+            if not cell:
+                cells.append("<td class='empty' title='No pick'></td>")
+                continue
+            hit = int(cell.get('hit', 0))
+            total = int(cell.get('total', 0))
+            pct = int(round(100.0 * hit / total)) if total else 0
+            rate_cls = 'high' if pct >= 75 else ('med' if pct >= 40 else ('low' if pct > 0 else 'zero'))
+            bar = (
+                f"<div class='round-cell {rate_cls}' title='Elites {hit} of {total}'>"
+                f"<div class='hit' style='width:{pct}%'></div>"
+                f"<div class='label'>{hit}/{total}</div>"
+                f"</div>"
+            )
+            cells.append(f"<td>{bar}</td>")
+        row_html = f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>{''.join(cells)}</tr>"
+        round_rows_elites.append(row_html)
+    html_out = html_out.replace('__ROUND_ROWS_ELITES__', '\n'.join(round_rows_elites))
     return html_out
 
 

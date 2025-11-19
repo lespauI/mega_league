@@ -75,7 +75,7 @@
 ## 15. Special Teams Field Position
 **X-Axis:** `punt_net_avg` + `kickoff_touchbacks`  
 **Y-Axis:** `win_pct`  
-**Insight:** Combined special teams impact on field position. Hidden yards win games.
+**Insight:** Combined special teams impact on field position. hidden yards win games.
 
 ## 16. Pass Protection Breakdown Rate
 **X-Axis:** `pass_att_per_game` (Dropback volume)  
