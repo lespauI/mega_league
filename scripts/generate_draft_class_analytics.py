@@ -693,12 +693,14 @@ def _normalize_player_name_for_match(name: str) -> str:
     - Trims whitespace
     """
     s = (name or '').strip()
-    # Remove Markdown bold **
-    if s.startswith('**') and s.endswith('**'):
-        s = s[2:-2]
-    # Remove variant suffix in parentheses
+    # Remove variant suffix in parentheses first
     if ' (' in s:
         s = s.split(' (', 1)[0]
+    # Remove Markdown bold markers if present on either side
+    if s.startswith('**'):
+        s = s[2:]
+    if s.endswith('**'):
+        s = s[:-2]
     return s.strip()
 
 
