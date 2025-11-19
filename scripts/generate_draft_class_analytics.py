@@ -891,10 +891,14 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
             notes_html = ''
 
         # Real pick evaluation section (always shown)
+        # Dev badge
+        dev_badge = badge_for_dev(e.get('dev', '0'))
         real_eval_html = (
             "<div class=\"real-eval-block\">"
             "  <div class=\"real-eval-title\">Оценка реального пика</div>"
             f"  <div class=\"real-eval\">Оценка: <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
+            f"  <div class=\"real-eval\">OVR: <span class=\"ovr-badge\">{int(e.get('ovr',0))}</span></div>"
+            f"  <div class=\"real-eval\">DevTrait: {dev_badge}</div>"
             "</div>"
         )
 
@@ -1213,6 +1217,7 @@ def generate_html(
     .real-eval-block { margin-top:8px; }
     .real-eval-title { color:#475569; font-weight:600; }
     .real-eval { color:#475569; font-size:12px; margin-top:6px; }
+    .ovr-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
 
     /* Responsive tweaks */
     @media (max-width: 1100px) {
