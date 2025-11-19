@@ -199,6 +199,52 @@ python3 scripts/top_pick_race_analysis.py
 
 **Output:** `output/draft_race/draft_race_report.md`
 
+## Draft Class Analytics
+
+- Purpose: Generate an analytics-focused HTML report for a given rookie draft class (e.g., 2026) using `MEGA_players.csv` and, optionally, `MEGA_teams.csv` for logos.
+
+- Usage
+  - Minimal (defaults paths and output):
+    - `python3 scripts/generate_draft_class_analytics.py --year 2026`
+  - Explicit paths and output file:
+    - `python3 scripts/generate_draft_class_analytics.py --year 2026 --players MEGA_players.csv --teams MEGA_teams.csv --out docs/draft_class_2026.html`
+
+- Arguments
+  - `--year <int>`: Required draft class year (e.g., 2026)
+  - `--players <path>`: Players CSV path; default `MEGA_players.csv`
+  - `--teams <path>`: Teams CSV path; default `MEGA_teams.csv` (optional, only used for logos)
+  - `--out <path>`: Output HTML path; default `docs/draft_class_<YEAR>.html` (parent dir is created)
+  - `--league-prefix <str>`: Optional suffix added to `<title>` (default: `MEGA League`)
+  - `--title <str>`: Optional full page `<title>` override
+
+- Output
+  - Generates `docs/draft_class_<YEAR>.html` (e.g., `docs/draft_class_2026.html`) with:
+    - KPIs: Total rookies, Avg overall, X-Factors, Superstars, Stars, Elites share
+    - Elites Spotlight (X-Factor + Superstar cards)
+    - Team draft quality table (Avg OVR, Best OVR, dev distribution)
+    - Most hiddens leaderboard (XF+SS+Star)
+    - Position strength table and elite-heavy positions list
+  - Team logos appear when `MEGA_teams.csv` provides a resolvable `logoId`; renders fine without it.
+  - Dev trait mapping: `3 = X-Factor`, `2 = Superstar`, `1 = Star`, `0 = Normal`.
+
+- Verification
+  - Generate for 2026:
+    - `python3 scripts/generate_draft_class_analytics.py --year 2026 --players MEGA_players.csv --teams MEGA_teams.csv --out docs/draft_class_2026.html`
+  - Quick checks:
+    - `test -s docs/draft_class_2026.html`
+    - `rg -n "Draft Class 2026 — Analytics Report" docs/draft_class_2026.html`
+    - `! rg -n "__[A-Z_]+__" docs/draft_class_2026.html`
+  - Sanity compare rookies count vs CSV:
+    - `python3 - << 'PY'\nimport csv;rows=[r for r in csv.DictReader(open('MEGA_players.csv',newline='',encoding='utf-8')) if str(r.get('rookieYear'))=='2026'];print(len(rows))\nPY`
+    - `rg -o "<b>Total rookies</b><span>(\\d+)" -r "$1" -N docs/draft_class_2026.html`
+  - Verifier script (recommended):
+    - `python3 scripts/verify_draft_class_analytics.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html`
+  - Smoke test (end-to-end):
+    - `bash scripts/smoke_generate_draft_2026.sh`
+
+Notes:
+- If `MEGA_teams.csv` is missing, the page still renders without logos.
+
 **Features:**
 - Top 16 draft picks projection
 - SOS impact on draft position

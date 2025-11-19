@@ -229,7 +229,8 @@ Verification
 - Run with missing `--teams` file to ensure graceful logo omission.
 - Run with corrupt numeric fields to ensure defaults used and page still renders.
 
-### [ ] Step: Documentation Update
+### [x] Step: Documentation Update
+<!-- chat-id: d41eb7ae-e66e-4614-801f-2a28155b1550 -->
 Task definition
 - Add a README section “Draft Class Analytics” with usage, arguments, outputs, and verification commands.
 
