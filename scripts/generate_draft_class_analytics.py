@@ -239,10 +239,11 @@ def compute_analytics(rows: list[dict]):
     teams_sorted = sorted(teams.items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0]))
     positions_sorted = sorted(positions.items(), key=lambda kv: (-kv[1]['avg_ovr'], -kv[1]['count'], kv[0]))
 
-    # Per-team per-round hidden hits/misses
+    # Per-team per-round hits/misses
     # Only include rows with a known draft_round
     rounds_present: set[int] = set()
     team_rounds: dict[str, dict[int, dict[str, int]]] = {}
+    team_rounds_elites: dict[str, dict[int, dict[str, int]]] = {}
     for r in rows:
         rd = r.get('draft_round')
         if rd is None:
@@ -257,6 +258,11 @@ def compute_analytics(rows: list[dict]):
         cell['total'] += 1
         if r['dev'] in ('3', '2', '1'):
             cell['hit'] += 1
+        # elites-only aggregation mirrors totals, counts hits for XF/SS only
+        cell_e = team_rounds_elites.setdefault(team, {}).setdefault(rdv, {'hit': 0, 'total': 0})
+        cell_e['total'] += 1
+        if r['dev'] in ('3', '2'):
+            cell_e['hit'] += 1
     rounds_sorted = sorted(rounds_present)
 
     return {
@@ -272,6 +278,7 @@ def compute_analytics(rows: list[dict]):
         'positions': positions,
         'positions_sorted': positions_sorted,
         'team_rounds': team_rounds,
+        'team_rounds_elites': team_rounds_elites,
         'rounds_sorted': rounds_sorted,
     }
 
