@@ -261,3 +261,8 @@ Saints_logo OVR 75 1.2
 Emmett Newby, QB (just text, not bage)
 Superstar (bage), 22 y/o (text)
  · Wyoming
+
+### [x] Step: Get latest master
+<!-- chat-id: 4331fc27-fa03-46fd-8801-f3965d45386c -->
+
+Resolve conflict in favor of your code
