@@ -1,9 +1,9 @@
-# Clarifications (prioritized)
-- Do we keep a way to mask dev traits behind a flag (e.g., `--mask-dev`), or should unhidden be the only mode going forward? [NEEDS CLARIFICATION]
-- In round hit/miss visualization, should a “hit” include Star (dev=1) or only Elites (X‑Factor + Superstar; dev=3/2)? This changes counts materially. [NEEDS CLARIFICATION]
-- Rename “Hidden Spotlight” to “Elites Spotlight” (X‑Factor + Superstar) or to a full “Dev Spotlight” that includes Stars as well? [NEEDS CLARIFICATION]
-- Replace all “Hidden/Normal” KPI and table columns with a four‑tier breakdown (XF/SS/Star/Normal)? Any preference for keeping an “Elites share” KPI (XF+SS) alongside the breakdown? [NEEDS CLARIFICATION]
-- Should we update docs/README and any smoke/verify scripts that reference “Hidden” naming in their expected outputs as part of this change? (Recommended to avoid confusion.) [NEEDS CLARIFICATION]
+# Decisions from Clarifications
+- Unhidden only: remove masking entirely; no `--mask-dev` mode.
+- Round “hit” includes Stars: default hits = dev in {3,2,1}. Add a second rounds table for Elites‑only hits (dev in {3,2}).
+- Spotlight = “Elites Spotlight”: includes X‑Factor + Superstar only (excludes Stars).
+- KPIs: replace Hidden/Normal with XF/SS/Star/Normal; add distribution grading based on targets XF ≥ 10%, SS ≥ 15%.
+- Documentation/scripts: update README and any verify/smoke scripts to remove “Hidden” terminology and reflect new outputs.
 
 # Feature Specification: Unhide Dev Traits in Draft Class Analytics
 
@@ -16,7 +16,7 @@
 
 ### User Story 2 - Understand dev distribution at a glance
 **Acceptance Scenarios**:
-1. **Given** the KPIs section, **When** I view the page header, **Then** I see counts for XF, SS, Star, Normal and an “Elites share” (XF+SS) percentage bar.
+1. **Given** the KPIs section, **When** I view the page header, **Then** I see counts and percentages for XF, SS, Star, Normal and a distribution grading that evaluates XF vs a 10% target and SS vs a 15% target, along with an “Elites share” (XF+SS) percentage bar.
 2. **Given** the team and position tables, **When** I sort by dev columns, **Then** I can rank by counts of XF, SS, Star, and Normal.
 
 ### User Story 3 - Spotlight top rookies
@@ -26,23 +26,27 @@
 
 ### User Story 4 - Preserve round analytics meaningfully
 **Acceptance Scenarios**:
-1. **Given** the round hit/miss table, **When** I view per‑team in round cells, **Then** the definition of “hit” is consistent across the page and documented in a note.
+1. **Given** the round hit/miss tables, **When** I view per‑team in round cells, **Then** one table shows hits = non‑Normal (XF/SS/Star) and a second table shows Elites‑only hits (XF/SS), with both definitions documented in notes.
 2. **Given** different interpretations (Elites only vs. non‑Normal), **When** a project default is chosen, **Then** the table labels and footnote reflect that default.
 
 ---
 
 ## Requirements*
 
-- Default behavior shows real dev traits everywhere (no masking).
+- Default behavior shows real dev traits everywhere (no masking). No CLI flag to mask.
 - Dev badges
   - Labels: “X‑Factor”, “Superstar”, “Star”, “Normal”.
   - Distinct CSS classes per tier (e.g., `dev-xf`, `dev-ss`, `dev-star`, `dev-norm`) with accessible contrast.
   - Badge colors consistent across player cards and tables.
 - KPIs
-  - Replace “Hidden/Normal” with four KPIs: XF, SS, Star, Normal.
+  - Replace “Hidden/Normal” with four KPIs: XF, SS, Star, Normal (counts and percentages).
   - Add “Elites share” = (XF+SS)/Total rookies as percent with a progress bar.
+  - Distribution grading: compute simple badges for XF and SS vs targets:
+    - Targets: XF ≥ 10%, SS ≥ 15%.
+    - Badge logic per tier: On‑target (≥ target), Near‑target (≥ 75% of target), Below‑target (< 75% of target).
+    - Display as small badges next to XF% and SS% (e.g., XF 11.2% — On‑target).
 - Spotlight
-  - Rename “Hidden Spotlight” to “Elites Spotlight”.
+  - Rename “Hidden Spotlight” to “Elites Spotlight” (XF+SS only; Stars excluded).
   - Cards show team logo (if available), OVR badge, draft round.pick (if both present), name, position chip, and dev badge.
 - Team table
   - Columns: Team | # | Avg OVR | Best OVR | XF | SS | Star | Normal.
@@ -52,10 +56,10 @@
   - Columns: Team | Elites (XF+SS) | # | Avg OVR. Sort by Elites desc.
 - Positions table
   - Columns: Position | # | Avg OVR | XF | SS | Star | Normal. Sort by Avg OVR desc then # desc.
-- Round hit/miss table
-  - Default interpretation: “hit” = dev > Normal (XF/SS/Star). This preserves historic intent while traits are unhidden.
-  - Table header and footnote indicate: “Hit = any non‑Normal dev (XF/SS/Star)”.
-  - Keep existing visualization (bar with percent and fraction hit/total). Limit columns to first 7–10 rounds for layout.
+- Round hit/miss tables
+  - Table A (Default): hits = any non‑Normal dev (XF/SS/Star). Header and footnote indicate: “Hit = XF/SS/Star”.
+  - Table B (Elites only): hits = Elites (XF/SS). Header and footnote indicate: “Hit = Elites (XF/SS)”.
+  - Keep existing visualization (bar with percent and fraction hit/total). Limit columns to first 7–10 rounds per table.
 - Data handling
   - Keep existing CSV schema assumptions: `devTrait` in {3,2,1,0}; tolerate unknowns by coercing to Normal (0).
   - Continue to derive OVR from `playerBestOvr` else `playerSchemeOvr`.
@@ -64,24 +68,23 @@
   - Badge colors meet contrast guidelines; tooltips/labels avoid ambiguity.
   - All tables remain sortable; mobile layout unchanged where possible.
 - Backward compatibility
-  - Optional: provide `--mask-dev` flag to re‑enable masking (defaults to unhidden). If omitted, proceed with unhidden only.
+  - No masking fallback. Remove or update any references to “Hidden” in UI and docs.
 - Documentation
   - Update README Draft Class Analytics section and any verify/smoke scripts to reflect new labels, KPIs, and table headers.
 
-Assumptions (defaults if not clarified):
-- “Elites Spotlight” includes XF+SS only; Stars appear in tables but not in spotlight.
-- Round “hit” counts XF/SS/Star (non‑Normal), matching prior “Hidden” semantics.
-- Keep “Elites share” KPI (XF+SS) in addition to the full breakdown.
+Assumptions
+- Spotlight excludes Stars; Stars are fully represented in tables.
+- Round Table A uses non‑Normal (XF/SS/Star); Round Table B uses XF/SS only.
+- Keep “Elites share” KPI (XF+SS) in addition to the full breakdown and grading badges.
 
 ## Success Criteria*
 
 - Running `python3 scripts/generate_draft_class_analytics.py --year <Y>` produces an HTML report where:
   - No “Hidden” labels appear; player badges read XF/SS/Star/Normal.
-  - KPIs display counts for XF/SS/Star/Normal and an “Elites share” percent bar.
+  - KPIs display counts and percentages for XF/SS/Star/Normal, an “Elites share” percent bar, and grading badges for XF and SS vs targets (10% and 15%).
   - Spotlight title reads “Elites Spotlight” and shows XF/SS only, ordered by round.pick then OVR.
   - Team and position tables show four dev columns (XF/SS/Star/Normal) with sorting.
   - “Most elites — by team” ranks teams by XF+SS count.
-  - Round hit/miss table footnote states the chosen “hit” definition and the bars match that definition.
-- README is updated to remove “Hidden” terminology and to describe the new output and verifications.
-- Any verify/smoke scripts that assert on copy or headers are aligned and pass.
+  - Two rounds tables are present: Table A uses hits = XF/SS/Star; Table B uses hits = XF/SS only. Each has clear footnotes and matching bar logic.
+- README and any verify/smoke scripts are updated to remove “Hidden” terminology and to describe new labels, KPIs, grading, and tables; checks pass.
 - No regressions in file paths, CLI flags, or default output location.
