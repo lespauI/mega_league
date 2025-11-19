@@ -100,7 +100,7 @@ Task instructions
 
 "Step:" prefix is important, do not omit it!
 
-### [ ] Step: Wire Section Intros Support
+### [x] Step: Wire Section Intros Support
 <!-- chat-id: 2bb29916-cd13-4ef5-bfb3-0890613ddce1 -->
 Implement optional, multi-line intro text blocks for key sections.
 
@@ -164,7 +164,7 @@ Create HTML validator for Round 1 and intro blocks.
 - Verification:
   - Run: `python3 scripts/verify_draft_round1_recap.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html` and expect zero errors (non-zero exit on failure).
 
-### [x] Step: Smoke Script Update
+### [ ] Step: Smoke Script Update
 <!-- chat-id: 295cea33-30d8-4c5c-bf3e-6363d786474b -->
 Extend smoke script to include new verification.
 

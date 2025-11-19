@@ -15,6 +15,7 @@ Usage:
 from __future__ import annotations
 
 import argparse
+import json
 import csv
 import html
 import os
@@ -67,6 +68,40 @@ def read_csv(path: str) -> list[dict]:
     except Exception as e:
         print(f"error: failed to read CSV '{path}': {e}", file=sys.stderr)
         sys.exit(2)
+
+
+def read_section_intros(path: str | None) -> dict:
+    """Load optional section intros JSON mapping.
+
+    Expected keys (all optional): 'kpis', 'elites', 'team_quality', 'positions', 'round1'.
+    Values should be strings; lists will be joined by newlines. Other types are
+    coerced to strings. On any error, returns an empty mapping without exiting.
+    """
+    mapping: dict[str, str] = {}
+    if not path:
+        return mapping
+    try:
+        if not os.path.exists(path):
+            print(f"warn: section intros file not found: {path}", file=sys.stderr)
+            return mapping
+        with open(path, 'r', encoding='utf-8') as fh:
+            data = json.load(fh)
+        if not isinstance(data, dict):
+            print("warn: section intros JSON is not an object; ignoring", file=sys.stderr)
+            return mapping
+        for k in ('kpis', 'elites', 'team_quality', 'positions', 'round1'):
+            if k not in data:
+                continue
+            v = data.get(k)
+            if isinstance(v, list):
+                v = "\n".join(str(x) for x in v)
+            elif not isinstance(v, str):
+                v = str(v)
+            mapping[k] = v
+    except Exception as e:
+        print(f"warn: failed to read section intros: {e}", file=sys.stderr)
+        return {}
+    return mapping
 
 
 def warn_missing_columns(rows: list[dict], required: list[str], context: str) -> None:
@@ -190,12 +225,153 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
             'dev': dev,
             'draft_round': safe_int(r.get('draftRound'), None),
             'draft_pick': safe_int(r.get('draftPick'), None),
+            # Optional portrait identifier (used for Round 1 recap photos)
+            'portrait_id': (lambda v: (str(v) if v is not None else None))(safe_int(r.get('portraitId'), None)),
             'college': college,
             'age': safe_int(r.get('age'), None),
         })
     # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
     return out
+
+
+def _normalize_pos_for_mapping(pos: str) -> str:
+    """Normalize a raw position into a mapping class for attrs/traits.
+
+    Groups logical equivalents (e.g., LE/RE -> DE, LT/RT/LG/RG/C -> OL, FS/SS -> S).
+    """
+    p = (pos or '').strip().upper()
+    if not p:
+        return '?'
+    # Offense
+    if p in {'HB', 'RB'}:
+        return 'RB'
+    if p == 'FB':
+        return 'FB'
+    if p == 'WR':
+        return 'WR'
+    if p == 'TE':
+        return 'TE'
+    if p in {'LT', 'RT', 'LG', 'RG', 'C', 'OL', 'T', 'G'}:
+        return 'OL'
+    if p == 'QB':
+        return 'QB'
+    if p in {'K', 'P'}:
+        return p
+    # Defense
+    if p in {'LE', 'RE', 'DE'}:
+        return 'DE'
+    if p in {'DT'}:
+        return 'DT'
+    if p in {'MLB', 'LOLB', 'ROLB', 'OLB', 'LB'}:
+        return 'LB'
+    if p in {'FS', 'SS'}:
+        return 'S'
+    if p in {'CB'}:
+        return 'CB'
+    # Fallback
+    return p
+
+
+def get_attr_keys_for_pos(pos: str) -> list[str]:
+    """Return up to ~10 key rating fields to display for a given position.
+
+    Keys match columns in MEGA_players.csv. Missing columns/values should be
+    skipped by callers. Order expresses priority.
+    """
+    p = _normalize_pos_for_mapping(pos)
+    mapping = {
+        # QB passing, pressure, mobility, awareness
+        'QB': [
+            'throwAccShortRating', 'throwAccMidRating', 'throwAccDeepRating',
+            'throwPowerRating', 'throwUnderPressureRating', 'throwOnRunRating',
+            'playActionRating', 'awareRating', 'speedRating', 'breakSackRating',
+        ],
+        # RB/HB elusiveness + carrying/vision + receiving
+        'RB': [
+            'speedRating', 'accelRating', 'agilityRating',
+            'breakTackleRating', 'truckRating', 'jukeMoveRating', 'spinMoveRating',
+            'stiffArmRating', 'carryRating', 'catchRating', 'bCVRating',
+        ],
+        # FB blocking + strength + short-yardage
+        'FB': [
+            'runBlockRating', 'leadBlockRating', 'impactBlockRating',
+            'strengthRating', 'truckRating', 'catchRating',
+        ],
+        # WR receiving, route running, release, agility
+        'WR': [
+            'catchRating', 'cITRating', 'routeRunShortRating', 'routeRunMedRating',
+            'routeRunDeepRating', 'speedRating', 'releaseRating', 'agilityRating',
+            'changeOfDirectionRating',
+        ],
+        # TE balanced catching + blocking + strength
+        'TE': [
+            'catchRating', 'cITRating', 'runBlockRating', 'passBlockRating',
+            'speedRating', 'routeRunShortRating', 'routeRunMedRating',
+            'strengthRating', 'specCatchRating',
+        ],
+        # Offensive Line (T/G/C): pass/run, power/finesse + strength/awareness/impact
+        'OL': [
+            'passBlockRating', 'passBlockPowerRating', 'passBlockFinesseRating',
+            'runBlockRating', 'runBlockPowerRating', 'runBlockFinesseRating',
+            'strengthRating', 'awareRating', 'impactBlockRating',
+        ],
+        # Edge rushers: moves + shed + pursuit + tackle + speed
+        'DE': [
+            'powerMovesRating', 'finesseMovesRating', 'blockShedRating',
+            'pursuitRating', 'tackleRating', 'strengthRating', 'speedRating', 'hitPowerRating',
+        ],
+        # Interior DL: power + shed + strength + tackle + pursuit + hit power
+        'DT': [
+            'powerMovesRating', 'blockShedRating', 'strengthRating',
+            'tackleRating', 'pursuitRating', 'hitPowerRating',
+        ],
+        # Linebackers: tackle + pursuit + hit + shed + recognition + coverage + speed
+        'LB': [
+            'tackleRating', 'pursuitRating', 'hitPowerRating', 'blockShedRating',
+            'playRecRating', 'zoneCoverRating', 'manCoverRating', 'speedRating', 'awareRating',
+        ],
+        # Cornerbacks: man/zone + speed/accel/agility + press + recognition + ball skills
+        'CB': [
+            'manCoverRating', 'zoneCoverRating', 'speedRating', 'accelRating',
+            'agilityRating', 'pressRating', 'playRecRating', 'catchRating', 'changeOfDirectionRating',
+        ],
+        # Safeties: zone + tackle + hit + speed + recognition + pursuit + man + awareness + hands
+        'S': [
+            'zoneCoverRating', 'tackleRating', 'hitPowerRating', 'speedRating',
+            'playRecRating', 'pursuitRating', 'manCoverRating', 'awareRating', 'catchRating',
+        ],
+        # Specialists
+        'K': ['kickPowerRating', 'kickAccRating'],
+        'P': ['kickPowerRating', 'kickAccRating'],
+    }
+    return mapping.get(p, [])
+
+
+def get_trait_keys_for_pos(pos: str) -> list[str]:
+    """Return a list of trait fields to display for a given position.
+
+    Uses role-based groupings per spec; skips missing fields gracefully downstream.
+    """
+    p = _normalize_pos_for_mapping(pos)
+    # Core groups
+    qb_traits = ['clutchTrait', 'sensePressureTrait', 'throwAwayTrait', 'tightSpiralTrait', 'forcePassTrait']
+    ball_carrier_traits = ['coverBallTrait', 'fightForYardsTrait', 'runStyle']
+    receiver_traits = ['feetInBoundsTrait', 'posCatchTrait', 'yACCatchTrait', 'dropOpenPassTrait']  # 'specCatchTrait' not present in CSV
+    defender_core = ['bigHitTrait', 'stripBallTrait', 'playBallTrait']
+    dl_moves = ['dLBullRushTrait', 'dLSpinTrait', 'dLSwimTrait']
+
+    if p == 'QB':
+        return qb_traits
+    if p in {'RB', 'FB'}:
+        return ball_carrier_traits
+    if p in {'WR', 'TE'}:
+        return receiver_traits
+    if p in {'DE', 'DT'}:
+        return dl_moves + defender_core
+    if p in {'LB', 'CB', 'S'}:
+        return defender_core
+    return []
 
 
 def compute_analytics(rows: list[dict]):
@@ -346,7 +522,17 @@ def badge_for_dev(dev: str) -> str:
     return f'<span class="dev-badge {cls}">{html.escape(label)}</span>'
 
 
-def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: dict, *, title_suffix: str | None = None, title_override: str | None = None) -> str:
+def generate_html(
+    year: int,
+    rows: list[dict],
+    analytics: dict,
+    team_logo_map: dict,
+    *,
+    title_suffix: str | None = None,
+    title_override: str | None = None,
+    section_intros: dict | None = None,
+    intro_default: str | None = None,
+) -> str:
     elites = [r for r in rows if r['dev'] in ('3','2')]
     # Order cards by draft pick: round asc, pick asc; missing picks last
     def elite_sort_key(r: dict):
@@ -508,6 +694,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     h1 { margin:0; font-size: 22px; }
     .subtitle { color: var(--sub); margin:8px 0 6px; font-size: 13px; }
     .pill { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; border:1px solid #bfdbfe; background:#dbeafe; color:#1e3a8a; font-size:12px; }
+    .section-intro { white-space: pre-wrap; color: #334155; font-size: 13px; margin: 8px 0 12px; }
 
     .panel { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }
     .kpis { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; }
@@ -689,6 +876,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     </nav>
 
     <section id=\"kpis\" class=\"panel\"> 
+      __INTRO_KPIS__
       <div class=\"kpis\"> 
         <div class=\"kpi\"><b>Total rookies</b><span>__TOTAL__</span></div>
         <div class=\"kpi\"><b>Avg overall</b><span>__AVG_OVR__</span></div>
@@ -710,6 +898,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     <section id=\"spotlight\" class=\"panel\"> 
       <div class=\"section-title\">Elites Spotlight</div>
+      __INTRO_ELITES__
       <div class=\"players\">__ELITE_CARDS__</div>
     </section>
 
@@ -717,6 +906,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Team draft quality — by Avg OVR</h3>
+          __INTRO_TEAM_QUALITY__
           <table class=\"sortable\">
             <thead><tr><th>Team</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>#</th><th>Avg OVR</th><th>Best OVR</th></tr></thead>
             <tbody>__TEAM_TABLE__</tbody>
@@ -753,6 +943,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     </section>
 
     <section id=\"positions\" class=\"panel\"> 
+      __INTRO_POSITIONS__
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Position strength</h3>
@@ -812,6 +1003,22 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__SS_GRADE_LABEL__', html.escape(ss_label_render))
     html_out = html_out.replace('__XF_GRADE_CLASS__', html.escape(xf_class_render))
     html_out = html_out.replace('__SS_GRADE_CLASS__', html.escape(ss_class_render))
+    # Section intros
+    section_intros = section_intros or {}
+    def render_intro(key: str) -> str:
+        txt = section_intros.get(key)
+        if txt is None:
+            txt = intro_default or ''
+        txt = (txt or '').strip()
+        if not txt:
+            return ''
+        return f'<div class="section-intro">{html.escape(txt)}</div>'
+
+    html_out = html_out.replace('__INTRO_KPIS__', render_intro('kpis'))
+    html_out = html_out.replace('__INTRO_ELITES__', render_intro('elites'))
+    html_out = html_out.replace('__INTRO_TEAM_QUALITY__', render_intro('team_quality'))
+    html_out = html_out.replace('__INTRO_POSITIONS__', render_intro('positions'))
+
     html_out = html_out.replace('__ELITE_CARDS__', elite_cards_html)
     html_out = html_out.replace('__TEAM_TABLE__', team_table_html)
     html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)
@@ -889,6 +1096,8 @@ def main():
     ap.add_argument('--out', default=None, help='Output HTML path (default: docs/draft_class_<year>.html)')
     ap.add_argument('--league-prefix', default='MEGA League', help='Optional league/brand suffix for <title>')
     ap.add_argument('--title', dest='title_override', default=None, help='Optional full page <title> override string')
+    ap.add_argument('--section-intros', dest='section_intros', default=None, help='Path to JSON mapping for section intros')
+    ap.add_argument('--intro-default', dest='intro_default', default=None, help='Default intro text used when a section is missing in mapping')
     args = ap.parse_args()
 
     out_path = args.out or os.path.join('docs', f'draft_class_{args.year}.html')
@@ -915,9 +1124,13 @@ def main():
 
     rookies = gather_rookies(players, args.year)
     analytics = compute_analytics(rookies)
+    intros_map = read_section_intros(args.section_intros)
     html_out = generate_html(
         args.year, rookies, analytics, team_logo_map,
-        title_suffix=args.league_prefix, title_override=args.title_override,
+        title_suffix=args.league_prefix,
+        title_override=args.title_override,
+        section_intros=intros_map,
+        intro_default=args.intro_default,
     )
 
     out_dir = os.path.dirname(out_path)
