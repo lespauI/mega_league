@@ -302,6 +302,28 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
             return ''
         return f'<img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/{lid}.png" alt="{html.escape(team)}" />'
 
+    # Small, colorful position chip
+    def pos_chip(pos: str) -> str:
+        p = (pos or '?').upper()
+        # Group common positions into color families for consistent styling
+        if p in {'LT','LG','RT','RG','T','G','C','OL'}:
+            cls = 'OL'
+        elif p in {'DE','DT','RE','LE','DL'}:
+            cls = 'DL'
+        elif p in {'MLB','LOLB','ROLB','OLB','LB'}:
+            cls = 'LB'
+        elif p in {'CB','FS','SS','DB'}:
+            cls = 'DB'
+        elif p in {'HB','RB','FB','WR','TE'}:
+            cls = p  # direct mapping available in CSS rules
+        elif p in {'QB','K','P'}:
+            cls = p
+        elif p == '?':
+            cls = '?'
+        else:
+            cls = 'UNK'
+        return f'<span class="pos-chip pos-{html.escape(cls)}">{html.escape(p)}</span>'
+
     elite_cards = []
     for r in elites:
         # Round.pick badge when both are present (e.g., 1.7)
@@ -317,7 +339,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
                 f"<div class=\"hdr\">{logo_img(r['team'])}<div class=\"tags\">{ovr_badge}{pick_badge}</div></div>"
                 f"<div class=\"nm\">{html.escape(r['name'])}</div>"
                 f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
-                f"<div class=\"meta\">{html.escape(r['position'])} · {html.escape(school)}</div>"
+                f"<div class=\"meta\">{pos_chip(r['position'])}<span class=\"dot\">·</span>{html.escape(school)}</div>"
                 '</div>'
             )
         )
@@ -418,6 +440,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     header { padding: 18px 20px 8px; border-bottom: 1px solid #ececec; background:linear-gradient(180deg,#ffffff 0%,#fafafa 100%); }
     h1 { margin:0; font-size: 22px; }
     .subtitle { color: var(--sub); margin:8px 0 6px; font-size: 13px; }
+    .pill { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; border:1px solid #bfdbfe; background:#dbeafe; color:#1e3a8a; font-size:12px; }
 
     .panel { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }
     .kpis { display: grid; grid-template-columns: repeat(6, minmax(0,1fr)); gap: 10px; }
@@ -425,25 +448,36 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .kpi:hover { box-shadow:0 2px 6px rgba(0,0,0,.06); }
     .kpi b { display:block; font-size: 12px; color:#0f172a; }
     .kpi span { color:#334155; font-size: 18px; font-weight: 700; }
+    .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+    .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }
 
     .section-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; border-left:3px solid var(--accent); padding-left:8px; }
     .grid { display:grid; grid-template-columns: 1.7fr 1.3fr; gap: 12px; }
     .card { background:#fff; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; }
     .card h3 { margin: 0 0 8px; font-size: 14px; color:#0f172a; }
 
-    .players { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
+    .players { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
     .player { border:1px solid var(--grid); border-radius:10px; padding:10px; background:#fff; transition: transform .12s ease, box-shadow .12s ease; }
     .player:hover { transform: translateY(-2px); box-shadow: 0 3px 10px rgba(0,0,0,.06); }
     .player .hdr { display:flex; align-items:center; }
     .player .logo { width:22px; height:22px; border-radius:4px; box-shadow:0 0 0 1px rgba(0,0,0,.06); }
     .player .tags { margin-left:auto; display:flex; align-items:center; gap:6px; }
     .player .nm { font-weight: 600; margin-top: 2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
-    .player .meta { color:#475569; font-size: 12px; margin-top: 2px; }
+    .player .meta { color:#475569; font-size: 12px; margin-top: 2px; display:flex; align-items:center; gap:8px; }
     .player .ovr { display:none; }
     .player .dev { margin-top: 4px; }
     .player .pick-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#e0f2fe; color:#075985; border:1px solid #bae6fd; }
     .player .ovr-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
     .muted { color: var(--muted); }
+    .pos-chip { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; border:1px solid transparent; }
+    .pos-QB { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .pos-HB, .pos-RB, .pos-FB, .pos-WR, .pos-TE { background:#dbeafe; color:#1e3a8a; border-color:#bfdbfe; }
+    .pos-T, .pos-G, .pos-C, .pos-OL { background:#ede9fe; color:#5b21b6; border-color:#ddd6fe; }
+    .pos-DE, .pos-DT, .pos-DL { background:#fef3c7; color:#92400e; border-color:#fde68a; }
+    .pos-MLB, .pos-LOLB, .pos-ROLB, .pos-LB { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+    .pos-CB, .pos-FS, .pos-SS, .pos-DB { background:#e0f2fe; color:#075985; border-color:#bae6fd; }
+    .pos-K, .pos-P { background:#f1f5f9; color:#0f172a; border-color:#e2e8f0; }
+    .pos-UNK, .pos-? { background:#e5e7eb; color:#374151; border-color:#d1d5db; }
 
     table { width:100%; border-collapse: collapse; }
     thead tr { background:#fafafa; }
@@ -463,7 +497,16 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .rounds-table th.rcol { text-align:center; }
     .round-cell { width: 72px; height: 16px; position: relative; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
     .round-cell .hit { height:100%; background:#86efac; }
+    .round-cell.low .hit { background:#fcd34d; }
+    .round-cell.med .hit { background:#a3e635; }
+    .round-cell.high .hit { background:#22c55e; }
+    .round-cell.zero .hit { background:#e5e7eb; }
     .round-cell .label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#334155; }
+
+    /* Sticky sub-nav */
+    .subnav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: saturate(120%) blur(6px); border-bottom: 1px solid #eef2f7; padding: 8px 12px; display:flex; flex-wrap:wrap; gap: 8px; }
+    .subnav a { text-decoration:none; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:6px 10px; border-radius:999px; }
+    .subnav a:hover { background:#e2e8f0; }
 
     /* Responsive tweaks */
     @media (max-width: 1100px) {
@@ -484,9 +527,17 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
   <div class=\"topbar\"><a class=\"back\" href=\"../index.html\" title=\"Back to index\">&#8592; Back to Index</a></div>
   <div class=\"container\"> 
     <header>
-      <h1>Draft Class __YEAR__ — Analytics Report</h1>
+      <h1>Draft Class __YEAR__ — Analytics Report <span class=\"pill\">__YEAR__</span></h1>
       <div class=\"subtitle\">Elites spotlight + team and position strength analytics</div>
     </header>
+
+    <nav class=\"subnav\">
+      <a href=\"#kpis\">KPIs</a>
+      <a href=\"#spotlight\">Spotlight</a>
+      <a href=\"#teams\">Teams</a>
+      <a href=\"#rounds\">Rounds</a>
+      <a href=\"#positions\">Positions</a>
+    </nav>
 
     <section id=\"kpis\" class=\"panel\">
       <div class=\"kpis\"> 
@@ -494,7 +545,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"kpi\"><b>Avg overall</b><span>__AVG_OVR__</span></div>
         <div class=\"kpi\"><b>Hidden</b><span>__HIDDEN__</span></div>
         <div class=\"kpi\"><b>Normal</b><span>__NORMAL__</span></div>
-        <div class=\"kpi\"><b>Hidden share</b><span>__HIDDEN__ (__HIDDEN_PCT__%)</span></div>
+        <div class=\"kpi\"><b>Hidden share</b><span>__HIDDEN__ (__HIDDEN_PCT__%)</span><div class=\"gbar\"><div class=\"fill\" style=\"width: __HIDDEN_PCT__%;\"></div></div></div>
       </div>
     </section>
 
@@ -608,7 +659,8 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
             hit = int(cell.get('hit', 0))
             total = int(cell.get('total', 0))
             pct = int(round(100.0 * hit / total)) if total else 0
-            bar = f"<div class='round-cell'><div class='hit' style='width:{pct}%'></div><div class='label'>{hit}/{total}</div></div>"
+            rate_cls = 'high' if pct >= 75 else ('med' if pct >= 40 else ('low' if pct > 0 else 'zero'))
+            bar = f"<div class='round-cell {rate_cls}'><div class='hit' style='width:{pct}%'></div><div class='label'>{hit}/{total}</div></div>"
             cells.append(f"<td>{bar}</td>")
         row_html = f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>{''.join(cells)}</tr>"
         round_rows.append(row_html)
