@@ -818,6 +818,12 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
     player_by_pick = (mock_lookup or {}).get('player_by_pick', {})
     for e in entries:
         grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
+        # Add '+' to grade for Superstar/X-Factor devs
+        try:
+            if str(e.get('dev')) in ('2','3'):
+                grade_label = f"{grade_label}+"
+        except Exception:
+            pass
         # Team logo in the top-right corner
         logo_img = f"<img class=\"team-logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
         photo = e.get('photo')
