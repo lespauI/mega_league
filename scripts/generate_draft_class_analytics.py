@@ -47,6 +47,7 @@ def grade_badge(tier: str, pct: float, target: float) -> tuple[str, str]:
         return ("On-target", "grade-on")
     if p >= 0.75 * tgt:
         return ("Near-target", "grade-near")
+    # Below-target: will be hidden in UI per KPI changes
     return ("Below-target", "grade-below")
 
 
@@ -147,6 +148,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
     - ovr: prefer playerBestOvr, then playerSchemeOvr; default 0
     - dev: keep as string in {'3','2','1','0'}; map unknowns to '0'
     - draftRound/draftPick: parsed to ints when available (used in Elites Spotlight)
+    - age: parsed to int when available; used on elite cards
     - college: if present, used in the meta line instead of current team
     """
     out = []
@@ -189,6 +191,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
             'draft_round': safe_int(r.get('draftRound'), None),
             'draft_pick': safe_int(r.get('draftPick'), None),
             'college': college,
+            'age': safe_int(r.get('age'), None),
         })
     # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
@@ -392,14 +395,16 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         pick_badge = f"<span class=\"pick-badge\">{int(rd)}.{int(pk)}</span>" if (rd is not None and pk is not None) else ""
         ovr_badge = f"<span class=\"ovr-badge\">OVR {int(r['ovr'])}</span>"
         school = (r.get('college') or '').strip() or r['team']
+        age = r.get('age')
+        age_txt = f", {int(age)} y/o" if isinstance(age, int) else ""
 
         elite_cards.append(
             (
                 '<div class="player">'
                 f"<div class=\"hdr\">{logo_img(r['team'])}<div class=\"tags\">{ovr_badge}{pick_badge}</div></div>"
-                f"<div class=\"nm\">{html.escape(r['name'])}</div>"
-                f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
-                f"<div class=\"meta\">{pos_chip(r['position'])}<span class=\"dot\">·</span>{html.escape(school)}</div>"
+                f"<div class=\"nm\">{html.escape(r['name'])}, {html.escape(str(r['position']))}</div>"
+                f"<div class=\"dev\">{badge_for_dev(r['dev'])}{age_txt}</div>"
+                f"<div class=\"meta\"><span class=\"dot\">·</span>{html.escape(school)}</div>"
                 '</div>'
             )
         )
@@ -512,6 +517,13 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .kpi span { color:#334155; font-size: 18px; font-weight: 700; }
     .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
     .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }
+    /* Stacked distribution bar */
+    .stackbar { margin-top:6px; height:10px; display:flex; border-radius:999px; overflow:hidden; border:1px solid #e5e7eb; background:#f3f4f6; }
+    .stackbar .seg { height:100%; }
+    .stackbar .seg-xf { background:#ef4444; }
+    .stackbar .seg-ss { background:#d4af37; }
+    .stackbar .seg-star { background:#c0c0c0; }
+    .stackbar .seg-norm { background:#cd7f32; }
 
     .section-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; border-left:3px solid var(--accent); padding-left:8px; }
     .grid { display:grid; grid-template-columns: 1.7fr 1.3fr; gap: 12px; }
@@ -562,6 +574,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .grade-on { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
     .grade-near { background:#fef3c7; color:#92400e; border-color:#fde68a; }
     .grade-below { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .grade.hidden { display:none; }
 
     /* Round hit/miss visualization */
     .rounds-table th.rcol { text-align:center; }
@@ -682,7 +695,15 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"kpi\"><b>SS</b><span>__SS__ (__SS_PCT__%) <span class=\"grade __SS_GRADE_CLASS__\">__SS_GRADE_LABEL__</span></span></div>
         <div class=\"kpi\"><b>Star</b><span>__STAR__ (__STAR_PCT__%)</span></div>
         <div class=\"kpi\"><b>Normal</b><span>__NORMAL__ (__NORM_PCT__%)</span></div>
-        <div class=\"kpi\"><b>Elites share</b><span>__ELITES_PCT__%</span><div class=\"gbar\"><div class=\"fill\" style=\"width: __ELITES_PCT__%;\"></div></div></div>
+        <div class=\"kpi\"><b>Dev distribution</b>
+          <span>__XF_PCT__% / __SS_PCT__% / __STAR_PCT__% / __NORM_PCT__%</span>
+          <div class=\"stackbar\">
+            <div class=\"seg seg-xf\" style=\"width: __XF_PCT__%\"></div>
+            <div class=\"seg seg-ss\" style=\"width: __SS_PCT__%\"></div>
+            <div class=\"seg seg-star\" style=\"width: __STAR_PCT__%\"></div>
+            <div class=\"seg seg-norm\" style=\"width: __NORM_PCT__%\"></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -773,13 +794,23 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__SS_PCT__', str(analytics.get('ss_pct', 0.0)))
     html_out = html_out.replace('__STAR_PCT__', str(analytics.get('star_pct', 0.0)))
     html_out = html_out.replace('__NORM_PCT__', str(analytics.get('norm_pct', 0.0)))
-    # Grades
-    html_out = html_out.replace('__XF_GRADE_LABEL__', html.escape(analytics.get('xf_grade_label', '')))
-    html_out = html_out.replace('__SS_GRADE_LABEL__', html.escape(analytics.get('ss_grade_label', '')))
-    html_out = html_out.replace('__XF_GRADE_CLASS__', html.escape(analytics.get('xf_grade_class', 'grade-below')))
-    html_out = html_out.replace('__SS_GRADE_CLASS__', html.escape(analytics.get('ss_grade_class', 'grade-below')))
-    # Elites share
-    html_out = html_out.replace('__ELITES_PCT__', str(analytics.get('elite_share_pct', 0.0)))
+    # Grades: hide below-target badge (no badge shown)
+    xf_label = analytics.get('xf_grade_label', '')
+    xf_class = analytics.get('xf_grade_class', '')
+    ss_label = analytics.get('ss_grade_label', '')
+    ss_class = analytics.get('ss_grade_class', '')
+    if xf_class == 'grade-below':
+        xf_label_render, xf_class_render = '', 'hidden'
+    else:
+        xf_label_render, xf_class_render = xf_label, xf_class
+    if ss_class == 'grade-below':
+        ss_label_render, ss_class_render = '', 'hidden'
+    else:
+        ss_label_render, ss_class_render = ss_label, ss_class
+    html_out = html_out.replace('__XF_GRADE_LABEL__', html.escape(xf_label_render))
+    html_out = html_out.replace('__SS_GRADE_LABEL__', html.escape(ss_label_render))
+    html_out = html_out.replace('__XF_GRADE_CLASS__', html.escape(xf_class_render))
+    html_out = html_out.replace('__SS_GRADE_CLASS__', html.escape(ss_class_render))
     html_out = html_out.replace('__ELITE_CARDS__', elite_cards_html)
     html_out = html_out.replace('__TEAM_TABLE__', team_table_html)
     html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)

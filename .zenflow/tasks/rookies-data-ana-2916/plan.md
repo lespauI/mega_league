@@ -237,3 +237,32 @@ Deliverable
 
 Verification
 - Grep repo for `Hidden` and expect zero matches in code and templates after changes.
+
+### [x] Step: KPI changes
+<!-- chat-id: bc05fbe1-1fe1-4e4c-868d-55845006be8f -->
+
+Remove Below-target bage
+
+change Elites share to show all destribitun on one scale XF red color, SS gold collor, S silver, normal as bronze
+
+### [x] Step: Change card
+<!-- chat-id: 3f7c849b-3382-44c0-a784-b1b1281c95a8 -->
+
+Right now we have
+
+Saints_logo OVR 75 1.2
+Emmett Newby
+Superstar
+QB · Wyoming
+
+i want to have 
+
+Saints_logo OVR 75 1.2
+Emmett Newby, QB (just text, not bage)
+Superstar (bage), 22 y/o (text)
+ · Wyoming
+
+### [x] Step: Get latest master
+<!-- chat-id: 4331fc27-fa03-46fd-8801-f3965d45386c -->
+
+Resolve conflict in favor of your code
