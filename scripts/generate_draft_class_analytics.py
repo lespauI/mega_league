@@ -576,7 +576,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     <section id=\"rounds\" class=\"panel\">
       <div class=\"card\">
-        <h3>Hidden by Round — per team (Hit/Miss)</h3>
+        <h3>Hidden by Round per team (Hit/Miss)</h3>
         <table class=\"rounds-table\">
           <thead>
             <tr>
