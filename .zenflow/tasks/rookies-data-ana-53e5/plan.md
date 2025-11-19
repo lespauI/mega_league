@@ -263,6 +263,7 @@ Implemented: Elite cards now include draft round and pick (derived from `draftRo
 
 In wich round team select a hidden? We need to have representation of Hit and miss, like for example Dallas select 3 hiddens in 1st round, and 0 in other rounds and etc
 
-### [ ] Step: Change Design
+### [x] Step: Change Design
+<!-- chat-id: 71761659-4361-43f0-983d-e5534f03f1f2 -->
 
 Right now design of our HTML looks super simple, lets made it better, Do your best, but not overcomplicated. You can look on other HTMLs to understand our styling
