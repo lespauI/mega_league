@@ -147,7 +147,7 @@ Append end-of-page recap with every first-round pick in order.
 - Verification:
   - Run generator and confirm a `Round 1` section exists with N cards (N≥1), sorted by pick, and images render when `portraitId` exists.
 
-### [ ] Step: Add Verification Script
+### [x] Step: Add Verification Script
 <!-- chat-id: 2b72305e-5e46-460f-962e-c4acab184fbe -->
 Create HTML validator for Round 1 and intro blocks.
 
