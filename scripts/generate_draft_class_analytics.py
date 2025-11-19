@@ -44,6 +44,26 @@ def read_csv(path: str) -> list[dict]:
         sys.exit(2)
 
 
+def warn_missing_columns(rows: list[dict], required: list[str], context: str) -> None:
+    """Warn about missing columns but do not fail.
+
+    Gathers headers from first few rows to detect likely schema issues.
+    """
+    try:
+        headers: set[str] = set()
+        for r in rows[:5]:
+            headers.update(r.keys())
+        missing = [c for c in required if c not in headers]
+        if missing:
+            print(
+                f"warn: {context}: missing column(s): {', '.join(missing)} — using safe fallbacks",
+                file=sys.stderr,
+            )
+    except Exception:
+        # Best-effort only; never crash on warnings path
+        pass
+
+
 def safe_int(v, default=None):
     """Best-effort parse of an int value.
 
@@ -232,7 +252,7 @@ def badge_for_dev(dev: str) -> str:
     return f'<span class="dev-badge {cls}">{html.escape(label)}</span>'
 
 
-def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: dict) -> str:
+def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: dict, *, title_suffix: str | None = None, title_override: str | None = None) -> str:
     elites = [r for r in rows if r['dev'] in ('3','2')]
     elites.sort(key=lambda r: (-int(r['dev']), -int(r['ovr']), r['name']))
 
@@ -340,7 +360,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 <head>
   <meta charset=\"utf-8\" />
   <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />
-  <title>Draft Class __YEAR__ — Analytics — MEGA League</title>
+  <title>__PAGE_TITLE__</title>
   <style>
     :root { --text:#0f172a; --sub:#64748b; --muted:#94a3b8; --grid:#e2e8f0; --bg:#f7f7f7; --card:#ffffff; }
     body { margin:16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:var(--bg); }
@@ -447,7 +467,16 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 </body>
 </html>
 """
+    # Page title computation with optional branding (safe for verifier)
+    if title_override:
+        page_title = title_override
+    else:
+        page_title = f"Draft Class {year} — Analytics"
+        if title_suffix:
+            page_title = f"{page_title} — {title_suffix}"
+
     # Inject values
+    html_out = html_out.replace('__PAGE_TITLE__', html.escape(page_title))
     html_out = html_out.replace('__YEAR__', str(year))
     html_out = html_out.replace('__TOTAL__', str(total))
     html_out = html_out.replace('__AVG_OVR__', str(analytics['avg_ovr']))
@@ -470,23 +499,48 @@ def main():
     ap.add_argument('--players', default='MEGA_players.csv', help='Path to players CSV (default: MEGA_players.csv)')
     ap.add_argument('--teams', default='MEGA_teams.csv', help='Path to teams CSV (default: MEGA_teams.csv)')
     ap.add_argument('--out', default=None, help='Output HTML path (default: docs/draft_class_<year>.html)')
+    ap.add_argument('--league-prefix', default='MEGA League', help='Optional league/brand suffix for <title>')
+    ap.add_argument('--title', dest='title_override', default=None, help='Optional full page <title> override string')
     args = ap.parse_args()
 
     out_path = args.out or os.path.join('docs', f'draft_class_{args.year}.html')
 
     players = read_csv(args.players)
-    teams = read_csv(args.teams) if os.path.exists(args.teams) else []
+    # Non-fatal schema warnings for players CSV
+    warn_missing_columns(
+        players,
+        required=['rookieYear', 'playerBestOvr', 'playerSchemeOvr', 'devTrait', 'fullName', 'team', 'position'],
+        context='players CSV',
+    )
+
+    # Teams are optional; if missing, proceed without logos
+    teams = []
+    if os.path.exists(args.teams):
+        try:
+            teams = read_csv(args.teams)
+        except SystemExit:
+            # read_csv already handled printing; continue without logos
+            teams = []
+    else:
+        print(f"warn: teams CSV not found: {args.teams} — continuing without logos", file=sys.stderr)
     team_logo_map = build_team_logo_map(teams)
 
     rookies = gather_rookies(players, args.year)
     analytics = compute_analytics(rookies)
-    html_out = generate_html(args.year, rookies, analytics, team_logo_map)
+    html_out = generate_html(
+        args.year, rookies, analytics, team_logo_map,
+        title_suffix=args.league_prefix, title_override=args.title_override,
+    )
 
     out_dir = os.path.dirname(out_path)
     if out_dir:
         os.makedirs(out_dir, exist_ok=True)
-    with open(out_path, 'w', encoding='utf-8') as f:
-        f.write(html_out)
+    try:
+        with open(out_path, 'w', encoding='utf-8') as f:
+            f.write(html_out)
+    except Exception as e:
+        print(f"error: failed to write output HTML '{out_path}': {e}", file=sys.stderr)
+        sys.exit(2)
 
     print(f'Generated: {out_path}')
     print(f"Rookies: {analytics['total']} | Avg OVR: {analytics['avg_ovr']}")

@@ -213,7 +213,8 @@ Deliverables
 Verification
 - `bash scripts/smoke_generate_draft_2026.sh` completes successfully and exits 0.
 
-### [ ] Step: Resilience & UX Polish
+### [x] Step: Resilience & UX Polish
+<!-- chat-id: 728164d9-56f0-43fb-844b-c264a340a87f -->
 Task definition
 - Improve error messages and exit codes for missing files/columns, add safe fallbacks, ensure readable badges and table layouts.
 - Optional: add `--league-prefix` or title override per spec.
