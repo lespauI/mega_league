@@ -704,14 +704,22 @@ def _normalize_player_name_for_match(name: str) -> str:
 def read_mock_draft_md(path: str | None) -> dict:
     """Parse docs/draft_mock.md table into lookup maps.
 
-    Returns a dict: {
-      'by_pick': {int: [str, ...]},
-      'by_player': {str: [str, ...]},  # normalized player name
-    }
+    Returns a dict with:
+      - 'by_pick': {int: [notes, ...]}
+      - 'by_player': {norm_name: [notes, ...]}
+      - 'team_by_pick': {int: team}
+      - 'team_by_player': {norm_name: team}
+      - 'player_by_pick': {int: [player_norm, ...]}
 
     Safe on errors/missing file; returns empty maps.
     """
-    out = {'by_pick': {}, 'by_player': {}}
+    out = {
+        'by_pick': {},
+        'by_player': {},
+        'team_by_pick': {},
+        'team_by_player': {},
+        'player_by_pick': {},
+    }
     if not path:
         return out
     try:
@@ -745,25 +753,44 @@ def read_mock_draft_md(path: str | None) -> dict:
                 player = player_raw.strip()
                 player_norm = _normalize_player_name_for_match(player)
                 notes = notes_raw.strip()
+                team_proj = team_raw.strip()
                 if notes:
                     if pick is not None:
                         out['by_pick'].setdefault(pick, []).append(notes)
                     if player_norm:
                         out['by_player'].setdefault(player_norm, []).append(notes)
+                # Team projections
+                if team_proj:
+                    if pick is not None and team_proj:
+                        out['team_by_pick'].setdefault(pick, team_proj)
+                    if player_norm:
+                        out['team_by_player'].setdefault(player_norm, team_proj)
+                # Projected player(s) per pick (allow variants)
+                if pick is not None and player_norm:
+                    lst = out['player_by_pick'].setdefault(pick, [])
+                    if player_norm not in lst:
+                        lst.append(player_norm)
             else:
                 if in_table and ln.strip() == '':
                     # End of contiguous table block
                     in_table = False
         return out
     except Exception:
-        return {'by_pick': {}, 'by_player': {}}
+        return {
+            'by_pick': {},
+            'by_player': {},
+            'team_by_pick': {},
+            'team_by_player': {},
+            'player_by_pick': {},
+        }
 
 
 def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) -> str:
     """Render HTML for Round 1 recap cards.
 
-    Produces a responsive grid of cards with team logo, pick number, name/pos,
-    grade badge, attributes grid, trait badges, and optional player photo.
+    Produces a responsive grid of cards with player photo header, pick number,
+    team logo pinned at top-right, name/pos, grade badge, attributes grid,
+    trait badges, analytics notes (expanded), and projection deltas.
     """
     if not entries:
         return "<div class='muted'>No Round 1 picks found.</div>"
@@ -774,10 +801,15 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
     cards = []
     mock_by_pick = (mock_lookup or {}).get('by_pick', {})
     mock_by_player = (mock_lookup or {}).get('by_player', {})
+    team_by_pick = (mock_lookup or {}).get('team_by_pick', {})
+    team_by_player = (mock_lookup or {}).get('team_by_player', {})
+    player_by_pick = (mock_lookup or {}).get('player_by_pick', {})
     for e in entries:
         grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
-        logo_img = f"<img class=\"logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
+        # Team logo in the top-right corner
+        logo_img = f"<img class=\"team-logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
         photo = e.get('photo')
+        # Prominent player photo in header
         photo_html = f"<img class=\"r1-photo\" src=\"{esc(photo)}\" alt=\"{esc(e['name'])}\" />" if photo else ''
 
         # Attributes grid (limit to 8-10 entries)
@@ -792,7 +824,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
             trait_lines.append(f"<span class=\"trait\">{esc(t)}</span>")
         traits_html = ''.join(trait_lines)
 
-        # Mock draft notes (spoiler)
+        # Analytics notes (expanded, no spoiler)
         notes_html = ''
         try:
             pick = e.get('pick')
@@ -806,24 +838,51 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
             if notes_list:
                 joined = '\n\n'.join(notes_list)
                 notes_html = (
-                    "<details class=\"spoiler\">"
-                    "  <summary>Что говорили аналитики</summary>"
+                    "<div class=\"mock-notes-block\">"
+                    "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
                     f"  <div class=\"mock-notes\">{esc(joined)}</div>"
-                    "</details>"
+                    "</div>"
                 )
         except Exception:
             notes_html = ''
 
+        # Projection deltas: highlight differences between analytics projections and actual selection
+        proj_html = ''
+        try:
+            pick = e.get('pick')
+            actual_team = e.get('team')
+            player_norm = _normalize_player_name_for_match(e.get('name', ''))
+            msgs = []
+            # Projected team for this player
+            team_proj_player = team_by_player.get(player_norm)
+            if team_proj_player and team_proj_player != actual_team:
+                msgs.append(f"Проекция команды: {esc(team_proj_player)} → выбран {esc(actual_team)}")
+            # Projected team for this pick
+            if isinstance(pick, int) and pick in team_by_pick:
+                team_proj_pick = team_by_pick.get(pick)
+                if team_proj_pick and team_proj_pick != actual_team:
+                    msgs.append(f"У прогноза на пик #{pick}: {esc(team_proj_pick)} → фактически {esc(actual_team)}")
+            # Projected player for this pick (show first variant if different)
+            if isinstance(pick, int) and pick in player_by_pick:
+                projected_players = [p for p in player_by_pick.get(pick, []) if p]
+                if projected_players and player_norm not in projected_players:
+                    msgs.append(f"Прогноз игрока на этот пик: {esc(projected_players[0])}")
+            if msgs:
+                proj_html = "<div class=\"proj\">" + "<br/>".join(msgs) + "</div>"
+        except Exception:
+            proj_html = ''
+
         cards.append(
             (
                 "<div class=\"r1-card\">"
-                f"  <div class=\"head\">{logo_img}<div class=\"pick\">Pick {esc(e.get('pick',''))}</div></div>"
+                f"  {logo_img}"
+                f"  <div class=\"head\">{photo_html}<div class=\"pick\">Pick {esc(e.get('pick',''))}</div></div>"
                 f"  <div class=\"name\"><b>{esc(e['name'])}</b> <span class=\"pos\">{esc(e['position'])}</span> <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
                 f"  <div class=\"meta\">Team: {esc(e['team'])} &nbsp; • &nbsp; OVR {int(e.get('ovr',0))}</div>"
+                f"  {proj_html}"
                 f"  <div class=\"attrs\">{attrs_html}</div>"
                 f"  <div class=\"traits\">{traits_html}</div>"
                 f"  {notes_html}"
-                f"  {photo_html}"
                 "</div>"
             )
         )
@@ -1105,7 +1164,9 @@ def generate_html(
     /* Round 1 recap cards */
     .r1-list { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
     .r1-card { border:1px solid var(--grid); border-radius:10px; padding:12px; background:#fff; position:relative; }
-    .r1-card .head { display:flex; align-items:center; gap:8px; }
+    .r1-card .head { display:flex; align-items:center; gap:8px; justify-content:space-between; }
+    .r1-card .head img.r1-photo { width:56px; height:56px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    .r1-card img.team-logo { position:absolute; top:10px; right:10px; width:24px; height:24px; border-radius:6px; box-shadow:0 0 0 1px rgba(0,0,0,.08); }
     .r1-card .pick { margin-left:auto; font-weight:700; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:2px 8px; border-radius:999px; }
     .r1-card .name { margin-top:4px; }
     .r1-card .name .pos { color:#475569; font-weight:600; }
@@ -1118,10 +1179,9 @@ def generate_html(
     .r1-card .attr { display:flex; justify-content:space-between; gap:8px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:6px 8px; font-size:12px; }
     .r1-card .traits { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
     .r1-card .trait { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; background:#eef2ff; color:#3730a3; border:1px solid #e0e7ff; }
-    .r1-photo { position:absolute; right:10px; bottom:10px; width:72px; height:auto; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); }
-    /* Mock draft notes spoiler */
-    details.spoiler { margin-top:8px; }
-    details.spoiler summary { cursor:pointer; color:#475569; font-weight:600; }
+    .proj { color:#0f172a; font-size:12px; margin-top:6px; background:#fff7ed; border:1px solid #fde68a; border-radius:8px; padding:6px 8px; }
+    .mock-notes-block { margin-top:8px; }
+    .mock-notes-title { cursor:default; color:#475569; font-weight:600; }
     .mock-notes { white-space: pre-wrap; color:#334155; font-size:13px; margin-top:6px; }
 
     /* Responsive tweaks */

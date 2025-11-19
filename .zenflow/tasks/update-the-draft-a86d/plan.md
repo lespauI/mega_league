@@ -196,3 +196,32 @@ Add sample JSON for analysts to edit.
 
 Git pull draft branch, i add file draft_mock.md
 This is analytics before draft, our goal is to add spoiler (wrapped) section to every first round pick "Что говорили анал итики" and add data from this table, about the player, about the team needs and etc
+
+### [x] Step: Change the style of the card
+<!-- chat-id: 61b5a13a-8609-470a-bbeb-c71960f4f360 -->
+
+- Replace team logo with player photo
+
+- team logo in the top right corner
+
+- Check what analytics says, sometimes they project pick to another team for example Jonathan Elias projected to the Jets but selected by Cowboys, this should be pointed
+
+- if team select another player now what analytics projected it should be pointed
+
+- Remove spoiler wrap for "Что говорили аналитики"
+
+### [ ] Step: Refactor cards aterributes
+
+In each atrribute get rid of text "rating" for example speedRating
+must be just "speed"
+
+lets change attributes for every possition 
+
+
+take it from file output/attributes.md
+
+Higlit attribute
+85 or more - green
+80 - 85 - slight green
+75-80 - yellow
+74 and less bronze
