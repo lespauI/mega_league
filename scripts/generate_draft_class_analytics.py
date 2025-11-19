@@ -18,21 +18,49 @@ import argparse
 import csv
 import html
 import os
+import sys
 import statistics as st
 from collections import Counter
 
 
-DEV_LABELS = {"3":"X-Factor","2":"Superstar","1":"Star","0":"Normal"}
+DEV_LABELS = {"3": "X-Factor", "2": "Superstar", "1": "Star", "0": "Normal"}
 
 
 def read_csv(path: str) -> list[dict]:
-    with open(path, newline='', encoding='utf-8') as fh:
-        return list(csv.DictReader(fh))
+    """Read a CSV file returning a list of dict rows.
+
+    - Uses utf-8-sig to tolerate BOMs
+    - Raises a clear error message on failure
+    """
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            reader = csv.DictReader(fh)
+            return list(reader)
+    except FileNotFoundError:
+        print(f"error: file not found: {path}", file=sys.stderr)
+        sys.exit(2)
+    except Exception as e:
+        print(f"error: failed to read CSV '{path}': {e}", file=sys.stderr)
+        sys.exit(2)
 
 
 def safe_int(v, default=None):
+    """Best-effort parse of an int value.
+
+    Accepts strings and numeric types; returns default on failure.
+    """
     try:
-        return int(v)
+        if v is None:
+            return default
+        if isinstance(v, int):
+            return v
+        s = str(v).strip()
+        if s == "":
+            return default
+        # handle floats encoded as strings like "69.0"
+        if "." in s:
+            return int(float(s))
+        return int(s)
     except Exception:
         return default
 
@@ -339,10 +367,10 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
 def main():
     ap = argparse.ArgumentParser(description='Generate Draft Class Analytics HTML')
-    ap.add_argument('--year', type=int, required=True)
-    ap.add_argument('--players', default='MEGA_players.csv')
-    ap.add_argument('--teams', default='MEGA_teams.csv')
-    ap.add_argument('--out', default=None)
+    ap.add_argument('--year', type=int, required=True, help='Draft class year (e.g., 2026)')
+    ap.add_argument('--players', default='MEGA_players.csv', help='Path to players CSV (default: MEGA_players.csv)')
+    ap.add_argument('--teams', default='MEGA_teams.csv', help='Path to teams CSV (default: MEGA_teams.csv)')
+    ap.add_argument('--out', default=None, help='Output HTML path (default: docs/draft_class_<year>.html)')
     args = ap.parse_args()
 
     out_path = args.out or os.path.join('docs', f'draft_class_{args.year}.html')
@@ -355,7 +383,9 @@ def main():
     analytics = compute_analytics(rookies)
     html_out = generate_html(args.year, rookies, analytics, team_logo_map)
 
-    os.makedirs(os.path.dirname(out_path), exist_ok=True)
+    out_dir = os.path.dirname(out_path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
     with open(out_path, 'w', encoding='utf-8') as f:
         f.write(html_out)
 

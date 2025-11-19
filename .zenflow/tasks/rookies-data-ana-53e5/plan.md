@@ -100,7 +100,8 @@ Task instructions
 
 "Step:" prefix is important, do not omit it!
 
-### [ ] Step: Bootstrap CLI & IO
+### [x] Step: Bootstrap CLI & IO
+<!-- chat-id: 998c3686-b9a1-40d7-9bdb-cd95bf45ccdd -->
 Task definition
 - Implement CLI parsing in `scripts/generate_draft_class_analytics.py` with args: `--year <int>` (required), `--players`, `--teams`, `--out` and create parent dir for output.
 - Implement helpers: `read_csv(path) -> list[dict]`, `safe_int(v, default=None) -> Optional[int]`.
