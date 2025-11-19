@@ -24,6 +24,13 @@
     .kpi span { color:#334155; font-size: 18px; font-weight: 700; }
     .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
     .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }
+    /* Stacked distribution bar */
+    .stackbar { margin-top:6px; height:10px; display:flex; border-radius:999px; overflow:hidden; border:1px solid #e5e7eb; background:#f3f4f6; }
+    .stackbar .seg { height:100%; }
+    .stackbar .seg-xf { background:#ef4444; }
+    .stackbar .seg-ss { background:#d4af37; }
+    .stackbar .seg-star { background:#c0c0c0; }
+    .stackbar .seg-norm { background:#cd7f32; }
 
     .section-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; border-left:3px solid var(--accent); padding-left:8px; }
     .grid { display:grid; grid-template-columns: 1.7fr 1.3fr; gap: 12px; }
@@ -74,6 +81,7 @@
     .grade-on { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
     .grade-near { background:#fef3c7; color:#92400e; border-color:#fde68a; }
     .grade-below { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .grade.hidden { display:none; }
 
     /* Round hit/miss visualization */
     .rounds-table th.rcol { text-align:center; }
@@ -190,11 +198,19 @@
       <div class="kpis"> 
         <div class="kpi"><b>Total rookies</b><span>224</span></div>
         <div class="kpi"><b>Avg overall</b><span>69.42</span></div>
-        <div class="kpi"><b>XF</b><span>6 (2.7%) <span class="grade grade-below">Below-target</span></span></div>
-        <div class="kpi"><b>SS</b><span>21 (9.4%) <span class="grade grade-below">Below-target</span></span></div>
+        <div class="kpi"><b>XF</b><span>6 (2.7%) <span class="grade hidden"></span></span></div>
+        <div class="kpi"><b>SS</b><span>21 (9.4%) <span class="grade hidden"></span></span></div>
         <div class="kpi"><b>Star</b><span>51 (22.8%)</span></div>
         <div class="kpi"><b>Normal</b><span>146 (65.2%)</span></div>
-        <div class="kpi"><b>Elites share</b><span>12.1%</span><div class="gbar"><div class="fill" style="width: 12.1%;"></div></div></div>
+        <div class="kpi"><b>Dev distribution</b>
+          <span>2.7% / 9.4% / 22.8% / 65.2%</span>
+          <div class="stackbar">
+            <div class="seg seg-xf" style="width: 2.7%"></div>
+            <div class="seg seg-ss" style="width: 9.4%"></div>
+            <div class="seg seg-star" style="width: 22.8%"></div>
+            <div class="seg seg-norm" style="width: 65.2%"></div>
+          </div>
+        </div>
       </div>
     </section>
 

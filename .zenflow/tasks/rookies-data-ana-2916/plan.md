@@ -237,3 +237,10 @@ Deliverable
 
 Verification
 - Grep repo for `Hidden` and expect zero matches in code and templates after changes.
+
+### [x] Step: KPI changes
+<!-- chat-id: bc05fbe1-1fe1-4e4c-868d-55845006be8f -->
+
+Remove Below-target bage
+
+change Elites share to show all destribitun on one scale XF red color, SS gold collor, S silver, normal as bronze
