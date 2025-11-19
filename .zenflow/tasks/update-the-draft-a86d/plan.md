@@ -210,7 +210,8 @@ This is analytics before draft, our goal is to add spoiler (wrapped) section to 
 
 - Remove spoiler wrap for "Что говорили аналитики"
 
-### [ ] Step: Refactor cards aterributes
+### [x] Step: Refactor cards aterributes
+<!-- chat-id: c5561e74-5f32-4442-ac28-35c803e0b0ae -->
 
 In each atrribute get rid of text "rating" for example speedRating
 must be just "speed"

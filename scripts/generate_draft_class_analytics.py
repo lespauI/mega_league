@@ -521,15 +521,15 @@ def _pos_key(pos: str) -> str:
 def get_attr_keys_for_pos(pos: str) -> list[str]:
     """Return ordered attribute keys for a given position.
 
-    Uses a curated set based on Madden attribute names. Missing keys are skipped
-    at render time; this helper only provides the order of preference.
+    Keys correspond to CSV column names. For readability on cards, labels will
+    have the trailing 'Rating' removed at render time (e.g., speedRating → speed).
     """
     p = _pos_key(pos)
     # QB
     if p == 'QB':
         return [
-            'throwAccShort','throwAccMid','throwAccDeep','throwPower',
-            'throwUnderPressure','throwOnRun','playAction','awareRating',
+            'throwAccShortRating','throwAccMidRating','throwAccDeepRating','throwPowerRating',
+            'throwUnderPressureRating','throwOnRunRating','playActionRating','awareRating',
             'speedRating','breakSackRating',
         ]
     # RB/HB archetype (ball carrier)
@@ -542,11 +542,22 @@ def get_attr_keys_for_pos(pos: str) -> list[str]:
     if p == 'FB':
         return ['runBlockRating','leadBlockRating','impactBlockRating','strengthRating','truckRating','catchRating']
     if p == 'WR':
-        return ['catchRating','specCatchRating','cITRating','speedRating','routeRunShort','routeRunMed','routeRunDeep','releaseRating','agilityRating','changeOfDirectionRating']
+        return [
+            'catchRating','specCatchRating','cITRating','speedRating',
+            'routeRunShortRating','routeRunMedRating','routeRunDeepRating',
+            'releaseRating','agilityRating','changeOfDirectionRating'
+        ]
     if p == 'TE':
-        return ['catchRating','cITRating','runBlockRating','passBlockRating','speedRating','routeRunShort','routeRunMed','strengthRating','specCatchRating']
+        return [
+            'catchRating','cITRating','runBlockRating','passBlockRating',
+            'speedRating','routeRunShortRating','routeRunMedRating','strengthRating','specCatchRating'
+        ]
     if p in {'LT','LG','RT','RG','T','G','C','OL'}:
-        return ['passBlockRating','passBlockPower','passBlockFinesse','runBlockRating','runBlockPower','runBlockFinesse','strengthRating','awareRating','impactBlockRating']
+        return [
+            'passBlockRating','passBlockPowerRating','passBlockFinesseRating',
+            'runBlockRating','runBlockPowerRating','runBlockFinesseRating',
+            'strengthRating','awareRating','impactBlockRating'
+        ]
     if p in {'LE','RE','DE'}:
         return ['powerMovesRating','finesseMovesRating','blockShedRating','pursuitRating','tackleRating','strengthRating','speedRating','hitPowerRating']
     if p == 'DT':
@@ -800,6 +811,24 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
 
     def esc(s: str) -> str:
         return html.escape(str(s))
+    def _attr_label(key: str) -> str:
+        k = str(key or '')
+        # Strip a single trailing 'Rating' (6 chars)
+        if k.endswith('Rating'):
+            k = k[:-6]
+        return k
+    def _val_cls(v: int) -> str:
+        try:
+            iv = int(v)
+        except Exception:
+            iv = 0
+        if iv >= 85:
+            return 'val-elite'
+        if iv >= 80:
+            return 'val-good'
+        if iv >= 75:
+            return 'val-warn'
+        return 'val-low'
     def _norm_team(val: str | None) -> str:
         if not val:
             return ''
@@ -833,7 +862,9 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
         # Attributes grid (limit to 8-10 entries)
         attr_lines = []
         for k, v in (e.get('attrs') or [])[:10]:
-            attr_lines.append(f"<div class=\"attr\"><span class=\"k\">{esc(k)}</span><span class=\"v\">{int(v)}</span></div>")
+            label = _attr_label(k)
+            v_cls = _val_cls(v)
+            attr_lines.append(f"<div class=\"attr\"><span class=\"k\">{esc(label)}</span><span class=\"v {v_cls}\">{int(v)}</span></div>")
         attrs_html = ''.join(attr_lines) if attr_lines else "<div class='muted' style='grid-column:1/-1;'>No attributes.</div>"
 
         # Trait badges
@@ -1207,6 +1238,12 @@ def generate_html(
     .r1-card .meta { color:#64748b; font-size:12px; margin-top:2px; }
     .r1-card .attrs { margin-top:6px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:6px; }
     .r1-card .attr { display:flex; justify-content:space-between; gap:8px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:6px 8px; font-size:12px; }
+    .r1-card .attr .k { color:#334155; font-weight:600; }
+    .r1-card .attr .v { font-weight:700; border-radius:6px; padding:0 6px; border:1px solid transparent; }
+    .r1-card .attr .v.val-elite { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+    .r1-card .attr .v.val-good { background:#ecfdf5; color:#047857; border-color:#a7f3d0; }
+    .r1-card .attr .v.val-warn { background:#fef9c3; color:#92400e; border-color:#fde68a; }
+    .r1-card .attr .v.val-low { background:#f9f1e7; color:#7c3e00; border-color:#e7c3a5; }
     .r1-card .traits { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
     .r1-card .trait { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; background:#eef2ff; color:#3730a3; border:1px solid #e0e7ff; }
     .proj { color:#0f172a; font-size:12px; margin-top:6px; background:#fff7ed; border:1px solid #fde68a; border-radius:8px; padding:6px 8px; }
