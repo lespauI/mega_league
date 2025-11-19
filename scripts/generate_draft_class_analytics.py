@@ -482,9 +482,8 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     pos_elite_sorted.sort(key=lambda x: (-x[4], -x[3], x[0]))
     top_pos_lines = []
     for p, xf_c, ss_c, star_c, elite_total in pos_elite_sorted[:6]:
-        # Do not reveal tiers in text; summarize as Hidden count
-        hidden = xf_c + ss_c + star_c
-        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {hidden} Hidden</li>")
+        non_normal = xf_c + ss_c + star_c
+        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {non_normal} non-normal</li>")
     top_pos_html = '\n'.join(top_pos_lines)
 
     html_out = """<!DOCTYPE html>
@@ -688,7 +687,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     </section>
 
     <section id=\"spotlight\" class=\"panel\"> 
-      <div class=\"section-title\">Hidden Spotlight</div>
+      <div class=\"section-title\">Elites Spotlight</div>
       <div class=\"players\">__ELITE_CARDS__</div>
     </section>
 
@@ -741,9 +740,9 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
           </table>
         </div>
         <div class=\"card\"> 
-          <h3>Hidden-heavy positions</h3>
+          <h3>Non‑Normal‑heavy positions</h3>
           <ul>__TOP_POS__</ul>
-          <p class=\"muted\" style=\"margin-top:6px;\">Hidden = X-Factor + Superstar + Star</p>
+          <p class=\"muted\" style=\"margin-top:6px;\">Non‑Normal = X‑Factor + Superstar + Star</p>
         </div>
       </div>
     </section>

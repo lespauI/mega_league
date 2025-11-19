@@ -115,7 +115,7 @@ Deliverable
 Verification
 - Run: `python3 scripts/fixtures/generate_tiny_draft.py` and confirm `output/tiny_players.csv` exists and contains at least one row for each dev tier 3/2/1/0.
 
-### [ ] Step: Unmask dev badges and spotlight
+### [x] Step: Unmask dev badges and spotlight
 <!-- chat-id: 7aceaebd-b2f6-46a5-8028-c8ed229788bc -->
 Task definition
 - Replace masking with explicit dev rendering across the page. Update spotlight to “Elites Spotlight” and include only X‑Factor and Superstar players. Add visible badges on cards.
