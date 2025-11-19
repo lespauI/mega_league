@@ -661,7 +661,12 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
             total = int(cell.get('total', 0))
             pct = int(round(100.0 * hit / total)) if total else 0
             rate_cls = 'high' if pct >= 75 else ('med' if pct >= 40 else ('low' if pct > 0 else 'zero'))
-            bar = f"<div class='round-cell {rate_cls}' title='Hidden {hit} of {total}'><div class='hit' style='width:{pct}%'></div></div>"
+            bar = (
+                f"<div class='round-cell {rate_cls}' title='Hidden {hit} of {total}'>"
+                f"<div class='hit' style='width:{pct}%'></div>"
+                f"<div class='label'>{hit}/{total}</div>"
+                f"</div>"
+            )
             cells.append(f"<td>{bar}</td>")
         row_html = f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>{''.join(cells)}</tr>"
         round_rows.append(row_html)
