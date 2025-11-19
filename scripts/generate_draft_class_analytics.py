@@ -752,6 +752,7 @@ def generate_html(
     title_override: str | None = None,
     section_intros: dict | None = None,
     intro_default: str | None = None,
+    round1_entries: list[dict] | None = None,
 ) -> str:
     elites = [r for r in rows if r['dev'] in ('3','2')]
     # Order cards by draft pick: round asc, pick asc; missing picks last
@@ -1000,6 +1001,24 @@ def generate_html(
     .subnav a { text-decoration:none; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:6px 10px; border-radius:999px; }
     .subnav a:hover { background:#e2e8f0; }
 
+    /* Round 1 recap cards */
+    .r1-list { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+    .r1-card { border:1px solid var(--grid); border-radius:10px; padding:12px; background:#fff; position:relative; }
+    .r1-card .head { display:flex; align-items:center; gap:8px; }
+    .r1-card .pick { margin-left:auto; font-weight:700; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:2px 8px; border-radius:999px; }
+    .r1-card .name { margin-top:4px; }
+    .r1-card .name .pos { color:#475569; font-weight:600; }
+    .r1-card .name .grade { margin-left:6px; padding:1px 6px; border-radius:999px; font-size:11px; border:1px solid #e5e7eb; }
+    .r1-card .name .grade.grade-on { background:#dcfce7; color:#166534; border-color:#bbf7d0; }
+    .r1-card .name .grade.grade-near { background:#fef9c3; color:#92400e; border-color:#fde68a; }
+    .r1-card .name .grade.grade-below { background:#fee2e2; color:#991b1b; border-color:#fecaca; }
+    .r1-card .meta { color:#64748b; font-size:12px; margin-top:2px; }
+    .r1-card .attrs { margin-top:6px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:6px; }
+    .r1-card .attr { display:flex; justify-content:space-between; gap:8px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:8px; padding:6px 8px; font-size:12px; }
+    .r1-card .traits { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
+    .r1-card .trait { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; background:#eef2ff; color:#3730a3; border:1px solid #e0e7ff; }
+    .r1-photo { position:absolute; right:10px; bottom:10px; width:72px; height:auto; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+
     /* Responsive tweaks */
     @media (max-width: 1100px) {
       .players { grid-template-columns: repeat(3, minmax(0,1fr)); }
@@ -1092,6 +1111,7 @@ def generate_html(
       <a href=\"#spotlight\">Spotlight</a>
       <a href=\"#teams\">Teams</a>
       <a href=\"#rounds\">Rounds</a>
+      <a href=\"#round1\">Round 1</a>
       <a href=\"#positions\">Positions</a>
     </nav>
 
@@ -1113,6 +1133,15 @@ def generate_html(
             <div class=\"seg seg-norm\" style=\"width: __NORM_PCT__%\"></div>
           </div>
         </div>
+      </div>
+    </section>
+
+    <section id=\"round1\" class=\"panel\"> 
+      <div class=\"section-title\">Round 1 Recap</div>
+      __INTRO_ROUND1__
+      <div class=\"card\"> 
+        __ROUND1_HTML__
+        <p class=\"muted\" style=\"margin-top:6px;\">__ROUND1_NOTE__</p>
       </div>
     </section>
 
@@ -1244,6 +1273,20 @@ def generate_html(
     html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)
     html_out = html_out.replace('__POS_TABLE__', pos_table_html)
     html_out = html_out.replace('__TOP_POS__', top_pos_html)
+    # Round 1 recap injection
+    r1_entries = round1_entries or []
+    r1_html = render_round1_recap(r1_entries)
+    r1_note = ''
+    try:
+        n = len(r1_entries)
+        if n and n < 32:
+            r1_note = f"Showing {n} of 32 picks"
+    except Exception:
+        r1_note = ''
+    html_out = html_out.replace('__ROUND1_HTML__', r1_html)
+    html_out = html_out.replace('__ROUND1_NOTE__', html.escape(r1_note))
+    html_out = html_out.replace('__INTRO_ROUND1__', render_intro('round1'))
+
     # Round-by-team hidden/miss table injection
     rounds = analytics.get('rounds_sorted', [])
     # Limit the number of columns to keep layout sane (e.g., first 7 rounds)
@@ -1345,12 +1388,15 @@ def main():
     rookies = gather_rookies(players, args.year)
     analytics = compute_analytics(rookies)
     intros_map = read_section_intros(args.section_intros)
+    # Build round 1 entries from raw players to access full ratings/traits
+    round1_entries = build_round1_entries(players, team_logo_map, year=args.year)
     html_out = generate_html(
         args.year, rookies, analytics, team_logo_map,
         title_suffix=args.league_prefix,
         title_override=args.title_override,
         section_intros=intros_map,
         intro_default=args.intro_default,
+        round1_entries=round1_entries,
     )
 
     out_dir = os.path.dirname(out_path)

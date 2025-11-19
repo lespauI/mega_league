@@ -131,7 +131,7 @@ Add data fields and mappings needed for Round 1 player cards.
 - Verification:
   - Quick run generation; inspect one rookie of QB/WR/CB in the Round 1 output later to ensure attributes/traits appear and missing keys don’t crash.
 
-### [ ] Step: Build and Render Round 1 Recap
+### [x] Step: Build and Render Round 1 Recap
 <!-- chat-id: f905f5df-9c89-40ac-8899-3d39ca012c92 -->
 Append end-of-page recap with every first-round pick in order.
 
