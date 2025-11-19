@@ -87,7 +87,8 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: 2832fb9c-d718-4594-a08e-3fe0d5053406 -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
 
@@ -98,3 +99,132 @@ Task instructions
 ```
 
 "Step:" prefix is important, do not omit it!
+
+### [ ] Step: Scaffold deterministic fixture generator
+Task definition
+- Add `scripts/fixtures/generate_tiny_draft.py` to produce a tiny, reproducible rookies CSV covering all dev tiers (3,2,1,0), multiple teams, positions, and first 3–4 rounds.
+
+Contracts to use/implement
+- Helper script (spec Verification Strategy: Helper scripts to add in Phase 1).
+- CSV columns: `rookieYear,fullName,team,position,playerBestOvr,devTrait,draftRound,draftPick,college`.
+
+Deliverable
+- File `scripts/fixtures/generate_tiny_draft.py` that writes `output/tiny_players.csv` without external deps.
+
+Verification
+- Run: `python3 scripts/fixtures/generate_tiny_draft.py` and confirm `output/tiny_players.csv` exists and contains at least one row for each dev tier 3/2/1/0.
+
+### [ ] Step: Unmask dev badges and spotlight
+Task definition
+- Replace masking with explicit dev rendering across the page. Update spotlight to “Elites Spotlight” and include only X‑Factor and Superstar players. Add visible badges on cards.
+
+Contracts to use/implement
+- Rendering helper `badge_for_dev(dev) -> str` returns `<span class="dev-badge dev-<tier>">Label</span>`.
+- CSS classes: `.dev-xf`, `.dev-ss`, `.dev-star`, `.dev-norm`.
+- Keep `gather_rookies(...)` contract unchanged.
+
+Deliverable
+- Updated `scripts/generate_draft_class_analytics.py` and embedded/style CSS where badges display: 3=>X‑Factor, 2=>Superstar, 1=>Star, 0=>Normal. Spotlight section title equals “Elites Spotlight”; Stars excluded.
+
+Verification
+- Generate HTML: `python3 scripts/generate_draft_class_analytics.py --year 2026 --out docs/draft_class_2026_test.html`.
+- Check: grep for `Elites Spotlight`, and for classes `dev-xf|dev-ss|dev-star|dev-norm`. Ensure no “Hidden” remains.
+
+### [ ] Step: KPI overhaul with grading and elites share
+Task definition
+- Replace Hidden/Normal KPIs with XF/SS/Star/Normal KPIs. Compute percentages and add “Elites share” ((XF+SS)/Total) progress bar. Add grading badges for XF and SS vs targets (XF ≥10%, SS ≥15%).
+
+Contracts to use/implement
+- `compute_analytics(rows)` adds: `xf_pct, ss_pct, star_pct, norm_pct`, `xf_grade|ss_grade` in {on,near,below}, labels `xf_grade_label|ss_grade_label`.
+- New helper `grade_badge(tier: str, pct: float, target: float) -> (label, css_class)` where class is `grade-on|grade-near|grade-below`.
+- CSS classes `.grade`, `.grade-on`, `.grade-near`, `.grade-below`.
+
+Deliverable
+- Updated analytics computation and HTML KPI block showing 4 dev KPIs, elites share bar, and grade badges next to XF% and SS%.
+
+Verification
+- Regenerate HTML for 2026. Confirm presence of four KPIs and an elites share bar percentage text.
+- Grep for `class="grade-(on|near|below)"` and for labels `On-target|Near-target|Below-target`.
+
+### [ ] Step: Update team and positions tables
+Task definition
+- Extend tables to include four dev columns (XF, SS, Star, Normal). Keep sortable behavior. Rename “Most hiddens” to “Most elites (XF+SS) — by team”.
+
+Contracts to use/implement
+- Team aggregate: `teams[team] = {count, avg_ovr, best_ovr, dev:{'3','2','1','0' -> int}}`.
+- Position aggregate: `positions[pos] = {count, avg_ovr, dev:{'3','2','1','0' -> int}}`.
+- “Most elites” computed as `elites = XF+SS` per team.
+
+Deliverable
+- Updated headers and row renderers for Teams and Positions tables, plus a renamed “Most elites (XF+SS) — by team” table.
+
+Verification
+- Grep headers in generated HTML: `Team | XF | SS | Star | Normal` and `Position | XF | SS | Star | Normal`.
+- Confirm the elites table title and that counts equal XF+SS per team.
+
+### [ ] Step: Add dual rounds tables (non-Normal and elites-only)
+Task definition
+- Keep existing per-round hits table where hit = non‑Normal (3/2/1). Add a second table where hit = elites only (3/2). Limit display to first 10 rounds if needed. Add clarifying subtitles/footnotes.
+
+Contracts to use/implement
+- `compute_analytics` adds `team_rounds_elites: dict[team, dict[int, {'hit':int, 'total':int}]]` and reuses `rounds_sorted`.
+
+Deliverable
+- Two separate rounds sections rendered with distinct titles, bars, and notes.
+
+Verification
+- Grep titles: one includes `Hit = XF/SS/Star` and the other `Hit = Elites (XF/SS)`.
+- Visually confirm two tables and bar visualizations in the HTML.
+
+### [ ] Step: Update verification script to new checks
+Task definition
+- Modify `scripts/verify_draft_class_analytics.py` to validate new KPIs, elites share, grading badges, spotlight title, updated table headers, and presence of two rounds tables. Ensure non-zero exit on failure.
+
+Contracts to use/implement
+- Spec Verification Strategy bullets under “Verifier updates (to implement)”.
+
+Deliverable
+- Updated verifier script with clear messages and proper exit codes. Supports `--html` parameter for local files.
+
+Verification
+- Run: `python3 scripts/verify_draft_class_analytics.py 2026 --html docs/draft_class_2026_test.html` and expect success.
+- Intentionally alter HTML (e.g., remove a header) and ensure the verifier exits non-zero.
+
+### [ ] Step: Refresh smoke script and messaging
+Task definition
+- Adjust `scripts/smoke_generate_draft_2026.sh` to run the generator and updated verifier; tweak echo messages to match new terminology (Elites, XF/SS/Star/Normal).
+
+Contracts to use/implement
+- No CLI changes; relies on updated generator and verifier.
+
+Deliverable
+- Updated smoke script that exits successfully on passing verification and clearly logs the new sections.
+
+Verification
+- Run: `bash scripts/smoke_generate_draft_2026.sh` and confirm success.
+
+### [ ] Step: Update README documentation
+Task definition
+- Update the Draft Class Analytics section to remove “Hidden” terminology, describe explicit dev tiers, new KPIs, elites share, table changes, and dual rounds view.
+
+Contracts to use/implement
+- Documentation alignment with the spec’s “Technical Implementation Brief” and “Delivery Phases”.
+
+Deliverable
+- Revised README explaining the new outputs and verification commands.
+
+Verification
+- Manual review; ensure commands and section names match the generator and verifier output.
+
+### [ ] Step: Cleanup and consistency pass
+Task definition
+- Remove any lingering “Hidden” references in code/templates; ensure classes and labels are consistent. Run a quick lint/format if available.
+
+Contracts to use/implement
+- Backward compatibility note: no masking mode retained; remove “Hidden” terminology.
+
+Deliverable
+- Cohesive code and HTML/CSS with no stale references.
+
+Verification
+- Grep repo for `Hidden` and expect zero matches in code and templates after changes.
