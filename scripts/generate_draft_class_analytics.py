@@ -280,8 +280,15 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     # Most hiddens: XF + SS + Star
     team_hidden_rows = []
-    for team, stats in sorted(analytics['teams'].items(), key=lambda kv: -(kv[1]['dev'].get('3',0)+kv[1]['dev'].get('2',0)+kv[1]['dev'].get('1',0))):
-        hidden = stats['dev'].get('3',0) + stats['dev'].get('2',0) + stats['dev'].get('1',0)
+    for team, stats in sorted(
+        analytics['teams'].items(),
+        key=lambda kv: (-(kv[1]['dev'].get('3',0)+kv[1]['dev'].get('2',0)+kv[1]['dev'].get('1',0)), kv[0])
+    ):
+        hidden = (
+            stats['dev'].get('3',0)
+            + stats['dev'].get('2',0)
+            + stats['dev'].get('1',0)
+        )
         team_hidden_rows.append(
             f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{hidden}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
         )

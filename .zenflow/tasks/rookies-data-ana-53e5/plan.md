@@ -167,7 +167,8 @@ Verification
   - `rg -o "<b>Total rookies</b><span>(\\d+)" -r "$1" -N docs/draft_class_2026.html`
 - Cross-check totals using CSV Python one-liner from spec.
 
-### [ ] Step: HTML Generation & Styling
+### [x] Step: HTML Generation & Styling
+<!-- chat-id: ee7721d0-7ee3-4137-a77f-596342dc0988 -->
 Task definition
 - Implement `generate_html(year, rows, analytics, team_logo_map)` to output a single self-contained HTML with inline CSS and sections: KPIs, Elites Spotlight (dev 3/2), Team Analytics, Most Hiddens, Position Analytics, Elite-heavy Positions.
 - Ensure deterministic sorting and no unresolved placeholders remain.
