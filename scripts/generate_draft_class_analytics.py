@@ -193,17 +193,18 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     elite = xf + ss
     elite_pct = round(100*elite/total, 1)
 
-    # Elite-heavy positions summary
-    pos_elite_sorted = sorted(
-        (
-            (p, d.get('3',0)+d.get('2',0), d.get('1',0))
-            for p, d in ((pos, analytics['positions'][pos]['dev']) for pos in analytics['positions'])
-        ),
-        key=lambda x: (-x[1], -x[2], x[0])
-    )
+    # Elite-heavy positions summary (show XF and SS separately)
+    pos_elite_sorted = []
+    for p in analytics['positions']:
+        d = analytics['positions'][p]['dev']
+        xf = d.get('3',0)
+        ss = d.get('2',0)
+        st = d.get('1',0)
+        pos_elite_sorted.append((p, xf, ss, st, xf+ss))
+    pos_elite_sorted.sort(key=lambda x: (-x[4], -x[3], x[0]))
     top_pos_lines = []
-    for p, elite_cnt, star_cnt in pos_elite_sorted[:6]:
-        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {elite_cnt} elites (XF+SS), {star_cnt} Stars</li>")
+    for p, xf, ss, st, elite_total in pos_elite_sorted[:6]:
+        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {xf} XF, {ss} SS, {st} Stars</li>")
     top_pos_html = '\n'.join(top_pos_lines)
 
     html_out = """<!DOCTYPE html>
@@ -363,4 +364,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
