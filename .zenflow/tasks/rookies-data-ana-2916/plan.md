@@ -132,7 +132,7 @@ Verification
 - Generate HTML: `python3 scripts/generate_draft_class_analytics.py --year 2026 --out docs/draft_class_2026_test.html`.
 - Check: grep for `Elites Spotlight`, and for classes `dev-xf|dev-ss|dev-star|dev-norm`. Ensure no “Hidden” remains.
 
-### [ ] Step: KPI overhaul with grading and elites share
+### [x] Step: KPI overhaul with grading and elites share
 <!-- chat-id: cd4fe048-89bf-45ac-941e-31103afa89d3 -->
 Task definition
 - Replace Hidden/Normal KPIs with XF/SS/Star/Normal KPIs. Compute percentages and add “Elites share” ((XF+SS)/Total) progress bar. Add grading badges for XF and SS vs targets (XF ≥10%, SS ≥15%).
@@ -166,7 +166,7 @@ Verification
 - Grep headers in generated HTML: `Team | XF | SS | Star | Normal` and `Position | XF | SS | Star | Normal`.
 - Confirm the elites table title and that counts equal XF+SS per team.
 
-### [ ] Step: Add dual rounds tables (non-Normal and elites-only)
+### [x] Step: Add dual rounds tables (non-Normal and elites-only)
 <!-- chat-id: 863e659f-80ce-40db-8e0a-fe967e05c207 -->
 Task definition
 - Keep existing per-round hits table where hit = non‑Normal (3/2/1). Add a second table where hit = elites only (3/2). Limit display to first 10 rounds if needed. Add clarifying subtitles/footnotes.

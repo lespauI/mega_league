@@ -150,6 +150,31 @@ def parse_html_kpis(html_text: str) -> dict:
     return k
 
 
+def parse_html_kpis_legacy(html_text: str) -> dict:
+    """Extract legacy KPI values (Hidden/Normal and Hidden share)."""
+    def extract(label: str) -> str | None:
+        m = re.search(rf"<b>\s*{re.escape(label)}\s*</b>\s*<span>([^<]+)</span>", html_text)
+        return m.group(1).strip() if m else None
+
+    k: dict[str, str | None] = {}
+    k["total"] = extract("Total rookies")
+    k["avg_ovr"] = extract("Avg overall")
+    k["hidden"] = extract("Hidden")
+    k["normal"] = extract("Normal")
+    m = re.search(r"<b>\s*Hidden share\s*</b>\s*<span>([^<]+)</span>", html_text)
+    if m:
+        piece = m.group(1).strip()
+        m2 = re.match(r"(\d+)\s*\(([-+]?[0-9]*\.?[0-9]+)%\)", piece)
+        if m2:
+            k["hidden"] = m2.group(1)
+            k["hidden_pct"] = m2.group(2)
+        else:
+            k["hidden_pct"] = None
+    else:
+        k["hidden_pct"] = None
+    return k
+
+
 def main():
     ap = argparse.ArgumentParser(description="Verify Draft Class Analytics HTML against CSV data")
     # support positional year as per usage, and optional --year for flexibility
@@ -188,10 +213,10 @@ def main():
         sys.exit(1)
 
     # 3) KPI extraction and comparison
-    html_kpis = parse_html_kpis(html_text)
-
+    is_new_layout = ("X-Factors" in html_text) or re.search(r"Elites Spotlight", html_text)
     mismatches: list[str] = []
     soft_warnings: list[str] = []
+    html_kpis = parse_html_kpis(html_text) if is_new_layout else parse_html_kpis_legacy(html_text)
 
     def cmp_int(key: str, v: int, label: str):
         s = html_kpis.get(key)
@@ -214,34 +239,46 @@ def main():
     cmp_int("total", kpis["total"], "Total rookies")
     cmp_float_str("avg_ovr", kpis["avg_ovr"], "Avg overall")
 
-    # Required: dev KPIs for XF/SS/Star (Normal is optional depending on layout)
-    cmp_int("xf", kpis["xf"], "X-Factors")
-    cmp_int("ss", kpis["ss"], "Superstars")
-    cmp_int("star", kpis["star"], "Stars")
-    # Normal KPI: only compare if present in HTML (some layouts omit it from KPIs)
-    if html_kpis.get("norm") is not None:
-        try:
-            hv = int(html_kpis.get("norm"))
-        except Exception:
-            hv = None
-        if hv != kpis["norm"]:
-            mismatches.append(f"Normal: expected {kpis['norm']}, found {html_kpis.get('norm')}")
+    if is_new_layout:
+        # Required: dev KPIs for XF/SS/Star (Normal is optional depending on layout)
+        cmp_int("xf", kpis["xf"], "X-Factors")
+        cmp_int("ss", kpis["ss"], "Superstars")
+        cmp_int("star", kpis["star"], "Stars")
+        # Normal KPI: only compare if present in HTML (some layouts omit it from KPIs)
+        if html_kpis.get("norm") is not None:
+            try:
+                hv = int(html_kpis.get("norm"))
+            except Exception:
+                hv = None
+            if hv != kpis["norm"]:
+                mismatches.append(f"Normal: expected {kpis['norm']}, found {html_kpis.get('norm')}")
 
-    # Elites share (count and percent)
-    elites_count_str = html_kpis.get("elites")
-    elites_pct_str = html_kpis.get("elites_pct")
-    if elites_count_str is None or elites_pct_str is None:
-        mismatches.append("missing KPI 'Elites share' in HTML")
+        # Elites share (count and percent)
+        elites_count_str = html_kpis.get("elites")
+        elites_pct_str = html_kpis.get("elites_pct")
+        if elites_count_str is None or elites_pct_str is None:
+            mismatches.append("missing KPI 'Elites share' in HTML")
+        else:
+            # Compare as exact strings
+            if elites_count_str != str(kpis["elites"]):
+                mismatches.append(f"Elites share (count): expected {kpis['elites']}, found {elites_count_str}")
+            if elites_pct_str != str(kpis["elites_pct"]):
+                mismatches.append(f"Elites share (%): expected {kpis['elites_pct']}, found {elites_pct_str}")
     else:
-        # Compare as exact strings
-        if elites_count_str != str(kpis["elites"]):
-            mismatches.append(f"Elites share (count): expected {kpis['elites']}, found {elites_count_str}")
-        if elites_pct_str != str(kpis["elites_pct"]):
-            mismatches.append(f"Elites share (%): expected {kpis['elites_pct']}, found {elites_pct_str}")
-
-    # Spotlight title check: allow extended subtitle, but must include key phrase
-    if not re.search(r"<div\s+class=\"section-title\"[^>]*>[^<]*Elites Spotlight", html_text, re.IGNORECASE):
-        mismatches.append("Spotlight title missing or not 'Elites Spotlight'")
+        # Legacy: Hidden/Normal counts and Hidden share
+        # Hidden = XF+SS+Star
+        hidden_expected = kpis["xf"] + kpis["ss"] + kpis["star"]
+        cmp_int("hidden", hidden_expected, "Hidden")
+        cmp_int("normal", kpis["norm"], "Normal")
+        # Hidden share percent if present
+        hidden_pct_str = html_kpis.get("hidden_pct")
+        if hidden_pct_str is not None:
+            expected_hidden_pct = round(100.0 * hidden_expected / (kpis["total"] or 1), 1)
+            if hidden_pct_str != str(expected_hidden_pct):
+                mismatches.append(f"Hidden share (%): expected {expected_hidden_pct}, found {hidden_pct_str}")
+        # Spotlight title should reference Hidden
+        if not re.search(r"<div\s+class=\"section-title\"[^>]*>[^<]*Hidden Spotlight", html_text, re.IGNORECASE):
+            mismatches.append("Legacy spotlight title missing or not 'Hidden Spotlight'")
 
     # Table header checks
     def thead_contains(block_regex: str, required_headers: list[str]) -> bool:
@@ -253,26 +290,32 @@ def main():
                 break
         return ok
 
-    # Teams table: requires dev columns present in a thead that has 'Team'
-    teams_ok = thead_contains(r"<thead>.*?<th>\s*Team\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
-    if not teams_ok:
-        mismatches.append("Teams table header missing dev columns XF/SS/Star/Norm")
-
-    # Positions table: requires dev columns present in a thead that has 'Pos' or 'Position'
-    pos_ok = (
-        thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
-    )
-    if not pos_ok:
-        mismatches.append("Positions table header missing dev columns XF/SS/Star/Norm")
+    if is_new_layout:
+        # Teams table: requires dev columns present in a thead that has 'Team'
+        teams_ok = thead_contains(r"<thead>.*?<th>\s*Team\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
+        if not teams_ok:
+            mismatches.append("Teams table header missing dev columns XF/SS/Star/Norm")
+        # Positions table: requires dev columns present in a thead that has 'Pos' or 'Position'
+        pos_ok = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
+        if not pos_ok:
+            mismatches.append("Positions table header missing dev columns XF/SS/Star/Norm")
+    else:
+        # Legacy teams header requires Hidden/Normal
+        teams_ok_legacy = thead_contains(r"<thead>.*?<th>\s*Team\s*</th>.*?</thead>", ["Hidden", "Normal"])
+        if not teams_ok_legacy:
+            mismatches.append("Legacy teams table header missing Hidden/Normal columns")
+        # Positions header may already have dev columns in some legacy files — allow either form
+        pos_ok_new = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["XF", "SS", "Star", "Norm"])
+        pos_ok_legacy = thead_contains(r"<thead>.*?<th>\s*Pos(ition)?\s*</th>.*?</thead>", ["Hidden", "Normal"]) or thead_contains(r"<thead>.*?<th>\s*Position\s*</th>.*?</thead>", ["Hidden", "Normal"])
+        if not (pos_ok_new or pos_ok_legacy):
+            mismatches.append("Positions table header missing expected columns (either dev columns or Hidden/Normal)")
 
     # Optional: grading badges presence (class="grade-on|near|below").
     if re.search(r"class=\"grade-(on|near|below)\"", html_text):
-        # If any grade badge exists, ensure both XF and SS labels exist nearby
-        # (best-effort heuristic; do not fail too aggressively)
+        # If any grade badge exists, ensure both XF and SS labels exist nearby (best-effort)
         if not re.search(r"XF", html_text) or not re.search(r"SS", html_text):
             soft_warnings.append("grade badges present but XF/SS labels not found near KPIs")
     else:
-        # Not present; only warn (layout may omit grades in test HTML)
         soft_warnings.append("grading badges not found; skipping grade checks")
 
     # Optional: dual rounds sections — only enforce if any rounds title text exists
