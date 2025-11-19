@@ -558,7 +558,7 @@ def get_attr_keys_for_pos(pos: str) -> list[str]:
             'runBlockRating','runBlockPowerRating','runBlockFinesseRating',
             'strengthRating','awareRating','impactBlockRating'
         ]
-    if p in {'LE','RE','DE'}:
+    if p in {'LE','RE','DE','LEDGE','REDGE'}:
         return ['powerMovesRating','finesseMovesRating','blockShedRating','pursuitRating','tackleRating','strengthRating','speedRating','hitPowerRating']
     if p == 'DT':
         return ['powerMovesRating','blockShedRating','strengthRating','tackleRating','pursuitRating','hitPowerRating']
@@ -591,7 +591,7 @@ def get_trait_keys_for_pos(pos: str) -> list[str]:
         return base_ball
     if p in {'WR','TE'}:
         return base_rec
-    if p in {'LE','RE','DE','DT'}:
+    if p in {'LE','RE','DE','DT','LEDGE','REDGE'}:
         return base_def + base_dl
     if p in {'MLB','LOLB','ROLB','OLB','LB','CB','FS','SS','S'}:
         return base_def
@@ -816,6 +816,9 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
         # Strip a single trailing 'Rating' (6 chars)
         if k.endswith('Rating'):
             k = k[:-6]
+        # Special shorthand
+        if k == 'throwUnderPressure':
+            return 'TUP'
         return k
     def _val_cls(v: int) -> str:
         try:
