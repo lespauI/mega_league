@@ -146,7 +146,8 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         lid = team_logo_map.get(team)
         if not lid:
             return ""
-        return f'<img class="logo" src="https://cdn.neonsportz.com/teamlogos/64/{lid}.png" alt="{html.escape(team)}" />'
+        # Use 256px logos as requested
+        return f'<img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/{lid}.png" alt="{html.escape(team)}" />'
 
     # Build main table rows
     table_rows = []

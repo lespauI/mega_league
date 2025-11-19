@@ -51,6 +51,13 @@ Add new steps here
 ### [x] Step: Link from index
 - Add link to the new page in `index.html` for easy access
 
+### [x] Step: Update logo links
+- Switch to Neon 256px logos (cdn.neonsportz.com/teamlogos/256/{logoId}.png)
+
 ### [x] Step: Hand-off and usage notes
 - Document how to run the script and customize output
 ```
+
+### [ ] Step: update logos link
+
+this is correct link to one of the logos https://cdn.neonsportz.com/teamlogos/256/6.png
