@@ -856,7 +856,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
                 grade_label = f"{grade_label}+"
         except Exception:
             pass
-        # Team logo in the top-right corner
+        # Team logo shown inline with the Pick number in header row
         logo_img = f"<img class=\"team-logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
         photo = e.get('photo')
         # Prominent player photo in header
@@ -939,8 +939,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
         cards.append(
             (
                 "<div class=\"r1-card\">"
-                f"  {logo_img}"
-                f"  <div class=\"head\">{photo_html}<div class=\"pick\">Pick {esc(e.get('pick',''))}</div></div>"
+                f"  <div class=\"head\">{photo_html}<div class=\"head-right\"><div class=\"pick\">Pick {esc(e.get('pick',''))}</div>{logo_img}</div></div>"
                 f"  <div class=\"name\"><b>{esc(e['name'])}</b> <span class=\"pos\">{esc(e['position'])}</span> <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
                 f"  <div class=\"meta\">Team: {esc(e['team'])} &nbsp; • &nbsp; OVR {int(e.get('ovr',0))}</div>"
                 f"  <div class=\"attrs\">{attrs_html}</div>"
@@ -1229,8 +1228,9 @@ def generate_html(
     .r1-list { display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
     .r1-card { border:1px solid var(--grid); border-radius:10px; padding:12px; background:#fff; position:relative; }
     .r1-card .head { display:flex; align-items:center; gap:8px; justify-content:space-between; }
+    .r1-card .head .head-right { display:flex; align-items:center; gap:8px; margin-left:auto; }
     .r1-card .head img.r1-photo { width:56px; height:56px; border-radius:8px; object-fit:cover; box-shadow:0 2px 6px rgba(0,0,0,.08); }
-    .r1-card img.team-logo { position:absolute; top:10px; right:10px; width:24px; height:24px; border-radius:6px; box-shadow:0 0 0 1px rgba(0,0,0,.08); }
+    .r1-card img.team-logo { width:24px; height:24px; border-radius:6px; box-shadow:0 0 0 1px rgba(0,0,0,.08); }
     .r1-card .pick { margin-left:auto; font-weight:700; font-size:12px; color:#0f172a; background:#f1f5f9; border:1px solid #e2e8f0; padding:2px 8px; border-radius:999px; }
     .r1-card .name { margin-top:4px; }
     .r1-card .name .pos { color:#475569; font-weight:600; }
