@@ -190,3 +190,9 @@ Add sample JSON for analysts to edit.
   - New file `scripts/fixtures/section_intros_example.json`.
 - Verification:
   - Run generator with `--section-intros scripts/fixtures/section_intros_example.json` and check that text appears as expected at the top of target sections.
+
+### [x] Step: add mock draft data
+<!-- chat-id: fb0df213-5e20-44da-ae72-d664ed670d8e -->
+
+Git pull draft branch, i add file draft_mock.md
+This is analytics before draft, our goal is to add spoiler (wrapped) section to every first round pick "Что говорили анал итики" and add data from this table, about the player, about the team needs and etc

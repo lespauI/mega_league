@@ -684,7 +684,82 @@ def _grade_for_ovr(ovr: int) -> tuple[str, str]:
     return ('C', 'grade-below')
 
 
-def render_round1_recap(entries: list[dict]) -> str:
+def _normalize_player_name_for_match(name: str) -> str:
+    """Normalize player name to match against mock draft markdown names.
+
+    - Strips Markdown emphasis (** **)
+    - Truncates at first ' (' to remove variant notes like '(вариант 1)'
+    - Trims whitespace
+    """
+    s = (name or '').strip()
+    # Remove Markdown bold **
+    if s.startswith('**') and s.endswith('**'):
+        s = s[2:-2]
+    # Remove variant suffix in parentheses
+    if ' (' in s:
+        s = s.split(' (', 1)[0]
+    return s.strip()
+
+
+def read_mock_draft_md(path: str | None) -> dict:
+    """Parse docs/draft_mock.md table into lookup maps.
+
+    Returns a dict: {
+      'by_pick': {int: [str, ...]},
+      'by_player': {str: [str, ...]},  # normalized player name
+    }
+
+    Safe on errors/missing file; returns empty maps.
+    """
+    out = {'by_pick': {}, 'by_player': {}}
+    if not path:
+        return out
+    try:
+        if not os.path.exists(path):
+            return out
+        with open(path, 'r', encoding='utf-8') as fh:
+            lines = fh.read().splitlines()
+        # Find the markdown table (lines starting with '|') under "Первый Раунд"
+        in_table = False
+        for ln in lines:
+            if ln.strip().startswith('|'):
+                in_table = True
+                # Skip header and alignment rows
+                # Detect alignment by pattern like |:---|
+                parts = [p.strip() for p in ln.strip().strip('|').split('|')]
+                if len(parts) < 5:
+                    continue
+                # Heuristic: skip header (contains non-numeric in 1st col and typically words)
+                if parts[0] and not parts[0].isdigit():
+                    continue
+                if parts[1].lower().startswith('---') or parts[0].lower().startswith('---'):
+                    continue
+                # Data row: Pick | Player | Pos | Team | Notes
+                pick_raw, player_raw, pos_raw, team_raw, notes_raw = parts[:5]
+                # Clean fields
+                try:
+                    pick = int(float(pick_raw))
+                except Exception:
+                    # If pick is not parseable, try to match by player name only
+                    pick = None
+                player = player_raw.strip()
+                player_norm = _normalize_player_name_for_match(player)
+                notes = notes_raw.strip()
+                if notes:
+                    if pick is not None:
+                        out['by_pick'].setdefault(pick, []).append(notes)
+                    if player_norm:
+                        out['by_player'].setdefault(player_norm, []).append(notes)
+            else:
+                if in_table and ln.strip() == '':
+                    # End of contiguous table block
+                    in_table = False
+        return out
+    except Exception:
+        return {'by_pick': {}, 'by_player': {}}
+
+
+def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) -> str:
     """Render HTML for Round 1 recap cards.
 
     Produces a responsive grid of cards with team logo, pick number, name/pos,
@@ -697,6 +772,8 @@ def render_round1_recap(entries: list[dict]) -> str:
         return html.escape(str(s))
 
     cards = []
+    mock_by_pick = (mock_lookup or {}).get('by_pick', {})
+    mock_by_player = (mock_lookup or {}).get('by_player', {})
     for e in entries:
         grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
         logo_img = f"<img class=\"logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
@@ -715,6 +792,28 @@ def render_round1_recap(entries: list[dict]) -> str:
             trait_lines.append(f"<span class=\"trait\">{esc(t)}</span>")
         traits_html = ''.join(trait_lines)
 
+        # Mock draft notes (spoiler)
+        notes_html = ''
+        try:
+            pick = e.get('pick')
+            player_norm = _normalize_player_name_for_match(e.get('name', ''))
+            notes_list = []
+            # Prefer player-specific notes when available; otherwise fall back to pick-based notes
+            if player_norm and player_norm in mock_by_player:
+                notes_list = list(mock_by_player.get(player_norm, []))
+            elif isinstance(pick, int) and pick in mock_by_pick:
+                notes_list = list(mock_by_pick.get(pick, []))
+            if notes_list:
+                joined = '\n\n'.join(notes_list)
+                notes_html = (
+                    "<details class=\"spoiler\">"
+                    "  <summary>Что говорили аналитики</summary>"
+                    f"  <div class=\"mock-notes\">{esc(joined)}</div>"
+                    "</details>"
+                )
+        except Exception:
+            notes_html = ''
+
         cards.append(
             (
                 "<div class=\"r1-card\">"
@@ -723,6 +822,7 @@ def render_round1_recap(entries: list[dict]) -> str:
                 f"  <div class=\"meta\">Team: {esc(e['team'])} &nbsp; • &nbsp; OVR {int(e.get('ovr',0))}</div>"
                 f"  <div class=\"attrs\">{attrs_html}</div>"
                 f"  <div class=\"traits\">{traits_html}</div>"
+                f"  {notes_html}"
                 f"  {photo_html}"
                 "</div>"
             )
@@ -753,6 +853,7 @@ def generate_html(
     section_intros: dict | None = None,
     intro_default: str | None = None,
     round1_entries: list[dict] | None = None,
+    round1_mock: dict | None = None,
 ) -> str:
     elites = [r for r in rows if r['dev'] in ('3','2')]
     # Order cards by draft pick: round asc, pick asc; missing picks last
@@ -1018,6 +1119,10 @@ def generate_html(
     .r1-card .traits { margin-top:8px; display:flex; flex-wrap:wrap; gap:6px; }
     .r1-card .trait { display:inline-block; padding:2px 8px; border-radius:999px; font-size:11px; background:#eef2ff; color:#3730a3; border:1px solid #e0e7ff; }
     .r1-photo { position:absolute; right:10px; bottom:10px; width:72px; height:auto; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,.08); }
+    /* Mock draft notes spoiler */
+    details.spoiler { margin-top:8px; }
+    details.spoiler summary { cursor:pointer; color:#475569; font-weight:600; }
+    .mock-notes { white-space: pre-wrap; color:#334155; font-size:13px; margin-top:6px; }
 
     /* Responsive tweaks */
     @media (max-width: 1100px) {
@@ -1275,7 +1380,7 @@ def generate_html(
     html_out = html_out.replace('__TOP_POS__', top_pos_html)
     # Round 1 recap injection
     r1_entries = round1_entries or []
-    r1_html = render_round1_recap(r1_entries)
+    r1_html = render_round1_recap(r1_entries, round1_mock)
     r1_note = ''
     try:
         n = len(r1_entries)
@@ -1361,6 +1466,7 @@ def main():
     ap.add_argument('--title', dest='title_override', default=None, help='Optional full page <title> override string')
     ap.add_argument('--section-intros', dest='section_intros', default=None, help='Path to JSON mapping for section intros')
     ap.add_argument('--intro-default', dest='intro_default', default=None, help='Default intro text used when a section is missing in mapping')
+    ap.add_argument('--mock-md', dest='mock_md', default=None, help='Path to mock draft markdown (docs/draft_mock.md). If omitted and default exists, it will be used.')
     args = ap.parse_args()
 
     out_path = args.out or os.path.join('docs', f'draft_class_{args.year}.html')
@@ -1388,6 +1494,13 @@ def main():
     rookies = gather_rookies(players, args.year)
     analytics = compute_analytics(rookies)
     intros_map = read_section_intros(args.section_intros)
+    # Mock draft notes (optional)
+    mock_md_path = args.mock_md
+    if not mock_md_path:
+        default_md = os.path.join('docs', 'draft_mock.md')
+        if os.path.exists(default_md):
+            mock_md_path = default_md
+    mock_lookup = read_mock_draft_md(mock_md_path)
     # Build round 1 entries from raw players to access full ratings/traits
     round1_entries = build_round1_entries(players, team_logo_map, year=args.year)
     html_out = generate_html(
@@ -1397,6 +1510,7 @@ def main():
         section_intros=intros_map,
         intro_default=args.intro_default,
         round1_entries=round1_entries,
+        round1_mock=mock_lookup,
     )
 
     out_dir = os.path.dirname(out_path)
