@@ -495,14 +495,14 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     /* Round hit/miss visualization */
     .rounds-table th.rcol { text-align:center; }
-    .round-cell { width: 72px; height: 16px; position: relative; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
+    .round-cell { width: 60px; height: 16px; position: relative; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
     .round-cell .hit { height:100%; background:#86efac; }
     .round-cell.low .hit { background:#fcd34d; }
     .round-cell.med .hit { background:#a3e635; }
     .round-cell.high .hit { background:#22c55e; }
     .round-cell.zero .hit { background:#e5e7eb; }
     .round-cell .label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#334155; }
-    .np-badge { display:inline-block; padding:2px 8px; border-radius:999px; background:#f1f5f9; color:#475569; border:1px solid #e2e8f0; font-size:11px; font-weight:600; }
+    .rounds-table td.empty { background:#fafafa; }
 
     /* Sticky sub-nav */
     .subnav { position: sticky; top: 0; z-index: 20; background: rgba(255,255,255,.92); backdrop-filter: saturate(120%) blur(6px); border-bottom: 1px solid #eef2f7; padding: 8px 12px; display:flex; flex-wrap:wrap; gap: 8px; }
@@ -655,13 +655,13 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         for r in rounds:
             cell = per_team.get(r)
             if not cell:
-                cells.append("<td><span class='np-badge' title='No pick'>NP</span></td>")
+                cells.append("<td class='empty' title='No pick'></td>")
                 continue
             hit = int(cell.get('hit', 0))
             total = int(cell.get('total', 0))
             pct = int(round(100.0 * hit / total)) if total else 0
             rate_cls = 'high' if pct >= 75 else ('med' if pct >= 40 else ('low' if pct > 0 else 'zero'))
-            bar = f"<div class='round-cell {rate_cls}'><div class='hit' style='width:{pct}%'></div><div class='label'>{hit}/{total}</div></div>"
+            bar = f"<div class='round-cell {rate_cls}' title='Hidden {hit} of {total}'><div class='hit' style='width:{pct}%'></div></div>"
             cells.append(f"<td>{bar}</td>")
         row_html = f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>{''.join(cells)}</tr>"
         round_rows.append(row_html)
