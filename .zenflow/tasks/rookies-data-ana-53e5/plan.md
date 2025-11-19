@@ -184,7 +184,8 @@ Verification
 - `! rg -n "__[A-Z_]+__" docs/draft_class_2026.html`
 - Spot-check elites cards exist only for dev in {2,3} via text search for badges.
 
-### [ ] Step: Verification Helper Script
+### [x] Step: Verification Helper Script
+<!-- chat-id: d1966662-0a8b-4ddb-81e2-d00287915e5e -->
 Task definition
 - Create `scripts/verify_draft_class_analytics.py` that recomputes counts from CSV for a given year and asserts HTML KPIs and placeholders, exiting non-zero on mismatches.
 
@@ -238,3 +239,9 @@ Deliverables
 
 Verification
 - Open `README.md` and confirm section exists with accurate commands; optionally run commands to validate.
+
+### [ ] Step: hide elits
+
+We need to do a refactoring to hide the real dev trait, if its 3 2 or 1 we show its as a Hiden, if its normal we showing as a normal. 
+
+Update representation and documentations
