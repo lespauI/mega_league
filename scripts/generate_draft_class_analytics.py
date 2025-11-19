@@ -271,13 +271,10 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     elite_cards = []
     for r in elites:
-        # Compose compact round/pick suffix when available (e.g., " · R1 P7")
-        rp_bits = []
-        if r.get('draft_round') is not None:
-            rp_bits.append(f"R{int(r['draft_round'])}")
-        if r.get('draft_pick') is not None:
-            rp_bits.append(f"P{int(r['draft_pick'])}")
-        rp_txt = (" · " + " ".join(rp_bits)) if rp_bits else ""
+        # Compose compact round.pick suffix when both available (e.g., " · 1.7")
+        rd = r.get('draft_round')
+        pk = r.get('draft_pick')
+        rp_txt = f" · {int(rd)}.{int(pk)}" if (rd is not None and pk is not None) else ""
 
         elite_cards.append(
             (
@@ -434,7 +431,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     </section>
 
     <section class=\"panel\"> 
-      <div class=\"section-title\">Hidden Spotlight — masked dev traits</div>
+      <div class=\"section-title\">Hidden Spotlight</div>
       <div class=\"players\">__ELITE_CARDS__</div>
     </section>
 
