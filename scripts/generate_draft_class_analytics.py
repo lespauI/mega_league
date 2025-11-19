@@ -123,6 +123,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
     - position: trimmed; default '?' when missing/blank
     - ovr: prefer playerBestOvr, then playerSchemeOvr; default 0
     - dev: keep as string in {'3','2','1','0'}; map unknowns to '0'
+    - draftRound/draftPick: parsed to ints when available (used in Elites Spotlight)
     """
     out = []
     for r in players:
@@ -160,6 +161,8 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
             'position': pos,
             'ovr': int(ovr),
             'dev': dev,
+            'draft_round': safe_int(r.get('draftRound'), None),
+            'draft_pick': safe_int(r.get('draftPick'), None),
         })
     # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
@@ -268,13 +271,21 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     elite_cards = []
     for r in elites:
+        # Compose round/pick suffix when available
+        rp = []
+        if r.get('draft_round') is not None:
+            rp.append(f"round {int(r['draft_round'])}")
+        if r.get('draft_pick') is not None:
+            rp.append(f"pick {int(r['draft_pick'])}")
+        rp_txt = (" " + " ".join(rp)) if rp else ""
+
         elite_cards.append(
             (
                 '<div class="player">'
                 f"{logo_img(r['team'])}"
                 f"<div class=\"nm\">{html.escape(r['name'])}</div>"
                 f"<div class=\"meta\">{html.escape(r['position'])} · {html.escape(r['team'])}</div>"
-                f"<div class=\"ovr\">OVR {int(r['ovr'])}</div>"
+                f"<div class=\"ovr\">OVR {int(r['ovr'])}{rp_txt}</div>"
                 f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
                 '</div>'
             )

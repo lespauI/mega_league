@@ -250,11 +250,18 @@ We need to do a refactoring to hide the real dev trait, if its 3 2 or 1 we show 
 
 Update representation and documentations
 
-### [ ] Step: Elites Spotlight — X-Factors and Superstars
+### [x] Step: Elites Spotlight — X-Factors and Superstars
+<!-- chat-id: 13d48387-273f-4f89-be17-fd5a3013d309 -->
 
 we need to show the pick where they picked like 
 Cardinals Clyde Stackhouse HB · Cardinals OVR 85 round 1 pick 8 and etc
 
+Implemented: Elite cards now include draft round and pick (derived from `draftRound` and `draftPick` in `MEGA_players.csv`) appended to the OVR line, e.g., `OVR 85 round 1 pick 8`. Dev tiers remain masked (Hidden/Normal) per prior step.
+
 ### [ ] Step: Add new graphic Round hidden
 
 In wich round team select a hidden? We need to have representation of Hit and miss, like for example Dallas select 3 hiddens in 1st round, and 0 in other rounds and etc
+
+### [ ] Step: Change Design
+
+Right now design of our HTML looks super simple, lets made it better, Do your best, but not overcomplicated. You can look on other HTMLs to understand our styling
