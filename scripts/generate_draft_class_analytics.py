@@ -517,6 +517,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .kpi span { color:#334155; font-size: 18px; font-weight: 700; }
     .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
     .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }
+    .kpi-large { grid-column: span 4; }
     /* Stacked distribution bar */
     .stackbar { margin-top:6px; height:10px; display:flex; border-radius:999px; overflow:hidden; border:1px solid #e5e7eb; background:#f3f4f6; }
     .stackbar .seg { height:100%; }
@@ -695,7 +696,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"kpi\"><b>SS</b><span>__SS__ (__SS_PCT__%) <span class=\"grade __SS_GRADE_CLASS__\">__SS_GRADE_LABEL__</span></span></div>
         <div class=\"kpi\"><b>Star</b><span>__STAR__ (__STAR_PCT__%)</span></div>
         <div class=\"kpi\"><b>Normal</b><span>__NORMAL__ (__NORM_PCT__%)</span></div>
-        <div class=\"kpi\"><b>Dev distribution</b>
+        <div class=\"kpi kpi-large\"><b>Dev distribution</b>
           <span>__XF_PCT__% / __SS_PCT__% / __STAR_PCT__% / __NORM_PCT__%</span>
           <div class=\"stackbar\">
             <div class=\"seg seg-xf\" style=\"width: __XF_PCT__%\"></div>
