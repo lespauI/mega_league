@@ -99,7 +99,8 @@ def build_team_logo_map(teams_rows: list[dict]) -> dict:
 
     for r in teams_rows:
         lid = str(r.get('logoId') or '').strip()
-        if not lid or lid == '0':
+        # Allow '0' as a valid logoId (e.g., Bears => 0.png)
+        if lid == '':
             continue
 
         for key in ('displayName', 'nickName', 'teamName'):

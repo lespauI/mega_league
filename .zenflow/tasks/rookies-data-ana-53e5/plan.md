@@ -254,3 +254,7 @@ Update representation and documentations
 
 we need to show the pick where they picked like 
 Cardinals Clyde Stackhouse HB · Cardinals OVR 85 round 1 pick 8 and etc
+
+### [ ] Step: Add new graphic Round hidden
+
+In wich round team select a hidden? We need to have representation of Hit and miss, like for example Dallas select 3 hiddens in 1st round, and 0 in other rounds and etc
