@@ -149,7 +149,7 @@ Verification
 - Regenerate HTML for 2026. Confirm presence of four KPIs and an elites share bar percentage text.
 - Grep for `class="grade-(on|near|below)"` and for labels `On-target|Near-target|Below-target`.
 
-### [ ] Step: Update team and positions tables
+### [x] Step: Update team and positions tables
 <!-- chat-id: 219151a2-1941-49dc-977d-57b502a9d3c3 -->
 Task definition
 - Extend tables to include four dev columns (XF, SS, Star, Normal). Keep sortable behavior. Rename “Most hiddens” to “Most elites (XF+SS) — by team”.

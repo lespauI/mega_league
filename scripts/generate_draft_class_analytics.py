@@ -27,6 +27,29 @@ from collections import Counter
 DEV_LABELS = {"3": "X-Factor", "2": "Superstar", "1": "Star", "0": "Normal"}
 
 
+def grade_badge(tier: str, pct: float, target: float) -> tuple[str, str]:
+    """Return (label, css_class) for KPI grading badges.
+
+    - css_class in {'grade-on','grade-near','grade-below'}
+    - On-target: pct >= target
+    - Near-target: pct >= 0.75 * target
+    - Below-target: otherwise
+    """
+    try:
+        p = float(pct)
+        tgt = float(target)
+    except Exception:
+        p = 0.0
+        tgt = 0.0
+    if tgt <= 0:
+        return ("On-target", "grade-on")
+    if p >= tgt:
+        return ("On-target", "grade-on")
+    if p >= 0.75 * tgt:
+        return ("Near-target", "grade-near")
+    return ("Below-target", "grade-below")
+
+
 def read_csv(path: str) -> list[dict]:
     """Read a CSV file returning a list of dict rows.
 
@@ -356,35 +379,35 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     team_rows = []
     for team, stats in sorted(analytics['teams'].items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0])):
         dev = stats['dev']
-        hidden = dev.get('3',0) + dev.get('2',0) + dev.get('1',0)
-        normal = dev.get('0',0)
+        xf = dev.get('3', 0)
+        ss = dev.get('2', 0)
+        star = dev.get('1', 0)
+        normal = dev.get('0', 0)
         team_rows.append(
             (
                 '<tr>'
                 f"<td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>"
+                f"<td class='num'>{xf}</td>"
+                f"<td class='num'>{ss}</td>"
+                f"<td class='num'>{star}</td>"
+                f"<td class='num'>{normal}</td>"
                 f"<td class='num'>{stats['count']}</td>"
                 f"<td class='num'>{stats['avg_ovr']:.2f}</td>"
                 f"<td class='num'>{stats['best_ovr']}</td>"
-                f"<td class='num'>{hidden}</td>"
-                f"<td class='num'>{normal}</td>"
                 '</tr>'
             )
         )
     team_table_html = '\n'.join(team_rows)
 
-    # Most hiddens: XF + SS + Star
+    # Most elites: XF + SS
     team_hidden_rows = []
     for team, stats in sorted(
         analytics['teams'].items(),
-        key=lambda kv: (-(kv[1]['dev'].get('3',0)+kv[1]['dev'].get('2',0)+kv[1]['dev'].get('1',0)), kv[0])
+        key=lambda kv: (-(kv[1]['dev'].get('3', 0) + kv[1]['dev'].get('2', 0)), kv[0])
     ):
-        hidden = (
-            stats['dev'].get('3',0)
-            + stats['dev'].get('2',0)
-            + stats['dev'].get('1',0)
-        )
+        elites = stats['dev'].get('3', 0) + stats['dev'].get('2', 0)
         team_hidden_rows.append(
-            f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{hidden}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
+            f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td><td class='num'>{elites}</td><td class='num'>{stats['count']}</td><td class='num'>{stats['avg_ovr']:.2f}</td></tr>"
         )
     team_hiddens_html = '\n'.join(team_hidden_rows)
 
@@ -392,16 +415,20 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     pos_rows = []
     for pos, stats in sorted(analytics['positions'].items(), key=lambda kv: (-kv[1]['avg_ovr'], -kv[1]['count'], kv[0])):
         dev = stats['dev']
-        hidden = dev.get('3',0) + dev.get('2',0) + dev.get('1',0)
-        normal = dev.get('0',0)
+        xf = dev.get('3', 0)
+        ss = dev.get('2', 0)
+        star = dev.get('1', 0)
+        normal = dev.get('0', 0)
         pos_rows.append(
             (
                 '<tr>'
                 f"<td>{html.escape(pos)}</td>"
+                f"<td class='num'>{xf}</td>"
+                f"<td class='num'>{ss}</td>"
+                f"<td class='num'>{star}</td>"
+                f"<td class='num'>{normal}</td>"
                 f"<td class='num'>{stats['count']}</td>"
                 f"<td class='num'>{stats['avg_ovr']:.2f}</td>"
-                f"<td class='num'>{hidden}</td>"
-                f"<td class='num'>{normal}</td>"
                 '</tr>'
             )
         )
@@ -632,14 +659,14 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"card\"> 
           <h3>Team draft quality — by Avg OVR</h3>
           <table class=\"sortable\">
-            <thead><tr><th>Team</th><th>#</th><th>Avg OVR</th><th>Best OVR</th><th>Hidden</th><th>Normal</th></tr></thead>
+            <thead><tr><th>Team</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>#</th><th>Avg OVR</th><th>Best OVR</th></tr></thead>
             <tbody>__TEAM_TABLE__</tbody>
           </table>
         </div>
         <div class=\"card\"> 
-          <h3>Most hiddens (XF+SS+S) — by team</h3>
+          <h3>Most elites (XF+SS) — by team</h3>
           <table class=\"sortable\">
-            <thead><tr><th>Team</th><th>Hiddens</th><th>#</th><th>Avg OVR</th></tr></thead>
+            <thead><tr><th>Team</th><th>Elites</th><th>#</th><th>Avg OVR</th></tr></thead>
             <tbody>__TEAM_HIDDENS__</tbody>
           </table>
           <p class=\"muted\" style=\"margin-top:6px;\">Note: based on current team on roster.</p>
@@ -670,7 +697,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         <div class=\"card\"> 
           <h3>Position strength</h3>
           <table class=\"sortable\">
-            <thead><tr><th>Pos</th><th>Total</th><th>Avg OVR</th><th>Hidden</th><th>Normal</th></tr></thead>
+            <thead><tr><th>Position</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>Total</th><th>Avg OVR</th></tr></thead>
             <tbody>__POS_TABLE__</tbody>
           </table>
         </div>
