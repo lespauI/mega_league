@@ -267,3 +267,9 @@ In wich round team select a hidden? We need to have representation of Hit and mi
 <!-- chat-id: 71761659-4361-43f0-983d-e5534f03f1f2 -->
 
 Right now design of our HTML looks super simple, lets made it better, Do your best, but not overcomplicated. You can look on other HTMLs to understand our styling
+
+### [x] Step: Tables update
+<!-- chat-id: 6c7b1486-d557-4cee-b53d-b7789392bc4b -->
+
+Refactor tables, headers and cels must be centralized. 
+Add ability to sort by each value of table

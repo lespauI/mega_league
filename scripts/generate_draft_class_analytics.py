@@ -483,10 +483,11 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     thead tr { background:#fafafa; }
     tbody tr:nth-child(odd) { background: #fcfcfd; }
     tbody tr:hover { background:#f6faff; }
-    th, td { padding: 8px 8px; border-bottom: 1px solid var(--grid); font-size: 13px; }
-    th { text-align:left; color:#475569; font-size:12px; }
-    td.num { text-align:right; font-variant-numeric: tabular-nums; }
-    td.team { display:flex; align-items:center; gap:8px; }
+    th, td { padding: 8px 8px; border-bottom: 1px solid var(--grid); font-size: 13px; text-align:center; }
+    th { color:#475569; font-size:12px; user-select:none; }
+    table.sortable th { cursor:pointer; }
+    td.num { text-align:center; font-variant-numeric: tabular-nums; }
+    td.team { display:flex; align-items:center; justify-content:center; gap:8px; }
     td.team img.logo { width:18px; height:18px; border-radius:4px; box-shadow:0 0 0 1px rgba(0,0,0,.05); }
 
     .dev-badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
@@ -523,6 +524,70 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); }
     }
   </style>
+  <script>
+  // Simple table sorter: click any <th> in a .sortable table to sort by that column
+  (function() {
+    function getCellValue(tr, idx) {
+      const td = tr.children[idx];
+      if (!td) return '';
+      // Prefer data-sort attribute when provided
+      const ds = td.getAttribute('data-sort');
+      const txt = ds != null ? ds : td.textContent || '';
+      return txt.trim();
+    }
+
+    function asNumber(v) {
+      if (v === '' || v == null) return NaN;
+      const n = parseFloat(v.replace(/[,\s]/g, ''));
+      return isNaN(n) ? NaN : n;
+    }
+
+    function makeComparer(idx, asc) {
+      return function(a, b) {
+        const va = getCellValue(a, idx);
+        const vb = getCellValue(b, idx);
+        const na = asNumber(va);
+        const nb = asNumber(vb);
+        let cmp;
+        if (!isNaN(na) && !isNaN(nb)) {
+          cmp = na - nb;
+        } else {
+          cmp = va.localeCompare(vb, undefined, {numeric:true, sensitivity:'base'});
+        }
+        return asc ? cmp : -cmp;
+      }
+    }
+
+    function initSortableTables() {
+      document.querySelectorAll('table.sortable').forEach(function(table) {
+        const thead = table.tHead;
+        if (!thead) return;
+        const headers = thead.rows[0]?.cells || [];
+        Array.from(headers).forEach(function(th, idx) {
+          th.addEventListener('click', function() {
+            const tbody = table.tBodies[0];
+            if (!tbody) return;
+            const rows = Array.from(tbody.rows);
+            const current = th.getAttribute('data-sort-dir') || 'desc';
+            const nextDir = current === 'asc' ? 'desc' : 'asc';
+            rows.sort(makeComparer(idx, nextDir === 'asc'));
+            // Update attributes for visual state (optional)
+            Array.from(headers).forEach(h => h.removeAttribute('data-sort-dir'));
+            th.setAttribute('data-sort-dir', nextDir);
+            // Re-append rows
+            rows.forEach(r => tbody.appendChild(r));
+          });
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSortableTables);
+    } else {
+      initSortableTables();
+    }
+  })();
+  </script>
 </head>
 <body>
   <div class=\"topbar\"><a class=\"back\" href=\"../index.html\" title=\"Back to index\">&#8592; Back to Index</a></div>
@@ -559,14 +624,14 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Team draft quality — by Avg OVR</h3>
-          <table>
+          <table class=\"sortable\">
             <thead><tr><th>Team</th><th>#</th><th>Avg OVR</th><th>Best OVR</th><th>Hidden</th><th>Normal</th></tr></thead>
             <tbody>__TEAM_TABLE__</tbody>
           </table>
         </div>
         <div class=\"card\"> 
           <h3>Most hiddens (XF+SS+S) — by team</h3>
-          <table>
+          <table class=\"sortable\">
             <thead><tr><th>Team</th><th>Hiddens</th><th>#</th><th>Avg OVR</th></tr></thead>
             <tbody>__TEAM_HIDDENS__</tbody>
           </table>
@@ -597,7 +662,7 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Position strength</h3>
-          <table>
+          <table class=\"sortable\">
             <thead><tr><th>Pos</th><th>Total</th><th>Avg OVR</th><th>Hidden</th><th>Normal</th></tr></thead>
             <tbody>__POS_TABLE__</tbody>
           </table>
