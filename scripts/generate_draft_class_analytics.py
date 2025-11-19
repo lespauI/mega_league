@@ -145,40 +145,84 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
 
 
 def compute_analytics(rows: list[dict]):
+    """Compute draft class analytics aggregates.
+
+    KPIs:
+    - total rookies
+    - avg overall (2 decimals)
+    - dev distribution (keys '3','2','1','0')
+    - elites (XF+SS) absolute and share percentage
+
+    Aggregates:
+    - per team: count, avg_ovr, best_ovr, dev distribution
+    - per position: count, avg_ovr, dev distribution
+
+    Sorting rules are applied downstream during rendering, but we also return
+    pre-sorted helper lists to make consumption straightforward if needed.
+    """
     total = len(rows)
-    dev_counts = Counter(r['dev'] for r in rows)
-    pos_counts = Counter(r['position'] for r in rows)
-    team_counts = Counter(r['team'] for r in rows)
+
+    # Dev distribution normalized to expected keys
+    raw_dev_counts = Counter(r['dev'] for r in rows)
+    dev_counts = {k: raw_dev_counts.get(k, 0) for k in ('3', '2', '1', '0')}
+
     ovrs = [r['ovr'] for r in rows]
-    avg_ovr = round(st.mean(ovrs), 2) if ovrs else 0
+    avg_ovr = round(st.mean(ovrs), 2) if ovrs else 0.0
 
-    teams = {}
-    for team in sorted(team_counts):
-        trs = [r for r in rows if r['team'] == team]
-        tovrs = [r['ovr'] for r in trs]
-        teams[team] = {
-            'count': len(trs),
-            'avg_ovr': round(st.mean(tovrs), 2) if tovrs else 0,
-            'best_ovr': max(tovrs) if tovrs else 0,
-            'dev': Counter(r['dev'] for r in trs),
-        }
+    # Team aggregates
+    teams: dict[str, dict] = {}
+    for r in rows:
+        team = r['team']
+        t = teams.setdefault(team, {'count': 0, 'sum_ovr': 0, 'best_ovr': 0, 'dev': Counter()})
+        t['count'] += 1
+        t['sum_ovr'] += r['ovr']
+        if r['ovr'] > t['best_ovr']:
+            t['best_ovr'] = r['ovr']
+        t['dev'][r['dev']] += 1
+    for team, t in teams.items():
+        t['avg_ovr'] = round((t['sum_ovr'] / t['count']) if t['count'] else 0.0, 2)
+        # normalize dev dict to all expected keys
+        t['dev'] = {k: t['dev'].get(k, 0) for k in ('3', '2', '1', '0')}
+        # drop helper
+        del t['sum_ovr']
 
-    positions = {}
-    for pos in sorted(pos_counts):
-        prs = [r for r in rows if r['position'] == pos]
-        povrs = [r['ovr'] for r in prs]
-        positions[pos] = {
-            'count': len(prs),
-            'avg_ovr': round(st.mean(povrs), 2) if povrs else 0,
-            'dev': Counter(r['dev'] for r in prs),
-        }
+    # Position aggregates
+    positions: dict[str, dict] = {}
+    for r in rows:
+        pos = r['position']
+        p = positions.setdefault(pos, {'count': 0, 'sum_ovr': 0, 'dev': Counter()})
+        p['count'] += 1
+        p['sum_ovr'] += r['ovr']
+        p['dev'][r['dev']] += 1
+    for pos, p in positions.items():
+        p['avg_ovr'] = round((p['sum_ovr'] / p['count']) if p['count'] else 0.0, 2)
+        p['dev'] = {k: p['dev'].get(k, 0) for k in ('3', '2', '1', '0')}
+        del p['sum_ovr']
+
+    # Elites spotlight (data only; HTML cards built in renderer)
+    elites = sorted(
+        (r for r in rows if r['dev'] in ('3', '2')),
+        key=lambda r: (-int(r['dev']), -int(r['ovr']), r['name'])
+    )
+    elites_count = dev_counts['3'] + dev_counts['2']
+    elite_share_pct = round((100.0 * elites_count / total), 1) if total else 0.0
+
+    # Pre-sorted helper views (not strictly required by renderer)
+    teams_sorted = sorted(teams.items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0]))
+    positions_sorted = sorted(positions.items(), key=lambda kv: (-kv[1]['avg_ovr'], -kv[1]['count'], kv[0]))
 
     return {
         'total': total,
         'avg_ovr': avg_ovr,
-        'dev_counts': dev_counts,
+        'dev_counts': raw_dev_counts,  # keep Counter for compatibility in renderer
+        'dev_counts_norm': dev_counts,  # normalized dict if needed elsewhere
+        'elite_count': elites_count,
+        'elite_share_pct': elite_share_pct,
+        'elites': elites,
         'teams': teams,
+        'teams_sorted': teams_sorted,
         'positions': positions,
+        'positions_sorted': positions_sorted,
     }
 
 
@@ -263,25 +307,25 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     pos_table_html = '\n'.join(pos_rows)
 
     total = analytics['total'] or 1
-    xf = analytics['dev_counts'].get('3',0)
-    ss = analytics['dev_counts'].get('2',0)
-    star = analytics['dev_counts'].get('1',0)
-    norm = analytics['dev_counts'].get('0',0)
-    elite = xf + ss
+    xf_total = analytics['dev_counts'].get('3',0)
+    ss_total = analytics['dev_counts'].get('2',0)
+    star_total = analytics['dev_counts'].get('1',0)
+    norm_total = analytics['dev_counts'].get('0',0)
+    elite = xf_total + ss_total
     elite_pct = round(100*elite/total, 1)
 
     # Elite-heavy positions summary (show XF and SS separately)
     pos_elite_sorted = []
     for p in analytics['positions']:
         d = analytics['positions'][p]['dev']
-        xf = d.get('3',0)
-        ss = d.get('2',0)
-        st = d.get('1',0)
-        pos_elite_sorted.append((p, xf, ss, st, xf+ss))
+        xf_c = d.get('3',0)
+        ss_c = d.get('2',0)
+        star_c = d.get('1',0)
+        pos_elite_sorted.append((p, xf_c, ss_c, star_c, xf_c+ss_c))
     pos_elite_sorted.sort(key=lambda x: (-x[4], -x[3], x[0]))
     top_pos_lines = []
-    for p, xf, ss, st, elite_total in pos_elite_sorted[:6]:
-        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {xf} XF, {ss} SS, {st} Stars</li>")
+    for p, xf_c, ss_c, star_c, elite_total in pos_elite_sorted[:6]:
+        top_pos_lines.append(f"<li><b>{html.escape(p)}</b>: {xf_c} XF, {ss_c} SS, {star_c} Stars</li>")
     top_pos_html = '\n'.join(top_pos_lines)
 
     html_out = """<!DOCTYPE html>
@@ -400,9 +444,9 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__YEAR__', str(year))
     html_out = html_out.replace('__TOTAL__', str(total))
     html_out = html_out.replace('__AVG_OVR__', str(analytics['avg_ovr']))
-    html_out = html_out.replace('__XF__', str(xf))
-    html_out = html_out.replace('__SS__', str(ss))
-    html_out = html_out.replace('__STAR__', str(star))
+    html_out = html_out.replace('__XF__', str(xf_total))
+    html_out = html_out.replace('__SS__', str(ss_total))
+    html_out = html_out.replace('__STAR__', str(star_total))
     html_out = html_out.replace('__ELITE__', str(elite))
     html_out = html_out.replace('__ELITE_PCT__', str(elite_pct))
     html_out = html_out.replace('__ELITE_CARDS__', elite_cards_html)

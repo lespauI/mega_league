@@ -150,7 +150,8 @@ Verification
 - If teams file present: `rg -n "<img class=\"logo\"" docs/draft_class_2026.html` returns at least one match.
 - If teams file absent/empty: page still renders without errors and without logos.
 
-### [ ] Step: Analytics Aggregations
+### [x] Step: Analytics Aggregations
+<!-- chat-id: a56acf17-0745-44e8-850a-6af6d4fada42 -->
 Task definition
 - Implement `compute_analytics(rows)` to compute KPIs: total rookies, average OVR, dev distribution, elites share; and aggregates per team and per position with sorting rules from the spec.
 
@@ -162,8 +163,8 @@ Deliverables
 
 Verification
 - Run generator; validate KPIs in HTML:
-  - `rg -n "Draft Class 2026 — Analytics" docs/draft_class_2026.html`
-  - `rg -o "<b>Total rookies</b><span>\((\\d+)\)" -r "$1" -N docs/draft_class_2026.html`
+  - `rg -n "Draft Class 2026 — Analytics Report" docs/draft_class_2026.html`
+  - `rg -o "<b>Total rookies</b><span>(\\d+)" -r "$1" -N docs/draft_class_2026.html`
 - Cross-check totals using CSV Python one-liner from spec.
 
 ### [ ] Step: HTML Generation & Styling
