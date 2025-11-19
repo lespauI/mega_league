@@ -87,7 +87,8 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: 102422cb-b36a-4aba-b81c-59d960a585ef -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
 
@@ -98,3 +99,137 @@ Task instructions
 ```
 
 "Step:" prefix is important, do not omit it!
+
+### [ ] Step: Bootstrap CLI & IO
+Task definition
+- Implement CLI parsing in `scripts/generate_draft_class_analytics.py` with args: `--year <int>` (required), `--players`, `--teams`, `--out` and create parent dir for output.
+- Implement helpers: `read_csv(path) -> list[dict]`, `safe_int(v, default=None) -> Optional[int]`.
+
+Contracts to use
+- Data contracts (inputs): `MEGA_players.csv`, `MEGA_teams.csv` headers presence as defined in spec.
+- CLI interface (script contract): invocation and default paths.
+
+Deliverables
+- Updated `scripts/generate_draft_class_analytics.py` supporting required CLI and resilient file IO.
+
+Verification
+- Run: `python3 scripts/generate_draft_class_analytics.py --year 2026 --players MEGA_players.csv --teams MEGA_teams.csv --out docs/draft_class_2026.html`
+- Confirm output directory creation and script summary printed.
+- Check file exists: `test -s docs/draft_class_2026.html`.
+
+### [ ] Step: Rookie Filtering & Normalization
+Task definition
+- Implement `gather_rookies(players, year)` to filter `rookieYear == year` and normalize fields: `name`, `team` (default `FA`), `position` (default `?`), `ovr` (prefer `playerBestOvr` then `playerSchemeOvr`, default 0), `dev` (map unknown to 0).
+- Name derivation order: `fullName` > `cleanName` > `firstName + lastName`.
+
+Contracts to use
+- Data contracts (inputs) and Dev trait mapping contract.
+
+Deliverables
+- Normalized in-memory list of rookies ready for analytics and rendering.
+
+Verification
+- Quick count from CSV vs function result by running the script and printing total rookies in summary.
+- Sanity one-liner: compare CSV rookies vs HTML KPI total using ripgrep as defined in spec’s verification strategy.
+
+### [ ] Step: Team Logo Mapping
+Task definition
+- Implement `build_team_logo_map(teams_rows)` to map any of `displayName`, `nickName`, `teamName` to `logoId` and support logo URL generation `https://cdn.neonsportz.com/teamlogos/256/<logoId>.png`.
+- Tolerate missing `MEGA_teams.csv` gracefully (no logos).
+
+Contracts to use
+- Data contracts (teams headers) and Output HTML contract (logos appear when resolvable).
+
+Deliverables
+- Logo mapping integrated into generation pipeline; logos rendered where possible.
+
+Verification
+- If teams file present: `rg -n "<img class=\"logo\"" docs/draft_class_2026.html` returns at least one match.
+- If teams file absent/empty: page still renders without errors and without logos.
+
+### [ ] Step: Analytics Aggregations
+Task definition
+- Implement `compute_analytics(rows)` to compute KPIs: total rookies, average OVR, dev distribution, elites share; and aggregates per team and per position with sorting rules from the spec.
+
+Contracts to use
+- Output HTML contract (required sections and metrics) and OVR fallback logic.
+
+Deliverables
+- Analytics dict consumed by HTML generator covering KPIs, team table data, position table data, elites spotlight lists.
+
+Verification
+- Run generator; validate KPIs in HTML:
+  - `rg -n "Draft Class 2026 — Analytics" docs/draft_class_2026.html`
+  - `rg -o "<b>Total rookies</b><span>\((\\d+)\)" -r "$1" -N docs/draft_class_2026.html`
+- Cross-check totals using CSV Python one-liner from spec.
+
+### [ ] Step: HTML Generation & Styling
+Task definition
+- Implement `generate_html(year, rows, analytics, team_logo_map)` to output a single self-contained HTML with inline CSS and sections: KPIs, Elites Spotlight (dev 3/2), Team Analytics, Most Hiddens, Position Analytics, Elite-heavy Positions.
+- Ensure deterministic sorting and no unresolved placeholders remain.
+
+Contracts to use
+- Output HTML contract (no `__PLACEHOLDER__`, required sections present, logos optional), Dev trait mapping for badges.
+
+Deliverables
+- `docs/draft_class_2026.html` generated with specified sections and styling.
+
+Verification
+- `test -s docs/draft_class_2026.html`
+- `! rg -n "__[A-Z_]+__" docs/draft_class_2026.html`
+- Spot-check elites cards exist only for dev in {2,3} via text search for badges.
+
+### [ ] Step: Verification Helper Script
+Task definition
+- Create `scripts/verify_draft_class_analytics.py` that recomputes counts from CSV for a given year and asserts HTML KPIs and placeholders, exiting non-zero on mismatches.
+
+Contracts to use
+- Data contracts, CLI interface (accept year and optional paths), Output HTML contract.
+
+Deliverables
+- New verification script in `scripts/` with usage: `python3 scripts/verify_draft_class_analytics.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html`.
+
+Verification
+- Run end-to-end: generate HTML then run the verifier; it should exit 0 and print a concise pass summary.
+
+### [ ] Step: Smoke Test Script
+Task definition
+- Create `scripts/smoke_generate_draft_2026.sh` to run generation for 2026 and then the verification script.
+- Make script executable and fail-fast on any error.
+
+Contracts to use
+- CLI interface, Verification Strategy commands from spec.
+
+Deliverables
+- Executable smoke script that returns non-zero on failure and prints output locations.
+
+Verification
+- `bash scripts/smoke_generate_draft_2026.sh` completes successfully and exits 0.
+
+### [ ] Step: Resilience & UX Polish
+Task definition
+- Improve error messages and exit codes for missing files/columns, add safe fallbacks, ensure readable badges and table layouts.
+- Optional: add `--league-prefix` or title override per spec.
+
+Contracts to use
+- CLI interface stability and Output HTML contract (robustness expectations).
+
+Deliverables
+- Hardened script behavior with clear errors and documented fallbacks; optional CLI for title/branding.
+
+Verification
+- Run with missing `--teams` file to ensure graceful logo omission.
+- Run with corrupt numeric fields to ensure defaults used and page still renders.
+
+### [ ] Step: Documentation Update
+Task definition
+- Add a README section “Draft Class Analytics” with usage, arguments, outputs, and verification commands.
+
+Contracts to use
+- Refer to CLI interface and Verification Strategy from spec.
+
+Deliverables
+- Updated `README.md` with concise instructions and example commands.
+
+Verification
+- Open `README.md` and confirm section exists with accurate commands; optionally run commands to validate.
