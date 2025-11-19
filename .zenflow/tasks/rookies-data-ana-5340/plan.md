@@ -54,8 +54,11 @@ Add new steps here
 ### [x] Step: Update logo links
 - Switch to Neon 256px logos (cdn.neonsportz.com/teamlogos/256/{logoId}.png)
 
+### [x] Step: Analytics redesign
+- New analytics-focused page showing only elites + team/position strength
+
 ### [x] Step: Hand-off and usage notes
-- Document how to run the script and customize output
+- Added new generator: scripts/generate_draft_class_analytics.py
 ```
 
 ### [ ] Step: update logos link
