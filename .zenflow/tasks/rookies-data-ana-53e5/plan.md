@@ -198,7 +198,8 @@ Deliverables
 Verification
 - Run end-to-end: generate HTML then run the verifier; it should exit 0 and print a concise pass summary.
 
-### [ ] Step: Smoke Test Script
+### [x] Step: Smoke Test Script
+<!-- chat-id: f511d9fb-ec49-4379-aeef-22f55a33b770 -->
 Task definition
 - Create `scripts/smoke_generate_draft_2026.sh` to run generation for 2026 and then the verification script.
 - Make script executable and fail-fast on any error.
