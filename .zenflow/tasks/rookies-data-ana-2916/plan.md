@@ -224,7 +224,7 @@ Deliverable
 Verification
 - Manual review; ensure commands and section names match the generator and verifier output.
 
-### [ ] Step: Cleanup and consistency pass
+### [x] Step: Cleanup and consistency pass
 <!-- chat-id: 027912e5-53e9-4d8c-9c3b-564cdfd43083 -->
 Task definition
 - Remove any lingering “Hidden” references in code/templates; ensure classes and labels are consistent. Run a quick lint/format if available.
