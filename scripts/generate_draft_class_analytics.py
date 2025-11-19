@@ -66,14 +66,30 @@ def safe_int(v, default=None):
 
 
 def build_team_logo_map(teams_rows: list[dict]) -> dict:
-    m = {}
+    """Build a mapping of team names to logoId.
+
+    Maps any of displayName, nickName, or teamName to the team's logoId.
+    - Trims whitespace, skips empty/zero logoIds
+    - Adds case-insensitive variants to increase match likelihood
+    """
+    mapping: dict[str, str] = {}
+    if not teams_rows:
+        return mapping
+
     for r in teams_rows:
-        logo = r.get('logoId') or ''
-        for k in ('displayName','nickName','teamName'):
-            name = (r.get(k) or '').strip()
-            if name:
-                m[name] = logo
-    return m
+        lid = str(r.get('logoId') or '').strip()
+        if not lid or lid == '0':
+            continue
+
+        for key in ('displayName', 'nickName', 'teamName'):
+            name = (r.get(key) or '').strip()
+            if not name:
+                continue
+            # Store several variants to be resilient to case/spacing differences
+            for variant in {name, name.lower(), name.upper()}:
+                mapping[variant] = lid
+
+    return mapping
 
 
 def gather_rookies(players: list[dict], year: int) -> list[dict]:
@@ -177,7 +193,8 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     elites.sort(key=lambda r: (-int(r['dev']), -int(r['ovr']), r['name']))
 
     def logo_img(team: str) -> str:
-        lid = team_logo_map.get(team)
+        # Try exact then case-insensitive lookup
+        lid = team_logo_map.get(team) or team_logo_map.get(team.lower()) or team_logo_map.get(team.upper())
         if not lid:
             return ''
         return f'<img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/{lid}.png" alt="{html.escape(team)}" />'

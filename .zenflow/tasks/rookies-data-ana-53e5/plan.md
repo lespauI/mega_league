@@ -134,7 +134,8 @@ Verification
 - Quick count from CSV vs function result by running the script and printing total rookies in summary.
 - Sanity one-liner: compare CSV rookies vs HTML KPI total using ripgrep as defined in spec’s verification strategy.
 
-### [ ] Step: Team Logo Mapping
+### [x] Step: Team Logo Mapping
+<!-- chat-id: e3b00b47-c970-4123-86df-79d871617244 -->
 Task definition
 - Implement `build_team_logo_map(teams_rows)` to map any of `displayName`, `nickName`, `teamName` to `logoId` and support logo URL generation `https://cdn.neonsportz.com/teamlogos/256/<logoId>.png`.
 - Tolerate missing `MEGA_teams.csv` gracefully (no logos).
