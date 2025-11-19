@@ -396,15 +396,15 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         ovr_badge = f"<span class=\"ovr-badge\">OVR {int(r['ovr'])}</span>"
         school = (r.get('college') or '').strip() or r['team']
         age = r.get('age')
-        age_txt = f", {int(age)} y/o" if isinstance(age, int) else ""
+        age_txt = f"{int(age)}" if isinstance(age, int) else ""
 
         elite_cards.append(
             (
                 '<div class="player">'
                 f"<div class=\"hdr\">{logo_img(r['team'])}<div class=\"tags\">{ovr_badge}{pick_badge}</div></div>"
-                f"<div class=\"nm\">{html.escape(r['name'])}, {html.escape(str(r['position']))}</div>"
-                f"<div class=\"dev\">{badge_for_dev(r['dev'])}{age_txt}</div>"
-                f"<div class=\"meta\"><span class=\"dot\">·</span>{html.escape(school)}</div>"
+                f"<div class=\"nm\">{html.escape(r['name'])}, {html.escape(str(r['position']))}, {age_txt}</div>"
+                f"<div class=\"meta\">{html.escape(school)}</div>"
+                f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
                 '</div>'
             )
         )
