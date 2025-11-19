@@ -124,6 +124,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
     - ovr: prefer playerBestOvr, then playerSchemeOvr; default 0
     - dev: keep as string in {'3','2','1','0'}; map unknowns to '0'
     - draftRound/draftPick: parsed to ints when available (used in Elites Spotlight)
+    - college: if present, used in the meta line instead of current team
     """
     out = []
     for r in players:
@@ -150,8 +151,9 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
         last = (r.get('lastName') or '').strip()
         name = fn or cn or (f"{first} {last}".strip())
 
-        # Team and position normalization
+        # Team, college, and position normalization
         team = (r.get('team') or '').strip() or 'FA'
+        college = (r.get('college') or '').strip()
         pos = (r.get('position') or '').strip() or '?'
 
         out.append({
@@ -163,6 +165,7 @@ def gather_rookies(players: list[dict], year: int) -> list[dict]:
             'dev': dev,
             'draft_round': safe_int(r.get('draftRound'), None),
             'draft_pick': safe_int(r.get('draftPick'), None),
+            'college': college,
         })
     # Deterministic sorting: OVR desc, then name asc
     out.sort(key=lambda x: (-x['ovr'], x['name']))
@@ -275,14 +278,16 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
         rd = r.get('draft_round')
         pk = r.get('draft_pick')
         pick_badge = f"<span class=\"pick-badge\">{int(rd)}.{int(pk)}</span>" if (rd is not None and pk is not None) else ""
+        ovr_badge = f"<span class=\"ovr-badge\">OVR {int(r['ovr'])}</span>"
+        school = (r.get('college') or '').strip() or r['team']
 
         elite_cards.append(
             (
                 '<div class="player">'
-                f"<div class=\"hdr\">{logo_img(r['team'])}{pick_badge}</div>"
-                f"<div class=\"nm\">{html.escape(r['name'])} {badge_for_dev(r['dev'])}</div>"
-                f"<div class=\"meta\">{html.escape(r['position'])} · {html.escape(r['team'])}</div>"
-                f"<div class=\"ovr\">OVR {int(r['ovr'])}</div>"
+                f"<div class=\"hdr\">{logo_img(r['team'])}<div class=\"tags\">{ovr_badge}{pick_badge}</div></div>"
+                f"<div class=\"nm\">{html.escape(r['name'])}</div>"
+                f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
+                f"<div class=\"meta\">{html.escape(r['position'])} · {html.escape(school)}</div>"
                 '</div>'
             )
         )
@@ -394,13 +399,15 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     .players { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
     .player { border:1px solid var(--grid); border-radius:10px; padding:10px; background:#fff; }
-    .player .hdr { display:flex; align-items:center; justify-content:space-between; }
-    .player .logo { width:22px; height:22px; border-radius:4px; vertical-align:middle; margin-right:6px; box-shadow:0 0 0 1px rgba(0,0,0,.06); }
+    .player .hdr { display:flex; align-items:center; }
+    .player .logo { width:22px; height:22px; border-radius:4px; box-shadow:0 0 0 1px rgba(0,0,0,.06); }
+    .player .tags { margin-left:auto; display:flex; align-items:center; gap:6px; }
     .player .nm { font-weight: 600; margin-top: 2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
     .player .meta { color:#475569; font-size: 12px; margin-top: 2px; }
-    .player .ovr { margin-top: 6px; font-weight:700; }
-    .player .dev { margin-top: 0; }
+    .player .ovr { display:none; }
+    .player .dev { margin-top: 4px; }
     .player .pick-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#e0f2fe; color:#075985; border:1px solid #bae6fd; }
+    .player .ovr-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#dcfce7; color:#166534; border:1px solid #bbf7d0; }
     .muted { color: var(--muted); }
 
     table { width:100%; border-collapse: collapse; }
