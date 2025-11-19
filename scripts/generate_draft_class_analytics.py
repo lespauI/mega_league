@@ -271,22 +271,21 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     elite_cards = []
     for r in elites:
-        # Compose round/pick suffix when available
-        rp = []
+        # Compose compact round/pick suffix when available (e.g., " · R1 P7")
+        rp_bits = []
         if r.get('draft_round') is not None:
-            rp.append(f"round {int(r['draft_round'])}")
+            rp_bits.append(f"R{int(r['draft_round'])}")
         if r.get('draft_pick') is not None:
-            rp.append(f"pick {int(r['draft_pick'])}")
-        rp_txt = (" " + " ".join(rp)) if rp else ""
+            rp_bits.append(f"P{int(r['draft_pick'])}")
+        rp_txt = (" · " + " ".join(rp_bits)) if rp_bits else ""
 
         elite_cards.append(
             (
                 '<div class="player">'
                 f"{logo_img(r['team'])}"
-                f"<div class=\"nm\">{html.escape(r['name'])}</div>"
+                f"<div class=\"nm\">{html.escape(r['name'])} {badge_for_dev(r['dev'])}</div>"
                 f"<div class=\"meta\">{html.escape(r['position'])} · {html.escape(r['team'])}</div>"
                 f"<div class=\"ovr\">OVR {int(r['ovr'])}{rp_txt}</div>"
-                f"<div class=\"dev\">{badge_for_dev(r['dev'])}</div>"
                 '</div>'
             )
         )
@@ -399,10 +398,10 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .players { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
     .player { border:1px solid var(--grid); border-radius:10px; padding:10px; background:#fff; }
     .player .logo { width:22px; height:22px; border-radius:4px; vertical-align:middle; margin-right:6px; box-shadow:0 0 0 1px rgba(0,0,0,.06); }
-    .player .nm { font-weight: 600; margin-top: 2px; }
+    .player .nm { font-weight: 600; margin-top: 2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
     .player .meta { color:#475569; font-size: 12px; margin-top: 2px; }
-    .player .ovr { margin-top: 4px; font-weight:700; }
-    .player .dev { margin-top: 4px; }
+    .player .ovr { margin-top: 6px; font-weight:700; }
+    .player .dev { margin-top: 0; }
     .muted { color: var(--muted); }
 
     table { width:100%; border-collapse: collapse; }
