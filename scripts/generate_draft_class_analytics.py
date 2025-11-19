@@ -271,18 +271,18 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     elite_cards = []
     for r in elites:
-        # Compose compact round.pick suffix when both available (e.g., " · 1.7")
+        # Round.pick badge when both are present (e.g., 1.7)
         rd = r.get('draft_round')
         pk = r.get('draft_pick')
-        rp_txt = f" · {int(rd)}.{int(pk)}" if (rd is not None and pk is not None) else ""
+        pick_badge = f"<span class=\"pick-badge\">{int(rd)}.{int(pk)}</span>" if (rd is not None and pk is not None) else ""
 
         elite_cards.append(
             (
                 '<div class="player">'
-                f"{logo_img(r['team'])}"
+                f"<div class=\"hdr\">{logo_img(r['team'])}{pick_badge}</div>"
                 f"<div class=\"nm\">{html.escape(r['name'])} {badge_for_dev(r['dev'])}</div>"
                 f"<div class=\"meta\">{html.escape(r['position'])} · {html.escape(r['team'])}</div>"
-                f"<div class=\"ovr\">OVR {int(r['ovr'])}{rp_txt}</div>"
+                f"<div class=\"ovr\">OVR {int(r['ovr'])}</div>"
                 '</div>'
             )
         )
@@ -394,11 +394,13 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
 
     .players { display:grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 10px; }
     .player { border:1px solid var(--grid); border-radius:10px; padding:10px; background:#fff; }
+    .player .hdr { display:flex; align-items:center; justify-content:space-between; }
     .player .logo { width:22px; height:22px; border-radius:4px; vertical-align:middle; margin-right:6px; box-shadow:0 0 0 1px rgba(0,0,0,.06); }
     .player .nm { font-weight: 600; margin-top: 2px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
     .player .meta { color:#475569; font-size: 12px; margin-top: 2px; }
     .player .ovr { margin-top: 6px; font-weight:700; }
     .player .dev { margin-top: 0; }
+    .player .pick-badge { display:inline-block; padding:2px 7px; border-radius:999px; font-size:11px; font-weight:700; background:#e0f2fe; color:#075985; border:1px solid #bae6fd; }
     .muted { color: var(--muted); }
 
     table { width:100%; border-collapse: collapse; }
