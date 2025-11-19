@@ -87,7 +87,8 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: eb396162-4919-4231-8772-a60c7412407f -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
 
@@ -98,3 +99,89 @@ Task instructions
 ```
 
 "Step:" prefix is important, do not omit it!
+
+### [ ] Step: Wire Section Intros Support
+Implement optional, multi-line intro text blocks for key sections.
+
+- Definition:
+  - Add `--section-intros <path>` and `--intro-default <str>` flags to `scripts/generate_draft_class_analytics.py`.
+  - Implement `read_section_intros(path)` to load JSON mapping for keys: `kpis`, `elites`, `team_quality`, `positions`, `round1`.
+  - Render a `<div class="section-intro">...</div>` at the top of KPIs, Elites Spotlight, Team Draft Quality — by Avg OVR, Positions.
+- Contracts to use:
+  - CLI flags and JSON schema defined in {@artifacts_path}/spec.md (Contracts section).
+- Deliverable:
+  - Updated `scripts/generate_draft_class_analytics.py` with flags parsing, loader, and HTML injection.
+  - CSS: `.section-intro { white-space: pre-wrap; color: #334155; font-size: 13px; margin: 8px 0 12px; }` added to embedded styles.
+- Verification:
+  - Run: `python3 scripts/generate_draft_class_analytics.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --section-intros scripts/fixtures/section_intros_example.json`.
+  - Open `docs/draft_class_2026.html` and confirm `.section-intro` blocks exist in each targeted section.
+
+### [ ] Step: Extend Rookie Data + Attr/Traits Mapping
+Add data fields and mappings needed for Round 1 player cards.
+
+- Definition:
+  - Extend `gather_rookies` to propagate `portraitId` → `portrait_id`, retain `draft_round`, `draft_pick`.
+  - Implement helpers: `get_attr_keys_for_pos(pos)`, `get_trait_keys_for_pos(pos)` based on the spec’s position table and key traits list; prefer 8–10 top attributes per position, skip missing fields gracefully.
+- Contracts to use:
+  - Position attribute and trait mappings from {@artifacts_path}/spec.md (Contracts section).
+- Deliverable:
+  - Updated `scripts/generate_draft_class_analytics.py` with helpers and enriched rookie dicts.
+- Verification:
+  - Quick run generation; inspect one rookie of QB/WR/CB in the Round 1 output later to ensure attributes/traits appear and missing keys don’t crash.
+
+### [ ] Step: Build and Render Round 1 Recap
+Append end-of-page recap with every first-round pick in order.
+
+- Definition:
+  - Implement `build_round1_entries(players_rows, team_logo_map)` to select rookies with `draft_round == 1`, sort by `draft_pick`, and attach team logo, photo URL (if `portrait_id`), position, and attribute/trait values.
+  - Implement `render_round1_recap(entries)` to emit HTML cards: team logo/name, pick number, player name/pos, grade badge, attributes grid, trait badges, player photo.
+  - Add `#round1` section to the page and include optional intro using section-intros mapping (`round1` key).
+  - Reuse existing grade badge styling (`.grade-on|near|below`) for a simple pick-grade (initially OK to derive from player OVR bands or placeholder label; preserve non-breaking behavior).
+- Contracts to use:
+  - Photo URL pattern and draft fields from {@artifacts_path}/spec.md; CSS classes defined in Source Code Structure.
+- Deliverable:
+  - Updated `scripts/generate_draft_class_analytics.py` with new helpers and final section rendering plus minimal card CSS.
+- Verification:
+  - Run generator and confirm a `Round 1` section exists with N cards (N≥1), sorted by pick, and images render when `portraitId` exists.
+
+### [ ] Step: Add Verification Script
+Create HTML validator for Round 1 and intro blocks.
+
+- Definition:
+  - Add `scripts/verify_draft_round1_recap.py` that loads the generated HTML and checks:
+    - Presence of `id="round1"` section with at least one entry.
+    - Round 1 entries sorted by `Pick 1..N`.
+    - If any `portraitId` exists for Round 1, validate corresponding `<img src>` matches `https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/\d+\.png`.
+    - `.section-intro` blocks exist in KPIs, Elites Spotlight, Team Draft Quality, Positions.
+- Contracts to use:
+  - Verification conditions specified in {@artifacts_path}/spec.md (Verification Strategy).
+- Deliverable:
+  - New file `scripts/verify_draft_round1_recap.py`.
+- Verification:
+  - Run: `python3 scripts/verify_draft_round1_recap.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html` and expect zero errors (non-zero exit on failure).
+
+### [ ] Step: Smoke Script Update
+Extend smoke script to include new verification.
+
+- Definition:
+  - Update `scripts/smoke_generate_draft_2026.sh` to run generator with section-intros and then run the new verifier.
+- Contracts to use:
+  - Example invocation in {@artifacts_path}/spec.md (Verification Strategy).
+- Deliverable:
+  - Updated `scripts/smoke_generate_draft_2026.sh` including:
+    - `python3 scripts/generate_draft_class_analytics.py ... --section-intros scripts/fixtures/section_intros_example.json`
+    - `python3 scripts/verify_draft_round1_recap.py ...`
+- Verification:
+  - Execute the smoke script and confirm successful exit and presence of the new section.
+
+### [ ] Step: Provide Example Intros Fixture
+Add sample JSON for analysts to edit.
+
+- Definition:
+  - Create `scripts/fixtures/section_intros_example.json` with placeholder copy for each supported key (`kpis`, `elites`, `team_quality`, `positions`, `round1`).
+- Contracts to use:
+  - JSON example from {@artifacts_path}/spec.md.
+- Deliverable:
+  - New file `scripts/fixtures/section_intros_example.json`.
+- Verification:
+  - Run generator with `--section-intros scripts/fixtures/section_intros_example.json` and check that text appears as expected at the top of target sections.
