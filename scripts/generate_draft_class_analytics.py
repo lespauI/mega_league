@@ -19,6 +19,7 @@ import json
 import csv
 import html
 import os
+import re
 import sys
 import statistics as st
 from collections import Counter
@@ -797,6 +798,15 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
 
     def esc(s: str) -> str:
         return html.escape(str(s))
+    def _norm_team(val: str | None) -> str:
+        if not val:
+            return ''
+        s = str(val).strip()
+        # Lower, remove extra spaces
+        s = ' '.join(s.split()).lower()
+        # Take mascot/last token to align "Pittsburgh Steelers" with "Steelers"
+        parts = [p for p in re.split(r"[\s\t]+", s) if p]
+        return parts[-1] if parts else s
 
     cards = []
     mock_by_pick = (mock_lookup or {}).get('by_pick', {})
@@ -835,11 +845,11 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
             # Collect projection messages
             msgs = []
             team_proj_player = team_by_player.get(player_norm)
-            if team_proj_player and team_proj_player != actual_team:
+            if team_proj_player and _norm_team(team_proj_player) != _norm_team(actual_team):
                 msgs.append(f"Проекция команды: {esc(team_proj_player)} → выбран {esc(actual_team)}")
             if isinstance(pick, int) and pick in team_by_pick:
                 team_proj_pick = team_by_pick.get(pick)
-                if team_proj_pick and team_proj_pick != actual_team:
+                if team_proj_pick and _norm_team(team_proj_pick) != _norm_team(actual_team):
                     msgs.append(f"У прогноза на пик #{pick}: {esc(team_proj_pick)} → фактически {esc(actual_team)}")
             if isinstance(pick, int) and pick in player_by_pick:
                 projected_players = [p for p in player_by_pick.get(pick, []) if p]
