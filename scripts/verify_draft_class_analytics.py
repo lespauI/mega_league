@@ -213,6 +213,8 @@ def main():
     with open(args.html, "r", encoding="utf-8") as fh:
         html_text = fh.read()
 
+    # note: responsive table wrapper checks are covered in a separate script
+
     # 1) Title/header check (h1 line should include year and 'Analytics Report')
     expected_hdr = f"Draft Class {year} — Analytics Report"
     if expected_hdr not in html_text:

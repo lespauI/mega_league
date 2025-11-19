@@ -1186,6 +1186,9 @@ def generate_html(
     .pos-UNK, .pos-? { background:#e5e7eb; color:#374151; border-color:#d1d5db; }
 
     table { width:100%; border-collapse: collapse; }
+    /* Horizontal scroll wrapper for wide tables on mobile */
+    .table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .table-wrap > table { width: max-content; min-width: 100%; }
     thead tr { background:#fafafa; }
     tbody tr:nth-child(odd) { background: #fcfcfd; }
     tbody tr:hover { background:#f6faff; }
@@ -1396,17 +1399,17 @@ def generate_html(
         <div class=\"card\"> 
           <h3>Team draft quality — by Avg OVR</h3>
           __INTRO_TEAM_QUALITY__
-          <table class=\"sortable\">
+          <div class=\"table-wrap\" tabindex=\"0\"><table class=\"sortable\">
             <thead><tr><th>Team</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>#</th><th>Avg OVR</th><th>Best OVR</th></tr></thead>
             <tbody>__TEAM_TABLE__</tbody>
-          </table>
+          </table></div>
         </div>
         <div class=\"card\"> 
           <h3>Most elites (XF+SS) — by team</h3>
-          <table class=\"sortable\">
+          <div class=\"table-wrap\" tabindex=\"0\"><table class=\"sortable\">
             <thead><tr><th>Team</th><th>Elites</th><th>#</th><th>Avg OVR</th></tr></thead>
             <tbody>__TEAM_HIDDENS__</tbody>
-          </table>
+          </table></div>
           <p class=\"muted\" style=\"margin-top:6px;\">Note: based on current team on roster.</p>
         </div>
       </div>
@@ -1415,7 +1418,7 @@ def generate_html(
     <section id=\"rounds\" class=\"panel\">
       <div class=\"card\">
         <h3>Per-Round Hits by Team — Hit = XF/SS/Star</h3>
-        <table class=\"rounds-table\">
+        <div class=\"table-wrap\" tabindex=\"0\"><table class=\"rounds-table\">
           <thead>
             <tr>
               <th>Team</th>
@@ -1425,10 +1428,10 @@ def generate_html(
           <tbody>
             __ROUND_ROWS__
           </tbody>
-        </table>
+        </table></div>
         <p class=\"muted\" style=\"margin-top:6px;\">Hit counts include XF/SS/Star (non-Normal). Cells show Hit/Total with a bar; empty = no picks.</p>
       </div>
-      <div class=\"card\" style=\"margin-top:16px;\">\n        <h3>Per-Round Hits by Team — Hit = Elites (XF/SS)</h3>\n        <table class=\"rounds-table\">\n          <thead>\n            <tr>\n              <th>Team</th>\n              __ROUND_HEADERS__\n            </tr>\n          </thead>\n          <tbody>\n            __ROUND_ROWS_ELITES__\n          </tbody>\n        </table>\n        <p class=\"muted\" style=\"margin-top:6px;\">Elites include only X-Factor and Superstar devs. Cells show Hit/Total with a bar; empty = no picks.</p>\n      </div>
+      <div class=\"card\" style=\"margin-top:16px;\">\n        <h3>Per-Round Hits by Team — Hit = Elites (XF/SS)</h3>\n        <div class=\"table-wrap\" tabindex=\"0\"><table class=\"rounds-table\">\n          <thead>\n            <tr>\n              <th>Team</th>\n              __ROUND_HEADERS__\n            </tr>\n          </thead>\n          <tbody>\n            __ROUND_ROWS_ELITES__\n          </tbody>\n        </table></div>\n        <p class=\"muted\" style=\"margin-top:6px;\">Elites include only X-Factor and Superstar devs. Cells show Hit/Total with a bar; empty = no picks.</p>\n      </div>
     </section>
 
     <section id=\"positions\" class=\"panel\"> 
@@ -1436,10 +1439,10 @@ def generate_html(
       <div class=\"grid\"> 
         <div class=\"card\"> 
           <h3>Position strength</h3>
-          <table class=\"sortable\">
+          <div class=\"table-wrap\" tabindex=\"0\"><table class=\"sortable\">
             <thead><tr><th>Position</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>Total</th><th>Avg OVR</th></tr></thead>
             <tbody>__POS_TABLE__</tbody>
-          </table>
+          </table></div>
         </div>
         <div class=\"card\"> 
           <h3>Non‑Normal‑heavy positions</h3>
