@@ -63,6 +63,9 @@
     .pos-UNK, .pos-? { background:#e5e7eb; color:#374151; border-color:#d1d5db; }
 
     table { width:100%; border-collapse: collapse; }
+    /* Horizontal scroll wrapper for wide tables on mobile */
+    .table-wrap { width: 100%; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .table-wrap > table { width: max-content; min-width: 100%; }
     thead tr { background:#fafafa; }
     tbody tr:nth-child(odd) { background: #fcfcfd; }
     tbody tr:hover { background:#f6faff; }
@@ -234,7 +237,7 @@
 
     <section id="kpis" class="panel"> 
       <div class="section-intro">Штош давайте посмотрим на наш драфт класс. Средний AVG почти 70 говорит о том что даже на первом слабом драфте можно легко пикнуть игрока в старт. А вот распределение элитных хфакторов и суперстаров оставляет желать лучшего, всего 10% на весь драфт. Слабо. Всего 3 хфактора и 10 суперстаров ушло в первом раунде, зато было 7 нормалов.</div>
-      <div class="kpis"> 
+      <div class="kpis">
         <div class="kpi"><b>Total rookies</b><span>224</span></div>
         <div class="kpi"><b>Avg overall</b><span>69.42</span></div>
         <div class="kpi"><b>XF</b><span>6 (2.7%) <span class="grade hidden"></span></span></div>
@@ -253,11 +256,11 @@
       </div>
     </section>
 
-    <section id="round1" class="panel"> 
+    <section id="round1" class="panel">
       <div class="section-title">Round 1 Recap</div>
-      <div class="section-intro">Теперь давайте посмотрим на самое интерестное, а именно на все пики первого раунда и сравним их с аналитикой. Постарался оценить пики по грейдам, но это мое личное мнение, желающте рассписать почему их пик топ велкоме. 
+      <div class="section-intro">Теперь давайте посмотрим на самое интерестное, а именно на все пики первого раунда и сравним их с аналитикой. Постарался оценить пики по грейдам, но это мое личное мнение, желающте рассписать почему их пик топ велкоме.
 Респект аналитикам за некоторые угаданные пики, не зря свой хлеб кушали</div>
-      <div class="card"> 
+      <div class="card">
         <div class="r1-list"><div class="r1-card">  <div class="head"><img class="r1-photo" src="https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/3358.png" alt="DeVonte Bullitt" /><div class="head-right"><div class="pick">Pick 1</div><img class="team-logo" src="https://cdn.neonsportz.com/teamlogos/256/28.png" alt="Steelers" /></div></div>  <div class="name"><b>DeVonte Bullitt</b> <span class="pos">QB</span> <span class="grade grade-near">B</span></div>  <div class="meta">Team: Steelers &nbsp; • &nbsp; OVR 76</div>  <div class="attrs"><div class="attr"><span class="k">throwAccShort</span><span class="v val-elite">86</span></div><div class="attr"><span class="k">throwAccMid</span><span class="v val-warn">76</span></div><div class="attr"><span class="k">throwAccDeep</span><span class="v val-elite">85</span></div><div class="attr"><span class="k">throwPower</span><span class="v val-elite">92</span></div><div class="attr"><span class="k">TUP</span><span class="v val-warn">78</span></div><div class="attr"><span class="k">throwOnRun</span><span class="v val-elite">85</span></div><div class="attr"><span class="k">playAction</span><span class="v val-low">70</span></div><div class="attr"><span class="k">aware</span><span class="v val-warn">78</span></div><div class="attr"><span class="k">speed</span><span class="v val-good">82</span></div><div class="attr"><span class="k">breakSack</span><span class="v val-good">84</span></div></div>  <div class="traits"></div>  <div class="mock-notes-block">  <div class="mock-notes-title">Что говорили аналитики</div><div class="proj">Прогнозируемая команда: New Orleans Saints → выбран Steelers<br/>Прогноз игрока на этот пик: Emmett Newby</div><div class="mock-notes">Второй лучший QB драфта (22 года) из San Diego State. Для менеджера это второй пик драфта по значимости. Конвертный игрок без топового скрэмблинга. В руках Артура может стать зверем к концу сезона - это подарок после страданий с предыдущим QB.</div></div>  <div class="real-eval-block">  <div class="real-eval-title">Оценка реального пика</div>  <div class="real-eval">Оценка: <span class="grade grade-near">B</span></div>  <div class="real-eval">OVR: <span class="ovr-badge">76</span></div>  <div class="real-eval">DevTrait: <span class="dev-badge dev-star">Star</span></div>  <div class="real-eval">Твердая четверка за первый пик. Били взял второго QB драфта вместо первого - аналитики были правы. Bullitt на 2 года старше Newby (22 vs 20), но зато с лучшим овералом (76 vs 75). Рука-пушка на 92 throwPower и элитная точность на короткие и дальние дистанции - это то, что нужно. Проблемы? Ну а как же без них - playAction всего 70, это боль. да и скорость 82 хотя breakSack 84 позволят убегать от давления, когда олайн Питтсбурга традиционно превратится в решето. Главное качать, а то развитие стар может поджечь били еще много раз. В целом пик норм - конвертный QB с развитием Star, который может стать франчайз игроком. Хотя есть опастность, что он станет франчайзом в руках другого менеджера после смерти от инфаркта Били</div></div></div>
 <div class="r1-card">  <div class="head"><img class="r1-photo" src="https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/4203.png" alt="Emmett Newby" /><div class="head-right"><div class="pick">Pick 2</div><img class="team-logo" src="https://cdn.neonsportz.com/teamlogos/256/26.png" alt="Saints" /></div></div>  <div class="name"><b>Emmett Newby</b> <span class="pos">QB</span> <span class="grade grade-near">B+</span></div>  <div class="meta">Team: Saints &nbsp; • &nbsp; OVR 75</div>  <div class="attrs"><div class="attr"><span class="k">throwAccShort</span><span class="v val-elite">88</span></div><div class="attr"><span class="k">throwAccMid</span><span class="v val-good">84</span></div><div class="attr"><span class="k">throwAccDeep</span><span class="v val-good">81</span></div><div class="attr"><span class="k">throwPower</span><span class="v val-elite">91</span></div><div class="attr"><span class="k">TUP</span><span class="v val-good">81</span></div><div class="attr"><span class="k">throwOnRun</span><span class="v val-good">84</span></div><div class="attr"><span class="k">playAction</span><span class="v val-warn">77</span></div><div class="attr"><span class="k">aware</span><span class="v val-low">71</span></div><div class="attr"><span class="k">speed</span><span class="v val-warn">78</span></div><div class="attr"><span class="k">breakSack</span><span class="v val-low">71</span></div></div>  <div class="traits"></div>  <div class="mock-notes-block">  <div class="mock-notes-title">Что говорили аналитики</div><div class="proj">Прогнозируемая команда: Pittsburgh Steelers → выбран Saints<br/>Прогноз игрока на этот пик: DeVonte Bullitt</div><div class="mock-notes">Самый молодой QB драфта (20 лет), обладатель Heisman Trophy из Wyoming. Очевидный выбор после отчисления Aaron Rodgers. Конвертный квотербек с отличным потенциалом развития. Билли заслужил хорошего QB за свои страдания.</div></div>  <div class="real-eval-block">  <div class="real-eval-title">Оценка реального пика</div>  <div class="real-eval">Оценка: <span class="grade grade-near">B+</span></div>  <div class="real-eval">OVR: <span class="ovr-badge">75</span></div>  <div class="real-eval">DevTrait: <span class="dev-badge dev-ss">Superstar</span></div>  <div class="real-eval">Вот это уже интереснее! Артур взял правильного парня - самого молодого QB драфта (всего 20 лет!) Хайсмана. Мы много обсуждали кб с Артуром и давно сошлись во мнении что Ньюбас уюбер пушка пик и, что критично, с девтрейтом! Правда я ждал Х фактора. Да, оверал всего 75 против 76 у Bullitt, но когда тебе 20 лет и ты уже суперзвезда - это топ. Throwpower 91, элитная точность на короткие (88), хорошо на средние и дальние - парень умеет раздавать. Проблемы? BreakSack 71 и скорость 78 - если олайн Saints превратится в картон, Newby будут укладывать поспать все команды лиги. Но фишка в возрасте и девтрейте - есть время чтобы раскачать парня в монстра, пока он на дешевом контракте. Аналитики угадали игрока (предсказывали его на 1), но не команду. Артур действительно заслужил хорошего QB после своих мучений. Грейд пика выше, чем у Steelers, потому что потенциал развития важнее текущего оверала.</div></div></div>
 <div class="r1-card">  <div class="head"><img class="r1-photo" src="https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/10323.png" alt="Jonathan Elias" /><div class="head-right"><div class="pick">Pick 3</div><img class="team-logo" src="https://cdn.neonsportz.com/teamlogos/256/10.png" alt="Cowboys" /></div></div>  <div class="name"><b>Jonathan Elias</b> <span class="pos">FS</span> <span class="grade grade-on">A</span></div>  <div class="meta">Team: Cowboys &nbsp; • &nbsp; OVR 82</div>  <div class="attrs"><div class="attr"><span class="k">zoneCover</span><span class="v val-elite">85</span></div><div class="attr"><span class="k">tackle</span><span class="v val-low">73</span></div><div class="attr"><span class="k">hitPower</span><span class="v val-warn">75</span></div><div class="attr"><span class="k">speed</span><span class="v val-elite">94</span></div><div class="attr"><span class="k">playRec</span><span class="v val-warn">79</span></div><div class="attr"><span class="k">pursuit</span><span class="v val-warn">75</span></div><div class="attr"><span class="k">manCover</span><span class="v val-low">74</span></div><div class="attr"><span class="k">aware</span><span class="v val-warn">77</span></div><div class="attr"><span class="k">catch</span><span class="v val-low">71</span></div></div>  <div class="traits"></div>  <div class="mock-notes-block">  <div class="mock-notes-title">Что говорили аналитики</div><div class="proj">Прогнозируемая команда: New York Jets → выбран Cowboys<br/>Прогноз игрока на этот пик: Jordan Carvajal</div><div class="mock-notes">Первый safety по рейтингу игры из Alabama, несмотря на рост 5&#x27;9&quot;. У Jets вообще НЕТ сейфти в составе. Менеджер уничтожает всех классом с Justin Fields, поэтому QB не нужен. Можно взять списанных ребят с FA, но это недолгое решение. Молодой топчик доступен - нужно брать.</div></div>  <div class="real-eval-block">  <div class="real-eval-title">Оценка реального пика</div>  <div class="real-eval">Оценка: <span class="grade grade-on">A</span></div>  <div class="real-eval">OVR: <span class="ovr-badge">82</span></div>  <div class="real-eval">DevTrait: <span class="dev-badge dev-star">Star</span></div>  <div class="real-eval">Первый сейфти драфта из Alabama! Cowboys взяли топчика с OVR 82 и девтрейтом Star - отличный пик для третьего номера. Парень из Alabama (5'9") - да, невысокий, но скорость 94 и zoneCover 85 компенсируют всё. Это идеальный deep safety для зонной схемы Кости. Проблемы? Рост 5'9" - коротышка для позиции, но Alabama не выпускает плохих сейфти. HitPower всего 75 и tackle 73 - не будет убивать ресиверов, но для free safety это не критично. ManCover 70 - только зона, в мэн его лучше не ставить. Главное - скорость и зонное покрытие, с этим всё ок. PlayRec 79 и awareness 77 - норм для старта карьеры. Cowboys получили первого сейфти драфта на третьем пике - это value. Аналитики предсказывали его Jets, но Костя оказался быстрее и схватил коротышку-ракету из Alabama. Solid pick для топ-3.</div></div></div>
@@ -334,7 +337,7 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
       </div>
     </section>
 
-    <section id="spotlight" class="panel"> 
+    <section id="spotlight" class="panel">
       <div class="section-title">Elites Spotlight</div>
       <div class="section-intro">Взгляним на всех эдитных игроков ушедших на драфте. Тут конечно выделяются Кольтс которые находились под контролем временного управляющего Димы щастье (aka царь драфта) и смогли взять 3 элитных игроков из 4 пиков; Патриоты взяли 2 х фактора. Два реса хфактора ушли почти друг за другом в низу первого раунда. Чикаго закрыло драфт двумя суперстарами в 6 и 7 раундах</div>
       <div class="players"><div class="player"><div class="hdr"><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/26.png" alt="Saints" /><div class="tags"><span class="ovr-badge">OVR 75</span><span class="pick-badge">1.2</span></div></div><div class="nm">Emmett Newby, QB, 20</div><div class="meta">Wyoming</div><div class="dev"><span class="dev-badge dev-ss">Superstar</span></div></div>
@@ -377,7 +380,7 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
             Но если подойти серьезно то стратегия с бек-ту-бек сейфти провалилась, оба оказались стары (ну хоть время шуток про нормалов первого раунда прошло)
             <br/>
             Неприятно удивили викинги. Фет смог взять 10 нормалов на 11 пиков СИЛЬНО! Ягуары и чифс тоже не попали и взяли по 5 нормалов из 5.</div>
-          <table class="sortable">
+            <div class="table-wrap" tabindex="0"><table class="sortable">
             <thead><tr><th>Team</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>#</th><th>Avg OVR</th><th>Best OVR</th></tr></thead>
             <tbody><tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/10.png" alt="Cowboys" /><span>Cowboys</span></td><td class='num'>1</td><td class='num'>0</td><td class='num'>2</td><td class='num'>5</td><td class='num'>8</td><td class='num'>73.12</td><td class='num'>82</td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/4.png" alt="Browns" /><span>Browns</span></td><td class='num'>0</td><td class='num'>0</td><td class='num'>6</td><td class='num'>7</td><td class='num'>13</td><td class='num'>72.15</td><td class='num'>79</td></tr>
@@ -410,12 +413,12 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/1.png" alt="Bengals" /><span>Bengals</span></td><td class='num'>0</td><td class='num'>1</td><td class='num'>1</td><td class='num'>5</td><td class='num'>7</td><td class='num'>66.43</td><td class='num'>76</td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/30.png" alt="Vikings" /><span>Vikings</span></td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>10</td><td class='num'>11</td><td class='num'>66.00</td><td class='num'>76</td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/16.png" alt="Jaguars" /><span>Jaguars</span></td><td class='num'>0</td><td class='num'>0</td><td class='num'>0</td><td class='num'>5</td><td class='num'>5</td><td class='num'>65.80</td><td class='num'>70</td></tr></tbody>
-          </table>
+          </table></div>
         </div>
         <div class="card"> 
           <h3>Most elites (XF+SS) — by team</h3>
           <div class="section-intro">12 команд остались без элитных пиков, 12 взяли всего 1 СС или ХФ, а вот Кольтс аж 3 игроков! Дима драфтуй за меня каждый год, плачу портвейном!</div>
-          <table class="sortable">
+            <div class="table-wrap" tabindex="0"><table class="sortable">
             <thead><tr><th>Team</th><th>Elites</th><th>#</th><th>Avg OVR</th></tr></thead>
             <tbody><tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/9.png" alt="Colts" /><span>Colts</span></td><td class='num'>3</td><td class='num'>8</td><td class='num'>68.50</td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/0.png" alt="Bears" /><span>Bears</span></td><td class='num'>2</td><td class='num'>8</td><td class='num'>67.88</td></tr>
@@ -448,7 +451,7 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/22.png" alt="Raiders" /><span>Raiders</span></td><td class='num'>0</td><td class='num'>2</td><td class='num'>70.50</td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/23.png" alt="Rams" /><span>Rams</span></td><td class='num'>0</td><td class='num'>8</td><td class='num'>68.00</td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/24.png" alt="Ravens" /><span>Ravens</span></td><td class='num'>0</td><td class='num'>2</td><td class='num'>66.50</td></tr></tbody>
-          </table>
+          </table></div>
           <p class="muted" style="margin-top:6px;">Note: based on current team on roster.</p>
         </div>
       </div>
@@ -460,7 +463,7 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
         <div class="section-intro">Интерестная статистика по Hit/Miss в которой Miss это взятый нормал. Валера наменял пиков для того что бы попасть всего 2 раза из 4 в первом раунде (всего 1 SS)
           <br/>
           Патриоты выдали супер стрик из 4 раундов и 5 хит пиков подряд! Из интерестного, в каждом раунде находился Суперстар или Х фактор кроме 4 раунда, там было всего 4 хита и все в Старов</div>
-        <table class="rounds-table">
+          <div class="table-wrap" tabindex="0"><table class="rounds-table">
           <thead>
             <tr>
               <th>Team</th>
@@ -500,12 +503,12 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/30.png" alt="Vikings" /><span>Vikings</span></td><td><div class='round-cell high' title='Hit 1 of 1'><div class='hit' style='width:100%'></div><div class='label'>1/1</div></div></td><td><div class='round-cell zero' title='Hit 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Hit 0 of 3'><div class='hit' style='width:0%'></div><div class='label'>0/3</div></div></td><td><div class='round-cell zero' title='Hit 0 of 2'><div class='hit' style='width:0%'></div><div class='label'>0/2</div></div></td><td><div class='round-cell zero' title='Hit 0 of 2'><div class='hit' style='width:0%'></div><div class='label'>0/2</div></div></td><td class='empty' title='No pick'></td><td><div class='round-cell zero' title='Hit 0 of 2'><div class='hit' style='width:0%'></div><div class='label'>0/2</div></div></td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/16.png" alt="Jaguars" /><span>Jaguars</span></td><td class='empty' title='No pick'></td><td class='empty' title='No pick'></td><td><div class='round-cell zero' title='Hit 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Hit 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Hit 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Hit 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Hit 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="muted" style="margin-top:6px;">Hit counts include XF/SS/Star (non-Normal). Cells show Hit/Total with a bar; empty = no picks.</p>
       </div>
       <div class="card" style="margin-top:16px;">
         <h3>Per-Round Hits by Team — Hit = Elites (XF/SS)</h3>
-        <table class="rounds-table">
+        <div class="table-wrap" tabindex="0"><table class="rounds-table">
           <thead>
             <tr>
               <th>Team</th>
@@ -545,7 +548,7 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/30.png" alt="Vikings" /><span>Vikings</span></td><td><div class='round-cell high' title='Elites 1 of 1'><div class='hit' style='width:100%'></div><div class='label'>1/1</div></div></td><td><div class='round-cell zero' title='Elites 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Elites 0 of 3'><div class='hit' style='width:0%'></div><div class='label'>0/3</div></div></td><td><div class='round-cell zero' title='Elites 0 of 2'><div class='hit' style='width:0%'></div><div class='label'>0/2</div></div></td><td><div class='round-cell zero' title='Elites 0 of 2'><div class='hit' style='width:0%'></div><div class='label'>0/2</div></div></td><td class='empty' title='No pick'></td><td><div class='round-cell zero' title='Elites 0 of 2'><div class='hit' style='width:0%'></div><div class='label'>0/2</div></div></td></tr>
 <tr><td class='team'><img class="logo" src="https://cdn.neonsportz.com/teamlogos/256/16.png" alt="Jaguars" /><span>Jaguars</span></td><td class='empty' title='No pick'></td><td class='empty' title='No pick'></td><td><div class='round-cell zero' title='Elites 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Elites 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Elites 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Elites 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td><td><div class='round-cell zero' title='Elites 0 of 1'><div class='hit' style='width:0%'></div><div class='label'>0/1</div></div></td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="muted" style="margin-top:6px;">Elites include only X-Factor and Superstar devs. Cells show Hit/Total with a bar; empty = no picks.</p>
       </div>
     </section>
@@ -556,10 +559,10 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
         Внутреняя OL была невероятно сильная, нужно было постараться что бы попасть в нормала которых было 2 из 9 и 1 из 6 в LG/RG (ПЗДЕЦ). В слудующем году фокус всех скаутов на iOL
         <br/>
         А вот бегущие подвели 18 пиков и 14 из них нормалы. Но совсем бомжи это SS, там все нормалы ни одной даже звезды</div>
-      <div class="grid"> 
+      <div class="grid">
         <div class="card"> 
           <h3>Position strength</h3>
-          <table class="sortable">
+          <div class="table-wrap" tabindex="0"><table class="sortable">
             <thead><tr><th>Position</th><th>XF</th><th>SS</th><th>Star</th><th>Normal</th><th>Total</th><th>Avg OVR</th></tr></thead>
             <tbody><tr><td>K</td><td class='num'>0</td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>1</td><td class='num'>77.00</td></tr>
 <tr><td>LG</td><td class='num'>0</td><td class='num'>3</td><td class='num'>4</td><td class='num'>2</td><td class='num'>9</td><td class='num'>72.56</td></tr>
@@ -583,7 +586,7 @@ Wide receiver из Washington State (6&#x27;4&quot;). Костя никак не
 <tr><td>WILL</td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>7</td><td class='num'>8</td><td class='num'>66.88</td></tr>
 <tr><td>MIKE</td><td class='num'>0</td><td class='num'>0</td><td class='num'>1</td><td class='num'>6</td><td class='num'>7</td><td class='num'>66.29</td></tr>
 <tr><td>RT</td><td class='num'>0</td><td class='num'>1</td><td class='num'>0</td><td class='num'>8</td><td class='num'>9</td><td class='num'>65.78</td></tr></tbody>
-          </table>
+          </table></div>
         </div>
         <div class="card"> 
           <h3>Non‑Normal‑heavy positions</h3>
