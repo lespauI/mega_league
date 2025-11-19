@@ -872,7 +872,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
                     parts.append(proj_html)
                 if notes_list:
                     joined = '\n\n'.join(notes_list)
-                    parts.append(f"<div class=\\\"mock-notes\\\">{esc(joined)}</div>")
+                    parts.append(f"<div class=\"mock-notes\">{esc(joined)}</div>")
                 notes_html = (
                     "<div class=\"mock-notes-block\">"
                     "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
@@ -1191,7 +1191,7 @@ def generate_html(
     .proj { color:#0f172a; font-size:12px; margin-top:6px; background:#fff7ed; border:1px solid #fde68a; border-radius:8px; padding:6px 8px; }
     .mock-notes-block { margin-top:8px; }
     .mock-notes-title { cursor:default; color:#475569; font-weight:600; }
-    .mock-notes { white-space: pre-wrap; color:#334155; font-size:13px; margin-top:6px; }
+    .mock-notes { white-space: pre-wrap; color:#475569; font-size:12px; margin-top:6px; }
 
     /* Responsive tweaks */
     @media (max-width: 1100px) {
