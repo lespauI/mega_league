@@ -239,6 +239,26 @@ def compute_analytics(rows: list[dict]):
     teams_sorted = sorted(teams.items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0]))
     positions_sorted = sorted(positions.items(), key=lambda kv: (-kv[1]['avg_ovr'], -kv[1]['count'], kv[0]))
 
+    # Per-team per-round hidden hits/misses
+    # Only include rows with a known draft_round
+    rounds_present: set[int] = set()
+    team_rounds: dict[str, dict[int, dict[str, int]]] = {}
+    for r in rows:
+        rd = r.get('draft_round')
+        if rd is None:
+            continue
+        try:
+            rdv = int(rd)
+        except Exception:
+            continue
+        rounds_present.add(rdv)
+        team = r['team']
+        cell = team_rounds.setdefault(team, {}).setdefault(rdv, {'hit': 0, 'total': 0})
+        cell['total'] += 1
+        if r['dev'] in ('3', '2', '1'):
+            cell['hit'] += 1
+    rounds_sorted = sorted(rounds_present)
+
     return {
         'total': total,
         'avg_ovr': avg_ovr,
@@ -251,6 +271,8 @@ def compute_analytics(rows: list[dict]):
         'teams_sorted': teams_sorted,
         'positions': positions,
         'positions_sorted': positions_sorted,
+        'team_rounds': team_rounds,
+        'rounds_sorted': rounds_sorted,
     }
 
 
@@ -428,6 +450,12 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     .dev-badge { display:inline-block; padding:3px 8px; border-radius:999px; font-size:11px; font-weight:600; }
     .dev-hidden { background:#fef3c7; color:#92400e; }
     .dev-norm { background:#e5e7eb; color:#374151; }
+
+    /* Round hit/miss visualization */
+    .rounds-table th.rcol { text-align:center; }
+    .round-cell { width: 72px; height: 16px; position: relative; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; overflow:hidden; }
+    .round-cell .hit { height:100%; background:#86efac; }
+    .round-cell .label { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:11px; color:#334155; }
   </style>
 </head>
 <body>
@@ -469,6 +497,24 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
           </table>
           <p class=\"muted\" style=\"margin-top:6px;\">Note: based on current team on roster.</p>
         </div>
+      </div>
+    </section>
+
+    <section class=\"panel\">
+      <div class=\"card\">
+        <h3>Hidden by Round — per team (Hit/Miss)</h3>
+        <table class=\"rounds-table\">
+          <thead>
+            <tr>
+              <th>Team</th>
+              __ROUND_HEADERS__
+            </tr>
+          </thead>
+          <tbody>
+            __ROUND_ROWS__
+          </tbody>
+        </table>
+        <p class=\"muted\" style=\"margin-top:6px;\">Cell shows Hidden/Total with a small hit bar. Empty means no picks in that round.</p>
       </div>
     </section>
 
@@ -514,6 +560,36 @@ def generate_html(year: int, rows: list[dict], analytics: dict, team_logo_map: d
     html_out = html_out.replace('__TEAM_HIDDENS__', team_hiddens_html)
     html_out = html_out.replace('__POS_TABLE__', pos_table_html)
     html_out = html_out.replace('__TOP_POS__', top_pos_html)
+    # Round-by-team hidden/miss table injection
+    rounds = analytics.get('rounds_sorted', [])
+    # Limit the number of columns to keep layout sane (e.g., first 7 rounds)
+    rounds = [r for r in rounds if isinstance(r, int)]
+    rounds = sorted(rounds)[:10]
+    if rounds:
+        hdr_cells = ''.join([f"<th class='rcol'>R{int(r)}</th>" for r in rounds])
+    else:
+        hdr_cells = "<th class='rcol'>R1</th>"
+    html_out = html_out.replace('__ROUND_HEADERS__', hdr_cells)
+
+    team_rounds = analytics.get('team_rounds', {})
+    round_rows = []
+    # Keep team ordering similar to overall team table (by avg OVR desc)
+    for team, stats in sorted(analytics['teams'].items(), key=lambda kv: (-kv[1]['avg_ovr'], kv[0])):
+        cells = []
+        per_team = team_rounds.get(team, {})
+        for r in rounds:
+            cell = per_team.get(r)
+            if not cell:
+                cells.append("<td class='num muted'>—</td>")
+                continue
+            hit = int(cell.get('hit', 0))
+            total = int(cell.get('total', 0))
+            pct = int(round(100.0 * hit / total)) if total else 0
+            bar = f"<div class='round-cell'><div class='hit' style='width:{pct}%'></div><div class='label'>{hit}/{total}</div></div>"
+            cells.append(f"<td>{bar}</td>")
+        row_html = f"<tr><td class='team'>{logo_img(team)}<span>{html.escape(team)}</span></td>{''.join(cells)}</tr>"
+        round_rows.append(row_html)
+    html_out = html_out.replace('__ROUND_ROWS__', '\n'.join(round_rows))
     return html_out
 
 

@@ -258,7 +258,8 @@ Cardinals Clyde Stackhouse HB · Cardinals OVR 85 round 1 pick 8 and etc
 
 Implemented: Elite cards now include draft round and pick (derived from `draftRound` and `draftPick` in `MEGA_players.csv`) appended to the OVR line, e.g., `OVR 85 round 1 pick 8`. Dev tiers remain masked (Hidden/Normal) per prior step.
 
-### [ ] Step: Add new graphic Round hidden
+### [x] Step: Add new graphic Round hidden
+<!-- chat-id: bca2fdcf-19cd-4ad9-bb5a-6b0cdc5d6817 -->
 
 In wich round team select a hidden? We need to have representation of Hit and miss, like for example Dallas select 3 hiddens in 1st round, and 0 in other rounds and etc
 
