@@ -510,6 +510,226 @@ def compute_analytics(rows: list[dict]):
     }
 
 
+def _pos_key(pos: str) -> str:
+    try:
+        return (pos or '').strip().upper()
+    except Exception:
+        return ''
+
+
+def get_attr_keys_for_pos(pos: str) -> list[str]:
+    """Return ordered attribute keys for a given position.
+
+    Uses a curated set based on Madden attribute names. Missing keys are skipped
+    at render time; this helper only provides the order of preference.
+    """
+    p = _pos_key(pos)
+    # QB
+    if p == 'QB':
+        return [
+            'throwAccShort','throwAccMid','throwAccDeep','throwPower',
+            'throwUnderPressure','throwOnRun','playAction','awareRating',
+            'speedRating','breakSackRating',
+        ]
+    # RB/HB archetype (ball carrier)
+    if p in {'HB','RB'}:
+        return [
+            'speedRating','accelRating','agilityRating','breakTackleRating',
+            'truckRating','jukeMoveRating','spinMoveRating','stiffArmRating',
+            'carryRating','catchRating','bCVRating',
+        ]
+    if p == 'FB':
+        return ['runBlockRating','leadBlockRating','impactBlockRating','strengthRating','truckRating','catchRating']
+    if p == 'WR':
+        return ['catchRating','specCatchRating','cITRating','speedRating','routeRunShort','routeRunMed','routeRunDeep','releaseRating','agilityRating','changeOfDirectionRating']
+    if p == 'TE':
+        return ['catchRating','cITRating','runBlockRating','passBlockRating','speedRating','routeRunShort','routeRunMed','strengthRating','specCatchRating']
+    if p in {'LT','LG','RT','RG','T','G','C','OL'}:
+        return ['passBlockRating','passBlockPower','passBlockFinesse','runBlockRating','runBlockPower','runBlockFinesse','strengthRating','awareRating','impactBlockRating']
+    if p in {'LE','RE','DE'}:
+        return ['powerMovesRating','finesseMovesRating','blockShedRating','pursuitRating','tackleRating','strengthRating','speedRating','hitPowerRating']
+    if p == 'DT':
+        return ['powerMovesRating','blockShedRating','strengthRating','tackleRating','pursuitRating','hitPowerRating']
+    if p in {'MLB','LOLB','ROLB','OLB','LB'}:
+        return ['tackleRating','pursuitRating','hitPowerRating','blockShedRating','playRecRating','zoneCoverRating','manCoverRating','speedRating','awareRating']
+    if p == 'CB':
+        return ['manCoverRating','zoneCoverRating','speedRating','accelRating','agilityRating','pressRating','playRecRating','catchRating','changeOfDirectionRating']
+    if p in {'FS','SS','S'}:
+        return ['zoneCoverRating','tackleRating','hitPowerRating','speedRating','playRecRating','pursuitRating','manCoverRating','awareRating','catchRating']
+    if p == 'K' or p == 'P':
+        return ['kickPowerRating','kickAccRating']
+    # Default: show common overall-relevant metrics if present
+    return ['speedRating','strengthRating','agilityRating','awareRating']
+
+
+def get_trait_keys_for_pos(pos: str) -> list[str]:
+    """Return ordered trait keys for a position.
+
+    Traits are boolean-ish fields in CSV (e.g., 'True', 'Yes', '1').
+    """
+    base_qb = ['clutchTrait','sensePressureTrait','throwAwayTrait','tightSpiralTrait','forcePassTrait']
+    base_ball = ['coverBallTrait','fightForYardsTrait','runStyle']
+    base_rec = ['feetInBoundsTrait','specCatchTrait','posCatchTrait','yACCatchTrait','dropOpenPassTrait']
+    base_def = ['bigHitTrait','stripBallTrait','playBallTrait']
+    base_dl = ['dLBullRushTrait','dLSpinTrait','dLSwimTrait']
+    p = _pos_key(pos)
+    if p == 'QB':
+        return base_qb
+    if p in {'HB','RB','FB'}:
+        return base_ball
+    if p in {'WR','TE'}:
+        return base_rec
+    if p in {'LE','RE','DE','DT'}:
+        return base_def + base_dl
+    if p in {'MLB','LOLB','ROLB','OLB','LB','CB','FS','SS','S'}:
+        return base_def
+    return base_qb[:2] + base_def[:1]
+
+
+def _boolish(v) -> bool:
+    if v is None:
+        return False
+    s = str(v).strip().lower()
+    return s in {'1','true','yes','y','t'}
+
+
+def build_round1_entries(players_rows: list[dict], team_logo_map: dict, *, year: int | None = None) -> list[dict]:
+    """Select Round 1 rookies and build card data entries.
+
+    - Filters by rookieYear if year is provided.
+    - Sorts by draftPick ascending.
+    - Attaches team logoId, photo URL (if portraitId), attributes and traits.
+    """
+    entries: list[dict] = []
+    for r in players_rows:
+        if year is not None and str(r.get('rookieYear', '')).strip() != str(year):
+            continue
+        rd = safe_int(r.get('draftRound'), None)
+        pk = safe_int(r.get('draftPick'), None)
+        if rd != 1 or pk is None:
+            continue
+
+        # Name derivation mirrors gather_rookies
+        fn = (r.get('fullName') or '').strip()
+        cn = (r.get('cleanName') or '').strip()
+        first = (r.get('firstName') or '').strip()
+        last = (r.get('lastName') or '').strip()
+        name = fn or cn or (f"{first} {last}".strip())
+
+        team = (r.get('team') or '').strip() or 'FA'
+        pos = (r.get('position') or '').strip() or '?'
+        ovr = safe_int(r.get('playerBestOvr'), None)
+        if ovr is None:
+            ovr = safe_int(r.get('playerSchemeOvr'), 0) or 0
+        dev = str(r.get('devTrait') or '0').strip()
+        portrait_id = (r.get('portraitId') or '').strip()
+
+        # Team logo mapping -> URL fragment
+        lid = team_logo_map.get(team) or team_logo_map.get(team.lower()) or team_logo_map.get(team.upper())
+        logo_url = f"https://cdn.neonsportz.com/teamlogos/256/{lid}.png" if lid not in (None, '') else ''
+
+        # Attribute grid
+        attr_keys = get_attr_keys_for_pos(pos)
+        attrs = []
+        for k in attr_keys:
+            if k in r and str(r.get(k) or '').strip() != '':
+                try:
+                    val = int(float(str(r[k]).strip()))
+                except Exception:
+                    continue
+                attrs.append((k, val))
+        # Trait badges
+        trait_keys = get_trait_keys_for_pos(pos)
+        traits = []
+        for k in trait_keys:
+            if _boolish(r.get(k)):
+                traits.append(k)
+
+        photo_url = ''
+        if portrait_id.isdigit():
+            photo_url = f"https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/{portrait_id}.png"
+
+        entries.append({
+            'pick': pk,
+            'team': team,
+            'team_logo': logo_url,
+            'name': name,
+            'position': pos,
+            'ovr': int(ovr),
+            'dev': dev,
+            'photo': photo_url,
+            'attrs': attrs,
+            'traits': traits,
+        })
+
+    entries.sort(key=lambda e: (e['pick'] if e['pick'] is not None else 999))
+    return entries
+
+
+def _grade_for_ovr(ovr: int) -> tuple[str, str]:
+    """Return (label, css_class) for a simple pick grade derived from OVR.
+
+    - A (grade-on): 78+
+    - B (grade-near): 72–77
+    - C (grade-below): <72
+    """
+    try:
+        o = int(ovr)
+    except Exception:
+        o = 0
+    if o >= 78:
+        return ('A', 'grade-on')
+    if o >= 72:
+        return ('B', 'grade-near')
+    return ('C', 'grade-below')
+
+
+def render_round1_recap(entries: list[dict]) -> str:
+    """Render HTML for Round 1 recap cards.
+
+    Produces a responsive grid of cards with team logo, pick number, name/pos,
+    grade badge, attributes grid, trait badges, and optional player photo.
+    """
+    if not entries:
+        return "<div class='muted'>No Round 1 picks found.</div>"
+
+    def esc(s: str) -> str:
+        return html.escape(str(s))
+
+    cards = []
+    for e in entries:
+        grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
+        logo_img = f"<img class=\"logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
+        photo = e.get('photo')
+        photo_html = f"<img class=\"r1-photo\" src=\"{esc(photo)}\" alt=\"{esc(e['name'])}\" />" if photo else ''
+
+        # Attributes grid (limit to 8-10 entries)
+        attr_lines = []
+        for k, v in (e.get('attrs') or [])[:10]:
+            attr_lines.append(f"<div class=\"attr\"><span class=\"k\">{esc(k)}</span><span class=\"v\">{int(v)}</span></div>")
+        attrs_html = ''.join(attr_lines) if attr_lines else "<div class='muted' style='grid-column:1/-1;'>No attributes.</div>"
+
+        # Trait badges
+        trait_lines = []
+        for t in (e.get('traits') or []):
+            trait_lines.append(f"<span class=\"trait\">{esc(t)}</span>")
+        traits_html = ''.join(trait_lines)
+
+        cards.append(
+            (
+                "<div class=\"r1-card\">"
+                f"  <div class=\"head\">{logo_img}<div class=\"pick\">Pick {esc(e.get('pick',''))}</div></div>"
+                f"  <div class=\"name\"><b>{esc(e['name'])}</b> <span class=\"pos\">{esc(e['position'])}</span> <span class=\"grade {esc(grade_cls)}\">{esc(grade_label)}</span></div>"
+                f"  <div class=\"meta\">Team: {esc(e['team'])} &nbsp; • &nbsp; OVR {int(e.get('ovr',0))}</div>"
+                f"  <div class=\"attrs\">{attrs_html}</div>"
+                f"  <div class=\"traits\">{traits_html}</div>"
+                f"  {photo_html}"
+                "</div>"
+            )
+        )
+    return '<div class="r1-list">' + '\n'.join(cards) + '</div>'
+
+
 def badge_for_dev(dev: str) -> str:
     # Render explicit dev tiers
     mapping = {
