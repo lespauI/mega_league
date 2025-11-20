@@ -48,3 +48,8 @@ Example format (wrapped in code block to prevent parsing):
 
 ### [ ] Step: Quick validation
 - Open docs locally to visually verify sizing and clarity across filters
+
+### [x] Step: Add some avg line
+<!-- chat-id: 4e8bfb07-3259-44a1-8be5-a928e541858a -->
+
+Add line to show if schedule us easer than team ELO, we need to know if team has easy schedule but they suck in elo for them this is difficult schedule
