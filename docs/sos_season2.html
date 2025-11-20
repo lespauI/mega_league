@@ -64,11 +64,39 @@
       }
       throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
     }
+    async function tryDsvSemi(paths) {
+      // Load semicolon-delimited with decimal commas (mega_elo.csv)
+      const semi = d3.dsvFormat(';');
+      let lastErr;
+      for (const p of paths) {
+        try {
+          const txt = await d3.text(p);
+          return semi.parse(txt);
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load DSV ; file: ' + paths.join(', '));
+    }
     function fmt3(x) { return d3.format('.3f')(x); }
 
     async function loadData() {
       const sos = await tryCsv(['../output/sos/season2_elo.csv', 'output/sos/season2_elo.csv', '/output/sos/season2_elo.csv']);
       const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
+      // Optional own ELO snapshot
+      let ownEloMap = new Map();
+      try {
+        const eloRows = await tryDsvSemi(['../mega_elo.csv', 'mega_elo.csv', '/mega_elo.csv']);
+        for (const r of eloRows) {
+          const name = String(r['Team'] || r['team'] || '').trim();
+          let v = String(r['START'] || r['elo'] || '').trim();
+          if (!name || !v) continue;
+          // Convert decimal comma to dot and strip spaces
+          v = v.replace(/\s+/g, '').replace(',', '.');
+          const num = parseFloat(v);
+          if (!Number.isNaN(num)) ownEloMap.set(name, num);
+        }
+      } catch (e) {
+        console.warn('mega_elo.csv not loaded:', e);
+      }
 
       const teamMeta = new Map();
       for (const t of teams) {
@@ -89,6 +117,10 @@
           if (meta.logoId !== undefined && meta.logoId !== null && meta.logoId !== '') {
             r.logoUrl = `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`;
           }
+        }
+        if (ownEloMap.size) {
+          const se = ownEloMap.get(name);
+          if (se != null) r.self_elo = +se;
         }
       }
 
@@ -208,6 +240,96 @@
       }
     }
 
+    // SCATTER RENDERING (Own ELO vs SoS)
+    function drawScatter(holder, rows) {
+      const data = rows.filter(r => r.self_elo != null && !Number.isNaN(+r.self_elo));
+      if (!data.length) {
+        holder.append('div').attr('class','muted').text('Own ELO not available (mega_elo.csv not loaded).');
+        return;
+      }
+      const margin = { top: 22, right: 26, bottom: 46, left: 56 };
+      const width = 960, height = 560;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      const xVals = data.map(d => +d.self_elo);
+      const yVals = data.map(d => +d.avg_opp_elo);
+      const minV = Math.min(d3.min(xVals), d3.min(yVals));
+      const maxV = Math.max(d3.max(xVals), d3.max(yVals));
+      const domain = [Math.floor(minV - 2), Math.ceil(maxV + 2)];
+
+      const x = d3.scaleLinear().domain(domain).nice().range([0, innerW]);
+      const y = d3.scaleLinear().domain(domain).nice().range([innerH, 0]);
+
+      const svg = holder.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      // grid
+      g.append('g')
+        .attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).ticks(8).tickSize(-innerH).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+      g.append('g')
+        .call(d3.axisLeft(y).ticks(8).tickSize(-innerW).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+      // Axis labels
+      svg.append('text').attr('x', margin.left + innerW/2).attr('y', height - 8).attr('text-anchor','middle').attr('fill','#444').text('Own ELO');
+      svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`).attr('text-anchor','middle').attr('fill','#444').text('SoS (Avg Opponent ELO)');
+
+      // y = x line (diagonal)
+      g.append('line')
+        .attr('x1', x(domain[0]))
+        .attr('y1', y(domain[0]))
+        .attr('x2', x(domain[1]))
+        .attr('y2', y(domain[1]))
+        .attr('stroke', '#999')
+        .attr('stroke-dasharray', '6,4');
+      g.append('text')
+        .attr('x', x(domain[1]) - 60)
+        .attr('y', y(domain[1]) + 14)
+        .attr('fill', '#666')
+        .attr('font-size', 11)
+        .text('y = x');
+
+      const tip = d3.select('body').append('div').attr('class','tooltip').style('display', 'none');
+
+      const color = d => (+d.avg_opp_elo >= +d.self_elo) ? 'var(--red)' : 'var(--blue)';
+
+      const pts = g.selectAll('circle').data(data, d => d.team).join('circle')
+        .attr('cx', d => x(+d.self_elo))
+        .attr('cy', d => y(+d.avg_opp_elo))
+        .attr('r', 6)
+        .attr('fill', color)
+        .attr('opacity', 0.8)
+        .on('mouseenter', function(evt, d){
+          const delta = (+d.avg_opp_elo) - (+d.self_elo);
+          const html = `<strong>${d.team}</strong>`+
+            `<br>Own ELO: ${fmt3(+d.self_elo)}`+
+            `<br>SoS (Avg Opp ELO): ${fmt3(+d.avg_opp_elo)}`+
+            `<br>Δ (SoS - Own): ${(delta>=0?'+':'')+fmt3(delta)}`;
+          tip.style('display','block').html(html);
+        })
+        .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+        .on('mouseleave', ()=> tip.style('display','none'));
+
+      // Labels (team logos optional)
+      g.selectAll('text.team').data(data, d => d.team).join('text')
+        .attr('class','team')
+        .attr('x', d => x(+d.self_elo) + 8)
+        .attr('y', d => y(+d.avg_opp_elo) + 4)
+        .attr('fill', '#444')
+        .attr('font-size', 11)
+        .text(d => d.team);
+
+      // Legend
+      const legend = holder.append('div').attr('class','legend');
+      legend.append('span').html('<span class="swatch" style="background: var(--red);"></span>Above y=x (SoS ≥ Own)');
+      legend.append('span').html('<span class="swatch" style="background: var(--blue);"></span>Below y=x (SoS < Own)');
+    }
+
     function setup() {
       // Tabs behavior
       function activate(tabId) {
@@ -325,6 +447,10 @@
         bDivSel.on('change', () => redrawBars());
         updateBarsVisibility();
         redrawBars();
+
+        // SCATTER INIT
+        const scatterRoot = d3.select('#scatter-root');
+        drawScatter(scatterRoot, allRows);
       }).catch(err => {
         console.error(err);
         d3.select('#error').text('Error loading data: ' + err);
@@ -342,6 +468,7 @@
     <div class="tabs">
       <div class="tab active" data-tab="table-view">Table</div>
       <div class="tab" data-tab="bars-view">Bars</div>
+      <div class="tab" data-tab="scatter-view">Scatter</div>
     </div>
 
     <div id="table-view" class="view active">
@@ -397,7 +524,11 @@
       </div>
       <div id="bars-root"></div>
     </div>
+
+    <div id="scatter-view" class="view">
+      <div class="subtitle" style="margin: 0 0 8px 0;">X: Own ELO • Y: SoS (Avg Opponent ELO). Points above the diagonal faced tougher opponents than their own rating.</div>
+      <div id="scatter-root" class="chart-wrap"></div>
+    </div>
   </div>
 </body>
 </html>
-
