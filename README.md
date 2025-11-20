@@ -199,6 +199,72 @@ python3 scripts/top_pick_race_analysis.py
 
 **Output:** `output/draft_race/draft_race_report.md`
 
+## 🗓️ Season 2 Strength of Schedule (ELO)
+
+This pipeline computes Season 2 Strength of Schedule (SoS) using opponent ELO ratings, writes CSV/JSON artifacts, and provides interactive HTML views (table and bar charts).
+
+### Inputs
+- `MEGA_games.csv` — full schedule; Season 2 starts at row 287 (data rows, header excluded)
+- `MEGA_teams.csv` — team metadata (conference, division, logoId)
+- `mega_elo.csv` — team ELO snapshot (semicolon `;` delimited; decimal commas)
+
+### Run SoS (ELO) Calculation
+
+```bash
+# Default run (starts at row 287 and writes outputs under ./output)
+python3 scripts/calc_sos_season2_elo.py --season2-start-row 287
+
+# Common options
+python3 scripts/calc_sos_season2_elo.py \
+  --games-csv MEGA_games.csv \
+  --teams-csv MEGA_teams.csv \
+  --elo-csv mega_elo.csv \
+  --season2-start-row 287 \
+  --include-home-advantage false \
+  --hfa-elo-points 55 \
+  --index-scale zscore-mean100-sd15 \
+  --out-dir output
+```
+
+Artifacts produced:
+- `output/schedules/season2/all_schedules.json` — per-team schedules (with opponent/homeAway/date)
+- `output/sos/season2_elo.csv` — SoS table for Season 2
+- `output/sos/season2_elo.json` — SoS rows for Season 2
+
+### Verify Artifacts
+
+```bash
+# Validate schedules schema and counts
+python3 scripts/verify_sos_season2_elo.py --check schedules
+
+# Validate SoS table schema, rank ordering, and league averages
+python3 scripts/verify_sos_season2_elo.py --check sos
+```
+
+### View UI Pages
+
+```bash
+# From repo root, serve docs locally
+python3 -m http.server 8000
+
+# Then open in your browser:
+# Table (sortable with conference/division filters)
+http://localhost:8000/docs/sos_season2_table.html
+
+# Bar charts (league/conference/division views)
+http://localhost:8000/docs/sos_season2_bars.html
+```
+
+Logos are loaded via Neon Sports CDN using `logoId` from `MEGA_teams.csv`.
+
+### One‑Command Pipeline (optional)
+
+```bash
+python3 scripts/run_all.py
+```
+
+This runs the end‑to‑end analysis and regenerates `index.html` with links to the new SoS pages. Open `index.html` from the repo root or visit `http://localhost:8000/index.html` if using the local server.
+
 ## Draft Class Analytics
 
 - Purpose: Generate an analytics-focused HTML report for a given rookie draft class (e.g., 2026) using `MEGA_players.csv` and, optionally, `MEGA_teams.csv` for logos.

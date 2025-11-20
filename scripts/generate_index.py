@@ -110,6 +110,8 @@ def get_file_description(filename):
         'playoff_race.html': 'Playoff race visualization and analysis',
         'playoff_race_table.html': 'Detailed playoff race table',
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
+        'sos_season2_table.html': 'Season 2 SoS — sortable table with conference/division filters',
+        'sos_season2_bars.html': 'Season 2 SoS — bar charts by league, conference, division',
         'stats_dashboard.html': '🏠 Main Stats Hub - Access all team analytics visualizations from one place',
         'team_stats_explorer.html': '📊 Interactive Win% correlation explorer with 20+ team metrics',
         'team_stats_correlations.html': '🔍 34 cross-metric correlation graphs revealing strategic insights',
