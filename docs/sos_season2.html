@@ -144,6 +144,10 @@
             r.logoUrl = `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`;
           }
         }
+        // Attach own ELO from mega_elo.csv if available
+        if (megaEloMap.has(name)) {
+          r.own_elo = +megaEloMap.get(name);
+        }
       }
 
       const conferences = Array.from(new Set(sos.map(r => (r.conference||'').toUpperCase()).filter(Boolean))).sort();
@@ -443,6 +447,124 @@
         oConfSel.on('change', () => { refreshODivisions(); redrawOppTable(); });
         oDivSel.on('change', () => redrawOppTable());
         redrawOppTable();
+
+        // SCATTER INIT (Own ELO vs SoS)
+        const sConfSel = d3.select('#s_conf');
+        const sDivSel = d3.select('#s_div');
+        sConfSel.append('option').attr('value','ALL').text('All Conferences');
+        conferences.forEach(c => sConfSel.append('option').attr('value', c).text(c));
+        function refreshSDivisions() {
+          const conf = sConfSel.property('value');
+          sDivSel.selectAll('option').remove();
+          sDivSel.append('option').attr('value','ALL').text('All Divisions');
+          const divs = conf==='ALL' ? Array.from(new Set([].concat(...Array.from(divisionsByConf.values())))).sort()
+                                    : (divisionsByConf.get(conf) || []);
+          divs.forEach(d => sDivSel.append('option').attr('value', d).text(d));
+        }
+        refreshSDivisions();
+
+        function drawScatter(holder, rows) {
+          const data = rows.filter(d => isFinite(+d.own_elo) && isFinite(+d.avg_opp_elo));
+          const margin = { top: 24, right: 28, bottom: 40, left: 48 };
+          const width = 880;
+          const height = 520;
+          const innerW = width - margin.left - margin.right;
+          const innerH = height - margin.top - margin.bottom;
+
+          const minVal = d3.min(data, d => Math.min(+d.own_elo, +d.avg_opp_elo));
+          const maxVal = d3.max(data, d => Math.max(+d.own_elo, +d.avg_opp_elo));
+          const pad = (maxVal - minVal) * 0.05;
+          const domain = [minVal - pad, maxVal + pad];
+
+          const x = d3.scaleLinear().domain(domain).nice().range([0, innerW]);
+          const y = d3.scaleLinear().domain(domain).nice().range([innerH, 0]);
+
+          const svg = holder.append('svg').attr('width', width).attr('height', height);
+          const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+          // Grid
+          g.append('g')
+            .attr('transform', `translate(0,${innerH})`)
+            .call(d3.axisBottom(x).ticks(6).tickSize(-innerH).tickPadding(6))
+            .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+            .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+          g.append('g')
+            .call(d3.axisLeft(y).ticks(6).tickSize(-innerW).tickPadding(6))
+            .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+            .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+          // Axis labels
+          svg.append('text').attr('x', margin.left + innerW/2).attr('y', height - 6)
+            .attr('text-anchor','middle').attr('fill','#555').attr('font-size',12)
+            .text('Own ELO');
+          svg.append('text').attr('transform', `translate(14,${margin.top + innerH/2}) rotate(-90)`) 
+            .attr('text-anchor','middle').attr('fill','#555').attr('font-size',12)
+            .text('SoS (Avg Opponent ELO)');
+
+          // Diagonal y = x
+          g.append('line')
+            .attr('x1', x(domain[0]))
+            .attr('y1', y(domain[0]))
+            .attr('x2', x(domain[1]))
+            .attr('y2', y(domain[1]))
+            .attr('stroke', '#888')
+            .attr('stroke-dasharray', '6,4')
+            .attr('stroke-width', 1.5);
+          g.append('text')
+            .attr('x', x(domain[1]) - 60)
+            .attr('y', y(domain[1]) + 14)
+            .attr('fill', '#666')
+            .attr('font-size', 11)
+            .text('y = x');
+
+          const tip = d3.select('body').append('div').attr('class','tooltip').style('display','none');
+
+          const node = g.selectAll('.pt').data(data, d => d.team).join('g').attr('class','pt')
+            .attr('transform', d => `translate(${x(+d.own_elo)},${y(+d.avg_opp_elo)})`);
+
+          node.append('circle')
+            .attr('r', 8)
+            .attr('fill', d => (+d.avg_opp_elo - +d.own_elo) >= 0 ? 'var(--red)' : 'var(--blue)')
+            .attr('opacity', 0.25);
+
+          node.append('image')
+            .attr('href', d => d.logoUrl || null)
+            .attr('x', -10)
+            .attr('y', -10)
+            .attr('width', 20)
+            .attr('height', 20)
+            .attr('opacity', 0.95)
+            .on('mouseenter', function(evt, d){
+              const delta = (+d.avg_opp_elo - +d.own_elo);
+              const html = `<strong>${d.team}</strong>`+
+                `<br>Own ELO: ${fmt1(+d.own_elo)}`+
+                `<br>Avg Opp ELO: ${fmt1(+d.avg_opp_elo)}`+
+                `<br>Δ (SoS - Own): ${(delta>=0?'+':'') + fmt1(delta)}`;
+              tip.style('display','block').html(html);
+            })
+            .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+            .on('mouseleave', ()=> tip.style('display','none'));
+
+          const legend = d3.select('#scatter-legend');
+          legend.html('');
+          legend.append('span').html(`<span class="swatch" style="background: var(--red);"></span>Above y=x (harder)`);
+          legend.append('span').style('margin-left','16px').html(`<span class="swatch" style="background: var(--blue);"></span>Below y=x (easier)`);
+        }
+
+        function redrawScatter() {
+          const root = d3.select('#scatter-root');
+          root.html('');
+          let rows = applyFilters(allRows, sConfSel.node(), sDivSel.node());
+          const panel = root.append('div').attr('class','panel');
+          panel.append('div').attr('class','header').text('Own ELO vs SoS (Avg Opp ELO) — y = x Reference');
+          const chart = panel.append('div').attr('class','chart-wrap');
+          drawScatter(chart, rows);
+          d3.select('#scatter-rowcount').text(rows.length);
+        }
+
+        sConfSel.on('change', () => { refreshSDivisions(); redrawScatter(); });
+        sDivSel.on('change', () => redrawScatter());
+        redrawScatter();
       }).catch(err => {
         console.error(err);
         d3.select('#error').text('Error loading data: ' + err);
@@ -461,6 +583,7 @@
       <div class="tab active" data-tab="table-view">Table</div>
       <div class="tab" data-tab="bars-view">Bars</div>
       <div class="tab" data-tab="opps-view">Opponents</div>
+      <div class="tab" data-tab="scatter-view">Scatter</div>
     </div>
 
     <div id="table-view" class="view active">
@@ -548,6 +671,23 @@
           <tbody id="opp-tbody"></tbody>
         </table>
       </div>
+    </div>
+
+    <div id="scatter-view" class="view">
+      <div class="controls">
+        <div>
+          <label for="s_conf">Conference</label>
+          <select id="s_conf"></select>
+        </div>
+        <div>
+          <label for="s_div">Division</label>
+          <select id="s_div"></select>
+        </div>
+        <div class="muted">Teams: <span id="scatter-rowcount">0</span></div>
+      </div>
+      <div class="legend" id="scatter-legend"></div>
+      <div id="scatter-root"></div>
+      <div class="subtitle" style="margin-top:8px">X: Own ELO, Y: Avg Opponent ELO (SoS). Points above y=x face tougher schedules relative to their rating.</div>
     </div>
   </div>
 </body>
