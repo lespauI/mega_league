@@ -220,3 +220,8 @@ Cowboys
 Bears
 Bears
 17
+
+### [x] Step: Combine table and bars into same html
+<!-- chat-id: 2738bda0-4237-4e8a-aeaf-6c7f5fc0628f -->
+
+We do not need to have separate pages, combine into one page
