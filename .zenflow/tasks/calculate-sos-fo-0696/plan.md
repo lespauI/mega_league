@@ -92,7 +92,8 @@ Save the spec to `{@artifacts_path}/spec.md`.
 
 Below is the implementation task plan derived from `{@artifacts_path}/spec.md`. Each task defines scope, contracts used/implemented, deliverables, and verification.
 
-### [ ] Step: Scaffold Season 2 SoS Scripts
+### [x] Step: Scaffold Season 2 SoS Scripts
+<!-- chat-id: cd8603be-19ca-4fa7-a05a-6d853a2eb423 -->
 Task: Create the calculation and verification scripts with CLI and logging scaffolding.
 - Contracts (from spec):
   - CLI contract: `python3 scripts/calc_sos_season2_elo.py [--games-csv PATH] [--teams-csv PATH] [--elo-csv PATH] [--season2-start-row N] [--include-home-advantage true|false] [--hfa-elo-points N] [--index-scale zscore-mean100-sd15|none] [--out-dir output]`.
