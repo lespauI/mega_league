@@ -89,14 +89,6 @@
     function fmt3(x) { return d3.format('.3f')(x); }
     function fmt1(x) { return d3.format('.1f')(x); }
 
-    // 6-level color mapping for opponent ELO (SoS) scaled to 1185–1215
-    // Bins (increasing difficulty):
-    // 1185.0–<1190.0  -> Dark Green
-    // 1190.0–<1195.0  -> Light Green
-    // 1195.0–<1200.0  -> Yellow-Green
-    // 1200.0–<1205.0  -> Yellow-Orange
-    // 1205.0–<1210.0  -> Orange-Red
-    // 1210.0–1215.0+  -> Dark Red
     function colorForElo(elo) {
       if (elo == null || isNaN(elo)) return '#e5e7eb';
       if (elo < 1190.0) return '#00AA00'; // Dark Green
@@ -476,13 +468,15 @@
           const innerW = width - margin.left - margin.right;
           const innerH = height - margin.top - margin.bottom;
 
-          const minVal = d3.min(data, d => Math.min(+d.own_elo, +d.avg_opp_elo));
-          const maxVal = d3.max(data, d => Math.max(+d.own_elo, +d.avg_opp_elo));
-          const pad = (maxVal - minVal) * 0.05;
-          const domain = [minVal - pad, maxVal + pad];
+          // X domain auto from data; Y domain fixed to requested SoS range 1185–1215
+          const xMin = d3.min(data, d => +d.own_elo);
+          const xMax = d3.max(data, d => +d.own_elo);
+          const xPad = (xMax - xMin) * 0.05;
+          const xDomain = [xMin - xPad, xMax + xPad];
+          const yDomain = [1185, 1215];
 
-          const x = d3.scaleLinear().domain(domain).nice().range([0, innerW]);
-          const y = d3.scaleLinear().domain(domain).nice().range([innerH, 0]);
+          const x = d3.scaleLinear().domain(xDomain).nice().range([0, innerW]);
+          const y = d3.scaleLinear().domain(yDomain).nice().range([innerH, 0]);
 
           const svg = holder.append('svg').attr('width', width).attr('height', height);
           const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
@@ -506,18 +500,20 @@
             .attr('text-anchor','middle').attr('fill','#555').attr('font-size',12)
             .text('SoS (Avg Opponent ELO)');
 
-          // Diagonal y = x
+          // Diagonal y = x (clipped to the visible x/y domains)
+          const seg0 = Math.max(x.domain()[0], y.domain()[0]);
+          const seg1 = Math.min(x.domain()[1], y.domain()[1]);
           g.append('line')
-            .attr('x1', x(domain[0]))
-            .attr('y1', y(domain[0]))
-            .attr('x2', x(domain[1]))
-            .attr('y2', y(domain[1]))
+            .attr('x1', x(seg0))
+            .attr('y1', y(seg0))
+            .attr('x2', x(seg1))
+            .attr('y2', y(seg1))
             .attr('stroke', '#888')
             .attr('stroke-dasharray', '6,4')
             .attr('stroke-width', 1.5);
           g.append('text')
-            .attr('x', x(domain[1]) - 60)
-            .attr('y', y(domain[1]) + 14)
+            .attr('x', x(seg1) - 60)
+            .attr('y', y(seg1) + 14)
             .attr('fill', '#666')
             .attr('font-size', 11)
             .text('y = x');
