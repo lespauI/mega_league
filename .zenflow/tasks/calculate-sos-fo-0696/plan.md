@@ -87,14 +87,106 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: 5a4f1e26-f675-4066-b761-1028765ab21c -->
 
-Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
+Below is the implementation task plan derived from `{@artifacts_path}/spec.md`. Each task defines scope, contracts used/implemented, deliverables, and verification.
 
-Format each task as 
-```
-### [ ] Step: <task_name>
-Task instructions
-```
+### [ ] Step: Scaffold Season 2 SoS Scripts
+Task: Create the calculation and verification scripts with CLI and logging scaffolding.
+- Contracts (from spec):
+  - CLI contract: `python3 scripts/calc_sos_season2_elo.py [--games-csv PATH] [--teams-csv PATH] [--elo-csv PATH] [--season2-start-row N] [--include-home-advantage true|false] [--hfa-elo-points N] [--index-scale zscore-mean100-sd15|none] [--out-dir output]`.
+  - Helper script interface: `scripts/verify_sos_season2_elo.py --check schedules|sos`.
+- Deliverables:
+  - File: `scripts/calc_sos_season2_elo.py` (argparse, stubbed functions: `read_games_season2`, `build_schedules`, `read_elo_map`, `read_team_meta`, `compute_sos_elo`, `write_outputs`).
+  - File: `scripts/verify_sos_season2_elo.py` (argparse, skeleton checks for schedules and sos).
+- Verification:
+  - Run: `python3 scripts/calc_sos_season2_elo.py -h` shows flags from contract.
+  - Run: `python3 scripts/verify_sos_season2_elo.py -h` shows two `--check` modes.
 
-"Step:" prefix is important, do not omit it!
+### [ ] Step: Implement Season 2 Games Slice and Schedule Builder
+Task: Parse `MEGA_games.csv` to slice Season 2 (rows >= 287) and build per-team schedules.
+- Contracts (from spec):
+  - Input: `MEGA_games.csv` columns: `homeTeam, awayTeam, gameId, scheduled_date_time, seasonIndex, stageIndex, weekIndex`.
+  - Output: `output/schedules/season2/all_schedules.json` schema `{ [team]: { team, conference, division, games, schedule: [{opponent, homeAway, date, gameId, oppElo:null}] } }`.
+- Deliverables:
+  - Implement `read_games_season2(games_csv, start_row=287)` and `build_schedules(games_rows, teams_meta)` in `scripts/calc_sos_season2_elo.py`.
+  - Artifact: `output/schedules/season2/all_schedules.json` written on `--dry-run` as well.
+- Verification:
+  - Run: `python3 scripts/calc_sos_season2_elo.py --dry-run --season2-start-row 287`.
+  - Check: file exists; contains ≥ 32 team keys; per team game count equals appearances in Season 2 slice.
+  - Helper: `python3 scripts/verify_sos_season2_elo.py --check schedules` prints counts and flags mismatches.
+
+### [ ] Step: Parse ELO Snapshot and Team Metadata
+Task: Parse `mega_elo.csv` with semicolon delimiter and decimal commas; load `MEGA_teams.csv` for conference/division/logo.
+- Contracts (from spec):
+  - Input: `mega_elo.csv` mapping `Team` -> float `START`, normalize commas to dots.
+  - Input: `MEGA_teams.csv` with `displayName|teamName`, `conferenceName`, `divName`, `logoId`.
+- Deliverables:
+  - Implement `read_elo_map(elo_csv)` returning `{team_name_normalized: elo_float}`.
+  - Implement `read_team_meta(teams_csv)` returning `{team_name: {conference, division, logoId}}` and a name-normalization utility used consistently across joins.
+- Verification:
+  - Run calc script; log total teams in ELO map and any missing mappings during schedule enrichment.
+  - Spot-check: `python3 - <<'PY'\nimport json;print('ok')\nPY` not required; rely on verify step below.
+
+### [ ] Step: Compute SoS Metrics and Write Outputs
+Task: Join opponents’ ELO to schedules, compute team SoS, and write CSV/JSON.
+- Contracts (from spec):
+  - Output CSV/JSON columns: `team,games,avg_opp_elo,league_avg_opp_elo,plus_minus_vs_avg,sos_index,rank,conference,division[,logoId]`.
+  - Ranking: highest `avg_opp_elo` (or `sos_index`) -> rank 1; deterministic tie-breakers.
+  - Index scaling: `zscore-mean100-sd15` or `none` per flag.
+- Deliverables:
+  - Implement `compute_sos_elo(schedules, elo_map, options)` and `write_outputs(rows, out_dir)` in calc script.
+  - Artifacts: `output/sos/season2_elo.csv` and `output/sos/season2_elo.json` generated.
+- Verification:
+  - Run: `python3 scripts/calc_sos_season2_elo.py --season2-start-row 287`.
+  - Check with helper: `python3 scripts/verify_sos_season2_elo.py --check sos` validates schema, strict ranking 1..N, league-average consistency, and prints top/bottom 5.
+
+### [ ] Step: Build SoS Table UI (Docs)
+Task: Create sortable SoS table with filters matching Playoff Chances UX.
+- Contracts (from spec):
+  - Frontend loader: load `../output/sos/season2_elo.csv` (fallback `output/sos/season2_elo.csv`).
+  - Columns: Team, Games, Avg Opp ELO, +/- vs Avg, SoS Index, Rank; filters: Conference, Division; logos via `logoId` at `https://cdn.neonsportz.com/teamlogos/256/{logoId}.png`.
+- Deliverables:
+  - File: `docs/sos_season2_table.html` using existing table/controls patterns from `docs/sos_graphs.html` and Playoff Chances.
+- Verification:
+  - Serve: `python3 -m http.server 8000`; open `http://localhost:8000/docs/sos_season2_table.html`.
+  - Confirm 32 rows render; sort toggles; filters adjust row counts per conference/division groupings from `MEGA_teams.csv`.
+
+### [ ] Step: Build SoS Graphics UI (Docs)
+Task: Create D3 bar charts mirroring last season’s SoS visuals with league/conference/division views.
+- Contracts (from spec):
+  - Data source: same CSV/JSON as table; hover tooltips show Team, Games, Avg Opp ELO, +/- vs Avg, Rank.
+- Deliverables:
+  - File: `docs/sos_season2_bars.html` implementing three views: league-wide, by conference, by division; color/styling consistent with `docs/sos_graphs.html`.
+- Verification:
+  - Open `http://localhost:8000/docs/sos_season2_bars.html`.
+  - Confirm bars render without console errors; ordering matches `rank`; hover tooltips and view toggles work.
+
+### [ ] Step: Integrate Links in Index
+Task: Link new SoS pages from site index for discoverability.
+- Contracts:
+  - Use existing pattern in `scripts/generate_index.py` that lists sos assets; add entries for `sos_season2_table.html` and `sos_season2_bars.html` if appropriate.
+- Deliverables:
+  - Updated `scripts/generate_index.py` to include links and descriptions.
+  - Re-generated `index.html` if the project relies on generation.
+- Verification:
+  - Run: `python3 scripts/generate_index.py` (if used) and confirm links appear; or manual check of `index.html` contains anchors to new docs pages.
+
+### [ ] Step: Add Pipeline Convenience Runner (Optional)
+Task: Provide a single entry to run SoS pipeline end-to-end.
+- Contracts:
+  - Add a function/entry in `scripts/run_all.py` to invoke `calc_sos_season2_elo.py` with defaults.
+- Deliverables:
+  - Updated `scripts/run_all.py` with a callable that generates SoS outputs.
+- Verification:
+  - Run: `python3 scripts/run_all.py` and confirm SoS artifacts are produced without breaking existing flows.
+
+### [ ] Step: Documentation and Usage Notes
+Task: Document how to run, verify, and view outputs.
+- Contracts:
+  - Reference CLI and verification commands defined above.
+- Deliverables:
+  - README section or `docs/` snippet describing: inputs, commands, outputs, and UI pages.
+- Verification:
+  - Open docs/readme and ensure steps can be followed in a clean checkout to reproduce artifacts and open pages.
