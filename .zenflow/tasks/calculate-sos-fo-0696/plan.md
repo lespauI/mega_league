@@ -132,7 +132,8 @@ Task: Parse `mega_elo.csv` with semicolon delimiter and decimal commas; load `ME
   - Run calc script; log total teams in ELO map and any missing mappings during schedule enrichment.
   - Spot-check: `python3 - <<'PY'\nimport json;print('ok')\nPY` not required; rely on verify step below.
 
-### [ ] Step: Compute SoS Metrics and Write Outputs
+### [x] Step: Compute SoS Metrics and Write Outputs
+<!-- chat-id: 606e885e-e297-4fb5-81c4-cea9ffdaa432 -->
 Task: Join opponents’ ELO to schedules, compute team SoS, and write CSV/JSON.
 - Contracts (from spec):
   - Output CSV/JSON columns: `team,games,avg_opp_elo,league_avg_opp_elo,plus_minus_vs_avg,sos_index,rank,conference,division[,logoId]`.

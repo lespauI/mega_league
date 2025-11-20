@@ -213,26 +213,131 @@ def compute_sos_elo(
     index_scale: str,
 ) -> List[Dict[str, Any]]:
     """Compute SoS metrics per team using opponents' ELO.
-
-    Stub: returns empty list. Implementation comes later.
     """
     logging.info(
-        "[stub] compute_sos_elo(schedules=%d, elo_map=%d, include_home_advantage=%s, hfa_elo_points=%d, index_scale=%s)",
+        "Compute SoS for %d teams using %d ELO entries (HFA=%s,%d; scale=%s)",
         len(schedules),
         len(elo_map),
         include_home_advantage,
         hfa_elo_points,
         index_scale,
     )
-    return []
+
+    # Enrich schedules in-place with oppElo and build per-team aggregates
+    per_team_avgs: Dict[str, float] = {}
+    rows: List[Dict[str, Any]] = []
+
+    for team, obj in schedules.items():
+        entries = obj.get("schedule", []) or []
+        opp_elos: List[float] = []
+        for e in entries:
+            opp = (e.get("opponent") or "").strip()
+            key = normalize_team_name(opp)
+            base = elo_map.get(key)
+            if base is None:
+                logging.warning("Missing ELO for opponent %r (team %r, game %r)", opp, team, e.get("gameId"))
+                e["oppElo"] = None
+                continue
+
+            adj = base
+            if include_home_advantage:
+                ha = (e.get("homeAway") or "").strip().lower()
+                if ha == "home":
+                    adj = base - float(hfa_elo_points)
+                elif ha == "away":
+                    adj = base + float(hfa_elo_points)
+            e["oppElo"] = adj
+            opp_elos.append(float(adj))
+
+        games = int(obj.get("games") or len(entries) or 0)
+        avg_opp_elo = sum(opp_elos) / len(opp_elos) if opp_elos else 0.0
+        per_team_avgs[team] = avg_opp_elo
+
+    # League averages for scaling and plus/minus
+    if per_team_avgs:
+        league_avg = sum(per_team_avgs.values()) / len(per_team_avgs)
+    else:
+        league_avg = 0.0
+
+    # Standard deviation for z-score scaling
+    def _stddev(vals: List[float]) -> float:
+        n = len(vals)
+        if n <= 1:
+            return 0.0
+        mean = sum(vals) / n
+        var = sum((v - mean) ** 2 for v in vals) / n
+        return var ** 0.5
+
+    avgs_list = list(per_team_avgs.values())
+    sd = _stddev(avgs_list)
+
+    # Build rows with metadata
+    for team, obj in schedules.items():
+        avg_opp_elo = per_team_avgs.get(team, 0.0)
+        plus_minus = avg_opp_elo - league_avg
+        if index_scale == "zscore-mean100-sd15":
+            if sd > 0:
+                z = (avg_opp_elo - (sum(avgs_list) / len(avgs_list))) / sd
+                sos_index = 100.0 + 15.0 * z
+            else:
+                sos_index = 100.0
+        else:
+            sos_index = avg_opp_elo
+
+        row = {
+            "team": team,
+            "games": int(obj.get("games") or len(obj.get("schedule", []) or [])),
+            "avg_opp_elo": float(avg_opp_elo),
+            "league_avg_opp_elo": float(league_avg),
+            "plus_minus_vs_avg": float(plus_minus),
+            "sos_index": float(sos_index),
+            # Rank will be added after sorting
+            "conference": obj.get("conference"),
+            "division": obj.get("division"),
+        }
+        rows.append(row)
+
+    # Deterministic ranking: hardest schedule first (highest avg_opp_elo), tie-break by team name
+    rows.sort(key=lambda r: (-r["avg_opp_elo"], normalize_team_name(r["team"])))
+    for i, r in enumerate(rows, start=1):
+        r["rank"] = i
+
+    logging.info("Computed SoS rows: %d", len(rows))
+    return rows
 
 
 def write_outputs(rows: List[Dict[str, Any]], out_dir: str) -> None:
     """Write CSV/JSON outputs for SoS.
-
-    Stub: does nothing. Implementation comes later.
     """
-    logging.info("[stub] write_outputs(rows=%d, out_dir=%s)", len(rows), out_dir)
+    os.makedirs(os.path.join(out_dir, "sos"), exist_ok=True)
+    csv_path = os.path.join(out_dir, "sos", "season2_elo.csv")
+    json_path = os.path.join(out_dir, "sos", "season2_elo.json")
+
+    # Define CSV column order; logoId is optional and not included here by default
+    fieldnames = [
+        "team",
+        "games",
+        "avg_opp_elo",
+        "league_avg_opp_elo",
+        "plus_minus_vs_avg",
+        "sos_index",
+        "rank",
+        "conference",
+        "division",
+    ]
+
+    # Write CSV
+    with open(csv_path, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=fieldnames)
+        w.writeheader()
+        for r in rows:
+            w.writerow({k: r.get(k) for k in fieldnames})
+    logging.info("Wrote SoS CSV: %s", csv_path)
+
+    # Write JSON
+    with open(json_path, "w", encoding="utf-8") as f:
+        json.dump(rows, f, ensure_ascii=False, indent=2)
+    logging.info("Wrote SoS JSON: %s", json_path)
 
 
 # -----------------------------
