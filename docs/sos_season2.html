@@ -90,13 +90,15 @@
     function fmt1(x) { return d3.format('.1f')(x); }
 
     function colorForElo(elo) {
-      if (elo == null || isNaN(elo)) return '#e5e7eb';
-      if (elo < 1190.0) return '#00AA00'; // Dark Green
-      if (elo < 1195.0) return '#66CC00'; // Light Green
-      if (elo < 1200.0) return '#CCCC00'; // Yellow-Green
-      if (elo < 1205.0) return '#FF9900'; // Yellow-Orange
-      if (elo < 1210.0) return '#FF4400'; // Orange-Red
-      return '#CC0000'; // Dark Red (>= 1210)
+        if (elo == null || isNaN(elo)) return '#e5e7eb';
+        if (elo >= 1101.0 && elo <= 1133.5) return '#00AA00'; // Dark Green
+        if (elo >= 1133.6 && elo <= 1166.2) return '#66CC00'; // Light Green
+        if (elo >= 1166.3 && elo <= 1198.9) return '#CCCC00'; // Yellow-Green
+        if (elo >= 1199.0 && elo <= 1231.6) return '#FF9900'; // Yellow-Orange
+        if (elo >= 1231.7 && elo <= 1264.3) return '#FF4400'; // Orange-Red
+        if (elo >= 1264.4 && elo <= 1297.1) return '#CC0000'; // Dark Red
+        // Fallback interpolate beyond bounds
+        return elo < 1101 ? '#00AA00' : '#CC0000';
     }
 
     async function loadData() {
