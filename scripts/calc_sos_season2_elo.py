@@ -16,7 +16,10 @@ along with stubbed functions that will be implemented in subsequent steps.
 from __future__ import annotations
 
 import argparse
+import csv
+import json
 import logging
+import os
 from typing import Any, Dict, List, Tuple
 
 
@@ -27,19 +30,106 @@ from typing import Any, Dict, List, Tuple
 def read_games_season2(games_csv: str, start_row: int) -> List[Dict[str, Any]]:
     """Read Season 2 slice of games from MEGA_games.csv starting at `start_row`.
 
-    Stub: returns empty list. Implementation comes in next step.
+    Notes:
+    - `start_row` is 1-based index counting DATA rows (header not counted) and is inclusive.
+    - Returns a list of dicts preserving file order for deterministic schedules.
+    - Only the subset of columns needed downstream is retained if present.
     """
-    logging.info("[stub] read_games_season2(games_csv=%s, start_row=%d)", games_csv, start_row)
-    return []
+    needed_cols = {
+        "homeTeam",
+        "awayTeam",
+        "gameId",
+        "scheduled_date_time",
+        "seasonIndex",
+        "stageIndex",
+        "weekIndex",
+    }
+    rows: List[Dict[str, Any]] = []
+    with open(games_csv, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        # DictReader iterates data rows directly; enumerate starting at 1 for first data row
+        for idx, row in enumerate(reader, start=1):
+            if idx < start_row:
+                continue
+            # Normalize: ensure required keys exist; if not, default to empty string
+            normalized = {k: row.get(k, "") for k in row.keys()}
+            # If columns are missing in the file, still produce keys for downstream code
+            for col in needed_cols:
+                normalized.setdefault(col, "")
+            rows.append(normalized)
+
+    logging.info("Season 2 slice: %d games from %s starting row %d", len(rows), games_csv, start_row)
+    return rows
 
 
-def build_schedules(games_rows: List[Dict[str, Any]], teams_meta: Dict[str, Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
-    """Build per-team schedules structure from sliced games and team metadata.
+def build_schedules(
+    games_rows: List[Dict[str, Any]],
+    teams_meta: Dict[str, Dict[str, Any]],
+) -> Dict[str, Dict[str, Any]]:
+    """Build per-team schedules structure from sliced games and optional team metadata.
 
-    Stub: returns empty dict. Implementation comes in next step.
+    Output schema:
+      {
+        [team]: {
+          team, conference, division, games, schedule: [
+            {opponent, homeAway, date, gameId, oppElo: null}
+          ]
+        }
+      }
     """
-    logging.info("[stub] build_schedules(games_rows=%d, teams_meta=%d)", len(games_rows), len(teams_meta))
-    return {}
+    schedules: Dict[str, Dict[str, Any]] = {}
+
+    def ensure_team(team_name: str) -> Dict[str, Any]:
+        if team_name not in schedules:
+            meta = teams_meta.get(team_name, {}) if teams_meta else {}
+            schedules[team_name] = {
+                "team": team_name,
+                "conference": meta.get("conference"),
+                "division": meta.get("division"),
+                "games": 0,
+                "schedule": [],
+            }
+        return schedules[team_name]
+
+    for row in games_rows:
+        home = (row.get("homeTeam") or "").strip()
+        away = (row.get("awayTeam") or "").strip()
+        game_id = (row.get("gameId") or "").strip()
+        date = (row.get("scheduled_date_time") or "").strip()
+
+        if not home or not away:
+            # Skip malformed rows without teams
+            logging.debug("Skipping row without teams: %s", row)
+            continue
+
+        # Home team entry
+        home_obj = ensure_team(home)
+        home_obj["schedule"].append(
+            {
+                "opponent": away,
+                "homeAway": "home",
+                "date": date,
+                "gameId": game_id,
+                "oppElo": None,
+            }
+        )
+        home_obj["games"] += 1
+
+        # Away team entry
+        away_obj = ensure_team(away)
+        away_obj["schedule"].append(
+            {
+                "opponent": home,
+                "homeAway": "away",
+                "date": date,
+                "gameId": game_id,
+                "oppElo": None,
+            }
+        )
+        away_obj["games"] += 1
+
+    logging.info("Built schedules for %d teams", len(schedules))
+    return schedules
 
 
 def read_elo_map(elo_csv: str) -> Dict[str, float]:
@@ -131,6 +221,11 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Scaling for SoS index (default: zscore-mean100-sd15)",
     )
     ap.add_argument("--out-dir", default="output", help="Output directory (default: output)")
+    ap.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="If set, still writes schedules but skips non-essential outputs",
+    )
     return ap
 
 
@@ -156,6 +251,18 @@ def main(argv: List[str] | None = None) -> int:
     games_rows = read_games_season2(args.games_csv, args.season2_start_row)
     teams_meta = read_team_meta(args.teams_csv)
     schedules = build_schedules(games_rows, teams_meta)
+
+    # Always write schedules JSON, including during dry-run
+    try:
+        out_sched_dir = os.path.join(args.out_dir, "schedules", "season2")
+        os.makedirs(out_sched_dir, exist_ok=True)
+        all_path = os.path.join(out_sched_dir, "all_schedules.json")
+        with open(all_path, "w", encoding="utf-8") as f:
+            json.dump(schedules, f, ensure_ascii=False, indent=2)
+        logging.info("Wrote schedules JSON: %s", all_path)
+    except Exception as e:
+        logging.error("Failed writing schedules JSON: %s", e)
+        raise
     elo_map = read_elo_map(args.elo_csv)
     sos_rows = compute_sos_elo(
         schedules,
@@ -164,7 +271,9 @@ def main(argv: List[str] | None = None) -> int:
         hfa_elo_points=args.hfa_elo_points,
         index_scale=args.index_scale,
     )
-    write_outputs(sos_rows, args.out_dir)
+    # Even in dry-run, writing schedules is already done above; SoS outputs will be implemented later
+    if not args.dry_run:
+        write_outputs(sos_rows, args.out_dir)
 
     logging.info("Finished (scaffold). Downstream steps will implement calculations and outputs.")
     return 0
@@ -172,4 +281,3 @@ def main(argv: List[str] | None = None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

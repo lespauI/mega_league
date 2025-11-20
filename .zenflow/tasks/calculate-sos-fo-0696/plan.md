@@ -105,7 +105,8 @@ Task: Create the calculation and verification scripts with CLI and logging scaff
   - Run: `python3 scripts/calc_sos_season2_elo.py -h` shows flags from contract.
   - Run: `python3 scripts/verify_sos_season2_elo.py -h` shows two `--check` modes.
 
-### [ ] Step: Implement Season 2 Games Slice and Schedule Builder
+### [x] Step: Implement Season 2 Games Slice and Schedule Builder
+<!-- chat-id: ef1aa2c8-c15a-4079-a6ee-89501713f322 -->
 Task: Parse `MEGA_games.csv` to slice Season 2 (rows >= 287) and build per-team schedules.
 - Contracts (from spec):
   - Input: `MEGA_games.csv` columns: `homeTeam, awayTeam, gameId, scheduled_date_time, seasonIndex, stageIndex, weekIndex`.
