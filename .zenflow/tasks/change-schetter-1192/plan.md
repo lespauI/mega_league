@@ -46,6 +46,7 @@ Example format (wrapped in code block to prevent parsing):
 ### [x] Step: Sanity check usages
 - Verified coloring applies to opponent badges and no other pages use this mapping.
 
+
 ### [x] Step: No you didnt get it right
 <!-- chat-id: ec2a1869-3124-40a7-8506-3cc45165283f -->
 
