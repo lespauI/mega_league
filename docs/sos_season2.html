@@ -89,17 +89,22 @@
     function fmt3(x) { return d3.format('.3f')(x); }
     function fmt1(x) { return d3.format('.1f')(x); }
 
-    // 6-level color mapping for opponent ELO
+    // 6-level color mapping for opponent ELO (SoS) scaled to 1185–1215
+    // Bins (increasing difficulty):
+    // 1185.0–<1190.0  -> Dark Green
+    // 1190.0–<1195.0  -> Light Green
+    // 1195.0–<1200.0  -> Yellow-Green
+    // 1200.0–<1205.0  -> Yellow-Orange
+    // 1205.0–<1210.0  -> Orange-Red
+    // 1210.0–1215.0+  -> Dark Red
     function colorForElo(elo) {
       if (elo == null || isNaN(elo)) return '#e5e7eb';
-      if (elo >= 1101.0 && elo <= 1133.5) return '#00AA00'; // Dark Green
-      if (elo >= 1133.6 && elo <= 1166.2) return '#66CC00'; // Light Green
-      if (elo >= 1166.3 && elo <= 1198.9) return '#CCCC00'; // Yellow-Green
-      if (elo >= 1199.0 && elo <= 1231.6) return '#FF9900'; // Yellow-Orange
-      if (elo >= 1231.7 && elo <= 1264.3) return '#FF4400'; // Orange-Red
-      if (elo >= 1264.4 && elo <= 1297.1) return '#CC0000'; // Dark Red
-      // Fallback interpolate beyond bounds
-      return elo < 1101 ? '#00AA00' : '#CC0000';
+      if (elo < 1190.0) return '#00AA00'; // Dark Green
+      if (elo < 1195.0) return '#66CC00'; // Light Green
+      if (elo < 1200.0) return '#CCCC00'; // Yellow-Green
+      if (elo < 1205.0) return '#FF9900'; // Yellow-Orange
+      if (elo < 1210.0) return '#FF4400'; // Orange-Red
+      return '#CC0000'; // Dark Red (>= 1210)
     }
 
     async function loadData() {
@@ -653,12 +658,12 @@
         <div class="muted">Rows: <span id="opp-rowcount">0</span></div>
       </div>
       <div class="opp-legend">
-        <span><span class="opp-swatch" style="background:#00AA00"></span>1101.0–1133.5</span>
-        <span><span class="opp-swatch" style="background:#66CC00"></span>1133.6–1166.2</span>
-        <span><span class="opp-swatch" style="background:#CCCC00"></span>1166.3–1198.9</span>
-        <span><span class="opp-swatch" style="background:#FF9900"></span>1199.0–1231.6</span>
-        <span><span class="opp-swatch" style="background:#FF4400"></span>1231.7–1264.3</span>
-        <span><span class="opp-swatch" style="background:#CC0000"></span>1264.4–1297.1</span>
+        <span><span class="opp-swatch" style="background:#00AA00"></span>1185.0–1189.9</span>
+        <span><span class="opp-swatch" style="background:#66CC00"></span>1190.0–1194.9</span>
+        <span><span class="opp-swatch" style="background:#CCCC00"></span>1195.0–1199.9</span>
+        <span><span class="opp-swatch" style="background:#FF9900"></span>1200.0–1204.9</span>
+        <span><span class="opp-swatch" style="background:#FF4400"></span>1205.0–1209.9</span>
+        <span><span class="opp-swatch" style="background:#CC0000"></span>1210.0–1215.0</span>
       </div>
       <div class="table-wrap">
         <table>
