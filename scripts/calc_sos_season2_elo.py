@@ -81,7 +81,9 @@ def build_schedules(
 
     def ensure_team(team_name: str) -> Dict[str, Any]:
         if team_name not in schedules:
-            meta = teams_meta.get(team_name, {}) if teams_meta else {}
+            # Look up metadata using normalized key if available
+            meta_key = normalize_team_name(team_name)
+            meta = teams_meta.get(meta_key, {}) if teams_meta else {}
             schedules[team_name] = {
                 "team": team_name,
                 "conference": meta.get("conference"),
@@ -132,22 +134,74 @@ def build_schedules(
     return schedules
 
 
-def read_elo_map(elo_csv: str) -> Dict[str, float]:
-    """Read team -> ELO map from mega_elo.csv (semicolon delimiter, decimal commas).
+def _parse_decimal_comma(val: str) -> float:
+    if val is None:
+        raise ValueError("Missing numeric value")
+    s = str(val).strip().replace(" ", "")
+    # Replace decimal comma with dot
+    s = s.replace(",", ".")
+    return float(s)
 
-    Stub: returns empty dict. Implementation comes later.
+
+def normalize_team_name(name: str) -> str:
+    """Normalize team names for consistent joins across files.
+
+    Strategy: lowercase, strip, remove punctuation and spaces.
+    This keeps names like '49ers' intact while unifying variants.
     """
-    logging.info("[stub] read_elo_map(elo_csv=%s)", elo_csv)
-    return {}
+    if name is None:
+        return ""
+    s = name.strip().lower()
+    # Remove common punctuation/spaces
+    for ch in ["'", "\"", ".", ",", "-", "_", "(", ")", "/", "\\", "&", "  "]:
+        s = s.replace(ch, " ")
+    s = "".join(ch for ch in s if ch.isalnum())
+    return s
+
+
+def read_elo_map(elo_csv: str) -> Dict[str, float]:
+    """Read team -> ELO map from mega_elo.csv (semicolon delimiter, decimal commas)."""
+    elo_map: Dict[str, float] = {}
+    with open(elo_csv, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f, delimiter=";")
+        for row in reader:
+            team_raw = row.get("Team")
+            start_raw = row.get("START")
+            if not team_raw or not start_raw:
+                continue
+            key = normalize_team_name(team_raw)
+            try:
+                elo = _parse_decimal_comma(start_raw)
+            except ValueError:
+                logging.warning("Skipping ELO row with invalid START: team=%r START=%r", team_raw, start_raw)
+                continue
+            elo_map[key] = elo
+    logging.info("Loaded ELO map: %d teams from %s", len(elo_map), elo_csv)
+    return elo_map
 
 
 def read_team_meta(teams_csv: str) -> Dict[str, Dict[str, Any]]:
     """Read team metadata (conference, division, logoId) from MEGA_teams.csv.
 
-    Stub: returns empty dict. Implementation comes later.
+    Returns a dict keyed by normalized team name for consistent joins.
+    Values include source teamName for reference.
     """
-    logging.info("[stub] read_team_meta(teams_csv=%s)", teams_csv)
-    return {}
+    meta: Dict[str, Dict[str, Any]] = {}
+    with open(teams_csv, "r", newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            name = (row.get("teamName") or row.get("displayName") or "").strip()
+            if not name:
+                continue
+            key = normalize_team_name(name)
+            meta[key] = {
+                "teamName": name,
+                "conference": (row.get("conferenceName") or "").strip() or None,
+                "division": (row.get("divName") or "").strip() or None,
+                "logoId": (row.get("logoId") or "").strip() or None,
+            }
+    logging.info("Loaded team metadata: %d teams from %s", len(meta), teams_csv)
+    return meta
 
 
 def compute_sos_elo(

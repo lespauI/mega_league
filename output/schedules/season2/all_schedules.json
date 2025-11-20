@@ -1,8 +1,8 @@
 {
   "Broncos": {
     "team": "Broncos",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC West",
     "games": 17,
     "schedule": [
       {
@@ -128,8 +128,8 @@
   },
   "Chiefs": {
     "team": "Chiefs",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC West",
     "games": 17,
     "schedule": [
       {
@@ -255,8 +255,8 @@
   },
   "49ers": {
     "team": "49ers",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC West",
     "games": 17,
     "schedule": [
       {
@@ -382,8 +382,8 @@
   },
   "Chargers": {
     "team": "Chargers",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC West",
     "games": 17,
     "schedule": [
       {
@@ -509,8 +509,8 @@
   },
   "Cowboys": {
     "team": "Cowboys",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC East",
     "games": 17,
     "schedule": [
       {
@@ -636,8 +636,8 @@
   },
   "Commanders": {
     "team": "Commanders",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC East",
     "games": 17,
     "schedule": [
       {
@@ -763,8 +763,8 @@
   },
   "Lions": {
     "team": "Lions",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC North",
     "games": 17,
     "schedule": [
       {
@@ -890,8 +890,8 @@
   },
   "Falcons": {
     "team": "Falcons",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC South",
     "games": 17,
     "schedule": [
       {
@@ -1017,8 +1017,8 @@
   },
   "Seahawks": {
     "team": "Seahawks",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC West",
     "games": 17,
     "schedule": [
       {
@@ -1144,8 +1144,8 @@
   },
   "Eagles": {
     "team": "Eagles",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC East",
     "games": 17,
     "schedule": [
       {
@@ -1271,8 +1271,8 @@
   },
   "Raiders": {
     "team": "Raiders",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC West",
     "games": 17,
     "schedule": [
       {
@@ -1398,8 +1398,8 @@
   },
   "Cardinals": {
     "team": "Cardinals",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC West",
     "games": 17,
     "schedule": [
       {
@@ -1525,8 +1525,8 @@
   },
   "Saints": {
     "team": "Saints",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC South",
     "games": 17,
     "schedule": [
       {
@@ -1652,8 +1652,8 @@
   },
   "Ravens": {
     "team": "Ravens",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC North",
     "games": 17,
     "schedule": [
       {
@@ -1779,8 +1779,8 @@
   },
   "Browns": {
     "team": "Browns",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC North",
     "games": 17,
     "schedule": [
       {
@@ -1906,8 +1906,8 @@
   },
   "Buccaneers": {
     "team": "Buccaneers",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC South",
     "games": 17,
     "schedule": [
       {
@@ -2033,8 +2033,8 @@
   },
   "Bengals": {
     "team": "Bengals",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC North",
     "games": 17,
     "schedule": [
       {
@@ -2160,8 +2160,8 @@
   },
   "Steelers": {
     "team": "Steelers",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC North",
     "games": 17,
     "schedule": [
       {
@@ -2287,8 +2287,8 @@
   },
   "Bills": {
     "team": "Bills",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC East",
     "games": 17,
     "schedule": [
       {
@@ -2414,8 +2414,8 @@
   },
   "Jets": {
     "team": "Jets",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC East",
     "games": 17,
     "schedule": [
       {
@@ -2541,8 +2541,8 @@
   },
   "Colts": {
     "team": "Colts",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC South",
     "games": 17,
     "schedule": [
       {
@@ -2668,8 +2668,8 @@
   },
   "Titans": {
     "team": "Titans",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC South",
     "games": 17,
     "schedule": [
       {
@@ -2795,8 +2795,8 @@
   },
   "Packers": {
     "team": "Packers",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC North",
     "games": 17,
     "schedule": [
       {
@@ -2922,8 +2922,8 @@
   },
   "Vikings": {
     "team": "Vikings",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC North",
     "games": 17,
     "schedule": [
       {
@@ -3049,8 +3049,8 @@
   },
   "Patriots": {
     "team": "Patriots",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC East",
     "games": 17,
     "schedule": [
       {
@@ -3176,8 +3176,8 @@
   },
   "Dolphins": {
     "team": "Dolphins",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC East",
     "games": 17,
     "schedule": [
       {
@@ -3303,8 +3303,8 @@
   },
   "Texans": {
     "team": "Texans",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC South",
     "games": 17,
     "schedule": [
       {
@@ -3430,8 +3430,8 @@
   },
   "Jaguars": {
     "team": "Jaguars",
-    "conference": null,
-    "division": null,
+    "conference": "AFC",
+    "division": "AFC South",
     "games": 17,
     "schedule": [
       {
@@ -3557,8 +3557,8 @@
   },
   "Giants": {
     "team": "Giants",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC East",
     "games": 17,
     "schedule": [
       {
@@ -3684,8 +3684,8 @@
   },
   "Rams": {
     "team": "Rams",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC West",
     "games": 17,
     "schedule": [
       {
@@ -3811,8 +3811,8 @@
   },
   "Panthers": {
     "team": "Panthers",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC South",
     "games": 16,
     "schedule": [
       {
@@ -3931,8 +3931,8 @@
   },
   "Bears": {
     "team": "Bears",
-    "conference": null,
-    "division": null,
+    "conference": "NFC",
+    "division": "NFC North",
     "games": 16,
     "schedule": [
       {

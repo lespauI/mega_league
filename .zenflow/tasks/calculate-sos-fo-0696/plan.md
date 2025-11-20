@@ -119,7 +119,8 @@ Task: Parse `MEGA_games.csv` to slice Season 2 (rows >= 287) and build per-team 
   - Check: file exists; contains ≥ 32 team keys; per team game count equals appearances in Season 2 slice.
   - Helper: `python3 scripts/verify_sos_season2_elo.py --check schedules` prints counts and flags mismatches.
 
-### [ ] Step: Parse ELO Snapshot and Team Metadata
+### [x] Step: Parse ELO Snapshot and Team Metadata
+<!-- chat-id: b9b9014d-f6bb-45c8-b1ce-4628929de9bf -->
 Task: Parse `mega_elo.csv` with semicolon delimiter and decimal commas; load `MEGA_teams.csv` for conference/division/logo.
 - Contracts (from spec):
   - Input: `mega_elo.csv` mapping `Team` -> float `START`, normalize commas to dots.
