@@ -169,7 +169,8 @@ Task: Create D3 bar charts mirroring last season’s SoS visuals with league/con
   - Open `http://localhost:8000/docs/sos_season2_bars.html`.
   - Confirm bars render without console errors; ordering matches `rank`; hover tooltips and view toggles work.
 
-### [ ] Step: Integrate Links in Index
+### [x] Step: Integrate Links in Index
+<!-- chat-id: e38e3752-3f97-4710-b067-e51a8cfcf4cb -->
 Task: Link new SoS pages from site index for discoverability.
 - Contracts:
   - Use existing pattern in `scripts/generate_index.py` that lists sos assets; add entries for `sos_season2_table.html` and `sos_season2_bars.html` if appropriate.
