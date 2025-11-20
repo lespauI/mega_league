@@ -49,5 +49,8 @@ Example format (wrapped in code block to prevent parsing):
 ### [x] Step: Implement D3 scatter chart
 - X: own ELO • Y: SoS (avg opponent ELO), y=x line, colors above/below
 
-### [ ] Step: Quick sanity check
-- Verify rendering locally (paths, tooltips, legend) and adjust if needed
+
+### [x] Step: fix
+<!-- chat-id: 16739d72-576f-472e-8ac7-7bccbb8f5ae6 -->
+
+Committed `plan.md` and pushed branch without errors.
