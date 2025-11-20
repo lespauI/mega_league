@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Season 2 Strength of Schedule — Table + Bars</title>
+  <title>Season 2 Strength of Schedule — Table + Bars + Opponents</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
   <style>
     :root {
@@ -53,6 +53,14 @@
     .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 6px 10px 10px; }
     .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
     .avgLineLabel { fill: #555; font-size: 11px; }
+
+    /* Opponents table */
+    .opp-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: 16px; font-size: 12px; margin: 3px 4px; color: #111; border: 1px solid rgba(0,0,0,.08); background: #f3f4f6; }
+    .opp-badge .opp-logo { width: 16px; height: 16px; object-fit: contain; border-radius: 2px; }
+    .opp-elo { font-weight: 700; font-variant-numeric: tabular-nums; }
+    .opp-row { display: flex; flex-wrap: wrap; }
+    .opp-legend { display: flex; gap: 12px; align-items: center; font-size: 12px; color: #555; padding: 8px 0; }
+    .opp-swatch { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1px solid rgba(0,0,0,.12); margin-right: 6px; }
   </style>
   <!-- Serve from repo root: python3 -m http.server 8000 -->
   <script>
@@ -64,11 +72,57 @@
       }
       throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
     }
+    async function tryJson(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.json(p); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load JSON: ' + paths.join(', '));
+    }
+    async function tryText(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.text(p); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load TEXT: ' + paths.join(', '));
+    }
     function fmt3(x) { return d3.format('.3f')(x); }
+    function fmt1(x) { return d3.format('.1f')(x); }
+
+    // 6-level color mapping for opponent ELO
+    function colorForElo(elo) {
+      if (elo == null || isNaN(elo)) return '#e5e7eb';
+      if (elo >= 1101.0 && elo <= 1133.5) return '#00AA00'; // Dark Green
+      if (elo >= 1133.6 && elo <= 1166.2) return '#66CC00'; // Light Green
+      if (elo >= 1166.3 && elo <= 1198.9) return '#CCCC00'; // Yellow-Green
+      if (elo >= 1199.0 && elo <= 1231.6) return '#FF9900'; // Yellow-Orange
+      if (elo >= 1231.7 && elo <= 1264.3) return '#FF4400'; // Orange-Red
+      if (elo >= 1264.4 && elo <= 1297.1) return '#CC0000'; // Dark Red
+      // Fallback interpolate beyond bounds
+      return elo < 1101 ? '#00AA00' : '#CC0000';
+    }
 
     async function loadData() {
       const sos = await tryCsv(['../output/sos/season2_elo.csv', 'output/sos/season2_elo.csv', '/output/sos/season2_elo.csv']);
       const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
+      const schedules = await tryJson(['../output/schedules/season2/all_schedules.json','output/schedules/season2/all_schedules.json','/output/schedules/season2/all_schedules.json']);
+      // Parse mega_elo.csv (semicolon separated, decimal comma)
+      let megaEloText = '';
+      try {
+        megaEloText = await tryText(['../mega_elo.csv','mega_elo.csv','/mega_elo.csv']);
+      } catch (_) {}
+      const megaEloMap = new Map();
+      if (megaEloText) {
+        megaEloText.split(/\r?\n/).forEach(line => {
+          if (!line || line.startsWith('#')) return;
+          const parts = line.split(';');
+          if (parts.length < 3) return;
+          const team = parts[1] && parts[1].trim();
+          let ratingStr = parts[2] ? parts[2].replace(/,/g, '.').trim() : '';
+          const rating = parseFloat(ratingStr);
+          if (team && !isNaN(rating)) megaEloMap.set(team, rating);
+        });
+      }
 
       const teamMeta = new Map();
       for (const t of teams) {
@@ -102,7 +156,24 @@
       }
 
       const allDivisions = Array.from(new Set(sos.map(r => r.division).filter(Boolean))).sort();
-      return { rows: sos, conferences, divisionsByConf, allDivisions };
+      // Build schedules map with opponent ELO inferred when missing
+      const scheduleMap = new Map();
+      if (schedules && typeof schedules === 'object') {
+        Object.entries(schedules).forEach(([team, rec]) => {
+          const list = (rec && rec.schedule) ? rec.schedule : [];
+          const normTeam = String(team).trim();
+          const enriched = list.map((g, idx) => {
+            const opp = String(g.opponent).trim();
+            let elo = g.oppElo;
+            if (elo == null && megaEloMap.has(opp)) elo = megaEloMap.get(opp);
+            const meta = teamMeta.get(opp) || {};
+            const logoUrl = (meta.logoId!==undefined && meta.logoId!==null && meta.logoId!=='') ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null;
+            return { week: idx, opponent: opp, elo: elo, homeAway: g.homeAway || '', gameId: g.gameId || '', logoUrl };
+          });
+          scheduleMap.set(normTeam, enriched);
+        });
+      }
+      return { rows: sos, conferences, divisionsByConf, allDivisions, scheduleMap };
     }
 
     // TABLE RENDERING
@@ -221,7 +292,7 @@
         activate(t.dataset.tab);
       });
 
-      loadData().then(({ rows: allRows, conferences, divisionsByConf, allDivisions }) => {
+      loadData().then(({ rows: allRows, conferences, divisionsByConf, allDivisions, scheduleMap }) => {
         // Default active tab
         activate('table-view');
 
@@ -325,6 +396,53 @@
         bDivSel.on('change', () => redrawBars());
         updateBarsVisibility();
         redrawBars();
+
+        // OPPONENTS INIT
+        const oConfSel = d3.select('#o_conf');
+        const oDivSel = d3.select('#o_div');
+        oConfSel.append('option').attr('value','ALL').text('All Conferences');
+        conferences.forEach(c => oConfSel.append('option').attr('value', c).text(c));
+        function refreshODivisions() {
+          const conf = oConfSel.property('value');
+          oDivSel.selectAll('option').remove();
+          oDivSel.append('option').attr('value','ALL').text('All Divisions');
+          const divs = conf==='ALL' ? Array.from(new Set([].concat(...Array.from(divisionsByConf.values())))).sort()
+                                    : (divisionsByConf.get(conf) || []);
+          divs.forEach(d => oDivSel.append('option').attr('value', d).text(d));
+        }
+        refreshODivisions();
+        const oTbody = d3.select('#opp-tbody');
+        function renderOppTable(rows) {
+          const tr = oTbody.selectAll('tr').data(rows, d => d.team).join('tr');
+          tr.html('');
+          tr.each(function(d){
+            const row = d3.select(this);
+            const cell = row.append('td');
+            const teamCell = cell.append('div').attr('class','team-cell');
+            if (d.logoUrl) teamCell.append('img').attr('class','logo').attr('src', d.logoUrl).attr('alt', d.team);
+            teamCell.append('span').text(d.team);
+
+            const opps = scheduleMap.get(d.team) || [];
+            const oppCell = row.append('td');
+            const wrap = oppCell.append('div').attr('class','opp-row');
+            opps.forEach(g => {
+              const badge = wrap.append('div').attr('class','opp-badge').style('background', colorForElo(+g.elo)).style('border-color', 'rgba(0,0,0,.12)');
+              if (g.logoUrl) badge.append('img').attr('class','opp-logo').attr('src', g.logoUrl).attr('alt', g.opponent);
+              badge.append('span').text(g.opponent);
+              badge.append('span').attr('class','opp-elo').text(isFinite(+g.elo) ? fmt1(+g.elo) : '—');
+            });
+          });
+        }
+        function redrawOppTable() {
+          let rows = applyFilters(allRows, oConfSel.node(), oDivSel.node());
+          // Enrich with logoUrl if not already
+          rows = rows.map(r => r);
+          renderOppTable(rows);
+          d3.select('#opp-rowcount').text(rows.length);
+        }
+        oConfSel.on('change', () => { refreshODivisions(); redrawOppTable(); });
+        oDivSel.on('change', () => redrawOppTable());
+        redrawOppTable();
       }).catch(err => {
         console.error(err);
         d3.select('#error').text('Error loading data: ' + err);
@@ -342,6 +460,7 @@
     <div class="tabs">
       <div class="tab active" data-tab="table-view">Table</div>
       <div class="tab" data-tab="bars-view">Bars</div>
+      <div class="tab" data-tab="opps-view">Opponents</div>
     </div>
 
     <div id="table-view" class="view active">
@@ -397,7 +516,39 @@
       </div>
       <div id="bars-root"></div>
     </div>
+
+    <div id="opps-view" class="view">
+      <div class="controls">
+        <div>
+          <label for="o_conf">Conference</label>
+          <select id="o_conf"></select>
+        </div>
+        <div>
+          <label for="o_div">Division</label>
+          <select id="o_div"></select>
+        </div>
+        <div class="muted">Rows: <span id="opp-rowcount">0</span></div>
+      </div>
+      <div class="opp-legend">
+        <span><span class="opp-swatch" style="background:#00AA00"></span>1101.0–1133.5</span>
+        <span><span class="opp-swatch" style="background:#66CC00"></span>1133.6–1166.2</span>
+        <span><span class="opp-swatch" style="background:#CCCC00"></span>1166.3–1198.9</span>
+        <span><span class="opp-swatch" style="background:#FF9900"></span>1199.0–1231.6</span>
+        <span><span class="opp-swatch" style="background:#FF4400"></span>1231.7–1264.3</span>
+        <span><span class="opp-swatch" style="background:#CC0000"></span>1264.4–1297.1</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Team</th>
+              <th>Opponents (ELO-colored)</th>
+            </tr>
+          </thead>
+          <tbody id="opp-tbody"></tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </body>
 </html>
-
