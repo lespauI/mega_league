@@ -180,7 +180,8 @@ Task: Link new SoS pages from site index for discoverability.
 - Verification:
   - Run: `python3 scripts/generate_index.py` (if used) and confirm links appear; or manual check of `index.html` contains anchors to new docs pages.
 
-### [ ] Step: Add Pipeline Convenience Runner (Optional)
+### [x] Step: Add Pipeline Convenience Runner (Optional)
+<!-- chat-id: 1f06bc58-3a4e-4135-a4df-8592d6d1c035 -->
 Task: Provide a single entry to run SoS pipeline end-to-end.
 - Contracts:
   - Add a function/entry in `scripts/run_all.py` to invoke `calc_sos_season2_elo.py` with defaults.
