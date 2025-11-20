@@ -247,12 +247,8 @@ python3 scripts/verify_sos_season2_elo.py --check sos
 # From repo root, serve docs locally
 python3 -m http.server 8000
 
-# Then open in your browser:
-# Table (sortable with conference/division filters)
-http://localhost:8000/docs/sos_season2_table.html
-
-# Bar charts (league/conference/division views)
-http://localhost:8000/docs/sos_season2_bars.html
+# Then open in your browser (combined page with tabs):
+http://localhost:8000/docs/sos_season2.html
 ```
 
 Logos are loaded via Neon Sports CDN using `logoId` from `MEGA_teams.csv`.
