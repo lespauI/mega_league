@@ -89,6 +89,27 @@
     function fmt3(x) { return d3.format('.3f')(x); }
     function fmt1(x) { return d3.format('.1f')(x); }
 
+    // Simple least-squares regression y = m*x + b
+    function regression(points) {
+      let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
+      for (const [x0, y0] of points) {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        n++; sx += x; sy += y; sxy += x*y; sxx += x*x; syy += y*y;
+      }
+      if (n < 2) return { m: 0, b: sy / (n || 1), r2: 0 };
+      const denom = n * sxx - sx * sx;
+      const m = denom !== 0 ? (n * sxy - sx * sy) / denom : 0;
+      const b = (sy - m * sx) / n;
+      const ssTot = syy - (sy*sy)/n;
+      const ssRes = points.reduce((acc, [x0,y0]) => {
+        const x = +x0, y = +y0; if (!Number.isFinite(x) || !Number.isFinite(y)) return acc;
+        const yHat = m*x + b; return acc + (y - yHat) * (y - yHat);
+      }, 0);
+      const r2 = ssTot !== 0 ? 1 - (ssRes/ssTot) : 0;
+      return { m, b, r2 };
+    }
+
     function colorForElo(elo) {
         if (elo == null || isNaN(elo)) return '#e5e7eb';
         if (elo >= 1101.0 && elo <= 1133.5) return '#00AA00'; // Dark Green
@@ -464,9 +485,9 @@
 
         function drawScatter(holder, rows) {
           const data = rows.filter(d => isFinite(+d.own_elo) && isFinite(+d.avg_opp_elo));
-          const margin = { top: 24, right: 28, bottom: 40, left: 48 };
-          const width = 880;
-          const height = 520;
+          const margin = { top: 24, right: 32, bottom: 48, left: 60 };
+          const width = 1080;
+          const height = 600;
           const innerW = width - margin.left - margin.right;
           const innerH = height - margin.top - margin.bottom;
 
@@ -502,23 +523,53 @@
             .attr('text-anchor','middle').attr('fill','#555').attr('font-size',12)
             .text('SoS (Avg Opponent ELO)');
 
-          // Diagonal y = x (clipped to the visible x/y domains)
-          const seg0 = Math.max(x.domain()[0], y.domain()[0]);
-          const seg1 = Math.min(x.domain()[1], y.domain()[1]);
+          // Averages
+          const xAvg = d3.mean(data, d => +d.own_elo);
+          const yAvg = d3.mean(data, d => +d.avg_opp_elo);
           g.append('line')
-            .attr('x1', x(seg0))
-            .attr('y1', y(seg0))
-            .attr('x2', x(seg1))
-            .attr('y2', y(seg1))
-            .attr('stroke', '#888')
-            .attr('stroke-dasharray', '6,4')
-            .attr('stroke-width', 1.5);
-          g.append('text')
-            .attr('x', x(seg1) - 60)
-            .attr('y', y(seg1) + 14)
-            .attr('fill', '#666')
-            .attr('font-size', 11)
-            .text('y = x');
+            .attr('x1', 0).attr('x2', innerW)
+            .attr('y1', y(yAvg)).attr('y2', y(yAvg))
+            .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+          g.append('line')
+            .attr('x1', x(xAvg)).attr('x2', x(xAvg))
+            .attr('y1', 0).attr('y2', innerH)
+            .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+          g.append('text').attr('class','avgLineLabel').attr('x', 6).attr('y', y(yAvg)-6).text('Avg Y ' + fmt1(yAvg));
+          g.append('text').attr('class','avgLineLabel').attr('x', x(xAvg)+6).attr('y', 12).text('Avg X ' + fmt1(xAvg));
+
+          // Parity line: schedule vs team ELO (slope 1 through averages)
+          // Equation in data space: y = (x - xAvg) + yAvg
+          const x0 = x.domain()[0], x1 = x.domain()[1];
+          const y0 = y.domain()[0], y1 = y.domain()[1];
+          const c = yAvg - xAvg; // y = x + c
+          const segPts = [];
+          const yAtLeft = x0 + c; if (yAtLeft >= y0 && yAtLeft <= y1) segPts.push([x0, yAtLeft]);
+          const yAtRight = x1 + c; if (yAtRight >= y0 && yAtRight <= y1) segPts.push([x1, yAtRight]);
+          const xAtBottom = y0 - c; if (xAtBottom >= x0 && xAtBottom <= x1) segPts.push([xAtBottom, y0]);
+          const xAtTop = y1 - c; if (xAtTop >= x0 && xAtTop <= x1) segPts.push([xAtTop, y1]);
+          // Deduplicate and keep at most two points
+          const unique = [];
+          for (const p of segPts) {
+            if (!unique.some(q => Math.abs(q[0]-p[0])<1e-6 && Math.abs(q[1]-p[1])<1e-6)) unique.push(p);
+          }
+          if (unique.length >= 2) {
+            const [p0, p1] = unique.slice(0,2);
+            g.append('line')
+              .attr('x1', x(p0[0])).attr('y1', y(p0[1]))
+              .attr('x2', x(p1[0])).attr('y2', y(p1[1]))
+              .attr('stroke', '#8b5cf6')
+              .attr('stroke-width', 1.8)
+              .attr('stroke-dasharray', '5,4')
+              .attr('opacity', 0.95);
+          }
+
+          // Trend line (linear regression)
+          const { m, b } = regression(data.map(d => [+d.own_elo, +d.avg_opp_elo]));
+          const xL = x.domain()[0], xR = x.domain()[1];
+          g.append('line')
+            .attr('x1', x(xL)).attr('y1', y(m*xL + b))
+            .attr('x2', x(xR)).attr('y2', y(m*xR + b))
+            .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
 
           const tip = d3.select('body').append('div').attr('class','tooltip').style('display','none');
 
@@ -526,23 +577,24 @@
             .attr('transform', d => `translate(${x(+d.own_elo)},${y(+d.avg_opp_elo)})`);
 
           node.append('circle')
-            .attr('r', 8)
-            .attr('fill', d => (+d.avg_opp_elo - +d.own_elo) >= 0 ? 'var(--red)' : 'var(--blue)')
-            .attr('opacity', 0.25);
+            .attr('r', 12)
+            .attr('fill', d => (+d.avg_opp_elo) >= (m*+d.own_elo + b) ? 'var(--red)' : 'var(--blue)')
+            .attr('opacity', 0.20);
 
           node.append('image')
             .attr('href', d => d.logoUrl || null)
-            .attr('x', -10)
-            .attr('y', -10)
-            .attr('width', 20)
-            .attr('height', 20)
+            .attr('x', -14)
+            .attr('y', -14)
+            .attr('width', 28)
+            .attr('height', 28)
             .attr('opacity', 0.95)
             .on('mouseenter', function(evt, d){
-              const delta = (+d.avg_opp_elo - +d.own_elo);
+              const trend = m * +d.own_elo + b;
+              const delta = (+d.avg_opp_elo - trend);
               const html = `<strong>${d.team}</strong>`+
                 `<br>Own ELO: ${fmt1(+d.own_elo)}`+
                 `<br>Avg Opp ELO: ${fmt1(+d.avg_opp_elo)}`+
-                `<br>Δ (SoS - Own): ${(delta>=0?'+':'') + fmt1(delta)}`;
+                `<br>Δ vs trend: ${(delta>=0?'+':'') + fmt1(delta)}`;
               tip.style('display','block').html(html);
             })
             .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
@@ -550,8 +602,11 @@
 
           const legend = d3.select('#scatter-legend');
           legend.html('');
-          legend.append('span').html(`<span class="swatch" style="background: var(--red);"></span>Above y=x (harder)`);
-          legend.append('span').style('margin-left','16px').html(`<span class="swatch" style="background: var(--blue);"></span>Below y=x (easier)`);
+          legend.append('span').html(`<span class="swatch" style="background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb;"></span>Avg X & Y`);
+          legend.append('span').html(`<span class="swatch" style="background: var(--red); opacity:.5"></span>Above trend (harder)`);
+          legend.append('span').html(`<span class="swatch" style="background: var(--blue); opacity:.5"></span>Below trend (easier)`);
+          legend.append('span').style('margin-left','16px').text('Trend line in gray');
+          legend.append('span').style('margin-left','16px').text('Parity line: schedule vs own ELO');
         }
 
         function redrawScatter() {
@@ -559,7 +614,7 @@
           root.html('');
           let rows = applyFilters(allRows, sConfSel.node(), sDivSel.node());
           const panel = root.append('div').attr('class','panel');
-          panel.append('div').attr('class','header').text('Own ELO vs SoS (Avg Opp ELO) — y = x Reference');
+          panel.append('div').attr('class','header').text('Own ELO vs SoS (Avg Opp ELO) — Averages + Trend');
           const chart = panel.append('div').attr('class','chart-wrap');
           drawScatter(chart, rows);
           d3.select('#scatter-rowcount').text(rows.length);
@@ -690,7 +745,8 @@
       </div>
       <div class="legend" id="scatter-legend"></div>
       <div id="scatter-root"></div>
-      <div class="subtitle" style="margin-top:8px">X: Own ELO, Y: Avg Opponent ELO (SoS). Points above y=x face tougher schedules relative to their rating.</div>
+      <div class="subtitle" style="margin-top:8px">X: Own ELO, Y: Avg Opponent ELO (SoS). Dotted lines = league averages; gray line = trend; purple dashed line = parity (schedule equals team ELO). Red = above trend (harder), Blue = below trend (easier).</div>
+      <div class="subtitle" style="margin-top:4px">Reading guide: Top-left = weak team + tough schedule; Top-right = strong + tough; Bottom-left = weak + easy; Bottom-right = strong + easy. Above purple parity line = schedule tougher than the team’s level; below it = easier for them.</div>
     </div>
   </div>
 </body>
