@@ -51,9 +51,9 @@ Hook filters and tab activation to re-render the scatter chart.
 ### [ ] Step: Sanity check
 Verify chart renders and filters update as expected.
 
+
 ### [x] Step: Change gradation
 <!-- chat-id: 57b1646f-fd6b-44a8-a411-fdfea3d6173e -->
 
 i dont like the oS (Avg Opponent ELO) gradation we have it the same as elo 1290-1000 but in reality it is 
 
-1213.512	to 1192.653	 so lets change it top 1215 to bottom 1185
