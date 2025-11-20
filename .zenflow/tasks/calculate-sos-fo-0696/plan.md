@@ -190,7 +190,8 @@ Task: Provide a single entry to run SoS pipeline end-to-end.
 - Verification:
   - Run: `python3 scripts/run_all.py` and confirm SoS artifacts are produced without breaking existing flows.
 
-### [ ] Step: Documentation and Usage Notes
+### [x] Step: Documentation and Usage Notes
+<!-- chat-id: 5fa74dbb-217f-4d04-a507-f8d28fc6bfa8 -->
 Task: Document how to run, verify, and view outputs.
 - Contracts:
   - Reference CLI and verification commands defined above.
