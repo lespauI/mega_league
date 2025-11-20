@@ -158,7 +158,8 @@ Task: Create sortable SoS table with filters matching Playoff Chances UX.
   - Serve: `python3 -m http.server 8000`; open `http://localhost:8000/docs/sos_season2_table.html`.
   - Confirm 32 rows render; sort toggles; filters adjust row counts per conference/division groupings from `MEGA_teams.csv`.
 
-### [ ] Step: Build SoS Graphics UI (Docs)
+### [x] Step: Build SoS Graphics UI (Docs)
+<!-- chat-id: d7ec9f69-ef04-4929-a5eb-b8ef356e3a8f -->
 Task: Create D3 bar charts mirroring last season’s SoS visuals with league/conference/division views.
 - Contracts (from spec):
   - Data source: same CSV/JSON as table; hover tooltips show Team, Games, Avg Opp ELO, +/- vs Avg, Rank.
