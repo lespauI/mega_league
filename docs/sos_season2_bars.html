@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Season 2 Strength of Schedule — Bars</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --bg: #f7f7f7;
+      --card: #fff;
+      --border: #e5e5e5;
+      --text: #222;
+      --muted: #666;
+      --axis: #9aa0a6;
+      --grid: #efefef;
+      --red: #ef4444; /* harder than avg */
+      --blue: #0ea5e9; /* easier than avg */
+      --accent: #0ea5e9;
+    }
+    body { margin: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: var(--bg); }
+    .container { max-width: 1200px; margin: 0 auto; background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 12px 16px 18px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 6px; font-size: 22px; }
+    .subtitle { color: var(--muted); font-size: 13px; margin: 2px 0 10px; }
+    .controls { display: flex; gap: 10px; align-items: center; margin: 8px 0 12px; flex-wrap: wrap; }
+    .controls label { font-size: 13px; color: var(--muted); margin-right: 4px; }
+    select { padding: 6px 8px; border: 1px solid var(--border); border-radius: 8px; background: #fff; font-size: 14px; }
+    .panel { border: 1px solid var(--border); border-radius: 10px; overflow: hidden; background: #fff; }
+    .panel > .header { padding: 10px 14px; background: #f5f7fa; border-bottom: 1px solid #ebeff5; font-weight: 700; }
+    .chart-wrap { padding: 8px; }
+    .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; }
+    .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 6px 10px 10px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+    .avgLineLabel { fill: #555; font-size: 11px; }
+  </style>
+  <!-- Serve from repo root: python3 -m http.server 8000 -->
+  <script>
+    // Robust CSV loader trying multiple relative paths
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function fmt3(x) { return d3.format('.3f')(x); }
+
+    async function loadData() {
+      const sos = await tryCsv(['../output/sos/season2_elo.csv', 'output/sos/season2_elo.csv', '/output/sos/season2_elo.csv']);
+      const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
+
+      const teamMeta = new Map();
+      for (const t of teams) {
+        if (!t.displayName) continue;
+        teamMeta.set(String(t.displayName).trim(), {
+          logoId: t.logoId,
+          conference: t.conferenceName || t.conference,
+          division: t.divName || t.divisionName || t.division,
+        });
+      }
+
+      for (const r of sos) {
+        const name = String(r.team).trim();
+        const meta = teamMeta.get(name);
+        if (meta) {
+          r.conference = r.conference || meta.conference || null;
+          r.division = r.division || meta.division || null;
+          if (meta.logoId !== undefined && meta.logoId !== null && meta.logoId !== '') {
+            r.logoUrl = `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`;
+          }
+        }
+      }
+
+      const conferences = Array.from(new Set(sos.map(r => (r.conference||'').toUpperCase()).filter(Boolean))).sort();
+      const divisions = Array.from(new Set(sos.map(r => r.division).filter(Boolean))).sort();
+      return { rows: sos, conferences, divisions };
+    }
+
+    function drawBars(holder, rows, cfg) {
+      // Sort by rank ascending to match spec
+      const data = rows.slice().sort((a,b) => (+a.rank) - (+b.rank));
+      const margin = { top: 14, right: 24, bottom: 10, left: 180 };
+      const rowH = 26;
+      const width = 1080;
+      const height = margin.top + margin.bottom + rowH * data.length + 10;
+      const innerW = width - margin.left - margin.right;
+
+      const svg = holder.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const xDomain = d3.extent(data, d => +d.avg_opp_elo);
+      const x = d3.scaleLinear().domain(xDomain).nice().range([0, innerW]);
+      const y = d3.scaleBand().domain(data.map(d => d.team)).range([0, rowH * data.length]).padding(0.25);
+
+      // Grid and axis
+      g.append('g')
+        .attr('transform', `translate(0,0)`) // top-aligned for grid
+        .call(d3.axisTop(x).ticks(6).tickSize(-rowH * data.length).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+      // League average line (use first row's league_avg_opp_elo; it's a constant)
+      const leagueAvg = +data[0].league_avg_opp_elo;
+      const avgX = x(leagueAvg);
+      g.append('line').attr('x1', avgX).attr('x2', avgX).attr('y1', 0).attr('y2', rowH * data.length)
+        .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('text').attr('x', avgX + 6).attr('y', 12).attr('class','avgLineLabel').text('League Avg ' + fmt3(leagueAvg));
+
+      // Tooltip
+      const tip = d3.select('body').append('div').attr('class','tooltip').style('display', 'none');
+
+      // Bars
+      const bar = g.selectAll('.bar').data(data, d => d.team).join('g').attr('class','bar')
+        .attr('transform', d => `translate(0,${y(d.team)})`);
+
+      bar.append('rect')
+        .attr('x', 0)
+        .attr('y', 0)
+        .attr('width', d => x(+d.avg_opp_elo))
+        .attr('height', y.bandwidth())
+        .attr('fill', d => (+d.plus_minus_vs_avg >= 0) ? 'var(--red)' : 'var(--blue)')
+        .attr('opacity', 0.75)
+        .on('mouseenter', function(evt, d){
+          const html = `<strong>${d.team}</strong>`+
+            `<br>Rank: ${d.rank}`+
+            `<br>Games: ${d.games}`+
+            `<br>Avg Opp ELO: ${fmt3(+d.avg_opp_elo)}`+
+            `<br>+/- vs Avg: ${(+d.plus_minus_vs_avg>=0?'+':'') + fmt3(+d.plus_minus_vs_avg)}`;
+          tip.style('display','block').html(html);
+        })
+        .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+        .on('mouseleave', ()=> tip.style('display','none'));
+
+      // Team labels (logo + name) on the left
+      const labels = svg.append('g').attr('transform', `translate(12,${margin.top})`);
+      const lab = labels.selectAll('.label').data(data, d => d.team).join('g').attr('class','label')
+        .attr('transform', d => `translate(0,${y(d.team) + (y.bandwidth()/2)})`);
+      lab.append('image')
+        .attr('href', d => d.logoUrl || null)
+        .attr('x', 0)
+        .attr('y', -10)
+        .attr('width', 20)
+        .attr('height', 20)
+        .attr('opacity', .95);
+      lab.append('text')
+        .attr('x', 26)
+        .attr('y', 4)
+        .attr('fill', '#333')
+        .attr('font-size', 13)
+        .text(d => `#${d.rank}  ${d.team}`);
+
+      // Title
+      if (cfg && cfg.title) {
+        holder.append('div').style('color', '#555').style('font-size', '12px').style('margin','6px 0 0 0')
+          .text(cfg.title);
+      }
+    }
+
+    function setup() {
+      loadData().then(({ rows: allRows, conferences, divisions }) => {
+        const viewSel = d3.select('#view');
+        const confSel = d3.select('#conf');
+        const divSel = d3.select('#div');
+
+        // Populate selects
+        viewSel.selectAll('option').remove();
+        viewSel.append('option').attr('value','LEAGUE').text('League');
+        viewSel.append('option').attr('value','CONF').text('By Conference');
+        viewSel.append('option').attr('value','DIV').text('By Division');
+
+        confSel.selectAll('option').remove();
+        conferences.forEach(c => confSel.append('option').attr('value', c).text(c));
+
+        divSel.selectAll('option').remove();
+        divisions.forEach(d => divSel.append('option').attr('value', d).text(d));
+
+        function updateVisibility() {
+          const v = viewSel.property('value');
+          d3.select('#conf-wrap').style('display', v==='CONF' ? 'inline-flex' : 'none');
+          d3.select('#div-wrap').style('display', v==='DIV' ? 'inline-flex' : 'none');
+        }
+
+        function redraw() {
+          const root = d3.select('#root');
+          root.html('');
+          const panel = root.append('div').attr('class','panel');
+          panel.append('div').attr('class','header').text('Season 2 — Strength of Schedule (Avg Opponent ELO)');
+          const chart = panel.append('div').attr('class','chart-wrap');
+          const v = viewSel.property('value');
+          if (v === 'LEAGUE') {
+            drawBars(chart, allRows, { title: 'League-wide (ordered by Rank)' });
+          } else if (v === 'CONF') {
+            const c = confSel.property('value');
+            const rows = allRows.filter(r => String(r.conference||'').toUpperCase() === c);
+            drawBars(chart, rows, { title: `${c} (ordered by Rank)` });
+          } else {
+            const d = divSel.property('value');
+            const rows = allRows.filter(r => String(r.division||'') === d);
+            drawBars(chart, rows, { title: `${d} (ordered by Rank)` });
+          }
+        }
+
+        viewSel.on('change', () => { updateVisibility(); redraw(); });
+        confSel.on('change', () => redraw());
+        divSel.on('change', () => redraw());
+
+        updateVisibility();
+        redraw();
+      }).catch(err => {
+        console.error(err);
+        d3.select('#error').text('Error loading data: ' + err);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', setup);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Season 2 Strength of Schedule — Bars</h1>
+    <div class="subtitle">D3 bar charts by league, conference, and division. Colors: red = harder than league average; blue = easier. Data: output/sos/season2_elo.csv + MEGA_teams.csv</div>
+    <div class="controls">
+      <div>
+        <label for="view">View</label>
+        <select id="view"></select>
+      </div>
+      <div id="conf-wrap" style="display:none">
+        <label for="conf">Conference</label>
+        <select id="conf"></select>
+      </div>
+      <div id="div-wrap" style="display:none">
+        <label for="div">Division</label>
+        <select id="div"></select>
+      </div>
+      <div id="error" class="subtitle"></div>
+    </div>
+    <div class="legend">
+      <span><span class="swatch" style="background: var(--red);"></span>Harder than league average</span>
+      <span><span class="swatch" style="background: var(--blue);"></span>Easier than league average</span>
+      <span><span class="swatch" style="background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb;"></span>League average</span>
+    </div>
+    <div id="root"></div>
+  </div>
+</body>
+</html>
+
