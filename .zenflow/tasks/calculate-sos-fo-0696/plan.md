@@ -146,7 +146,8 @@ Task: Join opponents’ ELO to schedules, compute team SoS, and write CSV/JSON.
   - Run: `python3 scripts/calc_sos_season2_elo.py --season2-start-row 287`.
   - Check with helper: `python3 scripts/verify_sos_season2_elo.py --check sos` validates schema, strict ranking 1..N, league-average consistency, and prints top/bottom 5.
 
-### [ ] Step: Build SoS Table UI (Docs)
+### [x] Step: Build SoS Table UI (Docs)
+<!-- chat-id: 4269473e-2057-4961-a8d9-364c41e6878d -->
 Task: Create sortable SoS table with filters matching Playoff Chances UX.
 - Contracts (from spec):
   - Frontend loader: load `../output/sos/season2_elo.csv` (fallback `output/sos/season2_elo.csv`).
