@@ -199,3 +199,24 @@ Task: Document how to run, verify, and view outputs.
   - README section or `docs/` snippet describing: inputs, commands, outputs, and UI pages.
 - Verification:
   - Open docs/readme and ensure steps can be followed in a clean checkout to reproduce artifacts and open pages.
+
+### [x] Step: fix a bug
+<!-- chat-id: 7a5dd21e-c054-4521-9167-4aa18aeba87f -->
+
+i see some teams has 16 games, this could not be true 
+
+Panthers
+Panthers
+16	1202.394	+0.811	102.496	13
+Vikings
+Vikings
+17	1200.800	−0.782	97.594	18
+Cardinals
+Cardinals
+17	1200.629	−0.953	97.069	20
+Cowboys
+Cowboys
+17	1199.312	−2.271	93.016	23
+Bears
+Bears
+17

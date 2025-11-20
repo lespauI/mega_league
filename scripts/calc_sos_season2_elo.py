@@ -28,12 +28,17 @@ from typing import Any, Dict, List, Tuple
 # -----------------------------
 
 def read_games_season2(games_csv: str, start_row: int) -> List[Dict[str, Any]]:
-    """Read Season 2 slice of games from MEGA_games.csv starting at `start_row`.
+    """Read Season 2 slice of games from MEGA_games.csv starting near `start_row`.
+
+    Robustness fixes:
+    - Some exports duplicate the header line; DictReader treats the duplicate header as a data row.
+      Relying strictly on a row cut can therefore drop the first real game of the season.
+    - We infer the target `seasonIndex` from the first valid row at or after `start_row`,
+      then include all rows that match that `seasonIndex` (regular season only: stageIndex == 1).
 
     Notes:
-    - `start_row` is 1-based index counting DATA rows (header not counted) and is inclusive.
+    - `start_row` is a 1-based index over DATA rows yielded by DictReader (first data row is 1).
     - Returns a list of dicts preserving file order for deterministic schedules.
-    - Only the subset of columns needed downstream is retained if present.
     """
     needed_cols = {
         "homeTeam",
@@ -44,21 +49,49 @@ def read_games_season2(games_csv: str, start_row: int) -> List[Dict[str, Any]]:
         "stageIndex",
         "weekIndex",
     }
-    rows: List[Dict[str, Any]] = []
+
+    all_rows: List[Tuple[int, Dict[str, Any]]] = []
     with open(games_csv, "r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        # DictReader iterates data rows directly; enumerate starting at 1 for first data row
         for idx, row in enumerate(reader, start=1):
-            if idx < start_row:
-                continue
-            # Normalize: ensure required keys exist; if not, default to empty string
             normalized = {k: row.get(k, "") for k in row.keys()}
-            # If columns are missing in the file, still produce keys for downstream code
             for col in needed_cols:
                 normalized.setdefault(col, "")
-            rows.append(normalized)
+            all_rows.append((idx, normalized))
 
-    logging.info("Season 2 slice: %d games from %s starting row %d", len(rows), games_csv, start_row)
+    # Determine target seasonIndex from the first valid row at/after start_row
+    target_season: str | None = None
+    for idx, r in all_rows:
+        if idx >= start_row:
+            si = str(r.get("seasonIndex", "")).strip()
+            if si.isdigit():
+                target_season = si
+                break
+
+    # Fallback: if not found (unexpected), include rows at/after start_row
+    if target_season is None:
+        rows = [r for idx, r in all_rows if idx >= start_row]
+        logging.warning(
+            "Could not infer target seasonIndex at/after row %d; using raw slice with %d rows",
+            start_row,
+            len(rows),
+        )
+        return rows
+
+    # Filter to the inferred season and regular season stage (stageIndex == 1)
+    rows: List[Dict[str, Any]] = []
+    for idx, r in all_rows:
+        if str(r.get("seasonIndex", "")).strip() == target_season and str(r.get("stageIndex", "")).strip() == "1":
+            rows.append(r)
+
+    logging.info(
+        "Season 2 slice: %d games from %s (seasonIndex=%s inferred from row %d; start_row arg=%d)",
+        len(rows),
+        games_csv,
+        target_season,
+        next((i for i, _ in all_rows if i >= start_row), start_row),
+        start_row,
+    )
     return rows
 
 
