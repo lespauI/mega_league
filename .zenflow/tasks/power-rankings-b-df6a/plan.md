@@ -48,7 +48,7 @@ Ask up to 5 most priority clarifications to the user. Then, create the document 
 
 Save the PRD into `{@artifacts_path}/requirements.md`.
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
 <!-- chat-id: 7f42154e-6a9b-452b-8725-3cf3b54daefb -->
 
 Based on the PRD in `{@artifacts_path}/requirements.md`, create a detailed technical specification to be used by a coding agent to implement the feature. Follow this template:
