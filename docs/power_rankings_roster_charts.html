@@ -118,6 +118,27 @@
         xLabel: 'Off Run Unit Score',
         yLabel: 'Run Defense Unit Score',
         help: 'Run-game profile both ways: ball-carrier + OL quality vs front-seven run defense. Good for finding true smashmouth builds.'
+      },
+      {
+        title: 'Defense Shell: Coverage vs Pass Rush',
+        xMetric: 'def_cover_score', yMetric: 'def_pass_rush_score',
+        xLabel: 'Pass Coverage Unit Score',
+        yLabel: 'Pass Rush Unit Score',
+        help: 'Pure defensive identity view. Top-right: rosters that can both cover and pressure; bottom corners: units skewed heavily toward either coverage shells or rush only.'
+      },
+      {
+        title: 'Defense Core: Coverage vs Run Defense',
+        xMetric: 'def_cover_score', yMetric: 'def_run_score',
+        xLabel: 'Pass Coverage Unit Score',
+        yLabel: 'Run Defense Unit Score',
+        help: 'How well secondaries and front sevens complement each other. Great for spotting defenses that are stout vs one phase but vulnerable in the other.'
+      },
+      {
+        title: 'Front Seven Profile: Pass Rush vs Run Defense',
+        xMetric: 'def_pass_rush_score', yMetric: 'def_run_score',
+        xLabel: 'Pass Rush Unit Score',
+        yLabel: 'Run Defense Unit Score',
+        help: 'Front-seven traits only. Top-right: complete disruptive fronts; off-diagonal teams skew toward either gap-stuffers or backfield chaos.'
       }
     ];
 

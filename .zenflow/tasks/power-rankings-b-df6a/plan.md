@@ -360,3 +360,10 @@ Redefine it
 <!-- chat-id: 166b1e21-a557-4acc-ac90-53936fe06411 -->
 
 We have a X/y charts what i rally like in rankings_explorer.html we can create the same representation in additional page to show how the Def and Off units, Pass vs Rush and etc across different teams, this is help people to compare teams
+
+### [x] Step: Add team logos into /power_rankings_roster_charts.html
+<!-- chat-id: 557dc333-1168-4cb6-866e-1e9238c694c8 -->
+
+we must add team logos we did in in every graph in runking_explorer, just copy past the logic
+
+add more grapsh, we now have only offense, need Deffense graps as well
