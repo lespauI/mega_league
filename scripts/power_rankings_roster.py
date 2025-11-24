@@ -2210,11 +2210,32 @@ def render_html_report(
 
         radar_html = _radar_svg(row)
 
+        # Radar + legend: show the actual numeric unit grades and
+        # spell out what each corner means so the polygon is easier
+        # to read at a glance.
+        off_pass = float(row.get("off_pass_score") or 0.0)
+        off_run = float(row.get("off_run_score") or 0.0)
+        cov = float(row.get("def_cover_score") or 0.0)
+        rush = float(row.get("def_pass_rush_score") or 0.0)
+        run_def = float(row.get("def_run_score") or 0.0)
+
         parts.append("          <div class=\"team-card-body\">")
         parts.append("            <div class=\"radar-shell\">")
         parts.append("              " + radar_html)
         parts.append(
-            '              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>'
+            "              <div class=\"radar-labels\">"
+            + "<span>Off Pass "
+            + escape(f"{off_pass:.0f}")
+            + "</span><span>Off Run "
+            + escape(f"{off_run:.0f}")
+            + "</span><span>Coverage "
+            + escape(f"{cov:.0f}")
+            + "</span><span>Pass Rush "
+            + escape(f"{rush:.0f}")
+            + "</span><span>Run Def "
+            + escape(f"{run_def:.0f}")
+            + "</span>"
+            + "</div>"
         )
         parts.append("            </div>")
 

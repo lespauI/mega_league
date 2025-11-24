@@ -150,7 +150,8 @@
 
       const teamMeta = new Map();
       for (const t of teams || []) {
-        const abbr = String(t.abbrev || '').trim();
+        // MEGA_teams.csv uses "abbrName" for the short team code (e.g. SF, CLE)
+        const abbr = String(t.abbrName || t.abbrev || '').trim();
         if (!abbr) continue;
         teamMeta.set(abbr, {
           logoId: t.logoId,
