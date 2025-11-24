@@ -100,7 +100,8 @@ Task instructions
 
 "Step:" prefix is important, do not omit it!
 
-### [ ] Step: Phase 1 – Data loading and roster export
+### [x] Step: Phase 1 – Data loading and roster export
+<!-- chat-id: 215c5ef0-4067-4e5f-882b-5788947aec3e -->
 Task definition:
 - Implement the foundational data-loading and per-team roster export pipeline described in the spec’s "Delivery Phases – Phase 1" and "Contracts" sections.
 - Focus on consuming `MEGA_players.csv` and `MEGA_teams.csv`, normalizing player rows, associating players with teams, and exporting full team rosters (no unit splits yet).
