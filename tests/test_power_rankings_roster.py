@@ -158,5 +158,57 @@ class BuildTeamMetricsRankingTests(unittest.TestCase):
         self.assertEqual(beta["overall_rank"], 2)
 
 
+class HtmlReportIncludesSorterTests(unittest.TestCase):
+    def test_render_html_report_includes_sortable_table_script(self) -> None:
+        # Build a minimal metrics payload with two teams so the HTML
+        # generator has something to render.
+        teams_metrics = [
+            {
+                "team_abbrev": "AAA",
+                "team_name": "Alpha",
+                "overall_score": 75.0,
+                "overall_rank": 1,
+                "off_pass_score": 80.0,
+                "off_run_score": 70.0,
+                "def_cover_score": 65.0,
+                "def_pass_rush_score": 60.0,
+                "def_run_score": 55.0,
+                "dev_xf": 1,
+                "dev_ss": 2,
+                "dev_star": 3,
+                "dev_normal": 4,
+            },
+            {
+                "team_abbrev": "BBB",
+                "team_name": "Beta",
+                "overall_score": 50.0,
+                "overall_rank": 2,
+                "off_pass_score": 40.0,
+                "off_run_score": 45.0,
+                "def_cover_score": 55.0,
+                "def_pass_rush_score": 50.0,
+                "def_run_score": 60.0,
+                "dev_xf": 0,
+                "dev_ss": 1,
+                "dev_star": 2,
+                "dev_normal": 5,
+            },
+        ]
+
+        out_path = "output/test_power_rankings_roster_report.html"
+
+        prr.render_html_report(out_path, teams_metrics, config={}, league_context={})
+
+        with open(out_path, "r", encoding="utf-8") as fh:
+            html = fh.read()
+
+        # The roster power rankings page should include the simple
+        # table sorter script so that clicking headers in the
+        # .sortable table actually sorts rows.
+        self.assertIn("Simple table sorter: click any <th> in a .sortable table to sort by that column", html)
+        self.assertIn("function initSortableTables()", html)
+        self.assertIn("table.sortable", html)
+
+
 if __name__ == "__main__":  # pragma: no cover - manual test runner
     unittest.main()
