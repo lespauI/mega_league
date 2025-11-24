@@ -302,7 +302,7 @@ Verification instructions:
   - Assert presence of a methodology/explanation block (e.g., by id or class name).
   - Check that key phrases like "Off Pass", "Off Run", "Pass Coverage", "Pass Rush", "Run Defense" and references to dev traits and normalization appear in the HTML.
 
-### [ ] Step: Add team pages
+### [x] Step: Add team pages
 <!-- chat-id: 01e63b91-84f6-4765-9969-cbe50ab38ed3 -->
 
 I want to click on the team in Table or in cards view and see their roster with players top atributes taken into consideration and evaluation and evaluation brakdown, shown how we calc the unit strhenght
