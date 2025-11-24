@@ -136,7 +136,8 @@ Verification instructions:
   - Compares that count with the number of `output/team_rosters/*.csv` files.
   - Verifies core columns exist and exits non-zero on mismatch.
 
-### [ ] Step: Phase 2 – Unit assignment and scoring
+### [x] Step: Phase 2 – Unit assignment and scoring
+<!-- chat-id: 060a1091-9130-4333-ba80-5505a5126567 -->
 Task definition:
 - Extend the roster exports to assign players to units (Offense, Defense, Special Teams) and generate unit-specific CSVs.
 - Implement the scoring pipeline for each unit and compute normalized unit scores plus overall power scores per team, as outlined in "Delivery Phases – Phase 2" and the scoring-related contracts.
