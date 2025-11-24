@@ -201,7 +201,7 @@
     </section>
     <section class="panel" id="methodology">
       <div class="section-title">Methodology &amp; Config</div>
-      <div class="section-intro">Each unit score is a position-weighted blend of starter-quality ratings, boosted by premium dev traits at high OVR bands and then normalized to a 0–100 scale (z-score (mean ~50, spread by standard deviation)).</div>
+      <div class="section-intro">Each unit score is a position-weighted blend of starter-quality ratings for that side of the ball, boosted by premium dev traits at high OVR bands and then normalized to a 0–100 scale. By default we use a z-score style normalization (mean around 50, spread by league-wide standard deviation), but the CLI can also be configured to use a simple min–max 0–100 stretch.</div>
       <div class="methodology-grid">
         <div class="methodology-col">
           <h3>Units &amp; position weighting</h3>
@@ -224,8 +224,18 @@
         </div>
         <div class="methodology-col">
           <h3>Normalization &amp; overall score</h3>
-          <p>Overall roster power combines normalized unit scores using: Off Pass 30% + Off Run 20% + Pass Coverage 30% + Pass Rush 20%. Run Defense is shown as its own unit but not currently weighted into the composite score by default.</p>
-          <p>Normalization method: zscore (z-score (mean ~50, spread by standard deviation)).</p>
+          <p>Overall roster power combines normalized unit scores using: Off Pass 30% + Off Run 20% + Pass Coverage 30% + Pass Rush 20%. Run Defense is shown as its own unit but is not included in the default composite score, but can be folded in by changing the overall unit weights.</p>
+          <p>Normalization method (per run): z-score (mean ~50, spread by league standard deviation) or optional min–max (min team = 0, max team = 100).</p>
+        </div>
+        <div class="methodology-col">
+          <h3>Key rating inputs by unit</h3>
+          <ul class="methodology-list">
+            <li>Off Pass: QB (throwAccShortRating, throwAccMidRating, throwAccDeepRating, throwPowerRating, throwUnderPressureRating, throwOnRunRating, playActionRating, awareRating, speedRating, breakSackRating); WR (catchRating, cITRating, routeRunShortRating, routeRunMedRating, routeRunDeepRating, speedRating, releaseRating, agilityRating, changeOfDirectionRating); TE (catchRating, cITRating, runBlockRating, passBlockRating, speedRating, routeRunShortRating, routeRunMedRating, strengthRating, specCatchRating); OL (passBlockRating, passBlockPowerRating, passBlockFinesseRating, runBlockRating, runBlockPowerRating, runBlockFinesseRating, strengthRating, awareRating, impactBlockRating).</li>
+            <li>Off Run: RB (speedRating, accelRating, agilityRating, breakTackleRating, truckRating, jukeMoveRating, spinMoveRating, stiffArmRating, carryRating, catchRating, bCVRating); FB (runBlockRating, leadBlockRating, impactBlockRating, strengthRating, truckRating, catchRating); TE (catchRating, cITRating, runBlockRating, passBlockRating, speedRating, routeRunShortRating, routeRunMedRating, strengthRating, specCatchRating); OL (passBlockRating, passBlockPowerRating, passBlockFinesseRating, runBlockRating, runBlockPowerRating, runBlockFinesseRating, strengthRating, awareRating, impactBlockRating).</li>
+            <li>Pass Coverage: CB (manCoverRating, zoneCoverRating, speedRating, accelRating, agilityRating, pressRating, playRecRating, catchRating, changeOfDirectionRating); S (zoneCoverRating, tackleRating, hitPowerRating, speedRating, playRecRating, pursuitRating, manCoverRating, awareRating, catchRating); LB (tackleRating, pursuitRating, hitPowerRating, blockShedRating, playRecRating, zoneCoverRating, manCoverRating, speedRating, awareRating).</li>
+            <li>Pass Rush: DE (powerMovesRating, finesseMovesRating, blockShedRating, pursuitRating, tackleRating, strengthRating, speedRating, hitPowerRating); DT (powerMovesRating, blockShedRating, strengthRating, tackleRating, pursuitRating, hitPowerRating); LB (tackleRating, pursuitRating, hitPowerRating, blockShedRating, playRecRating, zoneCoverRating, manCoverRating, speedRating, awareRating).</li>
+            <li>Run Defense: DE (powerMovesRating, finesseMovesRating, blockShedRating, pursuitRating, tackleRating, strengthRating, speedRating, hitPowerRating); DT (powerMovesRating, blockShedRating, strengthRating, tackleRating, pursuitRating, hitPowerRating); LB (tackleRating, pursuitRating, hitPowerRating, blockShedRating, playRecRating, zoneCoverRating, manCoverRating, speedRating, awareRating); S (zoneCoverRating, tackleRating, hitPowerRating, speedRating, playRecRating, pursuitRating, manCoverRating, awareRating, catchRating).</li>
+          </ul>
         </div>
       </div>
     </section>
@@ -239,7 +249,7 @@
       </div>
       <div class="table-wrap">
         <table class="sortable" id="teams-table">
-          <thead><tr><th>Rank</th><th>Team</th><th>Overall</th><th>Off Pass</th><th>Off Run</th><th>Def Coverage</th><th>Pass Rush</th><th>Run Def</th><th>Dev traits</th><th>Top contributors</th></tr></thead>
+          <thead><tr><th>Rank</th><th>Team</th><th>Overall</th><th title="Off Pass: QB + top WR/TE/RB receiving, weighted toward QB and OL pass protection">Off Pass</th><th title="Off Run: RB/FB/TE running behind run-blocking OL">Off Run</th><th title="Pass Coverage: CB/S/LB coverage and recognition">Def Coverage</th><th title="Pass Rush: DE/DT/LB rush moves, shed, and pursuit">Pass Rush</th><th title="Run Defense: DL/LB/S run fits, shedding, and tackling">Run Def</th><th>Dev traits</th><th>Top contributors</th></tr></thead>
           <tbody>
             <tr data-team-abbr="BAL" data-team-name="Ravens">
               <td class="num rank-cell" data-sort="1">1</td>

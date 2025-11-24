@@ -139,6 +139,38 @@ def verify_phase4_enhancements(html_text: str, csv_path: str) -> None:
         )
         sys.exit(1)
 
+    # Within the methodology/config area we expect explicit references to
+    # each major unit and to how dev traits and normalization work so
+    # the explanation matches the scoring implementation.
+    required_units = [
+        "off pass",
+        "off run",
+        "pass coverage",
+        "pass rush",
+        "run defense",
+    ]
+    for token in required_units:
+        if token not in lower:
+            print(
+                f"error: methodology section is missing required unit phrase '{token}'",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+    if "dev trait" not in lower:
+        print(
+            "error: methodology section is missing reference to dev traits",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    if "normalization method" not in lower and "normalized" not in lower:
+        print(
+            "error: methodology section is missing reference to normalization method",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
     # Radar / multi-metric visualization elements.
     if "radar-chart" not in lower:
         print(

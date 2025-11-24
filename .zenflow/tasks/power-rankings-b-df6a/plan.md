@@ -270,7 +270,8 @@ Verification instructions:
 - Confirm that all verification commands exit with status code 0 in the happy path and emit clear, actionable messages on failure.
 - If synthetic fixtures are added, run the pipeline against them (using `--players` / `--teams` overrides) and ensure the verification scripts still pass, giving a fast regression-check path for future work.
 
-### [ ] Step: Phase 6 – Scoring methodology explanation in HTML
+### [x] Step: Phase 6 – Scoring methodology explanation in HTML
+<!-- chat-id: 14bea67a-05e2-4dc8-8d91-34394fa93015 -->
 Task definition:
 - Extend the HTML report to clearly document the roster-based scoring system now implemented (unit definitions, per-position attributes, dev-trait bonuses, and normalization method).
 - Make sure users can understand *why* a team has its unit and overall scores, referencing the same attribute logic used in the draft class analysis.
