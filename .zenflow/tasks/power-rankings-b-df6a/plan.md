@@ -301,3 +301,60 @@ Verification instructions:
 - Extend `scripts/verify_power_rankings_roster_html.py` (or add a mode) to:
   - Assert presence of a methodology/explanation block (e.g., by id or class name).
   - Check that key phrases like "Off Pass", "Off Run", "Pass Coverage", "Pass Rush", "Run Defense" and references to dev traits and normalization appear in the HTML.
+
+### [ ] Step: Add team pages
+<!-- chat-id: 01e63b91-84f6-4765-9969-cbe50ab38ed3 -->
+
+I want to click on the team in Table or in cards view and see their roster with players top atributes taken into consideration and evaluation and evaluation brakdown, shown how we calc the unit strhenght
+
+### [ ] Step: HTML fixes
+
+This is unclear and usless info 
+
+League Overview
+Roster-based power rankings derived from unit strength scores. Higher scores reflect stronger starters and premium dev traits at key positions.
+Avg overall score
+50.0
+Avg Off Pass
+50.0
+Avg Coverage
+50.0
+79.3
+64.5
+58.3
+55.3
+55.2
+55.2
+55.0
+54.5
+54.0
+53.9
+52.1
+51.8
+51.4
+50.5
+50.4
+49.9
+49.6
+49.0
+48.5
+48.4
+47.7
+47.3
+46.7
+46.2
+44.5
+43.5
+43.1
+42.7
+38.4
+38.1
+38.0
+36.9
+
+Redefine it
+
+### [x] Step: Add HTML with charts
+<!-- chat-id: 166b1e21-a557-4acc-ac90-53936fe06411 -->
+
+We have a X/y charts what i rally like in rankings_explorer.html we can create the same representation in additional page to show how the Def and Off units, Pass vs Rush and etc across different teams, this is help people to compare teams

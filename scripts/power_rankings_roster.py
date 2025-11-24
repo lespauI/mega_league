@@ -406,6 +406,32 @@ def get_attr_keys_for_pos(pos: str) -> list[str]:
     return mapping.get(p, [])
 
 
+def get_top_attrs_for_player(player: dict, limit: int = 4) -> list[dict]:
+    """Return the strongest rating attributes for a player.
+
+    The result is a list of small dicts of the form
+    ``{"key": rating_name, "value": rating_value}`` ordered by
+    descending value. Only attributes that participate in the scoring
+    for the player's position are considered.
+    """
+
+    pos = player.get("position") or player.get("normalized_pos") or ""
+    keys = get_attr_keys_for_pos(str(pos))
+    values: list[tuple[str, float]] = []
+    for key in keys:
+        val = safe_float(player.get(key), None)
+        if val is None:
+            continue
+        values.append((key, float(val)))
+
+    if not values:
+        return []
+
+    values.sort(key=lambda kv: -kv[1])
+    top = values[: max(0, int(limit))]
+    return [{"key": k, "value": round(v, 1)} for k, v in top]
+
+
 def normalize_player_row(raw: dict, team_index: dict[str, dict] | None = None) -> dict:
     """Normalize a raw player row into the canonical internal format.
 
@@ -736,6 +762,103 @@ def _player_unit_score(player: dict, dev_multipliers: dict | None = None) -> flo
     return float(base) * (1.0 + bonus)
 
 
+def _score_unit_with_breakdown(
+    players: list[dict],
+    unit_type: str,
+    weights: dict | None = None,
+    dev_multipliers: dict | None = None,
+) -> tuple[float, dict]:
+    """Compute a raw unit score plus a per-position breakdown.
+
+    The score matches :func:`score_unit`. The breakdown dictionary has
+    the shape::
+
+        {
+            "positions": [
+                {
+                    "pos": "QB",
+                    "weight": 0.45,
+                    "weight_share": 0.45,
+                    "avg_unit_score": 92.3,
+                    "contribution": 41.5,
+                    "contribution_share": 0.34,
+                    "players": [
+                        {"player_id": "123", "unit_score": 95.1},
+                        ...,
+                    ],
+                },
+                ...,
+            ],
+            "total_weight": 1.0,
+        }
+    """
+
+    if not players:
+        return 0.0, {"positions": [], "total_weight": 0.0}
+
+    pos_weights = dict(UNIT_POSITION_WEIGHTS.get(unit_type, {}))
+    if weights:
+        # Allow overriding or extending the default position weights.
+        pos_weights.update({k: float(v) for k, v in weights.items()})
+
+    total_w = sum(v for v in pos_weights.values() if v > 0)
+    if total_w <= 0:
+        return 0.0, {"positions": [], "total_weight": 0.0}
+
+    starters_by_pos = select_unit_starters(players, unit_type)
+
+    score = 0.0
+    breakdown_positions: list[dict] = []
+
+    for pos, w in pos_weights.items():
+        if w <= 0:
+            continue
+        chosen = starters_by_pos.get(pos, [])
+        if not chosen:
+            continue
+
+        player_entries: list[dict] = []
+        for p in chosen:
+            pid = p.get("player_id") or p.get("id") or ""
+            unit_val = _player_unit_score(p, dev_multipliers=dev_multipliers)
+            player_entries.append(
+                {
+                    "player_id": str(pid),
+                    "unit_score": round(float(unit_val), 1),
+                }
+            )
+
+        if not player_entries:
+            continue
+
+        avg = sum(e["unit_score"] for e in player_entries) / len(player_entries)
+        contrib = (w / total_w) * avg
+        score += contrib
+
+        breakdown_positions.append(
+            {
+                "pos": pos,
+                "weight": float(w),
+                "weight_share": float(w / total_w),
+                "avg_unit_score": round(float(avg), 1),
+                "contribution": round(float(contrib), 2),
+                # contribution_share is filled once final score is known.
+                "players": player_entries,
+            }
+        )
+
+    if score > 0 and breakdown_positions:
+        for entry in breakdown_positions:
+            contrib = float(entry.get("contribution") or 0.0)
+            entry["contribution_share"] = float(contrib / score)
+    else:
+        for entry in breakdown_positions:
+            entry["contribution_share"] = 0.0
+
+    details = {"positions": breakdown_positions, "total_weight": float(total_w)}
+    return float(score), details
+
+
 def score_unit(
     players: list[dict],
     unit_type: str,
@@ -745,36 +868,16 @@ def score_unit(
     """Compute a raw (unnormalized) score for a unit.
 
     The score is a weighted average of position-group scores, where each
-    group's score is the average of selected starters' OVRs adjusted by
-    dev-trait multipliers.
+    group's score is the average of selected starters' attribute-driven
+    ratings adjusted by dev-trait multipliers.
     """
 
-    if not players:
-        return 0.0
-
-    pos_weights = dict(UNIT_POSITION_WEIGHTS.get(unit_type, {}))
-    if weights:
-        # Allow overriding or extending the default position weights.
-        pos_weights.update({k: float(v) for k, v in weights.items()})
-
-    total_w = sum(v for v in pos_weights.values() if v > 0)
-    if total_w <= 0:
-        return 0.0
-
-    starters_by_pos = select_unit_starters(players, unit_type)
-    score = 0.0
-    for pos, w in pos_weights.items():
-        if w <= 0:
-            continue
-        chosen = starters_by_pos.get(pos, [])
-        if not chosen:
-            continue
-        vals = [_player_unit_score(p, dev_multipliers=dev_multipliers) for p in chosen]
-        if not vals:
-            continue
-        avg = sum(vals) / len(vals)
-        score += (w / total_w) * avg
-
+    score, _ = _score_unit_with_breakdown(
+        players,
+        unit_type,
+        weights=weights,
+        dev_multipliers=dev_multipliers,
+    )
     return score
 
 
@@ -1237,6 +1340,7 @@ def render_html_report(
     teams_metrics: list[dict],
     config: dict | None = None,
     league_context: dict | None = None,
+    players_by_team: dict[str, list[dict]] | None = None,
 ) -> None:
     """Render a basic HTML report for roster-based power rankings.
 
@@ -1274,14 +1378,117 @@ def render_html_report(
             }
         )
 
-    data_blob = json.dumps(
-        {
-            "teams": js_teams,
-            "config": cfg,
-            "league": league_ctx,
-        },
-        ensure_ascii=False,
-    )
+    # Optional per-team roster + unit breakdown data for team detail pages.
+    rosters_payload: dict[str, list[dict]] = {}
+    unit_breakdowns: dict[str, dict] = {}
+
+    if players_by_team:
+        # Use the same dev multipliers that drove scoring so that
+        # per-unit breakdowns line up with the main grades.
+        dev_cfg = cfg.get("dev_multipliers") or DEFAULT_DEV_MULTIPLIERS
+
+        unit_labels = {
+            "off_pass": "Off Pass",
+            "off_run": "Off Run",
+            "def_coverage": "Pass Coverage",
+            "pass_rush": "Pass Rush",
+            "run_defense": "Run Defense",
+        }
+
+        score_key_map = {
+            "off_pass": "off_pass_score",
+            "off_run": "off_run_score",
+            "def_coverage": "def_cover_score",
+            "pass_rush": "def_pass_rush_score",
+            "run_defense": "def_run_score",
+        }
+
+        # Build payloads keyed by team abbrev so JS can quickly map
+        # from a clicked team to its roster and unit breakdown.
+        for row in teams_metrics:
+            team_abbrev = str(row.get("team_abbrev") or "").strip()
+            if not team_abbrev:
+                continue
+
+            team_players = list(players_by_team.get(team_abbrev, []))
+            if team_players:
+                # Sort by OVR descending for a nicer default ordering.
+                team_players.sort(
+                    key=lambda p: (-safe_int(p.get("ovr"), 0) or 0, p.get("player_name", "")),
+                )
+
+            roster_rows: list[dict] = []
+            for p in team_players:
+                dev = str(p.get("dev") or "0")
+                roster_rows.append(
+                    {
+                        "player_id": str(p.get("player_id") or p.get("id") or ""),
+                        "name": p.get("player_name") or p.get("fullName") or "?",
+                        "position": p.get("position") or "?",
+                        "normalized_pos": p.get("normalized_pos") or _normalize_pos_for_mapping(p.get("position", "")),
+                        "ovr": safe_int(p.get("ovr"), 0) or 0,
+                        "dev": dev,
+                        "dev_label": DEV_LABELS.get(dev, "Normal"),
+                        "top_attrs": get_top_attrs_for_player(p),
+                    }
+                )
+
+            if roster_rows:
+                rosters_payload[team_abbrev] = roster_rows
+
+            if team_players:
+                offense = [
+                    p
+                    for p in team_players
+                    if assign_unit(p.get("position", "")) == "Offense"
+                ]
+                defense = [
+                    p
+                    for p in team_players
+                    if assign_unit(p.get("position", "")) == "Defense"
+                ]
+
+                unit_details: dict[str, dict] = {}
+                for unit_key in [
+                    "off_pass",
+                    "off_run",
+                    "def_coverage",
+                    "pass_rush",
+                    "run_defense",
+                ]:
+                    pool = offense if unit_key.startswith("off_") else defense
+                    raw_score, breakdown = _score_unit_with_breakdown(
+                        pool,
+                        unit_key,
+                        dev_multipliers=dev_cfg,
+                    )
+                    norm_key = score_key_map.get(unit_key)
+                    norm_val = row.get(norm_key) if norm_key else None
+                    try:
+                        norm_score = (float(norm_val) if norm_val is not None else None)
+                    except Exception:
+                        norm_score = None
+
+                    unit_details[unit_key] = {
+                        "label": unit_labels.get(unit_key, unit_key),
+                        "raw_score": round(float(raw_score), 2),
+                        "norm_score": norm_score,
+                        "positions": breakdown.get("positions", []),
+                    }
+
+                unit_breakdowns[team_abbrev] = unit_details
+
+    data_dict: dict[str, object] = {
+        "teams": js_teams,
+        "config": cfg,
+        "league": league_ctx,
+    }
+    if rosters_payload:
+        data_dict["rosters"] = rosters_payload
+    if unit_breakdowns:
+        data_dict["unit_breakdowns"] = unit_breakdowns
+
+    data_blob = json.dumps(data_dict, ensure_ascii=False)
 
     normalization = cfg.get("normalization", "zscore")
 
@@ -1444,8 +1651,30 @@ def render_html_report(
     parts.append("    .team-narrative p { margin:0; }")
     parts.append("    .team-narrative strong { color:#0f172a; }")
     parts.append("    .team-narrative .label { text-transform:uppercase; font-size:11px; letter-spacing:0.04em; color:#6b7280; }")
+    parts.append("    #teams-table tbody tr, .team-card { cursor:pointer; }")
+    parts.append("    .team-detail-overlay { position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center; padding:40px 12px; z-index:40; }")
+    parts.append("    .team-detail-overlay.visible { display:flex; }")
+    parts.append("    .team-detail-backdrop { position:absolute; inset:0; background:rgba(15,23,42,0.55); }")
+    parts.append("    .team-detail-panel { position:relative; max-width:980px; width:100%; max-height:100%; background:#ffffff; border-radius:12px; box-shadow:0 22px 45px rgba(15,23,42,0.45); padding:16px 18px 18px; overflow:auto; }")
+    parts.append("    .team-detail-close { position:absolute; top:8px; right:10px; border:none; background:transparent; font-size:18px; cursor:pointer; color:#64748b; }")
+    parts.append("    .team-detail-header h2 { margin:0; font-size:18px; }")
+    parts.append("    .team-detail-sub { margin:2px 0 10px; font-size:12px; color:#6b7280; }")
+    parts.append("    .team-detail-body { font-size:11px; color:#111827; }")
+    parts.append("    .team-detail-columns { display:grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1.1fr); gap:12px; }")
+    parts.append("    .team-detail-col h3 { margin:0 0 6px; font-size:13px; }")
+    parts.append("    .team-detail-table { width:100%; border-collapse:collapse; font-size:11px; }")
+    parts.append("    .team-detail-table th, .team-detail-table td { padding:4px 6px; border-bottom:1px solid #e5e7eb; text-align:left; }")
+    parts.append("    .team-detail-table th { font-weight:600; color:#475569; background:#f9fafb; position:sticky; top:0; z-index:1; }")
+    parts.append("    .team-detail-table .num { text-align:right; font-variant-numeric:tabular-nums; }")
+    parts.append("    .team-detail-attr { font-variant-numeric:tabular-nums; }")
+    parts.append("    .team-detail-breakdown { font-size:11px; display:flex; flex-direction:column; gap:6px; }")
+    parts.append("    .team-detail-breakdown-unit { border:1px solid #e5e7eb; border-radius:8px; padding:6px 8px; background:#f8fafc; }")
+    parts.append("    .team-detail-breakdown-unit h4 { margin:0 0 4px; font-size:12px; }")
+    parts.append("    .team-detail-breakdown-unit table { width:100%; border-collapse:collapse; font-size:11px; }")
+    parts.append("    .team-detail-breakdown-unit th, .team-detail-breakdown-unit td { padding:2px 4px; text-align:left; }")
+    parts.append("    .team-detail-breakdown-unit th { color:#6b7280; font-weight:500; }")
     parts.append("    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .team-grid { grid-template-columns: 1fr; } }")
-    parts.append("    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } .team-card-body { flex-direction:column; } }")
+    parts.append("    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } .team-card-body { flex-direction:column; } .team-detail-columns { grid-template-columns: 1fr; } .team-detail-panel { padding:12px 10px 14px; } }")
     parts.append("  </style>")
     parts.append("  <script>")
     parts.append("  // Simple table sorter: click any <th> in a .sortable table to sort by that column\n"  # noqa: E501
@@ -1549,6 +1778,12 @@ def render_html_report(
     parts.append("    <header>")
     parts.append(f"      <h1>{escape(title)} <span class=\"pill\">Roster-based</span></h1>")
     parts.append(f"      <div class=\"subtitle\">{escape(subtitle)}</div>")
+    parts.append(
+        "      <div class=\"subtitle\">"
+        "For X/Y roster unit comparison charts (Off vs Def, Pass vs Run, coverage vs pass rush), "
+        "open the <a href=\\"power_rankings_roster_charts.html\\">Roster Power Explorer</a>."
+        "</div>"
+    )
     parts.append("    </header>")
 
     # Overview KPIs: overall average and simple context for a couple of units.
