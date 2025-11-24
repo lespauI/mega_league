@@ -15,10 +15,12 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import math
 import os
 import statistics as st
 import sys
+from html import escape
 from typing import Iterable
 
 
@@ -1041,6 +1043,441 @@ def write_power_rankings_csv(path: str, teams_metrics: list[dict]) -> None:
 
 
 ###############################################################################
+# League context and HTML report rendering (Phase 3)
+###############################################################################
+
+
+def compute_league_context(teams_metrics: list[dict]) -> dict:
+    """Compute simple league-wide context statistics for key metrics.
+
+    Returns a mapping of metric name -> summary stats, where each summary
+    contains avg/min/max and 25th/50th/75th percentiles. This is intended
+    both for display in the HTML report and for narrative helpers in
+    later phases.
+    """
+
+    def _metric_stats(key: str) -> dict:
+        vals: list[float] = []
+        for row in teams_metrics:
+            v = row.get(key)
+            if v is None or v == "":
+                continue
+            try:
+                vals.append(float(v))
+            except Exception:
+                continue
+        if not vals:
+            return {}
+        vals.sort()
+        n = len(vals)
+
+        def pct(p: float) -> float:
+            if n == 1:
+                return vals[0]
+            # Simple nearest-rank percentile.
+            idx = int(round((p / 100.0) * (n - 1)))
+            if idx < 0:
+                idx = 0
+            if idx >= n:
+                idx = n - 1
+            return vals[idx]
+
+        avg = sum(vals) / n
+        return {
+            "avg": avg,
+            "min": vals[0],
+            "max": vals[-1],
+            "p25": pct(25.0),
+            "p50": pct(50.0),
+            "p75": pct(75.0),
+        }
+
+    metrics = {
+        "overall_score": _metric_stats("overall_score"),
+        "off_pass_score": _metric_stats("off_pass_score"),
+        "off_run_score": _metric_stats("off_run_score"),
+        "def_cover_score": _metric_stats("def_cover_score"),
+        "def_pass_rush_score": _metric_stats("def_pass_rush_score"),
+        "def_run_score": _metric_stats("def_run_score"),
+    }
+
+    # Filter out completely empty entries.
+    return {k: v for k, v in metrics.items() if v}
+
+
+def render_html_report(
+    path: str,
+    teams_metrics: list[dict],
+    config: dict | None = None,
+    league_context: dict | None = None,
+) -> None:
+    """Render a basic HTML report for roster-based power rankings.
+
+    Phase 3 scope focuses on a league-wide sortable/searchable table and
+    simple bar-style charts, while keeping the layout visually aligned
+    with existing docs pages such as draft_class_2026 and
+    rankings_explorer.
+    """
+
+    if not teams_metrics:
+        print("warn: render_html_report called with no team metrics; skipping HTML output", file=sys.stderr)
+        return
+
+    cfg = dict(config or {})
+    league_ctx = dict(league_context or {})
+
+    # Prepare compact JS data blob.
+    js_teams: list[dict] = []
+    for row in teams_metrics:
+        js_teams.append(
+            {
+                "team_abbrev": row.get("team_abbrev"),
+                "team_name": row.get("team_name"),
+                "overall_score": row.get("overall_score"),
+                "overall_rank": row.get("overall_rank"),
+                "off_pass_score": row.get("off_pass_score"),
+                "off_run_score": row.get("off_run_score"),
+                "def_cover_score": row.get("def_cover_score"),
+                "def_pass_rush_score": row.get("def_pass_rush_score"),
+                "def_run_score": row.get("def_run_score"),
+                "dev_xf": row.get("dev_xf"),
+                "dev_ss": row.get("dev_ss"),
+                "dev_star": row.get("dev_star"),
+                "dev_normal": row.get("dev_normal"),
+            }
+        )
+
+    data_blob = json.dumps(
+        {
+            "teams": js_teams,
+            "config": cfg,
+            "league": league_ctx,
+        },
+        ensure_ascii=False,
+    )
+
+    normalization = cfg.get("normalization", "zscore")
+
+    title = "Roster Power Rankings — Roster Analytics"
+    subtitle = f"League-wide roster strength overview (normalization: {normalization})"
+
+    # Build HTML structure. Keep the style and table sorter closely
+    # aligned with draft_class_2026.html for visual consistency.
+    parts: list[str] = []
+    parts.append("<!DOCTYPE html>")
+    parts.append("<html lang=\"en\">")
+    parts.append("<head>")
+    parts.append("  <meta charset=\"utf-8\" />")
+    parts.append("  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\" />")
+    parts.append(f"  <title>{escape(title)}</title>")
+    parts.append("  <style>")
+    parts.append("    :root { --text:#0f172a; --sub:#64748b; --muted:#94a3b8; --grid:#e2e8f0; --bg:#f7f7f7; --card:#ffffff; --accent:#3b82f6; }")
+    parts.append("    body { margin:16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:var(--bg); }")
+    parts.append("    .topbar { max-width: 1200px; margin: 0 auto 10px; display:flex; align-items:center; gap:10px; }")
+    parts.append("    .back { display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#1e293b; text-decoration:none; background:#fff; border:1px solid #e5e7eb; padding:6px 10px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.05); }")
+    parts.append("    .back:hover { background:#f8fafc; }")
+    parts.append("    .container { max-width: 1200px; margin: 0 auto; background: var(--card); border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); overflow:hidden; }")
+    parts.append("    header { padding: 18px 20px 10px; border-bottom: 1px solid #ececec; background:linear-gradient(180deg,#ffffff 0%,#fafafa 100%); }")
+    parts.append("    h1 { margin:0; font-size: 22px; }")
+    parts.append("    .subtitle { color: var(--sub); margin:8px 0 4px; font-size: 13px; }")
+    parts.append("    .pill { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; border:1px solid #bfdbfe; background:#dbeafe; color:#1e3a8a; font-size:12px; }")
+    parts.append("    .panel { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }")
+    parts.append("    .section-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; border-left:3px solid var(--accent); padding-left:8px; }")
+    parts.append("    .section-intro { white-space: pre-wrap; color: #334155; font-size: 13px; margin: 4px 0 10px; }")
+    parts.append("    .kpis { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; }")
+    parts.append("    .kpi { background:#f8fafc; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px; }")
+    parts.append("    .kpi b { display:block; font-size: 12px; color:#0f172a; }")
+    parts.append("    .kpi span { color:#334155; font-size: 18px; font-weight: 700; }")
+    parts.append("    .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }")
+    parts.append("    .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }")
+    parts.append("    .controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-size:13px; }")
+    parts.append("    .controls label { font-weight:500; color:#475569; }")
+    parts.append("    .controls input[type='search'] { padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; min-width: 220px; font-size:13px; }")
+    parts.append("    .controls select { padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; font-size:13px; }")
+    parts.append("    .table-wrap { margin-top:10px; border:1px solid #e5e7eb; border-radius:10px; overflow:auto; }")
+    parts.append("    table { width:100%; border-collapse:collapse; font-size:12px; }")
+    parts.append("    thead { background:#f8fafc; position:sticky; top:0; z-index:1; }")
+    parts.append("    th, td { padding:6px 8px; border-bottom:1px solid #e5e7eb; text-align:left; }")
+    parts.append("    th { font-weight:600; color:#475569; cursor:pointer; white-space:nowrap; }")
+    parts.append("    tr:nth-child(even) { background:#f9fafb; }")
+    parts.append("    tr:hover { background:#eef2ff; }")
+    parts.append("    .num { text-align:right; font-variant-numeric: tabular-nums; }")
+    parts.append("    .rank-cell { font-weight:700; }")
+    parts.append("    .team-cell { display:flex; align-items:center; gap:6px; }")
+    parts.append("    .team-tag { display:inline-flex; align-items:center; gap:4px; font-weight:600; }")
+    parts.append("    .team-tag span { font-size:11px; color:#64748b; }")
+    parts.append("    .metric { display:flex; flex-direction:column; gap:2px; }")
+    parts.append("    .metric-value { font-weight:600; }")
+    parts.append("    .metric-bar { height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }")
+    parts.append("    .metric-bar-fill { height:100%; background:linear-gradient(90deg,#3b82f6,#22c55e); }")
+    parts.append("    .dev-chips { display:flex; flex-wrap:wrap; gap:4px; }")
+    parts.append("    .chip { padding:2px 6px; border-radius:999px; border:1px solid #e5e7eb; font-size:11px; background:#f9fafb; }")
+    parts.append("    .chip-xf { border-color:#fecaca; background:#fee2e2; color:#b91c1c; }")
+    parts.append("    .chip-ss { border-color:#facc15; background:#fef9c3; color:#854d0e; }")
+    parts.append("    .chip-star { border-color:#d4d4d8; background:#e4e4e7; color:#27272a; }")
+    parts.append("    .chip-norm { border-color:#c4b5fd; background:#e0e7ff; color:#3730a3; }")
+    parts.append("    .chart-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }")
+    parts.append("    .chart-bar { flex:1 1 40px; min-width:40px; height:36px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; position:relative; overflow:hidden; }")
+    parts.append("    .chart-bar-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#22c55e,#16a34a); opacity:0.3; }")
+    parts.append("    .chart-bar-label { position:relative; z-index:1; padding:4px 6px; font-size:11px; display:flex; flex-direction:column; justify-content:center; }")
+    parts.append("    .chart-bar-label b { font-size:12px; }")
+    parts.append("    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } }")
+    parts.append("    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } }")
+    parts.append("  </style>")
+    parts.append("  <script>")
+    parts.append("  // Simple table sorter: click any <th> in a .sortable table to sort by that column\n"  # noqa: E501
+                 "  (function() {\n"  # noqa: E501
+                 "    function getCellValue(tr, idx) {\n"
+                 "      const td = tr.children[idx];\n"
+                 "      if (!td) return '';\n"
+                 "      const ds = td.getAttribute('data-sort');\n"
+                 "      const txt = ds != null ? ds : (td.textContent || '');\n"
+                 "      return txt.trim();\n"
+                 "    }\n"
+                 "    function asNumber(v) {\n"
+                 "      if (v === '' || v == null) return NaN;\n"
+                 "      const n = parseFloat(String(v).replace(/[,\\s]/g, ''));\n"
+                 "      return isNaN(n) ? NaN : n;\n"
+                 "    }\n"
+                 "    function makeComparer(idx, asc) {\n"
+                 "      return function(a, b) {\n"
+                 "        const va = getCellValue(a, idx);\n"
+                 "        const vb = getCellValue(b, idx);\n"
+                 "        const na = asNumber(va);\n"
+                 "        const nb = asNumber(vb);\n"
+                 "        let cmp;\n"
+                 "        if (!isNaN(na) && !isNaN(nb)) { cmp = na - nb; } else { cmp = va.localeCompare(vb, undefined, {numeric:true, sensitivity:'base'}); }\n"
+                 "        return asc ? cmp : -cmp;\n"
+                 "      }\n"
+                 "    }\n"
+                 "    function initSortableTables() {\n"
+                 "      document.querySelectorAll('table.sortable').forEach(function(table) {\n"
+                 "        const thead = table.tHead; if (!thead) return;\n"
+                 "        const headers = thead.rows[0] ? thead.rows[0].cells : [];\n"
+                 "        Array.from(headers).forEach(function(th, idx) {\n"
+                 "          th.addEventListener('click', function() {\n"
+                 "            const tbody = table.tBodies[0]; if (!tbody) return;\n"
+                 "            const rows = Array.from(tbody.rows);\n"
+                 "            const current = th.getAttribute('data-sort-dir') || 'asc';\n"
+                 "            const nextDir = current === 'asc' ? 'desc' : 'asc';\n"
+                 "            rows.sort(makeComparer(idx, nextDir === 'asc'));\n"
+                 "            Array.from(headers).forEach(h => h.removeAttribute('data-sort-dir'));\n"
+                 "            th.setAttribute('data-sort-dir', nextDir);\n"
+                 "            rows.forEach(r => tbody.appendChild(r));\n"
+                 "          });\n"
+                 "        });\n"
+                 "      });\n"
+                 "    }\n"
+                 "    function initSearchAndCharts() {\n"
+                 "      const dataEl = document.getElementById('teams-data');\n"
+                 "      let DATA = null;\n"
+                 "      if (dataEl) {\n"
+                 "        try { DATA = JSON.parse(dataEl.textContent || '{}'); } catch (e) { DATA = null; }\n"
+                 "      }\n"
+                 "      const search = document.getElementById('team-search');\n"
+                 "      if (search) {\n"
+                 "        search.addEventListener('input', function() {\n"
+                 "          const q = (this.value || '').toLowerCase();\n"
+                 "          const rows = document.querySelectorAll('#teams-table tbody tr');\n"
+                 "          rows.forEach(function(tr) {\n"
+                 "            const name = (tr.getAttribute('data-team-name') || '').toLowerCase();\n"
+                 "            const abbr = (tr.getAttribute('data-team-abbr') || '').toLowerCase();\n"
+                 "            const hay = name + ' ' + abbr;\n"
+                 "            tr.style.display = hay.indexOf(q) === -1 ? 'none' : '';\n"
+                 "          });\n"
+                 "        });\n"
+                 "      }\n"
+                 "      function renderOverallChart() {\n"
+                 "        if (!DATA || !DATA.teams) return;\n"
+                 "        const wrap = document.getElementById('overall-chart');\n"
+                 "        if (!wrap) return;\n"
+                 "        const teams = Array.from(DATA.teams).sort((a,b) => (a.overall_rank||0) - (b.overall_rank||0));\n"
+                 "        wrap.innerHTML = '';\n"
+                 "        teams.forEach(function(t) {\n"
+                 "          const score = typeof t.overall_score === 'number' ? t.overall_score : parseFloat(t.overall_score || '0');\n"
+                 "          const pct = Math.max(0, Math.min(100, isNaN(score) ? 0 : score));\n"
+                 "          const div = document.createElement('div');\n"
+                 "          div.className = 'chart-bar';\n"
+                 "          const fill = document.createElement('div');\n"
+                 "          fill.className = 'chart-bar-fill';\n"
+                 "          fill.style.width = pct + '%';\n"
+                 "          const label = document.createElement('div');\n"
+                 "          label.className = 'chart-bar-label';\n"
+                 "          const name = (t.team_abbrev || '') + ' — ' + (t.team_name || '');\n"
+                 "          label.innerHTML = '<b>' + name + '</b><span>Overall ' + (score || 0).toFixed ? (score || 0).toFixed(1) : score + '</span>';\n"
+                 "          div.appendChild(fill);\n"
+                 "          div.appendChild(label);\n"
+                 "          wrap.appendChild(div);\n"
+                 "        });\n"
+                 "      }\n"
+                 "      renderOverallChart();\n"
+                 "    }\n"
+                 "    if (document.readyState === 'loading') {\n"
+                 "      document.addEventListener('DOMContentLoaded', function() { initSortableTables(); initSearchAndCharts(); });\n"
+                 "    } else {\n"
+                 "      initSortableTables(); initSearchAndCharts();\n"
+                 "    }\n"
+                 "  })();\n")
+    parts.append("  </script>")
+    parts.append("</head>")
+    parts.append("<body>")
+    parts.append("  <div class=\"topbar\"><a class=\"back\" href=\"../index.html\" title=\"Back to index\">&#8592; Back to Index</a></div>")
+    parts.append("  <div class=\"container\">")
+    parts.append("    <header>")
+    parts.append(f"      <h1>{escape(title)} <span class=\"pill\">Roster-based</span></h1>")
+    parts.append(f"      <div class=\"subtitle\">{escape(subtitle)}</div>")
+    parts.append("    </header>")
+
+    # Overview KPIs: overall average and simple context for a couple of units.
+    parts.append("    <section class=\"panel\" id=\"overview\">")
+    parts.append("      <div class=\"section-title\">League Overview</div>")
+    parts.append("      <div class=\"section-intro\">Roster-based power rankings derived from unit strength scores. Higher scores reflect stronger starters and premium dev traits at key positions.</div>")
+    parts.append("      <div class=\"kpis\">")
+
+    def _fmt(val: float | None) -> str:
+        try:
+            if val is None:
+                return "—"
+            return f"{val:.1f}"
+        except Exception:
+            return "—"
+
+    ov = league_ctx.get("overall_score") or {}
+    parts.append("        <div class=\"kpi\"><b>Avg overall score</b><span>" + escape(_fmt(ov.get("avg"))) + "</span>"
+                 "<div class=\"gbar\"><div class=\"fill\" style=\"width: " + escape(_fmt(ov.get("avg"))) + "%\"></div></div></div>")
+
+    offp = league_ctx.get("off_pass_score") or {}
+    parts.append("        <div class=\"kpi\"><b>Avg Off Pass</b><span>" + escape(_fmt(offp.get("avg"))) + "</span>"
+                 "<div class=\"gbar\"><div class=\"fill\" style=\"width: " + escape(_fmt(offp.get("avg"))) + "%\"></div></div></div>")
+
+    defc = league_ctx.get("def_cover_score") or {}
+    parts.append("        <div class=\"kpi\"><b>Avg Coverage</b><span>" + escape(_fmt(defc.get("avg"))) + "</span>"
+                 "<div class=\"gbar\"><div class=\"fill\" style=\"width: " + escape(_fmt(defc.get("avg"))) + "%\"></div></div></div>")
+
+    parts.append("      </div>")
+    parts.append("      <div class=\"chart-strip\" id=\"overall-chart\"></div>")
+    parts.append("    </section>")
+
+    # Controls + league-wide table.
+    parts.append("    <section class=\"panel\" id=\"teams\">")
+    parts.append("      <div class=\"section-title\">Teams – Roster Power Table</div>")
+    parts.append("      <div class=\"controls\">")
+    parts.append("        <label for=\"team-search\">Search team:</label>")
+    parts.append("        <input id=\"team-search\" type=\"search\" placeholder=\"Filter by team or abbrev...\" />")
+    parts.append("        <span style=\"flex:1 0 auto\"></span>")
+    parts.append("        <span>Tip: click column headers to sort (overall or any unit).</span>")
+    parts.append("      </div>")
+    parts.append("      <div class=\"table-wrap\">")
+    parts.append("        <table class=\"sortable\" id=\"teams-table\">")
+    parts.append("          <thead><tr>"
+                 "<th>Rank</th>"
+                 "<th>Team</th>"
+                 "<th>Overall</th>"
+                 "<th>Off Pass</th>"
+                 "<th>Off Run</th>"
+                 "<th>Def Coverage</th>"
+                 "<th>Pass Rush</th>"
+                 "<th>Run Def</th>"
+                 "<th>Dev traits</th>"
+                 "<th>Top contributors</th>"
+                 "</tr></thead>")
+    parts.append("          <tbody>")
+
+    for row in teams_metrics:
+        team_abbrev = str(row.get("team_abbrev") or "")
+        team_name = str(row.get("team_name") or team_abbrev)
+        overall_score = float(row.get("overall_score") or 0.0)
+        off_pass_score = float(row.get("off_pass_score") or 0.0)
+        off_run_score = float(row.get("off_run_score") or 0.0)
+        def_cover_score = float(row.get("def_cover_score") or 0.0)
+        def_pr_score = float(row.get("def_pass_rush_score") or 0.0)
+        def_run_score = float(row.get("def_run_score") or 0.0)
+        overall_rank = int(row.get("overall_rank") or 0)
+        dev_xf = int(row.get("dev_xf") or 0)
+        dev_ss = int(row.get("dev_ss") or 0)
+        dev_star = int(row.get("dev_star") or 0)
+        dev_norm = int(row.get("dev_normal") or 0)
+        contrib = str(row.get("top_contributors") or "")
+
+        parts.append(
+            "            <tr data-team-abbr=\""
+            + escape(team_abbrev)
+            + "\" data-team-name=\""
+            + escape(team_name)
+            + "\">"
+        )
+        parts.append(
+            "              <td class=\"num rank-cell\" data-sort=\""
+            + escape(str(overall_rank))
+            + "\">"
+            + escape(str(overall_rank))
+            + "</td>"
+        )
+        parts.append(
+            "              <td><div class=\"team-cell\"><span class=\"team-tag\">"
+            + escape(team_name)
+            + "<span>"
+            + escape(team_abbrev)
+            + "</span></span></div></td>"
+        )
+
+        def _metric_cell(val: float) -> str:
+            pct = max(0.0, min(100.0, float(val)))
+            return (
+                "<td class=\"num\" data-sort=\""
+                + escape(f"{val:.1f}")
+                + "\"><div class=\"metric\"><span class=\"metric-value\">"
+                + escape(f"{val:.1f}")
+                + "</span><div class=\"metric-bar\"><div class=\"metric-bar-fill\" style=\"width: "
+                + escape(f"{pct:.1f}")
+                + "%\"></div></div></div></td>"
+            )
+
+        parts.append("              " + _metric_cell(overall_score))
+        parts.append("              " + _metric_cell(off_pass_score))
+        parts.append("              " + _metric_cell(off_run_score))
+        parts.append("              " + _metric_cell(def_cover_score))
+        parts.append("              " + _metric_cell(def_pr_score))
+        parts.append("              " + _metric_cell(def_run_score))
+
+        dev_html = [
+            f"<span class=\"chip chip-xf\">XF {dev_xf}</span>",
+            f"<span class=\"chip chip-ss\">SS {dev_ss}</span>",
+            f"<span class=\"chip chip-star\">Star {dev_star}</span>",
+            f"<span class=\"chip chip-norm\">Norm {dev_norm}</span>",
+        ]
+        parts.append(
+            "              <td><div class=\"dev-chips\">"
+            + "".join(dev_html)
+            + "</div></td>"
+        )
+
+        parts.append("              <td>" + escape(contrib) + "</td>")
+        parts.append("            </tr>")
+
+    parts.append("          </tbody>")
+    parts.append("        </table>")
+    parts.append("      </div>")
+    parts.append("    </section>")
+
+    parts.append("  </div>")
+    parts.append("  <script id=\"teams-data\" type=\"application/json\">")
+    parts.append(data_blob)
+    parts.append("  </script>")
+    parts.append("</body>")
+    parts.append("</html>")
+
+    html_out = "\n".join(parts)
+    out_dir = os.path.dirname(path)
+    if out_dir:
+        os.makedirs(out_dir, exist_ok=True)
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write(html_out)
+
+    print(f"wrote power rankings HTML report to {path}", file=sys.stdout)
+
+
+###############################################################################
 # CLI
 ###############################################################################
 
@@ -1091,7 +1528,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--out-html",
         default=os.path.join("docs", "power_rankings_roster.html"),
-        help="(Unused in Phase 1) Output HTML report path",
+        help="Output HTML report path (default: docs/power_rankings_roster.html)",
     )
     parser.add_argument(
         "--include-st",
@@ -1161,6 +1598,19 @@ def main(argv: list[str] | None = None) -> int:
         normalization=args.normalization,
     )
     write_power_rankings_csv(args.out_csv, teams_metrics)
+
+    # Phase 3: HTML report generation.
+    league_ctx = compute_league_context(teams_metrics)
+    html_config = {
+        "normalization": args.normalization,
+        "include_st": bool(args.include_st),
+    }
+    if args.verbose:
+        print(
+            f"info: rendering HTML report to {args.out_html}",
+            file=sys.stderr,
+        )
+    render_html_report(args.out_html, teams_metrics, config=html_config, league_context=league_ctx)
 
     return 0
 
