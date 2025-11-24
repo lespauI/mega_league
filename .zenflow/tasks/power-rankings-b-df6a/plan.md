@@ -240,7 +240,8 @@ Verification instructions:
   - Assert presence of non-empty narrative text for each team.
 - Perform qualitative spot checks on a few known-strong and known-weak rosters to confirm that strengths/weaknesses and rank ordering align with expectations from the underlying MEGA data.
 
-### [ ] Step: Phase 5 – Configuration, fixtures, and automated verification helpers
+### [x] Step: Phase 5 – Configuration, fixtures, and automated verification helpers
+<!-- chat-id: b6fc9dd3-6319-4d79-b832-3d4348518c33 -->
 Task definition:
 - Finalize configuration handling, synthetic fixtures, and verification helpers so future agents can safely modify and re-run the pipeline.
 - Ensure all helper scripts and any sample fixtures mentioned in the spec’s "Verification Strategy", "MCP servers", and "Sample input artifacts" sections are created and documented.

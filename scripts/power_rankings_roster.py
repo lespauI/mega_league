@@ -1600,7 +1600,10 @@ def render_html_report(
         + "</div>"
     )
 
-    # Unit position weighting lines.
+    # Unit position weighting lines (always based on the position-level
+    # weights baked into this script so that readers can see which
+    # positions drive each unit, regardless of overall unit weight
+    # tweaks).
     unit_weight_lines: list[str] = []
     unit_labels = {
         "off_pass": "Off Pass (QB/WR/TE/OL)",
@@ -1626,10 +1629,12 @@ def render_html_report(
             unit_label = unit_labels.get(key, key)
             unit_weight_lines.append(f"{unit_label}: " + ", ".join(parts_line))
 
-    # Dev trait ladder description.
+    # Dev trait ladder description. Prefer any runtime configuration
+    # provided via the CLI, falling back to defaults.
+    dev_cfg = cfg.get("dev_multipliers") or DEFAULT_DEV_MULTIPLIERS
     dev_lines: list[str] = []
     for dev_code, label in DEV_LABELS.items():
-        ladder = DEFAULT_DEV_MULTIPLIERS.get(dev_code, [])
+        ladder = dev_cfg.get(dev_code) or DEFAULT_DEV_MULTIPLIERS.get(dev_code, [])
         if not ladder:
             dev_lines.append(f"{label}: baseline impact only (no extra multiplier by default).")
             continue
@@ -1638,7 +1643,9 @@ def render_html_report(
             parts_line.append(f"+{bonus * 100:.0f}% above {threshold} OVR")
         dev_lines.append(f"{label}: " + ", ".join(parts_line))
 
-    # Overall weighting text.
+    # Overall weighting text. Prefer runtime-configured overall unit
+    # weights so the explanation matches the actual composite score.
+    overall_cfg = cfg.get("overall_unit_weights") or DEFAULT_OVERALL_UNIT_WEIGHTS
     overall_parts: list[str] = []
     for key, label in [
         ("off_pass", "Off Pass"),
@@ -1646,7 +1653,7 @@ def render_html_report(
         ("def_coverage", "Pass Coverage"),
         ("pass_rush", "Pass Rush"),
     ]:
-        w = DEFAULT_OVERALL_UNIT_WEIGHTS.get(key)
+        w = (overall_cfg.get(key) if isinstance(overall_cfg, dict) else None)
         if w is None or w <= 0:
             continue
         overall_parts.append(f"{label} {w * 100:.0f}%")
@@ -1919,6 +1926,49 @@ def render_html_report(
 ###############################################################################
 
 
+def _load_json_spec(spec: str, *, label: str) -> dict:
+    """Load a JSON mapping from a file path or inline JSON string.
+
+    The *spec* value may be either a path to a JSON file or a literal
+    JSON object string. This helper is used for configuration flags like
+    ``--weights-json`` and ``--dev-multipliers-json`` so that callers
+    can keep small configs inline or in separate files.
+    """
+
+    if not spec:
+        return {}
+
+    # Prefer treating *spec* as a file path when it exists on disk.
+    if os.path.exists(spec):
+        try:
+            with open(spec, "r", encoding="utf-8") as fh:
+                data = json.load(fh)
+        except Exception as exc:  # pragma: no cover - defensive
+            print(
+                f"error: failed to load {label} JSON from file {spec}: {exc}",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+    else:
+        try:
+            data = json.loads(spec)
+        except Exception as exc:  # pragma: no cover - defensive
+            print(
+                f"error: failed to parse {label} JSON value: {exc}",
+                file=sys.stderr,
+            )
+            sys.exit(2)
+
+    if not isinstance(data, dict):
+        print(
+            f"error: {label} JSON must be a mapping/object (got {type(data).__name__})",
+            file=sys.stderr,
+        )
+        sys.exit(2)
+
+    return data
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
@@ -1973,10 +2023,35 @@ def build_arg_parser() -> argparse.ArgumentParser:
         help="Include Special Teams unit in exports and scoring",
     )
     parser.add_argument(
+        "--weights-json",
+        help=(
+            "JSON mapping for overall unit weights (path to file or inline JSON). "
+            "Example: '{\"off_pass\": 0.35, \"off_run\": 0.15, "
+            "\"def_coverage\": 0.30, \"pass_rush\": 0.20}'."
+        ),
+    )
+    parser.add_argument(
+        "--dev-multipliers-json",
+        help=(
+            "JSON mapping for dev multipliers by dev tier and OVR band "
+            "(path to file or inline JSON). Keys are devTrait codes "
+            "('3' X-Factor, '2' Superstar, '1' Star, '0' Normal) and values "
+            "are [ovr_threshold, bonus] pairs; e.g. '{\"3\": [[90, 0.15], [85, 0.10]]}'."
+        ),
+    )
+    parser.add_argument(
         "--normalization",
         choices=["zscore", "minmax"],
         default="zscore",
         help="Normalization method for unit scores (default: zscore)",
+    )
+    parser.add_argument(
+        "--no-clobber",
+        action="store_true",
+        help=(
+            "Fail if target outputs already exist instead of overwriting "
+            "(applies to CSV/HTML and roster CSVs)."
+        ),
     )
     parser.add_argument(
         "--verbose",
@@ -1991,6 +2066,41 @@ def build_arg_parser() -> argparse.ArgumentParser:
 def main(argv: list[str] | None = None) -> int:
     parser = build_arg_parser()
     args = parser.parse_args(argv)
+
+    # Optional JSON-based configuration for overall unit weights and
+    # dev multipliers. These override the hard-coded defaults when
+    # provided, enabling experimentation without code changes.
+    overall_weights: dict[str, float] | None = None
+    dev_multipliers: dict | None = None
+
+    if getattr(args, "weights_json", None):
+        raw = _load_json_spec(args.weights_json, label="weights")
+        # Cast values to float defensively.
+        overall_weights = {str(k): float(v) for k, v in raw.items()}
+
+    if getattr(args, "dev_multipliers_json", None):
+        dev_multipliers = _load_json_spec(args.dev_multipliers_json, label="dev-multipliers")
+
+    # Respect --no-clobber by refusing to overwrite existing primary
+    # outputs (CSV/HTML and roster CSVs).
+    if getattr(args, "no_clobber", False):
+        existing: list[str] = []
+        if os.path.exists(args.out_csv):
+            existing.append(args.out_csv)
+        if os.path.exists(args.out_html):
+            existing.append(args.out_html)
+        if args.export_rosters and os.path.isdir(args.rosters_dir):
+            for name in os.listdir(args.rosters_dir):
+                if name.lower().endswith(".csv"):
+                    existing.append(os.path.join(args.rosters_dir, name))
+                    break
+        if existing:
+            print(
+                "error: --no-clobber specified and one or more outputs already exist: "
+                + ", ".join(existing),
+                file=sys.stderr,
+            )
+            return 1
 
     if args.verbose:
         print(
@@ -2033,6 +2143,8 @@ def main(argv: list[str] | None = None) -> int:
         team_index,
         include_st=args.include_st,
         normalization=args.normalization,
+        overall_weights=overall_weights,
+        dev_multipliers=dev_multipliers,
     )
     write_power_rankings_csv(args.out_csv, teams_metrics)
 
@@ -2041,6 +2153,8 @@ def main(argv: list[str] | None = None) -> int:
     html_config = {
         "normalization": args.normalization,
         "include_st": bool(args.include_st),
+        "overall_unit_weights": overall_weights or DEFAULT_OVERALL_UNIT_WEIGHTS,
+        "dev_multipliers": dev_multipliers or DEFAULT_DEV_MULTIPLIERS,
     }
     if args.verbose:
         print(
