@@ -367,3 +367,8 @@ We have a X/y charts what i rally like in rankings_explorer.html we can create t
 we must add team logos we did in in every graph in runking_explorer, just copy past the logic
 
 add more grapsh, we now have only offense, need Deffense graps as well
+
+### [ ] Step: Update radar-poly
+<!-- chat-id: d55e850a-6cff-4d52-91ec-38b55a5fe28f -->
+
+show numbers and what every corner means
