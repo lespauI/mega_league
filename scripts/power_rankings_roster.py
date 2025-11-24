@@ -1677,99 +1677,150 @@ def render_html_report(
     parts.append("    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } .team-card-body { flex-direction:column; } .team-detail-columns { grid-template-columns: 1fr; } .team-detail-panel { padding:12px 10px 14px; } }")
     parts.append("  </style>")
     parts.append("  <script>")
-    parts.append("  // Simple table sorter: click any <th> in a .sortable table to sort by that column\n"  # noqa: E501
-                 "  (function() {\n"  # noqa: E501
-                 "    function getCellValue(tr, idx) {\n"
-                 "      const td = tr.children[idx];\n"
-                 "      if (!td) return '';\n"
-                 "      const ds = td.getAttribute('data-sort');\n"
-                 "      const txt = ds != null ? ds : (td.textContent || '');\n"
-                 "      return txt.trim();\n"
-                 "    }\n"
-                 "    function asNumber(v) {\n"
-                 "      if (v === '' || v == null) return NaN;\n"
-                 "      const n = parseFloat(String(v).replace(/[,\\s]/g, ''));\n"
-                 "      return isNaN(n) ? NaN : n;\n"
-                 "    }\n"
-                 "    function makeComparer(idx, asc) {\n"
-                 "      return function(a, b) {\n"
-                 "        const va = getCellValue(a, idx);\n"
-                 "        const vb = getCellValue(b, idx);\n"
-                 "        const na = asNumber(va);\n"
-                 "        const nb = asNumber(vb);\n"
-                 "        let cmp;\n"
-                 "        if (!isNaN(na) && !isNaN(nb)) { cmp = na - nb; } else { cmp = va.localeCompare(vb, undefined, {numeric:true, sensitivity:'base'}); }\n"
-                 "        return asc ? cmp : -cmp;\n"
-                 "      }\n"
-                 "    }\n"
-                 "    function initSortableTables() {\n"
-                 "      document.querySelectorAll('table.sortable').forEach(function(table) {\n"
-                 "        const thead = table.tHead; if (!thead) return;\n"
-                 "        const headers = thead.rows[0] ? thead.rows[0].cells : [];\n"
-                 "        Array.from(headers).forEach(function(th, idx) {\n"
-                 "          th.addEventListener('click', function() {\n"
-                 "            const tbody = table.tBodies[0]; if (!tbody) return;\n"
-                 "            const rows = Array.from(tbody.rows);\n"
-                 "            const current = th.getAttribute('data-sort-dir') || 'asc';\n"
-                 "            const nextDir = current === 'asc' ? 'desc' : 'asc';\n"
-                 "            rows.sort(makeComparer(idx, nextDir === 'asc'));\n"
-                 "            Array.from(headers).forEach(h => h.removeAttribute('data-sort-dir'));\n"
-                 "            th.setAttribute('data-sort-dir', nextDir);\n"
-                 "            rows.forEach(r => tbody.appendChild(r));\n"
-                 "          });\n"
-                 "        });\n"
-                 "      });\n"
-                 "    }\n"
-                 "    function initSearchAndCharts() {\n"
-                 "      const dataEl = document.getElementById('teams-data');\n"
-                 "      let DATA = null;\n"
-                 "      if (dataEl) {\n"
-                 "        try { DATA = JSON.parse(dataEl.textContent || '{}'); } catch (e) { DATA = null; }\n"
-                 "      }\n"
-                 "      const search = document.getElementById('team-search');\n"
-                 "      if (search) {\n"
-                 "        search.addEventListener('input', function() {\n"
-                 "          const q = (this.value || '').toLowerCase();\n"
-                 "          const rows = document.querySelectorAll('#teams-table tbody tr');\n"
-                 "          rows.forEach(function(tr) {\n"
-                 "            const name = (tr.getAttribute('data-team-name') || '').toLowerCase();\n"
-                 "            const abbr = (tr.getAttribute('data-team-abbr') || '').toLowerCase();\n"
-                 "            const hay = name + ' ' + abbr;\n"
-                 "            tr.style.display = hay.indexOf(q) === -1 ? 'none' : '';\n"
-                 "          });\n"
-                 "        });\n"
-                 "      }\n"
-                 "      function renderOverallChart() {\n"
-                 "        if (!DATA || !DATA.teams) return;\n"
-                 "        const wrap = document.getElementById('overall-chart');\n"
-                 "        if (!wrap) return;\n"
-                 "        const teams = Array.from(DATA.teams).sort((a,b) => (a.overall_rank||0) - (b.overall_rank||0));\n"
-                 "        wrap.innerHTML = '';\n"
-                 "        teams.forEach(function(t) {\n"
-                 "          const score = typeof t.overall_score === 'number' ? t.overall_score : parseFloat(t.overall_score || '0');\n"
-                 "          const pct = Math.max(0, Math.min(100, isNaN(score) ? 0 : score));\n"
-                 "          const div = document.createElement('div');\n"
-                 "          div.className = 'chart-bar';\n"
-                 "          const fill = document.createElement('div');\n"
-                 "          fill.className = 'chart-bar-fill';\n"
-                 "          fill.style.width = pct + '%';\n"
-                 "          const label = document.createElement('div');\n"
-                 "          label.className = 'chart-bar-label';\n"
-                 "          const name = (t.team_abbrev || '') + ' — ' + (t.team_name || '');\n"
-                 "          label.innerHTML = '<b>' + name + '</b><span>Overall ' + (score || 0).toFixed ? (score || 0).toFixed(1) : score + '</span>';\n"
-                 "          div.appendChild(fill);\n"
-                 "          div.appendChild(label);\n"
-                 "          wrap.appendChild(div);\n"
-                 "        });\n"
-                 "      }\n"
-                 "      renderOverallChart();\n"
-                 "    }\n"
-                 "    if (document.readyState === 'loading') {\n"
-                 "      document.addEventListener('DOMContentLoaded', function() { initSortableTables(); initSearchAndCharts(); });\n"
-                 "    } else {\n"
-                 "      initSortableTables(); initSearchAndCharts();\n"
-                 "    }\n"
-                 "  })();\n")
+    parts.append("  (function() {")
+    parts.append("    function getData() {")
+    parts.append("      const el = document.getElementById('teams-data');")
+    parts.append("      if (!el) return null;")
+    parts.append("      try { return JSON.parse(el.textContent || '{}'); } catch (e) { return null; }")
+    parts.append("    }")
+    parts.append("    function closeTeamDetail() {")
+    parts.append("      const overlay = document.getElementById('team-detail-overlay');")
+    parts.append("      if (!overlay) return;")
+    parts.append("      overlay.classList.remove('visible');")
+    parts.append("      overlay.setAttribute('aria-hidden', 'true');")
+    parts.append("    }")
+    parts.append("    function openTeamDetail(abbr, DATA) {")
+    parts.append("      if (!DATA || !DATA.rosters) return;")
+    parts.append("      const rosterMap = DATA.rosters || {};")
+    parts.append("      const unitsMap = DATA.unit_breakdowns || {};")
+    parts.append("      const roster = rosterMap[abbr];")
+    parts.append("      if (!roster || !roster.length) return;")
+    parts.append("      const overlay = document.getElementById('team-detail-overlay');")
+    parts.append("      if (!overlay) return;")
+    parts.append("      const teamMeta = (DATA.teams || []).find(function(t) { return String(t.team_abbrev || '') === String(abbr || ''); });")
+    parts.append("      const titleEl = document.getElementById('team-detail-title');")
+    parts.append("      const subEl = document.getElementById('team-detail-subtitle');")
+    parts.append("      const rosterTable = document.getElementById('team-detail-roster');")
+    parts.append("      const breakdownRoot = document.getElementById('team-detail-breakdown');")
+    parts.append("      if (!rosterTable || !breakdownRoot) return;")
+    parts.append("      const name = teamMeta && (teamMeta.team_name || teamMeta.team_abbrev || abbr) || abbr;")
+    parts.append("      const rank = teamMeta && teamMeta.overall_rank;")
+    parts.append("      const overall = teamMeta && teamMeta.overall_score;")
+    parts.append("      if (titleEl) { titleEl.textContent = name + ' (' + abbr + ')'; }")
+    parts.append("      if (subEl) {")
+    parts.append("        const bits = [];")
+    parts.append("        if (typeof rank === 'number' && rank) bits.push('#' + rank + ' overall roster grade');")
+    parts.append("        if (typeof overall === 'number') bits.push('Overall ' + overall.toFixed(1));")
+    parts.append("        subEl.textContent = bits.join(' • ');")
+    parts.append("      }")
+    parts.append("      const byId = {};")
+    parts.append("      roster.forEach(function(p) { if (p && p.player_id != null) byId[String(p.player_id)] = p; });")
+    parts.append("      rosterTable.innerHTML = '';")
+    parts.append("      const thead = document.createElement('thead');")
+    parts.append("      thead.innerHTML = '<tr><th>Pos</th><th>Player</th><th class=num>OVR</th><th>Dev</th><th>Top attributes</th></tr>';")
+    parts.append("      rosterTable.appendChild(thead);")
+    parts.append("      const tbody = document.createElement('tbody');")
+    parts.append("      roster.forEach(function(p) {")
+    parts.append("        const tr = document.createElement('tr');")
+    parts.append("        const attrs = (p.top_attrs || []).map(function(a) { return a.key + ': ' + a.value; }).join(', ');")
+    parts.append("        tr.innerHTML = '<td>' + (p.position || '') + '</td>' +")
+    parts.append("          '<td>' + (p.name || '') + '</td>' +")
+    parts.append("          '<td class=num>' + (p.ovr != null ? p.ovr : '') + '</td>' +")
+    parts.append("          '<td>' + (p.dev_label || '') + '</td>' +")
+    parts.append("          '<td class=team-detail-attr>' + attrs + '</td>';
+")
+    parts.append("        tbody.appendChild(tr);")
+    parts.append("      });")
+    parts.append("      rosterTable.appendChild(tbody);")
+    parts.append("      breakdownRoot.innerHTML = '';")
+    parts.append("      const allUnits = ['off_pass','off_run','def_coverage','pass_rush','run_defense'];")
+    parts.append("      const labels = { off_pass: 'Off Pass', off_run: 'Off Run', def_coverage: 'Pass Coverage', pass_rush: 'Pass Rush', run_defense: 'Run Defense' };")
+    parts.append("      const teamUnits = unitsMap && unitsMap[abbr];")
+    parts.append("      if (teamUnits) {")
+    parts.append("        allUnits.forEach(function(key) {")
+    parts.append("          const u = teamUnits[key];")
+    parts.append("          if (!u) return;")
+    parts.append("          const card = document.createElement('div');")
+    parts.append("          card.className = 'team-detail-breakdown-unit';")
+    parts.append("          const h = document.createElement('h4');")
+    parts.append("          const label = (u.label || labels[key] || key);")
+    parts.append("          let grade = '';")
+    parts.append("          if (typeof u.norm_score === 'number') grade = ' — grade ' + u.norm_score.toFixed(1);")
+    parts.append("          h.textContent = label + grade;")
+    parts.append("          card.appendChild(h);")
+    parts.append("          if (typeof u.raw_score === 'number') {")
+    parts.append("            const p = document.createElement('p');")
+    parts.append("            p.textContent = 'Raw starter blend: ' + u.raw_score.toFixed(1);")
+    parts.append("            card.appendChild(p);")
+    parts.append("          }")
+    parts.append("          const tbl = document.createElement('table');")
+    parts.append("          const th = document.createElement('thead');")
+    parts.append("          th.innerHTML = '<tr><th>Pos</th><th class=num>Wt%</th><th class=num>Pos score</th><th>Starters used</th></tr>';")
+    parts.append("          tbl.appendChild(th);")
+    parts.append("          const tb = document.createElement('tbody');")
+    parts.append("          (u.positions || []).forEach(function(posInfo) {")
+    parts.append("            const tr = document.createElement('tr');")
+    parts.append("            const wtPct = (posInfo.weight_share != null ? (posInfo.weight_share * 100).toFixed(0) : '');")
+    parts.append("            const posScore = (posInfo.avg_unit_score != null ? posInfo.avg_unit_score.toFixed(1) : '');")
+    parts.append("            const starters = (posInfo.players || []).map(function(pl) {")
+    parts.append("              const pid = pl.player_id != null ? String(pl.player_id) : '';")
+    parts.append("              const base = pid && byId[pid] ? byId[pid] : null;")
+    parts.append("              if (!base) return '';")
+    parts.append("              const tag = (base.position || '') + ' ' + (base.name || '');")
+    parts.append("              const ovr = base.ovr != null ? base.ovr : '';")
+    parts.append("              const dev = base.dev_label || '';")
+    parts.append("              const parts = [tag];")
+    parts.append("              if (ovr !== '') parts.push(String(ovr));")
+    parts.append("              if (dev) parts.push(dev);")
+    parts.append("              return parts.join(' ');")
+    parts.append("            }).filter(Boolean).join('; ');")
+    parts.append("            tr.innerHTML = '<td>' + (posInfo.pos || '') + '</td>' +")
+    parts.append("              '<td class=num>' + wtPct + '</td>' +")
+    parts.append("              '<td class=num>' + posScore + '</td>' +")
+    parts.append("              '<td>' + starters + '</td>';
+")
+    parts.append("            tb.appendChild(tr);")
+    parts.append("          });")
+    parts.append("          tbl.appendChild(tb);")
+    parts.append("          card.appendChild(tbl);")
+    parts.append("          breakdownRoot.appendChild(card);")
+    parts.append("        });")
+    parts.append("      }")
+    parts.append("      overlay.classList.add('visible');")
+    parts.append("      overlay.setAttribute('aria-hidden', 'false');")
+    parts.append("    }")
+    parts.append("    function attachTeamDetailHandlers() {")
+    parts.append("      const DATA = getData();")
+    parts.append("      if (!DATA) return;")
+    parts.append("      const rows = document.querySelectorAll('#teams-table tbody tr[data-team-abbr]');")
+    parts.append("      rows.forEach(function(tr) {")
+    parts.append("        tr.addEventListener('click', function() {")
+    parts.append("          const abbr = tr.getAttribute('data-team-abbr');")
+    parts.append("          if (abbr) openTeamDetail(abbr, DATA);")
+    parts.append("        });")
+    parts.append("      });")
+    parts.append("      const cards = document.querySelectorAll('.team-card[data-team-abbr]');")
+    parts.append("      cards.forEach(function(card) {")
+    parts.append("        card.addEventListener('click', function() {")
+    parts.append("          const abbr = card.getAttribute('data-team-abbr');")
+    parts.append("          if (abbr) openTeamDetail(abbr, DATA);")
+    parts.append("        });")
+    parts.append("      });")
+    parts.append("      const overlay = document.getElementById('team-detail-overlay');")
+    parts.append("      if (overlay) {")
+    parts.append("        const closeBtn = overlay.querySelector('.team-detail-close');")
+    parts.append("        const backdrop = overlay.querySelector('.team-detail-backdrop');")
+    parts.append("        if (closeBtn) closeBtn.addEventListener('click', closeTeamDetail);")
+    parts.append("        if (backdrop) backdrop.addEventListener('click', closeTeamDetail);")
+    parts.append("      }")
+    parts.append("      document.addEventListener('keydown', function(ev) { if (ev.key === 'Escape') closeTeamDetail(); });")
+    parts.append("    }")
+    parts.append("    if (document.readyState === 'loading') {")
+    parts.append("      document.addEventListener('DOMContentLoaded', attachTeamDetailHandlers);")
+    parts.append("    } else {")
+    parts.append("      attachTeamDetailHandlers();")
+    parts.append("    }")
+    parts.append("  })();")
     parts.append("  </script>")
     parts.append("</head>")
     parts.append("<body>")
@@ -1781,7 +1832,7 @@ def render_html_report(
     parts.append(
         "      <div class=\"subtitle\">"
         "For X/Y roster unit comparison charts (Off vs Def, Pass vs Run, coverage vs pass rush), "
-        "open the <a href=\\"power_rankings_roster_charts.html\\">Roster Power Explorer</a>."
+        "open the <a href='power_rankings_roster_charts.html'>Roster Power Explorer</a>."
         "</div>"
     )
     parts.append("    </header>")
