@@ -2519,6 +2519,16 @@ def main(argv: list[str] | None = None) -> int:
     players_raw = read_players(args.players)
     players: list[dict] = [normalize_player_row(r, team_index) for r in players_raw]
 
+    # Pre-compute players grouped by team abbrev so both the scoring
+    # pipeline and HTML renderer can reason about per-team rosters
+    # without re-deriving this mapping.
+    players_by_team: dict[str, list[dict]] = {}
+    for p in players:
+        abbr = (p.get("team_abbrev") or "").strip()
+        if not abbr or abbr == "FA":
+            continue
+        players_by_team.setdefault(abbr, []).append(p)
+
     if args.export_rosters:
         if args.verbose:
             print(
@@ -2566,7 +2576,13 @@ def main(argv: list[str] | None = None) -> int:
             f"info: rendering HTML report to {args.out_html}",
             file=sys.stderr,
         )
-    render_html_report(args.out_html, teams_metrics, config=html_config, league_context=league_ctx)
+    render_html_report(
+        args.out_html,
+        teams_metrics,
+        config=html_config,
+        league_context=league_ctx,
+        players_by_team=players_by_team,
+    )
 
     return 0
 
