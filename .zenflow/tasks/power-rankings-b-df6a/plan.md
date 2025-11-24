@@ -267,3 +267,34 @@ Verification instructions:
   - `python3 scripts/verify_power_rankings_roster_html.py`
 - Confirm that all verification commands exit with status code 0 in the happy path and emit clear, actionable messages on failure.
 - If synthetic fixtures are added, run the pipeline against them (using `--players` / `--teams` overrides) and ensure the verification scripts still pass, giving a fast regression-check path for future work.
+
+### [ ] Step: Phase 6 – Scoring methodology explanation in HTML
+Task definition:
+- Extend the HTML report to clearly document the roster-based scoring system now implemented (unit definitions, per-position attributes, dev-trait bonuses, and normalization method).
+- Make sure users can understand *why* a team has its unit and overall scores, referencing the same attribute logic used in the draft class analysis.
+
+Contracts to use/implement:
+- HTML rendering contract (building on `render_html_report` and Phase 3/4 work):
+  - Add a dedicated "Scoring Methodology" or "How these grades work" section to `docs/power_rankings_roster.html`.
+- Supporting contracts:
+  - Surface the actual runtime configuration used by the CLI into the HTML (unit weights, dev multipliers, normalization choice) so the explanation reflects the exact run.
+  - Describe, for each major unit (Off Pass, Off Run, Def Coverage, Pass Rush, Run Defense), which positions and key rating attributes are used – reusing the attribute sets from the draft class analytics (`get_attr_keys_for_pos`).
+
+Deliverables:
+- Updated `docs/power_rankings_roster.html` that includes:
+  - A clearly visible methodology section explaining:
+    - Which units exist and which positions feed each unit.
+    - Which rating attributes are emphasized per position (e.g., QB accuracy/power, RB elusiveness + catching, OL pass/run block, DB coverage traits).
+    - How dev traits and OVR bands modify player impact.
+    - How unit scores are normalized (z-score vs min–max) and how overall scores are combined from units.
+  - Optional per-team tooltip or hover help that briefly summarizes what drives each unit score (e.g., "Off Pass: QB + top 2 WR + TE + RB receiving, weighted toward QB and OL").
+
+Verification instructions:
+- Re-generate the HTML report after implementing the methodology section:
+  - `python3 scripts/power_rankings_roster.py --players MEGA_players.csv --teams MEGA_teams.csv --out-html docs/power_rankings_roster.html`
+- Inspect `docs/power_rankings_roster.html` to confirm:
+  - There is a dedicated scoring explanation section with text referencing units, positions, key attributes, dev traits, and normalization.
+  - The text matches the current implementation (position groups, attribute lists, dev multipliers, normalization method) rather than stale documentation.
+- Extend `scripts/verify_power_rankings_roster_html.py` (or add a mode) to:
+  - Assert presence of a methodology/explanation block (e.g., by id or class name).
+  - Check that key phrases like "Off Pass", "Off Run", "Pass Coverage", "Pass Rush", "Run Defense" and references to dev traits and normalization appear in the HTML.
