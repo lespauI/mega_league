@@ -418,6 +418,7 @@ def get_top_attrs_for_player(player: dict, limit: int = 4) -> list[dict]:
     pos = player.get("position") or player.get("normalized_pos") or ""
     keys = get_attr_keys_for_pos(str(pos))
     values: list[tuple[str, float]] = []
+
     for key in keys:
         val = safe_float(player.get(key), None)
         if val is None:
@@ -429,7 +430,16 @@ def get_top_attrs_for_player(player: dict, limit: int = 4) -> list[dict]:
 
     values.sort(key=lambda kv: -kv[1])
     top = values[: max(0, int(limit))]
-    return [{"key": k, "value": round(v, 1)} for k, v in top]
+
+    def _display_name(attr_key: str) -> str:
+        # Strip generic "Rating" suffix so labels match the shorter
+        # style used elsewhere (e.g. accelRating -> accel,
+        # finesseMovesRating -> finesseMoves).
+        if attr_key.endswith("Rating"):
+            return attr_key[: -len("Rating")]
+        return attr_key
+
+    return [{"key": _display_name(k), "value": round(v, 1)} for k, v in top]
 
 
 def normalize_player_row(raw: dict, team_index: dict[str, dict] | None = None) -> dict:
@@ -1660,6 +1670,7 @@ def render_html_report(
     parts.append("    .team-detail-header h2 { margin:0; font-size:18px; }")
     parts.append("    .team-detail-sub { margin:2px 0 10px; font-size:12px; color:#6b7280; }")
     parts.append("    .team-detail-body { font-size:11px; color:#111827; }")
+    parts.append("    .team-detail-radar-shell { margin-bottom:8px; display:flex; justify-content:center; }")
     parts.append("    .team-detail-columns { display:grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1.1fr); gap:12px; }")
     parts.append("    .team-detail-col h3 { margin:0 0 6px; font-size:13px; }")
     parts.append("    .team-detail-table { width:100%; border-collapse:collapse; font-size:11px; }")
@@ -1726,6 +1737,15 @@ def render_html_report(
     parts.append("        if (typeof rank === 'number' && rank) bits.push('#' + rank + ' overall roster grade');")
     parts.append("        if (typeof overall === 'number') bits.push('Overall ' + overall.toFixed(1));")
     parts.append("        subEl.textContent = bits.join(' • ');")
+    parts.append("      }")
+    parts.append("      const radarHost = document.getElementById('team-detail-radar');")
+    parts.append("      if (radarHost) {")
+    parts.append("        radarHost.innerHTML = '';")
+    parts.append("        let source = null;")
+    parts.append("        document.querySelectorAll('.radar-chart').forEach(function(el) {")
+    parts.append("          if (String(el.getAttribute('data-team-abbr') || '') === String(abbr || '')) { source = el; }")
+    parts.append("        });")
+    parts.append("        if (source) { radarHost.innerHTML = source.outerHTML; }")
     parts.append("      }")
     parts.append("      const byId = {};")
     parts.append("      roster.forEach(function(p) { if (p && p.player_id != null) byId[String(p.player_id)] = p; });")
@@ -2231,6 +2251,7 @@ def render_html_report(
     parts.append("          <p id=\"team-detail-subtitle\" class=\"team-detail-sub\"></p>")
     parts.append("        </div>")
     parts.append("        <div class=\"team-detail-body\">")
+    parts.append("          <div class=\"team-detail-radar-shell\"><div id=\"team-detail-radar\"></div></div>")
     parts.append("          <div class=\"team-detail-columns\">")
     parts.append("            <section class=\"team-detail-col\">")
     parts.append("              <h3>Roster overview (OVR &amp; key attributes)</h3>")
