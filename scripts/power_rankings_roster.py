@@ -1850,10 +1850,15 @@ def render_html_report(
     )
     parts.append("    </header>")
 
-    # Overview KPIs: overall average and simple context for a couple of units.
+    # Overview KPIs: show how strong the league actually is instead of
+    # three ~50.0 averages from z-score normalization.
     parts.append("    <section class=\"panel\" id=\"overview\">")
     parts.append("      <div class=\"section-title\">League Overview</div>")
-    parts.append("      <div class=\"section-intro\">Roster-based power rankings derived from unit strength scores. Higher scores reflect stronger starters and premium dev traits at key positions.</div>")
+    parts.append(
+        "      <div class=\"section-intro\">Scores are normalized 0–100 across the league. "
+        "Around 50 is an average roster, 70+ is contender territory, and 40 or below flags a problem build. "
+        "These snapshots show the spread of overall roster strength this season.</div>"
+    )
     parts.append("      <div class=\"kpis\">")
 
     def _fmt(val: float | None) -> str:
@@ -1865,16 +1870,27 @@ def render_html_report(
             return "—"
 
     ov = league_ctx.get("overall_score") or {}
-    parts.append("        <div class=\"kpi\"><b>Avg overall score</b><span>" + escape(_fmt(ov.get("avg"))) + "</span>"
-                 "<div class=\"gbar\"><div class=\"fill\" style=\"width: " + escape(_fmt(ov.get("avg"))) + "%\"></div></div></div>")
-
-    offp = league_ctx.get("off_pass_score") or {}
-    parts.append("        <div class=\"kpi\"><b>Avg Off Pass</b><span>" + escape(_fmt(offp.get("avg"))) + "</span>"
-                 "<div class=\"gbar\"><div class=\"fill\" style=\"width: " + escape(_fmt(offp.get("avg"))) + "%\"></div></div></div>")
-
-    defc = league_ctx.get("def_cover_score") or {}
-    parts.append("        <div class=\"kpi\"><b>Avg Coverage</b><span>" + escape(_fmt(defc.get("avg"))) + "</span>"
-                 "<div class=\"gbar\"><div class=\"fill\" style=\"width: " + escape(_fmt(defc.get("avg"))) + "%\"></div></div></div>")
+    parts.append(
+        "        <div class=\"kpi\"><b>Best roster score</b><span>"
+        + escape(_fmt(ov.get("max")))
+        + "</span><div class=\"gbar\"><div class=\"fill\" style=\"width: "
+        + escape(_fmt(ov.get("max")))
+        + "%\"></div></div></div>"
+    )
+    parts.append(
+        "        <div class=\"kpi\"><b>League median</b><span>"
+        + escape(_fmt(ov.get("p50")))
+        + "</span><div class=\"gbar\"><div class=\"fill\" style=\"width: "
+        + escape(_fmt(ov.get("p50")))
+        + "%\"></div></div></div>"
+    )
+    parts.append(
+        "        <div class=\"kpi\"><b>Weakest roster score</b><span>"
+        + escape(_fmt(ov.get("min")))
+        + "</span><div class=\"gbar\"><div class=\"fill\" style=\"width: "
+        + escape(_fmt(ov.get("min")))
+        + "%\"></div></div></div>"
+    )
 
     parts.append("      </div>")
     parts.append("      <div class=\"chart-strip\" id=\"overall-chart\"></div>")

@@ -307,7 +307,8 @@ Verification instructions:
 
 I want to click on the team in Table or in cards view and see their roster with players top atributes taken into consideration and evaluation and evaluation brakdown, shown how we calc the unit strhenght
 
-### [ ] Step: HTML fixes
+### [x] Step: HTML fixes
+<!-- chat-id: f707cd69-3aed-483c-94b5-721bb6a38807 -->
 
 This is unclear and usless info 
 
@@ -353,6 +354,7 @@ Avg Coverage
 36.9
 
 Redefine it
+
 
 ### [x] Step: Add HTML with charts
 <!-- chat-id: 166b1e21-a557-4acc-ac90-53936fe06411 -->
