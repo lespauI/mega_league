@@ -247,11 +247,11 @@ def _normalize_pos_for_mapping(pos: str) -> str:
     if p in {"K", "P"}:
         return p
     # Defense
-    if p in {"LE", "RE", "DE"}:
+    if p in {"LE", "RE", "DE", "LEDGE", "REDGE"}:
         return "DE"
     if p in {"DT"}:
         return "DT"
-    if p in {"MLB", "LOLB", "ROLB", "OLB", "LB"}:
+    if p in {"MLB", "LOLB", "ROLB", "OLB", "LB", "WILL", "SAM", "MIKE"}:
         return "LB"
     if p in {"FS", "SS"}:
         return "S"
@@ -353,7 +353,7 @@ def export_team_rosters(
     teams_index: dict[str, dict],
     out_dir: str,
     split_units: bool = False,
-    include_st: bool = False,
+    include_st: bool = False,  # kept for CLI compatibility; currently ignored
 ) -> None:
     """Export one full-roster CSV per team.
 
@@ -366,9 +366,8 @@ def export_team_rosters(
       preserved as extra columns.
 
     When *split_units* is True, also writes split-unit CSVs per team:
-    - <TEAM_ABBR>_O.csv – offensive players
-    - <TEAM_ABBR>_D.csv – defensive players
-    - <TEAM_ABBR>_ST.csv – special teams players (only if *include_st*).
+    - <TEAM_ABBR>_Offense.csv – offensive players
+    - <TEAM_ABBR>_Defense.csv – defensive players
     """
 
     # Derive the set of team abbrevs from the team index
@@ -421,18 +420,15 @@ def export_team_rosters(
         if split_units and team_players:
             offense: list[dict] = []
             defense: list[dict] = []
-            special: list[dict] = []
             for p in team_players:
                 unit = assign_unit(p.get("position", ""))
-                if unit == "O":
+                if unit == "Offense":
                     offense.append(p)
-                elif unit == "D":
+                elif unit == "Defense":
                     defense.append(p)
-                elif unit == "ST":
-                    special.append(p)
 
             if offense:
-                o_path = os.path.join(out_dir, f"{abbrev}_O.csv")
+                o_path = os.path.join(out_dir, f"{abbrev}_Offense.csv")
                 with open(o_path, "w", newline="", encoding="utf-8") as fh_o:
                     writer_o = csv.DictWriter(fh_o, fieldnames=fieldnames)
                     writer_o.writeheader()
@@ -440,20 +436,12 @@ def export_team_rosters(
                         writer_o.writerow(p)
 
             if defense:
-                d_path = os.path.join(out_dir, f"{abbrev}_D.csv")
+                d_path = os.path.join(out_dir, f"{abbrev}_Defense.csv")
                 with open(d_path, "w", newline="", encoding="utf-8") as fh_d:
                     writer_d = csv.DictWriter(fh_d, fieldnames=fieldnames)
                     writer_d.writeheader()
                     for p in defense:
                         writer_d.writerow(p)
-
-            if include_st and special:
-                st_path = os.path.join(out_dir, f"{abbrev}_ST.csv")
-                with open(st_path, "w", newline="", encoding="utf-8") as fh_st:
-                    writer_st = csv.DictWriter(fh_st, fieldnames=fieldnames)
-                    writer_st.writeheader()
-                    for p in special:
-                        writer_st.writerow(p)
 
     print(
         f"exported {total_players} players across {len(all_teams)} teams to {out_dir}",
@@ -469,28 +457,29 @@ def export_team_rosters(
 def assign_unit(position: str, side_hint: str | None = None) -> str:
     """Assign a position to a high-level unit.
 
-    Returns one of "O" (offense), "D" (defense), "ST" (special teams),
-    or "?" when the unit cannot be determined.
+    Returns one of "Offense", "Defense", or "?" when the unit cannot
+    be determined.
     """
 
     p = _normalize_pos_for_mapping(position)
     if p in {"QB", "RB", "FB", "WR", "TE", "OL"}:
-        return "O"
+        return "Offense"
     if p in {"DE", "DT", "LB", "CB", "S"}:
-        return "D"
-    if p in {"K", "P"}:
-        return "ST"
+        return "Defense"
+    # K/P and any other unrecognized positions are not scored in
+    # offense/defense units.
     return side_hint or "?"
 
 
 # Starter / rotation target counts per unit and normalized position.
 UNIT_ROLE_COUNTS: dict[str, dict[str, int]] = {
-    "off_pass": {"QB": 1, "WR": 3, "TE": 1, "OL": 5},
-    "off_run": {"RB": 1, "WR": 1, "TE": 1, "FB": 1, "OL": 5},
+    # Passing: QB + 2 WR + TE + RB, behind 5 OL.
+    "off_pass": {"QB": 1, "WR": 2, "TE": 1, "RB": 1, "OL": 5},
+    # Rushing: RB + FB + 2 blocking TEs + 5 OL.
+    "off_run": {"RB": 1, "TE": 2, "FB": 1, "OL": 5},
     "def_coverage": {"CB": 3, "S": 2, "LB": 2},
     "pass_rush": {"DE": 2, "DT": 2, "LB": 2},
     "run_defense": {"DE": 2, "DT": 2, "LB": 3, "S": 1},
-    "special": {"K": 1, "P": 1},
 }
 
 
@@ -725,8 +714,6 @@ def build_team_metrics(
             players_by_team[team_abbrev].append(p)
 
     unit_keys = ["off_pass", "off_run", "def_coverage", "pass_rush", "run_defense"]
-    if include_st:
-        unit_keys.append("special")
 
     raw_scores_by_unit: dict[str, dict[str, float]] = {u: {} for u in unit_keys}
 
@@ -734,9 +721,8 @@ def build_team_metrics(
 
     for abbrev, team in all_teams.items():
         team_players = players_by_team.get(abbrev, [])
-        offense = [p for p in team_players if assign_unit(p.get("position", "")) == "O"]
-        defense = [p for p in team_players if assign_unit(p.get("position", "")) == "D"]
-        special = [p for p in team_players if assign_unit(p.get("position", "")) == "ST"]
+        offense = [p for p in team_players if assign_unit(p.get("position", "")) == "Offense"]
+        defense = [p for p in team_players if assign_unit(p.get("position", "")) == "Defense"]
 
         raw_scores_by_unit["off_pass"][abbrev] = score_unit(
             offense,
@@ -763,12 +749,6 @@ def build_team_metrics(
             "run_defense",
             dev_multipliers=dev_multipliers,
         )
-        if include_st:
-            raw_scores_by_unit["special"][abbrev] = score_unit(
-                special,
-                "special",
-                dev_multipliers=dev_multipliers,
-            )
 
         # Dev trait counts per team
         dev_counts = {"3": 0, "2": 0, "1": 0, "0": 0}
@@ -790,7 +770,6 @@ def build_team_metrics(
         unit_scores_for_team = {
             unit_key: norm_scores_by_unit[unit_key].get(abbrev, 0.0)
             for unit_key in norm_scores_by_unit.keys()
-            if unit_key != "special"
         }
         overall_scores[abbrev] = compute_overall_score(
             unit_scores_for_team,
@@ -839,9 +818,6 @@ def build_team_metrics(
             "def_pass_rush_rank": unit_ranks["pass_rush"].get(abbrev, 0),
             "def_run_score": round(norm_scores_by_unit["run_defense"].get(abbrev, 0.0), 1),
             "def_run_rank": unit_ranks["run_defense"].get(abbrev, 0),
-            # ST columns always present for a stable schema; may be zeroed.
-            "st_score": round(norm_scores_by_unit.get("special", {}).get(abbrev, 0.0), 1),
-            "st_rank": unit_ranks.get("special", {}).get(abbrev, 0),
             "dev_xf": dev_counts.get("3", 0),
             "dev_ss": dev_counts.get("2", 0),
             "dev_star": dev_counts.get("1", 0),
@@ -878,8 +854,6 @@ def write_power_rankings_csv(path: str, teams_metrics: list[dict]) -> None:
         "def_pass_rush_rank",
         "def_run_score",
         "def_run_rank",
-        "st_score",
-        "st_rank",
         "dev_xf",
         "dev_ss",
         "dev_star",

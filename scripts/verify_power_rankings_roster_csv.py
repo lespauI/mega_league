@@ -100,8 +100,7 @@ def verify_scores_and_ranks(rows: list[dict]) -> None:
         "def_pass_rush_score",
         "def_run_score",
     ]
-    # ST columns are optional but, if present, should also satisfy checks.
-    optional_score_cols = ["st_score"]
+    optional_score_cols: list[str] = []
 
     rank_cols = [
         "overall_rank",
@@ -111,7 +110,7 @@ def verify_scores_and_ranks(rows: list[dict]) -> None:
         "def_pass_rush_rank",
         "def_run_rank",
     ]
-    optional_rank_cols = ["st_rank"]
+    optional_rank_cols: list[str] = []
 
     present_score_cols = [c for c in score_cols if c in rows[0].keys()]
     present_optional_scores = [c for c in optional_score_cols if c in rows[0].keys()]
@@ -210,4 +209,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry
     raise SystemExit(main())
-
