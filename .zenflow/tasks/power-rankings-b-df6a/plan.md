@@ -87,7 +87,8 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: cc220be8-050c-4bad-bb80-771d41a2d301 -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
 
@@ -98,3 +99,168 @@ Task instructions
 ```
 
 "Step:" prefix is important, do not omit it!
+
+### [ ] Step: Phase 1 – Data loading and roster export
+Task definition:
+- Implement the foundational data-loading and per-team roster export pipeline described in the spec’s "Delivery Phases – Phase 1" and "Contracts" sections.
+- Focus on consuming `MEGA_players.csv` and `MEGA_teams.csv`, normalizing player rows, associating players with teams, and exporting full team rosters (no unit splits yet).
+
+Contracts to use/implement:
+- Data access and normalization contracts:
+  - `read_players(path: str) -> list[dict]`
+  - `read_teams(path: str) -> list[dict]`
+  - `build_team_index(teams: list[dict]) -> dict[str, dict]`
+  - `normalize_player_row(raw: dict) -> dict`
+- Roster export contract:
+  - `export_team_rosters(players: list[dict], teams_index: dict, out_dir: str, split_units: bool = False) -> None` (Phase 1: `split_units=False`, only `<TEAM_ABBR>.csv`).
+- CLI contract elements:
+  - Initial `main(argv: list[str] | None = None) -> int` wired to `--players`, `--teams`, `--rosters-dir`, `--export-rosters/--no-export-rosters` flags as defined in the "CLI contract" section.
+
+Deliverables:
+- New script `scripts/power_rankings_roster.py` containing:
+  - Argument parsing for core inputs and roster-export options.
+  - Implementations (or imports from a helper module) of the data-loading and roster-export helpers listed above.
+  - Logic to read inputs and write `output/team_rosters/<TEAM_ABBR>.csv` for every team present in `MEGA_teams.csv`.
+- (Optional) Helper module `scripts/power_rankings_roster_utils.py` housing shared CSV and normalization utilities, as suggested in the spec’s "Source Code Structure" section.
+
+Verification instructions:
+- From the project root, run the new CLI with defaults:
+  - `python3 scripts/power_rankings_roster.py --players MEGA_players.csv --teams MEGA_teams.csv --export-rosters`
+- Confirm that `output/team_rosters/` exists and contains one CSV per team (e.g., 32 files for a standard league):
+  - `ls output/team_rosters`
+  - `wc -l MEGA_teams.csv` vs `ls output/team_rosters/*.csv | wc -l`
+- Spot-check a few team roster files to ensure expected columns are present (e.g., `team_abbrev`, `player_id`, `player_name`, `position`, `ovr`, `dev`) and values are correctly normalized from raw MEGA fields.
+- Implement and run helper script `scripts/verify_team_rosters_export.py` as described in the spec’s "Verification Strategy – Phase 1 – Roster exports", ensuring it:
+  - Reads `MEGA_teams.csv` and counts teams.
+  - Compares that count with the number of `output/team_rosters/*.csv` files.
+  - Verifies core columns exist and exits non-zero on mismatch.
+
+### [ ] Step: Phase 2 – Unit assignment and scoring
+Task definition:
+- Extend the roster exports to assign players to units (Offense, Defense, Special Teams) and generate unit-specific CSVs.
+- Implement the scoring pipeline for each unit and compute normalized unit scores plus overall power scores per team, as outlined in "Delivery Phases – Phase 2" and the scoring-related contracts.
+
+Contracts to use/implement:
+- Unit and starter-selection contracts:
+  - `assign_unit(position: str, side_hint: str | None = None) -> str`
+  - Starter / rotation selection utilities for offense, defense, and special teams, consistent with the spec’s heuristics (starting lineup plus secondary contributors).
+- Scoring contracts:
+  - `score_unit(players: list[dict], unit_type: str, weights: dict | None = None, dev_multipliers: dict | None = None) -> float`
+  - `normalize_unit_scores(raw_scores: dict[str, float], method: str = "zscore") -> dict[str, float]`
+  - `compute_overall_score(units: dict[str, float], weights: dict[str, float]) -> float`
+- Metrics assembly contracts:
+  - Functions to build per-team metrics objects (unit scores, normalized scores, ranks, dev-trait counts) feeding both CSV and HTML.
+
+Deliverables:
+- Updated roster export behavior in `scripts/power_rankings_roster.py` (and/or `power_rankings_roster_utils.py`) that produces:
+  - `output/team_rosters/<TEAM_ABBR>.csv` (full roster, as in Phase 1).
+  - `output/team_rosters/<TEAM_ABBR>_O.csv` for offensive units.
+  - `output/team_rosters/<TEAM_ABBR>_D.csv` for defensive units.
+  - `output/team_rosters/<TEAM_ABBR>_ST.csv` for special teams when `--include-st` is enabled.
+- A fully populated `output/power_rankings_roster.csv` containing for each team:
+  - Unit scores and normalized scores (Off Pass, Off Run, Def Coverage, Pass Rush, Run Defense, optional Special Teams).
+  - Overall power score and rank.
+  - Dev-trait counts and any additional metrics defined in the "Contracts" and "CSV output" sections of the spec.
+
+Verification instructions:
+- Run the CLI to recompute scores with default configuration:
+  - `python3 scripts/power_rankings_roster.py --players MEGA_players.csv --teams MEGA_teams.csv`
+- Confirm that `output/power_rankings_roster.csv` exists and has one row per team plus a header:
+  - `wc -l output/power_rankings_roster.csv`
+- Manually inspect a sample of rows using `head`/`sed` to verify presence and plausible ranges (0–100) for all unit and overall score columns, as well as rank columns.
+- Implement and run `scripts/verify_power_rankings_roster_csv.py` as detailed in the spec’s "Verification Strategy – Phase 2 – Unit scoring" to ensure:
+  - Expected header columns exist.
+  - Score columns are numeric and in the 0–100 range.
+  - Rank columns contain unique integers in `1..N` with no gaps.
+
+### [ ] Step: Phase 3 – Basic HTML report generation
+Task definition:
+- Implement an initial HTML report writer that surfaces roster-based power rankings in a style consistent with the existing draft class and rankings explorer pages.
+- Focus on a league-wide table, basic search and sorting, and simple charts, as described under "Delivery Phases – Phase 3" and the `render_html_report` contract.
+
+Contracts to use/implement:
+- HTML rendering contract:
+  - `render_html_report(path: str, teams_metrics: list[dict], config: dict, league_context: dict) -> None`
+- Supporting contracts:
+  - League-context computation utilities (e.g., computing averages and percentile bands for units and overall scores).
+  - CLI options `--out-html PATH` and `--normalization` wiring to control report output and display metadata.
+
+Deliverables:
+- Generated HTML file `docs/power_rankings_roster.html` that includes:
+  - A league-wide table or grid of teams with overall and unit scores.
+  - Search/filter input and sort controls for at least overall rank and one unit metric.
+  - Basic charts (bar charts or similar) reflecting overall or unit strength, implemented with lightweight inline JS and HTML elements.
+- HTML structure and styling aligned with existing docs pages (e.g., typography and layout echoes of `docs/draft_class_2026.html` and `docs/rankings_explorer.html`).
+
+Verification instructions:
+- Run the CLI with HTML generation enabled (default behavior):
+  - `python3 scripts/power_rankings_roster.py --players MEGA_players.csv --teams MEGA_teams.csv --out-html docs/power_rankings_roster.html`
+- Confirm that `docs/power_rankings_roster.html` exists and is non-trivial in size (for example, `ls -lh docs/power_rankings_roster.html` and check for >10 KB).
+- Use simple text inspection commands to check contents:
+  - `grep` for several known team names from `MEGA_teams.csv`.
+  - `grep` for expected CSS class names or structural markers reused from draft/rankings pages.
+- Implement and run `scripts/verify_power_rankings_roster_html.py` as specified in the "Verification Strategy – Phase 3 – HTML report (basic)" section to verify:
+  - Presence of a team listing table or card container.
+  - Embedded JS data (JSON or arrays) representing team metrics.
+  - Existence of search/sort UI elements.
+
+### [ ] Step: Phase 4 – Advanced visualizations, dev-trait insights, and narratives
+Task definition:
+- Enhance the HTML report to highlight unit strengths/weaknesses and key players using richer visualizations and narrative text.
+- Implement dev-trait composition indicators and methodology/config presentation as in "Delivery Phases – Phase 4".
+
+Contracts to use/implement:
+- Visualization-related contracts (building on `render_html_report`):
+  - Data structures and JS hooks necessary to render radar/spider charts (or equivalent) per team for Off Pass, Off Run, Def Coverage, Pass Rush, and Run Defense.
+  - Additional HTML/CSS structures for dev-trait badges or chips per team.
+- Narrative generation contract:
+  - `generate_team_narrative(team_metrics: dict, league_context: dict) -> dict[str, str]` producing `strengths`, `weaknesses`, and optional `summary` text.
+- Methodology/config presentation:
+  - Section within the HTML (e.g., "Methodology") that surfaces the unit definitions, weights, dev multipliers, and normalization method used, derived from the same config passed to the CLI.
+
+Deliverables:
+- Updated `docs/power_rankings_roster.html` that, for each team card or row:
+  - Displays a radar/spider-style representation (or similar multi-axis visualization) of unit strengths.
+  - Shows dev-trait composition indicators (XF/SS/Star/Normal counts) and highlights when a unit is driven by high-dev, high-OVR players.
+  - Includes narrative text blocks calling out at least one primary strength and one primary weakness per team, referencing specific units and (optionally) standout players.
+- A visible methodology/config panel or section documenting the scoring approach.
+
+Verification instructions:
+- Re-generate the HTML after implementing advanced features:
+  - `python3 scripts/power_rankings_roster.py --players MEGA_players.csv --teams MEGA_teams.csv`
+- Inspect the HTML to verify that each team has:
+  - A rendered multi-metric visualization element (e.g., `<canvas>` or SVG for radar chart or equivalent).
+  - Dev-trait indicators and narrative text blocks.
+- Extend or configure `scripts/verify_power_rankings_roster_html.py` (or an additional mode) to:
+  - Match each team from `output/power_rankings_roster.csv` to a corresponding HTML section or card.
+  - Assert presence of non-empty narrative text for each team.
+- Perform qualitative spot checks on a few known-strong and known-weak rosters to confirm that strengths/weaknesses and rank ordering align with expectations from the underlying MEGA data.
+
+### [ ] Step: Phase 5 – Configuration, fixtures, and automated verification helpers
+Task definition:
+- Finalize configuration handling, synthetic fixtures, and verification helpers so future agents can safely modify and re-run the pipeline.
+- Ensure all helper scripts and any sample fixtures mentioned in the spec’s "Verification Strategy", "MCP servers", and "Sample input artifacts" sections are created and documented.
+
+Contracts to use/implement:
+- Configuration contracts referenced by the CLI and scoring functions:
+  - JSON-based configuration for unit weights and dev multipliers (`--weights-json`, `--dev-multipliers-json`).
+  - Normalization method selection (`--normalization {zscore,minmax}`).
+- Helper-script contracts:
+  - `scripts/verify_team_rosters_export.py`
+  - `scripts/verify_power_rankings_roster_csv.py`
+  - `scripts/verify_power_rankings_roster_html.py` (and any extended modes for Phase 4 checks).
+- Optional fixture-generation helpers under `scripts/` or `{@artifacts_path}/fixtures/` to create small synthetic MEGA-style CSVs for quick tests, consistent with the "Sample input artifacts" guidance.
+
+Deliverables:
+- Completed and documented CLI options for configuration and verification.
+- All verification helper scripts present and executable, with clear usage in comments or docstrings.
+- (Optional but recommended) Small synthetic fixture CSVs (e.g., 4-team dataset) plus a short README note in `{@artifacts_path}` or `spec/power_rankings_roster.md` explaining how they are used for fast verification.
+
+Verification instructions:
+- Run verification helpers sequentially after a full pipeline run:
+  - `python3 scripts/power_rankings_roster.py --players MEGA_players.csv --teams MEGA_teams.csv`
+  - `python3 scripts/verify_team_rosters_export.py`
+  - `python3 scripts/verify_power_rankings_roster_csv.py`
+  - `python3 scripts/verify_power_rankings_roster_html.py`
+- Confirm that all verification commands exit with status code 0 in the happy path and emit clear, actionable messages on failure.
+- If synthetic fixtures are added, run the pipeline against them (using `--players` / `--teams` overrides) and ensure the verification scripts still pass, giving a fast regression-check path for future work.
