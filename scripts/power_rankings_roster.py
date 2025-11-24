@@ -261,6 +261,149 @@ def _normalize_pos_for_mapping(pos: str) -> str:
     return p
 
 
+def get_attr_keys_for_pos(pos: str) -> list[str]:
+    """Return key rating fields to use for a position.
+
+    This mirrors the attribute selections used in the draft class
+    analytics for highlighting strengths by position. Keys correspond to
+    columns in MEGA_players.csv; missing fields are simply skipped by
+    callers.
+    """
+
+    p = _normalize_pos_for_mapping(pos)
+    mapping = {
+        # QB passing, pressure, mobility, awareness
+        "QB": [
+            "throwAccShortRating",
+            "throwAccMidRating",
+            "throwAccDeepRating",
+            "throwPowerRating",
+            "throwUnderPressureRating",
+            "throwOnRunRating",
+            "playActionRating",
+            "awareRating",
+            "speedRating",
+            "breakSackRating",
+        ],
+        # RB/HB elusiveness + carrying/vision + receiving
+        "RB": [
+            "speedRating",
+            "accelRating",
+            "agilityRating",
+            "breakTackleRating",
+            "truckRating",
+            "jukeMoveRating",
+            "spinMoveRating",
+            "stiffArmRating",
+            "carryRating",
+            "catchRating",
+            "bCVRating",
+        ],
+        # FB blocking + strength + short-yardage
+        "FB": [
+            "runBlockRating",
+            "leadBlockRating",
+            "impactBlockRating",
+            "strengthRating",
+            "truckRating",
+            "catchRating",
+        ],
+        # WR receiving, route running, release, agility
+        "WR": [
+            "catchRating",
+            "cITRating",
+            "routeRunShortRating",
+            "routeRunMedRating",
+            "routeRunDeepRating",
+            "speedRating",
+            "releaseRating",
+            "agilityRating",
+            "changeOfDirectionRating",
+        ],
+        # TE balanced catching + blocking + strength
+        "TE": [
+            "catchRating",
+            "cITRating",
+            "runBlockRating",
+            "passBlockRating",
+            "speedRating",
+            "routeRunShortRating",
+            "routeRunMedRating",
+            "strengthRating",
+            "specCatchRating",
+        ],
+        # Offensive Line: pass/run, power/finesse + strength/awareness/impact
+        "OL": [
+            "passBlockRating",
+            "passBlockPowerRating",
+            "passBlockFinesseRating",
+            "runBlockRating",
+            "runBlockPowerRating",
+            "runBlockFinesseRating",
+            "strengthRating",
+            "awareRating",
+            "impactBlockRating",
+        ],
+        # Edge rushers: moves + shed + pursuit + tackle + speed
+        "DE": [
+            "powerMovesRating",
+            "finesseMovesRating",
+            "blockShedRating",
+            "pursuitRating",
+            "tackleRating",
+            "strengthRating",
+            "speedRating",
+            "hitPowerRating",
+        ],
+        # Interior DL: power + shed + strength + tackle + pursuit + hit power
+        "DT": [
+            "powerMovesRating",
+            "blockShedRating",
+            "strengthRating",
+            "tackleRating",
+            "pursuitRating",
+            "hitPowerRating",
+        ],
+        # Linebackers: tackle + pursuit + hit + shed + recognition + coverage + speed
+        "LB": [
+            "tackleRating",
+            "pursuitRating",
+            "hitPowerRating",
+            "blockShedRating",
+            "playRecRating",
+            "zoneCoverRating",
+            "manCoverRating",
+            "speedRating",
+            "awareRating",
+        ],
+        # Cornerbacks: man/zone + speed/accel/agility + press + recognition + ball skills
+        "CB": [
+            "manCoverRating",
+            "zoneCoverRating",
+            "speedRating",
+            "accelRating",
+            "agilityRating",
+            "pressRating",
+            "playRecRating",
+            "catchRating",
+            "changeOfDirectionRating",
+        ],
+        # Safeties: zone + tackle + hit + speed + recognition + pursuit + man + awareness + hands
+        "S": [
+            "zoneCoverRating",
+            "tackleRating",
+            "hitPowerRating",
+            "speedRating",
+            "playRecRating",
+            "pursuitRating",
+            "manCoverRating",
+            "awareRating",
+            "catchRating",
+        ],
+    }
+    return mapping.get(p, [])
+
+
 def normalize_player_row(raw: dict, team_index: dict[str, dict] | None = None) -> dict:
     """Normalize a raw player row into the canonical internal format.
 
@@ -274,6 +417,10 @@ def normalize_player_row(raw: dict, team_index: dict[str, dict] | None = None) -
     - ovr: int OVR value used for scoring (best or scheme OVR).
     - dev: dev trait code as string in {"3","2","1","0"}.
     """
+
+    # Start from the raw row so all rating attributes remain available to
+    # downstream scoring logic.
+    out: dict = dict(raw)
 
     # Player id
     player_id = (raw.get("id") or "").strip()
@@ -313,16 +460,14 @@ def normalize_player_row(raw: dict, team_index: dict[str, dict] | None = None) -
     if dev not in {"3", "2", "1", "0"}:
         dev = "0"
 
-    out: dict = {
-        "team_abbrev": team_abbrev,
-        "team_name": team_name,
-        "player_id": player_id,
-        "player_name": player_name,
-        "position": position,
-        "normalized_pos": normalized_pos,
-        "ovr": int(ovr) if ovr is not None else 0,
-        "dev": dev,
-    }
+    out["team_abbrev"] = team_abbrev
+    out["team_name"] = team_name
+    out["player_id"] = player_id
+    out["player_name"] = player_name
+    out["position"] = position
+    out["normalized_pos"] = normalized_pos
+    out["ovr"] = int(ovr) if ovr is not None else 0
+    out["dev"] = dev
 
     return out
 
@@ -549,12 +694,33 @@ def _dev_multiplier(ovr: int, dev: str, overrides: dict | None = None) -> float:
     return 0.0
 
 
+def _player_base_attr_score(player: dict) -> float:
+    """Compute a base score from key attributes for the player's position.
+
+    Falls back to overall rating when attribute fields are missing.
+    """
+
+    pos = player.get("position") or player.get("normalized_pos") or ""
+    keys = get_attr_keys_for_pos(str(pos))
+    values: list[float] = []
+    for key in keys:
+        val = safe_float(player.get(key), None)
+        if val is not None:
+            values.append(val)
+    if values:
+        return float(sum(values) / len(values))
+
+    # Fallback: use overall rating if no attribute data is available.
+    return float(safe_int(player.get("ovr"), 0) or 0)
+
+
 def _player_unit_score(player: dict, dev_multipliers: dict | None = None) -> float:
-    ovr = safe_int(player.get("ovr"), 0) or 0
+    base = _player_base_attr_score(player)
     dev = str(player.get("dev") or "0")
-    bonus = _dev_multiplier(ovr, dev, overrides=dev_multipliers)
-    # Scale OVR by (1 + bonus); low-OVR devs get 0 bonus.
-    return float(ovr) * (1.0 + bonus)
+    ovr_for_band = safe_int(player.get("ovr"), 0) or 0
+    bonus = _dev_multiplier(ovr_for_band, dev, overrides=dev_multipliers)
+    # Scale attribute-based score by (1 + bonus); low-OVR devs get 0 bonus.
+    return float(base) * (1.0 + bonus)
 
 
 def score_unit(

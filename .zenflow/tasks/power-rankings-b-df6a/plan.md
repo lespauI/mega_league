@@ -176,6 +176,7 @@ Verification instructions:
   - Rank columns contain unique integers in `1..N` with no gaps.
 
 ### [ ] Step: Phase 3 – Basic HTML report generation
+<!-- chat-id: 888ccd02-21cb-482a-a484-16cbc0376cc9 -->
 Task definition:
 - Implement an initial HTML report writer that surfaces roster-based power rankings in a style consistent with the existing draft class and rankings explorer pages.
 - Focus on a league-wide table, basic search and sorting, and simple charts, as described under "Delivery Phases – Phase 3" and the `render_html_report` contract.
