@@ -372,3 +372,8 @@ add more grapsh, we now have only offense, need Deffense graps as well
 <!-- chat-id: d55e850a-6cff-4d52-91ec-38b55a5fe28f -->
 
 show numbers and what every corner means
+
+### [x] Step: worktree fix
+<!-- chat-id: 9e287631-99df-499f-b4d0-eaad85c4bf3c -->
+
+Failed to push branch to GitHub: zen/power-rankings-b-df6a has uncommitted changes: docs/power_rankings_roster.html
