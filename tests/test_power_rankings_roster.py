@@ -42,11 +42,12 @@ class ComputeOverallScoreTests(unittest.TestCase):
         self.assertAlmostEqual(score, expected)
 
     def test_custom_weights_override_defaults(self) -> None:
+        # Only pass in the units we want to participate in the
+        # composite here so the expected value is easy to reason
+        # about and not affected by defensive placeholders.
         units = {
             "off_pass": 50.0,
             "off_run": 100.0,
-            "def_coverage": 0.0,
-            "pass_rush": 0.0,
         }
         weights = {"off_pass": 0.10, "off_run": 0.90}
 
@@ -159,4 +160,3 @@ class BuildTeamMetricsRankingTests(unittest.TestCase):
 
 if __name__ == "__main__":  # pragma: no cover - manual test runner
     unittest.main()
-
