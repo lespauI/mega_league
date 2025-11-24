@@ -377,3 +377,8 @@ show numbers and what every corner means
 <!-- chat-id: 9e287631-99df-499f-b4d0-eaad85c4bf3c -->
 
 Failed to push branch to GitHub: zen/power-rankings-b-df6a has uncommitted changes: docs/power_rankings_roster.html
+
+### [x] Step: create unit tests
+<!-- chat-id: 82b7c7c6-2ad3-4929-a66e-31741d7cf17f -->
+
+We need to validate our rank calculation works correctly
