@@ -2139,9 +2139,179 @@ def render_html_report(
     parts.append("      </div>")
     parts.append("    </section>")
 
+    # Team detail overlay used as an in-page "team page". Clicking a
+    # row in the table or a team card opens this panel and shows the
+    # full roster plus a per-unit scoring breakdown for that team.
+    parts.append("    <div id=\"team-detail-overlay\" class=\"team-detail-overlay\" aria-hidden=\"true\">")
+    parts.append("      <div class=\"team-detail-backdrop\"></div>")
+    parts.append("      <div class=\"team-detail-panel\">")
+    parts.append("        <button type=\"button\" class=\"team-detail-close\" aria-label=\"Close team detail\">&#x00D7;</button>")
+    parts.append("        <div class=\"team-detail-header\">")
+    parts.append("          <h2 id=\"team-detail-title\"></h2>")
+    parts.append("          <p id=\"team-detail-subtitle\" class=\"team-detail-sub\"></p>")
+    parts.append("        </div>")
+    parts.append("        <div class=\"team-detail-body\">")
+    parts.append("          <div class=\"team-detail-columns\">")
+    parts.append("            <section class=\"team-detail-col\">")
+    parts.append("              <h3>Roster overview (OVR &amp; key attributes)</h3>")
+    parts.append("              <table id=\"team-detail-roster\" class=\"team-detail-table\"></table>")
+    parts.append("            </section>")
+    parts.append("            <section class=\"team-detail-col\">")
+    parts.append("              <h3>Unit strength breakdown</h3>")
+    parts.append("              <div id=\"team-detail-breakdown\" class=\"team-detail-breakdown\"></div>")
+    parts.append("            </section>")
+    parts.append("          </div>")
+    parts.append("        </div>")
+    parts.append("      </div>")
+    parts.append("    </div>")
+
     parts.append("  </div>")
     parts.append("  <script id=\"teams-data\" type=\"application/json\">")
     parts.append(data_blob)
+    parts.append("  </script>")
+    parts.append("  <script>")
+    parts.append("  (function() {\n"
+                 "    function getData() {\n"
+                 "      const el = document.getElementById('teams-data');\n"
+                 "      if (!el) return null;\n"
+                 "      try { return JSON.parse(el.textContent || '{}'); } catch (e) { return null; }\n"
+                 "    }\n"
+                 "    function closeTeamDetail() {\n"
+                 "      const overlay = document.getElementById('team-detail-overlay');\n"
+                 "      if (!overlay) return;\n"
+                 "      overlay.classList.remove('visible');\n"
+                 "      overlay.setAttribute('aria-hidden', 'true');\n"
+                 "    }\n"
+                 "    function openTeamDetail(abbr, DATA) {\n"
+                 "      if (!DATA || !DATA.rosters) return;\n"
+                 "      const rosterMap = DATA.rosters || {};\n"
+                 "      const unitsMap = DATA.unit_breakdowns || {};\n"
+                 "      const roster = rosterMap[abbr];\n"
+                 "      if (!roster || !roster.length) return;\n"
+                 "      const overlay = document.getElementById('team-detail-overlay');\n"
+                 "      if (!overlay) return;\n"
+                 "      const teamMeta = (DATA.teams || []).find(function(t) { return String(t.team_abbrev || '') === String(abbr || ''); });\n"
+                 "      const titleEl = document.getElementById('team-detail-title');\n"
+                 "      const subEl = document.getElementById('team-detail-subtitle');\n"
+                 "      const rosterTable = document.getElementById('team-detail-roster');\n"
+                 "      const breakdownRoot = document.getElementById('team-detail-breakdown');\n"
+                 "      if (!rosterTable || !breakdownRoot) return;\n"
+                 "      const name = teamMeta && (teamMeta.team_name || teamMeta.team_abbrev || abbr) || abbr;\n"
+                 "      const rank = teamMeta && teamMeta.overall_rank;\n"
+                 "      const overall = teamMeta && teamMeta.overall_score;\n"
+                 "      if (titleEl) { titleEl.textContent = name + ' (' + abbr + ')'; }\n"
+                 "      if (subEl) {\n"
+                 "        const bits = [];\n"
+                 "        if (typeof rank === 'number' && rank) bits.push('#' + rank + ' overall roster grade');\n"
+                 "        if (typeof overall === 'number') bits.push('Overall ' + overall.toFixed(1));\n"
+                 "        subEl.textContent = bits.join(' • ');\n"
+                 "      }\n"
+                 "      const byId = {};\n"
+                 "      roster.forEach(function(p) { if (p && p.player_id != null) byId[String(p.player_id)] = p; });\n"
+                 "      rosterTable.innerHTML = '';\n"
+                 "      const thead = document.createElement('thead');\n"
+                 "      thead.innerHTML = '<tr><th>Pos</th><th>Player</th><th class=\\"num\\">OVR</th><th>Dev</th><th>Top attributes</th></tr>';\n"
+                 "      rosterTable.appendChild(thead);\n"
+                 "      const tbody = document.createElement('tbody');\n"
+                 "      roster.forEach(function(p) {\n"
+                 "        const tr = document.createElement('tr');\n"
+                 "        const attrs = (p.top_attrs || []).map(function(a) { return a.key + ': ' + a.value; }).join(', ');\n"
+                 "        tr.innerHTML = '<td>' + (p.position || '') + '</td>' +\n"
+                 "          '<td>' + (p.name || '') + '</td>' +\n"
+                 "          '<td class=\\"num\\">' + (p.ovr != null ? p.ovr : '') + '</td>' +\n"
+                 "          '<td>' + (p.dev_label || '') + '</td>' +\n"
+                 "          '<td class=\\"team-detail-attr\\">' + attrs + '</td>';\n"
+                 "        tbody.appendChild(tr);\n"
+                 "      });\n"
+                 "      rosterTable.appendChild(tbody);\n"
+                 "      breakdownRoot.innerHTML = '';\n"
+                 "      const allUnits = ['off_pass','off_run','def_coverage','pass_rush','run_defense'];\n"
+                 "      const labels = { off_pass: 'Off Pass', off_run: 'Off Run', def_coverage: 'Pass Coverage', pass_rush: 'Pass Rush', run_defense: 'Run Defense' };\n"
+                 "      const teamUnits = unitsMap && unitsMap[abbr];\n"
+                 "      if (teamUnits) {\n"
+                 "        allUnits.forEach(function(key) {\n"
+                 "          const u = teamUnits[key];\n"
+                 "          if (!u) return;\n"
+                 "          const card = document.createElement('div');\n"
+                 "          card.className = 'team-detail-breakdown-unit';\n"
+                 "          const h = document.createElement('h4');\n"
+                 "          const label = (u.label || labels[key] || key);\n"
+                 "          let grade = '';\n"
+                 "          if (typeof u.norm_score === 'number') grade = ' — grade ' + u.norm_score.toFixed(1);\n"
+                 "          h.textContent = label + grade;\n"
+                 "          card.appendChild(h);\n"
+                 "          if (typeof u.raw_score === 'number') {\n"
+                 "            const p = document.createElement('p');\n"
+                 "            p.textContent = 'Raw starter blend: ' + u.raw_score.toFixed(1);\n"
+                 "            card.appendChild(p);\n"
+                 "          }\n"
+                 "          const tbl = document.createElement('table');\n"
+                 "          const th = document.createElement('thead');\n"
+                 "          th.innerHTML = '<tr><th>Pos</th><th class=\\"num\\">Wt%</th><th class=\\"num\\">Pos score</th><th>Starters used</th></tr>';\n"
+                 "          tbl.appendChild(th);\n"
+                 "          const tb = document.createElement('tbody');\n"
+                 "          (u.positions || []).forEach(function(posInfo) {\n"
+                 "            const tr = document.createElement('tr');\n"
+                 "            const wtPct = (posInfo.weight_share != null ? (posInfo.weight_share * 100).toFixed(0) : '');\n"
+                 "            const posScore = (posInfo.avg_unit_score != null ? posInfo.avg_unit_score.toFixed(1) : '');\n"
+                 "            const starters = (posInfo.players || []).map(function(pl) {\n"
+                 "              const pid = pl.player_id != null ? String(pl.player_id) : '';\n"
+                 "              const base = pid && byId[pid] ? byId[pid] : null;\n"
+                 "              if (!base) return '';\n"
+                 "              const tag = (base.position || '') + ' ' + (base.name || '');\n"
+                 "              const ovr = base.ovr != null ? base.ovr : '';\n"
+                 "              const dev = base.dev_label || '';\n"
+                 "              const parts = [tag];\n"
+                 "              if (ovr !== '') parts.push(String(ovr));\n"
+                 "              if (dev) parts.push(dev);\n"
+                 "              return parts.join(' ');\n"
+                 "            }).filter(Boolean).join('; ');\n"
+                 "            tr.innerHTML = '<td>' + (posInfo.pos || '') + '</td>' +\n"
+                 "              '<td class=\\"num\\">' + wtPct + '</td>' +\n"
+                 "              '<td class=\\"num\\">' + posScore + '</td>' +\n"
+                 "              '<td>' + starters + '</td>';\n"
+                 "            tb.appendChild(tr);\n"
+                 "          });\n"
+                 "          tbl.appendChild(tb);\n"
+                 "          card.appendChild(tbl);\n"
+                 "          breakdownRoot.appendChild(card);\n"
+                 "        });\n"
+                 "      }\n"
+                 "      overlay.classList.add('visible');\n"
+                 "      overlay.setAttribute('aria-hidden', 'false');\n"
+                 "    }\n"
+                 "    function attachTeamDetailHandlers() {\n"
+                 "      const DATA = getData();\n"
+                 "      if (!DATA) return;\n"
+                 "      const rows = document.querySelectorAll('#teams-table tbody tr[data-team-abbr]');\n"
+                 "      rows.forEach(function(tr) {\n"
+                 "        tr.addEventListener('click', function() {\n"
+                 "          const abbr = tr.getAttribute('data-team-abbr');\n"
+                 "          if (abbr) openTeamDetail(abbr, DATA);\n"
+                 "        });\n"
+                 "      });\n"
+                 "      const cards = document.querySelectorAll('.team-card[data-team-abbr]');\n"
+                 "      cards.forEach(function(card) {\n"
+                 "        card.addEventListener('click', function() {\n"
+                 "          const abbr = card.getAttribute('data-team-abbr');\n"
+                 "          if (abbr) openTeamDetail(abbr, DATA);\n"
+                 "        });\n"
+                 "      });\n"
+                 "      const overlay = document.getElementById('team-detail-overlay');\n"
+                 "      if (overlay) {\n"
+                 "        const closeBtn = overlay.querySelector('.team-detail-close');\n"
+                 "        const backdrop = overlay.querySelector('.team-detail-backdrop');\n"
+                 "        if (closeBtn) closeBtn.addEventListener('click', closeTeamDetail);\n"
+                 "        if (backdrop) backdrop.addEventListener('click', closeTeamDetail);\n"
+                 "      }\n"
+                 "      document.addEventListener('keydown', function(ev) { if (ev.key === 'Escape') closeTeamDetail(); });\n"
+                 "    }\n"
+                 "    if (document.readyState === 'loading') {\n"
+                 "      document.addEventListener('DOMContentLoaded', attachTeamDetailHandlers);\n"
+                 "    } else {\n"
+                 "      attachTeamDetailHandlers();\n"
+                 "    }\n"
+                 "  })();\n")
     parts.append("  </script>")
     parts.append("</body>")
     parts.append("</html>")
