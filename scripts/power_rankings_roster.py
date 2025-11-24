@@ -687,6 +687,17 @@ DEFAULT_DEV_MULTIPLIERS: dict[str, list[tuple[int, float]]] = {
 }
 
 
+# Overall unit weights used when composing the final power score from
+# normalized unit scores. Exposed as a constant so the HTML report can
+# document the actual configuration in use.
+DEFAULT_OVERALL_UNIT_WEIGHTS: dict[str, float] = {
+    "off_pass": 0.30,
+    "off_run": 0.20,
+    "def_coverage": 0.30,
+    "pass_rush": 0.20,
+}
+
+
 def _dev_multiplier(ovr: int, dev: str, overrides: dict | None = None) -> float:
     tiers = overrides or DEFAULT_DEV_MULTIPLIERS
     ladder = tiers.get(str(dev), [])
@@ -819,16 +830,15 @@ def compute_overall_score(units: dict[str, float], weights: dict[str, float] | N
     Run Defense and Special Teams can be folded in via *weights*.
     """
 
-    default_weights = {
-        "off_pass": 0.30,
-        "off_run": 0.20,
-        "def_coverage": 0.30,
-        "pass_rush": 0.20,
-    }
+    default_weights = dict(DEFAULT_OVERALL_UNIT_WEIGHTS)
     if weights:
         default_weights.update({k: float(v) for k, v in weights.items()})
 
-    usable_items = [(k, default_weights[k]) for k in default_weights.keys() if k in units and default_weights[k] > 0]
+    usable_items = [
+        (k, default_weights[k])
+        for k in default_weights.keys()
+        if k in units and default_weights[k] > 0
+    ]
     total_w = sum(w for _, w in usable_items)
     if total_w <= 0:
         return 0.0
@@ -1105,6 +1115,123 @@ def compute_league_context(teams_metrics: list[dict]) -> dict:
     return {k: v for k, v in metrics.items() if v}
 
 
+def generate_team_narrative(team_metrics: dict, league_context: dict) -> dict[str, str]:
+    """Generate narrative text describing a team's strengths and weaknesses.
+
+    The output dict contains ``strengths``, ``weaknesses``, and ``summary``
+    keys. The content is heuristic but grounded in the same metrics that
+    feed the CSV/HTML report.
+    """
+
+    # Core unit keys and human labels.
+    unit_keys = [
+        ("off_pass_score", "Off Pass"),
+        ("off_run_score", "Off Run"),
+        ("def_cover_score", "Pass Coverage"),
+        ("def_pass_rush_score", "Pass Rush"),
+        ("def_run_score", "Run Defense"),
+    ]
+
+    scores: dict[str, float] = {}
+    for key, _ in unit_keys:
+        try:
+            scores[key] = float(team_metrics.get(key) or 0.0)
+        except Exception:
+            scores[key] = 0.0
+
+    def _ctx(key: str) -> dict:
+        if isinstance(league_context, dict):
+            return league_context.get(key, {})
+        return {}
+
+    strengths: list[str] = []
+    weaknesses: list[str] = []
+
+    # Strong if >= 75th percentile, weak if <= 25th.
+    for key, label in unit_keys:
+        ctx = _ctx(key)
+        score = scores.get(key, 0.0)
+        if ctx:
+            high = ctx.get("p75", ctx.get("p50", 0.0))
+            low = ctx.get("p25", ctx.get("p50", 0.0))
+        else:
+            high = 70.0
+            low = 40.0
+
+        if score >= high:
+            strengths.append(f"{label} unit grades as a clear strength ({score:.1f}).")
+        elif score <= low:
+            weaknesses.append(f"{label} unit looks like a liability ({score:.1f}).")
+
+    # Ensure at least one strength/weakness.
+    if not strengths and scores:
+        best_key = max(scores, key=scores.get)
+        best_label = dict(unit_keys).get(best_key, best_key)
+        strengths.append(f"{best_label} is the most reliable unit on this roster.")
+
+    if not weaknesses and scores:
+        worst_key = min(scores, key=scores.get)
+        worst_label = dict(unit_keys).get(worst_key, worst_key)
+        weaknesses.append(f"{worst_label} lags behind the rest of the build.")
+
+    dev_xf = int(team_metrics.get("dev_xf") or 0)
+    dev_ss = int(team_metrics.get("dev_ss") or 0)
+    dev_star = int(team_metrics.get("dev_star") or 0)
+    dev_norm = int(team_metrics.get("dev_normal") or 0)
+    total_premium = dev_xf + dev_ss
+    total_dev = total_premium + dev_star + dev_norm
+
+    dev_phrase = ""
+    if total_premium >= 6:
+        dev_phrase = f" built around {total_premium} X-Factor/Superstar pieces"
+    elif total_premium >= 3:
+        dev_phrase = " with a solid premium dev core"
+
+    top_contrib_str = str(team_metrics.get("top_contributors") or "")
+    top_contrib = ""
+    if top_contrib_str:
+        first = top_contrib_str.split(";")[0].strip()
+        if first:
+            top_contrib = first
+
+    team_name = str(
+        team_metrics.get("team_name") or team_metrics.get("team_abbrev") or ""
+    ).strip()
+    overall_rank = int(team_metrics.get("overall_rank") or 0)
+
+    primary_strength = strengths[0] if strengths else ""
+    primary_weakness = weaknesses[0] if weaknesses else ""
+
+    summary_parts: list[str] = []
+    if team_name:
+        if overall_rank:
+            summary_parts.append(
+                f"{team_name} currently grades #{overall_rank} in roster power"
+            )
+        else:
+            summary_parts.append(
+                f"{team_name} sits in the middle of the roster power pack"
+            )
+    if dev_phrase:
+        summary_parts.append(dev_phrase)
+    if top_contrib:
+        summary_parts.append(f" headlined by {top_contrib}")
+
+    summary = ""
+    if summary_parts:
+        summary = "".join(summary_parts) + "."
+        if primary_strength or primary_weakness:
+            summary += " " + " ".join(
+                s for s in [primary_strength, primary_weakness] if s
+            )
+
+    return {
+        "strengths": " ".join(strengths) if strengths else primary_strength,
+        "weaknesses": " ".join(weaknesses) if weaknesses else primary_weakness,
+        "summary": summary,
+    }
+
+
 def render_html_report(
     path: str,
     teams_metrics: list[dict],
@@ -1160,6 +1287,75 @@ def render_html_report(
 
     title = "Roster Power Rankings — Roster Analytics"
     subtitle = f"League-wide roster strength overview (normalization: {normalization})"
+
+    # Small helper for per-team radar / spider-style visualization.
+    def _radar_svg(team_row: dict) -> str:
+        metrics = [
+            ("off_pass_score", "OP"),
+            ("off_run_score", "OR"),
+            ("def_cover_score", "Cov"),
+            ("def_pass_rush_score", "Rush"),
+            ("def_run_score", "Run"),
+        ]
+        cx, cy, radius = 60.0, 60.0, 42.0
+
+        # Background polygon at ~70% radius for visual context.
+        bg_pts: list[str] = []
+        for idx, _ in enumerate(metrics):
+            angle = -math.pi / 2.0 + (2.0 * math.pi * idx) / len(metrics)
+            r_bg = radius * 0.7
+            x = cx + r_bg * math.cos(angle)
+            y = cy + r_bg * math.sin(angle)
+            bg_pts.append(f"{x:.1f},{y:.1f}")
+
+        # Data polygon from unit scores.
+        data_pts: list[tuple[float, float]] = []
+        for idx, (key, _label) in enumerate(metrics):
+            try:
+                score = float(team_row.get(key) or 0.0)
+            except Exception:
+                score = 0.0
+            score = max(0.0, min(100.0, score))
+            angle = -math.pi / 2.0 + (2.0 * math.pi * idx) / len(metrics)
+            r = radius * (score / 100.0)
+            x = cx + r * math.cos(angle)
+            y = cy + r * math.sin(angle)
+            data_pts.append((x, y))
+
+        poly_pts = " ".join(f"{x:.1f},{y:.1f}" for x, y in data_pts)
+
+        abbr = str(team_row.get("team_abbrev") or "")
+
+        svg_parts: list[str] = []
+        svg_parts.append(
+            '<svg class="radar-chart" viewBox="0 0 120 120" '
+            f'data-team-abbr="{escape(abbr)}">'
+        )
+        svg_parts.append('<g class="radar-bg"><polygon points="' + " ".join(bg_pts) + '"/></g>')
+        svg_parts.append('<g class="radar-axes">')
+        for idx, _ in enumerate(metrics):
+            angle = -math.pi / 2.0 + (2.0 * math.pi * idx) / len(metrics)
+            x2 = cx + radius * math.cos(angle)
+            y2 = cy + radius * math.sin(angle)
+            svg_parts.append(
+                '<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}"/>'.format(
+                    x1=cx,
+                    y1=cy,
+                    x2=x2,
+                    y2=y2,
+                )
+            )
+        svg_parts.append("</g>")
+        svg_parts.append('<polygon class="radar-poly" points="' + poly_pts + '"/>')
+        for x, y in data_pts:
+            svg_parts.append(
+                '<circle class="radar-point" cx="{x:.1f}" cy="{y:.1f}" r="2"/>'.format(
+                    x=x,
+                    y=y,
+                )
+            )
+        svg_parts.append("</svg>")
+        return "".join(svg_parts)
 
     # Build HTML structure. Keep the style and table sorter closely
     # aligned with draft_class_2026.html for visual consistency.
@@ -1221,8 +1417,35 @@ def render_html_report(
     parts.append("    .chart-bar-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#22c55e,#16a34a); opacity:0.3; }")
     parts.append("    .chart-bar-label { position:relative; z-index:1; padding:4px 6px; font-size:11px; display:flex; flex-direction:column; justify-content:center; }")
     parts.append("    .chart-bar-label b { font-size:12px; }")
-    parts.append("    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } }")
-    parts.append("    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } }")
+    parts.append("    .methodology-grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:8px; font-size:12px; color:#111827; }")
+    parts.append("    .methodology-col { background:#f8fafc; border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; }")
+    parts.append("    .methodology-col h3 { margin:0 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:0.03em; color:#6b7280; }")
+    parts.append("    .methodology-list { margin:0; padding-left:16px; }")
+    parts.append("    .methodology-list li { margin:2px 0; }")
+    parts.append("    .team-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }")
+    parts.append("    .team-card { border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; background:#f9fafb; display:flex; flex-direction:column; gap:8px; }")
+    parts.append("    .team-card-header { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }")
+    parts.append("    .team-card-title { font-size:13px; font-weight:600; color:#0f172a; }")
+    parts.append("    .team-card-sub { font-size:11px; color:#6b7280; }")
+    parts.append("    .team-card-dev { font-size:11px; color:#4b5563; }")
+    parts.append("    .team-card-dev strong { font-weight:600; }")
+    parts.append("    .team-card-dev span { margin-right:6px; }")
+    parts.append("    .team-card.dev-elite { border-color:#f97316; box-shadow:0 0 0 1px rgba(249,115,22,0.35); }")
+    parts.append("    .team-card-body { display:flex; gap:10px; align-items:stretch; }")
+    parts.append("    .radar-shell { flex:0 0 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; }")
+    parts.append("    .radar-chart { width:120px; height:120px; }")
+    parts.append("    .radar-bg polygon { fill:#eff6ff; stroke:#dbeafe; stroke-width:1; }")
+    parts.append("    .radar-axes line { stroke:#e5e7eb; stroke-width:1; }")
+    parts.append("    .radar-poly { fill:rgba(59,130,246,0.3); stroke:#2563eb; stroke-width:1.5; }")
+    parts.append("    .radar-point { fill:#1d4ed8; stroke:#eff6ff; stroke-width:1; r:2; }")
+    parts.append("    .radar-labels { display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-top:4px; font-size:10px; color:#6b7280; }")
+    parts.append("    .radar-labels span { padding:1px 4px; border-radius:999px; background:#e5e7eb; }")
+    parts.append("    .team-narrative { flex:1 1 auto; font-size:12px; color:#111827; display:flex; flex-direction:column; gap:4px; }")
+    parts.append("    .team-narrative p { margin:0; }")
+    parts.append("    .team-narrative strong { color:#0f172a; }")
+    parts.append("    .team-narrative .label { text-transform:uppercase; font-size:11px; letter-spacing:0.04em; color:#6b7280; }")
+    parts.append("    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .team-grid { grid-template-columns: 1fr; } }")
+    parts.append("    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } .team-card-body { flex-direction:column; } }")
     parts.append("  </style>")
     parts.append("  <script>")
     parts.append("  // Simple table sorter: click any <th> in a .sortable table to sort by that column\n"  # noqa: E501
@@ -1358,6 +1581,115 @@ def render_html_report(
     parts.append("      <div class=\"chart-strip\" id=\"overall-chart\"></div>")
     parts.append("    </section>")
 
+    # Methodology / configuration overview.
+    parts.append("    <section class=\"panel\" id=\"methodology\">")
+    parts.append("      <div class=\"section-title\">Methodology &amp; Config</div>")
+
+    norm_text = "z-score (mean ~50, spread by standard deviation)"
+    if normalization == "minmax":
+        norm_text = "min–max to [0,100] across teams"
+
+    parts.append(
+        '      <div class="section-intro">'
+        + escape(
+            "Each unit score is a position-weighted blend of starter-quality ratings, "
+            "boosted by premium dev traits at high OVR bands and then normalized to a 0–100 scale ("
+            + norm_text
+            + ")."
+        )
+        + "</div>"
+    )
+
+    # Unit position weighting lines.
+    unit_weight_lines: list[str] = []
+    unit_labels = {
+        "off_pass": "Off Pass (QB/WR/TE/OL)",
+        "off_run": "Off Run (RB/FB/TE/OL)",
+        "def_coverage": "Pass Coverage (CB/S/LB)",
+        "pass_rush": "Pass Rush (DE/DT/LB)",
+        "run_defense": "Run Defense (DE/DT/LB/S)",
+    }
+    for key in ["off_pass", "off_run", "def_coverage", "pass_rush", "run_defense"]:
+        weights = UNIT_POSITION_WEIGHTS.get(key, {})
+        if not weights:
+            continue
+        total = sum(v for v in weights.values() if v > 0)
+        if total <= 0:
+            continue
+        parts_line: list[str] = []
+        for pos, w in sorted(weights.items(), key=lambda kv: -kv[1]):
+            if w <= 0:
+                continue
+            pct = (w / total) * 100.0
+            parts_line.append(f"{pos} {pct:.0f}%")
+        if parts_line:
+            unit_label = unit_labels.get(key, key)
+            unit_weight_lines.append(f"{unit_label}: " + ", ".join(parts_line))
+
+    # Dev trait ladder description.
+    dev_lines: list[str] = []
+    for dev_code, label in DEV_LABELS.items():
+        ladder = DEFAULT_DEV_MULTIPLIERS.get(dev_code, [])
+        if not ladder:
+            dev_lines.append(f"{label}: baseline impact only (no extra multiplier by default).")
+            continue
+        parts_line = []
+        for threshold, bonus in ladder:
+            parts_line.append(f"+{bonus * 100:.0f}% above {threshold} OVR")
+        dev_lines.append(f"{label}: " + ", ".join(parts_line))
+
+    # Overall weighting text.
+    overall_parts: list[str] = []
+    for key, label in [
+        ("off_pass", "Off Pass"),
+        ("off_run", "Off Run"),
+        ("def_coverage", "Pass Coverage"),
+        ("pass_rush", "Pass Rush"),
+    ]:
+        w = DEFAULT_OVERALL_UNIT_WEIGHTS.get(key)
+        if w is None or w <= 0:
+            continue
+        overall_parts.append(f"{label} {w * 100:.0f}%")
+    overall_text = " + ".join(overall_parts)
+
+    parts.append("      <div class=\"methodology-grid\">")
+    parts.append("        <div class=\"methodology-col\">")
+    parts.append("          <h3>Units &amp; position weighting</h3>")
+    parts.append("          <ul class=\"methodology-list\">")
+    for line in unit_weight_lines:
+        parts.append("            <li>" + escape(line) + "</li>")
+    parts.append("          </ul>")
+    parts.append("        </div>")
+
+    parts.append("        <div class=\"methodology-col\">")
+    parts.append("          <h3>Dev traits impact</h3>")
+    parts.append("          <ul class=\"methodology-list\">")
+    for line in dev_lines:
+        parts.append("            <li>" + escape(line) + "</li>")
+    parts.append("          </ul>")
+    parts.append("        </div>")
+
+    parts.append("        <div class=\"methodology-col\">")
+    parts.append("          <h3>Normalization &amp; overall score</h3>")
+    if overall_text:
+        parts.append(
+            "          <p>" + escape(
+                "Overall roster power combines normalized unit scores using: "
+                + overall_text
+                + ". Run Defense is shown as its own unit but not currently weighted into the composite score by default."
+            )
+            + "</p>"
+        )
+    parts.append(
+        "          <p>" + escape(
+            "Normalization method: " + normalization + " (" + norm_text + ")."
+        )
+        + "</p>"
+    )
+    parts.append("        </div>")
+    parts.append("      </div>")
+    parts.append("    </section>")
+
     # Controls + league-wide table.
     parts.append("    <section class=\"panel\" id=\"teams\">")
     parts.append("      <div class=\"section-title\">Teams – Roster Power Table</div>")
@@ -1457,6 +1789,111 @@ def render_html_report(
 
     parts.append("          </tbody>")
     parts.append("        </table>")
+    parts.append("      </div>")
+    parts.append("    </section>")
+
+    # Team-level cards with radar-style unit overview and narrative.
+    parts.append("    <section class=\"panel\" id=\"team-insights\">")
+    parts.append("      <div class=\"section-title\">Team Unit Profiles &amp; Narratives</div>")
+    parts.append(
+        '      <div class="section-intro">'
+        + escape(
+            "Per-team view of unit balance, dev-trait composition, and roster storylines. "
+            "Use alongside the table above when scouting matchups or trade targets."
+        )
+        + "</div>"
+    )
+    parts.append("      <div class=\"team-grid\">")
+
+    for row in teams_metrics:
+        team_abbrev = str(row.get("team_abbrev") or "")
+        team_name = str(row.get("team_name") or team_abbrev)
+        overall_score = float(row.get("overall_score") or 0.0)
+        overall_rank = int(row.get("overall_rank") or 0)
+        dev_xf = int(row.get("dev_xf") or 0)
+        dev_ss = int(row.get("dev_ss") or 0)
+        dev_star = int(row.get("dev_star") or 0)
+        dev_norm = int(row.get("dev_normal") or 0)
+
+        premium_dev = dev_xf + dev_ss
+        card_classes = ["team-card"]
+        if premium_dev >= 6:
+            card_classes.append("dev-elite")
+        card_class = " ".join(card_classes)
+
+        narrative = generate_team_narrative(row, league_ctx)
+        strengths_text = str(narrative.get("strengths") or "").strip()
+        weaknesses_text = str(narrative.get("weaknesses") or "").strip()
+        summary_text = str(narrative.get("summary") or "").strip()
+
+        parts.append(
+            "        <article class=\""
+            + card_class
+            + "\" data-team-abbr=\""
+            + escape(team_abbrev)
+            + "\">"
+        )
+        parts.append("          <div class=\"team-card-header\">")
+        parts.append("            <div>")
+        parts.append(
+            '              <div class="team-card-title">'
+            + escape(team_name)
+            + " <span>("
+            + escape(team_abbrev)
+            + ")</span></div>"
+        )
+        parts.append(
+            '              <div class="team-card-sub">Overall '
+            + escape(f"{overall_score:.1f}")
+            + " (rank "
+            + escape(str(overall_rank))
+            + ")</div>"
+        )
+        parts.append("            </div>")
+        parts.append("            <div class=\"team-card-dev\">")
+        parts.append(
+            "              <strong>Dev traits:</strong> "
+            + "<span>XF "
+            + escape(str(dev_xf))
+            + "</span><span>SS "
+            + escape(str(dev_ss))
+            + "</span><span>Star "
+            + escape(str(dev_star))
+            + "</span><span>Norm "
+            + escape(str(dev_norm))
+            + "</span>"
+        )
+        parts.append("            </div>")
+        parts.append("          </div>")
+
+        radar_html = _radar_svg(row)
+
+        parts.append("          <div class=\"team-card-body\">")
+        parts.append("            <div class=\"radar-shell\">")
+        parts.append("              " + radar_html)
+        parts.append(
+            '              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>'
+        )
+        parts.append("            </div>")
+
+        parts.append(
+            '            <div class="team-narrative" data-team-abbr="'
+            + escape(team_abbrev)
+            + "\">"
+        )
+        if summary_text:
+            parts.append("              <p class=\"label\">Summary</p>")
+            parts.append("              <p>" + escape(summary_text) + "</p>")
+        if strengths_text:
+            parts.append("              <p class=\"label\">Strengths</p>")
+            parts.append("              <p>" + escape(strengths_text) + "</p>")
+        if weaknesses_text:
+            parts.append("              <p class=\"label\">Weaknesses</p>")
+            parts.append("              <p>" + escape(weaknesses_text) + "</p>")
+        parts.append("            </div>")
+        parts.append("          </div>")
+        parts.append("        </article>")
+
     parts.append("      </div>")
     parts.append("    </section>")
 

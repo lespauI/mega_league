@@ -1,19 +1,25 @@
 #!/usr/bin/env python3
-"""Verify basic HTML report for roster-based power rankings (Phase 3).
+"""Verify HTML report for roster-based power rankings (Phases 3–4).
 
 Checks performed:
 - HTML file exists and is non-trivial in size (> 10 KB).
 - Presence of a team listing table/container.
 - Embedded JS data blob representing team metrics.
 - Existence of search/sort UI elements.
+- Phase 4 enhancements:
+  - Team-level cards or sections with radar-style visuals.
+  - Per-team narrative text (strengths/weaknesses) matching CSV teams.
+  - Visible methodology/config section.
 
 Usage (from project root):
     python3 scripts/verify_power_rankings_roster_html.py \
-        --html docs/power_rankings_roster.html
+        --html docs/power_rankings_roster.html \
+        --csv output/power_rankings_roster.csv
 """
 from __future__ import annotations
 
 import argparse
+import csv
 import os
 import sys
 
@@ -60,10 +66,10 @@ def verify_html_structure(path: str, text: str) -> None:
         sys.exit(1)
 
     # Embedded JS data: check for JSON blob with team metrics.
-    if "id=\"teams-data\"" not in text and "\"teams\"" not in text:
+    if "id=\"teams-data\"" not in text and '"teams"' not in text:
         print(
             "error: HTML is missing embedded JS data blob for teams "
-            "(expected <script id=\"teams-data\"> or '"teams"' JSON)",
+            "(expected <script id=\"teams-data\"> or JSON key 'teams')",
             file=sys.stderr,
         )
         sys.exit(1)
@@ -86,14 +92,113 @@ def verify_html_structure(path: str, text: str) -> None:
         sys.exit(1)
 
 
+def load_team_abbrevs_from_csv(path: str) -> list[str]:
+    """Load team abbreviations from the power rankings CSV.
+
+    Exits with an error if the CSV is missing or malformed.
+    """
+
+    if not os.path.exists(path):
+        print(f"error: rankings CSV not found: {path}", file=sys.stderr)
+        sys.exit(2)
+
+    abbrs: list[str] = []
+    try:
+        with open(path, newline="", encoding="utf-8-sig") as fh:
+            reader = csv.DictReader(fh)
+            for row in reader:
+                abbr = (row.get("team_abbrev") or row.get("abbrev") or "").strip()
+                if not abbr:
+                    continue
+                if abbr not in abbrs:
+                    abbrs.append(abbr)
+    except Exception as exc:  # pragma: no cover - defensive path
+        print(f"error: failed to read rankings CSV '{path}': {exc}", file=sys.stderr)
+        sys.exit(2)
+
+    if not abbrs:
+        print(
+            f"error: no team_abbrev values found in {path}; cannot verify team cards",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    return abbrs
+
+
+def verify_phase4_enhancements(html_text: str, csv_path: str) -> None:
+    """Verify Phase 4 specific HTML features (advanced visuals & narratives)."""
+
+    lower = html_text.lower()
+
+    # Methodology/config section.
+    if "id=\"methodology\"" not in html_text and "methodology &amp; config" not in lower:
+        print(
+            "error: HTML is missing methodology/config section (expected element with id 'methodology')",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Radar / multi-metric visualization elements.
+    if "radar-chart" not in lower:
+        print(
+            "error: HTML is missing radar-style unit visuals (expected elements with class 'radar-chart')",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    # Team cards and narratives per team.
+    abbrs = load_team_abbrevs_from_csv(csv_path)
+
+    card_count = html_text.count("class=\"team-card")
+    if card_count < len(abbrs):
+        print(
+            f"error: expected at least {len(abbrs)} team cards but found {card_count} (class 'team-card')",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+
+    for abbr in abbrs:
+        card_marker = f'class="team-card"'
+        if f'data-team-abbr="{abbr}"' not in html_text:
+            print(
+                f"error: no HTML section/card found for team '{abbr}' (missing data-team-abbr)",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        narrative_marker = f'class="team-narrative" data-team-abbr="{abbr}"'
+        if narrative_marker not in html_text:
+            print(
+                f"error: team '{abbr}' is missing narrative block (class 'team-narrative')",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+        idx = html_text.find(narrative_marker)
+        window = html_text[idx : idx + 2000]
+        # Require both strengths and weaknesses labels to appear near the narrative.
+        if "Strengths" not in window or "Weaknesses" not in window:
+            print(
+                f"error: narrative for team '{abbr}' is missing strengths/weaknesses text",
+                file=sys.stderr,
+            )
+            sys.exit(1)
+
+
 def build_arg_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Verify basic power rankings HTML report for Phase 3",
+        description="Verify power rankings HTML report (Phases 3–4)",
     )
     parser.add_argument(
         "--html",
         default=os.path.join("docs", "power_rankings_roster.html"),
         help="Path to HTML report (default: docs/power_rankings_roster.html)",
+    )
+    parser.add_argument(
+        "--csv",
+        default=os.path.join("output", "power_rankings_roster.csv"),
+        help="Path to power rankings CSV (default: output/power_rankings_roster.csv)",
     )
     return parser
 
@@ -112,9 +217,10 @@ def main(argv: list[str] | None = None) -> int:
         return 1
 
     verify_html_structure(args.html, text)
+    verify_phase4_enhancements(text, args.csv)
 
     print(
-        f"ok: verified power rankings HTML report at {args.html}",
+        f"ok: verified power rankings HTML report (Phases 3–4) at {args.html}",
         file=sys.stdout,
     )
     return 0
@@ -122,4 +228,3 @@ def main(argv: list[str] | None = None) -> int:
 
 if __name__ == "__main__":  # pragma: no cover - CLI entry
     raise SystemExit(main())
-

@@ -1,0 +1,1443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roster Power Rankings — Roster Analytics</title>
+  <style>
+    :root { --text:#0f172a; --sub:#64748b; --muted:#94a3b8; --grid:#e2e8f0; --bg:#f7f7f7; --card:#ffffff; --accent:#3b82f6; }
+    body { margin:16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:var(--bg); }
+    .topbar { max-width: 1200px; margin: 0 auto 10px; display:flex; align-items:center; gap:10px; }
+    .back { display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#1e293b; text-decoration:none; background:#fff; border:1px solid #e5e7eb; padding:6px 10px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+    .back:hover { background:#f8fafc; }
+    .container { max-width: 1200px; margin: 0 auto; background: var(--card); border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); overflow:hidden; }
+    header { padding: 18px 20px 10px; border-bottom: 1px solid #ececec; background:linear-gradient(180deg,#ffffff 0%,#fafafa 100%); }
+    h1 { margin:0; font-size: 22px; }
+    .subtitle { color: var(--sub); margin:8px 0 4px; font-size: 13px; }
+    .pill { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; border:1px solid #bfdbfe; background:#dbeafe; color:#1e3a8a; font-size:12px; }
+    .panel { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }
+    .section-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; border-left:3px solid var(--accent); padding-left:8px; }
+    .section-intro { white-space: pre-wrap; color: #334155; font-size: 13px; margin: 4px 0 10px; }
+    .kpis { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; }
+    .kpi { background:#f8fafc; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px; }
+    .kpi b { display:block; font-size: 12px; color:#0f172a; }
+    .kpi span { color:#334155; font-size: 18px; font-weight: 700; }
+    .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+    .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }
+    .controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-size:13px; }
+    .controls label { font-weight:500; color:#475569; }
+    .controls input[type='search'] { padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; min-width: 220px; font-size:13px; }
+    .controls select { padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; font-size:13px; }
+    .table-wrap { margin-top:10px; border:1px solid #e5e7eb; border-radius:10px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    thead { background:#f8fafc; position:sticky; top:0; z-index:1; }
+    th, td { padding:6px 8px; border-bottom:1px solid #e5e7eb; text-align:left; }
+    th { font-weight:600; color:#475569; cursor:pointer; white-space:nowrap; }
+    tr:nth-child(even) { background:#f9fafb; }
+    tr:hover { background:#eef2ff; }
+    .num { text-align:right; font-variant-numeric: tabular-nums; }
+    .rank-cell { font-weight:700; }
+    .team-cell { display:flex; align-items:center; gap:6px; }
+    .team-tag { display:inline-flex; align-items:center; gap:4px; font-weight:600; }
+    .team-tag span { font-size:11px; color:#64748b; }
+    .metric { display:flex; flex-direction:column; gap:2px; }
+    .metric-value { font-weight:600; }
+    .metric-bar { height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+    .metric-bar-fill { height:100%; background:linear-gradient(90deg,#3b82f6,#22c55e); }
+    .dev-chips { display:flex; flex-wrap:wrap; gap:4px; }
+    .chip { padding:2px 6px; border-radius:999px; border:1px solid #e5e7eb; font-size:11px; background:#f9fafb; }
+    .chip-xf { border-color:#fecaca; background:#fee2e2; color:#b91c1c; }
+    .chip-ss { border-color:#facc15; background:#fef9c3; color:#854d0e; }
+    .chip-star { border-color:#d4d4d8; background:#e4e4e7; color:#27272a; }
+    .chip-norm { border-color:#c4b5fd; background:#e0e7ff; color:#3730a3; }
+    .chart-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+    .chart-bar { flex:1 1 40px; min-width:40px; height:36px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; position:relative; overflow:hidden; }
+    .chart-bar-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#22c55e,#16a34a); opacity:0.3; }
+    .chart-bar-label { position:relative; z-index:1; padding:4px 6px; font-size:11px; display:flex; flex-direction:column; justify-content:center; }
+    .chart-bar-label b { font-size:12px; }
+    .methodology-grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:8px; font-size:12px; color:#111827; }
+    .methodology-col { background:#f8fafc; border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; }
+    .methodology-col h3 { margin:0 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:0.03em; color:#6b7280; }
+    .methodology-list { margin:0; padding-left:16px; }
+    .methodology-list li { margin:2px 0; }
+    .team-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .team-card { border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; background:#f9fafb; display:flex; flex-direction:column; gap:8px; }
+    .team-card-header { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+    .team-card-title { font-size:13px; font-weight:600; color:#0f172a; }
+    .team-card-sub { font-size:11px; color:#6b7280; }
+    .team-card-dev { font-size:11px; color:#4b5563; }
+    .team-card-dev strong { font-weight:600; }
+    .team-card-dev span { margin-right:6px; }
+    .team-card.dev-elite { border-color:#f97316; box-shadow:0 0 0 1px rgba(249,115,22,0.35); }
+    .team-card-body { display:flex; gap:10px; align-items:stretch; }
+    .radar-shell { flex:0 0 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .radar-chart { width:120px; height:120px; }
+    .radar-bg polygon { fill:#eff6ff; stroke:#dbeafe; stroke-width:1; }
+    .radar-axes line { stroke:#e5e7eb; stroke-width:1; }
+    .radar-poly { fill:rgba(59,130,246,0.3); stroke:#2563eb; stroke-width:1.5; }
+    .radar-point { fill:#1d4ed8; stroke:#eff6ff; stroke-width:1; r:2; }
+    .radar-labels { display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-top:4px; font-size:10px; color:#6b7280; }
+    .radar-labels span { padding:1px 4px; border-radius:999px; background:#e5e7eb; }
+    .team-narrative { flex:1 1 auto; font-size:12px; color:#111827; display:flex; flex-direction:column; gap:4px; }
+    .team-narrative p { margin:0; }
+    .team-narrative strong { color:#0f172a; }
+    .team-narrative .label { text-transform:uppercase; font-size:11px; letter-spacing:0.04em; color:#6b7280; }
+    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .team-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } .team-card-body { flex-direction:column; } }
+  </style>
+  <script>
+  // Simple table sorter: click any <th> in a .sortable table to sort by that column
+  (function() {
+    function getCellValue(tr, idx) {
+      const td = tr.children[idx];
+      if (!td) return '';
+      const ds = td.getAttribute('data-sort');
+      const txt = ds != null ? ds : (td.textContent || '');
+      return txt.trim();
+    }
+    function asNumber(v) {
+      if (v === '' || v == null) return NaN;
+      const n = parseFloat(String(v).replace(/[,\s]/g, ''));
+      return isNaN(n) ? NaN : n;
+    }
+    function makeComparer(idx, asc) {
+      return function(a, b) {
+        const va = getCellValue(a, idx);
+        const vb = getCellValue(b, idx);
+        const na = asNumber(va);
+        const nb = asNumber(vb);
+        let cmp;
+        if (!isNaN(na) && !isNaN(nb)) { cmp = na - nb; } else { cmp = va.localeCompare(vb, undefined, {numeric:true, sensitivity:'base'}); }
+        return asc ? cmp : -cmp;
+      }
+    }
+    function initSortableTables() {
+      document.querySelectorAll('table.sortable').forEach(function(table) {
+        const thead = table.tHead; if (!thead) return;
+        const headers = thead.rows[0] ? thead.rows[0].cells : [];
+        Array.from(headers).forEach(function(th, idx) {
+          th.addEventListener('click', function() {
+            const tbody = table.tBodies[0]; if (!tbody) return;
+            const rows = Array.from(tbody.rows);
+            const current = th.getAttribute('data-sort-dir') || 'asc';
+            const nextDir = current === 'asc' ? 'desc' : 'asc';
+            rows.sort(makeComparer(idx, nextDir === 'asc'));
+            Array.from(headers).forEach(h => h.removeAttribute('data-sort-dir'));
+            th.setAttribute('data-sort-dir', nextDir);
+            rows.forEach(r => tbody.appendChild(r));
+          });
+        });
+      });
+    }
+    function initSearchAndCharts() {
+      const dataEl = document.getElementById('teams-data');
+      let DATA = null;
+      if (dataEl) {
+        try { DATA = JSON.parse(dataEl.textContent || '{}'); } catch (e) { DATA = null; }
+      }
+      const search = document.getElementById('team-search');
+      if (search) {
+        search.addEventListener('input', function() {
+          const q = (this.value || '').toLowerCase();
+          const rows = document.querySelectorAll('#teams-table tbody tr');
+          rows.forEach(function(tr) {
+            const name = (tr.getAttribute('data-team-name') || '').toLowerCase();
+            const abbr = (tr.getAttribute('data-team-abbr') || '').toLowerCase();
+            const hay = name + ' ' + abbr;
+            tr.style.display = hay.indexOf(q) === -1 ? 'none' : '';
+          });
+        });
+      }
+      function renderOverallChart() {
+        if (!DATA || !DATA.teams) return;
+        const wrap = document.getElementById('overall-chart');
+        if (!wrap) return;
+        const teams = Array.from(DATA.teams).sort((a,b) => (a.overall_rank||0) - (b.overall_rank||0));
+        wrap.innerHTML = '';
+        teams.forEach(function(t) {
+          const score = typeof t.overall_score === 'number' ? t.overall_score : parseFloat(t.overall_score || '0');
+          const pct = Math.max(0, Math.min(100, isNaN(score) ? 0 : score));
+          const div = document.createElement('div');
+          div.className = 'chart-bar';
+          const fill = document.createElement('div');
+          fill.className = 'chart-bar-fill';
+          fill.style.width = pct + '%';
+          const label = document.createElement('div');
+          label.className = 'chart-bar-label';
+          const name = (t.team_abbrev || '') + ' — ' + (t.team_name || '');
+          label.innerHTML = '<b>' + name + '</b><span>Overall ' + (score || 0).toFixed ? (score || 0).toFixed(1) : score + '</span>';
+          div.appendChild(fill);
+          div.appendChild(label);
+          wrap.appendChild(div);
+        });
+      }
+      renderOverallChart();
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', function() { initSortableTables(); initSearchAndCharts(); });
+    } else {
+      initSortableTables(); initSearchAndCharts();
+    }
+  })();
+
+  </script>
+</head>
+<body>
+  <div class="topbar"><a class="back" href="../index.html" title="Back to index">&#8592; Back to Index</a></div>
+  <div class="container">
+    <header>
+      <h1>Roster Power Rankings — Roster Analytics <span class="pill">Roster-based</span></h1>
+      <div class="subtitle">League-wide roster strength overview (normalization: zscore)</div>
+    </header>
+    <section class="panel" id="overview">
+      <div class="section-title">League Overview</div>
+      <div class="section-intro">Roster-based power rankings derived from unit strength scores. Higher scores reflect stronger starters and premium dev traits at key positions.</div>
+      <div class="kpis">
+        <div class="kpi"><b>Avg overall score</b><span>50.0</span><div class="gbar"><div class="fill" style="width: 50.0%"></div></div></div>
+        <div class="kpi"><b>Avg Off Pass</b><span>50.0</span><div class="gbar"><div class="fill" style="width: 50.0%"></div></div></div>
+        <div class="kpi"><b>Avg Coverage</b><span>50.0</span><div class="gbar"><div class="fill" style="width: 50.0%"></div></div></div>
+      </div>
+      <div class="chart-strip" id="overall-chart"></div>
+    </section>
+    <section class="panel" id="methodology">
+      <div class="section-title">Methodology &amp; Config</div>
+      <div class="section-intro">Each unit score is a position-weighted blend of starter-quality ratings, boosted by premium dev traits at high OVR bands and then normalized to a 0–100 scale (z-score (mean ~50, spread by standard deviation)).</div>
+      <div class="methodology-grid">
+        <div class="methodology-col">
+          <h3>Units &amp; position weighting</h3>
+          <ul class="methodology-list">
+            <li>Off Pass (QB/WR/TE/OL): QB 45%, WR 30%, OL 15%, TE 10%</li>
+            <li>Off Run (RB/FB/TE/OL): OL 40%, RB 35%, TE 15%, FB 10%</li>
+            <li>Pass Coverage (CB/S/LB): CB 50%, S 30%, LB 20%</li>
+            <li>Pass Rush (DE/DT/LB): DE 40%, DT 30%, LB 30%</li>
+            <li>Run Defense (DE/DT/LB/S): DT 35%, LB 30%, DE 25%, S 10%</li>
+          </ul>
+        </div>
+        <div class="methodology-col">
+          <h3>Dev traits impact</h3>
+          <ul class="methodology-list">
+            <li>X-Factor: +10% above 85 OVR, +5% above 80 OVR</li>
+            <li>Superstar: +7% above 85 OVR, +3% above 80 OVR</li>
+            <li>Star: baseline impact only (no extra multiplier by default).</li>
+            <li>Normal: baseline impact only (no extra multiplier by default).</li>
+          </ul>
+        </div>
+        <div class="methodology-col">
+          <h3>Normalization &amp; overall score</h3>
+          <p>Overall roster power combines normalized unit scores using: Off Pass 30% + Off Run 20% + Pass Coverage 30% + Pass Rush 20%. Run Defense is shown as its own unit but not currently weighted into the composite score by default.</p>
+          <p>Normalization method: zscore (z-score (mean ~50, spread by standard deviation)).</p>
+        </div>
+      </div>
+    </section>
+    <section class="panel" id="teams">
+      <div class="section-title">Teams – Roster Power Table</div>
+      <div class="controls">
+        <label for="team-search">Search team:</label>
+        <input id="team-search" type="search" placeholder="Filter by team or abbrev..." />
+        <span style="flex:1 0 auto"></span>
+        <span>Tip: click column headers to sort (overall or any unit).</span>
+      </div>
+      <div class="table-wrap">
+        <table class="sortable" id="teams-table">
+          <thead><tr><th>Rank</th><th>Team</th><th>Overall</th><th>Off Pass</th><th>Off Run</th><th>Def Coverage</th><th>Pass Rush</th><th>Run Def</th><th>Dev traits</th><th>Top contributors</th></tr></thead>
+          <tbody>
+            <tr data-team-abbr="BAL" data-team-name="Ravens">
+              <td class="num rank-cell" data-sort="1">1</td>
+              <td><div class="team-cell"><span class="team-tag">Ravens<span>BAL</span></span></div></td>
+              <td class="num" data-sort="79.3"><div class="metric"><span class="metric-value">79.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 79.3%"></div></div></div></td>
+              <td class="num" data-sort="73.7"><div class="metric"><span class="metric-value">73.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 73.7%"></div></div></div></td>
+              <td class="num" data-sort="49.4"><div class="metric"><span class="metric-value">49.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.4%"></div></div></div></td>
+              <td class="num" data-sort="94.3"><div class="metric"><span class="metric-value">94.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 94.3%"></div></div></div></td>
+              <td class="num" data-sort="95.0"><div class="metric"><span class="metric-value">95.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 95.0%"></div></div></div></td>
+              <td class="num" data-sort="100.0"><div class="metric"><span class="metric-value">100.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 100.0%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 5</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 10</span><span class="chip chip-norm">Norm 27</span></div></td>
+              <td>QB Lamar Jackson (99, X-Factor); MIKE Roquan Smith (95, X-Factor); HB Derrick Henry (94, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="SF" data-team-name="49ers">
+              <td class="num rank-cell" data-sort="2">2</td>
+              <td><div class="team-cell"><span class="team-tag">49ers<span>SF</span></span></div></td>
+              <td class="num" data-sort="64.5"><div class="metric"><span class="metric-value">64.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 64.5%"></div></div></div></td>
+              <td class="num" data-sort="66.7"><div class="metric"><span class="metric-value">66.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 66.7%"></div></div></div></td>
+              <td class="num" data-sort="81.0"><div class="metric"><span class="metric-value">81.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 81.0%"></div></div></div></td>
+              <td class="num" data-sort="44.3"><div class="metric"><span class="metric-value">44.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 44.3%"></div></div></div></td>
+              <td class="num" data-sort="75.3"><div class="metric"><span class="metric-value">75.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 75.3%"></div></div></div></td>
+              <td class="num" data-sort="64.3"><div class="metric"><span class="metric-value">64.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 64.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 4</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 18</span><span class="chip chip-norm">Norm 32</span></div></td>
+              <td>MIKE Fred Warner (98, X-Factor); TE George Kittle (96, Superstar); LEDGE Nick Bosa (96, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="KC" data-team-name="Chiefs">
+              <td class="num rank-cell" data-sort="3">3</td>
+              <td><div class="team-cell"><span class="team-tag">Chiefs<span>KC</span></span></div></td>
+              <td class="num" data-sort="58.3"><div class="metric"><span class="metric-value">58.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 58.3%"></div></div></div></td>
+              <td class="num" data-sort="75.6"><div class="metric"><span class="metric-value">75.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 75.6%"></div></div></div></td>
+              <td class="num" data-sort="45.0"><div class="metric"><span class="metric-value">45.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.0%"></div></div></div></td>
+              <td class="num" data-sort="50.5"><div class="metric"><span class="metric-value">50.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.5%"></div></div></div></td>
+              <td class="num" data-sort="57.1"><div class="metric"><span class="metric-value">57.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.1%"></div></div></div></td>
+              <td class="num" data-sort="63.3"><div class="metric"><span class="metric-value">63.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 63.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 12</span><span class="chip chip-norm">Norm 36</span></div></td>
+              <td>QB Patrick Mahomes (97, X-Factor); DT Chris Jones (96, X-Factor); CB Trent McDuffie (96, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="DET" data-team-name="Lions">
+              <td class="num rank-cell" data-sort="4">4</td>
+              <td><div class="team-cell"><span class="team-tag">Lions<span>DET</span></span></div></td>
+              <td class="num" data-sort="55.3"><div class="metric"><span class="metric-value">55.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.3%"></div></div></div></td>
+              <td class="num" data-sort="43.1"><div class="metric"><span class="metric-value">43.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.1%"></div></div></div></td>
+              <td class="num" data-sort="54.3"><div class="metric"><span class="metric-value">54.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.3%"></div></div></div></td>
+              <td class="num" data-sort="66.6"><div class="metric"><span class="metric-value">66.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 66.6%"></div></div></div></td>
+              <td class="num" data-sort="57.8"><div class="metric"><span class="metric-value">57.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.8%"></div></div></div></td>
+              <td class="num" data-sort="63.3"><div class="metric"><span class="metric-value">63.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 63.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 4</span><span class="chip chip-ss">SS 4</span><span class="chip chip-star">Star 18</span><span class="chip chip-norm">Norm 28</span></div></td>
+              <td>HB Jahmyr Gibbs (99, X-Factor); RG Penei Sewell (99, X-Factor); LEDGE Aidan Hutchinson (95, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="WAS" data-team-name="Commanders">
+              <td class="num rank-cell" data-sort="5">5</td>
+              <td><div class="team-cell"><span class="team-tag">Commanders<span>WAS</span></span></div></td>
+              <td class="num" data-sort="55.2"><div class="metric"><span class="metric-value">55.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.2%"></div></div></div></td>
+              <td class="num" data-sort="72.3"><div class="metric"><span class="metric-value">72.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 72.3%"></div></div></div></td>
+              <td class="num" data-sort="36.5"><div class="metric"><span class="metric-value">36.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 36.5%"></div></div></div></td>
+              <td class="num" data-sort="61.0"><div class="metric"><span class="metric-value">61.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 61.0%"></div></div></div></td>
+              <td class="num" data-sort="39.8"><div class="metric"><span class="metric-value">39.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 39.8%"></div></div></div></td>
+              <td class="num" data-sort="49.3"><div class="metric"><span class="metric-value">49.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 15</span><span class="chip chip-norm">Norm 31</span></div></td>
+              <td>WR Terry McLaurin (95, Superstar); LT Laremy Tunsil (94, Superstar); FS Minkah Fitzpatrick (93, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="PIT" data-team-name="Steelers">
+              <td class="num rank-cell" data-sort="6">6</td>
+              <td><div class="team-cell"><span class="team-tag">Steelers<span>PIT</span></span></div></td>
+              <td class="num" data-sort="55.2"><div class="metric"><span class="metric-value">55.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.2%"></div></div></div></td>
+              <td class="num" data-sort="25.4"><div class="metric"><span class="metric-value">25.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 25.4%"></div></div></div></td>
+              <td class="num" data-sort="72.9"><div class="metric"><span class="metric-value">72.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 72.9%"></div></div></div></td>
+              <td class="num" data-sort="57.8"><div class="metric"><span class="metric-value">57.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.8%"></div></div></div></td>
+              <td class="num" data-sort="78.3"><div class="metric"><span class="metric-value">78.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 78.3%"></div></div></div></td>
+              <td class="num" data-sort="74.7"><div class="metric"><span class="metric-value">74.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 74.7%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 4</span><span class="chip chip-star">Star 21</span><span class="chip chip-norm">Norm 39</span></div></td>
+              <td>LEDGE T.J. Watt (96, Superstar); CB Jalen Ramsey (94, X-Factor); LEDGE Alex Highsmith (90, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="CIN" data-team-name="Bengals">
+              <td class="num rank-cell" data-sort="7">7</td>
+              <td><div class="team-cell"><span class="team-tag">Bengals<span>CIN</span></span></div></td>
+              <td class="num" data-sort="55.0"><div class="metric"><span class="metric-value">55.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.0%"></div></div></div></td>
+              <td class="num" data-sort="80.4"><div class="metric"><span class="metric-value">80.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 80.4%"></div></div></div></td>
+              <td class="num" data-sort="26.7"><div class="metric"><span class="metric-value">26.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 26.7%"></div></div></div></td>
+              <td class="num" data-sort="43.1"><div class="metric"><span class="metric-value">43.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.1%"></div></div></div></td>
+              <td class="num" data-sort="63.0"><div class="metric"><span class="metric-value">63.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 63.0%"></div></div></div></td>
+              <td class="num" data-sort="54.6"><div class="metric"><span class="metric-value">54.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.6%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 3</span><span class="chip chip-ss">SS 6</span><span class="chip chip-star">Star 13</span><span class="chip chip-norm">Norm 36</span></div></td>
+              <td>WR Ja&#x27;Marr Chase (99, X-Factor); QB Joe Burrow (99, X-Factor); REDGE Trey Hendrickson (92, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="LAC" data-team-name="Chargers">
+              <td class="num rank-cell" data-sort="8">8</td>
+              <td><div class="team-cell"><span class="team-tag">Chargers<span>LAC</span></span></div></td>
+              <td class="num" data-sort="54.5"><div class="metric"><span class="metric-value">54.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.5%"></div></div></div></td>
+              <td class="num" data-sort="57.9"><div class="metric"><span class="metric-value">57.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.9%"></div></div></div></td>
+              <td class="num" data-sort="69.0"><div class="metric"><span class="metric-value">69.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 69.0%"></div></div></div></td>
+              <td class="num" data-sort="53.1"><div class="metric"><span class="metric-value">53.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 53.1%"></div></div></div></td>
+              <td class="num" data-sort="36.7"><div class="metric"><span class="metric-value">36.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 36.7%"></div></div></div></td>
+              <td class="num" data-sort="45.3"><div class="metric"><span class="metric-value">45.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 0</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 21</span><span class="chip chip-norm">Norm 31</span></div></td>
+              <td>SS Derwin James Jr (93, Superstar); RT Rashawn Slater (93, Superstar); QB Justin Herbert (88, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="CHI" data-team-name="Bears">
+              <td class="num rank-cell" data-sort="9">9</td>
+              <td><div class="team-cell"><span class="team-tag">Bears<span>CHI</span></span></div></td>
+              <td class="num" data-sort="54.0"><div class="metric"><span class="metric-value">54.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.0%"></div></div></div></td>
+              <td class="num" data-sort="72.1"><div class="metric"><span class="metric-value">72.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 72.1%"></div></div></div></td>
+              <td class="num" data-sort="64.7"><div class="metric"><span class="metric-value">64.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 64.7%"></div></div></div></td>
+              <td class="num" data-sort="38.2"><div class="metric"><span class="metric-value">38.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.2%"></div></div></div></td>
+              <td class="num" data-sort="39.7"><div class="metric"><span class="metric-value">39.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 39.7%"></div></div></div></td>
+              <td class="num" data-sort="42.0"><div class="metric"><span class="metric-value">42.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 42.0%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 21</span><span class="chip chip-norm">Norm 27</span></div></td>
+              <td>QB Caleb Williams (92, X-Factor); CB Jaylon Johnson (92, Star); TE Colston Loveland (89, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="SEA" data-team-name="Seahawks">
+              <td class="num rank-cell" data-sort="10">10</td>
+              <td><div class="team-cell"><span class="team-tag">Seahawks<span>SEA</span></span></div></td>
+              <td class="num" data-sort="53.9"><div class="metric"><span class="metric-value">53.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 53.9%"></div></div></div></td>
+              <td class="num" data-sort="33.5"><div class="metric"><span class="metric-value">33.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 33.5%"></div></div></div></td>
+              <td class="num" data-sort="69.8"><div class="metric"><span class="metric-value">69.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 69.8%"></div></div></div></td>
+              <td class="num" data-sort="68.9"><div class="metric"><span class="metric-value">68.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 68.9%"></div></div></div></td>
+              <td class="num" data-sort="46.1"><div class="metric"><span class="metric-value">46.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 46.1%"></div></div></div></td>
+              <td class="num" data-sort="48.6"><div class="metric"><span class="metric-value">48.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 48.6%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 22</span><span class="chip chip-norm">Norm 33</span></div></td>
+              <td>TE David Njoku (91, Star); HB Kenneth Walker III (90, Superstar); CB Devon Witherspoon (89, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="NE" data-team-name="Patriots">
+              <td class="num rank-cell" data-sort="11">11</td>
+              <td><div class="team-cell"><span class="team-tag">Patriots<span>NE</span></span></div></td>
+              <td class="num" data-sort="52.1"><div class="metric"><span class="metric-value">52.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 52.1%"></div></div></div></td>
+              <td class="num" data-sort="38.3"><div class="metric"><span class="metric-value">38.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.3%"></div></div></div></td>
+              <td class="num" data-sort="68.9"><div class="metric"><span class="metric-value">68.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 68.9%"></div></div></div></td>
+              <td class="num" data-sort="62.7"><div class="metric"><span class="metric-value">62.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 62.7%"></div></div></div></td>
+              <td class="num" data-sort="40.2"><div class="metric"><span class="metric-value">40.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.2%"></div></div></div></td>
+              <td class="num" data-sort="42.8"><div class="metric"><span class="metric-value">42.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 42.8%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 22</span><span class="chip chip-norm">Norm 24</span></div></td>
+              <td>CB Christian Gonzalez (97, Superstar); HB TreVeyon Henderson (91, Superstar); DT Milton Williams (87, Star)</td>
+            </tr>
+            <tr data-team-abbr="HOU" data-team-name="Texans">
+              <td class="num rank-cell" data-sort="12">12</td>
+              <td><div class="team-cell"><span class="team-tag">Texans<span>HOU</span></span></div></td>
+              <td class="num" data-sort="51.8"><div class="metric"><span class="metric-value">51.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.8%"></div></div></div></td>
+              <td class="num" data-sort="57.5"><div class="metric"><span class="metric-value">57.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.5%"></div></div></div></td>
+              <td class="num" data-sort="45.8"><div class="metric"><span class="metric-value">45.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.8%"></div></div></div></td>
+              <td class="num" data-sort="57.4"><div class="metric"><span class="metric-value">57.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.4%"></div></div></div></td>
+              <td class="num" data-sort="40.8"><div class="metric"><span class="metric-value">40.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.8%"></div></div></div></td>
+              <td class="num" data-sort="35.5"><div class="metric"><span class="metric-value">35.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 35.5%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 7</span><span class="chip chip-star">Star 16</span><span class="chip chip-norm">Norm 40</span></div></td>
+              <td>CB Derek Stingley Jr (95, X-Factor); REDGE Danielle Hunter (92, Superstar); HB Joe Mixon (91, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="ATL" data-team-name="Falcons">
+              <td class="num rank-cell" data-sort="13">13</td>
+              <td><div class="team-cell"><span class="team-tag">Falcons<span>ATL</span></span></div></td>
+              <td class="num" data-sort="51.4"><div class="metric"><span class="metric-value">51.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.4%"></div></div></div></td>
+              <td class="num" data-sort="38.3"><div class="metric"><span class="metric-value">38.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.3%"></div></div></div></td>
+              <td class="num" data-sort="55.4"><div class="metric"><span class="metric-value">55.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.4%"></div></div></div></td>
+              <td class="num" data-sort="67.3"><div class="metric"><span class="metric-value">67.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 67.3%"></div></div></div></td>
+              <td class="num" data-sort="43.4"><div class="metric"><span class="metric-value">43.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.4%"></div></div></div></td>
+              <td class="num" data-sort="49.3"><div class="metric"><span class="metric-value">49.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 9</span><span class="chip chip-star">Star 12</span><span class="chip chip-norm">Norm 33</span></div></td>
+              <td>HB Bijan Robinson (97, X-Factor); FS Jessie Bates III (95, Superstar); RG Chris Lindstrom (94, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="NYG" data-team-name="Giants">
+              <td class="num rank-cell" data-sort="14">14</td>
+              <td><div class="team-cell"><span class="team-tag">Giants<span>NYG</span></span></div></td>
+              <td class="num" data-sort="50.5"><div class="metric"><span class="metric-value">50.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.5%"></div></div></div></td>
+              <td class="num" data-sort="41.3"><div class="metric"><span class="metric-value">41.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 41.3%"></div></div></div></td>
+              <td class="num" data-sort="53.7"><div class="metric"><span class="metric-value">53.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 53.7%"></div></div></div></td>
+              <td class="num" data-sort="45.1"><div class="metric"><span class="metric-value">45.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.1%"></div></div></div></td>
+              <td class="num" data-sort="69.2"><div class="metric"><span class="metric-value">69.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 69.2%"></div></div></div></td>
+              <td class="num" data-sort="69.1"><div class="metric"><span class="metric-value">69.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 69.1%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 4</span><span class="chip chip-star">Star 14</span><span class="chip chip-norm">Norm 26</span></div></td>
+              <td>DT Dexter Lawrence II (97, Superstar); C Quinn Meinerz (95, Superstar); LEDGE Abdul Carter (91, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="TEN" data-team-name="Titans">
+              <td class="num rank-cell" data-sort="15">15</td>
+              <td><div class="team-cell"><span class="team-tag">Titans<span>TEN</span></span></div></td>
+              <td class="num" data-sort="50.4"><div class="metric"><span class="metric-value">50.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.4%"></div></div></div></td>
+              <td class="num" data-sort="52.3"><div class="metric"><span class="metric-value">52.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 52.3%"></div></div></div></td>
+              <td class="num" data-sort="40.3"><div class="metric"><span class="metric-value">40.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.3%"></div></div></div></td>
+              <td class="num" data-sort="52.3"><div class="metric"><span class="metric-value">52.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 52.3%"></div></div></div></td>
+              <td class="num" data-sort="54.9"><div class="metric"><span class="metric-value">54.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.9%"></div></div></div></td>
+              <td class="num" data-sort="54.6"><div class="metric"><span class="metric-value">54.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.6%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 0</span><span class="chip chip-ss">SS 9</span><span class="chip chip-star">Star 19</span><span class="chip chip-norm">Norm 39</span></div></td>
+              <td>DT Jeffery Simmons (92, Star); QB Cam Ward (88, Superstar); HB Tony Pollard (88, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="BUF" data-team-name="Bills">
+              <td class="num rank-cell" data-sort="16">16</td>
+              <td><div class="team-cell"><span class="team-tag">Bills<span>BUF</span></span></div></td>
+              <td class="num" data-sort="49.9"><div class="metric"><span class="metric-value">49.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.9%"></div></div></div></td>
+              <td class="num" data-sort="67.4"><div class="metric"><span class="metric-value">67.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 67.4%"></div></div></div></td>
+              <td class="num" data-sort="40.8"><div class="metric"><span class="metric-value">40.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.8%"></div></div></div></td>
+              <td class="num" data-sort="39.2"><div class="metric"><span class="metric-value">39.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 39.2%"></div></div></div></td>
+              <td class="num" data-sort="48.9"><div class="metric"><span class="metric-value">48.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 48.9%"></div></div></div></td>
+              <td class="num" data-sort="42.6"><div class="metric"><span class="metric-value">42.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 42.6%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 3</span><span class="chip chip-star">Star 23</span><span class="chip chip-norm">Norm 27</span></div></td>
+              <td>QB Josh Allen (99, X-Factor); HB James Cook III (92, Superstar); LT Dion Dawkins (91, Star)</td>
+            </tr>
+            <tr data-team-abbr="DEN" data-team-name="Broncos">
+              <td class="num rank-cell" data-sort="17">17</td>
+              <td><div class="team-cell"><span class="team-tag">Broncos<span>DEN</span></span></div></td>
+              <td class="num" data-sort="49.6"><div class="metric"><span class="metric-value">49.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.6%"></div></div></div></td>
+              <td class="num" data-sort="45.3"><div class="metric"><span class="metric-value">45.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.3%"></div></div></div></td>
+              <td class="num" data-sort="35.5"><div class="metric"><span class="metric-value">35.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 35.5%"></div></div></div></td>
+              <td class="num" data-sort="66.5"><div class="metric"><span class="metric-value">66.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 66.5%"></div></div></div></td>
+              <td class="num" data-sort="44.8"><div class="metric"><span class="metric-value">44.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 44.8%"></div></div></div></td>
+              <td class="num" data-sort="47.0"><div class="metric"><span class="metric-value">47.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 47.0%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 4</span><span class="chip chip-star">Star 17</span><span class="chip chip-norm">Norm 34</span></div></td>
+              <td>CB Patrick Surtain II (98, X-Factor); WR Amon-Ra St. Brown (96, X-Factor); LT Garett Bolles (87, Star)</td>
+            </tr>
+            <tr data-team-abbr="LAR" data-team-name="Rams">
+              <td class="num rank-cell" data-sort="18">18</td>
+              <td><div class="team-cell"><span class="team-tag">Rams<span>LAR</span></span></div></td>
+              <td class="num" data-sort="49.0"><div class="metric"><span class="metric-value">49.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.0%"></div></div></div></td>
+              <td class="num" data-sort="40.2"><div class="metric"><span class="metric-value">40.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.2%"></div></div></div></td>
+              <td class="num" data-sort="71.0"><div class="metric"><span class="metric-value">71.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 71.0%"></div></div></div></td>
+              <td class="num" data-sort="35.6"><div class="metric"><span class="metric-value">35.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 35.6%"></div></div></div></td>
+              <td class="num" data-sort="60.0"><div class="metric"><span class="metric-value">60.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 60.0%"></div></div></div></td>
+              <td class="num" data-sort="58.5"><div class="metric"><span class="metric-value">58.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 58.5%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 19</span><span class="chip chip-norm">Norm 40</span></div></td>
+              <td>WR Puka Nacua (97, X-Factor); LEDGE Jared Verse (90, Superstar); HB Kyren Williams (87, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="GB" data-team-name="Packers">
+              <td class="num rank-cell" data-sort="19">19</td>
+              <td><div class="team-cell"><span class="team-tag">Packers<span>GB</span></span></div></td>
+              <td class="num" data-sort="48.5"><div class="metric"><span class="metric-value">48.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 48.5%"></div></div></div></td>
+              <td class="num" data-sort="54.1"><div class="metric"><span class="metric-value">54.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 54.1%"></div></div></div></td>
+              <td class="num" data-sort="43.9"><div class="metric"><span class="metric-value">43.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.9%"></div></div></div></td>
+              <td class="num" data-sort="44.2"><div class="metric"><span class="metric-value">44.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 44.2%"></div></div></div></td>
+              <td class="num" data-sort="51.1"><div class="metric"><span class="metric-value">51.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.1%"></div></div></div></td>
+              <td class="num" data-sort="52.3"><div class="metric"><span class="metric-value">52.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 52.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 2</span><span class="chip chip-star">Star 21</span><span class="chip chip-norm">Norm 31</span></div></td>
+              <td>REDGE Micah Parsons (99, X-Factor); SS Xavier McKinney (94, Superstar); HB Josh Jacobs (91, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="CLE" data-team-name="Browns">
+              <td class="num rank-cell" data-sort="20">20</td>
+              <td><div class="team-cell"><span class="team-tag">Browns<span>CLE</span></span></div></td>
+              <td class="num" data-sort="48.4"><div class="metric"><span class="metric-value">48.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 48.4%"></div></div></div></td>
+              <td class="num" data-sort="29.8"><div class="metric"><span class="metric-value">29.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 29.8%"></div></div></div></td>
+              <td class="num" data-sort="32.8"><div class="metric"><span class="metric-value">32.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 32.8%"></div></div></div></td>
+              <td class="num" data-sort="67.1"><div class="metric"><span class="metric-value">67.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 67.1%"></div></div></div></td>
+              <td class="num" data-sort="63.6"><div class="metric"><span class="metric-value">63.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 63.6%"></div></div></div></td>
+              <td class="num" data-sort="61.7"><div class="metric"><span class="metric-value">61.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 61.7%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 3</span><span class="chip chip-ss">SS 1</span><span class="chip chip-star">Star 21</span><span class="chip chip-norm">Norm 42</span></div></td>
+              <td>REDGE Myles Garrett (99, X-Factor); CB Denzel Ward (91, X-Factor); WR Davante Adams (87, Star)</td>
+            </tr>
+            <tr data-team-abbr="NO" data-team-name="Saints">
+              <td class="num rank-cell" data-sort="21">21</td>
+              <td><div class="team-cell"><span class="team-tag">Saints<span>NO</span></span></div></td>
+              <td class="num" data-sort="47.7"><div class="metric"><span class="metric-value">47.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 47.7%"></div></div></div></td>
+              <td class="num" data-sort="29.6"><div class="metric"><span class="metric-value">29.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 29.6%"></div></div></div></td>
+              <td class="num" data-sort="67.1"><div class="metric"><span class="metric-value">67.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 67.1%"></div></div></div></td>
+              <td class="num" data-sort="51.5"><div class="metric"><span class="metric-value">51.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.5%"></div></div></div></td>
+              <td class="num" data-sort="49.6"><div class="metric"><span class="metric-value">49.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.6%"></div></div></div></td>
+              <td class="num" data-sort="50.3"><div class="metric"><span class="metric-value">50.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.3%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 0</span><span class="chip chip-ss">SS 6</span><span class="chip chip-star">Star 22</span><span class="chip chip-norm">Norm 29</span></div></td>
+              <td>C Erik McCoy (90, Star); WR Chris Olave (87, Superstar); FS Justin Reid (87, Star)</td>
+            </tr>
+            <tr data-team-abbr="DAL" data-team-name="Cowboys">
+              <td class="num rank-cell" data-sort="22">22</td>
+              <td><div class="team-cell"><span class="team-tag">Cowboys<span>DAL</span></span></div></td>
+              <td class="num" data-sort="47.3"><div class="metric"><span class="metric-value">47.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 47.3%"></div></div></div></td>
+              <td class="num" data-sort="56.7"><div class="metric"><span class="metric-value">56.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 56.7%"></div></div></div></td>
+              <td class="num" data-sort="58.7"><div class="metric"><span class="metric-value">58.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 58.7%"></div></div></div></td>
+              <td class="num" data-sort="40.0"><div class="metric"><span class="metric-value">40.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.0%"></div></div></div></td>
+              <td class="num" data-sort="32.9"><div class="metric"><span class="metric-value">32.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 32.9%"></div></div></div></td>
+              <td class="num" data-sort="31.0"><div class="metric"><span class="metric-value">31.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 31.0%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 3</span><span class="chip chip-star">Star 16</span><span class="chip chip-norm">Norm 35</span></div></td>
+              <td>WR CeeDee Lamb (96, X-Factor); LG Tyler Smith (90, Star); K Brandon Aubrey (88, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="ARI" data-team-name="Cardinals">
+              <td class="num rank-cell" data-sort="23">23</td>
+              <td><div class="team-cell"><span class="team-tag">Cardinals<span>ARI</span></span></div></td>
+              <td class="num" data-sort="46.7"><div class="metric"><span class="metric-value">46.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 46.7%"></div></div></div></td>
+              <td class="num" data-sort="50.7"><div class="metric"><span class="metric-value">50.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.7%"></div></div></div></td>
+              <td class="num" data-sort="44.3"><div class="metric"><span class="metric-value">44.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 44.3%"></div></div></div></td>
+              <td class="num" data-sort="48.1"><div class="metric"><span class="metric-value">48.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 48.1%"></div></div></div></td>
+              <td class="num" data-sort="40.8"><div class="metric"><span class="metric-value">40.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.8%"></div></div></div></td>
+              <td class="num" data-sort="46.2"><div class="metric"><span class="metric-value">46.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 46.2%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 4</span><span class="chip chip-ss">SS 2</span><span class="chip chip-star">Star 16</span><span class="chip chip-norm">Norm 36</span></div></td>
+              <td>TE Trey McBride (94, X-Factor); WR Tyreek Hill (94, X-Factor); SS Budda Baker (93, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="JAX" data-team-name="Jaguars">
+              <td class="num rank-cell" data-sort="24">24</td>
+              <td><div class="team-cell"><span class="team-tag">Jaguars<span>JAX</span></span></div></td>
+              <td class="num" data-sort="46.2"><div class="metric"><span class="metric-value">46.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 46.2%"></div></div></div></td>
+              <td class="num" data-sort="37.4"><div class="metric"><span class="metric-value">37.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 37.4%"></div></div></div></td>
+              <td class="num" data-sort="39.6"><div class="metric"><span class="metric-value">39.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 39.6%"></div></div></div></td>
+              <td class="num" data-sort="51.9"><div class="metric"><span class="metric-value">51.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.9%"></div></div></div></td>
+              <td class="num" data-sort="57.6"><div class="metric"><span class="metric-value">57.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 57.6%"></div></div></div></td>
+              <td class="num" data-sort="51.8"><div class="metric"><span class="metric-value">51.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.8%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 11</span><span class="chip chip-norm">Norm 42</span></div></td>
+              <td>WR Brian Thomas Jr (92, X-Factor); REDGE Josh Hines-Allen (91, Superstar); CB Travis Hunter (88, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="TB" data-team-name="Buccaneers">
+              <td class="num rank-cell" data-sort="25">25</td>
+              <td><div class="team-cell"><span class="team-tag">Buccaneers<span>TB</span></span></div></td>
+              <td class="num" data-sort="44.5"><div class="metric"><span class="metric-value">44.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 44.5%"></div></div></div></td>
+              <td class="num" data-sort="49.5"><div class="metric"><span class="metric-value">49.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.5%"></div></div></div></td>
+              <td class="num" data-sort="42.0"><div class="metric"><span class="metric-value">42.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 42.0%"></div></div></div></td>
+              <td class="num" data-sort="56.3"><div class="metric"><span class="metric-value">56.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 56.3%"></div></div></div></td>
+              <td class="num" data-sort="21.7"><div class="metric"><span class="metric-value">21.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 21.7%"></div></div></div></td>
+              <td class="num" data-sort="28.7"><div class="metric"><span class="metric-value">28.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 28.7%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 13</span><span class="chip chip-norm">Norm 36</span></div></td>
+              <td>LT Tristan Wirfs (97, Superstar); HB Bucky Irving (96, Superstar); FS Antoine Winfield Jr (92, X-Factor)</td>
+            </tr>
+            <tr data-team-abbr="MIN" data-team-name="Vikings">
+              <td class="num rank-cell" data-sort="26">26</td>
+              <td><div class="team-cell"><span class="team-tag">Vikings<span>MIN</span></span></div></td>
+              <td class="num" data-sort="43.5"><div class="metric"><span class="metric-value">43.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.5%"></div></div></div></td>
+              <td class="num" data-sort="65.4"><div class="metric"><span class="metric-value">65.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 65.4%"></div></div></div></td>
+              <td class="num" data-sort="48.9"><div class="metric"><span class="metric-value">48.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 48.9%"></div></div></div></td>
+              <td class="num" data-sort="29.1"><div class="metric"><span class="metric-value">29.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 29.1%"></div></div></div></td>
+              <td class="num" data-sort="27.0"><div class="metric"><span class="metric-value">27.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 27.0%"></div></div></div></td>
+              <td class="num" data-sort="20.4"><div class="metric"><span class="metric-value">20.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 20.4%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 14</span><span class="chip chip-norm">Norm 25</span></div></td>
+              <td>WR Justin Jefferson (99, X-Factor); LT Christian Darrisaw (93, Superstar); TE T.J. Hockenson (89, Star)</td>
+            </tr>
+            <tr data-team-abbr="LV" data-team-name="Raiders">
+              <td class="num rank-cell" data-sort="27">27</td>
+              <td><div class="team-cell"><span class="team-tag">Raiders<span>LV</span></span></div></td>
+              <td class="num" data-sort="43.1"><div class="metric"><span class="metric-value">43.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.1%"></div></div></div></td>
+              <td class="num" data-sort="45.9"><div class="metric"><span class="metric-value">45.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.9%"></div></div></div></td>
+              <td class="num" data-sort="50.5"><div class="metric"><span class="metric-value">50.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.5%"></div></div></div></td>
+              <td class="num" data-sort="28.2"><div class="metric"><span class="metric-value">28.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 28.2%"></div></div></div></td>
+              <td class="num" data-sort="53.8"><div class="metric"><span class="metric-value">53.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 53.8%"></div></div></div></td>
+              <td class="num" data-sort="51.8"><div class="metric"><span class="metric-value">51.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 51.8%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 5</span><span class="chip chip-star">Star 21</span><span class="chip chip-norm">Norm 26</span></div></td>
+              <td>LEDGE Maxx Crosby (97, Superstar); TE Brock Bowers (95, X-Factor); DT Vita Vea (93, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="IND" data-team-name="Colts">
+              <td class="num rank-cell" data-sort="28">28</td>
+              <td><div class="team-cell"><span class="team-tag">Colts<span>IND</span></span></div></td>
+              <td class="num" data-sort="42.7"><div class="metric"><span class="metric-value">42.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 42.7%"></div></div></div></td>
+              <td class="num" data-sort="31.5"><div class="metric"><span class="metric-value">31.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 31.5%"></div></div></div></td>
+              <td class="num" data-sort="50.3"><div class="metric"><span class="metric-value">50.3</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.3%"></div></div></div></td>
+              <td class="num" data-sort="49.4"><div class="metric"><span class="metric-value">49.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 49.4%"></div></div></div></td>
+              <td class="num" data-sort="41.9"><div class="metric"><span class="metric-value">41.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 41.9%"></div></div></div></td>
+              <td class="num" data-sort="41.1"><div class="metric"><span class="metric-value">41.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 41.1%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 0</span><span class="chip chip-ss">SS 8</span><span class="chip chip-star">Star 14</span><span class="chip chip-norm">Norm 38</span></div></td>
+              <td>LG Quenton Nelson (93, Superstar); DT DeForest Buckner (88, Star); HB Jonathan Taylor (88, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="NYJ" data-team-name="Jets">
+              <td class="num rank-cell" data-sort="29">29</td>
+              <td><div class="team-cell"><span class="team-tag">Jets<span>NYJ</span></span></div></td>
+              <td class="num" data-sort="38.4"><div class="metric"><span class="metric-value">38.4</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.4%"></div></div></div></td>
+              <td class="num" data-sort="34.6"><div class="metric"><span class="metric-value">34.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 34.6%"></div></div></div></td>
+              <td class="num" data-sort="36.8"><div class="metric"><span class="metric-value">36.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 36.8%"></div></div></div></td>
+              <td class="num" data-sort="38.2"><div class="metric"><span class="metric-value">38.2</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.2%"></div></div></div></td>
+              <td class="num" data-sort="46.1"><div class="metric"><span class="metric-value">46.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 46.1%"></div></div></div></td>
+              <td class="num" data-sort="32.5"><div class="metric"><span class="metric-value">32.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 32.5%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 4</span><span class="chip chip-star">Star 13</span><span class="chip chip-norm">Norm 28</span></div></td>
+              <td>CB Sauce Gardner (96, X-Factor); REDGE Quinnen Williams (91, Superstar); HB Breece Hall (87, Star)</td>
+            </tr>
+            <tr data-team-abbr="PHI" data-team-name="Eagles">
+              <td class="num rank-cell" data-sort="30">30</td>
+              <td><div class="team-cell"><span class="team-tag">Eagles<span>PHI</span></span></div></td>
+              <td class="num" data-sort="38.1"><div class="metric"><span class="metric-value">38.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.1%"></div></div></div></td>
+              <td class="num" data-sort="43.9"><div class="metric"><span class="metric-value">43.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.9%"></div></div></div></td>
+              <td class="num" data-sort="13.0"><div class="metric"><span class="metric-value">13.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 13.0%"></div></div></div></td>
+              <td class="num" data-sort="45.1"><div class="metric"><span class="metric-value">45.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.1%"></div></div></div></td>
+              <td class="num" data-sort="44.1"><div class="metric"><span class="metric-value">44.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 44.1%"></div></div></div></td>
+              <td class="num" data-sort="43.5"><div class="metric"><span class="metric-value">43.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.5%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 2</span><span class="chip chip-ss">SS 8</span><span class="chip chip-star">Star 9</span><span class="chip chip-norm">Norm 32</span></div></td>
+              <td>HB Saquon Barkley (99, X-Factor); LT Jordan Mailata (97, Superstar); WR A.J. Brown (94, Superstar)</td>
+            </tr>
+            <tr data-team-abbr="MIA" data-team-name="Dolphins">
+              <td class="num rank-cell" data-sort="31">31</td>
+              <td><div class="team-cell"><span class="team-tag">Dolphins<span>MIA</span></span></div></td>
+              <td class="num" data-sort="38.0"><div class="metric"><span class="metric-value">38.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 38.0%"></div></div></div></td>
+              <td class="num" data-sort="45.9"><div class="metric"><span class="metric-value">45.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.9%"></div></div></div></td>
+              <td class="num" data-sort="56.6"><div class="metric"><span class="metric-value">56.6</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 56.6%"></div></div></div></td>
+              <td class="num" data-sort="16.8"><div class="metric"><span class="metric-value">16.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 16.8%"></div></div></div></td>
+              <td class="num" data-sort="39.5"><div class="metric"><span class="metric-value">39.5</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 39.5%"></div></div></div></td>
+              <td class="num" data-sort="37.1"><div class="metric"><span class="metric-value">37.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 37.1%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 0</span><span class="chip chip-ss">SS 2</span><span class="chip chip-star">Star 18</span><span class="chip chip-norm">Norm 32</span></div></td>
+              <td>HB De&#x27;Von Achane (89, Star); LEDGE Jaelan Phillips (85, Star); WR Jaylen Waddle (85, Star)</td>
+            </tr>
+            <tr data-team-abbr="CAR" data-team-name="Panthers">
+              <td class="num rank-cell" data-sort="32">32</td>
+              <td><div class="team-cell"><span class="team-tag">Panthers<span>CAR</span></span></div></td>
+              <td class="num" data-sort="36.9"><div class="metric"><span class="metric-value">36.9</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 36.9%"></div></div></div></td>
+              <td class="num" data-sort="43.8"><div class="metric"><span class="metric-value">43.8</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 43.8%"></div></div></div></td>
+              <td class="num" data-sort="34.7"><div class="metric"><span class="metric-value">34.7</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 34.7%"></div></div></div></td>
+              <td class="num" data-sort="30.1"><div class="metric"><span class="metric-value">30.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 30.1%"></div></div></div></td>
+              <td class="num" data-sort="39.1"><div class="metric"><span class="metric-value">39.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 39.1%"></div></div></div></td>
+              <td class="num" data-sort="45.1"><div class="metric"><span class="metric-value">45.1</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.1%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 0</span><span class="chip chip-star">Star 20</span><span class="chip chip-norm">Norm 36</span></div></td>
+              <td>DT Derrick Brown (95, Star); WR Tetairoa McMillan (91, X-Factor); DT Christian Wilkins (89, Star)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel" id="team-insights">
+      <div class="section-title">Team Unit Profiles &amp; Narratives</div>
+      <div class="section-intro">Per-team view of unit balance, dev-trait composition, and roster storylines. Use alongside the table above when scouting matchups or trade targets.</div>
+      <div class="team-grid">
+        <article class="team-card dev-elite" data-team-abbr="BAL">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Ravens <span>(BAL)</span></div>
+              <div class="team-card-sub">Overall 79.3 (rank 1)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 5</span><span>SS 5</span><span>Star 10</span><span>Norm 27</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="BAL"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,29.0 79.7,53.6 83.3,92.0 36.5,92.3 20.1,47.0"/><circle class="radar-point" cx="60.0" cy="29.0" r="2"/><circle class="radar-point" cx="79.7" cy="53.6" r="2"/><circle class="radar-point" cx="83.3" cy="92.0" r="2"/><circle class="radar-point" cx="36.5" cy="92.3" r="2"/><circle class="radar-point" cx="20.1" cy="47.0" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="BAL">
+              <p class="label">Summary</p>
+              <p>Ravens currently grades #1 in roster power built around 10 X-Factor/Superstar pieces headlined by QB Lamar Jackson (99, X-Factor). Off Pass unit grades as a clear strength (73.7). Off Run lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (73.7). Pass Coverage unit grades as a clear strength (94.3). Pass Rush unit grades as a clear strength (95.0). Run Defense unit grades as a clear strength (100.0).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="SF">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">49ers <span>(SF)</span></div>
+              <div class="team-card-sub">Overall 64.5 (rank 2)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 4</span><span>SS 5</span><span>Star 18</span><span>Norm 32</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="SF"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,32.0 92.4,49.5 70.9,75.1 41.4,85.6 34.3,51.7"/><circle class="radar-point" cx="60.0" cy="32.0" r="2"/><circle class="radar-point" cx="92.4" cy="49.5" r="2"/><circle class="radar-point" cx="70.9" cy="75.1" r="2"/><circle class="radar-point" cx="41.4" cy="85.6" r="2"/><circle class="radar-point" cx="34.3" cy="51.7" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="SF">
+              <p class="label">Summary</p>
+              <p>49ers currently grades #2 in roster power built around 9 X-Factor/Superstar pieces headlined by MIKE Fred Warner (98, X-Factor). Off Pass unit grades as a clear strength (66.7). Pass Coverage lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (66.7). Off Run unit grades as a clear strength (81.0). Pass Rush unit grades as a clear strength (75.3). Run Defense unit grades as a clear strength (64.3).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="KC">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Chiefs <span>(KC)</span></div>
+              <div class="team-card-sub">Overall 58.3 (rank 3)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 5</span><span>Star 12</span><span>Norm 36</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="KC"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,28.2 78.0,54.2 72.5,77.2 45.9,79.4 34.7,51.8"/><circle class="radar-point" cx="60.0" cy="28.2" r="2"/><circle class="radar-point" cx="78.0" cy="54.2" r="2"/><circle class="radar-point" cx="72.5" cy="77.2" r="2"/><circle class="radar-point" cx="45.9" cy="79.4" r="2"/><circle class="radar-point" cx="34.7" cy="51.8" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="KC">
+              <p class="label">Summary</p>
+              <p>Chiefs currently grades #3 in roster power built around 7 X-Factor/Superstar pieces headlined by QB Patrick Mahomes (97, X-Factor). Off Pass unit grades as a clear strength (75.6). Off Run lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (75.6). Run Defense unit grades as a clear strength (63.3).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="DET">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Lions <span>(DET)</span></div>
+              <div class="team-card-sub">Overall 55.3 (rank 4)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 4</span><span>SS 4</span><span>Star 18</span><span>Norm 28</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="DET"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,41.9 81.7,53.0 76.4,82.6 45.7,79.6 34.7,51.8"/><circle class="radar-point" cx="60.0" cy="41.9" r="2"/><circle class="radar-point" cx="81.7" cy="53.0" r="2"/><circle class="radar-point" cx="76.4" cy="82.6" r="2"/><circle class="radar-point" cx="45.7" cy="79.6" r="2"/><circle class="radar-point" cx="34.7" cy="51.8" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="DET">
+              <p class="label">Summary</p>
+              <p>Lions currently grades #4 in roster power built around 8 X-Factor/Superstar pieces headlined by HB Jahmyr Gibbs (99, X-Factor). Pass Coverage unit grades as a clear strength (66.6). Off Pass lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Pass Coverage unit grades as a clear strength (66.6). Pass Rush unit grades as a clear strength (57.8). Run Defense unit grades as a clear strength (63.3).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="WAS">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Commanders <span>(WAS)</span></div>
+              <div class="team-card-sub">Overall 55.2 (rank 5)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 5</span><span>Star 15</span><span>Norm 31</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="WAS"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,29.6 74.6,55.3 75.1,80.7 50.2,73.5 40.3,53.6"/><circle class="radar-point" cx="60.0" cy="29.6" r="2"/><circle class="radar-point" cx="74.6" cy="55.3" r="2"/><circle class="radar-point" cx="75.1" cy="80.7" r="2"/><circle class="radar-point" cx="50.2" cy="73.5" r="2"/><circle class="radar-point" cx="40.3" cy="53.6" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="WAS">
+              <p class="label">Summary</p>
+              <p>Commanders currently grades #5 in roster power built around 7 X-Factor/Superstar pieces headlined by WR Terry McLaurin (95, Superstar). Off Pass unit grades as a clear strength (72.3). Off Run unit looks like a liability (36.5).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (72.3). Pass Coverage unit grades as a clear strength (61.0).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run unit looks like a liability (36.5). Pass Rush unit looks like a liability (39.8).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="PIT">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Steelers <span>(PIT)</span></div>
+              <div class="team-card-sub">Overall 55.2 (rank 6)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 4</span><span>Star 21</span><span>Norm 39</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="PIT"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,49.3 89.1,50.5 74.3,79.6 40.7,86.6 30.2,50.3"/><circle class="radar-point" cx="60.0" cy="49.3" r="2"/><circle class="radar-point" cx="89.1" cy="50.5" r="2"/><circle class="radar-point" cx="74.3" cy="79.6" r="2"/><circle class="radar-point" cx="40.7" cy="86.6" r="2"/><circle class="radar-point" cx="30.2" cy="50.3" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="PIT">
+              <p class="label">Summary</p>
+              <p>Steelers currently grades #6 in roster power built around 6 X-Factor/Superstar pieces headlined by LEDGE T.J. Watt (96, Superstar). Off Run unit grades as a clear strength (72.9). Off Pass unit looks like a liability (25.4).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run unit grades as a clear strength (72.9). Pass Coverage unit grades as a clear strength (57.8). Pass Rush unit grades as a clear strength (78.3). Run Defense unit grades as a clear strength (74.7).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (25.4).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="CIN">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Bengals <span>(CIN)</span></div>
+              <div class="team-card-sub">Overall 55.0 (rank 7)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 3</span><span>SS 6</span><span>Star 13</span><span>Norm 36</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="CIN"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,26.2 70.7,56.5 70.6,74.6 44.4,81.4 38.2,52.9"/><circle class="radar-point" cx="60.0" cy="26.2" r="2"/><circle class="radar-point" cx="70.7" cy="56.5" r="2"/><circle class="radar-point" cx="70.6" cy="74.6" r="2"/><circle class="radar-point" cx="44.4" cy="81.4" r="2"/><circle class="radar-point" cx="38.2" cy="52.9" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="CIN">
+              <p class="label">Summary</p>
+              <p>Bengals currently grades #7 in roster power built around 9 X-Factor/Superstar pieces headlined by WR Ja&#x27;Marr Chase (99, X-Factor). Off Pass unit grades as a clear strength (80.4). Off Run unit looks like a liability (26.7).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (80.4). Pass Rush unit grades as a clear strength (63.0). Run Defense unit grades as a clear strength (54.6).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run unit looks like a liability (26.7).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="LAC">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Chargers <span>(LAC)</span></div>
+              <div class="team-card-sub">Overall 54.5 (rank 8)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 0</span><span>SS 5</span><span>Star 21</span><span>Norm 31</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="LAC"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,35.7 87.6,51.0 73.1,78.0 50.9,72.5 41.9,54.1"/><circle class="radar-point" cx="60.0" cy="35.7" r="2"/><circle class="radar-point" cx="87.6" cy="51.0" r="2"/><circle class="radar-point" cx="73.1" cy="78.0" r="2"/><circle class="radar-point" cx="50.9" cy="72.5" r="2"/><circle class="radar-point" cx="41.9" cy="54.1" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="LAC">
+              <p class="label">Summary</p>
+              <p>Chargers currently grades #8 in roster power with a solid premium dev core headlined by SS Derwin James Jr (93, Superstar). Off Pass unit grades as a clear strength (57.9). Pass Rush unit looks like a liability (36.7).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (57.9). Off Run unit grades as a clear strength (69.0).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Rush unit looks like a liability (36.7).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="CHI">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Bears <span>(CHI)</span></div>
+              <div class="team-card-sub">Overall 54.0 (rank 9)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 5</span><span>Star 21</span><span>Norm 27</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="CHI"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,29.7 85.8,51.6 69.4,73.0 50.2,73.5 43.2,54.5"/><circle class="radar-point" cx="60.0" cy="29.7" r="2"/><circle class="radar-point" cx="85.8" cy="51.6" r="2"/><circle class="radar-point" cx="69.4" cy="73.0" r="2"/><circle class="radar-point" cx="50.2" cy="73.5" r="2"/><circle class="radar-point" cx="43.2" cy="54.5" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="CHI">
+              <p class="label">Summary</p>
+              <p>Bears currently grades #9 in roster power built around 6 X-Factor/Superstar pieces headlined by QB Caleb Williams (92, X-Factor). Off Pass unit grades as a clear strength (72.1). Pass Coverage unit looks like a liability (38.2).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (72.1). Off Run unit grades as a clear strength (64.7).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (38.2). Pass Rush unit looks like a liability (39.7). Run Defense unit looks like a liability (42.0).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="SEA">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Seahawks <span>(SEA)</span></div>
+              <div class="team-card-sub">Overall 53.9 (rank 10)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 5</span><span>Star 22</span><span>Norm 33</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="SEA"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,45.9 87.9,50.9 77.0,83.4 48.6,75.7 40.6,53.7"/><circle class="radar-point" cx="60.0" cy="45.9" r="2"/><circle class="radar-point" cx="87.9" cy="50.9" r="2"/><circle class="radar-point" cx="77.0" cy="83.4" r="2"/><circle class="radar-point" cx="48.6" cy="75.7" r="2"/><circle class="radar-point" cx="40.6" cy="53.7" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="SEA">
+              <p class="label">Summary</p>
+              <p>Seahawks currently grades #10 in roster power built around 6 X-Factor/Superstar pieces headlined by TE David Njoku (91, Star). Off Run unit grades as a clear strength (69.8). Off Pass unit looks like a liability (33.5).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run unit grades as a clear strength (69.8). Pass Coverage unit grades as a clear strength (68.9).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (33.5).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="NE">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Patriots <span>(NE)</span></div>
+              <div class="team-card-sub">Overall 52.1 (rank 11)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 5</span><span>Star 22</span><span>Norm 24</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="NE"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,43.9 87.5,51.1 75.5,81.3 50.1,73.7 42.9,54.4"/><circle class="radar-point" cx="60.0" cy="43.9" r="2"/><circle class="radar-point" cx="87.5" cy="51.1" r="2"/><circle class="radar-point" cx="75.5" cy="81.3" r="2"/><circle class="radar-point" cx="50.1" cy="73.7" r="2"/><circle class="radar-point" cx="42.9" cy="54.4" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="NE">
+              <p class="label">Summary</p>
+              <p>Patriots currently grades #11 in roster power built around 7 X-Factor/Superstar pieces headlined by CB Christian Gonzalez (97, Superstar). Off Run unit grades as a clear strength (68.9). Off Pass unit looks like a liability (38.3).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run unit grades as a clear strength (68.9). Pass Coverage unit grades as a clear strength (62.7).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (38.3). Pass Rush unit looks like a liability (40.2).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="HOU">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Texans <span>(HOU)</span></div>
+              <div class="team-card-sub">Overall 51.8 (rank 12)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 7</span><span>Star 16</span><span>Norm 40</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="HOU"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,35.9 78.3,54.1 74.2,79.5 49.9,73.9 45.8,55.4"/><circle class="radar-point" cx="60.0" cy="35.9" r="2"/><circle class="radar-point" cx="78.3" cy="54.1" r="2"/><circle class="radar-point" cx="74.2" cy="79.5" r="2"/><circle class="radar-point" cx="49.9" cy="73.9" r="2"/><circle class="radar-point" cx="45.8" cy="55.4" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="HOU">
+              <p class="label">Summary</p>
+              <p>Texans currently grades #12 in roster power built around 9 X-Factor/Superstar pieces headlined by CB Derek Stingley Jr (95, X-Factor). Off Pass is the most reliable unit on this roster. Run Defense unit looks like a liability (35.5).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Run Defense unit looks like a liability (35.5).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="ATL">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Falcons <span>(ATL)</span></div>
+              <div class="team-card-sub">Overall 51.4 (rank 13)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 9</span><span>Star 12</span><span>Norm 33</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="ATL"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,43.9 82.1,52.8 76.6,82.9 49.3,74.7 40.3,53.6"/><circle class="radar-point" cx="60.0" cy="43.9" r="2"/><circle class="radar-point" cx="82.1" cy="52.8" r="2"/><circle class="radar-point" cx="76.6" cy="82.9" r="2"/><circle class="radar-point" cx="49.3" cy="74.7" r="2"/><circle class="radar-point" cx="40.3" cy="53.6" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="ATL">
+              <p class="label">Summary</p>
+              <p>Falcons currently grades #13 in roster power built around 10 X-Factor/Superstar pieces headlined by HB Bijan Robinson (97, X-Factor). Pass Coverage unit grades as a clear strength (67.3). Off Pass unit looks like a liability (38.3).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Coverage unit grades as a clear strength (67.3).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (38.3).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="NYG">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Giants <span>(NYG)</span></div>
+              <div class="team-card-sub">Overall 50.5 (rank 14)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 4</span><span>Star 14</span><span>Norm 26</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="NYG"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,42.7 81.5,53.0 71.1,75.3 42.9,83.5 32.4,51.0"/><circle class="radar-point" cx="60.0" cy="42.7" r="2"/><circle class="radar-point" cx="81.5" cy="53.0" r="2"/><circle class="radar-point" cx="71.1" cy="75.3" r="2"/><circle class="radar-point" cx="42.9" cy="83.5" r="2"/><circle class="radar-point" cx="32.4" cy="51.0" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="NYG">
+              <p class="label">Summary</p>
+              <p>Giants currently grades #14 in roster power built around 6 X-Factor/Superstar pieces headlined by DT Dexter Lawrence II (97, Superstar). Pass Rush unit grades as a clear strength (69.2). Off Pass lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Pass Rush unit grades as a clear strength (69.2). Run Defense unit grades as a clear strength (69.1).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="TEN">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Titans <span>(TEN)</span></div>
+              <div class="team-card-sub">Overall 50.4 (rank 15)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 0</span><span>SS 9</span><span>Star 19</span><span>Norm 39</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="TEN"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,38.0 76.1,54.8 72.9,77.8 46.4,78.7 38.2,52.9"/><circle class="radar-point" cx="60.0" cy="38.0" r="2"/><circle class="radar-point" cx="76.1" cy="54.8" r="2"/><circle class="radar-point" cx="72.9" cy="77.8" r="2"/><circle class="radar-point" cx="46.4" cy="78.7" r="2"/><circle class="radar-point" cx="38.2" cy="52.9" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="TEN">
+              <p class="label">Summary</p>
+              <p>Titans currently grades #15 in roster power built around 9 X-Factor/Superstar pieces headlined by DT Jeffery Simmons (92, Star). Run Defense unit grades as a clear strength (54.6). Off Run unit looks like a liability (40.3).</p>
+              <p class="label">Strengths</p>
+              <p>Run Defense unit grades as a clear strength (54.6).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run unit looks like a liability (40.3).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="BUF">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Bills <span>(BUF)</span></div>
+              <div class="team-card-sub">Overall 49.9 (rank 16)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 3</span><span>Star 23</span><span>Norm 27</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="BUF"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,31.7 76.3,54.7 69.7,73.3 47.9,76.6 43.0,54.5"/><circle class="radar-point" cx="60.0" cy="31.7" r="2"/><circle class="radar-point" cx="76.3" cy="54.7" r="2"/><circle class="radar-point" cx="69.7" cy="73.3" r="2"/><circle class="radar-point" cx="47.9" cy="76.6" r="2"/><circle class="radar-point" cx="43.0" cy="54.5" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="BUF">
+              <p class="label">Summary</p>
+              <p>Bills currently grades #16 in roster power with a solid premium dev core headlined by QB Josh Allen (99, X-Factor). Off Pass unit grades as a clear strength (67.4). Pass Coverage unit looks like a liability (39.2).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (67.4).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (39.2). Run Defense unit looks like a liability (42.6).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="DEN">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Broncos <span>(DEN)</span></div>
+              <div class="team-card-sub">Overall 49.6 (rank 17)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 4</span><span>Star 17</span><span>Norm 34</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="DEN"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,41.0 74.2,55.4 76.4,82.6 48.9,75.2 41.2,53.9"/><circle class="radar-point" cx="60.0" cy="41.0" r="2"/><circle class="radar-point" cx="74.2" cy="55.4" r="2"/><circle class="radar-point" cx="76.4" cy="82.6" r="2"/><circle class="radar-point" cx="48.9" cy="75.2" r="2"/><circle class="radar-point" cx="41.2" cy="53.9" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="DEN">
+              <p class="label">Summary</p>
+              <p>Broncos currently grades #17 in roster power built around 6 X-Factor/Superstar pieces headlined by CB Patrick Surtain II (98, X-Factor). Pass Coverage unit grades as a clear strength (66.5). Off Run unit looks like a liability (35.5).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Coverage unit grades as a clear strength (66.5).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run unit looks like a liability (35.5).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="LAR">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Rams <span>(LAR)</span></div>
+              <div class="team-card-sub">Overall 49.0 (rank 18)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 5</span><span>Star 19</span><span>Norm 40</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="LAR"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,43.1 88.4,50.8 68.8,72.1 45.2,80.4 36.6,52.4"/><circle class="radar-point" cx="60.0" cy="43.1" r="2"/><circle class="radar-point" cx="88.4" cy="50.8" r="2"/><circle class="radar-point" cx="68.8" cy="72.1" r="2"/><circle class="radar-point" cx="45.2" cy="80.4" r="2"/><circle class="radar-point" cx="36.6" cy="52.4" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="LAR">
+              <p class="label">Summary</p>
+              <p>Rams currently grades #18 in roster power built around 6 X-Factor/Superstar pieces headlined by WR Puka Nacua (97, X-Factor). Off Run unit grades as a clear strength (71.0). Pass Coverage unit looks like a liability (35.6).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run unit grades as a clear strength (71.0). Pass Rush unit grades as a clear strength (60.0). Run Defense unit grades as a clear strength (58.5).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (35.6).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="GB">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Packers <span>(GB)</span></div>
+              <div class="team-card-sub">Overall 48.5 (rank 19)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 2</span><span>Star 21</span><span>Norm 31</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="GB"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,37.3 77.5,54.3 70.9,75.0 47.4,77.4 39.1,53.2"/><circle class="radar-point" cx="60.0" cy="37.3" r="2"/><circle class="radar-point" cx="77.5" cy="54.3" r="2"/><circle class="radar-point" cx="70.9" cy="75.0" r="2"/><circle class="radar-point" cx="47.4" cy="77.4" r="2"/><circle class="radar-point" cx="39.1" cy="53.2" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="GB">
+              <p class="label">Summary</p>
+              <p>Packers currently grades #19 in roster power with a solid premium dev core headlined by REDGE Micah Parsons (99, X-Factor). Off Pass is the most reliable unit on this roster. Off Run lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="CLE">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Browns <span>(CLE)</span></div>
+              <div class="team-card-sub">Overall 48.4 (rank 20)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 3</span><span>SS 1</span><span>Star 21</span><span>Norm 42</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="CLE"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,47.5 73.1,55.7 76.6,82.8 44.3,81.6 35.4,52.0"/><circle class="radar-point" cx="60.0" cy="47.5" r="2"/><circle class="radar-point" cx="73.1" cy="55.7" r="2"/><circle class="radar-point" cx="76.6" cy="82.8" r="2"/><circle class="radar-point" cx="44.3" cy="81.6" r="2"/><circle class="radar-point" cx="35.4" cy="52.0" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="CLE">
+              <p class="label">Summary</p>
+              <p>Browns currently grades #20 in roster power with a solid premium dev core headlined by REDGE Myles Garrett (99, X-Factor). Pass Coverage unit grades as a clear strength (67.1). Off Pass unit looks like a liability (29.8).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Coverage unit grades as a clear strength (67.1). Pass Rush unit grades as a clear strength (63.6). Run Defense unit grades as a clear strength (61.7).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (29.8). Off Run unit looks like a liability (32.8).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="NO">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Saints <span>(NO)</span></div>
+              <div class="team-card-sub">Overall 47.7 (rank 21)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 0</span><span>SS 6</span><span>Star 22</span><span>Norm 29</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="NO"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,47.6 86.8,51.3 72.7,77.5 47.8,76.9 39.9,53.5"/><circle class="radar-point" cx="60.0" cy="47.6" r="2"/><circle class="radar-point" cx="86.8" cy="51.3" r="2"/><circle class="radar-point" cx="72.7" cy="77.5" r="2"/><circle class="radar-point" cx="47.8" cy="76.9" r="2"/><circle class="radar-point" cx="39.9" cy="53.5" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="NO">
+              <p class="label">Summary</p>
+              <p>Saints currently grades #21 in roster power built around 6 X-Factor/Superstar pieces headlined by C Erik McCoy (90, Star). Off Run unit grades as a clear strength (67.1). Off Pass unit looks like a liability (29.6).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run unit grades as a clear strength (67.1).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (29.6).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="DAL">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Cowboys <span>(DAL)</span></div>
+              <div class="team-card-sub">Overall 47.3 (rank 22)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 3</span><span>Star 16</span><span>Norm 35</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="DAL"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,36.2 83.4,52.4 69.9,73.6 51.9,71.2 47.6,56.0"/><circle class="radar-point" cx="60.0" cy="36.2" r="2"/><circle class="radar-point" cx="83.4" cy="52.4" r="2"/><circle class="radar-point" cx="69.9" cy="73.6" r="2"/><circle class="radar-point" cx="51.9" cy="71.2" r="2"/><circle class="radar-point" cx="47.6" cy="56.0" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="DAL">
+              <p class="label">Summary</p>
+              <p>Cowboys currently grades #22 in roster power with a solid premium dev core headlined by WR CeeDee Lamb (96, X-Factor). Off Run unit grades as a clear strength (58.7). Pass Coverage unit looks like a liability (40.0).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run unit grades as a clear strength (58.7).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (40.0). Pass Rush unit looks like a liability (32.9). Run Defense unit looks like a liability (31.0).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="ARI">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Cardinals <span>(ARI)</span></div>
+              <div class="team-card-sub">Overall 46.7 (rank 23)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 4</span><span>SS 2</span><span>Star 16</span><span>Norm 36</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="ARI"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,38.7 77.7,54.3 71.9,76.3 49.9,73.9 41.5,54.0"/><circle class="radar-point" cx="60.0" cy="38.7" r="2"/><circle class="radar-point" cx="77.7" cy="54.3" r="2"/><circle class="radar-point" cx="71.9" cy="76.3" r="2"/><circle class="radar-point" cx="49.9" cy="73.9" r="2"/><circle class="radar-point" cx="41.5" cy="54.0" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="ARI">
+              <p class="label">Summary</p>
+              <p>Cardinals currently grades #23 in roster power built around 6 X-Factor/Superstar pieces headlined by TE Trey McBride (94, X-Factor). Off Pass is the most reliable unit on this roster. Pass Rush lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Rush lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="JAX">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Jaguars <span>(JAX)</span></div>
+              <div class="team-card-sub">Overall 46.2 (rank 24)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 5</span><span>Star 11</span><span>Norm 42</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="JAX"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,44.3 75.8,54.9 72.8,77.6 45.8,79.6 39.3,53.3"/><circle class="radar-point" cx="60.0" cy="44.3" r="2"/><circle class="radar-point" cx="75.8" cy="54.9" r="2"/><circle class="radar-point" cx="72.8" cy="77.6" r="2"/><circle class="radar-point" cx="45.8" cy="79.6" r="2"/><circle class="radar-point" cx="39.3" cy="53.3" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="JAX">
+              <p class="label">Summary</p>
+              <p>Jaguars currently grades #24 in roster power built around 7 X-Factor/Superstar pieces headlined by WR Brian Thomas Jr (92, X-Factor). Pass Rush unit grades as a clear strength (57.6). Off Pass unit looks like a liability (37.4).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Rush unit grades as a clear strength (57.6).</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (37.4). Off Run unit looks like a liability (39.6).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="TB">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Buccaneers <span>(TB)</span></div>
+              <div class="team-card-sub">Overall 44.5 (rank 25)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 5</span><span>Star 13</span><span>Norm 36</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="TB"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,39.2 76.8,54.5 73.9,79.1 54.6,67.4 48.5,56.3"/><circle class="radar-point" cx="60.0" cy="39.2" r="2"/><circle class="radar-point" cx="76.8" cy="54.5" r="2"/><circle class="radar-point" cx="73.9" cy="79.1" r="2"/><circle class="radar-point" cx="54.6" cy="67.4" r="2"/><circle class="radar-point" cx="48.5" cy="56.3" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="TB">
+              <p class="label">Summary</p>
+              <p>Buccaneers currently grades #25 in roster power built around 7 X-Factor/Superstar pieces headlined by LT Tristan Wirfs (97, Superstar). Pass Coverage is the most reliable unit on this roster. Pass Rush unit looks like a liability (21.7).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Coverage is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Rush unit looks like a liability (21.7). Run Defense unit looks like a liability (28.7).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="MIN">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Vikings <span>(MIN)</span></div>
+              <div class="team-card-sub">Overall 43.5 (rank 26)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 5</span><span>Star 14</span><span>Norm 25</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="MIN"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,32.5 79.5,53.7 67.2,69.9 53.3,69.2 51.9,57.4"/><circle class="radar-point" cx="60.0" cy="32.5" r="2"/><circle class="radar-point" cx="79.5" cy="53.7" r="2"/><circle class="radar-point" cx="67.2" cy="69.9" r="2"/><circle class="radar-point" cx="53.3" cy="69.2" r="2"/><circle class="radar-point" cx="51.9" cy="57.4" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="MIN">
+              <p class="label">Summary</p>
+              <p>Vikings currently grades #26 in roster power built around 6 X-Factor/Superstar pieces headlined by WR Justin Jefferson (99, X-Factor). Off Pass unit grades as a clear strength (65.4). Pass Coverage unit looks like a liability (29.1).</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (65.4).</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (29.1). Pass Rush unit looks like a liability (27.0). Run Defense unit looks like a liability (20.4).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="LV">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Raiders <span>(LV)</span></div>
+              <div class="team-card-sub">Overall 43.1 (rank 27)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 5</span><span>Star 21</span><span>Norm 26</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="LV"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,40.7 80.2,53.4 67.0,69.6 46.7,78.3 39.3,53.3"/><circle class="radar-point" cx="60.0" cy="40.7" r="2"/><circle class="radar-point" cx="80.2" cy="53.4" r="2"/><circle class="radar-point" cx="67.0" cy="69.6" r="2"/><circle class="radar-point" cx="46.7" cy="78.3" r="2"/><circle class="radar-point" cx="39.3" cy="53.3" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="LV">
+              <p class="label">Summary</p>
+              <p>Raiders currently grades #27 in roster power built around 7 X-Factor/Superstar pieces headlined by LEDGE Maxx Crosby (97, Superstar). Pass Rush is the most reliable unit on this roster. Pass Coverage unit looks like a liability (28.2).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Rush is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (28.2).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="IND">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Colts <span>(IND)</span></div>
+              <div class="team-card-sub">Overall 42.7 (rank 28)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 0</span><span>SS 8</span><span>Star 14</span><span>Norm 38</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="IND"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,46.8 80.1,53.5 72.2,76.8 49.7,74.2 43.6,54.7"/><circle class="radar-point" cx="60.0" cy="46.8" r="2"/><circle class="radar-point" cx="80.1" cy="53.5" r="2"/><circle class="radar-point" cx="72.2" cy="76.8" r="2"/><circle class="radar-point" cx="49.7" cy="74.2" r="2"/><circle class="radar-point" cx="43.6" cy="54.7" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="IND">
+              <p class="label">Summary</p>
+              <p>Colts currently grades #28 in roster power built around 8 X-Factor/Superstar pieces headlined by LG Quenton Nelson (93, Superstar). Off Run is the most reliable unit on this roster. Off Pass unit looks like a liability (31.5).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (31.5). Run Defense unit looks like a liability (41.1).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="NYJ">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Jets <span>(NYJ)</span></div>
+              <div class="team-card-sub">Overall 38.4 (rank 29)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 4</span><span>Star 13</span><span>Norm 28</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="NYJ"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,45.5 74.7,55.2 69.4,73.0 48.6,75.7 47.0,55.8"/><circle class="radar-point" cx="60.0" cy="45.5" r="2"/><circle class="radar-point" cx="74.7" cy="55.2" r="2"/><circle class="radar-point" cx="69.4" cy="73.0" r="2"/><circle class="radar-point" cx="48.6" cy="75.7" r="2"/><circle class="radar-point" cx="47.0" cy="55.8" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="NYJ">
+              <p class="label">Summary</p>
+              <p>Jets currently grades #29 in roster power built around 6 X-Factor/Superstar pieces headlined by CB Sauce Gardner (96, X-Factor). Pass Rush is the most reliable unit on this roster. Off Pass unit looks like a liability (34.6).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Rush is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (34.6). Off Run unit looks like a liability (36.8). Pass Coverage unit looks like a liability (38.2). Run Defense unit looks like a liability (32.5).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card dev-elite" data-team-abbr="PHI">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Eagles <span>(PHI)</span></div>
+              <div class="team-card-sub">Overall 38.1 (rank 30)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 2</span><span>SS 8</span><span>Star 9</span><span>Norm 32</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="PHI"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,41.6 65.2,58.3 71.1,75.3 49.1,75.0 42.6,54.4"/><circle class="radar-point" cx="60.0" cy="41.6" r="2"/><circle class="radar-point" cx="65.2" cy="58.3" r="2"/><circle class="radar-point" cx="71.1" cy="75.3" r="2"/><circle class="radar-point" cx="49.1" cy="75.0" r="2"/><circle class="radar-point" cx="42.6" cy="54.4" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="PHI">
+              <p class="label">Summary</p>
+              <p>Eagles currently grades #30 in roster power built around 10 X-Factor/Superstar pieces headlined by HB Saquon Barkley (99, X-Factor). Pass Coverage is the most reliable unit on this roster. Off Run unit looks like a liability (13.0).</p>
+              <p class="label">Strengths</p>
+              <p>Pass Coverage is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run unit looks like a liability (13.0).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="MIA">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Dolphins <span>(MIA)</span></div>
+              <div class="team-card-sub">Overall 38.0 (rank 31)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 0</span><span>SS 2</span><span>Star 18</span><span>Norm 32</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="MIA"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,40.7 82.6,52.7 64.1,65.7 50.2,73.4 45.2,55.2"/><circle class="radar-point" cx="60.0" cy="40.7" r="2"/><circle class="radar-point" cx="82.6" cy="52.7" r="2"/><circle class="radar-point" cx="64.1" cy="65.7" r="2"/><circle class="radar-point" cx="50.2" cy="73.4" r="2"/><circle class="radar-point" cx="45.2" cy="55.2" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="MIA">
+              <p class="label">Summary</p>
+              <p>Dolphins currently grades #31 in roster power headlined by HB De&#x27;Von Achane (89, Star). Off Run is the most reliable unit on this roster. Pass Coverage unit looks like a liability (16.8).</p>
+              <p class="label">Strengths</p>
+              <p>Off Run is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Pass Coverage unit looks like a liability (16.8). Pass Rush unit looks like a liability (39.5). Run Defense unit looks like a liability (37.1).</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="CAR">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Panthers <span>(CAR)</span></div>
+              <div class="team-card-sub">Overall 36.9 (rank 32)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 0</span><span>Star 20</span><span>Norm 36</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="CAR"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,41.6 73.9,55.5 67.4,70.2 50.3,73.3 42.0,54.1"/><circle class="radar-point" cx="60.0" cy="41.6" r="2"/><circle class="radar-point" cx="73.9" cy="55.5" r="2"/><circle class="radar-point" cx="67.4" cy="70.2" r="2"/><circle class="radar-point" cx="50.3" cy="73.3" r="2"/><circle class="radar-point" cx="42.0" cy="54.1" r="2"/></svg>
+              <div class="radar-labels"><span>OP</span><span>OR</span><span>Cov</span><span>Rush</span><span>Run</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="CAR">
+              <p class="label">Summary</p>
+              <p>Panthers currently grades #32 in roster power headlined by DT Derrick Brown (95, Star). Run Defense is the most reliable unit on this roster. Off Run unit looks like a liability (34.7).</p>
+              <p class="label">Strengths</p>
+              <p>Run Defense is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Run unit looks like a liability (34.7). Pass Coverage unit looks like a liability (30.1). Pass Rush unit looks like a liability (39.1).</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+  </div>
+  <script id="teams-data" type="application/json">
+{"teams": [{"team_abbrev": "BAL", "team_name": "Ravens", "overall_score": 79.3, "overall_rank": 1, "off_pass_score": 73.7, "off_run_score": 49.4, "def_cover_score": 94.3, "def_pass_rush_score": 95.0, "def_run_score": 100.0, "dev_xf": 5, "dev_ss": 5, "dev_star": 10, "dev_normal": 27}, {"team_abbrev": "SF", "team_name": "49ers", "overall_score": 64.5, "overall_rank": 2, "off_pass_score": 66.7, "off_run_score": 81.0, "def_cover_score": 44.3, "def_pass_rush_score": 75.3, "def_run_score": 64.3, "dev_xf": 4, "dev_ss": 5, "dev_star": 18, "dev_normal": 32}, {"team_abbrev": "KC", "team_name": "Chiefs", "overall_score": 58.3, "overall_rank": 3, "off_pass_score": 75.6, "off_run_score": 45.0, "def_cover_score": 50.5, "def_pass_rush_score": 57.1, "def_run_score": 63.3, "dev_xf": 2, "dev_ss": 5, "dev_star": 12, "dev_normal": 36}, {"team_abbrev": "DET", "team_name": "Lions", "overall_score": 55.3, "overall_rank": 4, "off_pass_score": 43.1, "off_run_score": 54.3, "def_cover_score": 66.6, "def_pass_rush_score": 57.8, "def_run_score": 63.3, "dev_xf": 4, "dev_ss": 4, "dev_star": 18, "dev_normal": 28}, {"team_abbrev": "WAS", "team_name": "Commanders", "overall_score": 55.2, "overall_rank": 5, "off_pass_score": 72.3, "off_run_score": 36.5, "def_cover_score": 61.0, "def_pass_rush_score": 39.8, "def_run_score": 49.3, "dev_xf": 2, "dev_ss": 5, "dev_star": 15, "dev_normal": 31}, {"team_abbrev": "PIT", "team_name": "Steelers", "overall_score": 55.2, "overall_rank": 6, "off_pass_score": 25.4, "off_run_score": 72.9, "def_cover_score": 57.8, "def_pass_rush_score": 78.3, "def_run_score": 74.7, "dev_xf": 2, "dev_ss": 4, "dev_star": 21, "dev_normal": 39}, {"team_abbrev": "CIN", "team_name": "Bengals", "overall_score": 55.0, "overall_rank": 7, "off_pass_score": 80.4, "off_run_score": 26.7, "def_cover_score": 43.1, "def_pass_rush_score": 63.0, "def_run_score": 54.6, "dev_xf": 3, "dev_ss": 6, "dev_star": 13, "dev_normal": 36}, {"team_abbrev": "LAC", "team_name": "Chargers", "overall_score": 54.5, "overall_rank": 8, "off_pass_score": 57.9, "off_run_score": 69.0, "def_cover_score": 53.1, "def_pass_rush_score": 36.7, "def_run_score": 45.3, "dev_xf": 0, "dev_ss": 5, "dev_star": 21, "dev_normal": 31}, {"team_abbrev": "CHI", "team_name": "Bears", "overall_score": 54.0, "overall_rank": 9, "off_pass_score": 72.1, "off_run_score": 64.7, "def_cover_score": 38.2, "def_pass_rush_score": 39.7, "def_run_score": 42.0, "dev_xf": 1, "dev_ss": 5, "dev_star": 21, "dev_normal": 27}, {"team_abbrev": "SEA", "team_name": "Seahawks", "overall_score": 53.9, "overall_rank": 10, "off_pass_score": 33.5, "off_run_score": 69.8, "def_cover_score": 68.9, "def_pass_rush_score": 46.1, "def_run_score": 48.6, "dev_xf": 1, "dev_ss": 5, "dev_star": 22, "dev_normal": 33}, {"team_abbrev": "NE", "team_name": "Patriots", "overall_score": 52.1, "overall_rank": 11, "off_pass_score": 38.3, "off_run_score": 68.9, "def_cover_score": 62.7, "def_pass_rush_score": 40.2, "def_run_score": 42.8, "dev_xf": 2, "dev_ss": 5, "dev_star": 22, "dev_normal": 24}, {"team_abbrev": "HOU", "team_name": "Texans", "overall_score": 51.8, "overall_rank": 12, "off_pass_score": 57.5, "off_run_score": 45.8, "def_cover_score": 57.4, "def_pass_rush_score": 40.8, "def_run_score": 35.5, "dev_xf": 2, "dev_ss": 7, "dev_star": 16, "dev_normal": 40}, {"team_abbrev": "ATL", "team_name": "Falcons", "overall_score": 51.4, "overall_rank": 13, "off_pass_score": 38.3, "off_run_score": 55.4, "def_cover_score": 67.3, "def_pass_rush_score": 43.4, "def_run_score": 49.3, "dev_xf": 1, "dev_ss": 9, "dev_star": 12, "dev_normal": 33}, {"team_abbrev": "NYG", "team_name": "Giants", "overall_score": 50.5, "overall_rank": 14, "off_pass_score": 41.3, "off_run_score": 53.7, "def_cover_score": 45.1, "def_pass_rush_score": 69.2, "def_run_score": 69.1, "dev_xf": 2, "dev_ss": 4, "dev_star": 14, "dev_normal": 26}, {"team_abbrev": "TEN", "team_name": "Titans", "overall_score": 50.4, "overall_rank": 15, "off_pass_score": 52.3, "off_run_score": 40.3, "def_cover_score": 52.3, "def_pass_rush_score": 54.9, "def_run_score": 54.6, "dev_xf": 0, "dev_ss": 9, "dev_star": 19, "dev_normal": 39}, {"team_abbrev": "BUF", "team_name": "Bills", "overall_score": 49.9, "overall_rank": 16, "off_pass_score": 67.4, "off_run_score": 40.8, "def_cover_score": 39.2, "def_pass_rush_score": 48.9, "def_run_score": 42.6, "dev_xf": 1, "dev_ss": 3, "dev_star": 23, "dev_normal": 27}, {"team_abbrev": "DEN", "team_name": "Broncos", "overall_score": 49.6, "overall_rank": 17, "off_pass_score": 45.3, "off_run_score": 35.5, "def_cover_score": 66.5, "def_pass_rush_score": 44.8, "def_run_score": 47.0, "dev_xf": 2, "dev_ss": 4, "dev_star": 17, "dev_normal": 34}, {"team_abbrev": "LAR", "team_name": "Rams", "overall_score": 49.0, "overall_rank": 18, "off_pass_score": 40.2, "off_run_score": 71.0, "def_cover_score": 35.6, "def_pass_rush_score": 60.0, "def_run_score": 58.5, "dev_xf": 1, "dev_ss": 5, "dev_star": 19, "dev_normal": 40}, {"team_abbrev": "GB", "team_name": "Packers", "overall_score": 48.5, "overall_rank": 19, "off_pass_score": 54.1, "off_run_score": 43.9, "def_cover_score": 44.2, "def_pass_rush_score": 51.1, "def_run_score": 52.3, "dev_xf": 2, "dev_ss": 2, "dev_star": 21, "dev_normal": 31}, {"team_abbrev": "CLE", "team_name": "Browns", "overall_score": 48.4, "overall_rank": 20, "off_pass_score": 29.8, "off_run_score": 32.8, "def_cover_score": 67.1, "def_pass_rush_score": 63.6, "def_run_score": 61.7, "dev_xf": 3, "dev_ss": 1, "dev_star": 21, "dev_normal": 42}, {"team_abbrev": "NO", "team_name": "Saints", "overall_score": 47.7, "overall_rank": 21, "off_pass_score": 29.6, "off_run_score": 67.1, "def_cover_score": 51.5, "def_pass_rush_score": 49.6, "def_run_score": 50.3, "dev_xf": 0, "dev_ss": 6, "dev_star": 22, "dev_normal": 29}, {"team_abbrev": "DAL", "team_name": "Cowboys", "overall_score": 47.3, "overall_rank": 22, "off_pass_score": 56.7, "off_run_score": 58.7, "def_cover_score": 40.0, "def_pass_rush_score": 32.9, "def_run_score": 31.0, "dev_xf": 2, "dev_ss": 3, "dev_star": 16, "dev_normal": 35}, {"team_abbrev": "ARI", "team_name": "Cardinals", "overall_score": 46.7, "overall_rank": 23, "off_pass_score": 50.7, "off_run_score": 44.3, "def_cover_score": 48.1, "def_pass_rush_score": 40.8, "def_run_score": 46.2, "dev_xf": 4, "dev_ss": 2, "dev_star": 16, "dev_normal": 36}, {"team_abbrev": "JAX", "team_name": "Jaguars", "overall_score": 46.2, "overall_rank": 24, "off_pass_score": 37.4, "off_run_score": 39.6, "def_cover_score": 51.9, "def_pass_rush_score": 57.6, "def_run_score": 51.8, "dev_xf": 2, "dev_ss": 5, "dev_star": 11, "dev_normal": 42}, {"team_abbrev": "TB", "team_name": "Buccaneers", "overall_score": 44.5, "overall_rank": 25, "off_pass_score": 49.5, "off_run_score": 42.0, "def_cover_score": 56.3, "def_pass_rush_score": 21.7, "def_run_score": 28.7, "dev_xf": 2, "dev_ss": 5, "dev_star": 13, "dev_normal": 36}, {"team_abbrev": "MIN", "team_name": "Vikings", "overall_score": 43.5, "overall_rank": 26, "off_pass_score": 65.4, "off_run_score": 48.9, "def_cover_score": 29.1, "def_pass_rush_score": 27.0, "def_run_score": 20.4, "dev_xf": 1, "dev_ss": 5, "dev_star": 14, "dev_normal": 25}, {"team_abbrev": "LV", "team_name": "Raiders", "overall_score": 43.1, "overall_rank": 27, "off_pass_score": 45.9, "off_run_score": 50.5, "def_cover_score": 28.2, "def_pass_rush_score": 53.8, "def_run_score": 51.8, "dev_xf": 2, "dev_ss": 5, "dev_star": 21, "dev_normal": 26}, {"team_abbrev": "IND", "team_name": "Colts", "overall_score": 42.7, "overall_rank": 28, "off_pass_score": 31.5, "off_run_score": 50.3, "def_cover_score": 49.4, "def_pass_rush_score": 41.9, "def_run_score": 41.1, "dev_xf": 0, "dev_ss": 8, "dev_star": 14, "dev_normal": 38}, {"team_abbrev": "NYJ", "team_name": "Jets", "overall_score": 38.4, "overall_rank": 29, "off_pass_score": 34.6, "off_run_score": 36.8, "def_cover_score": 38.2, "def_pass_rush_score": 46.1, "def_run_score": 32.5, "dev_xf": 2, "dev_ss": 4, "dev_star": 13, "dev_normal": 28}, {"team_abbrev": "PHI", "team_name": "Eagles", "overall_score": 38.1, "overall_rank": 30, "off_pass_score": 43.9, "off_run_score": 13.0, "def_cover_score": 45.1, "def_pass_rush_score": 44.1, "def_run_score": 43.5, "dev_xf": 2, "dev_ss": 8, "dev_star": 9, "dev_normal": 32}, {"team_abbrev": "MIA", "team_name": "Dolphins", "overall_score": 38.0, "overall_rank": 31, "off_pass_score": 45.9, "off_run_score": 56.6, "def_cover_score": 16.8, "def_pass_rush_score": 39.5, "def_run_score": 37.1, "dev_xf": 0, "dev_ss": 2, "dev_star": 18, "dev_normal": 32}, {"team_abbrev": "CAR", "team_name": "Panthers", "overall_score": 36.9, "overall_rank": 32, "off_pass_score": 43.8, "off_run_score": 34.7, "def_cover_score": 30.1, "def_pass_rush_score": 39.1, "def_run_score": 45.1, "dev_xf": 1, "dev_ss": 0, "dev_star": 20, "dev_normal": 36}], "config": {"normalization": "zscore", "include_st": false}, "league": {"overall_score": {"avg": 49.996874999999996, "min": 36.9, "max": 79.3, "p25": 46.2, "p50": 49.9, "p75": 54.0}, "off_pass_score": {"avg": 50.003125000000004, "min": 25.4, "max": 80.4, "p25": 38.3, "p50": 45.9, "p75": 57.9}, "off_run_score": {"avg": 49.996874999999996, "min": 13.0, "max": 81.0, "p25": 40.3, "p50": 49.4, "p75": 58.7}, "def_cover_score": {"avg": 49.996874999999996, "min": 16.8, "max": 94.3, "p25": 40.0, "p50": 50.5, "p75": 57.8}, "def_pass_rush_score": {"avg": 49.99374999999999, "min": 21.7, "max": 95.0, "p25": 40.2, "p50": 46.1, "p75": 57.6}, "def_run_score": {"avg": 49.94687499999999, "min": 20.4, "max": 100.0, "p25": 42.6, "p50": 49.3, "p75": 54.6}}}
+  </script>
+</body>
+</html>
