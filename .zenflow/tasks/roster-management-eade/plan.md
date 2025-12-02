@@ -198,7 +198,7 @@ Task instructions
 - Deliverable: Before/after cap comparison in modal; applying updates Cap Summary.
 - Verification: Manual preview delta equals applied delta.
 
-### [ ] Step: Conversion Flow
+### [x] Step: Conversion Flow
 <!-- chat-id: 245cad15-2389-4254-a174-01a6d8f6a679 -->
 Task instructions
 - Definition: Add “Conversion” action for high `capHit` players; implement modal `js/ui/modals/conversionModal.js` to convert base salary to signing bonus with proration and show multi-year impact.

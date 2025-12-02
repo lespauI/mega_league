@@ -2,6 +2,7 @@ import { getState, setState, getCapSummary } from '../state.js';
 import { simulateTradeQuick } from '../capMath.js';
 import { openReleaseModal } from './modals/releaseModal.js';
 import { openExtensionModal } from './modals/extensionModal.js';
+import { openConversionModal } from './modals/conversionModal.js';
 import { openOfferModal } from './modals/offerModal.js';
 
 function fmtMoney(n) {
@@ -170,6 +171,8 @@ export function renderPlayerTable(containerId, players, options = {}) {
           try { console.assert(getCapSummary().capAvailable === res.newCapSpace, '[tradeQuick] capAvailable matches preview'); } catch {}
         } else if (action === 'extend') {
           openExtensionModal(p);
+        } else if (action === 'convert') {
+          openConversionModal(p);
         }
         sel.value = '';
       });
