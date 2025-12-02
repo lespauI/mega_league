@@ -249,7 +249,8 @@ Deliverable
 Verification
 - Run `node scripts/test_year_context.mjs` and ensure it finishes without throwing.
 
-### [ ] Step: E2E Tests For Year Context
+### [x] Step: E2E Tests For Year Context
+<!-- chat-id: 8d108562-3650-4eee-93e1-4626de22afab -->
 Task definition
 - Add `tests/e2e/year-context.spec.ts` that exercises the selector, header/column labels, roster counts, release modal preview in context, and scenario persistence.
 
