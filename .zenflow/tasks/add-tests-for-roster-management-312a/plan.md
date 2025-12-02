@@ -159,7 +159,8 @@ Verification:
 - `bash scripts/smoke_roster_cap_tool.sh` still passes (page + assets served).
 - Run smoke test; selectors using `data-testid` resolve without timeouts.
 
-### [ ] Step: Release Flow E2E
+### [x] Step: Release Flow E2E
+<!-- chat-id: 40cc3b78-c4d6-4765-865b-fda059aeccd3 -->
 Task definition:
 - Implement test that releases a player from Active roster and verifies Dead Money + Cap Space delta.
 
