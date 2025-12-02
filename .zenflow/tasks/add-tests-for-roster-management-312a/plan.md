@@ -257,7 +257,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/scenarios.spec.ts --project=chromium` passes.
 
-### [ ] Step: CI Workflow and Docs
+### [x] Step: CI Workflow and Docs
+<!-- chat-id: ffe241d0-60a2-4ebb-8496-5dbe22f626cc -->
 Task definition:
 - Add GitHub Actions workflow to run Chromium tests on Ubuntu and provide local usage docs.
 
