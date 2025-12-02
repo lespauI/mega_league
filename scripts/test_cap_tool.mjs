@@ -3,7 +3,7 @@
 import { readFile } from 'node:fs/promises';
 const capMathCode = await readFile(new URL('../docs/roster_cap_tool/js/capMath.js', import.meta.url), 'utf8');
 const capMathMod = await import('data:text/javascript;base64,' + Buffer.from(capMathCode).toString('base64'));
-const { projectTeamCaps, simulateRelease } = capMathMod;
+const { projectTeamCaps, simulateRelease, projectPlayerCapHits } = capMathMod;
 
 function assert(cond, msg) {
   if (!cond) {
@@ -50,7 +50,7 @@ const team = {
   assert(afterY1 === baseY1, `Scenario A: expected Y+1 unchanged (${afterY1} vs ${baseY1})`);
 })();
 
-// Scenario B: Release 2-year player with bonus → Y+1 increases by (removed cap - next-year penalty)
+// Scenario B: Release 2-year player with bonus → Y+1 increases only by next-year dead penalty (salary remains)
 (() => {
   const p = {
     id: 'P2', firstName: 'Test', lastName: 'Two', position: 'WR',
@@ -77,15 +77,14 @@ const team = {
   const afterY1Spent = after[1].totalSpent;
   const afterY1Space = after[1].capSpace;
 
-  // Baseline Y+1 included player's year-2 cap; after release includes only next-year dead money
-  // So Y+1 spent should decrease, space should increase
-  assert(afterY1Spent <= baseY1Spent, `Scenario B: expected Y+1 spent to decrease (${afterY1Spent} <= ${baseY1Spent})`);
-  assert(afterY1Space >= baseY1Space, `Scenario B: expected Y+1 space to increase (${afterY1Space} >= ${baseY1Space})`);
+  // For FA=2, Year+1 should be unaffected except for next-year dead penalty
+  assert(money(afterY1Spent) === money(baseY1Spent + sim.penaltyNextYear), `Scenario B: expected Y+1 spent base + next-year penalty (${afterY1Spent} vs ${baseY1Spent} + ${sim.penaltyNextYear})`);
+  assert(money(afterY1Space) === money(baseY1Space - sim.penaltyNextYear), `Scenario B: expected Y+1 space base - next-year penalty (${afterY1Space} vs ${baseY1Space} - ${sim.penaltyNextYear})`);
 })();
 
 console.log('Cap tool tests completed. Check exit code for failures.');
 
-// Scenario C: Multi-year contract (3y left). After release, Y+2 should change (salary removed).
+// Scenario C: Multi-year contract (3y left). After release, Y+1 changes (salary removed + penalty), Y+2 unchanged.
 (() => {
   const teamC = { abbrName: 'DAL', capRoom: 300_000_000, capSpent: 200_000_000, capAvailable: 100_000_000 };
   const p = {
@@ -101,8 +100,11 @@ console.log('Cap tool tests completed. Check exit code for failures.');
   };
   const players = [p];
   const baseline = projectTeamCaps(teamC, players, [], 4);
+  const caps = projectPlayerCapHits(p, 4);
   const baseY2Spent = baseline[2].totalSpent;
   const baseY2Space = baseline[2].capSpace;
+  const baseY1Spent = baseline[1].totalSpent;
+  const baseY1Space = baseline[1].capSpace;
 
   const sim = simulateRelease(teamC, p);
   const moves = [sim.move];
@@ -110,7 +112,58 @@ console.log('Cap tool tests completed. Check exit code for failures.');
   const after = projectTeamCaps(teamC, playersAfter, moves, 4);
   const afterY2Spent = after[2].totalSpent;
   const afterY2Space = after[2].capSpace;
+  const afterY1Spent = after[1].totalSpent;
+  const afterY1Space = after[1].capSpace;
 
-  assert(afterY2Spent < baseY2Spent, `Scenario C: expected Y+2 spent to decrease (${afterY2Spent} < ${baseY2Spent})`);
-  assert(afterY2Space > baseY2Space, `Scenario C: expected Y+2 space to increase (${afterY2Space} > ${baseY2Space})`);
+  // Y+1: removed salary plus next-year dead penalty
+  assert(money(afterY1Spent) === money(baseY1Spent - caps[1] + sim.penaltyNextYear), `Scenario C: expected Y+1 spent = base - cap[1] + penaltyNext (${afterY1Spent} vs ${baseY1Spent} - ${caps[1]} + ${sim.penaltyNextYear})`);
+  assert(money(afterY1Space) === money(baseY1Space + caps[1] - sim.penaltyNextYear), `Scenario C: expected Y+1 space = base + cap[1] - penaltyNext (${afterY1Space} vs ${baseY1Space} + ${caps[1]} - ${sim.penaltyNextYear})`);
+
+  // Y+2 unchanged for FA=3
+  assert(money(afterY2Spent) === money(baseY2Spent), `Scenario C: expected Y+2 spent unchanged (${afterY2Spent} vs ${baseY2Spent})`);
+  assert(money(afterY2Space) === money(baseY2Space), `Scenario C: expected Y+2 space unchanged (${afterY2Space} vs ${baseY2Space})`);
+})();
+
+// Scenario D: 4y left. After release, Y+1 and Y+2 free salary (Y+1 also adds penalty), Y+3 unchanged.
+(() => {
+  const teamD = { abbrName: 'DAL', capRoom: 300_000_000, capSpent: 200_000_000, capAvailable: 100_000_000 };
+  const p = {
+    id: 'P4', firstName: 'Test', lastName: 'Four', position: 'CB',
+    isFreeAgent: false, team: 'DAL',
+    capHit: 12_000_000,
+    contractSalary: 40_000_000,
+    contractBonus: 10_000_000,
+    contractLength: 4,
+    contractYearsLeft: 4,
+    capReleasePenalty: 10_000_000,
+    capReleaseNetSavings: 3_000_000,
+  };
+  const players = [p];
+  const baseline = projectTeamCaps(teamD, players, [], 5);
+  const caps = projectPlayerCapHits(p, 5);
+  const baseY1Spent = baseline[1].totalSpent;
+  const baseY1Space = baseline[1].capSpace;
+  const baseY2Spent = baseline[2].totalSpent;
+  const baseY2Space = baseline[2].capSpace;
+  const baseY3Spent = baseline[3].totalSpent;
+  const baseY3Space = baseline[3].capSpace;
+
+  const sim = simulateRelease(teamD, p);
+  const after = projectTeamCaps(teamD, [{ ...p, isFreeAgent: true, team: '' }], [sim.move], 5);
+  const afterY1Spent = after[1].totalSpent;
+  const afterY1Space = after[1].capSpace;
+  const afterY2Spent = after[2].totalSpent;
+  const afterY2Space = after[2].capSpace;
+  const afterY3Spent = after[3].totalSpent;
+  const afterY3Space = after[3].capSpace;
+
+  // Y+1: remove cap + add next-year dead
+  assert(money(afterY1Spent) === money(baseY1Spent - caps[1] + sim.penaltyNextYear), `Scenario D: Y+1 spent mismatch`);
+  assert(money(afterY1Space) === money(baseY1Space + caps[1] - sim.penaltyNextYear), `Scenario D: Y+1 space mismatch`);
+  // Y+2: remove cap only
+  assert(money(afterY2Spent) === money(baseY2Spent - caps[2]), `Scenario D: Y+2 spent = base - cap[2]`);
+  assert(money(afterY2Space) === money(baseY2Space + caps[2]), `Scenario D: Y+2 space = base + cap[2]`);
+  // Y+3: unchanged
+  assert(money(afterY3Spent) === money(baseY3Spent), `Scenario D: Y+3 spent unchanged`);
+  assert(money(afterY3Space) === money(baseY3Space), `Scenario D: Y+3 space unchanged`);
 })();
