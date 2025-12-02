@@ -100,7 +100,8 @@ export function openExtensionModal(player) {
     const oldCap = Number(player.capHit || 0);
     const newCap = sim.newCapHit;
     const delta = sim.capHitDelta; // positive = more spending (worse for cap), negative = savings
-    const remaining = (snap.capAvailable || 0) - delta;
+    const baseCap = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
+    const remaining = baseCap - delta;
 
     if (newCapEl) newCapEl.textContent = fmtMoney(newCap);
     if (deltaEl) deltaEl.textContent = `${delta >= 0 ? '+' : ''}${fmtMoney(delta)}`;
@@ -153,8 +154,9 @@ export function openExtensionModal(player) {
 
     // Sanity assert: capAvailable reflects previewed remaining
     try {
-      const after = getCapSummary().capAvailable;
-      console.assert(Math.round(after) === Math.round(remaining), '[extend] capAvailable matches preview');
+      const afterSnap = getCapSummary();
+      const afterCap = Number.isFinite(Number(afterSnap.capAvailableEffective)) ? Number(afterSnap.capAvailableEffective) : (afterSnap.capAvailable || 0);
+      console.assert(Math.round(afterCap) === Math.round(remaining), '[extend] capAvailable matches preview');
     } catch {}
 
     close();

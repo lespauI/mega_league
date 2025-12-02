@@ -114,7 +114,8 @@ export function openConversionModal(player) {
     if (yearsValEl) yearsValEl.textContent = `${inp.yearsRemaining} year(s)`;
     const sim = simulateConversion(player, inp);
     const delta = sim.capHitDelta; // negative saves cap this year
-    const remaining = (snap.capAvailable || 0) - delta; // subtract negative = add cap space
+    const baseCap = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
+    const remaining = baseCap - delta; // subtract negative = add cap space
 
     if (newCapEl) newCapEl.textContent = fmtMoney(sim.newCurrentYearCapHit);
     if (deltaEl) deltaEl.textContent = `${delta >= 0 ? '+' : ''}${fmtMoney(delta)}`;
@@ -181,8 +182,9 @@ export function openConversionModal(player) {
     setState({ moves, players });
 
     try {
-      const after = getCapSummary().capAvailable;
-      console.assert(Math.round(after) === Math.round(remaining), '[convert] capAvailable matches preview');
+      const afterSnap = getCapSummary();
+      const afterCap = Number.isFinite(Number(afterSnap.capAvailableEffective)) ? Number(afterSnap.capAvailableEffective) : (afterSnap.capAvailable || 0);
+      console.assert(Math.round(afterCap) === Math.round(remaining), '[convert] capAvailable matches preview');
     } catch {}
 
     close();

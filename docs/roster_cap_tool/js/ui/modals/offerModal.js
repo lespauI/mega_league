@@ -88,7 +88,8 @@ export function openOfferModal(player) {
 
   function recalcPreview() {
     const snap = getCapSummary();
-    const effTeam = { ...team, capAvailable: snap.capAvailable };
+    const baseCap = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
+    const effTeam = { ...team, capAvailable: baseCap };
     const offer = getOffer();
     yearsValEl.textContent = `${offer.years} year(s)`;
     const sim = simulateSigning(effTeam, player, offer);
@@ -122,7 +123,8 @@ export function openOfferModal(player) {
   dlg.querySelector('[data-action="cancel"]').addEventListener('click', close);
   dlg.querySelector('[data-action="confirm"]').addEventListener('click', () => {
     const snap = getCapSummary();
-    const effTeam = { ...team, capAvailable: snap.capAvailable };
+    const baseCap = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
+    const effTeam = { ...team, capAvailable: baseCap };
     const offer = getOffer();
     const sim = simulateSigning(effTeam, player, offer);
     if (!sim.canSign) return; // should be disabled already
@@ -147,7 +149,9 @@ export function openOfferModal(player) {
     setState({ moves, players });
 
     // Sanity assert that summary matches preview
-    console.assert(Math.round(getCapSummary().capAvailable) === Math.round(sim.remainingCapAfter), '[sign] capAvailable matches previewed remaining cap');
+    const after = getCapSummary();
+    const afterCap = Number.isFinite(Number(after.capAvailableEffective)) ? Number(after.capAvailableEffective) : (after.capAvailable || 0);
+    console.assert(Math.round(afterCap) === Math.round(sim.remainingCapAfter), '[sign] capAvailable matches previewed remaining cap');
     close();
   });
 

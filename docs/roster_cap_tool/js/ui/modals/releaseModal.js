@@ -23,7 +23,8 @@ export function openReleaseModal(player) {
 
   // Use current dynamic capAvailable from snapshot, not baseline
   const snap = getCapSummary();
-  const effectiveTeam = { ...team, capAvailable: snap.capAvailable };
+  const baseCap = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
+  const effectiveTeam = { ...team, capAvailable: baseCap };
   const sim = simulateRelease(effectiveTeam, player);
 
   const name = `${player.firstName || ''} ${player.lastName || ''}`.trim();
@@ -61,7 +62,8 @@ export function openReleaseModal(player) {
   dlg.querySelector('[data-action="confirm"]')?.addEventListener('click', () => {
     // Recompute with latest snapshot just in case
     const latestSnap = getCapSummary();
-    const effTeam = { ...team, capAvailable: latestSnap.capAvailable };
+    const baseCap2 = Number.isFinite(Number(latestSnap.capAvailableEffective)) ? Number(latestSnap.capAvailableEffective) : (latestSnap.capAvailable || 0);
+    const effTeam = { ...team, capAvailable: baseCap2 };
     const res = simulateRelease(effTeam, player);
 
     // Apply move to state: push move, mark player FA and clear team
@@ -83,7 +85,9 @@ export function openReleaseModal(player) {
     const deadMoneyLedger = Array.isArray(current.deadMoneyLedger) ? [...current.deadMoneyLedger, ledgerEntry] : [ledgerEntry];
     setState({ moves, players, deadMoneyLedger });
 
-    console.assert(getCapSummary().capAvailable === res.newCapSpace, '[release] capAvailable matches previewed newCapSpace');
+    const after = getCapSummary();
+    const afterCap = Number.isFinite(Number(after.capAvailableEffective)) ? Number(after.capAvailableEffective) : (after.capAvailable || 0);
+    console.assert(afterCap === res.newCapSpace, '[release] capAvailable matches previewed newCapSpace');
     close();
   });
 

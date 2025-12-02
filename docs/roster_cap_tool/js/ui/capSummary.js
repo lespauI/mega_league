@@ -20,7 +20,7 @@ export function mountCapSummary(containerId = 'cap-summary') {
   const snap = State.getCapSummary();
   const room = snap.capRoom || 0;
   const spent = snap.capSpent || 0;
-  const avail = snap.capAvailable || 0;
+  const avail = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
   const deltaAvail = snap.deltaAvailable || 0; // + means gained cap space
   const pct = room > 0 ? Math.max(0, Math.min(100, Math.round((spent / room) * 100))) : 0;
 

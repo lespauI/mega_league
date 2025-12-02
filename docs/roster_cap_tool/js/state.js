@@ -76,6 +76,7 @@ export function getCapSummary() {
       capRoom: 0,
       capSpent: 0,
       capAvailable: 0,
+      capAvailableEffective: 0,
       deadMoney: 0,
       baselineAvailable: 0,
       deltaAvailable: 0,
@@ -86,10 +87,21 @@ export function getCapSummary() {
   const snap = calcCapSummary(team, state.moves);
   const picks = getDraftPicksForSelectedTeam();
   const rookieReserveEstimate = estimateRookieReserveForPicks(picks);
+  // If user entered in-game Re-sign Available, treat that as the authoritative Year 1 cap,
+  // then adjust by live delta from our moves. Otherwise use computed capAvailable.
+  let capAvailableEffective = snap.capAvailable;
+  try {
+    const x = getReSignInGameForSelectedTeam();
+    if (Number.isFinite(Number(x))) {
+      const baseX = Math.max(0, Number(x) || 0);
+      capAvailableEffective = baseX + (Number(snap.deltaAvailable || 0));
+    }
+  } catch {}
   return {
     ...snap,
+    capAvailableEffective,
     rookieReserveEstimate,
-    capAfterRookies: (snap.capAvailable || 0) - rookieReserveEstimate,
+    capAfterRookies: (capAvailableEffective || 0) - rookieReserveEstimate,
   };
 }
 
