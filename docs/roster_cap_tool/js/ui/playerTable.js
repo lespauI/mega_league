@@ -142,6 +142,15 @@ export function renderPlayerTable(containerId, players, options = {}) {
       ];
 
   const table = document.createElement('table');
+  // Assign stable test id based on container/type
+  try {
+    const tid = containerId.includes('active-roster') ? 'table-active-roster'
+      : containerId.includes('free-agents') ? 'table-free-agents'
+      : containerId.includes('injured-reserve') ? 'table-injured-reserve'
+      : containerId.includes('dead-money') ? 'table-dead-money'
+      : (type === 'fa' ? 'table-free-agents' : 'table-active-roster');
+    table.setAttribute('data-testid', tid);
+  } catch {}
   const thead = document.createElement('thead');
   const headRow = document.createElement('tr');
   headerMeta.forEach((meta) => {
@@ -161,6 +170,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
 
   list.forEach((p, i) => {
     const tr = document.createElement('tr');
+    tr.setAttribute('data-testid', 'player-row');
 
     if (type !== 'fa') {
       // Row number
@@ -196,6 +206,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
       const btn = document.createElement('button');
       btn.className = 'btn primary';
       btn.textContent = 'Make Offer';
+      btn.setAttribute('data-testid', 'offer-button');
       btn.addEventListener('click', () => openOfferModal(p));
       action.appendChild(btn);
       tr.appendChild(action);
@@ -224,9 +235,15 @@ export function renderPlayerTable(containerId, players, options = {}) {
       tdAction.setAttribute('data-label', 'Action');
       tdAction.classList.add('cell-action');
       const sel = document.createElement('select');
+      sel.setAttribute('data-testid', 'action-select');
       const opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = 'Select…'; sel.appendChild(opt0);
       const addOpt = (val, label, enabled = true) => {
         const o = document.createElement('option'); o.value = val; o.textContent = label; if (!enabled) o.disabled = true; sel.appendChild(o);
+        // mark each action option for tests
+        if (val === 'release') o.setAttribute('data-testid', 'action-release');
+        if (val === 'tradeQuick') o.setAttribute('data-testid', 'action-trade-quick');
+        if (val === 'extend') o.setAttribute('data-testid', 'action-extend');
+        if (val === 'convert') o.setAttribute('data-testid', 'action-convert');
       };
       addOpt('release', 'Release');
       addOpt('tradeQuick', 'Trade (Quick)');

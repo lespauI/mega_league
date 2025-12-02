@@ -139,7 +139,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/smoke.spec.ts --project=chromium` passes headless.
 
-### [ ] Step: Add DOM TestIDs (Instrumentation)
+### [x] Step: Add DOM TestIDs (Instrumentation)
+<!-- chat-id: 2ed4966f-70c3-473d-8d3e-0a1c9f8aa381 -->
 Task definition:
 - Introduce minimal `data-testid` attributes to stabilize tests across text/markup refactors.
 

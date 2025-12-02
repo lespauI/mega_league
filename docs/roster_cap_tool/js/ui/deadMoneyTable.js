@@ -81,7 +81,7 @@ export function renderDeadMoneyTable(containerId = 'dead-money-table') {
       <span style="color:var(--muted); font-size:.9em;">Next Year</span>
       <input type="number" step="100000" min="0" value="${Number(baseline.year1 || 0)}" style="background:#0b1324;color:var(--text);border:1px solid #334155;padding:.25rem .5rem;border-radius:.375rem;width:10rem;" data-dead="y1" />
     </label>
-    <button class="btn" data-action="save">Save</button>
+    <button class="btn" data-action="save" data-testid="btn-dead-save">Save</button>
     <div style="margin-left:auto; color:var(--muted); font-size:.9em;">Totals — This Year: <span class="money-warn">${fmtMoney(baseline.year0 + totalCur)}</span> · Next Year: <span class="money-warn">${fmtMoney(baseline.year1 + totalNext)}</span></div>
   `;
 
@@ -92,6 +92,7 @@ export function renderDeadMoneyTable(containerId = 'dead-money-table') {
   });
 
   const table = document.createElement('table');
+  table.setAttribute('data-testid', 'table-dead-money');
   const thead = document.createElement('thead');
   const headRow = document.createElement('tr');
   ['When', 'Player', 'Move', 'This Year', 'Next Year', 'Total'].forEach((h) => {

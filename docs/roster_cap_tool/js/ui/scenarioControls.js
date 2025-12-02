@@ -27,6 +27,7 @@ export function mountScenarioControls(containerId = 'scenario-controls') {
   const btnSave = document.createElement('button');
   btnSave.className = 'btn';
   btnSave.textContent = 'Save';
+  btnSave.setAttribute('data-testid', 'btn-scn-save');
   btnSave.title = hasChanges ? '' : 'No changes to save';
   btnSave.disabled = !hasChanges;
   btnSave.addEventListener('click', () => openScenarioSaveModal());
@@ -34,6 +35,7 @@ export function mountScenarioControls(containerId = 'scenario-controls') {
   const btnLoad = document.createElement('button');
   btnLoad.className = 'btn';
   btnLoad.textContent = `Load (${saved.length})`;
+  btnLoad.setAttribute('data-testid', 'btn-scn-load');
   btnLoad.title = saved.length ? '' : 'No saved scenarios for this team';
   btnLoad.disabled = saved.length === 0;
   btnLoad.addEventListener('click', () => openScenarioLoadModal());
@@ -41,6 +43,7 @@ export function mountScenarioControls(containerId = 'scenario-controls') {
   const btnReset = document.createElement('button');
   btnReset.className = 'btn danger';
   btnReset.textContent = 'Reset';
+  btnReset.setAttribute('data-testid', 'btn-scn-reset');
   btnReset.title = hasChanges ? 'Reset to baseline roster' : 'Nothing to reset';
   btnReset.disabled = !hasChanges;
   btnReset.addEventListener('click', () => {
@@ -52,12 +55,14 @@ export function mountScenarioControls(containerId = 'scenario-controls') {
   const btnCompare = document.createElement('button');
   btnCompare.className = 'btn primary';
   btnCompare.textContent = 'Compare';
+  btnCompare.setAttribute('data-testid', 'btn-scn-compare');
   btnCompare.addEventListener('click', () => openScenarioCompareModal());
 
   const btnTradeIn = document.createElement('button');
   btnTradeIn.className = 'btn';
   btnTradeIn.textContent = 'Trade In';
   btnTradeIn.title = 'Acquire a player from another roster';
+  btnTradeIn.setAttribute('data-testid', 'btn-trade-in');
   btnTradeIn.addEventListener('click', () => openTradeInModal());
 
   const chip = document.createElement('span');

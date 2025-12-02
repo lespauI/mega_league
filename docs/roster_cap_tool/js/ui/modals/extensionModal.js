@@ -32,6 +32,7 @@ export function openExtensionModal(player) {
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-extension');
   dlg.innerHTML = `
     <h3 style="margin-top:0">Extend ${name}</h3>
     <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:.75rem; align-items:center;">
@@ -54,25 +55,25 @@ export function openExtensionModal(player) {
     <div style="margin-top:.75rem; display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
       <div>
         <div style="color:var(--muted); font-size:.85em">Current Cap Hit</div>
-        <div id="ext-old-cap" class="">${fmtMoney(player.capHit || 0)}</div>
+        <div id="ext-old-cap" class="" data-testid="ext-old-cap">${fmtMoney(player.capHit || 0)}</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">New Cap Hit</div>
-        <div id="ext-new-cap" class="money-warn">$0</div>
+        <div id="ext-new-cap" class="money-warn" data-testid="ext-new-cap">$0</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">Cap Impact</div>
-        <div id="ext-delta" class="">$0</div>
+        <div id="ext-delta" class="" data-testid="ext-delta">$0</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">Remaining Cap After</div>
-        <div id="ext-remaining" class="">$0</div>
+        <div id="ext-remaining" class="" data-testid="ext-remaining">$0</div>
       </div>
     </div>
 
     <div class="modal-actions">
-      <button class="btn" data-action="cancel">Cancel</button>
-      <button class="btn primary" data-action="confirm">Apply Extension</button>
+      <button class="btn" data-action="cancel" data-testid="cancel-extension">Cancel</button>
+      <button class="btn primary" data-action="confirm" data-testid="confirm-extension">Apply Extension</button>
     </div>
   `;
 

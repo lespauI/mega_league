@@ -44,6 +44,7 @@ export function openConversionModal(player) {
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-conversion');
   dlg.innerHTML = `
     <h3 style="margin-top:0">Convert Contract — ${name}</h3>
     <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:.75rem; align-items:center;">
@@ -61,19 +62,19 @@ export function openConversionModal(player) {
     <div style="margin-top:.75rem; display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
       <div>
         <div style="color:var(--muted); font-size:.85em">Current Cap Hit</div>
-        <div id="conv-old-cap">${fmtMoney(currentCapHit)}</div>
+        <div id="conv-old-cap" data-testid="conv-old-cap">${fmtMoney(currentCapHit)}</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">New Current-Year Cap Hit</div>
-        <div id="conv-new-cap" class="money-warn">$0</div>
+        <div id="conv-new-cap" class="money-warn" data-testid="conv-new-cap">$0</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">Cap Impact (This Year)</div>
-        <div id="conv-delta" class="">$0</div>
+        <div id="conv-delta" class="" data-testid="conv-delta">$0</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">Remaining Cap After</div>
-        <div id="conv-remaining" class="">$0</div>
+        <div id="conv-remaining" class="" data-testid="conv-remaining">$0</div>
       </div>
     </div>
 
@@ -85,8 +86,8 @@ export function openConversionModal(player) {
     <div id="conv-note" style="margin-top:.25rem; font-size:.85em; color: var(--yellow); display:none;">Note: Convert amount reduced to available base salary.</div>
 
     <div class="modal-actions">
-      <button class="btn" data-action="cancel">Cancel</button>
-      <button class="btn primary" data-action="confirm">Apply Conversion</button>
+      <button class="btn" data-action="cancel" data-testid="cancel-conversion">Cancel</button>
+      <button class="btn primary" data-action="confirm" data-testid="confirm-conversion">Apply Conversion</button>
     </div>
   `;
 
