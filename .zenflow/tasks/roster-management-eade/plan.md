@@ -472,3 +472,13 @@ Findings (Dallas):
 
 Conclusion:
 - After re‑export, Year 1 numbers for DAL are correct in the app (Cap Space ≈ $0.83M). No additional code changes required.
+
+### [x] Step: Baseline Dead Money affect on prediction bug
+<!-- chat-id: deb2ac94-9702-4105-bedd-3ad955be79ae -->
+
+Implemented baseline dead money impact on projections:
+- capMath: `projectTeamCaps` now applies `opts.baselineDeadMoneyByYear[0]` to Year 0 anchored totals (reducing cap space and rollover) and applies baseline dead money for all years, not only i>0.
+- UI: Header projections now pass both This Year and Next Year baseline dead money: `[year0, year1, 0, 0]`.
+
+Verification:
+- In the Dead Money tab, set This Year and Next Year baseline amounts and Save. Header Y+1 projection updates immediately; increasing This Year reduces possible rollover and lowers Y+1 cap space; setting Next Year lowers Y+1 cap space directly. Persist across re-renders.

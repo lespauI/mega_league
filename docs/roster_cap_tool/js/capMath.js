@@ -491,6 +491,13 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       // Derive a rosterCap that is consistent and non-negative.
       // Note: deadMoney here only includes new scenario moves; baseline dead money is folded into baseSpent.
       rosterCap = Math.max(0, totalSpent - deadMoney);
+      // If caller provided baseline dead money for current year (manual input),
+      // fold it into Year 0 totals so rollover availability reflects it.
+      const dmBaseY0 = (opts && Array.isArray(opts.baselineDeadMoneyByYear)) ? Number(opts.baselineDeadMoneyByYear[0] || 0) : 0;
+      if (Number.isFinite(dmBaseY0) && dmBaseY0 > 0) {
+        totalSpent += dmBaseY0;
+        capSpace = capRoomYear - totalSpent;
+      }
       y0CapSpace = capSpace;
     }
 
@@ -503,8 +510,9 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       capSpace = capRoomYear - totalSpent;
     }
 
-    // Apply optional baseline dead money for out-years (e.g., existing voids)
+    // Apply optional baseline dead money for out-years (manual inputs / existing voids)
     // Provided by caller via opts.baselineDeadMoneyByYear[] where index = yearOffset.
+    // Note: Year 0 baseline is handled above inside the i===0 anchor block.
     const dmBase = (opts && Array.isArray(opts.baselineDeadMoneyByYear)) ? Number(opts.baselineDeadMoneyByYear[i] || 0) : 0;
     if (i > 0 && Number.isFinite(dmBase) && dmBase > 0) {
       totalSpent += dmBase;

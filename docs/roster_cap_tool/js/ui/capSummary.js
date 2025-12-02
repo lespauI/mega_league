@@ -68,9 +68,14 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     const rr3 = rr2;
     const rollover = getRolloverForSelectedTeam();
 
-    // Optional baseline dead money for next year from the Dead Money tab
+    // Baseline dead money from the Dead Money tab (This Year and Next Year)
     const dmBase = getBaselineDeadMoney();
-    const baselineDMByYear = [0, Number(dmBase?.year1 || 0) || 0, 0, 0];
+    const baselineDMByYear = [
+      Number(dmBase?.year0 || 0) || 0,
+      Number(dmBase?.year1 || 0) || 0,
+      0,
+      0,
+    ];
 
     // Re-sign reserve: approximate Year 1 cap for expiring/flagged players.
     // Factor is user-tunable (0..1); default 0.40. Persisted in localStorage.
