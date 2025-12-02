@@ -84,3 +84,33 @@ const team = {
 })();
 
 console.log('Cap tool tests completed. Check exit code for failures.');
+
+// Scenario C: Multi-year contract (3y left). After release, Y+2 should change (salary removed).
+(() => {
+  const teamC = { abbrName: 'DAL', capRoom: 300_000_000, capSpent: 200_000_000, capAvailable: 100_000_000 };
+  const p = {
+    id: 'P3', firstName: 'Test', lastName: 'Three', position: 'OT',
+    isFreeAgent: false, team: 'DAL',
+    capHit: 16_000_000, // approximated current
+    contractSalary: 36_000_000, // ~12M/yr base schedule
+    contractBonus: 9_000_000,   // proration 3y → 3M/yr
+    contractLength: 3,
+    contractYearsLeft: 3,
+    capReleasePenalty: 9_000_000,
+    capReleaseNetSavings: 1_000_000,
+  };
+  const players = [p];
+  const baseline = projectTeamCaps(teamC, players, [], 4);
+  const baseY2Spent = baseline[2].totalSpent;
+  const baseY2Space = baseline[2].capSpace;
+
+  const sim = simulateRelease(teamC, p);
+  const moves = [sim.move];
+  const playersAfter = [{ ...p, isFreeAgent: true, team: '' }];
+  const after = projectTeamCaps(teamC, playersAfter, moves, 4);
+  const afterY2Spent = after[2].totalSpent;
+  const afterY2Space = after[2].capSpace;
+
+  assert(afterY2Spent < baseY2Spent, `Scenario C: expected Y+2 spent to decrease (${afterY2Spent} < ${baseY2Spent})`);
+  assert(afterY2Space > baseY2Space, `Scenario C: expected Y+2 space to increase (${afterY2Space} > ${baseY2Space})`);
+})();
