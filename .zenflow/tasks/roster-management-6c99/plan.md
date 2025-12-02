@@ -169,7 +169,8 @@ Verification
 - `npm run test:e2e` to confirm no regressions in smoke/projections.
 - Later tied to unit tests in `scripts/test_year_context.mjs` (added in a subsequent step).
 
-### [ ] Step: Year Context UI Control
+### [x] Step: Year Context UI Control
+<!-- chat-id: 4403fb39-3928-4f4b-8965-9f800666c4cd -->
 Task definition
 - Add a new UI module `docs/roster_cap_tool/js/ui/yearContext.js` that renders a small selector (Y+0, Y+1, Y+2, Y+3...) and updates state.
 - Insert container `<div id="year-context"></div>` into `docs/roster_cap_tool/index.html` header (right side), next to the team selector.
