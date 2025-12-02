@@ -372,6 +372,18 @@ Implemented Trade In flow:
 Verification:
 - Open the app, click Trade In, search/select a player from another team. Confirm. Active Roster updates; Cap Summary reduces by the shown Year 1 amount. Projections show no bonus proration for the acquired player.
 
-### [ ] Step: Add possitions colors and filter
+### [x] Step: Add possitions colors and filter
+<!-- chat-id: 5d7392a6-eecc-4997-9f93-52aba35c66be -->
 
-Lets add additional colors for every possition and ability to filter by possitions in Roster and in Free agents tables
+Implemented:
+- Expanded position badge colors in `docs/roster_cap_tool/css/styles.css` for QB, RB/HB, FB, WR, TE, full OL (LT/LG/C/RG/RT), DL (LE/RE/DE/DT/DL/EDGE), LBs (LOLB/MLB/ROLB/OLB/LB), secondary (CB/FS/SS/S/DB), and specialists (K/P/LS).
+- Added filter bars to Active Roster and Free Agents panels (`index.html`) and styled chips (`.filters-bar`, `.chip`).
+- Added position filter state with localStorage persistence in `js/state.js` (`getPositionFilter`, `setPositionFilter`).
+- Rendered filter chips and applied filtering in `js/ui/rosterTabs.js` for both tables; chips toggle per-position; “All/Reset” clears filter.
+
+Verification:
+- Open Active Roster and Free Agents: position chips render above tables; clicking chips filters rows; clearing shows all; selections persist across re-renders and tab switches. Badges display with the new colors.
+
+### [ ] Step: Contract over the years
+
+So we dont have info about contract over the year only for 2 years, but we can calculate aprox, we have all contract, we can devide it by years for contract and add aprox amount per each year to improve the cap projection

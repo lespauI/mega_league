@@ -69,8 +69,30 @@ tr:hover td { background: rgba(148,163,184,0.06); }
 .badge { display: inline-block; padding: .125rem .375rem; border-radius: .25rem; font-size: .75rem; border: 1px solid #334155; color: #cbd5e1; }
 .pos-QB { border-color: #f59e0b; color: #f59e0b; }
 .pos-WR { border-color: #22c55e; color: #22c55e; }
-.pos-RB { border-color: #38bdf8; color: #38bdf8; }
-.pos-LB { border-color: #818cf8; color: #818cf8; }
+.pos-RB, .pos-HB { border-color: #06b6d4; color: #06b6d4; }
+.pos-FB { border-color: #14b8a6; color: #14b8a6; }
+.pos-TE { border-color: #a855f7; color: #a855f7; }
+/* Offensive line */
+.pos-LT, .pos-LG, .pos-C, .pos-RG, .pos-RT, .pos-OL { border-color: #60a5fa; color: #60a5fa; }
+/* Defensive line / edge */
+.pos-LE, .pos-RE, .pos-DE, .pos-DT, .pos-DL, .pos-EDGE { border-color: #f97316; color: #f97316; }
+/* Linebackers */
+.pos-LB, .pos-OLB, .pos-ILB, .pos-LOLB, .pos-MLB, .pos-ROLB { border-color: #818cf8; color: #818cf8; }
+/* Secondary */
+.pos-CB { border-color: #22d3ee; color: #22d3ee; }
+.pos-FS, .pos-SS, .pos-S, .pos-DB { border-color: #38bdf8; color: #38bdf8; }
+/* Specialists */
+.pos-K { border-color: #84cc16; color: #84cc16; }
+.pos-P { border-color: #65a30d; color: #65a30d; }
+.pos-LS { border-color: #94a3b8; color: #94a3b8; }
+
+/* Filters bar for position chips */
+.filters-bar { display: flex; flex-wrap: wrap; gap: .5rem; padding: .5rem; border-bottom: 1px solid #1f2937; align-items: center; }
+.filters-bar .filters-label { color: var(--muted); font-size: .8rem; margin-right: .25rem; }
+.chip { display: inline-flex; align-items: center; gap: .25rem; padding: .25rem .5rem; border-radius: 9999px; border: 1px solid #334155; background: #0b1324; color: var(--text); cursor: pointer; font-size: .8rem; }
+.chip:hover { background: #0f172a; }
+.chip.is-active { border-color: var(--blue); color: #dbeafe; }
+.chip .swatch { width: .5rem; height: .5rem; border-radius: 9999px; display: inline-block; }
 
 .money-pos { color: var(--green); font-weight: 600; }
 .money-neg { color: var(--red); font-weight: 600; }

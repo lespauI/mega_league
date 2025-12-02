@@ -24,6 +24,8 @@ const state = {
   draftPicksByTeam: {},
   /** Persisted baseline dead money per team: { [abbr]: { year0:number, year1:number } } */
   baselineDeadMoneyByTeam: {},
+  /** Position filters per table */
+  positionFilters: { active: [], fa: [] },
 };
 
 export function subscribe(fn) {
@@ -116,6 +118,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.deadMoneyBaseline');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.baselineDeadMoneyByTeam = parsed;
+  } catch {}
+  // Load position filters from localStorage once
+  try {
+    const raw = localStorage.getItem('rosterCap.positionFilters');
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (parsed && typeof parsed === 'object') state.positionFilters = { active: parsed.active || [], fa: parsed.fa || [] };
   } catch {}
   emit();
 }
@@ -305,5 +313,24 @@ export function setBaselineDeadMoney({ year0 = 0, year1 = 0 } = {}) {
   next[abbr] = { year0: Math.max(0, Number(year0) || 0), year1: Math.max(0, Number(year1) || 0) };
   state.baselineDeadMoneyByTeam = next;
   try { localStorage.setItem('rosterCap.deadMoneyBaseline', JSON.stringify(next)); } catch {}
+  emit();
+}
+
+// ----- Position Filters -----
+
+/** Get position filter (array of UPPERCASE positions) for given table type ('active'|'fa'). */
+export function getPositionFilter(type) {
+  const t = (type === 'fa') ? 'fa' : 'active';
+  const arr = state.positionFilters?.[t];
+  return Array.isArray(arr) ? arr.slice() : [];
+}
+
+/** Set position filter for given table type ('active'|'fa'). Pass empty array to clear. */
+export function setPositionFilter(type, positions) {
+  const t = (type === 'fa') ? 'fa' : 'active';
+  const clean = Array.isArray(positions) ? positions.filter(Boolean).map(s => String(s).toUpperCase()) : [];
+  const next = { ...(state.positionFilters || {}), [t]: clean };
+  state.positionFilters = next;
+  try { localStorage.setItem('rosterCap.positionFilters', JSON.stringify(next)); } catch {}
   emit();
 }
