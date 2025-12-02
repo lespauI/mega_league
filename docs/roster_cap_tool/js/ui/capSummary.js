@@ -1,4 +1,4 @@
-import { getCapSummary, getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, setRolloverForSelectedTeam, getBaselineDeadMoney, setState, getReSignSettingsForSelectedTeam, setReSignSettingsForSelectedTeam } from '../state.js';
+import * as State from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -17,7 +17,7 @@ function fmtMoney(n) {
 export function mountCapSummary(containerId = 'cap-summary') {
   const el = document.getElementById(containerId);
   if (!el) return;
-  const snap = getCapSummary();
+  const snap = State.getCapSummary();
   const room = snap.capRoom || 0;
   const spent = snap.capSpent || 0;
   const avail = snap.capAvailable || 0;
@@ -30,7 +30,7 @@ export function mountCapSummary(containerId = 'cap-summary') {
   // Read-only Rookie Reserve for next year (does not affect current year)
   let rookieNext = 0;
   try {
-    const picks = getDraftPicksForSelectedTeam();
+    const picks = State.getDraftPicksForSelectedTeam();
     rookieNext = estimateRookieReserveForPicks(picks);
   } catch {}
 
@@ -55,21 +55,21 @@ export function mountHeaderProjections(containerId = 'header-projections') {
   const el = document.getElementById(containerId);
   if (!el) return;
   try {
-    const st = getState();
+    const st = State.getState();
     const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
     if (!team) { el.innerHTML = ''; return; }
 
     const horizon = 4; // show Y+1..Y+3
-    const nextYearPicks = getDraftPicksForSelectedTeam();
+    const nextYearPicks = State.getDraftPicksForSelectedTeam();
     const defaultOneEach = { 1:1,2:1,3:1,4:1,5:1,6:1,7:1 };
     const rr0 = 0;
     const rr1 = estimateRookieReserveForPicks(nextYearPicks);
     const rr2 = estimateRookieReserveForPicks(defaultOneEach);
     const rr3 = rr2;
-    const rollover = getRolloverForSelectedTeam();
+    const rollover = State.getRolloverForSelectedTeam();
 
     // Baseline dead money from the Dead Money tab (This Year and Next Year)
-    const dmBase = getBaselineDeadMoney();
+    const dmBase = State.getBaselineDeadMoney();
     const baselineDMByYear = [
       Number(dmBase?.year0 || 0) || 0,
       Number(dmBase?.year1 || 0) || 0,
@@ -95,7 +95,7 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       }
     } catch {}
     // Settings per team: manual reserve, toggle to use in-game value, and the in-game value itself.
-    const reConf = getReSignSettingsForSelectedTeam();
+    const reConf = State.getReSignSettingsForSelectedTeam();
     const reSignReserve = Math.max(0, Number(reConf.useInGame ? reConf.inGameValue : reConf.reserve) || 0);
 
     // Cap growth rate tunable (persisted)
@@ -143,20 +143,20 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     if (input) {
       input.addEventListener('change', () => {
         const v = Math.max(0, Math.min(35_000_000, Number(input.value||0)));
-        setRolloverForSelectedTeam(v);
+        State.setRolloverForSelectedTeam(v);
       });
     }
     const reInput = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-reserve'));
     if (reInput) {
       reInput.addEventListener('change', () => {
         const v = Math.max(0, Number(reInput.value||0));
-        setReSignSettingsForSelectedTeam({ reserve: v });
+        State.setReSignSettingsForSelectedTeam({ reserve: v });
       });
     }
     const btnEstimate = /** @type {HTMLButtonElement|null} */(el.querySelector('#resign-use-estimate'));
     if (btnEstimate) {
       btnEstimate.addEventListener('click', () => {
-        setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
+        State.setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
       });
     }
     const chkUseInGame = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-use-ingame'));
@@ -164,13 +164,13 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     if (chkUseInGame) {
       chkUseInGame.addEventListener('change', () => {
         const use = !!chkUseInGame.checked;
-        setReSignSettingsForSelectedTeam({ useInGame: use });
+        State.setReSignSettingsForSelectedTeam({ useInGame: use });
       });
     }
     if (inGameInput) {
       inGameInput.addEventListener('change', () => {
         const v = Math.max(0, Number(inGameInput.value||0));
-        setReSignSettingsForSelectedTeam({ inGameValue: v });
+        State.setReSignSettingsForSelectedTeam({ inGameValue: v });
       });
     }
     const capGrowth = /** @type {HTMLInputElement|null} */(el.querySelector('#cap-growth'));

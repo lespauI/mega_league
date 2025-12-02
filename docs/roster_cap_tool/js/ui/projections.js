@@ -1,4 +1,4 @@
-import { getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, getBaselineDeadMoney, setState, getReSignSettingsForSelectedTeam, setReSignSettingsForSelectedTeam } from '../state.js';
+import * as State from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -20,7 +20,7 @@ export function mountProjections() {
   const el = document.getElementById('projections-view');
   if (!el) return;
 
-  const st = getState();
+  const st = State.getState();
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
   if (!team) {
     el.innerHTML = '<div style="padding:.75rem; color:var(--muted)">No team selected.</div>';
@@ -36,15 +36,15 @@ export function mountProjections() {
   }
 
   // Build Rookie Reserve schedule and apply rollover to next year
-  const nextYearPicks = getDraftPicksForSelectedTeam();
+  const nextYearPicks = State.getDraftPicksForSelectedTeam();
   const defaultOneEach = { 1:1,2:1,3:1,4:1,5:1,6:1,7:1 };
   const rrByYear = Array.from({ length: years }, (_, i) => {
     if (i === 0) return 0;
     if (i === 1) return estimateRookieReserveForPicks(nextYearPicks);
     return estimateRookieReserveForPicks(defaultOneEach);
   });
-  const rollover = getRolloverForSelectedTeam();
-  const dmBase = getBaselineDeadMoney();
+  const rollover = State.getRolloverForSelectedTeam();
+  const dmBase = State.getBaselineDeadMoney();
   const baselineDMByYear = Array.from({ length: years }, (_, i) => {
     if (i === 0) return Number(dmBase?.year0 || 0) || 0;
     if (i === 1) return Number(dmBase?.year1 || 0) || 0;
@@ -67,7 +67,7 @@ export function mountProjections() {
       }
     }
   } catch {}
-  const reConf = getReSignSettingsForSelectedTeam();
+  const reConf = State.getReSignSettingsForSelectedTeam();
   const reSignReserve = Math.max(0, Number(reConf.useInGame ? reConf.inGameValue : reConf.reserve) || 0);
 
   const extraSpendingByYear = Array.from({ length: years }, (_, i) => (i === 1 ? reSignReserve : 0));
@@ -147,26 +147,26 @@ export function mountProjections() {
   if (reInput) {
     reInput.addEventListener('change', () => {
       const v = Math.max(0, Number(reInput.value||0));
-      setReSignSettingsForSelectedTeam({ reserve: v });
+      State.setReSignSettingsForSelectedTeam({ reserve: v });
     });
   }
   const btnEst = /** @type {HTMLButtonElement|null} */(el.querySelector('#proj-resign-use-estimate'));
   if (btnEst) {
     btnEst.addEventListener('click', () => {
-      setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
+      State.setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
     });
   }
   const chkUse = /** @type {HTMLInputElement|null} */(el.querySelector('#proj-resign-use-ingame'));
   if (chkUse) {
     chkUse.addEventListener('change', () => {
-      setReSignSettingsForSelectedTeam({ useInGame: !!chkUse.checked });
+      State.setReSignSettingsForSelectedTeam({ useInGame: !!chkUse.checked });
     });
   }
   const inGame = /** @type {HTMLInputElement|null} */(el.querySelector('#proj-resign-ingame-value'));
   if (inGame) {
     inGame.addEventListener('change', () => {
       const v = Math.max(0, Number(inGame.value||0));
-      setReSignSettingsForSelectedTeam({ inGameValue: v });
+      State.setReSignSettingsForSelectedTeam({ inGameValue: v });
     });
   }
 }
