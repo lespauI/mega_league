@@ -1,5 +1,6 @@
 import { getState } from '../state.js';
 import { openReleaseModal } from './modals/releaseModal.js';
+import { openOfferModal } from './modals/offerModal.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -110,9 +111,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
       const btn = document.createElement('button');
       btn.className = 'btn primary';
       btn.textContent = 'Make Offer';
-      btn.addEventListener('click', () => {
-        console.log('[action] make-offer', { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
-      });
+      btn.addEventListener('click', () => openOfferModal(p));
       action.appendChild(btn);
       tr.appendChild(action);
     } else {

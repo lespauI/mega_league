@@ -174,7 +174,8 @@ Task instructions
 - Deliverable: Releasing a player updates roster and Cap Summary in real time.
 - Verification: Manual modal preview; console assert of cap increase equals previewed savings.
 
-### [ ] Step: Free Agent Signing Flow (Offer Modal)
+### [x] Step: Free Agent Signing Flow (Offer Modal)
+<!-- chat-id: 256cba22-b39c-4559-b886-66e6558dffad -->
 Task instructions
 - Definition: Add “Make Offer” for FAs; implement `js/ui/modals/offerModal.js` with years/salary/bonus inputs and cap preview; block signing if `capAvailable < year1CapHit`; on confirm, sign player and mark `isFreeAgent = false`.
 - Contracts: `simulateSigning`; warning if offer < 90% of desired terms.
