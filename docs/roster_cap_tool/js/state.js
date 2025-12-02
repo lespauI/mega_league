@@ -368,6 +368,23 @@ export function setReSignSettingsForSelectedTeam(partial = {}) {
   emit();
 }
 
+/** Simpler helpers focused on in-game value only */
+export function getReSignInGameForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const cur = state.reSignSettingsByTeam?.[abbr] || {};
+  return Number(cur.inGameValue || 0) || 0;
+}
+
+export function setReSignInGameForSelectedTeam(amount) {
+  const abbr = state.selectedTeam || '';
+  const cur = state.reSignSettingsByTeam?.[abbr] || {};
+  const nextTeam = { ...cur, inGameValue: Math.max(0, Number(amount) || 0) };
+  const nextAll = { ...(state.reSignSettingsByTeam || {}), [abbr]: nextTeam };
+  state.reSignSettingsByTeam = nextAll;
+  try { localStorage.setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
+  emit();
+}
+
 // ----- Baseline Dead Money (manual input) -----
 
 /** Return baseline dead money for selected team: { year0, year1 } */

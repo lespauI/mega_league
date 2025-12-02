@@ -459,6 +459,11 @@ Verification:
 ### [x] Step: Calculate DAL Y+1 breakdown
 <!-- chat-id: on-demand -->
 
+### [x] Step: Simplify Re-sign input to in-game value
+<!-- chat-id: ui-resign-single-input -->
+
+Replaced the re-sign reserve slider/toggle with a single input: “Use in-game ‘Re-sign Available’”. Projections apply this as X + ΔSpace (current cap space delta vs baseline) so cuts/conversions immediately affect Y+1. Controls updated in header projections and Projections tab; persisted per team.
+
 Added helper script `scripts/calc_team_y1_cap.py` to compute per-player Year+1 cap for a team (mirrors projectPlayerCapHits) and aggregate totals. Includes optional rookie reserve, baseline next-year dead money, and a tunable re-sign reserve factor.
 
 Verification:

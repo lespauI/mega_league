@@ -77,26 +77,10 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       0,
     ];
 
-    // Estimate re-sign cost from roster to show as a helper; not used unless applied.
-    let estReSign = 0;
-    try {
-      const pyears = (len) => Math.max(1, Math.min(5, Math.floor(Number(len) || 3)));
-      for (const p of st.players || []) {
-        if (!p || p.isFreeAgent || p.team !== team.abbrName) continue;
-        const yl = Number(p.contractYearsLeft || 0);
-        const rs = Number(p.reSignStatus || 0);
-        if ((Number.isFinite(yl) && yl <= 0) || (Number.isFinite(rs) && rs !== 0)) {
-          const ds = Number(p.desiredSalary || 0) || 0;
-          const db = Number(p.desiredBonus || 0) || 0;
-          const dl = Number(p.desiredLength || 0) || 3;
-          const y1 = ds + (db / pyears(dl));
-          if (y1 > 0) estReSign += y1;
-        }
-      }
-    } catch {}
-    // Settings per team: manual reserve, toggle to use in-game value, and the in-game value itself.
-    const reConf = State.getReSignSettingsForSelectedTeam();
-    const reSignReserve = Math.max(0, Number(reConf.useInGame ? reConf.inGameValue : reConf.reserve) || 0);
+    // In-game Re-sign Available (X), applied as X + deltaAvailable to reflect live changes
+    const snapNow = State.getCapSummary();
+    const inGameReSign = State.getReSignInGameForSelectedTeam();
+    const reSignReserve = Math.max(0, Number(inGameReSign || 0) + Number(snapNow?.deltaAvailable || 0));
 
     // Cap growth rate tunable (persisted)
     const capGrowthRate = (() => {
@@ -122,18 +106,14 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     el.innerHTML = `
       <div class="proj-strip">
         <span class="label">Proj Cap (after rookies):</span>
-        <span class="badge" title="Includes rookie reserve, baseline dead $, and re-sign reserve">Y+1 <span class="${c1}">${fmtMoney(y1)}</span></span>
+        <span class="badge" title="Includes rookie reserve, baseline dead $, and re-sign available (adjusted)">Y+1 <span class="${c1}">${fmtMoney(y1)}</span></span>
         <span class="badge">Y+2 <span class="${c2}">${fmtMoney(y2)}</span></span>
         <span class="badge">Y+3 <span class="${c3}">${fmtMoney(y3)}</span></span>
         <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
         <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
-        <label class="label" for="resign-reserve" style="margin-left:.75rem;">Re-sign reserve (Y+1)</label>
-        <input id="resign-reserve" type="number" min="0" step="500000" value="${Math.max(0, Number(reConf.reserve||0))}" class="input-number" ${reConf.useInGame ? 'disabled' : ''} />
-        <span class="badge" title="Current value used in projections">Using: ${fmtMoney(reSignReserve)}</span>
-        <button id="resign-use-estimate" class="btn" title="Set reserve to estimated cost">Use Estimate (${fmtMoney(estReSign)})</button>
-        <label class="label" for="resign-use-ingame" style="margin-left:.5rem;">Use in-game “Re-sign Available”</label>
-        <input id="resign-use-ingame" type="checkbox" ${reConf.useInGame ? 'checked' : ''} />
-        <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(reConf.inGameValue||0))}" class="input-number" ${reConf.useInGame ? '' : ''} placeholder="Enter in-game amount" />
+        <label class="label" for="resign-ingame-value" style="margin-left:.75rem;">Use in-game “Re-sign Available”</label>
+        <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" />
+        <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
         <label class="label" for="cap-growth" style="margin-left:.75rem;">Cap growth</label>
         <input id="cap-growth" type="range" min="0" max="0.15" step="0.01" value="${capGrowthRate}" class="input-range" />
         <span class="badge">${(capGrowthRate*100).toFixed(0)}%</span>
@@ -146,31 +126,12 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         State.setRolloverForSelectedTeam(v);
       });
     }
-    const reInput = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-reserve'));
-    if (reInput) {
-      reInput.addEventListener('change', () => {
-        const v = Math.max(0, Number(reInput.value||0));
-        State.setReSignSettingsForSelectedTeam({ reserve: v });
-      });
-    }
-    const btnEstimate = /** @type {HTMLButtonElement|null} */(el.querySelector('#resign-use-estimate'));
-    if (btnEstimate) {
-      btnEstimate.addEventListener('click', () => {
-        State.setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
-      });
-    }
-    const chkUseInGame = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-use-ingame'));
     const inGameInput = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-ingame-value'));
-    if (chkUseInGame) {
-      chkUseInGame.addEventListener('change', () => {
-        const use = !!chkUseInGame.checked;
-        State.setReSignSettingsForSelectedTeam({ useInGame: use });
-      });
-    }
     if (inGameInput) {
       inGameInput.addEventListener('change', () => {
         const v = Math.max(0, Number(inGameInput.value||0));
-        State.setReSignSettingsForSelectedTeam({ inGameValue: v });
+        State.setReSignInGameForSelectedTeam(v);
+        State.setState({});
       });
     }
     const capGrowth = /** @type {HTMLInputElement|null} */(el.querySelector('#cap-growth'));
@@ -178,7 +139,7 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       capGrowth.addEventListener('input', () => {
         const v = Math.max(0, Math.min(0.15, Number(capGrowth.value||0)));
         try { localStorage.setItem('rosterCap.capGrowthRate', String(v)); } catch {}
-        setState({});
+        State.setState({});
       });
     }
   } catch {

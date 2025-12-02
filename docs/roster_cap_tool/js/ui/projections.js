@@ -50,25 +50,10 @@ export function mountProjections() {
     if (i === 1) return Number(dmBase?.year1 || 0) || 0;
     return 0;
   });
-  // Re-sign reserve: use settings (manual value or in-game toggle)
-  let estReSign = 0;
-  try {
-    const pyears = (len) => Math.max(1, Math.min(5, Math.floor(Number(len) || 3)));
-    for (const p of st.players || []) {
-      if (!p || p.isFreeAgent || p.team !== team.abbrName) continue;
-      const yl = Number(p.contractYearsLeft || 0);
-      const rs = Number(p.reSignStatus || 0);
-      if ((Number.isFinite(yl) && yl <= 0) || (Number.isFinite(rs) && rs !== 0)) {
-        const ds = Number(p.desiredSalary || 0) || 0;
-        const db = Number(p.desiredBonus || 0) || 0;
-        const dl = Number(p.desiredLength || 0) || 3;
-        const y1 = ds + (db / pyears(dl));
-        if (y1 > 0) estReSign += y1;
-      }
-    }
-  } catch {}
-  const reConf = State.getReSignSettingsForSelectedTeam();
-  const reSignReserve = Math.max(0, Number(reConf.useInGame ? reConf.inGameValue : reConf.reserve) || 0);
+  // Re-sign reserve from in-game input, adjusted by delta cap space: applied = X + ΔSpace
+  const snapNow = State.getCapSummary();
+  const inGameReSign = State.getReSignInGameForSelectedTeam();
+  const reSignReserve = Math.max(0, Number(inGameReSign || 0) + Number(snapNow?.deltaAvailable || 0));
 
   const extraSpendingByYear = Array.from({ length: years }, (_, i) => (i === 1 ? reSignReserve : 0));
 
@@ -87,15 +72,12 @@ export function mountProjections() {
       <input type="range" min="3" max="5" step="1" value="${years}" data-horizon style="width:160px" />
       <div id="proj-years-label" class="badge">${years} year(s)</div>
       <div style="width:1px; height:20px; background:var(--border); margin:0 .5rem;"></div>
-      <label class="label" for="proj-resign-reserve">Re-sign reserve (Y+1)</label>
-      <input id="proj-resign-reserve" type="number" min="0" step="500000" value="${Math.max(0, Number(reConf.reserve||0))}" class="input-number" ${reConf.useInGame ? 'disabled' : ''} />
-      <button id="proj-resign-use-estimate" class="btn" title="Set reserve to estimated cost">Use Estimate (${fmtMoney(estReSign)})</button>
-      <label class="label" for="proj-resign-use-ingame">Use in-game “Re-sign Available”</label>
-      <input id="proj-resign-use-ingame" type="checkbox" ${reConf.useInGame ? 'checked' : ''} />
-      <input id="proj-resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(reConf.inGameValue||0))}" class="input-number" placeholder="Enter in-game amount" />
+      <label class="label" for="proj-resign-ingame-value">Use in-game “Re-sign Available”</label>
+      <input id="proj-resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" />
+      <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
-      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Re-sign reserve is applied to Y+1 totals. Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
+      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Re-sign uses in-game “Re-sign Available” adjusted by current ΔSpace (X + ΔSpace). Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
     </div>
   `;
 
@@ -143,30 +125,12 @@ export function mountProjections() {
     });
     slider.addEventListener('change', () => mountProjections());
   }
-  const reInput = /** @type {HTMLInputElement|null} */(el.querySelector('#proj-resign-reserve'));
-  if (reInput) {
-    reInput.addEventListener('change', () => {
-      const v = Math.max(0, Number(reInput.value||0));
-      State.setReSignSettingsForSelectedTeam({ reserve: v });
-    });
-  }
-  const btnEst = /** @type {HTMLButtonElement|null} */(el.querySelector('#proj-resign-use-estimate'));
-  if (btnEst) {
-    btnEst.addEventListener('click', () => {
-      State.setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
-    });
-  }
-  const chkUse = /** @type {HTMLInputElement|null} */(el.querySelector('#proj-resign-use-ingame'));
-  if (chkUse) {
-    chkUse.addEventListener('change', () => {
-      State.setReSignSettingsForSelectedTeam({ useInGame: !!chkUse.checked });
-    });
-  }
   const inGame = /** @type {HTMLInputElement|null} */(el.querySelector('#proj-resign-ingame-value'));
   if (inGame) {
     inGame.addEventListener('change', () => {
       const v = Math.max(0, Number(inGame.value||0));
-      State.setReSignSettingsForSelectedTeam({ inGameValue: v });
+      State.setReSignInGameForSelectedTeam(v);
+      State.setState({});
     });
   }
 }
