@@ -347,6 +347,7 @@ Verification:
 - DAL totals now show `Cap Space` equal to the in‑game `capAvailable` for Year 1 and never negative; applying a release/sign adjusts by the move deltas. Future years remain projection‑based.
 
 ### [ ] Step: Dead money
+<!-- chat-id: 5dd9e963-f8d0-48b3-b800-6400bb0680d6 -->
 
 Dead money shoult be split to 2 years and we need to show it in dead money page. Also if we dont have current team dead money info, lets allow user to set it manualy
 
