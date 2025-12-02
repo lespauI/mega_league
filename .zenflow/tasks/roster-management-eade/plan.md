@@ -142,7 +142,8 @@ Task instructions
 - Deliverable: Functions exported via ES modules; used by UI and verification scripts.
 - Verification: Add cases to `test.html` to run these functions and assert outputs; also cross-check via `scripts/verify_cap_math.py`.
 
-### [ ] Step: App State (Pub/Sub Store)
+### [x] Step: App State (Pub/Sub Store)
+<!-- chat-id: 7833658b-714c-4997-817a-123985ac5db5 -->
 Task instructions
 - Definition: Implement `js/state.js` as a simple pub/sub store holding selected team, players, free agents, dead money ledger, and move history. Provide derived getters for cap summary and filtered lists.
 - Contracts: Same selectors concept from spec but implemented as functions: `getCapSummary()`, `getActiveRoster()`, `getFreeAgents()`.

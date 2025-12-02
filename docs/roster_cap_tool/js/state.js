@@ -1,6 +1,6 @@
 // Minimal pub/sub app state for the tool
-
 /** @typedef {import('./models.js').CapSnapshot} CapSnapshot */
+import { calcCapSummary } from './capMath.js';
 
 const listeners = new Set();
 
@@ -25,6 +25,8 @@ export function subscribe(fn) {
 }
 
 function emit() {
+  // Light debug hook for devtools
+  try { console.debug && console.debug('[state] update', state); } catch {}
   for (const fn of listeners) fn(getState());
 }
 
@@ -47,6 +49,22 @@ export function getFreeAgents() {
   return state.players.filter((p) => p.isFreeAgent);
 }
 
+/** Compute the current cap snapshot for the selected team */
+export function getCapSummary() {
+  const team = state.teams.find((t) => t.abbrName === state.selectedTeam);
+  if (!team) {
+    return {
+      capRoom: 0,
+      capSpent: 0,
+      capAvailable: 0,
+      deadMoney: 0,
+      baselineAvailable: 0,
+      deltaAvailable: 0,
+    };
+  }
+  return calcCapSummary(team, state.moves);
+}
+
 export function initState({ teams, players }) {
   state.teams = teams;
   state.players = players;
@@ -55,4 +73,3 @@ export function initState({ teams, players }) {
   }
   emit();
 }
-

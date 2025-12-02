@@ -12,6 +12,7 @@
       import { normalizeTeamRow, normalizePlayerRow, toNum, toBool } from './js/validation.js';
       import { loadTeams, loadPlayers } from './js/csv.js';
       import { calcCapSummary, simulateRelease, simulateTradeQuick, simulateExtension, simulateConversion, simulateSigning } from './js/capMath.js';
+      import { initState, getState, getCapSummary, getActiveRoster, getFreeAgents } from './js/state.js';
 
       const out = document.getElementById('out');
       function log(line) { out.textContent += line + "\n"; }
@@ -40,6 +41,18 @@
         assert('teams loaded > 0', (teams?.length || 0) > 0);
         assert('players loaded > 0', (players?.length || 0) > 0);
         log(`Loaded teams: ${teams.length}, players: ${players.length}`);
+
+        // Initialize store and verify selectors
+        initState({ teams, players });
+        const st = getState();
+        const team0 = teams[0];
+        assert('state selectedTeam set', !!st.selectedTeam);
+        const snap0 = getCapSummary();
+        assert('cap summary baseline available equals team.capAvailable', snap0.baselineAvailable === team0.capAvailable);
+        assert('cap summary spent equals team.capSpent', snap0.capSpent === team0.capSpent);
+        const activeCount = getActiveRoster().length;
+        const faCount = getFreeAgents().length;
+        assert('active roster + FA equals all players', (activeCount + faCount) === players.length);
 
         // Cap math unit tests (deterministic numbers)
         const team = { capRoom: 304200000, capSpent: 248422144, capAvailable: 55777856 };

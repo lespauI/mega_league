@@ -1,5 +1,5 @@
 import './models.js';
-import { initState, subscribe, getState, setState } from './state.js';
+import { initState, subscribe, getState, setState, getCapSummary } from './state.js';
 import { loadTeams, loadPlayers } from './csv.js';
 
 // Basic tabs behavior
@@ -39,10 +39,10 @@ function fmtMoney(n) {
 function mountCapSummary() {
   const el = document.getElementById('cap-summary');
   if (!el) return;
-  const st = getState();
-  const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
-  if (!team) { el.textContent = ''; return; }
-  const spent = team.capSpent; const room = team.capRoom; const avail = team.capAvailable; // baseline; will be dynamic later
+  const snap = getCapSummary();
+  const room = snap.capRoom;
+  const spent = snap.capSpent;
+  const avail = snap.capAvailable;
   const pct = Math.max(0, Math.min(100, Math.round((spent / room) * 100)));
   el.innerHTML = `
     <div class="metric"><span class="label">Original Cap</span><span class="value">${fmtMoney(room)}</span></div>
@@ -100,4 +100,3 @@ async function boot() {
 boot().catch((err) => {
   console.error('Failed to initialize app', err);
 });
-
