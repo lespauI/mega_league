@@ -13,6 +13,7 @@
       import { loadTeams, loadPlayers } from './js/csv.js';
       import { calcCapSummary, simulateRelease, simulateTradeQuick, simulateExtension, simulateConversion, simulateSigning } from './js/capMath.js';
       import { initState, getState, setState, getCapSummary, getActiveRoster, getFreeAgents } from './js/state.js';
+      import { confirmWithDialog } from './js/ui/modals/confirmDialog.js';
 
       const out = document.getElementById('out');
       function log(line) { out.textContent += line + "\n"; }
@@ -147,6 +148,19 @@
         });
         const afterSign = getCapSummary();
         assert('store: cap after signing equals preview', Math.round(afterSign.capAvailable) === Math.round(signSim.remainingCapAfter));
+
+        // Confirm dialog smoke: verify rememberKey short-circuits to true without UI
+        try {
+          localStorage.setItem('rosterCap.skipConfirm.__test__', 'true');
+          const ok = await confirmWithDialog({
+            title: 'Test',
+            message: 'This should not show because rememberKey is set.',
+            rememberKey: 'rosterCap.skipConfirm.__test__',
+          });
+          assert('confirmWithDialog remembers prior consent', ok === true);
+        } catch {
+          log('SKIP - confirmWithDialog remember test (storage unavailable)');
+        }
       } catch (err) {
         log('FAIL - CSV load error: ' + err.message);
       }

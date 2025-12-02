@@ -4,6 +4,7 @@ import { openReleaseModal } from './modals/releaseModal.js';
 import { openExtensionModal } from './modals/extensionModal.js';
 import { openConversionModal } from './modals/conversionModal.js';
 import { openOfferModal } from './modals/offerModal.js';
+import { confirmWithDialog } from './modals/confirmDialog.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -233,7 +234,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
       const canExtend = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft <= 2 : false;
       addOpt('extend', 'Extension', canExtend);
       addOpt('convert', 'Conversion');
-      sel.addEventListener('change', () => {
+      sel.addEventListener('change', async () => {
         if (!sel.value) return;
         const action = sel.value;
         console.log('[action]', action, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
@@ -248,7 +249,16 @@ export function renderPlayerTable(containerId, players, options = {}) {
           const effTeam = { ...team, capAvailable: (Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0)) };
           const res = simulateTradeQuick(effTeam, p);
           const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
-          const ok = window.confirm(`Trade (Quick) ${name}?\n\nDead Cap This Year: ${fmtMoney(res.penaltyCurrentYear)}\nSavings: ${fmtMoney(res.savings || 0)}\nNew Cap Space: ${fmtMoney(res.newCapSpace || 0)}`);
+          const rememberKey = `rosterCap.skipConfirm.tradeQuick.${team.abbrName}`;
+          const ok = await confirmWithDialog({
+            title: `Trade (Quick) — ${name}`,
+            message: `Dead Cap This Year: ${fmtMoney(res.penaltyCurrentYear)}\nSavings: ${fmtMoney(res.savings || 0)}\nNew Cap Space: ${fmtMoney(res.newCapSpace || 0)}`,
+            confirmText: 'Confirm Trade',
+            cancelText: 'Cancel',
+            danger: true,
+            rememberKey,
+            rememberLabel: "Don't ask again for this team",
+          });
           if (!ok) { sel.value = ''; return; }
           // Apply move; also add ledger entry for dead money
           const moves = [...stNow.moves, res.move];
