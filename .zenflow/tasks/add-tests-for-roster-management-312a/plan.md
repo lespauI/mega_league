@@ -92,7 +92,8 @@ Save the spec to `{@artifacts_path}/spec.md`.
 
 Below is the actionable implementation plan derived from the technical spec at `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Playwright Harness Setup
+### [x] Step: Playwright Harness Setup
+<!-- chat-id: 53e82189-f428-489d-bc18-e629418e4408 -->
 Task definition:
 - Initialize Playwright E2E test harness with a local static server and base scaffolding.
 
