@@ -245,7 +245,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
           const team = stNow.teams.find((t) => t.abbrName === stNow.selectedTeam);
           if (!team) { sel.value = ''; return; }
           const snap = getCapSummary();
-          const effTeam = { ...team, capAvailable: snap.capAvailable };
+          const effTeam = { ...team, capAvailable: (Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0)) };
           const res = simulateTradeQuick(effTeam, p);
           const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
           const ok = window.confirm(`Trade (Quick) ${name}?\n\nDead Cap This Year: ${fmtMoney(res.penaltyCurrentYear)}\nSavings: ${fmtMoney(res.savings || 0)}\nNew Cap Space: ${fmtMoney(res.newCapSpace || 0)}`);

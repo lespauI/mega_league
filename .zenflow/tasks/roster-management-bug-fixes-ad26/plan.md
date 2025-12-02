@@ -39,7 +39,8 @@ Notes:
 - Proposed fixes documented in `{@artifacts_path}/solution.md`.
 - Cap Space = Current Cap − Cap Spent; gate in‑game re‑sign override; decouple Y+1 re‑sign reserve from ΔSpace; ensure Y+1 fully recalculates after releases.
 
-### [ ] Step: Implementation
+### [x] Step: Implementation
+<!-- chat-id: 76f59d15-98c3-4e78-bd35-da766a0d5a0a -->
 
 Implement the bug fix:
 

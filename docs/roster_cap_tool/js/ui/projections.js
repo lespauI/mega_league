@@ -50,10 +50,9 @@ export function mountProjections() {
     if (i === 1) return Number(dmBase?.year1 || 0) || 0;
     return 0;
   });
-  // Re-sign reserve from in-game input, adjusted by delta cap space: applied = X + ΔSpace
-  const snapNow = State.getCapSummary();
+  // Re-sign reserve uses the in-game input only (decoupled from current ΔSpace)
   const inGameReSign = State.getReSignInGameForSelectedTeam();
-  const reSignReserve = Math.max(0, Number(inGameReSign || 0) + Number(snapNow?.deltaAvailable || 0));
+  const reSignReserve = Math.max(0, Number(inGameReSign || 0));
 
   const extraSpendingByYear = Array.from({ length: years }, (_, i) => (i === 1 ? reSignReserve : 0));
 
@@ -74,10 +73,10 @@ export function mountProjections() {
       <div style="width:1px; height:20px; background:var(--border); margin:0 .5rem;"></div>
       <label class="label" for="proj-resign-ingame-value" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
       <input id="proj-resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
-      <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
+      <span class="badge" title="Applied to Y+1 as entered (no ΔSpace)">Applied: ${fmtMoney(reSignReserve)}</span>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
-      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Re-sign uses in-game “Re-sign Available” adjusted by current ΔSpace (X + ΔSpace). Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
+      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Re-sign uses in-game “Re-sign Available” as-is (no ΔSpace coupling). Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
     </div>
   `;
 

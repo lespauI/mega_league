@@ -112,7 +112,8 @@ export function calcCapSummary(team, moves = []) {
   }
 
   const capSpent = baseSpent + deltaSpent;
-  const capAvailable = baseAvail - deltaSpent;
+  // Cap Space should be derived from Current Cap − Cap Spent to avoid zero/default errors
+  const capAvailable = capRoom - capSpent;
   return {
     capRoom,
     capSpent,
@@ -482,7 +483,16 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
   const capRoom = toFinite(team.capRoom);
   const baseSpent = toFinite(team.capSpent);
   const baseAvail = toFinite(team.capAvailable);
-  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName);
+  // Exclude players who are not on the active roster or who have been
+  // removed via release/trade moves (even if caller hasn't mutated the
+  // players array yet). This ensures out-year projections fully recompute
+  // after roster moves.
+  const removed = new Set(
+    (moves || [])
+      .filter((mv) => mv && (mv.type === 'release' || mv.type === 'tradeQuick'))
+      .map((mv) => mv.playerId)
+  );
+  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName && !removed.has(p.id));
   const dead = deriveDeadMoneySchedule(moves, players, horizon);
   const conv = deriveConversionIncrements(moves, horizon);
   const growthRate = (opts && Number.isFinite(Number(opts.capGrowthRate))) ? Number(opts.capGrowthRate) : 0.09;
