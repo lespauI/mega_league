@@ -35,7 +35,7 @@ export function openReleaseModal(player) {
     <h3 style="margin-top:0">Release ${name}?</h3>
     <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
       <div><div style="color:var(--muted); font-size:.85em">Dead Cap Hit</div><div class="money-neg">${fmtMoney(player.capReleasePenalty || 0)}</div></div>
-      <div><div style="color:var(--muted); font-size:.85em">Cap Savings</div><div class="money-pos">${fmtMoney(player.capReleaseNetSavings || 0)}</div></div>
+      <div><div style="color:var(--muted); font-size:.85em">Cap Savings</div><div class="money-pos">${fmtMoney(sim.savings || player.capReleaseNetSavings || 0)}</div></div>
       <div><div style="color:var(--muted); font-size:.85em">New Cap Space</div><div>${fmtMoney(sim.newCapSpace || 0)}</div></div>
     </div>
     <p style="margin:.5rem 0 0; color:var(--muted); font-size:.85em">This will remove the player from the active roster and apply current-year dead money.</p>
