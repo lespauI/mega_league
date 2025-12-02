@@ -1,4 +1,4 @@
-import { getCapSummary, getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, setRolloverForSelectedTeam } from '../state.js';
+import { getCapSummary, getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, setRolloverForSelectedTeam, getBaselineDeadMoney, setState } from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -67,7 +67,46 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     const rr2 = estimateRookieReserveForPicks(defaultOneEach);
     const rr3 = rr2;
     const rollover = getRolloverForSelectedTeam();
-    const proj = projectTeamCaps(team, st.players, st.moves, horizon, { rookieReserveByYear: [rr0, rr1, rr2, rr3], rolloverToNext: rollover, rolloverMax: 35_000_000 });
+
+    // Optional baseline dead money for next year from the Dead Money tab
+    const dmBase = getBaselineDeadMoney();
+    const baselineDMByYear = [0, Number(dmBase?.year1 || 0) || 0, 0, 0];
+
+    // Re-sign reserve: approximate Year 1 cap for expiring/flagged players.
+    // Factor is user-tunable (0..1); default 0.40. Persisted in localStorage.
+    const factor = (() => {
+      try {
+        const raw = localStorage.getItem('rosterCap.reSignReserveFactor');
+        const v = Number(raw);
+        if (Number.isFinite(v)) return Math.max(0, Math.min(1, v));
+      } catch {}
+      return 0.4;
+    })();
+    let estReSign = 0;
+    try {
+      const pyears = (len) => Math.max(1, Math.min(5, Math.floor(Number(len) || 3)));
+      for (const p of st.players || []) {
+        if (!p || p.isFreeAgent || p.team !== team.abbrName) continue;
+        const yl = Number(p.contractYearsLeft || 0);
+        const rs = Number(p.reSignStatus || 0);
+        if ((Number.isFinite(yl) && yl <= 0) || (Number.isFinite(rs) && rs !== 0)) {
+          const ds = Number(p.desiredSalary || 0) || 0;
+          const db = Number(p.desiredBonus || 0) || 0;
+          const dl = Number(p.desiredLength || 0) || 3;
+          const y1 = ds + (db / pyears(dl));
+          if (y1 > 0) estReSign += y1;
+        }
+      }
+    } catch {}
+    const reSignReserve = Math.max(0, estReSign * factor);
+
+    const proj = projectTeamCaps(team, st.players, st.moves, horizon, {
+      rookieReserveByYear: [rr0, rr1, rr2, rr3],
+      baselineDeadMoneyByYear: baselineDMByYear,
+      extraSpendingByYear: [0, reSignReserve, 0, 0],
+      rolloverToNext: rollover,
+      rolloverMax: 35_000_000,
+    });
     const y1 = proj[1]?.capSpace ?? 0;
     const y2 = proj[2]?.capSpace ?? 0;
     const y3 = proj[3]?.capSpace ?? 0;
@@ -78,11 +117,14 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     el.innerHTML = `
       <div class="proj-strip">
         <span class="label">Proj Cap (after rookies):</span>
-        <span class="badge">Y+1 <span class="${c1}">${fmtMoney(y1)}</span></span>
+        <span class="badge" title="Includes rookie reserve, baseline dead $, and re-sign reserve">Y+1 <span class="${c1}">${fmtMoney(y1)}</span></span>
         <span class="badge">Y+2 <span class="${c2}">${fmtMoney(y2)}</span></span>
         <span class="badge">Y+3 <span class="${c3}">${fmtMoney(y3)}</span></span>
         <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
         <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
+        <label class="label" for="resign-factor" style="margin-left:.75rem;">Re-sign reserve</label>
+        <input id="resign-factor" type="range" min="0" max="1" step="0.05" value="${factor}" class="input-range" />
+        <span class="badge" title="Estimated Year+1 re-sign budget">${fmtMoney(reSignReserve)}</span>
       </div>
     `;
     const input = /** @type {HTMLInputElement|null} */(el.querySelector('#rollover-input'));
@@ -90,6 +132,15 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       input.addEventListener('change', () => {
         const v = Math.max(0, Math.min(35_000_000, Number(input.value||0)));
         setRolloverForSelectedTeam(v);
+      });
+    }
+    const slider = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-factor'));
+    if (slider) {
+      slider.addEventListener('input', () => {
+        const v = Math.max(0, Math.min(1, Number(slider.value||0)));
+        try { localStorage.setItem('rosterCap.reSignReserveFactor', String(v)); } catch {}
+        // Trigger re-render
+        setState({});
       });
     }
   } catch {

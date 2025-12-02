@@ -503,6 +503,21 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       capSpace = capRoomYear - totalSpent;
     }
 
+    // Apply optional baseline dead money for out-years (e.g., existing voids)
+    // Provided by caller via opts.baselineDeadMoneyByYear[] where index = yearOffset.
+    const dmBase = (opts && Array.isArray(opts.baselineDeadMoneyByYear)) ? Number(opts.baselineDeadMoneyByYear[i] || 0) : 0;
+    if (i > 0 && Number.isFinite(dmBase) && dmBase > 0) {
+      totalSpent += dmBase;
+      capSpace = capRoomYear - totalSpent;
+    }
+
+    // Apply any extra planned spending (e.g., re-sign reserve) for out-years.
+    const extra = (opts && Array.isArray(opts.extraSpendingByYear)) ? Number(opts.extraSpendingByYear[i] || 0) : 0;
+    if (i > 0 && Number.isFinite(extra) && extra > 0) {
+      totalSpent += extra;
+      capSpace = capRoomYear - totalSpent;
+    }
+
     // Apply rollover from current year into next year (i === 1) up to a cap.
     if (i === 1) {
       const requested = Math.max(0, toFinite(/** @type {any} */(opts).rolloverToNext, 0));
