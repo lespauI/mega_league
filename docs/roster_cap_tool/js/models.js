@@ -32,6 +32,7 @@
  * @property {number=} desiredBonus
  * @property {number=} desiredLength
  * @property {number=} reSignStatus
+ * @property {boolean=} isOnIR
  */
 
 /**
@@ -54,4 +55,3 @@
  */
 
 export const __models = true;
-

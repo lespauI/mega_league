@@ -182,7 +182,8 @@ Task instructions
 - Deliverable: Signing updates Active Roster and Cap Summary; warning shown when low offer.
 - Verification: Manual offer at desired values shows expected Year 1 Cap Hit and reduces cap accordingly.
 
-### [ ] Step: Dead Money & IR Tabs + Trade Quick
+### [x] Step: Dead Money & IR Tabs + Trade Quick
+<!-- chat-id: 2e5cc953-d333-4bb9-a65f-4b348d1f44d6 -->
 Task instructions
 - Definition: Implement “Dead Money” tab listing penalties accumulated; minimal IR tab filtered by available injury surrogate; add “Trade → Quick Simulate” that removes player and applies `capReleasePenalty`.
 - Contracts: `simulateTradeQuick`; store dead money ledger; table filters.

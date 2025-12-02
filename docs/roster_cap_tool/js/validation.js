@@ -62,6 +62,7 @@ export function normalizePlayerRow(row) {
   const weight = Number.isFinite(toNum(row.weight)) ? toNum(row.weight) : undefined;
   const team = toStr(row.team || '');
   const isFreeAgent = toBool(row.isFreeAgent);
+  const isOnIR = toBool(row.isOnIR);
   const yearsPro = Number.isFinite(toNum(row.yearsPro)) ? toNum(row.yearsPro) : undefined;
 
   const capHit = toNum(row.capHit);
@@ -89,11 +90,10 @@ export function normalizePlayerRow(row) {
     ok: errors.length === 0,
     player: {
       id, firstName, lastName, position, age, height, weight, team,
-      isFreeAgent, yearsPro, capHit, capReleaseNetSavings, capReleasePenalty,
+      isFreeAgent, isOnIR, yearsPro, capHit, capReleaseNetSavings, capReleasePenalty,
       contractSalary, contractBonus, contractLength, contractYearsLeft,
       desiredSalary, desiredBonus, desiredLength, reSignStatus,
     },
     errors,
   };
 }
-

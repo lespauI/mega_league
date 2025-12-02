@@ -1,4 +1,5 @@
-import { getState } from '../state.js';
+import { getState, setState, getCapSummary } from '../state.js';
+import { simulateTradeQuick } from '../capMath.js';
 import { openReleaseModal } from './modals/releaseModal.js';
 import { openOfferModal } from './modals/offerModal.js';
 
@@ -147,6 +148,25 @@ export function renderPlayerTable(containerId, players, options = {}) {
         console.log('[action]', action, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
         if (action === 'release') {
           openReleaseModal(p);
+        } else if (action === 'tradeQuick') {
+          // Quick trade: confirm, then remove player and apply trade dead money savings/penalty
+          const stNow = getState();
+          const team = stNow.teams.find((t) => t.abbrName === stNow.selectedTeam);
+          if (!team) { sel.value = ''; return; }
+          const snap = getCapSummary();
+          const effTeam = { ...team, capAvailable: snap.capAvailable };
+          const res = simulateTradeQuick(effTeam, p);
+          const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
+          const ok = window.confirm(`Trade (Quick) ${name}?\n\nDead Cap This Year: ${fmtMoney(res.penaltyCurrentYear)}\nSavings: ${fmtMoney(res.savings || 0)}\nNew Cap Space: ${fmtMoney(res.newCapSpace || 0)}`);
+          if (!ok) { sel.value = ''; return; }
+          // Apply move; also add ledger entry for dead money
+          const moves = [...stNow.moves, res.move];
+          const players = stNow.players.map((pl) => pl.id === p.id ? { ...pl, isFreeAgent: true, team: '' } : pl);
+          const ledgerEntry = { playerId: p.id, name, type: 'tradeQuick', penalty: res.penaltyCurrentYear, at: Date.now() };
+          const deadMoneyLedger = Array.isArray(stNow.deadMoneyLedger) ? [...stNow.deadMoneyLedger, ledgerEntry] : [ledgerEntry];
+          setState({ moves, players, deadMoneyLedger });
+          // Sanity assert
+          try { console.assert(getCapSummary().capAvailable === res.newCapSpace, '[tradeQuick] capAvailable matches preview'); } catch {}
         }
         sel.value = '';
       });

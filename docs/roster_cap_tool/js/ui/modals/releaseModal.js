@@ -70,7 +70,9 @@ export function openReleaseModal(player) {
       if (p.id !== player.id) return p;
       return { ...p, isFreeAgent: true, team: '' };
     });
-    setState({ moves, players });
+    const ledgerEntry = { playerId: player.id, name, type: 'release', penalty: res.penaltyCurrentYear, at: Date.now() };
+    const deadMoneyLedger = Array.isArray(current.deadMoneyLedger) ? [...current.deadMoneyLedger, ledgerEntry] : [ledgerEntry];
+    setState({ moves, players, deadMoneyLedger });
 
     console.assert(getCapSummary().capAvailable === res.newCapSpace, '[release] capAvailable matches previewed newCapSpace');
     close();
