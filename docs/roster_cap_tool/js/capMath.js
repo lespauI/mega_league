@@ -497,6 +497,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       if (Number.isFinite(dmBaseY0) && dmBaseY0 > 0) {
         totalSpent += dmBaseY0;
         capSpace = capRoomYear - totalSpent;
+        deadMoney += dmBaseY0;
       }
       y0CapSpace = capSpace;
     }
@@ -517,6 +518,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
     if (i > 0 && Number.isFinite(dmBase) && dmBase > 0) {
       totalSpent += dmBase;
       capSpace = capRoomYear - totalSpent;
+      deadMoney += dmBase;
     }
 
     // Apply any extra planned spending (e.g., re-sign reserve) for out-years.

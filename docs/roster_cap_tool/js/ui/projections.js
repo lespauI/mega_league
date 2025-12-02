@@ -1,4 +1,4 @@
-import { getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam } from '../state.js';
+import { getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, getBaselineDeadMoney } from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -44,8 +44,15 @@ export function mountProjections() {
     return estimateRookieReserveForPicks(defaultOneEach);
   });
   const rollover = getRolloverForSelectedTeam();
+  const dmBase = getBaselineDeadMoney();
+  const baselineDMByYear = Array.from({ length: years }, (_, i) => {
+    if (i === 0) return Number(dmBase?.year0 || 0) || 0;
+    if (i === 1) return Number(dmBase?.year1 || 0) || 0;
+    return 0;
+  });
   const proj = projectTeamCaps(team, st.players, st.moves, years, {
     rookieReserveByYear: rrByYear,
+    baselineDeadMoneyByYear: baselineDMByYear,
     rolloverToNext: rollover,
     rolloverMax: 35_000_000,
   });
