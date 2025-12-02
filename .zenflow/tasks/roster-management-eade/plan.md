@@ -166,7 +166,8 @@ Task instructions
 - Deliverable: Two functional tables with sorting and row numbering.
 - Verification: Manual sort checks; console logs for selected actions.
 
-### [ ] Step: Release Flow (Action + Modal)
+### [x] Step: Release Flow (Action + Modal)
+<!-- chat-id: 19dc21bd-8878-4b86-92bd-bbde00603e6e -->
 Task instructions
 - Definition: Add Action dropdown with “Release”; implement a modal using `<dialog>` in `js/ui/modals/releaseModal.js` showing Dead Cap Hit, Cap Savings, and New Cap Space; on confirm apply move and update store.
 - Contracts: `simulateRelease`, `ScenarioMove` (ReleaseMove); fields `capReleasePenalty`, `capReleaseNetSavings`.

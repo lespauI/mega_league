@@ -1,4 +1,5 @@
 import { getState } from '../state.js';
+import { openReleaseModal } from './modals/releaseModal.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -143,7 +144,11 @@ export function renderPlayerTable(containerId, players, options = {}) {
       addOpt('convert', 'Conversion');
       sel.addEventListener('change', () => {
         if (!sel.value) return;
-        console.log('[action]', sel.value, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
+        const action = sel.value;
+        console.log('[action]', action, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
+        if (action === 'release') {
+          openReleaseModal(p);
+        }
         sel.value = '';
       });
       tdAction.appendChild(sel);
@@ -162,4 +167,3 @@ export function renderPlayerTable(containerId, players, options = {}) {
 }
 
 export default { renderPlayerTable };
-
