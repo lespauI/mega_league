@@ -90,7 +90,7 @@ export function calcCapSummary(team, moves = []) {
 /**
  * Simulate a release using provided player fields.
  * - New Cap Space = team.capAvailable + capReleaseNetSavings (per spec)
- * - Dead cap penalty distribution: if years left >=2 → 40/60 split; else 100% current year
+ * - Dead cap penalty distribution: if years left >=2 → 60/40 split (current/next); else 100% current year
  * @param {Team} team
  * @param {Player} player
  */
@@ -102,8 +102,10 @@ export function simulateRelease(team, player) {
   let penaltyCurrentYear = penaltyTotal;
   let penaltyNextYear = 0;
   if (penaltyTotal > 0 && yearsLeft >= 2) {
-    penaltyCurrentYear = Math.round(penaltyTotal * 0.4);
-    penaltyNextYear = penaltyTotal - penaltyCurrentYear; // remainder
+    // In-game behavior observed: larger portion hits immediately.
+    // Use 60% in current year, 40% next year for multi-year contracts.
+    penaltyNextYear = Math.round(penaltyTotal * 0.4);
+    penaltyCurrentYear = penaltyTotal - penaltyNextYear; // remainder (≈60%)
   }
 
   const newCapSpace = toFinite(team.capAvailable) + savings; // savings already net of current-year penalty
@@ -477,7 +479,20 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
     let rosterCap = rosterTotals[i] || 0;
     let deadMoney = dead[i] || 0;
     let totalSpent = rosterCap + deadMoney;
-    const capRoomYear = (i === 0) ? capRoom : (capRoom * Math.pow(1 + growthRate, i));
+    // Cap room per year: anchor Y0 to team, hardcode next 3 seasons per game behavior,
+    // then fall back to growth for farther horizons.
+    let capRoomYear;
+    if (i === 0) {
+      capRoomYear = capRoom;
+    } else if (i === 1) {
+      capRoomYear = 324_000_000;
+    } else if (i === 2) {
+      capRoomYear = 334_000_000;
+    } else if (i === 3) {
+      capRoomYear = 344_000_000;
+    } else {
+      capRoomYear = capRoom * Math.pow(1 + growthRate, i);
+    }
     let capSpace = capRoomYear - totalSpent;
 
     if (i === 0) {

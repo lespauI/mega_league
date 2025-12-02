@@ -482,3 +482,10 @@ Implemented baseline dead money impact on projections:
 
 Verification:
 - In the Dead Money tab, set This Year and Next Year baseline amounts and Save. Header Y+1 projection updates immediately; increasing This Year reduces possible rollover and lowers Y+1 cap space; setting Next Year lowers Y+1 cap space directly. Persist across re-renders.
+
+### [x] Step: Change Y1 and Y2 penalty
+<!-- chat-id: 798c9a2b-e1b7-481c-a63e-784149bb81a3 -->
+
+looks like there a bug in our data we showing penalty as low in year 1 and high in year 2, but in game it is opposite. Change it in our representation and calculations. So what we called yar 2 penalty must be year 1.
+
+Also we recalculate the Cap as 9% increes, but game also has a bug, lets hardcode Year 2 salary cap as 324 mil year 3 as 334 mil and year 4 as 344

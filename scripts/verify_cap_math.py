@@ -238,8 +238,9 @@ def simulate_release(team: Team, player: Player) -> dict:
     penalty_current = penalty_total
     penalty_next = 0.0
     if penalty_total > 0 and years_left >= 2:
-        penalty_current = round(penalty_total * 0.4)
-        penalty_next = penalty_total - penalty_current
+        # Mirror JS: ~60% current year, ~40% next year
+        penalty_next = round(penalty_total * 0.4)
+        penalty_current = penalty_total - penalty_next
 
     new_cap_space = float(team.capAvailable) + savings
     move = {

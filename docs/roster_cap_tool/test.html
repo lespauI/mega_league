@@ -61,7 +61,7 @@
         const mike = { id: 'p1', capHit: 11000000, capReleaseNetSavings: 20008820, capReleasePenalty: 8008820, contractYearsLeft: 3 };
         const rel = simulateRelease(team, mike);
         assert('release: move tagged', rel.move?.type === 'release');
-        assert('release: penalty split (40/60)', rel.penaltyCurrentYear === Math.round(8008820 * 0.4));
+        assert('release: penalty split (60/40)', rel.penaltyCurrentYear === Math.round(8008820 * 0.6));
         assert('release: new cap space matches spec', rel.newCapSpace === 55777856 + 20008820);
         const snap1 = calcCapSummary(team, [rel.move]);
         assert('summary after release capAvailable matches preview', snap1.capAvailable === rel.newCapSpace);

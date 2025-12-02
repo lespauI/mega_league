@@ -67,7 +67,7 @@ Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
 - Release (simplified):
   - Savings = `capReleaseNetSavings`
   - Dead Money = `capReleasePenalty`
-  - If multi‑year: current year dead money ≈ 40% of penalty, remainder next year
+  - If multi‑year: current year dead money ≈ 60% of penalty, remainder next year
 - Bonus proration capped at 5 years (Madden rule)
 
 ## Architecture (Pure JS)
@@ -95,4 +95,3 @@ Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
 4) Optional: Extension/Conversion for targeted cap adjustments
 
 For an in‑depth explanation of Madden’s cap mechanics, see `spec/Salary Cap Works in Madden.md`.
-
