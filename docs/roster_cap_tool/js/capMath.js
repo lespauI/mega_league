@@ -168,6 +168,10 @@ export function simulateRelease(team, player) {
     playerId: player.id,
     penalty: penaltyCurrentYear,
     savings,
+    // Capture FA context at time of move to drive out-year effects later
+    faYearsAtRelease: yearsLeft,
+    // Number of out-year offsets to free/remove (Y+1..Y+N). Map: FA 2→0, 3→1, 4+→2
+    freeOutYears: clamp(yearsLeft - 2, 0, 2),
     at: Date.now(),
   };
 
@@ -373,6 +377,44 @@ export default {
 };
 
 /**
+ * Derive an overlay to add back released/traded-away players' cap hits for
+ * unaffected out-years based on FA year logic.
+ * Rules: freeOutYears = clamp(faYearsAtRelease - 2, 0, 2). Offsets >= 1 + freeOutYears
+ * are added back. Offset 0 is never added back.
+ * @param {Array<ScenarioMove>} moves
+ * @param {Array<Player>} players
+ * @param {number} years
+ * @param {Record<string, number[]>} convInc conversion increments by player id
+ * @returns {number[]} length `years` array overlay to add to roster totals
+ */
+export function deriveReleaseAddBackOverlay(moves = [], players = [], years = 5, convInc = {}) {
+  const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
+  const overlay = Array.from({ length: horizon }, () => 0);
+  if (horizon === 0) return overlay;
+  /** @type {Record<string, Player>} */
+  const byId = {};
+  for (const p of players || []) byId[p.id] = p;
+  const seen = new Set();
+  for (const mv of moves || []) {
+    if (!mv || (mv.type !== 'release' && mv.type !== 'tradeQuick')) continue;
+    if (seen.has(mv.playerId)) continue; // guard in case of duplicates
+    seen.add(mv.playerId);
+    const pl = byId[mv.playerId];
+    if (!pl) continue;
+    const faYears = Math.max(0, Math.floor(toFinite(/** @type {any} */(mv).faYearsAtRelease, toFinite(pl.contractYearsLeft, 0))));
+    const freeOutYears = clamp(Math.floor(toFinite(/** @type {any} */(mv).freeOutYears, faYears - 2)), 0, 2);
+    const caps = projectPlayerCapHits(pl, horizon);
+    const inc = convInc[mv.playerId] || null;
+    for (let o = 1 + freeOutYears; o < horizon; o++) {
+      let add = caps[o] || 0;
+      if (inc) add += (inc[o] || 0);
+      overlay[o] += add;
+    }
+  }
+  return overlay;
+}
+
+/**
  * Project per-year cap hits for a player over N future seasons.
  * Year 0 = current season and uses player.capHit (reflects conversions/extensions already applied).
  * Future years use simplified model: base = totalSalary/length for remaining contract years,
@@ -511,6 +553,8 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
   const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName && !removed.has(p.id));
   const dead = deriveDeadMoneySchedule(moves, players, horizon);
   const conv = deriveConversionIncrements(moves, horizon);
+  // Build overlay to add back unaffected out-years for released/traded players
+  const addBack = deriveReleaseAddBackOverlay(moves, players, horizon, conv);
   const growthRate = (opts && Number.isFinite(Number(opts.capGrowthRate))) ? Number(opts.capGrowthRate) : 0.09;
 
   // Compute deltaSpent from moves (same semantics as calcCapSummary)
@@ -549,6 +593,11 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       }
     }
     for (let i = 0; i < horizon; i++) rosterTotals[i] += caps[i] || 0;
+  }
+
+  // Apply add-back overlay for out-years
+  for (let i = 0; i < horizon; i++) {
+    rosterTotals[i] += addBack[i] || 0;
   }
 
   // Build result
