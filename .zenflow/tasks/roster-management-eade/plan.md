@@ -300,10 +300,16 @@ Fix implemented:
 Verification:
 - Load app, switch team, perform a release/sign. Press Reset. Active Roster returns to original list; Free Agents and cap summary revert to baseline. Draft picks remain unchanged.
 
-### [ ] Step: Visual bug in roster
+### [x] Step: Visual bug in roster
 <!-- chat-id: ee04d146-5b6f-4ca6-9469-7dcab0da45e3 -->
 
-The #	Player	2025 Cap	Dead Cap (Release)	Dead Cap (Trade)	Contract	FA Year	Action is on a second row after player one insted to be the 0 row
+Fix: Table header appeared below the first player row due to an incorrect sticky offset in CSS (`th { top: calc(58px + 44px) }`). Since the table scrolls inside `.table-container` (overflow: auto), the header should stick at the top of that container, not offset for the page header/tabs.
+
+Changes:
+- Updated `docs/roster_cap_tool/css/styles.css` to set `th { position: sticky; top: 0; z-index: 2; }` and removed the larger offsets in the responsive section.
+
+Verification:
+- Open Active Roster: header now renders as the first row and remains correctly sticky within the table container while scrolling.
 
 ### [ ] Step: In projection the Roster cap for DAL
 

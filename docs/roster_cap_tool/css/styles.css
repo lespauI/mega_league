@@ -62,7 +62,8 @@ body {
 .table-container { background: var(--panel); border: 1px solid #1f2937; border-radius: .5rem; overflow: auto; }
 table { width: 100%; border-collapse: collapse; font-size: .925rem; }
 th, td { padding: .625rem .75rem; border-bottom: 1px solid #1f2937; white-space: nowrap; }
-th { position: sticky; top: calc(58px + 44px); background: var(--panel); text-align: left; color: var(--muted); font-weight: 500; }
+/* Make table headers sticky within the scrolling table container */
+th { position: sticky; top: 0; background: var(--panel); text-align: left; color: var(--muted); font-weight: 500; z-index: 2; }
 tr:hover td { background: rgba(148,163,184,0.06); }
 
 .badge { display: inline-block; padding: .125rem .375rem; border-radius: .25rem; font-size: .75rem; border: 1px solid #334155; color: #cbd5e1; }
@@ -91,7 +92,8 @@ dialog::backdrop { background: rgba(2, 6, 23, 0.6); }
 @media (max-width: 900px) {
   .cap-summary { grid-auto-flow: row; gap: .5rem; }
   .scenario-controls { display:flex; gap:.25rem; }
-  th { top: calc(58px + 84px); }
+  /* Headers remain sticky at the top of their container */
+  th { top: 0; }
 }
 
 /* Tablet adjustments */
