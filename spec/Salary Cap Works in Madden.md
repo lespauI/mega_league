@@ -105,16 +105,18 @@ Madden uses fixed percentages for base salary distribution across contract lengt
 
 #### **Rule 1: Multi-Year Contracts (2+ years remaining)**
 When you cut/trade a player with 2+ years left:
-* **Year 1 Penalty:** ~40% of remaining bonus
-* **Year 2 Penalty:** ~60% of remaining bonus
+* **Current Year Penalty:** ~60% of remaining bonus
+* **Next Year Penalty:** ~40% of remaining bonus
+
+Note: Some CSV exports label “Penalty Year 1/Year 2” opposite of in‑game application. In practice, the value labeled “Year 2” applies to the current season, and “Year 1” applies to the following season. Our tools normalize this by applying the 60/40 split as described.
 
 **Example:**
 * Player has $40M signing bonus on 4-year deal
 * Bonus = $10M/year for 4 years
 * You cut him after Year 1
 * **Remaining bonus:** $30M ($10M × 3 years)
-* **Year 1 penalty:** ~$12M
-* **Year 2 penalty:** ~$18M
+* **Current year penalty:** ~$18M
+* **Next year penalty:** ~$12M
 
 #### **Rule 2: Final Year of Contract**
 * **All remaining bonus hits current year only**
@@ -528,4 +530,3 @@ Mastering Madden's salary cap requires understanding:
 **Golden Rule:** Always check `capReleaseNetSavings` and `capReleasePenalty` before cutting or trading players. These two numbers determine whether a move helps or hurts your cap situation.
 
 With disciplined cap management, you can build a dynasty that remains competitive for 10+ seasons without ever going into cap hell.
-

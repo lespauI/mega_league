@@ -35,15 +35,16 @@ Design a solution to fix the bug:
    - Testing strategy
    - Risk assessment
 
-### [ ] Step: Implementation
+### [x] Step: Implementation
+<!-- chat-id: a3596efb-d162-4cfc-9a50-a1fd9cb0fd9f -->
 
 Implement the bug fix:
 
-1. Apply the solution designed in the previous step
-2. Ensure code follows project conventions and style guidelines
-3. Add or update tests to cover the bug scenario
-4. Verify the fix resolves the issue
+1. Apply the solution designed in the previous step — done (60/40 split fix in `docs/roster_cap_tool/js/capMath.js`)
+2. Ensure code follows project conventions and style guidelines — done
+3. Add or update tests to cover the bug scenario — existing tests assert 60/40; verified via Node test and parity script
+4. Verify the fix resolves the issue — done (Node + Python checks passing)
 5. Update `{@artifacts_path}/implementation.md` with:
-   - Changes made
-   - Test results
-   - Verification steps performed
+   - Changes made — documented
+   - Test results — documented
+   - Verification steps performed — documented
