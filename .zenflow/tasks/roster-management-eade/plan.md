@@ -481,3 +481,16 @@ Result:
 
 Verification:
 - Select DAL, note Y+1 projection. Release Jawaan Taylor (shows $0 dead cap). Y+1 remains unchanged. Adjust Re-sign budget or Rollover to see intended effects.
+
+### [x] Step: Y+1 recalculation after release/trade
+
+Issue: Releasing a player with dead cap (e.g., Diggs) did not update Y+1 cap space to reflect removal of the player's future salary and addition of next-year dead money.
+
+Changes:
+- `docs/roster_cap_tool/js/capMath.js`: In `projectTeamCaps`, exclude players referenced by `release`/`tradeQuick` moves from the active roster when computing future-year roster totals. This guarantees Y+1 (and beyond) immediately reflect that the team no longer carries the player's future base salary/proration, while `deriveDeadMoneySchedule` accounts for next-year dead cap.
+
+Result:
+- After a release/trade, Y+1 cap space is fully recalculated: player's future salary is removed; only the scheduled dead money remains.
+
+Verification:
+- Select DAL and note Y+1 cap space. Release Trevon Diggs. Observe Y+1 increases by approximately (Diggs Y+1 cap hit minus next-year dead money). Repeat with other players to confirm consistent behavior.

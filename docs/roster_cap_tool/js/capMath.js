@@ -482,7 +482,17 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
   const capRoom = toFinite(team.capRoom);
   const baseSpent = toFinite(team.capSpent);
   const baseAvail = toFinite(team.capAvailable);
-  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName);
+  // Build a set of players removed from the roster this year (release/trade).
+  /** @type {Record<string, boolean>} */
+  const removedIds = {};
+  for (const mv of moves || []) {
+    if (!mv) continue;
+    if (mv.type === 'release' || mv.type === 'tradeQuick') {
+      removedIds[mv.playerId] = true;
+    }
+  }
+  // Active roster excludes players flagged as removed via scenario moves, even if dataset still lists them on the team.
+  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName && !removedIds[p.id]);
   const dead = deriveDeadMoneySchedule(moves, players, horizon);
   const conv = deriveConversionIncrements(moves, horizon);
   const growthRate = (opts && Number.isFinite(Number(opts.capGrowthRate))) ? Number(opts.capGrowthRate) : 0.09;
