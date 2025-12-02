@@ -1,6 +1,7 @@
 import { getState, saveScenario, listScenarios, loadScenario, resetScenario, getScenarioEdits } from '../state.js';
 import { openScenarioSaveModal, openScenarioLoadModal, openScenarioCompareModal } from './modals/scenarioModals.js';
 import { openTradeInModal } from './modals/tradeInModal.js';
+import { confirmWithDialog } from './modals/confirmDialog.js';
 
 /**
  * Mount Scenario controls (Save, Load, Reset, Compare) into header.
@@ -43,9 +44,18 @@ export function mountScenarioControls(containerId = 'scenario-controls') {
   btnReset.textContent = 'Reset';
   btnReset.title = hasChanges ? 'Reset to baseline roster' : 'Nothing to reset';
   btnReset.disabled = !hasChanges;
-  btnReset.addEventListener('click', () => {
+  btnReset.addEventListener('click', async () => {
     if (!hasChanges) return;
-    const ok = window.confirm('Reset scenario to baseline? This clears all moves.');
+    const rememberKey = `rosterCap.skipConfirm.resetScenario.${teamAbbr}`;
+    const ok = await confirmWithDialog({
+      title: 'Reset Scenario?',
+      message: 'This clears all moves and roster edits.',
+      confirmText: 'Reset',
+      cancelText: 'Cancel',
+      danger: true,
+      rememberKey,
+      rememberLabel: "Don't ask again for this team",
+    });
     if (ok) resetScenario();
   });
 

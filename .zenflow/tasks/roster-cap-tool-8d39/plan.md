@@ -35,15 +35,18 @@ Design a solution to fix the bug:
    - Testing strategy
    - Risk assessment
 
-### [ ] Step: Implementation
+### [x] Step: Implementation
+<!-- chat-id: f228791e-6b51-412e-a8d3-993d7aa7e1a9 -->
 
 Implement the bug fix:
 
-1. Apply the solution designed in the previous step
-2. Ensure code follows project conventions and style guidelines
-3. Add or update tests to cover the bug scenario
-4. Verify the fix resolves the issue
-5. Update `{@artifacts_path}/implementation.md` with:
-   - Changes made
-   - Test results
-   - Verification steps performed
+1. Apply the solution designed in the previous step — DONE
+2. Ensure code follows project conventions and style guidelines — DONE
+3. Add or update tests to cover the bug scenario — DONE (smoke in `docs/roster_cap_tool/test.html`)
+4. Verify the fix resolves the issue — DONE
+5. Update `{@artifacts_path}/implementation.md` — DONE
+
+### [ ] Step: qqew
+
+test
+

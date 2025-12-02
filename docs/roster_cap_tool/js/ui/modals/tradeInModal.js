@@ -1,6 +1,7 @@
 import { getState, setState, getCapSummary } from '../../state.js';
 import { simulateTradeIn } from '../../capMath.js';
 import { enhanceDialog } from '../a11y.js';
+import { confirmWithDialog } from './confirmDialog.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -62,12 +63,21 @@ export function openTradeInModal() {
     return sim.year1CapHit || 0;
   }
 
-  function applyTradeIn(p) {
+  async function applyTradeIn(p) {
     const snap = getCapSummary();
     const effTeam = { ...team, capAvailable: snap.capAvailable };
     const sim = simulateTradeIn(effTeam, p);
     const name = playerName(p);
-    const ok = window.confirm(`Trade in ${name}?\n\nYear 1 Cap Hit (salary only): ${fmtMoney(sim.year1CapHit)}\nCap After Trade: ${fmtMoney(sim.remainingCapAfter)}`);
+    const rememberKey = `rosterCap.skipConfirm.tradeIn.${team.abbrName}`;
+    const ok = await confirmWithDialog({
+      title: `Trade In — ${name}`,
+      message: `Year 1 Cap Hit (salary only): ${fmtMoney(sim.year1CapHit)}\nCap After Trade: ${fmtMoney(sim.remainingCapAfter)}`,
+      confirmText: 'Trade In',
+      cancelText: 'Cancel',
+      danger: false,
+      rememberKey,
+      rememberLabel: "Don't ask again for this team",
+    });
     if (!ok) return;
 
     const current = getState();
