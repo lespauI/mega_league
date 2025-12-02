@@ -3,6 +3,7 @@ import { initState, subscribe } from './state.js';
 import { loadTeams, loadPlayers } from './csv.js';
 import { mountTeamSelector } from './ui/teamSelector.js';
 import { mountCapSummary } from './ui/capSummary.js';
+import { mountRosterTabs } from './ui/rosterTabs.js';
 
 // Basic tabs behavior
 function initTabs() {
@@ -54,10 +55,12 @@ async function boot() {
   // Initial mounts
   mountTeamSelector();
   mountCapSummary();
+  mountRosterTabs();
   // Subscribe to updates
   subscribe(() => {
     mountTeamSelector();
     mountCapSummary();
+    mountRosterTabs();
   });
 }
 

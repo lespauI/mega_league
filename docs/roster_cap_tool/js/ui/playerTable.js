@@ -1,0 +1,165 @@
+import { getState } from '../state.js';
+
+function fmtMoney(n) {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    maximumFractionDigits: 0,
+  }).format(n || 0);
+}
+
+function fmtPlayerCell(p) {
+  const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
+  const posBadge = `<span class="badge pos-${(p.position || '').toUpperCase()}">${p.position || ''}</span>`;
+  const meta = [
+    typeof p.age === 'number' ? `${p.age}y` : null,
+    p.height ? p.height : null,
+    typeof p.weight === 'number' ? `${p.weight} lb` : null,
+  ].filter(Boolean).join(' · ');
+  return `
+    <div><strong>${name}</strong> ${posBadge}</div>
+    <div style="color:var(--muted); font-size:.8em">${meta}</div>
+  `;
+}
+
+function calcFaYear(p, seasonIndex) {
+  const left = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft : null;
+  const season = typeof seasonIndex === 'number' ? seasonIndex : null;
+  if (left == null || season == null) return '-';
+  try { return String(season + left); } catch { return '-'; }
+}
+
+/**
+ * Render a roster-like table into a container.
+ * @param {string} containerId
+ * @param {Array<Object>} players
+ * @param {{ type: 'active'|'fa', sortKey?: string, sortDir?: 'asc'|'desc', onSortChange?: (key:string, dir:'asc'|'desc')=>void }} options
+ */
+export function renderPlayerTable(containerId, players, options = {}) {
+  const { type = 'active', sortKey = 'capHit', sortDir = 'desc', onSortChange } = options;
+  const el = document.getElementById(containerId);
+  if (!el) return;
+
+  const st = getState();
+  const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
+
+  // Sort copy of players
+  const list = [...players];
+  list.sort((a, b) => {
+    const av = Number(a?.[sortKey] || 0);
+    const bv = Number(b?.[sortKey] || 0);
+    return sortDir === 'asc' ? av - bv : bv - av;
+  });
+
+  // Build header based on type
+  const headers = type === 'fa'
+    ? ['Player', 'Desired Salary', 'Desired Bonus', 'Desired Length', 'Total Value', 'Action']
+    : ['#', 'Player', '2025 Cap', 'Dead Cap (Release)', 'Dead Cap (Trade)', 'Contract', 'FA Year', 'Action'];
+
+  const sortableIdx = type === 'fa' ? 1 : 2; // index of sortable money column
+
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  const headRow = document.createElement('tr');
+  headers.forEach((h, idx) => {
+    const th = document.createElement('th');
+    th.textContent = h;
+    if (idx === sortableIdx) {
+      th.style.cursor = 'pointer';
+      th.title = 'Click to sort';
+      th.addEventListener('click', () => {
+        const newDir = sortDir === 'asc' ? 'desc' : 'asc';
+        onSortChange && onSortChange(type === 'fa' ? 'desiredSalary' : 'capHit', newDir);
+      });
+    }
+    headRow.appendChild(th);
+  });
+  thead.appendChild(headRow);
+
+  const tbody = document.createElement('tbody');
+
+  list.forEach((p, i) => {
+    const tr = document.createElement('tr');
+
+    if (type !== 'fa') {
+      // Row number
+      const tdIdx = document.createElement('td');
+      tdIdx.textContent = String(i + 1);
+      tr.appendChild(tdIdx);
+    }
+
+    // Player cell
+    const tdPlayer = document.createElement('td');
+    tdPlayer.innerHTML = fmtPlayerCell(p);
+    tr.appendChild(tdPlayer);
+
+    if (type === 'fa') {
+      const desiredSalary = Number(p.desiredSalary || 0);
+      const desiredBonus = Number(p.desiredBonus || 0);
+      const desiredLength = Number(p.desiredLength || 0);
+      const totalValue = (desiredSalary * desiredLength) + desiredBonus;
+
+      const c1 = document.createElement('td'); c1.textContent = fmtMoney(desiredSalary);
+      const c2 = document.createElement('td'); c2.textContent = fmtMoney(desiredBonus);
+      const c3 = document.createElement('td'); c3.textContent = desiredLength ? String(desiredLength) : '-';
+      const c4 = document.createElement('td'); c4.textContent = fmtMoney(totalValue);
+      tr.append(c1, c2, c3, c4);
+
+      const action = document.createElement('td');
+      const btn = document.createElement('button');
+      btn.className = 'btn primary';
+      btn.textContent = 'Make Offer';
+      btn.addEventListener('click', () => {
+        console.log('[action] make-offer', { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
+      });
+      action.appendChild(btn);
+      tr.appendChild(action);
+    } else {
+      // Active roster columns
+      const tdCap = document.createElement('td');
+      tdCap.textContent = fmtMoney(p.capHit || 0);
+      const tdDeadRel = document.createElement('td');
+      // Per PRD mapping for column, using capReleaseNetSavings here
+      tdDeadRel.textContent = p.capReleaseNetSavings != null ? fmtMoney(p.capReleaseNetSavings) : '-';
+      const tdDeadTrade = document.createElement('td');
+      tdDeadTrade.textContent = p.capReleasePenalty != null ? fmtMoney(p.capReleasePenalty) : '-';
+      const tdContract = document.createElement('td');
+      const len = p.contractLength; const sal = p.contractSalary;
+      tdContract.textContent = (len && sal) ? `${len} yrs, ${fmtMoney(sal)}` : '-';
+      const tdFaYear = document.createElement('td');
+      tdFaYear.textContent = calcFaYear(p, team?.seasonIndex);
+      tr.append(tdCap, tdDeadRel, tdDeadTrade, tdContract, tdFaYear);
+
+      const tdAction = document.createElement('td');
+      const sel = document.createElement('select');
+      const opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = 'Select…'; sel.appendChild(opt0);
+      const addOpt = (val, label, enabled = true) => {
+        const o = document.createElement('option'); o.value = val; o.textContent = label; if (!enabled) o.disabled = true; sel.appendChild(o);
+      };
+      addOpt('release', 'Release');
+      addOpt('tradeQuick', 'Trade (Quick)');
+      const canExtend = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft <= 2 : false;
+      addOpt('extend', 'Extension', canExtend);
+      addOpt('convert', 'Conversion');
+      sel.addEventListener('change', () => {
+        if (!sel.value) return;
+        console.log('[action]', sel.value, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
+        sel.value = '';
+      });
+      tdAction.appendChild(sel);
+      tr.appendChild(tdAction);
+    }
+
+    tbody.appendChild(tr);
+  });
+
+  table.appendChild(thead);
+  table.appendChild(tbody);
+
+  // Mount
+  el.innerHTML = '';
+  el.appendChild(table);
+}
+
+export default { renderPlayerTable };
+

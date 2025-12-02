@@ -158,7 +158,8 @@ Task instructions
 - Deliverable: Interactive header that updates as actions occur.
 - Verification: Manual check in browser; console asserts for value changes when switching teams.
 
-### [ ] Step: Roster Tabs & Tables (Active + Free Agents)
+### [x] Step: Roster Tabs & Tables (Active + Free Agents)
+<!-- chat-id: 3744afdd-1460-45db-8617-06258c1d98f7 -->
 Task instructions
 - Definition: Implement `js/ui/rosterTabs.js` and `js/ui/playerTable.js`; Active Roster and Free Agents tabs with specified columns; sortable by cap hit; action column with dropdown.
 - Contracts: Columns and filters per PRD; uses `getActiveRoster()` and `getFreeAgents()`.
