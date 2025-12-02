@@ -201,7 +201,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/trade.spec.ts --project=chromium` passes.
 
-### [ ] Step: Extension + Conversion E2E
+### [x] Step: Extension + Conversion E2E
+<!-- chat-id: 8a463508-6cbf-4240-b915-d6b18ab807b7 -->
 Task definition:
 - Implement tests for contract extension and bonus conversion flows, validating previews and resulting cap deltas.
 
@@ -214,7 +215,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/extend_convert.spec.ts --project=chromium` passes.
 
-### [ ] Step: Filters and Tabs E2E
+### [x] Step: Filters and Tabs E2E
+<!-- chat-id: f7ceac49-ce90-4753-97ef-2021c8fc9e9b -->
 Task definition:
 - Implement tests for position filters on Active/FA tables and ensure persistence across tab switches.
 

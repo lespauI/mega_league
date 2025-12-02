@@ -20,32 +20,46 @@ test.describe('Trade (Quick) E2E', () => {
     const table = activeRosterTable(page);
     await expect(table).toBeVisible();
 
-    // Pick the first player row and capture details
-    const row = tableRows(table).first();
-    const name = (await rowPlayerName(row).innerText().catch(() => '')).trim();
+    // Choose a row with a non-zero savings if available, else the first
+    const rows = tableRows(table);
+    const count = await rows.count();
+    let row = rows.first();
+    let name = (await rowPlayerName(row).innerText().catch(() => '')).trim();
+    let savings = parseMoney(await row.locator('td[data-label="Free cap after release"]').innerText().catch(() => ''));
+    for (let i = 0; i < Math.min(count, 10); i++) {
+      const candidate = rows.nth(i);
+      const candSavings = parseMoney(await candidate.locator('td[data-label="Free cap after release"]').innerText().catch(() => ''));
+      const candName = (await rowPlayerName(candidate).innerText().catch(() => '')).trim();
+      if (Math.round(candSavings) !== 0 && candName) {
+        row = candidate;
+        name = candName;
+        savings = candSavings;
+        break;
+      }
+    }
     expect(name.length).toBeGreaterThan(0);
 
     const before = await readCapAvailable(page);
-
-    // Read the table's "Free cap after release" which equals in-game Savings
-    const savingsText = await row.locator('td[data-label="Free cap after release"]').innerText();
-    const savings = parseMoney(savingsText);
     const expectedAfter = Math.round(before + savings);
 
     // Trigger Trade (Quick) which uses a native confirm dialog
-    const confirmOnce = page.once('dialog', (d) => d.accept());
+    page.once('dialog', (d) => d.accept());
     await rowActionSelect(row).selectOption('tradeQuick');
-    await confirmOnce; // ensure confirm handled
 
-    // Wait for cap to update and match expected preview math
-    await page.waitForFunction((exp) => {
-      const el = document.querySelector('#cap-summary [data-testid="cap-available"]');
-      if (!el) return false;
-      const txt = el.textContent || '';
-      const cleaned = txt.replace(/[^0-9.\-]/g, '');
-      const v = Number(cleaned);
-      return Number.isFinite(v) && Math.round(v) === Math.round(exp as number);
-    }, expectedAfter, { timeout: 5000 });
+    if (Math.round(before) !== expectedAfter) {
+      // Wait for cap to change from the baseline "before"
+      await page.waitForFunction((b) => {
+        const el = document.querySelector('#cap-summary [data-testid="cap-available"]');
+        if (!el) return false;
+        const txt = el.textContent || '';
+        const cleaned = txt.replace(/[^0-9.\-]/g, '');
+        const v = Number(cleaned);
+        return Number.isFinite(v) && Math.round(v) !== Math.round(b as number);
+      }, before, { timeout: 5000 });
+    } else {
+      // If expectedAfter equals before, just give the UI a moment
+      await page.waitForTimeout(100);
+    }
 
     const after = await readCapAvailable(page);
     expect(Math.round(after)).toBe(expectedAfter);
@@ -64,3 +78,4 @@ test.describe('Trade (Quick) E2E', () => {
     ).toHaveCount(1);
   });
 });
+
