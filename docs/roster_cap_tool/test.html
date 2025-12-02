@@ -12,7 +12,7 @@
       import { normalizeTeamRow, normalizePlayerRow, toNum, toBool } from './js/validation.js';
       import { loadTeams, loadPlayers } from './js/csv.js';
       import { calcCapSummary, simulateRelease, simulateTradeQuick, simulateExtension, simulateConversion, simulateSigning } from './js/capMath.js';
-      import { initState, getState, getCapSummary, getActiveRoster, getFreeAgents } from './js/state.js';
+      import { initState, getState, setState, getCapSummary, getActiveRoster, getFreeAgents } from './js/state.js';
 
       const out = document.getElementById('out');
       function log(line) { out.textContent += line + "\n"; }
@@ -91,6 +91,62 @@
         const combined = calcCapSummary(team, [rel.move, sign.move, ext.move, conv.move]);
         const expected = team.capAvailable + 20008820 - 4000000 - 9905550 - Math.round(conv.capHitDelta);
         assertNear('combined summary capAvailable matches arithmetic', Math.round(combined.capAvailable), Math.round(expected));
+
+        // 6) Store-driven smoke: apply a release then a signing via setState-like updates
+        // Create a synthetic roster player for the currently selected team to guarantee fields
+        const currentTeam = getState().selectedTeam;
+        const syntheticRelease = {
+          id: 'syn_rel_1',
+          firstName: 'Synthetic', lastName: 'Release', position: 'LB',
+          team: currentTeam, isFreeAgent: false,
+          capHit: 9500000,
+          contractYearsLeft: 3,
+          capReleaseNetSavings: 20000000,
+          capReleasePenalty: 8000000,
+        };
+        // And a synthetic free agent with desired terms
+        const syntheticFA = {
+          id: 'syn_fa_1',
+          firstName: 'Synthetic', lastName: 'FA', position: 'RB',
+          team: '', isFreeAgent: true,
+          capHit: 0,
+          desiredSalary: 3500000,
+          desiredBonus: 1000000,
+          desiredLength: 2,
+        };
+
+        // Inject into state
+        setState({ players: [...getState().players, syntheticRelease, syntheticFA] });
+
+        // Release synthetic player using the same pattern as the modal
+        const beforeSnap = getCapSummary();
+        const effTeam0 = { ...teams[0], capAvailable: beforeSnap.capAvailable };
+        const relSim = simulateRelease(effTeam0, syntheticRelease);
+        setState({
+          moves: [...getState().moves, relSim.move],
+          players: getState().players.map(p => p.id === syntheticRelease.id ? { ...p, isFreeAgent: true, team: '' } : p),
+        });
+        const afterRelease = getCapSummary();
+        assert('store: cap after release equals preview', Math.round(afterRelease.capAvailable) === Math.round(relSim.newCapSpace));
+
+        // Sign synthetic FA using the same pattern as the modal
+        const beforeSignSnap = getCapSummary();
+        const effTeam1 = { ...teams[0], capAvailable: beforeSignSnap.capAvailable };
+        const offer = { years: 2, salary: 3500000, bonus: 1000000 };
+        const signSim = simulateSigning(effTeam1, syntheticFA, offer);
+        setState({
+          moves: [...getState().moves, signSim.move],
+          players: getState().players.map(p => p.id === syntheticFA.id ? {
+            ...p, isFreeAgent: false, team: currentTeam,
+            contractLength: offer.years,
+            contractYearsLeft: offer.years,
+            contractSalary: offer.salary * offer.years,
+            contractBonus: offer.bonus,
+            capHit: signSim.year1CapHit,
+          } : p),
+        });
+        const afterSign = getCapSummary();
+        assert('store: cap after signing equals preview', Math.round(afterSign.capAvailable) === Math.round(signSim.remainingCapAfter));
       } catch (err) {
         log('FAIL - CSV load error: ' + err.message);
       }

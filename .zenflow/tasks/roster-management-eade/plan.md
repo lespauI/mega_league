@@ -222,7 +222,8 @@ Task instructions
 - Deliverable: Scenario controls with save/load and baseline/active comparison.
 - Verification: Manual save/load; inspect localStorage entries.
 
-### [ ] Step: Browser Test Page (Smoke)
+### [x] Step: Browser Test Page (Smoke)
+<!-- chat-id: 1041fc8d-a4e1-40f7-9516-8882c0d454a9 -->
 Task instructions
 - Definition: Create `docs/roster_cap_tool/test.html` that programmatically simulates: load team → release a player → sign a FA; logs assertions to console for cap deltas.
 - Contracts: Uses exported functions and store actions.
