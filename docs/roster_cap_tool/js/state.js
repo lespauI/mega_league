@@ -307,8 +307,20 @@ export function getRookieReserveEstimate() {
 /** Get rollover amount for selected team (0..$35M). */
 export function getRolloverForSelectedTeam() {
   const abbr = state.selectedTeam || '';
-  const v = Number(state.rolloverByTeam?.[abbr] || 0);
-  return Math.max(0, Math.min(35_000_000, Number.isFinite(v) ? v : 0));
+  const hasStored = state.rolloverByTeam && Object.prototype.hasOwnProperty.call(state.rolloverByTeam, abbr);
+  if (hasStored) {
+    const v = Number(state.rolloverByTeam?.[abbr] || 0);
+    return Math.max(0, Math.min(35_000_000, Number.isFinite(v) ? v : 0));
+  }
+  // Default to current cap space (clamped 0..35M) when not explicitly set
+  try {
+    const snap = getCapSummary();
+    const avail = Number(snap?.capAvailable || 0);
+    const fallback = Math.max(0, Math.min(35_000_000, Number.isFinite(avail) ? Math.floor(avail) : 0));
+    return fallback;
+  } catch {
+    return 0;
+  }
 }
 
 /** Set rollover amount for selected team (clamped 0..$35M). */
