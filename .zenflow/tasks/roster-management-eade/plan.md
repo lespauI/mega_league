@@ -230,7 +230,8 @@ Task instructions
 - Deliverable: One-click browser smoke test without Node tooling.
 - Verification: Open `test.html` and check console output for PASS lines.
 
-### [ ] Step: Helper Verification Scripts & Fixtures
+### [x] Step: Helper Verification Scripts & Fixtures
+<!-- chat-id: 4d1055c7-33ea-4d07-9bf2-cce74451181f -->
 Task instructions
 - Definition: Implement `scripts/verify_cap_math.py`, `scripts/smoke_roster_cap_tool.sh`, and `scripts/fixtures/cap_scenarios.json`. Generate `output/tiny_teams.csv` if missing for tiny tests.
 - Contracts: Script I/O per spec; relies on same formulas as `capMath`.
