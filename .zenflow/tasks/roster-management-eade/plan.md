@@ -456,3 +456,14 @@ Files changed:
 
 Verification:
 - Open the app header; the Cap growth slider and percentage badge no longer appear.
+
+### [x] Step: Cap Space $0
+<!-- chat-id: 28ade47f-eb37-4dab-80a4-c205cafbd7e3 -->
+
+Fix: Cap Space displayed as $0 for all teams.
+
+Change:
+- Update `docs/roster_cap_tool/js/ui/capSummary.js` to compute and display Cap Space as `Current Cap - Cap Spent` instead of relying on `capAvailable` (which can be 0 in the dataset).
+
+Verification:
+- Open the app header. Cap Space now equals `capRoom - capSpent` and updates with moves; progress bar remains correct.
