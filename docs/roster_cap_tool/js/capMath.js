@@ -187,14 +187,30 @@ export function simulateTradeQuick(team, player) {
  * @param {Player} player
  */
 export function simulateTradeIn(team, player) {
-  // Approximate bonus proration per year the same way conversion math does
+  // Determine the acquiring team's Year 1 cap hit as base salary only
+  // Prefer contract base schedule for the current contract year; fall back to
+  // (capHit - bonusPerYear) if salary data is missing.
   const totalBonus = toFinite(player.contractBonus, 0);
   const lenRaw = toFinite(player.contractLength, 0);
+  const yearsLeftRaw = toFinite(player.contractYearsLeft, 0);
   const len = Math.max(1, Math.floor(Number.isFinite(lenRaw) && lenRaw > 0 ? lenRaw : toFinite(player.contractYearsLeft, 1)));
+  const yearsLeft = Math.max(0, Math.floor(Number.isFinite(yearsLeftRaw) && yearsLeftRaw >= 0 ? yearsLeftRaw : 0));
+  const yearsElapsed = clamp(len - yearsLeft, 0, Math.max(0, len - 1));
   const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
   const bonusPerYear = totalBonus > 0 ? (totalBonus / prorateYears) : 0;
-  const currentCapHit = toFinite(player.capHit);
-  const acquiringYear1 = Math.max(0, currentCapHit - bonusPerYear);
+
+  // Try to compute current-year base salary from total contract salary using Madden weights
+  const contractSalary = toFinite(player.contractSalary, 0);
+  let acquiringYear1 = 0;
+  if (contractSalary > 0 && len > 0) {
+    const schedule = buildBaseSchedule(contractSalary, len);
+    const idx = clamp(yearsElapsed, 0, schedule.length - 1);
+    acquiringYear1 = Math.max(0, toFinite(schedule[idx], 0));
+  } else {
+    // Fallback: approximate base as capHit minus bonus proration
+    const currentCapHit = toFinite(player.capHit);
+    acquiringYear1 = Math.max(0, currentCapHit - bonusPerYear);
+  }
   const remainingCapAfter = toFinite(team.capAvailable) - acquiringYear1;
 
   const move = {

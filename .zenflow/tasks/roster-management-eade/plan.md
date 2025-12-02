@@ -433,12 +433,21 @@ Verification:
 - Click Clear to remove the override; values revert to estimates.
 
 
-### [ ] Step:  Trade fixes
+### [x] Step:  Trade fixes
+<!-- chat-id: 0791f738-d880-4be1-a754-7e1bc34b7189 -->
 
-We need to fix trade 
- - in a trade sub window move the trade button into the left from right
- - Check the sallary, looks like it is not correct in the trade window, as for example Puka nakua shown as 0$ salary
- - Get rid of "No enough money" validation, allow users to have negative cap
+Implemented trade fixes:
+- UI: Moved the Trade In button column to the leftmost side of the Trade modal list.
+- Math: Corrected Year 1 acquiring cap hit to use the contract's base-salary schedule for the current contract year (fallback to `capHit - bonus/year`), fixing cases like Puka Nacua showing $0.
+- Validation: Removed the "insufficient cap" block from Trade In, allowing negative cap scenarios.
+
+Files changed:
+- `docs/roster_cap_tool/js/capMath.js` (simulateTradeIn logic)
+- `docs/roster_cap_tool/js/ui/modals/tradeInModal.js` (column order, removed validation)
+
+Verification:
+- Open Trade In, search a player (e.g., Puka Nacua). Year 1 shows a non-zero salary based on contract.
+- The Trade In button now appears as the first column; clicking proceeds even if cap goes negative; Cap Summary updates accordingly.
 ### [x] Step: Remove Cap growth slider
 Removed the Cap growth slider from the header projections strip and all related localStorage/event logic. Projections now rely on the default internal growth rate only.
 

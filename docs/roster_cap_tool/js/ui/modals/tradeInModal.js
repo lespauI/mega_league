@@ -36,12 +36,12 @@ export function openTradeInModal() {
       <table style="width:100%">
         <thead>
           <tr>
+            <th>Action</th>
             <th>Player</th>
             <th>From Team</th>
             <th>Pos</th>
             <th>Year 1 (Salary Only)</th>
             <th>Contract</th>
-            <th>Action</th>
           </tr>
         </thead>
         <tbody id="tradein-results"></tbody>
@@ -66,10 +66,6 @@ export function openTradeInModal() {
     const snap = getCapSummary();
     const effTeam = { ...team, capAvailable: snap.capAvailable };
     const sim = simulateTradeIn(effTeam, p);
-    if (!sim.canTradeIn) {
-      alert('Insufficient cap space to acquire this contract.');
-      return;
-    }
     const name = playerName(p);
     const ok = window.confirm(`Trade in ${name}?\n\nYear 1 Cap Hit (salary only): ${fmtMoney(sim.year1CapHit)}\nCap After Trade: ${fmtMoney(sim.remainingCapAfter)}`);
     if (!ok) return;
@@ -105,6 +101,13 @@ export function openTradeInModal() {
     resultsEl.innerHTML = '';
     for (const p of filtered) {
       const tr = document.createElement('tr');
+      const tdAct = document.createElement('td');
+      const btn = document.createElement('button');
+      btn.className = 'btn primary';
+      btn.textContent = 'Trade In';
+      btn.addEventListener('click', () => applyTradeIn(p));
+      tdAct.appendChild(btn);
+
       const tdName = document.createElement('td');
       tdName.innerHTML = `<div><strong>${playerName(p)}</strong></div>`;
       const tdFrom = document.createElement('td');
@@ -120,13 +123,7 @@ export function openTradeInModal() {
       if (sal) parts.push(fmtMoney(sal));
       if (bon) parts.push(`+ bonus ${fmtMoney(bon)}`);
       tdContract.textContent = parts.length ? parts.join(', ') : '-';
-      const tdAct = document.createElement('td');
-      const btn = document.createElement('button');
-      btn.className = 'btn primary';
-      btn.textContent = 'Trade In';
-      btn.addEventListener('click', () => applyTradeIn(p));
-      tdAct.appendChild(btn);
-      tr.append(tdName, tdFrom, tdPos, tdY1, tdContract, tdAct);
+      tr.append(tdAct, tdName, tdFrom, tdPos, tdY1, tdContract);
       resultsEl.appendChild(tr);
     }
   }
@@ -154,4 +151,3 @@ export function openTradeInModal() {
 }
 
 export default { openTradeInModal };
-
