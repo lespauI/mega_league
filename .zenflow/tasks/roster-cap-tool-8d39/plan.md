@@ -35,7 +35,7 @@ Design a solution to fix the bug:
    - Testing strategy
    - Risk assessment
 
-### [x] Step: Implementation
+### [ ] Step: Implementation
 <!-- chat-id: f228791e-6b51-412e-a8d3-993d7aa7e1a9 -->
 
 Implement the bug fix:
@@ -45,8 +45,4 @@ Implement the bug fix:
 3. Add or update tests to cover the bug scenario — DONE (smoke in `docs/roster_cap_tool/test.html`)
 4. Verify the fix resolves the issue — DONE
 5. Update `{@artifacts_path}/implementation.md` — DONE
-
-### [ ] Step: qqew
-
-test
 
