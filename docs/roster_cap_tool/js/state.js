@@ -40,6 +40,12 @@ export function getState() {
 }
 
 export function setState(partial) {
+  // If callers pass a fresh players array, normalize team keys to abbr
+  if (partial && Array.isArray(partial.players)) {
+    try {
+      partial = { ...partial, players: normalizePlayersTeams(partial.players, state.teams) };
+    } catch {}
+  }
   Object.assign(state, partial);
   emit();
 }
@@ -83,20 +89,7 @@ export function initState({ teams, players }) {
   state.teams = teams;
   // Normalize player.team to team abbrName so filters work
   try {
-    /** @type {Record<string,string>} */
-    const teamKeyToAbbr = Object.create(null);
-    for (const t of teams || []) {
-      const keys = [t.abbrName, t.displayName, t.teamName].filter(Boolean);
-      for (const k of keys) {
-        teamKeyToAbbr[String(k).trim().toLowerCase()] = t.abbrName;
-      }
-    }
-    state.players = (players || []).map((p) => {
-      if (p && p.isFreeAgent) return p;
-      const raw = (p && p.team) ? String(p.team).trim().toLowerCase() : '';
-      const abbr = raw ? (teamKeyToAbbr[raw] || p.team) : p.team;
-      return { ...p, team: abbr };
-    });
+    state.players = normalizePlayersTeams(players || [], teams || []);
   } catch {
     state.players = players;
   }
@@ -117,6 +110,24 @@ export function initState({ teams, players }) {
     if (parsed && typeof parsed === 'object') state.draftPicksByTeam = parsed;
   } catch {}
   emit();
+}
+
+/** Normalize players' team fields to team abbr based on provided teams list. */
+function normalizePlayersTeams(players, teams) {
+  /** @type {Record<string,string>} */
+  const teamKeyToAbbr = Object.create(null);
+  for (const t of teams || []) {
+    const keys = [t.abbrName, t.displayName, t.teamName].filter(Boolean);
+    for (const k of keys) {
+      teamKeyToAbbr[String(k).trim().toLowerCase()] = t.abbrName;
+    }
+  }
+  return (players || []).map((p) => {
+    if (!p || p.isFreeAgent) return p;
+    const raw = (p.team ? String(p.team) : '').trim().toLowerCase();
+    const abbr = raw ? (teamKeyToAbbr[raw] || p.team) : p.team;
+    return { ...p, team: abbr };
+  });
 }
 
 // ----- Scenario (What-if) persistence -----

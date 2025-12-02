@@ -48,35 +48,109 @@ export function renderPlayerTable(containerId, players, options = {}) {
   const st = getState();
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
 
-  // Sort copy of players
+  // Helper to compute sort values per column
+  const getActiveSortValue = (p, key, originalPlayers) => {
+    switch (key) {
+      case 'index': {
+        const idx = originalPlayers.indexOf(p);
+        return idx === -1 ? Number.MAX_SAFE_INTEGER : idx;
+      }
+      case 'player': {
+        const ln = (p.lastName || '').toString().toLowerCase();
+        const fn = (p.firstName || '').toString().toLowerCase();
+        return `${ln},${fn}`;
+      }
+      case 'capHit': return Number(p.capHit || 0);
+      case 'deadRelease': return Number(p.capReleaseNetSavings || 0);
+      case 'deadTrade': return Number(p.capReleasePenalty || 0);
+      case 'contract': return Number(p.contractSalary || 0);
+      case 'faYear': {
+        const left = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft : null;
+        const season = typeof team?.seasonIndex === 'number' ? team.seasonIndex : null;
+        if (left == null || season == null) return Number.MAX_SAFE_INTEGER;
+        return Number(season + left);
+      }
+      case 'action': {
+        const canExtend = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft <= 2 : false;
+        return canExtend ? 1 : 0;
+      }
+      default: return Number(p[sortKey] || 0);
+    }
+  };
+
+  const getFaSortValue = (p, key) => {
+    switch (key) {
+      case 'player': {
+        const ln = (p.lastName || '').toString().toLowerCase();
+        const fn = (p.firstName || '').toString().toLowerCase();
+        return `${ln},${fn}`;
+      }
+      case 'desiredSalary': return Number(p.desiredSalary || 0);
+      case 'desiredBonus': return Number(p.desiredBonus || 0);
+      case 'desiredLength': return Number(p.desiredLength || 0);
+      case 'totalValue': {
+        const s = Number(p.desiredSalary || 0);
+        const b = Number(p.desiredBonus || 0);
+        const y = Number(p.desiredLength || 0);
+        return (s * y) + b;
+      }
+      case 'action': return 0; // identical buttons; keep stable
+      default: return Number(p[sortKey] || 0);
+    }
+  };
+
+  // Sort copy of players using selected column
   const list = [...players];
+  const originalPlayers = players;
+  const valFn = type === 'fa'
+    ? (p) => getFaSortValue(p, sortKey)
+    : (p) => getActiveSortValue(p, sortKey, originalPlayers);
   list.sort((a, b) => {
-    const av = Number(a?.[sortKey] || 0);
-    const bv = Number(b?.[sortKey] || 0);
-    return sortDir === 'asc' ? av - bv : bv - av;
+    const av = valFn(a);
+    const bv = valFn(b);
+    const isString = (v) => typeof v === 'string';
+    let cmp = 0;
+    if (isString(av) || isString(bv)) {
+      cmp = String(av).localeCompare(String(bv));
+    } else {
+      cmp = Number(av) - Number(bv);
+    }
+    return sortDir === 'asc' ? cmp : -cmp;
   });
 
-  // Build header based on type
-  const headers = type === 'fa'
-    ? ['Player', 'Desired Salary', 'Desired Bonus', 'Desired Length', 'Total Value', 'Action']
-    : ['#', 'Player', '2025 Cap', 'Dead Cap (Release)', 'Dead Cap (Trade)', 'Contract', 'FA Year', 'Action'];
-
-  const sortableIdx = type === 'fa' ? 1 : 2; // index of sortable money column
+  // Build header metadata based on type
+  const headerMeta = type === 'fa'
+    ? [
+        { label: 'Player', key: 'player' },
+        { label: 'Desired Salary', key: 'desiredSalary' },
+        { label: 'Desired Bonus', key: 'desiredBonus' },
+        { label: 'Desired Length', key: 'desiredLength' },
+        { label: 'Total Value', key: 'totalValue' },
+        { label: 'Action', key: 'action' },
+      ]
+    : [
+        { label: '#', key: 'index' },
+        { label: 'Player', key: 'player' },
+        { label: '2025 Cap', key: 'capHit' },
+        { label: 'Dead Cap (Release)', key: 'deadRelease' },
+        { label: 'Dead Cap (Trade)', key: 'deadTrade' },
+        { label: 'Contract', key: 'contract' },
+        { label: 'FA Year', key: 'faYear' },
+        { label: 'Action', key: 'action' },
+      ];
 
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const headRow = document.createElement('tr');
-  headers.forEach((h, idx) => {
+  headerMeta.forEach((meta) => {
     const th = document.createElement('th');
-    th.textContent = h;
-    if (idx === sortableIdx) {
-      th.style.cursor = 'pointer';
-      th.title = 'Click to sort';
-      th.addEventListener('click', () => {
-        const newDir = sortDir === 'asc' ? 'desc' : 'asc';
-        onSortChange && onSortChange(type === 'fa' ? 'desiredSalary' : 'capHit', newDir);
-      });
-    }
+    th.textContent = meta.label;
+    th.style.cursor = 'pointer';
+    th.title = 'Click to sort';
+    th.addEventListener('click', () => {
+      const nextDir = (sortKey === meta.key) ? (sortDir === 'asc' ? 'desc' : 'asc') : 'desc';
+      onSortChange && onSortChange(meta.key, nextDir);
+    });
     headRow.appendChild(th);
   });
   thead.appendChild(headRow);
@@ -89,6 +163,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
     if (type !== 'fa') {
       // Row number
       const tdIdx = document.createElement('td');
+      // Show the visual index (1-based after sorting)
       tdIdx.textContent = String(i + 1);
       tdIdx.setAttribute('data-label', '#');
       tr.appendChild(tdIdx);
@@ -136,7 +211,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
       tdDeadTrade.setAttribute('data-label', 'Dead Cap (Trade)');
       const tdContract = document.createElement('td');
       const len = p.contractLength; const sal = p.contractSalary;
-      tdContract.textContent = (len && sal) ? `${len} yrs, ${fmtMoney(sal)}` : '-';
+      tdContract.textContent = (len && sal) ? `${len} yrs, ${fmtMoney(sal)}` : (len ? `${len} yrs` : '-');
       tdContract.setAttribute('data-label', 'Contract');
       const tdFaYear = document.createElement('td');
       tdFaYear.textContent = calcFaYear(p, team?.seasonIndex);

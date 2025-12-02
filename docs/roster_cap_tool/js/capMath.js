@@ -364,9 +364,32 @@ export function deriveDeadMoneySchedule(moves = [], players = [], years = 5) {
 export function projectTeamCaps(team, players = [], moves = [], years = 5) {
   const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
   const capRoom = toFinite(team.capRoom);
+  const baseSpent = toFinite(team.capSpent);
+  const baseAvail = toFinite(team.capAvailable);
   const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName);
   const dead = deriveDeadMoneySchedule(moves, players, horizon);
   const conv = deriveConversionIncrements(moves, horizon);
+
+  // Compute deltaSpent from moves (same semantics as calcCapSummary)
+  let deltaSpent = 0; // positive increases spending, negative = savings
+  for (const mv of moves || []) {
+    if (!mv || typeof mv !== 'object') continue;
+    switch (mv.type) {
+      case 'release':
+      case 'tradeQuick':
+        deltaSpent -= toFinite(/** @type {any} */(mv).savings);
+        break;
+      case 'extend':
+      case 'convert':
+        deltaSpent += toFinite(/** @type {any} */(mv).capHitDelta);
+        break;
+      case 'sign':
+        deltaSpent += toFinite(/** @type {any} */(mv).year1CapHit);
+        break;
+      default:
+        break;
+    }
+  }
 
   // Sum roster caps per year
   const rosterTotals = Array.from({ length: horizon }, () => 0);
@@ -385,10 +408,24 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5) {
   // Build result
   const out = [];
   for (let i = 0; i < horizon; i++) {
-    const rosterCap = rosterTotals[i] || 0;
-    const deadMoney = dead[i] || 0;
-    const totalSpent = rosterCap + deadMoney;
-    const capSpace = capRoom - totalSpent;
+    let rosterCap = rosterTotals[i] || 0;
+    let deadMoney = dead[i] || 0;
+    let totalSpent = rosterCap + deadMoney;
+    let capSpace = capRoom - totalSpent;
+
+    if (i === 0) {
+      // Anchor current-year snapshot to in-game team totals to avoid mismatches
+      // and negative cap due to dataset differences (e.g., practice squad/IR counts).
+      const anchoredTotal = baseSpent + deltaSpent;
+      const anchoredSpace = baseAvail - deltaSpent;
+      // Prefer anchored totals for Year 0
+      totalSpent = anchoredTotal;
+      capSpace = anchoredSpace;
+      // Derive a rosterCap that is consistent and non-negative.
+      // Note: deadMoney here only includes new scenario moves; baseline dead money is folded into baseSpent.
+      rosterCap = Math.max(0, totalSpent - deadMoney);
+    }
+
     out.push({ yearOffset: i, capRoom, rosterCap, deadMoney, totalSpent, capSpace });
   }
   return out;

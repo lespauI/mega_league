@@ -311,6 +311,26 @@ Changes:
 Verification:
 - Open Active Roster: header now renders as the first row and remains correctly sticky within the table container while scrolling.
 
+### [x] Step: Make all table columns sortable
+<!-- chat-id: 5fdd1b9c-3ae7-4d1a-8f22-a4b8b1e0c0e7 -->
+
+Add full-table sorting across all headers for Active Roster and Free Agents.
+
+Changes:
+- Updated `docs/roster_cap_tool/js/ui/playerTable.js` to:
+  - Define header metadata with keys for every column.
+  - Add click handlers to all headers to toggle sort direction.
+  - Implement robust sort value mapping for each key (player name, cap hit, dead money, contract value, FA year, etc.).
+  - Keep Action column sortable (groups by extension eligibility for Active; stable for FAs).
+
+Verification:
+- Click any header in Active Roster or Free Agents; rows re-sort accordingly; clicking again toggles sort direction.
+
 ### [ ] Step: In projection the Roster cap for DAL
+<!-- chat-id: 9467ffe8-6ca1-467f-b1f8-3f8bbfc6053e -->
 
 For dal the Roster cap shown as $321,560,000 for this season and it is -17 millions, i would like to understand how you calculate this, maybe you didnt get right the state of the season? we are ongoing season week 3, it is not possible to have a team with negative cap
+
+### [ ] Step: Dead money
+
+Dead money shoult be split to 2 years and we need to show it in dead money page. Also if we dont have current team dead money info, lets allow user to set it manualy

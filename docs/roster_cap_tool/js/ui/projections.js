@@ -44,6 +44,9 @@ export function mountProjections() {
       <input type="range" min="3" max="5" step="1" value="${years}" data-horizon style="width:160px" />
       <div id="proj-years-label" class="badge">${years} year(s)</div>
     </div>
+    <div style="margin:.25rem; color:var(--muted); font-size:12px;">
+      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Roster Cap is derived; Dead Money reflects only scenario moves.
+    </div>
   `;
 
   let rows = '';
@@ -93,4 +96,3 @@ export function mountProjections() {
 }
 
 export default { mountProjections };
-
