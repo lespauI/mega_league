@@ -1,6 +1,7 @@
 // Minimal pub/sub app state for the tool
 /** @typedef {import('./models.js').CapSnapshot} CapSnapshot */
 import { calcCapSummary, estimateRookieReserveForPicks } from './capMath.js';
+import { getContextualPlayers } from './context.js';
 
 const listeners = new Set();
 
@@ -63,10 +64,24 @@ export function setState(partial) {
 // Derived getters (simple for now; cap summary computed later)
 export function getActiveRoster() {
   if (!state.selectedTeam) return [];
+  const offset = getYearContextForSelectedTeam();
+  if (offset > 0) {
+    // Use contextualized roster membership in future years
+    const list = getContextualPlayers();
+    return list.filter((p) => p.team === state.selectedTeam && !p.isFreeAgent_ctx);
+  }
+  // Default (Y+0) behavior unchanged
   return state.players.filter((p) => !p.isFreeAgent && p.team === state.selectedTeam);
 }
 
 export function getFreeAgents() {
+  const offset = getYearContextForSelectedTeam();
+  if (offset > 0) {
+    // Future-year context: treat players with expired deals as FAs
+    const list = getContextualPlayers();
+    return list.filter((p) => p.isFreeAgent_ctx);
+  }
+  // Default (Y+0) behavior unchanged
   return state.players.filter((p) => p.isFreeAgent);
 }
 

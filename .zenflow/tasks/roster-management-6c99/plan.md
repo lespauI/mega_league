@@ -135,7 +135,8 @@ Verification
 - Node import smoke: `node -e "import('file://$PWD/docs/roster_cap_tool/js/context.js').then(()=>console.log('ok'))"` prints ok.
 - E2E unaffected: `npm run test:e2e`.
 
-### [ ] Step: Wire Roster Getters To Context
+### [x] Step: Wire Roster Getters To Context
+<!-- chat-id: 675f60e6-9165-4e6a-adf5-c319171cd96b -->
 Task definition
 - Update `getActiveRoster()` and `getFreeAgents()` in `docs/roster_cap_tool/js/state.js` to return contextualized players when year context offset > 0.
 - Ensure default behavior (`offset=0`) matches existing results bit-for-bit.
