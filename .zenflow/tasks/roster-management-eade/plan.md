@@ -264,3 +264,35 @@ Implementation notes:
 - Fix: In `initState` normalize `player.team` to the team's `abbrName` using a mapping of `abbrName`/`displayName`/`teamName` → `abbrName`. Free agents remain unchanged.
 - File changed: `docs/roster_cap_tool/js/state.js`.
 - Verification: Load app and select any team. Active Roster lists players; Free Agents unchanged; actions work as before.
+
+### [x] Step: add ability to setup draft pics
+<!-- chat-id: ab4b0875-aa69-4113-b24f-1422282be294 -->
+
+We don't have data on draft picks; let's set the ability to set up draft picks and calculate the approximate rookie reserve required.
+
+Implementation notes:
+- Added rookie reserve estimation math in `docs/roster_cap_tool/js/capMath.js`:
+  - `estimateRookieYear1ForSlot(round, pickInRound)` and `estimateRookieReserveForPicks({1..7})` with a round-based linear scale.
+- Extended app state in `docs/roster_cap_tool/js/state.js`:
+  - Persist per-team draft picks under `localStorage` key `rosterCap.draftPicks`.
+  - New getters/setters: `getDraftPicksForSelectedTeam()`, `setDraftPicksForSelectedTeam()`, `getRookieReserveEstimate()`.
+  - `getCapSummary()` now includes `rookieReserveEstimate` and `capAfterRookies`.
+- New UI tab renderer `docs/roster_cap_tool/js/ui/draftPicks.js`:
+  - Per-round pick count inputs, estimated per-pick Year 1, per-round totals, and grand total.
+  - Reset/default buttons; advisory note.
+- Updated mounts:
+  - `main.js` mounts `mountDraftPicks()` on load and on state changes.
+  - `capSummary` now displays Rookie Reserve and Cap After Rookies.
+
+Verification:
+- Open `docs/roster_cap_tool/index.html` → Draft Picks tab:
+  - Change counts; Rookie Reserve total updates and persists per team.
+  - Cap Summary shows Rookie Reserve and Cap After Rookies reflecting the estimate.
+
+### [ ] Step: Reset button whipe roster
+
+It is whipe the whole roster, but must return it into default state
+
+### [ ] Step: Visual bug in roster
+
+The #	Player	2025 Cap	Dead Cap (Release)	Dead Cap (Trade)	Contract	FA Year	Action is on a second row after player one insted to be the 0 row

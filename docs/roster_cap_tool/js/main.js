@@ -6,6 +6,7 @@ import { mountCapSummary } from './ui/capSummary.js';
 import { mountRosterTabs } from './ui/rosterTabs.js';
 import { mountProjections } from './ui/projections.js';
 import { mountScenarioControls } from './ui/scenarioControls.js';
+import { mountDraftPicks } from './ui/draftPicks.js';
 
 // Basic tabs behavior
 function initTabs() {
@@ -79,6 +80,7 @@ async function boot() {
   mountCapSummary();
   mountRosterTabs();
   mountProjections();
+  mountDraftPicks();
   // Subscribe to updates
   subscribe(() => {
     mountTeamSelector();
@@ -86,6 +88,7 @@ async function boot() {
     mountCapSummary();
     mountRosterTabs();
     mountProjections();
+    mountDraftPicks();
   });
 }
 

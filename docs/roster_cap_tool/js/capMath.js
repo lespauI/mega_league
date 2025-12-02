@@ -258,6 +258,8 @@ export default {
   simulateConversion,
   simulateSigning,
   projectPlayerCapHits,
+  estimateRookieYear1ForSlot,
+  estimateRookieReserveForPicks,
   deriveConversionIncrements,
   deriveDeadMoneySchedule,
   projectTeamCaps,
@@ -394,3 +396,52 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5) {
 
 // Marker for tooling/tests
 export const __capMath_projections = true;
+
+/**
+ * Estimate Year 1 cap hit for a rookie at a given draft slot.
+ * Approximates Madden rookie scale using round-based ranges and linear interpolation.
+ * - Round 1: $9.0M (1.01) → $2.25M (1.32)
+ * - Round 2: $1.9M (2.01) → $1.2M (2.32)
+ * - Round 3: $1.2M → $0.95M
+ * - Round 4: $0.95M → $0.85M
+ * - Round 5: $0.85M → $0.775M
+ * - Round 6: $0.775M → $0.70M
+ * - Round 7: $0.70M → $0.65M
+ * @param {number} round 1-7
+ * @param {number} pickInRound 1-32 (approx; comp picks treated as end-of-round)
+ */
+export function estimateRookieYear1ForSlot(round, pickInRound = 16) {
+  const r = Math.max(1, Math.min(7, Math.floor(toFinite(round, 1))));
+  const pr = Math.max(1, Math.min(32, Math.floor(toFinite(pickInRound, 16))));
+  // Define [start, end] ranges per round (USD)
+  /** @type {Record<number, [number, number]>} */
+  const ranges = {
+    1: [9_000_000, 2_250_000],
+    2: [1_900_000, 1_200_000],
+    3: [1_200_000, 950_000],
+    4: [950_000, 850_000],
+    5: [850_000, 775_000],
+    6: [775_000, 700_000],
+    7: [700_000, 650_000],
+  };
+  const [start, end] = ranges[r] || [800_000, 700_000];
+  const t = (pr - 1) / 31; // 0..1
+  return start + (end - start) * t;
+}
+
+/**
+ * Estimate Rookie Reserve for a set of picks.
+ * @param {{ [round: number]: number }} roundCounts Map round→count
+ * @returns {number}
+ */
+export function estimateRookieReserveForPicks(roundCounts = {}) {
+  let total = 0;
+  for (let r = 1; r <= 7; r++) {
+    const count = Math.max(0, Math.floor(toFinite(roundCounts[r] || 0, 0)));
+    if (!count) continue;
+    // Assume mid-round slot for estimate
+    const per = estimateRookieYear1ForSlot(r, 16);
+    total += per * count;
+  }
+  return total;
+}

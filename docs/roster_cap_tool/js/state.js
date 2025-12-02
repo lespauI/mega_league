@@ -1,6 +1,6 @@
 // Minimal pub/sub app state for the tool
 /** @typedef {import('./models.js').CapSnapshot} CapSnapshot */
-import { calcCapSummary } from './capMath.js';
+import { calcCapSummary, estimateRookieReserveForPicks } from './capMath.js';
 
 const listeners = new Set();
 
@@ -20,6 +20,8 @@ const state = {
   moves: [],
   /** @type {CapSnapshot|null} */
   snapshot: null,
+  /** Persisted draft picks config per team: { [abbr]: {1:number,...,7:number} } */
+  draftPicksByTeam: {},
 };
 
 export function subscribe(fn) {
@@ -63,9 +65,18 @@ export function getCapSummary() {
       deadMoney: 0,
       baselineAvailable: 0,
       deltaAvailable: 0,
+      rookieReserveEstimate: 0,
+      capAfterRookies: 0,
     };
   }
-  return calcCapSummary(team, state.moves);
+  const snap = calcCapSummary(team, state.moves);
+  const picks = getDraftPicksForSelectedTeam();
+  const rookieReserveEstimate = estimateRookieReserveForPicks(picks);
+  return {
+    ...snap,
+    rookieReserveEstimate,
+    capAfterRookies: (snap.capAvailable || 0) - rookieReserveEstimate,
+  };
 }
 
 export function initState({ teams, players }) {
@@ -94,6 +105,12 @@ export function initState({ teams, players }) {
   if (!state.selectedTeam && teams.length) {
     state.selectedTeam = teams[0].abbrName;
   }
+  // Load draft picks from localStorage once
+  try {
+    const raw = localStorage.getItem('rosterCap.draftPicks');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.draftPicksByTeam = parsed;
+  } catch {}
   emit();
 }
 
@@ -208,4 +225,39 @@ export function resetScenario() {
 /** Return computed roster edits vs baseline (for UI stats) */
 export function getScenarioEdits() {
   return computeRosterEdits();
+}
+
+// ----- Draft Picks (Rookie Reserve) -----
+
+/** Return per-round pick counts for selected team. */
+export function getDraftPicksForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const cur = state.draftPicksByTeam?.[abbr];
+  // Default 0 picks in all rounds
+  const out = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0 };
+  if (cur && typeof cur === 'object') {
+    for (let r = 1; r <= 7; r++) out[r] = Number(cur[r] || 0) || 0;
+  }
+  return out;
+}
+
+/** Update per-round pick counts for selected team and persist. */
+export function setDraftPicksForSelectedTeam(picksPerRound) {
+  const abbr = state.selectedTeam || '';
+  const next = { ...(state.draftPicksByTeam || {}) };
+  const clean = { 1:0,2:0,3:0,4:0,5:0,6:0,7:0 };
+  for (let r = 1; r <= 7; r++) {
+    const v = picksPerRound?.[r] ?? 0;
+    clean[r] = Math.max(0, Math.floor(Number(v) || 0));
+  }
+  next[abbr] = clean;
+  state.draftPicksByTeam = next;
+  try { localStorage.setItem('rosterCap.draftPicks', JSON.stringify(next)); } catch {}
+  emit();
+}
+
+/** Compute rookie reserve estimate for selected team. */
+export function getRookieReserveEstimate() {
+  const picks = getDraftPicksForSelectedTeam();
+  return estimateRookieReserveForPicks(picks);
 }
