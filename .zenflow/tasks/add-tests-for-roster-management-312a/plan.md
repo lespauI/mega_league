@@ -87,14 +87,175 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: c2599874-6392-4b21-ba63-ac19fc652bee -->
 
-Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
+Below is the actionable implementation plan derived from the technical spec at `{@artifacts_path}/spec.md`.
 
-Format each task as 
-```
-### [ ] Step: <task_name>
-Task instructions
-```
+### [ ] Step: Playwright Harness Setup
+Task definition:
+- Initialize Playwright E2E test harness with a local static server and base scaffolding.
 
-"Step:" prefix is important, do not omit it!
+Contracts (spec Contracts refs):
+- No DOM contracts; harness only. BaseURL: `http://127.0.0.1:8000` and `webServer` using `python3 -m http.server 8000`.
+
+Deliverables:
+- `package.json` with devDeps `@playwright/test` and `playwright`, npm scripts for `test:e2e`.
+- `playwright.config.ts` with `baseURL`, `webServer`, `projects` (Chromium), retries, reporter.
+- `tests/e2e/README.md` with local run/debug instructions.
+
+Verification:
+- Run: `npm i && npx playwright install --with-deps`.
+- Execute a placeholder: `npx playwright test` (should start/stop server and pass with zero tests or a smoke).
+
+### [ ] Step: Test Fixtures and Selector Utils
+Task definition:
+- Create shared fixtures and selector helpers for resilient element access and consistent navigation.
+
+Contracts:
+- Prefers role/name; may use planned `data-testid` fallbacks defined in Contracts section.
+
+Deliverables:
+- `tests/e2e/fixtures.ts` with `test`, `expect`, `gotoTool(page)`, and `beforeEach` clearing `localStorage`.
+- `tests/e2e/utils/selectors.ts` exporting helpers: `teamSelect`, `capAvailable`, `tab(name)`, table + row selectors.
+- `tests/e2e/utils/flows.ts` exporting flows: `releaseFirstRosterPlayer`, `signFirstFreeAgent`, `tradeQuick`, `extendFirst`, `convertFirst`.
+
+Verification:
+- `npx playwright test -g selectors` (if you add a small unit-ish spec) or import in smoke test without runtime errors.
+
+### [ ] Step: Smoke Test (Load + Cap Summary)
+Task definition:
+- Add a basic smoke test to ensure the app loads, CSVs parse, and Cap Summary shows numbers.
+
+Contracts:
+- Uses Cap Summary container and labels. Optional `data-testid="cap-summary"` and inline metrics per Contracts.
+
+Deliverables:
+- `tests/e2e/smoke.spec.ts` validating: page loads at `/docs/roster_cap_tool/`, tabs render, Cap Summary values are visible and numeric.
+
+Verification:
+- `npx playwright test tests/e2e/smoke.spec.ts --project=chromium` passes headless.
+
+### [ ] Step: Add DOM TestIDs (Instrumentation)
+Task definition:
+- Introduce minimal `data-testid` attributes to stabilize tests across text/markup refactors.
+
+Contracts:
+- Team selector: `data-testid="team-select"`.
+- Cap Summary root + inline spans: `cap-summary`, `cap-room`, `cap-spent`, `cap-available`, `cap-available-effective`, `delta-available`.
+- Tabs: `data-testid="tab-<name>"` for active-roster, injured-reserve, dead-money, projections, draft-picks, free-agents.
+- Tables + rows: `data-testid="table-<name>"`, rows `data-testid="player-row"`.
+- Row action buttons per table type (release/trade/extend/convert/offer): `data-testid` per spec.
+- Modals + confirm buttons: `data-testid` per spec.
+
+Deliverables:
+- Updates in `docs/roster_cap_tool/index.html`, `docs/roster_cap_tool/js/ui/*.js` to add attributes as specified.
+
+Verification:
+- `bash scripts/smoke_roster_cap_tool.sh` still passes (page + assets served).
+- Run smoke test; selectors using `data-testid` resolve without timeouts.
+
+### [ ] Step: Release Flow E2E
+Task definition:
+- Implement test that releases a player from Active roster and verifies Dead Money + Cap Space delta.
+
+Contracts:
+- Active roster table/row/action buttons; Release modal with preview labels and confirm.
+
+Deliverables:
+- `tests/e2e/release.spec.ts` performing: select team → release first player → assert player disappears from Active, appears in Free Agents or Dead Money row present; Cap Available equals modal preview.
+
+Verification:
+- `npx playwright test tests/e2e/release.spec.ts --project=chromium` passes; trace retained on failure.
+
+### [ ] Step: Free Agent Signing E2E
+Task definition:
+- Implement test that signs a free agent via offer modal and updates cap figures accordingly.
+
+Contracts:
+- Free Agents table/row/action; Offer modal with Year 1 cap preview; Confirm.
+
+Deliverables:
+- `tests/e2e/signing.spec.ts` performing: switch to Free Agents → Make Offer on first row (defaults) → Confirm → assert player appears in Active and cap reduced by preview amount.
+
+Verification:
+- `npx playwright test tests/e2e/signing.spec.ts --project=chromium` passes.
+
+### [ ] Step: Trade (Quick) E2E
+Task definition:
+- Implement quick trade flow on a player and verify dead money + cap changes.
+
+Contracts:
+- Active roster row → Trade (Quick) action; confirmation dialog.
+
+Deliverables:
+- `tests/e2e/trade.spec.ts` with assertions similar to Release regarding dead money and cap delta.
+
+Verification:
+- `npx playwright test tests/e2e/trade.spec.ts --project=chromium` passes.
+
+### [ ] Step: Extension + Conversion E2E
+Task definition:
+- Implement tests for contract extension and bonus conversion flows, validating previews and resulting cap deltas.
+
+Contracts:
+- Extension modal inputs, preview; Conversion modal inputs, preview; confirm buttons.
+
+Deliverables:
+- `tests/e2e/extend_convert.spec.ts` covering both flows with minimal input tweaks; asserts cap delta and contract fields update.
+
+Verification:
+- `npx playwright test tests/e2e/extend_convert.spec.ts --project=chromium` passes.
+
+### [ ] Step: Filters and Tabs E2E
+Task definition:
+- Implement tests for position filters on Active/FA tables and ensure persistence across tab switches.
+
+Contracts:
+- Filters chips/buttons per table; tab buttons.
+
+Deliverables:
+- `tests/e2e/filters_tabs.spec.ts` toggling 1–2 position filters, verifying row count changes and persistence after navigation.
+
+Verification:
+- `npx playwright test tests/e2e/filters_tabs.spec.ts --project=chromium` passes.
+
+### [ ] Step: Projections E2E
+Task definition:
+- Implement tests for projections controls (Re-sign budget, horizon slider) and verify values update/persist.
+
+Contracts:
+- Projections view controls; Cap summary/projection readouts.
+
+Deliverables:
+- `tests/e2e/projections.spec.ts` that adjusts controls and asserts visible cap space rows reflect changes and persist across view switches.
+
+Verification:
+- `npx playwright test tests/e2e/projections.spec.ts --project=chromium` passes.
+
+### [ ] Step: Scenario Save/Load/Reset E2E
+Task definition:
+- Implement scenario persistence tests covering Save, Load, and Reset flows.
+
+Contracts:
+- Scenario controls (save, load dropdown/list, reset button); counts/roster state.
+
+Deliverables:
+- `tests/e2e/scenarios.spec.ts` that performs edits, saves with generated name, loads it, then resets; asserts roster counts/state restored.
+
+Verification:
+- `npx playwright test tests/e2e/scenarios.spec.ts --project=chromium` passes.
+
+### [ ] Step: CI Workflow and Docs
+Task definition:
+- Add GitHub Actions workflow to run Chromium tests on Ubuntu and provide local usage docs.
+
+Contracts:
+- None (infrastructure only).
+
+Deliverables:
+- `.github/workflows/e2e.yml` to install Node, Playwright with deps, and run tests, uploading traces on failure.
+- Update `tests/e2e/README.md` with CI notes and common troubleshooting.
+
+Verification:
+- Manual: `act` (optional) or validate YAML; CI will run on push/PR and show Playwright summary and artifacts.
