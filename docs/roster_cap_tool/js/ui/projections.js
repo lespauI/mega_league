@@ -45,7 +45,7 @@ export function mountProjections() {
       <div id="proj-years-label" class="badge">${years} year(s)</div>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
-      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Roster Cap is derived; Dead Money reflects only scenario moves.
+      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Roster Cap is derived; Dead Money reflects only scenario moves. Out-years are approximated from contract totals (salary ÷ length, bonus prorated up to 5 years). If contract details are missing, projections infer base from current cap hit and proration from release penalty.
     </div>
   `;
 

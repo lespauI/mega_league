@@ -384,6 +384,21 @@ Implemented:
 Verification:
 - Open Active Roster and Free Agents: position chips render above tables; clicking chips filters rows; clearing shows all; selections persist across re-renders and tab switches. Badges display with the new colors.
 
-### [ ] Step: Contract over the years
+### [x] Step: Contract over the years
+<!-- chat-id: 96a4302b-16be-42e1-8309-3f39a7fd0a25 -->
 
-So we dont have info about contract over the year only for 2 years, but we can calculate aprox, we have all contract, we can devide it by years for contract and add aprox amount per each year to improve the cap projection
+Implemented approximate multi-year contract allocation to improve projections.
+
+Changes:
+- capMath: Enhanced `projectPlayerCapHits()` to derive out-year cap hits by distributing base salary (`contractSalary/contractLength`) and prorating bonuses (up to 5 years). When `contractBonus` is missing, infer proration from `capReleasePenalty` (treated as remaining bonus). When `contractSalary` is missing, infer base from current `capHit` minus proration.
+- UI: Updated Projections note to clarify approximations and inference rules.
+
+Files changed:
+- `docs/roster_cap_tool/js/capMath.js`
+- `docs/roster_cap_tool/js/ui/projections.js`
+
+Verification:
+- Open `docs/roster_cap_tool/index.html` → Projections tab. Confirm:
+  - Year 1 remains anchored to team snapshot.
+  - Future years reflect base = totalSalary/length + bonus proration; players with missing fields still show reasonable out-year caps.
+  - Smoke check players with zero `contractSalary`/`contractBonus` still contribute via inferred values.

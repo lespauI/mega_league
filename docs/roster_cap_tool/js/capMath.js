@@ -319,10 +319,35 @@ export function projectPlayerCapHits(player, years = 5) {
   const yearsLeft = Math.max(0, Math.floor(toFinite(player.contractYearsLeft, 0)));
   const yearsElapsed = clamp(len - yearsLeft, 0, len);
   const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
-  const bonusTotal = Math.max(0, toFinite(player.contractBonus, 0));
+
+  // Derive bonus proration per year. Prefer explicit contractBonus; otherwise
+  // approximate using capReleasePenalty as the remaining unamortized bonus.
+  let bonusTotal = Math.max(0, toFinite(player.contractBonus, 0));
+  let remainingProrationNow = Math.max(0, prorateYears - yearsElapsed);
+  if (!bonusTotal) {
+    const pen = Math.max(0, toFinite(player.capReleasePenalty, 0));
+    if (pen > 0 && remainingProrationNow > 0) {
+      // Treat penalty as remaining bonus today; approximate total bonus by
+      // spreading it evenly across remaining proration windows.
+      bonusTotal = pen * (prorateYears / remainingProrationNow);
+    }
+  }
   const bonusPerYear = bonusTotal > 0 ? (bonusTotal / prorateYears) : 0;
-  const remainingProrationNow = Math.max(0, prorateYears - yearsElapsed);
-  const basePerYear = Math.max(0, toFinite(player.contractSalary, 0)) / len;
+
+  // Base salary per year. Prefer explicit contractSalary/len; otherwise
+  // approximate from current capHit minus bonus-per-year (cannot be negative).
+  let basePerYear = 0;
+  const contractSalary = toFinite(player.contractSalary, 0);
+  if (contractSalary > 0) {
+    basePerYear = Math.max(0, contractSalary / len);
+  } else {
+    const cur = toFinite(player.capHit);
+    if (Number.isFinite(cur)) {
+      basePerYear = Math.max(0, cur - (remainingProrationNow > 0 ? bonusPerYear : 0));
+    } else {
+      basePerYear = 0;
+    }
+  }
 
   for (let i = 0; i < out.length; i++) {
     if (i === 0) {
