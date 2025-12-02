@@ -1,6 +1,7 @@
 import { getState, setState, saveScenario, listScenarios, loadScenario, deleteScenario } from '../../state.js';
 import { calcCapSummary } from '../../capMath.js';
 import { enhanceDialog } from '../a11y.js';
+import { confirmWithDialog } from './confirmDialog.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
@@ -82,7 +83,7 @@ export function openScenarioLoadModal() {
     </div>
   `;
 
-  dlg.addEventListener('click', (e) => {
+  dlg.addEventListener('click', async (e) => {
     const btn = /** @type {HTMLElement} */(e.target.closest('button'));
     if (!btn) return;
     const act = btn.getAttribute('data-action');
@@ -93,7 +94,13 @@ export function openScenarioLoadModal() {
       loadScenario(id);
       closeAndRemove(dlg);
     } else if (act === 'delete' && id) {
-      const ok = window.confirm('Delete this saved scenario?');
+      const ok = await confirmWithDialog({
+        title: 'Delete Scenario?',
+        message: 'This will permanently remove the saved scenario.',
+        confirmText: 'Delete',
+        cancelText: 'Cancel',
+        danger: true,
+      });
       if (!ok) return;
       deleteScenario(id);
       scenarios = listScenarios(teamAbbr);

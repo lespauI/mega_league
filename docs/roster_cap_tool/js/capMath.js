@@ -112,7 +112,8 @@ export function calcCapSummary(team, moves = []) {
   }
 
   const capSpent = baseSpent + deltaSpent;
-  const capAvailable = baseAvail - deltaSpent;
+  // Cap Space should be derived from Current Cap − Cap Spent to avoid zero/default errors
+  const capAvailable = capRoom - capSpent;
   return {
     capRoom,
     capSpent,
@@ -131,17 +132,33 @@ export function calcCapSummary(team, moves = []) {
  * @param {Player} player
  */
 export function simulateRelease(team, player) {
-  const savings = toFinite(player.capReleaseNetSavings);
   const penaltyTotal = Math.max(0, toFinite(player.capReleasePenalty));
   const yearsLeft = Math.max(0, Math.floor(toFinite(player.contractYearsLeft, 0)));
 
+  // Split penalties: default to ~40% current year, ~60% next year when multi-year per spec.
   let penaltyCurrentYear = penaltyTotal;
   let penaltyNextYear = 0;
   if (penaltyTotal > 0 && yearsLeft >= 2) {
-    // In-game behavior observed: larger portion hits immediately.
-    // Use 60% in current year, 40% next year for multi-year contracts.
-    penaltyNextYear = Math.round(penaltyTotal * 0.4);
-    penaltyCurrentYear = penaltyTotal - penaltyNextYear; // remainder (≈60%)
+    penaltyCurrentYear = Math.round(penaltyTotal * 0.4);
+    penaltyNextYear = penaltyTotal - penaltyCurrentYear; // remainder (~60%)
+  }
+
+  // Derive approximate current-year base salary to compute fallback savings when dataset lacks it
+  const totalBonus = toFinite(player.contractBonus, 0);
+  const lenRaw = toFinite(player.contractLength, 0);
+  const yearsLeftRaw = toFinite(player.contractYearsLeft, 0);
+  const len = Math.max(1, Math.floor(Number.isFinite(lenRaw) && lenRaw > 0 ? lenRaw : toFinite(player.contractYearsLeft, 1)));
+  const yearsLeft2 = Math.max(0, Math.floor(Number.isFinite(yearsLeftRaw) && yearsLeftRaw >= 0 ? yearsLeftRaw : 0));
+  const yearsElapsed = clamp(len - yearsLeft2, 0, Math.max(0, len - 1));
+  const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
+  const bonusPerYear = totalBonus > 0 ? (totalBonus / prorateYears) : 0;
+  const currentCapHit = toFinite(player.capHit);
+  const approxBaseSalary = Math.max(0, currentCapHit - bonusPerYear);
+
+  // Use provided net savings if available; else approximate as base minus current-year penalty
+  let savings = toFinite(player.capReleaseNetSavings);
+  if (!Number.isFinite(savings)) {
+    savings = approxBaseSalary - penaltyCurrentYear;
   }
 
   const newCapSpace = toFinite(team.capAvailable) + savings; // savings already net of current-year penalty
@@ -151,6 +168,10 @@ export function simulateRelease(team, player) {
     playerId: player.id,
     penalty: penaltyCurrentYear,
     savings,
+    // Capture FA context at time of move to drive out-year effects later
+    faYearsAtRelease: yearsLeft,
+    // Number of out-year offsets to free/remove (Y+1..Y+N). Map: FA 2→0, 3→1, 4+→2
+    freeOutYears: clamp(yearsLeft - 2, 0, 2),
     at: Date.now(),
   };
 
@@ -356,6 +377,44 @@ export default {
 };
 
 /**
+ * Derive an overlay to add back released/traded-away players' cap hits for
+ * unaffected out-years based on FA year logic.
+ * Rules: freeOutYears = clamp(faYearsAtRelease - 2, 0, 2). Offsets >= 1 + freeOutYears
+ * are added back. Offset 0 is never added back.
+ * @param {Array<ScenarioMove>} moves
+ * @param {Array<Player>} players
+ * @param {number} years
+ * @param {Record<string, number[]>} convInc conversion increments by player id
+ * @returns {number[]} length `years` array overlay to add to roster totals
+ */
+export function deriveReleaseAddBackOverlay(moves = [], players = [], years = 5, convInc = {}) {
+  const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
+  const overlay = Array.from({ length: horizon }, () => 0);
+  if (horizon === 0) return overlay;
+  /** @type {Record<string, Player>} */
+  const byId = {};
+  for (const p of players || []) byId[p.id] = p;
+  const seen = new Set();
+  for (const mv of moves || []) {
+    if (!mv || (mv.type !== 'release' && mv.type !== 'tradeQuick')) continue;
+    if (seen.has(mv.playerId)) continue; // guard in case of duplicates
+    seen.add(mv.playerId);
+    const pl = byId[mv.playerId];
+    if (!pl) continue;
+    const faYears = Math.max(0, Math.floor(toFinite(/** @type {any} */(mv).faYearsAtRelease, toFinite(pl.contractYearsLeft, 0))));
+    const freeOutYears = clamp(Math.floor(toFinite(/** @type {any} */(mv).freeOutYears, faYears - 2)), 0, 2);
+    const caps = projectPlayerCapHits(pl, horizon);
+    const inc = convInc[mv.playerId] || null;
+    for (let o = 1 + freeOutYears; o < horizon; o++) {
+      let add = caps[o] || 0;
+      if (inc) add += (inc[o] || 0);
+      overlay[o] += add;
+    }
+  }
+  return overlay;
+}
+
+/**
  * Project per-year cap hits for a player over N future seasons.
  * Year 0 = current season and uses player.capHit (reflects conversions/extensions already applied).
  * Future years use simplified model: base = totalSalary/length for remaining contract years,
@@ -482,9 +541,20 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
   const capRoom = toFinite(team.capRoom);
   const baseSpent = toFinite(team.capSpent);
   const baseAvail = toFinite(team.capAvailable);
-  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName);
+  // Exclude players who are not on the active roster or who have been
+  // removed via release/trade moves (even if caller hasn't mutated the
+  // players array yet). This ensures out-year projections fully recompute
+  // after roster moves.
+  const removed = new Set(
+    (moves || [])
+      .filter((mv) => mv && (mv.type === 'release' || mv.type === 'tradeQuick'))
+      .map((mv) => mv.playerId)
+  );
+  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName && !removed.has(p.id));
   const dead = deriveDeadMoneySchedule(moves, players, horizon);
   const conv = deriveConversionIncrements(moves, horizon);
+  // Build overlay to add back unaffected out-years for released/traded players
+  const addBack = deriveReleaseAddBackOverlay(moves, players, horizon, conv);
   const growthRate = (opts && Number.isFinite(Number(opts.capGrowthRate))) ? Number(opts.capGrowthRate) : 0.09;
 
   // Compute deltaSpent from moves (same semantics as calcCapSummary)
@@ -523,6 +593,11 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       }
     }
     for (let i = 0; i < horizon; i++) rosterTotals[i] += caps[i] || 0;
+  }
+
+  // Apply add-back overlay for out-years
+  for (let i = 0; i < horizon; i++) {
+    rosterTotals[i] += addBack[i] || 0;
   }
 
   // Build result

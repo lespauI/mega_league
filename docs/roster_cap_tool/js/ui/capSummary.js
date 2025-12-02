@@ -22,7 +22,9 @@ export function mountCapSummary(containerId = 'cap-summary') {
   const snap = State.getCapSummary();
   const room = snap.capRoom || 0;
   const spent = snap.capSpent || 0;
-  const avail = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
+  // Cap Space should reflect Current Cap - Cap Spent to avoid stale/zero
+  // snapshots if capAvailable is missing. Anchor to arithmetic difference.
+  const avail = (Number(room) || 0) - (Number(spent) || 0);
   const deltaAvail = snap.deltaAvailable || 0; // + means gained cap space
   const pct = room > 0 ? Math.max(0, Math.min(100, Math.round((spent / room) * 100))) : 0;
 
@@ -82,9 +84,9 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     ];
 
     // In-game Re-sign Available (X), applied as X + deltaAvailable to reflect live changes
-    const snapNow = State.getCapSummary();
     const inGameReSign = State.getReSignInGameForSelectedTeam();
-    const reSignReserve = Math.max(0, Number(inGameReSign || 0) + Number(snapNow?.deltaAvailable || 0));
+    // Decouple re-sign reserve from ΔSpace: apply only the in-game value
+    const reSignReserve = Math.max(0, Number(inGameReSign || 0));
 
     const proj = projectTeamCaps(team, st.players, st.moves, horizon, {
       rookieReserveByYear: [rr0, rr1, rr2, rr3],

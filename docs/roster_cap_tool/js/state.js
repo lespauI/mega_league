@@ -92,11 +92,13 @@ export function getCapSummary() {
   let capAvailableEffective = snap.capAvailable;
   try {
     const x = getReSignInGameForSelectedTeam();
-    if (Number.isFinite(Number(x))) {
+    if (Number.isFinite(Number(x)) && Number(x) > 0) {
       const baseX = Math.max(0, Number(x) || 0);
       capAvailableEffective = baseX + (Number(snap.deltaAvailable || 0));
+    } else {
+      capAvailableEffective = snap.capAvailable;
     }
-  } catch {}
+  } catch { capAvailableEffective = snap.capAvailable; }
   return {
     ...snap,
     capAvailableEffective,
