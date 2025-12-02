@@ -260,17 +260,16 @@ Verification:
 ### [x] Step: CI Workflow and Docs
 <!-- chat-id: ffe241d0-60a2-4ebb-8496-5dbe22f626cc -->
 Task definition:
-- Add GitHub Actions workflow to run Chromium tests on Ubuntu and provide local usage docs.
+- Initially add GitHub Actions workflow to run Chromium tests on Ubuntu and provide local usage docs. Update: per user request, CI workflow removed; project is local-only.
 
 Contracts:
 - None (infrastructure only).
 
 Deliverables:
-- `.github/workflows/e2e.yml` to install Node, Playwright with deps, and run tests, uploading traces on failure.
-- Update `tests/e2e/README.md` with CI notes and common troubleshooting.
+- [Removed] `.github/workflows/e2e.yml`; updated `tests/e2e/README.md` to reflect local-only usage and troubleshooting.
 
 Verification:
-- Manual: `act` (optional) or validate YAML; CI will run on push/PR and show Playwright summary and artifacts.
+- Manual: validate README instructions work locally (`npm i && npx playwright install --with-deps && npx playwright test`).
 
 ### [x] Step: Test
 <!-- chat-id: 2bf32eff-5d2d-4cf8-968b-ca8b23de4e7a -->
