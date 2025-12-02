@@ -173,7 +173,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/release.spec.ts --project=chromium` passes; trace retained on failure.
 
-### [ ] Step: Free Agent Signing E2E
+### [x] Step: Free Agent Signing E2E
+<!-- chat-id: fac1c0b4-9c7f-4c13-84de-1e27246d5cf2 -->
 Task definition:
 - Implement test that signs a free agent via offer modal and updates cap figures accordingly.
 
@@ -186,7 +187,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/signing.spec.ts --project=chromium` passes.
 
-### [ ] Step: Trade (Quick) E2E
+### [x] Step: Trade (Quick) E2E
+<!-- chat-id: 80f6ddbf-9a9a-4a99-b383-7ac9c4b636f0 -->
 Task definition:
 - Implement quick trade flow on a player and verify dead money + cap changes.
 
@@ -264,3 +266,7 @@ Deliverables:
 
 Verification:
 - Manual: `act` (optional) or validate YAML; CI will run on push/PR and show Playwright summary and artifacts.
+
+### [ ] Step: Test
+
+this is a test steo
