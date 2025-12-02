@@ -489,3 +489,17 @@ Verification:
 looks like there a bug in our data we showing penalty as low in year 1 and high in year 2, but in game it is opposite. Change it in our representation and calculations. So what we called yar 2 penalty must be year 1.
 
 Also we recalculate the Cap as 9% increes, but game also has a bug, lets hardcode Year 2 salary cap as 324 mil year 3 as 334 mil and year 4 as 344
+
+### [x] Step: Re-sign reserve
+<!-- chat-id: 30472e5c-9532-48d7-9154-35f454b33830 -->
+
+Implemented re-sign reserve in the Projections tab:
+- Added re-sign reserve computation (same as header) and applied it to Y+1 via `extraSpendingByYear` in `projectTeamCaps`.
+- Added a re-sign reserve slider and badge to the Projections controls; value persists in `localStorage` and triggers global re-render.
+- Updated note to clarify re-sign reserve is applied to Y+1 totals.
+
+Files changed:
+- `docs/roster_cap_tool/js/ui/projections.js`
+
+Verification:
+- Open Projections tab. Adjust the “Re-sign reserve” slider; Y+1 Cap Space changes accordingly and matches the header’s projection strip.

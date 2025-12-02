@@ -1,4 +1,4 @@
-import { getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, getBaselineDeadMoney } from '../state.js';
+import { getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, getBaselineDeadMoney, setState } from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -50,9 +50,40 @@ export function mountProjections() {
     if (i === 1) return Number(dmBase?.year1 || 0) || 0;
     return 0;
   });
+  // Re-sign reserve: mirror header computation so the table includes it.
+  // Factor persisted in localStorage (0..1), default 0.40
+  const reSignFactor = (() => {
+    try {
+      const raw = localStorage.getItem('rosterCap.reSignReserveFactor');
+      const v = Number(raw);
+      if (Number.isFinite(v)) return Math.max(0, Math.min(1, v));
+    } catch {}
+    return 0.4;
+  })();
+  let reSignReserve = 0;
+  try {
+    const pyears = (len) => Math.max(1, Math.min(5, Math.floor(Number(len) || 3)));
+    for (const p of st.players || []) {
+      if (!p || p.isFreeAgent || p.team !== team.abbrName) continue;
+      const yl = Number(p.contractYearsLeft || 0);
+      const rs = Number(p.reSignStatus || 0);
+      if ((Number.isFinite(yl) && yl <= 0) || (Number.isFinite(rs) && rs !== 0)) {
+        const ds = Number(p.desiredSalary || 0) || 0;
+        const db = Number(p.desiredBonus || 0) || 0;
+        const dl = Number(p.desiredLength || 0) || 3;
+        const y1 = ds + (db / pyears(dl));
+        if (y1 > 0) reSignReserve += y1;
+      }
+    }
+  } catch {}
+  reSignReserve = Math.max(0, reSignReserve * reSignFactor);
+
+  const extraSpendingByYear = Array.from({ length: years }, (_, i) => (i === 1 ? reSignReserve : 0));
+
   const proj = projectTeamCaps(team, st.players, st.moves, years, {
     rookieReserveByYear: rrByYear,
     baselineDeadMoneyByYear: baselineDMByYear,
+    extraSpendingByYear,
     rolloverToNext: rollover,
     rolloverMax: 35_000_000,
   });
@@ -63,9 +94,13 @@ export function mountProjections() {
       <div style="color:var(--muted)">Horizon</div>
       <input type="range" min="3" max="5" step="1" value="${years}" data-horizon style="width:160px" />
       <div id="proj-years-label" class="badge">${years} year(s)</div>
+      <div style="width:1px; height:20px; background:var(--border); margin:0 .5rem;"></div>
+      <label class="label" for="proj-resign-factor">Re-sign reserve</label>
+      <input id="proj-resign-factor" type="range" min="0" max="1" step="0.05" value="${reSignFactor}" class="input-range" />
+      <span class="badge" title="Estimated Year+1 re-sign budget applied to projections">${fmtMoney(reSignReserve)}</span>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
-      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
+      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Re-sign reserve is applied to Y+1 totals. Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
     </div>
   `;
 
@@ -112,6 +147,15 @@ export function mountProjections() {
       if (label) label.textContent = `${val} year(s)`;
     });
     slider.addEventListener('change', () => mountProjections());
+  }
+  const reSlider = /** @type {HTMLInputElement|null} */(el.querySelector('#proj-resign-factor'));
+  if (reSlider) {
+    reSlider.addEventListener('input', () => {
+      const v = Math.max(0, Math.min(1, Number(reSlider.value||0)));
+      try { localStorage.setItem('rosterCap.reSignReserveFactor', String(v)); } catch {}
+      // Trigger global re-render (updates header strip as well)
+      setState({});
+    });
   }
 }
 
