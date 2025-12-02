@@ -1,7 +1,8 @@
-import { getState, setState, getCapSummary } from '../../state.js';
+import { getState, setState, getCapSummary, getYearContextForSelectedTeam } from '../../state.js';
 import { simulateTradeIn } from '../../capMath.js';
 import { enhanceDialog } from '../a11y.js';
 import { confirmWithDialog } from './confirmDialog.js';
+import { contextualizePlayer } from '../../context.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -59,14 +60,34 @@ export function openTradeInModal() {
   function computeYear1(p) {
     const snap = getCapSummary();
     const effTeam = { ...team, capAvailable: snap.capAvailable };
-    const sim = simulateTradeIn(effTeam, p);
+    const offset = getYearContextForSelectedTeam();
+    const effPlayer = (() => {
+      if (!offset || offset <= 0) return p;
+      const pctx = contextualizePlayer(p, team, offset);
+      return {
+        ...p,
+        capHit: Number(pctx.capHit_ctx || p.capHit || 0),
+        contractYearsLeft: Number(pctx.contractYearsLeft_ctx != null ? pctx.contractYearsLeft_ctx : p.contractYearsLeft || 0),
+      };
+    })();
+    const sim = simulateTradeIn(effTeam, effPlayer);
     return sim.year1CapHit || 0;
   }
 
   async function applyTradeIn(p) {
     const snap = getCapSummary();
     const effTeam = { ...team, capAvailable: snap.capAvailable };
-    const sim = simulateTradeIn(effTeam, p);
+    const offset = getYearContextForSelectedTeam();
+    const effPlayer = (() => {
+      if (!offset || offset <= 0) return p;
+      const pctx = contextualizePlayer(p, team, offset);
+      return {
+        ...p,
+        capHit: Number(pctx.capHit_ctx || p.capHit || 0),
+        contractYearsLeft: Number(pctx.contractYearsLeft_ctx != null ? pctx.contractYearsLeft_ctx : p.contractYearsLeft || 0),
+      };
+    })();
+    const sim = simulateTradeIn(effTeam, effPlayer);
     const name = playerName(p);
     const rememberKey = `rosterCap.skipConfirm.tradeIn.${team.abbrName}`;
     const ok = await confirmWithDialog({

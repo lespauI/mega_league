@@ -71,9 +71,11 @@ test.describe('Scenario Save/Load/Reset E2E', () => {
     // Reset to baseline and confirm
     const resetBtn = page.locator('#scenario-controls .btn', { hasText: /Reset/i });
     await expect(resetBtn).toBeEnabled();
-    const once = page.once('dialog', (d) => d.accept());
     await resetBtn.click();
-    await once;
+    const confirmDlg = page.getByRole('dialog');
+    await expect(confirmDlg).toBeVisible();
+    await confirmDlg.getByRole('button', { name: /Reset/i }).click();
+    await expect(confirmDlg).toBeHidden();
 
     // Baseline should be restored (counts and cap)
     await expect

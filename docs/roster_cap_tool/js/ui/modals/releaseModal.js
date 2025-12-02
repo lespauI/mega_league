@@ -1,6 +1,7 @@
-import { getState, setState, getCapSummary } from '../../state.js';
+import { getState, setState, getCapSummary, getYearContextForSelectedTeam } from '../../state.js';
 import { simulateRelease } from '../../capMath.js';
 import { enhanceDialog } from '../a11y.js';
+import { contextualizePlayer } from '../../context.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -21,11 +22,26 @@ export function openReleaseModal(player) {
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
   if (!team) return;
 
+  // If viewing a future Year Context, adjust the player numbers to that year
+  const offset = getYearContextForSelectedTeam();
+  const effPlayer = (() => {
+    if (!offset || offset <= 0) return player;
+    const pctx = contextualizePlayer(player, team, offset);
+    return {
+      ...player,
+      capHit: Number(pctx.capHit_ctx || player.capHit || 0),
+      contractYearsLeft: Number(pctx.contractYearsLeft_ctx != null ? pctx.contractYearsLeft_ctx : player.contractYearsLeft || 0),
+      capReleasePenalty: Number(pctx.capReleasePenalty_ctx || player.capReleasePenalty || 0),
+      capReleaseNetSavings: Number(pctx.capReleaseNetSavings_ctx || player.capReleaseNetSavings || 0),
+      isFreeAgent: Boolean(pctx.isFreeAgent_ctx || player.isFreeAgent),
+    };
+  })();
+
   // Use current dynamic capAvailable from snapshot, not baseline
   const snap = getCapSummary();
   const baseCap = Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0);
   const effectiveTeam = { ...team, capAvailable: baseCap };
-  const sim = simulateRelease(effectiveTeam, player);
+  const sim = simulateRelease(effectiveTeam, effPlayer);
 
   const name = `${player.firstName || ''} ${player.lastName || ''}`.trim();
 
@@ -35,8 +51,8 @@ export function openReleaseModal(player) {
   dlg.innerHTML = `
     <h3 style="margin-top:0">Release ${name}?</h3>
     <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
-      <div><div style="color:var(--muted); font-size:.85em">Dead Cap Hit</div><div class="money-neg">${fmtMoney(player.capReleasePenalty || 0)}</div></div>
-      <div><div style="color:var(--muted); font-size:.85em">Cap Savings</div><div class="money-pos">${fmtMoney(sim.savings || player.capReleaseNetSavings || 0)}</div></div>
+      <div><div style="color:var(--muted); font-size:.85em">Dead Cap Hit</div><div class="money-neg">${fmtMoney(effPlayer.capReleasePenalty || 0)}</div></div>
+      <div><div style="color:var(--muted); font-size:.85em">Cap Savings</div><div class="money-pos">${fmtMoney(sim.savings || effPlayer.capReleaseNetSavings || 0)}</div></div>
       <div><div style="color:var(--muted); font-size:.85em">New Cap Space</div><div>${fmtMoney(sim.newCapSpace || 0)}</div></div>
     </div>
     <p style="margin:.5rem 0 0; color:var(--muted); font-size:.85em">This will remove the player from the active roster and apply current-year dead money.</p>
@@ -65,7 +81,7 @@ export function openReleaseModal(player) {
     const latestSnap = getCapSummary();
     const baseCap2 = Number.isFinite(Number(latestSnap.capAvailableEffective)) ? Number(latestSnap.capAvailableEffective) : (latestSnap.capAvailable || 0);
     const effTeam = { ...team, capAvailable: baseCap2 };
-    const res = simulateRelease(effTeam, player);
+    const res = simulateRelease(effTeam, effPlayer);
 
     // Apply move to state: push move, mark player FA and clear team
     const current = getState();

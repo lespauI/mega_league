@@ -1,10 +1,11 @@
-import { getState, setState, getCapSummary } from '../state.js';
+import { getState, setState, getCapSummary, getContextLabel, getYearContextForSelectedTeam } from '../state.js';
 import { simulateTradeQuick } from '../capMath.js';
 import { openReleaseModal } from './modals/releaseModal.js';
 import { openExtensionModal } from './modals/extensionModal.js';
 import { openConversionModal } from './modals/conversionModal.js';
 import { openOfferModal } from './modals/offerModal.js';
 import { confirmWithDialog } from './modals/confirmDialog.js';
+import { contextualizePlayer } from '../context.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -134,7 +135,8 @@ export function renderPlayerTable(containerId, players, options = {}) {
     : [
         { label: '#', key: 'index' },
         { label: 'Player', key: 'player' },
-        { label: '2025 Cap', key: 'capHit' },
+        // Header label reflects current Year Context, but cell data-labels remain stable for tests
+        { label: `Cap (${getContextLabel()})`, key: 'capHit' },
         { label: 'Free cap after release', key: 'deadRelease' },
         { label: 'Dead Cap (Trade)', key: 'deadTrade' },
         { label: 'Contract', key: 'contract' },
@@ -157,6 +159,10 @@ export function renderPlayerTable(containerId, players, options = {}) {
   headerMeta.forEach((meta) => {
     const th = document.createElement('th');
     th.textContent = meta.label;
+    if (meta.key === 'capHit') {
+      // Add test id for E2E and ensure label stays fresh
+      th.setAttribute('data-testid', 'col-cap-label');
+    }
     th.style.cursor = 'pointer';
     th.title = 'Click to sort';
     th.addEventListener('click', () => {
@@ -225,7 +231,11 @@ export function renderPlayerTable(containerId, players, options = {}) {
       tdDeadTrade.setAttribute('data-label', 'Dead Cap (Trade)');
       const tdContract = document.createElement('td');
       const len = p.contractLength; const sal = p.contractSalary;
-      tdContract.textContent = (len && sal) ? `${len} yrs, ${fmtMoney(sal)}` : (len ? `${len} yrs` : '-');
+      const hasLen = !!len;
+      const hasSal = (sal !== undefined && sal !== null && !Number.isNaN(Number(sal)));
+      tdContract.textContent = (hasLen && hasSal)
+        ? `${len} yrs, ${fmtMoney(Number(sal))}`
+        : (hasLen ? `${len} yrs` : (hasSal ? fmtMoney(Number(sal)) : '-'));
       tdContract.setAttribute('data-label', 'Contract');
       const tdFaYear = document.createElement('td');
       tdFaYear.textContent = calcFaYear(p, team?.seasonIndex);
@@ -254,7 +264,6 @@ export function renderPlayerTable(containerId, players, options = {}) {
       sel.addEventListener('change', async () => {
         if (!sel.value) return;
         const action = sel.value;
-        console.log('[action]', action, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
         if (action === 'release') {
           openReleaseModal(p);
         } else if (action === 'tradeQuick') {
@@ -264,7 +273,19 @@ export function renderPlayerTable(containerId, players, options = {}) {
           if (!team) { sel.value = ''; return; }
           const snap = getCapSummary();
           const effTeam = { ...team, capAvailable: (Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0)) };
-          const res = simulateTradeQuick(effTeam, p);
+          const offset = getYearContextForSelectedTeam();
+          const effPlayer = (() => {
+            if (!offset || offset <= 0) return p;
+            const pctx = contextualizePlayer(p, team, offset);
+            return {
+              ...p,
+              capHit: Number(pctx.capHit_ctx || p.capHit || 0),
+              contractYearsLeft: Number(pctx.contractYearsLeft_ctx != null ? pctx.contractYearsLeft_ctx : p.contractYearsLeft || 0),
+              capReleasePenalty: Number(pctx.capReleasePenalty_ctx || p.capReleasePenalty || 0),
+              capReleaseNetSavings: Number(pctx.capReleaseNetSavings_ctx || p.capReleaseNetSavings || 0),
+            };
+          })();
+          const res = simulateTradeQuick(effTeam, effPlayer);
           const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
           const rememberKey = `rosterCap.skipConfirm.tradeQuick.${team.abbrName}`;
           const ok = await confirmWithDialog({

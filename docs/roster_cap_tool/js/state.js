@@ -1,6 +1,7 @@
 // Minimal pub/sub app state for the tool
 /** @typedef {import('./models.js').CapSnapshot} CapSnapshot */
-import { calcCapSummary, estimateRookieReserveForPicks } from './capMath.js';
+import { calcCapSummary, calcCapSummaryForContext, estimateRookieReserveForPicks } from './capMath.js';
+import { getContextualPlayers } from './context.js';
 
 const listeners = new Set();
 
@@ -20,6 +21,8 @@ const state = {
   moves: [],
   /** @type {CapSnapshot|null} */
   snapshot: null,
+  /** Per-team Year Context offset (Y+N) */
+  yearContextByTeam: {},
   /** Persisted draft picks config per team: { [abbr]: {1:number,...,7:number} } */
   draftPicksByTeam: {},
   /** Persisted baseline dead money per team: { [abbr]: { year0:number, year1:number } } */
@@ -61,10 +64,24 @@ export function setState(partial) {
 // Derived getters (simple for now; cap summary computed later)
 export function getActiveRoster() {
   if (!state.selectedTeam) return [];
+  const offset = getYearContextForSelectedTeam();
+  if (offset > 0) {
+    // Use contextualized roster membership in future years
+    const list = getContextualPlayers();
+    return list.filter((p) => p.team === state.selectedTeam && !p.isFreeAgent_ctx);
+  }
+  // Default (Y+0) behavior unchanged
   return state.players.filter((p) => !p.isFreeAgent && p.team === state.selectedTeam);
 }
 
 export function getFreeAgents() {
+  const offset = getYearContextForSelectedTeam();
+  if (offset > 0) {
+    // Future-year context: treat players with expired deals as FAs
+    const list = getContextualPlayers();
+    return list.filter((p) => p.isFreeAgent_ctx);
+  }
+  // Default (Y+0) behavior unchanged
   return state.players.filter((p) => p.isFreeAgent);
 }
 
@@ -84,7 +101,19 @@ export function getCapSummary() {
       capAfterRookies: 0,
     };
   }
-  const snap = calcCapSummary(team, state.moves);
+  const offset = getYearContextForSelectedTeam();
+  let snap;
+  if (offset > 0) {
+    // Build minimal opts used by projections: include baseline dead money schedule
+    const dm = getBaselineDeadMoney();
+    const baselineDeadMoneyByYear = [
+      Number(dm?.year0 || 0) || 0,
+      Number(dm?.year1 || 0) || 0,
+    ];
+    snap = calcCapSummaryForContext(team, state.players, state.moves, offset, { baselineDeadMoneyByYear });
+  } else {
+    snap = calcCapSummary(team, state.moves);
+  }
   const picks = getDraftPicksForSelectedTeam();
   const rookieReserveEstimate = estimateRookieReserveForPicks(picks);
   // If user entered in-game Re-sign Available, treat that as the authoritative Year 1 cap,
@@ -148,6 +177,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.reSignSettings');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.reSignSettingsByTeam = parsed;
+  } catch {}
+  // Load Year Context (per team) once
+  try {
+    const raw = localStorage.getItem('rosterCap.yearContext');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.yearContextByTeam = parsed;
   } catch {}
   // Load position filters from localStorage once
   try {
@@ -242,6 +277,8 @@ export function saveScenario(name = '') {
     name: name?.trim() || 'Untitled Scenario',
     teamAbbr: state.selectedTeam || '',
     savedAt: Date.now(),
+    // Persist current Year Context so loading restores the same Y+N view
+    yearContextOffset: getYearContextForSelectedTeam(),
     moves: (state.moves || []).slice(),
     rosterEdits,
   };
@@ -274,6 +311,8 @@ export function loadScenario(id) {
   const moves = (scn.moves || []).slice();
   const selectedTeam = scn.teamAbbr || state.selectedTeam;
   setState({ players, moves, selectedTeam, deadMoneyLedger: [] });
+  // Restore saved Year Context for this team (default to 0 if absent)
+  try { setYearContextForSelectedTeam(Math.max(0, Math.floor(Number(scn.yearContextOffset ?? 0) || 0))); } catch {}
   return true;
 }
 
@@ -322,6 +361,32 @@ export function setDraftPicksForSelectedTeam(picksPerRound) {
 export function getRookieReserveEstimate() {
   const picks = getDraftPicksForSelectedTeam();
   return estimateRookieReserveForPicks(picks);
+}
+
+// ----- Year Context (Y+N view only; no behavioral changes yet) -----
+
+/** Get Year Context offset (0 = current year) for selected team. */
+export function getYearContextForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const v = state.yearContextByTeam?.[abbr];
+  const n = Number(v);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.floor(n));
+}
+
+/** Set Year Context offset (clamped to >= 0) for selected team and persist. */
+export function setYearContextForSelectedTeam(offset) {
+  const abbr = state.selectedTeam || '';
+  const next = { ...(state.yearContextByTeam || {}), [abbr]: Math.max(0, Math.floor(Number(offset) || 0)) };
+  state.yearContextByTeam = next;
+  try { localStorage.setItem('rosterCap.yearContext', JSON.stringify(next)); } catch {}
+  emit();
+}
+
+/** Return short label for current context (e.g., 'Y+0', 'Y+1'). */
+export function getContextLabel() {
+  const off = getYearContextForSelectedTeam();
+  return `Y+${off}`;
 }
 
 // ----- Rollover (carryover to next year) -----

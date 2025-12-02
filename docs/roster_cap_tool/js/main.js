@@ -7,6 +7,7 @@ import { mountRosterTabs } from './ui/rosterTabs.js';
 import { mountProjections } from './ui/projections.js';
 import { mountScenarioControls } from './ui/scenarioControls.js';
 import { mountDraftPicks } from './ui/draftPicks.js';
+import { mountYearContext } from './ui/yearContext.js';
 
 // Basic tabs behavior
 function initTabs() {
@@ -82,6 +83,7 @@ async function boot() {
   initState({ teams, players });
   // Initial mounts
   mountTeamSelector();
+  mountYearContext();
   mountScenarioControls();
   mountCapSummary();
   mountHeaderProjections('projections-top');
@@ -91,6 +93,7 @@ async function boot() {
   // Subscribe to updates
   subscribe(() => {
     mountTeamSelector();
+    mountYearContext();
     mountScenarioControls();
     mountCapSummary();
     mountHeaderProjections('projections-top');

@@ -77,6 +77,7 @@
  * @property {string} name
  * @property {string} teamAbbr
  * @property {number} savedAt
+ * @property {number=} yearContextOffset Optional year context offset (default 0)
  * @property {Array<ScenarioMove>} moves
  * @property {Array<ScenarioRosterEdit>} rosterEdits
  */
