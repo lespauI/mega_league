@@ -455,3 +455,20 @@ Changes:
 
 Verification:
 - Open the app header projections and compare Y+1 cap space before/after a manual check: base cap ~304M becomes ~331M cap basis for Y+1; cap space reflects this growth after rookies and rollover adjustments.
+
+### [x] Step: Lets do validation of numbers and finde where we fucked up
+<!-- chat-id: 972ff175-9735-4bd9-92dc-110b1e304291 -->
+
+Actions taken:
+- Ran data re‑export: `bash scripts/sync_data_to_docs.sh --all` (copied updated MEGA_*.csv into `docs/roster_cap_tool/data/`).
+- Smoked local server: `bash scripts/smoke_roster_cap_tool.sh` (assets served OK).
+- Validated DAL team row from updated CSV: `capRoom=304,200,000 capAvailable=830,000 capSpent=303,370,000`.
+- Verified cap math checks: `python3 scripts/verify_cap_math.py` (15/15 passed).
+
+Findings (Dallas):
+- Year 1 Cap Space now anchors to team snapshot (capAvailable) and reads ~$0.83M, matching in‑game. The prior ~$68M issue came from summing roster caps; this was fixed earlier by anchoring Year 1 in `projectTeamCaps()` and using `calcCapSummary()` for the header.
+- Roster sum (~$321M) + dead (~$18M) ≈ $339M is higher than team `capRoom` due to rollover handling in‑game; our UI reflects the authoritative `capAvailable` field, not recomputed totals, so current‑year space is accurate.
+- Next‑year rookie reserve estimate remains close to reported (~$12.6M vs our ~$11.5M baseline); users can override via the Draft Picks tab.
+
+Conclusion:
+- After re‑export, Year 1 numbers for DAL are correct in the app (Cap Space ≈ $0.83M). No additional code changes required.
