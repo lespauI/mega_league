@@ -430,6 +430,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
   const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName);
   const dead = deriveDeadMoneySchedule(moves, players, horizon);
   const conv = deriveConversionIncrements(moves, horizon);
+  const growthRate = (opts && Number.isFinite(Number(opts.capGrowthRate))) ? Number(opts.capGrowthRate) : 0.09;
 
   // Compute deltaSpent from moves (same semantics as calcCapSummary)
   let deltaSpent = 0; // positive increases spending, negative = savings
@@ -476,7 +477,8 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
     let rosterCap = rosterTotals[i] || 0;
     let deadMoney = dead[i] || 0;
     let totalSpent = rosterCap + deadMoney;
-    let capSpace = capRoom - totalSpent;
+    const capRoomYear = (i === 0) ? capRoom : (capRoom * Math.pow(1 + growthRate, i));
+    let capSpace = capRoomYear - totalSpent;
 
     if (i === 0) {
       // Anchor current-year snapshot to in-game team totals to avoid mismatches
@@ -498,7 +500,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
     const rr = (opts && Array.isArray(opts.rookieReserveByYear)) ? Number(opts.rookieReserveByYear[i] || 0) : 0;
     if (i > 0 && Number.isFinite(rr) && rr > 0) {
       totalSpent += rr;
-      capSpace = capRoom - totalSpent;
+      capSpace = capRoomYear - totalSpent;
     }
 
     // Apply rollover from current year into next year (i === 1) up to a cap.
@@ -512,7 +514,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       }
     }
 
-    out.push({ yearOffset: i, capRoom, rosterCap, deadMoney, totalSpent, capSpace });
+    out.push({ yearOffset: i, capRoom: capRoomYear, rosterCap, deadMoney, totalSpent, capSpace });
   }
   return out;
 }

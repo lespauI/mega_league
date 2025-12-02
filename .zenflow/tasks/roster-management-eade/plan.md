@@ -443,3 +443,15 @@ Implementation:
 Verification:
 - Badges for the new roles display with colors in Active/FA tables.
 - Player meta shows like `OVR 88 · Age 27` instead of `28y · 76 · 266 lb`.
+
+### [x] Step: Raise the cap by 9% each year
+<!-- chat-id: 91b21747-59c3-43ff-b0ac-a811cc71063a -->
+
+Implemented annual cap growth in projections.
+
+Changes:
+- `docs/roster_cap_tool/js/capMath.js`: `projectTeamCaps` now applies a per-year cap growth rate (default 9%). For year i, `capRoom_i = capRoom_0 * (1 + rate)^i`. The function also accepts optional `opts.capGrowthRate` to override the default.
+- Projections in the header now implicitly reflect the increased cap space for Y+1..Y+3 because `projectTeamCaps` returns year-specific `capRoom` and `capSpace`.
+
+Verification:
+- Open the app header projections and compare Y+1 cap space before/after a manual check: base cap ~304M becomes ~331M cap basis for Y+1; cap space reflects this growth after rookies and rollover adjustments.
