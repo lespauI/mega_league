@@ -1,5 +1,6 @@
 import { getState, setState, saveScenario, listScenarios, loadScenario, deleteScenario } from '../../state.js';
 import { calcCapSummary } from '../../capMath.js';
+import { enhanceDialog } from '../a11y.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
@@ -37,6 +38,7 @@ export function openScenarioSaveModal() {
     closeAndRemove(dlg);
   });
   root.appendChild(dlg);
+  enhanceDialog(dlg, { opener: document.activeElement });
   try { dlg.showModal(); } catch { dlg.show(); }
 }
 
@@ -100,6 +102,7 @@ export function openScenarioLoadModal() {
 
   const rootEl = document.getElementById('modals-root') || document.body;
   rootEl.appendChild(dlg);
+  enhanceDialog(dlg, { opener: document.activeElement });
   try { dlg.showModal(); } catch { dlg.show(); }
 }
 
@@ -157,8 +160,8 @@ export function openScenarioCompareModal() {
   dlg.querySelector('[data-action="close"]')?.addEventListener('click', () => closeAndRemove(dlg));
   const root = document.getElementById('modals-root') || document.body;
   root.appendChild(dlg);
+  enhanceDialog(dlg, { opener: document.activeElement });
   try { dlg.showModal(); } catch { dlg.show(); }
 }
 
 export default { openScenarioSaveModal, openScenarioLoadModal, openScenarioCompareModal };
-

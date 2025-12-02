@@ -12,11 +12,30 @@ function initTabs() {
   const tabsRoot = document.getElementById('tabs');
   const panelsRoot = document.getElementById('tab-panels');
   if (!tabsRoot || !panelsRoot) return;
+  // ARIA roles
+  tabsRoot.setAttribute('role', 'tablist');
+  tabsRoot.querySelectorAll('.tab').forEach((btn) => {
+    btn.setAttribute('role', 'tab');
+    const tab = btn.getAttribute('data-tab');
+    const panelId = `panel-${tab}`;
+    if (!btn.id) btn.id = `tab-${tab}`;
+    btn.setAttribute('aria-controls', panelId);
+    btn.setAttribute('aria-selected', btn.classList.contains('is-active') ? 'true' : 'false');
+  });
+  panelsRoot.querySelectorAll('.panel').forEach((panel) => {
+    panel.setAttribute('role', 'tabpanel');
+    const id = panel.id.replace(/^panel-/, '');
+    panel.setAttribute('aria-labelledby', `tab-${id}`);
+  });
   tabsRoot.addEventListener('click', (e) => {
     const btn = e.target.closest('.tab');
     if (!btn) return;
     const tab = btn.getAttribute('data-tab');
-    tabsRoot.querySelectorAll('.tab').forEach((b) => b.classList.toggle('is-active', b === btn));
+    tabsRoot.querySelectorAll('.tab').forEach((b) => {
+      const active = b === btn;
+      b.classList.toggle('is-active', active);
+      b.setAttribute('aria-selected', active ? 'true' : 'false');
+    });
     panelsRoot.querySelectorAll('.panel').forEach((p) => p.classList.toggle('is-active', p.id === `panel-${tab}`));
   });
 }

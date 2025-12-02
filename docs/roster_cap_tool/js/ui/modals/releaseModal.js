@@ -1,5 +1,6 @@
 import { getState, setState, getCapSummary } from '../../state.js';
 import { simulateRelease } from '../../capMath.js';
+import { enhanceDialog } from '../a11y.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -79,6 +80,7 @@ export function openReleaseModal(player) {
   });
 
   root.appendChild(dlg);
+  enhanceDialog(dlg, { opener: document.activeElement });
   try { dlg.showModal(); } catch { dlg.show(); }
 }
 

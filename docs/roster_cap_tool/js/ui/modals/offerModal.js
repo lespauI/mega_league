@@ -1,6 +1,7 @@
 import { getState, setState, getCapSummary } from '../../state.js';
 import { simulateSigning } from '../../capMath.js';
 import { toNum } from '../../validation.js';
+import { enhanceDialog } from '../a11y.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -151,10 +152,10 @@ export function openOfferModal(player) {
   });
 
   root.appendChild(dlg);
+  enhanceDialog(dlg, { opener: document.activeElement });
   try { dlg.showModal(); } catch { dlg.show(); }
   // Initial preview
   recalcPreview();
 }
 
 export default { openOfferModal };
-

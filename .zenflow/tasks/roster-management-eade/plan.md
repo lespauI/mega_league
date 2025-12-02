@@ -238,7 +238,8 @@ Task instructions
 - Deliverable: Scripts produce `output/cap_tool_verification.json` and smoke-check that `docs/roster_cap_tool/` contains required assets and serves via local http.server.
 - Verification: `python3 scripts/verify_cap_math.py`; `bash scripts/smoke_roster_cap_tool.sh`.
 
-### [ ] Step: Styling, Accessibility, Responsive
+### [x] Step: Styling, Accessibility, Responsive
+<!-- chat-id: 3a3ba701-4138-4fce-a783-b18c9db6f0a9 -->
 Task instructions
 - Definition: Apply Spotrac-inspired colors (green/red/yellow/blue) via plain CSS; responsive grid/tables; accessible `<dialog>` modals with focus trapping.
 - Contracts: None; aligns with PRD “UI/UX Requirements”.

@@ -19,6 +19,10 @@ body {
   color: var(--text);
 }
 
+/* Accessible focus ring */
+:focus-visible { outline: 2px solid var(--blue); outline-offset: 2px; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
 .header {
   position: sticky;
   top: 0;
@@ -71,15 +75,45 @@ tr:hover td { background: rgba(148,163,184,0.06); }
 .money-neg { color: var(--red); font-weight: 600; }
 .money-warn { color: var(--yellow); font-weight: 600; }
 
-dialog { border: 1px solid #334155; background: var(--panel); color: var(--text); border-radius: .5rem; padding: 1rem; }
+dialog { border: 1px solid #334155; background: var(--panel); color: var(--text); border-radius: .5rem; padding: 1rem; max-width: 640px; width: min(92vw, 640px); }
 dialog::backdrop { background: rgba(2, 6, 23, 0.6); }
 .modal-actions { display: flex; justify-content: flex-end; gap: .5rem; margin-top: 1rem; }
 .btn { border: 1px solid #334155; background: #0b1324; color: var(--text); padding: .5rem .75rem; border-radius: .375rem; cursor: pointer; }
 .btn.primary { border-color: var(--blue); color: #dbeafe; }
 .btn.danger { border-color: var(--red); color: #fecaca; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Reduce motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .progress .bar { transition: none; }
+}
 
 @media (max-width: 900px) {
   .cap-summary { grid-auto-flow: row; gap: .5rem; }
   .scenario-controls { display:flex; gap:.25rem; }
   th { top: calc(58px + 84px); }
+}
+
+/* Tablet adjustments */
+@media (max-width: 1024px) {
+  /* Allow tabs to wrap */
+  .tabs { flex-wrap: wrap; row-gap: .5rem; }
+}
+
+/* Mobile: convert table rows into cards */
+@media (max-width: 700px) {
+  .header { flex-wrap: wrap; align-items: flex-start; gap: .5rem; }
+  .header__right { flex-wrap: wrap; }
+
+  .table-container { overflow: visible; }
+  table, thead, tbody, th, td, tr { display: block; }
+  thead { display: none; }
+  tr { border-bottom: 1px solid #1f2937; margin-bottom: .5rem; background: transparent; }
+  td { display: grid; grid-template-columns: minmax(8rem, 40%) 1fr; gap: .25rem .5rem; align-items: start; white-space: normal; }
+  td::before { content: attr(data-label); color: var(--muted); font-size: .8rem; }
+  /* Player cell spans full width */
+  td.cell-player { grid-template-columns: 1fr; }
+  td.cell-player::before { content: none; }
+  /* Action cell aligns right */
+  td.cell-action { justify-content: end; }
 }

@@ -90,11 +90,14 @@ export function renderPlayerTable(containerId, players, options = {}) {
       // Row number
       const tdIdx = document.createElement('td');
       tdIdx.textContent = String(i + 1);
+      tdIdx.setAttribute('data-label', '#');
       tr.appendChild(tdIdx);
     }
 
     // Player cell
     const tdPlayer = document.createElement('td');
+    tdPlayer.classList.add('cell-player');
+    tdPlayer.setAttribute('data-label', 'Player');
     tdPlayer.innerHTML = fmtPlayerCell(p);
     tr.appendChild(tdPlayer);
 
@@ -104,13 +107,15 @@ export function renderPlayerTable(containerId, players, options = {}) {
       const desiredLength = Number(p.desiredLength || 0);
       const totalValue = (desiredSalary * desiredLength) + desiredBonus;
 
-      const c1 = document.createElement('td'); c1.textContent = fmtMoney(desiredSalary);
-      const c2 = document.createElement('td'); c2.textContent = fmtMoney(desiredBonus);
-      const c3 = document.createElement('td'); c3.textContent = desiredLength ? String(desiredLength) : '-';
-      const c4 = document.createElement('td'); c4.textContent = fmtMoney(totalValue);
+      const c1 = document.createElement('td'); c1.textContent = fmtMoney(desiredSalary); c1.setAttribute('data-label', 'Desired Salary');
+      const c2 = document.createElement('td'); c2.textContent = fmtMoney(desiredBonus); c2.setAttribute('data-label', 'Desired Bonus');
+      const c3 = document.createElement('td'); c3.textContent = desiredLength ? String(desiredLength) : '-'; c3.setAttribute('data-label', 'Desired Length');
+      const c4 = document.createElement('td'); c4.textContent = fmtMoney(totalValue); c4.setAttribute('data-label', 'Total Value');
       tr.append(c1, c2, c3, c4);
 
       const action = document.createElement('td');
+      action.setAttribute('data-label', 'Action');
+      action.classList.add('cell-action');
       const btn = document.createElement('button');
       btn.className = 'btn primary';
       btn.textContent = 'Make Offer';
@@ -121,19 +126,26 @@ export function renderPlayerTable(containerId, players, options = {}) {
       // Active roster columns
       const tdCap = document.createElement('td');
       tdCap.textContent = fmtMoney(p.capHit || 0);
+      tdCap.setAttribute('data-label', '2025 Cap');
       const tdDeadRel = document.createElement('td');
       // Per PRD mapping for column, using capReleaseNetSavings here
       tdDeadRel.textContent = p.capReleaseNetSavings != null ? fmtMoney(p.capReleaseNetSavings) : '-';
+      tdDeadRel.setAttribute('data-label', 'Dead Cap (Release)');
       const tdDeadTrade = document.createElement('td');
       tdDeadTrade.textContent = p.capReleasePenalty != null ? fmtMoney(p.capReleasePenalty) : '-';
+      tdDeadTrade.setAttribute('data-label', 'Dead Cap (Trade)');
       const tdContract = document.createElement('td');
       const len = p.contractLength; const sal = p.contractSalary;
       tdContract.textContent = (len && sal) ? `${len} yrs, ${fmtMoney(sal)}` : '-';
+      tdContract.setAttribute('data-label', 'Contract');
       const tdFaYear = document.createElement('td');
       tdFaYear.textContent = calcFaYear(p, team?.seasonIndex);
+      tdFaYear.setAttribute('data-label', 'FA Year');
       tr.append(tdCap, tdDeadRel, tdDeadTrade, tdContract, tdFaYear);
 
       const tdAction = document.createElement('td');
+      tdAction.setAttribute('data-label', 'Action');
+      tdAction.classList.add('cell-action');
       const sel = document.createElement('select');
       const opt0 = document.createElement('option'); opt0.value = ''; opt0.textContent = 'Select…'; sel.appendChild(opt0);
       const addOpt = (val, label, enabled = true) => {
