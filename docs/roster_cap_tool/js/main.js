@@ -78,7 +78,7 @@ async function boot() {
   mountTeamSelector();
   mountScenarioControls();
   mountCapSummary();
-  mountHeaderProjections();
+  mountHeaderProjections('projections-top');
   mountRosterTabs();
   mountProjections();
   mountDraftPicks();
@@ -87,7 +87,7 @@ async function boot() {
     mountTeamSelector();
     mountScenarioControls();
     mountCapSummary();
-    mountHeaderProjections();
+    mountHeaderProjections('projections-top');
     mountRosterTabs();
     mountProjections();
     mountDraftPicks();
