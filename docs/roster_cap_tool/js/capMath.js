@@ -135,12 +135,12 @@ export function simulateRelease(team, player) {
   const penaltyTotal = Math.max(0, toFinite(player.capReleasePenalty));
   const yearsLeft = Math.max(0, Math.floor(toFinite(player.contractYearsLeft, 0)));
 
-  // Split penalties: default to ~40% current year, ~60% next year when multi-year per spec.
+  // Split penalties: default to ~60% current year, ~40% next year when multi-year per spec.
   let penaltyCurrentYear = penaltyTotal;
   let penaltyNextYear = 0;
   if (penaltyTotal > 0 && yearsLeft >= 2) {
-    penaltyCurrentYear = Math.round(penaltyTotal * 0.4);
-    penaltyNextYear = penaltyTotal - penaltyCurrentYear; // remainder (~60%)
+    penaltyCurrentYear = Math.round(penaltyTotal * 0.6);
+    penaltyNextYear = penaltyTotal - penaltyCurrentYear; // remainder (~40%)
   }
 
   // Derive approximate current-year base salary to compute fallback savings when dataset lacks it
