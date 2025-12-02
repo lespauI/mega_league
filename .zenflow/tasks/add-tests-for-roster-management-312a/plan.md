@@ -229,7 +229,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/filters_tabs.spec.ts --project=chromium` passes.
 
-### [ ] Step: Projections E2E
+### [x] Step: Projections E2E
+<!-- chat-id: 1513c4fc-7ac5-4e97-8f35-72d2104ac57a -->
 Task definition:
 - Implement tests for projections controls (Re-sign budget, horizon slider) and verify values update/persist.
 
