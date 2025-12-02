@@ -27,11 +27,19 @@ export function mountCapSummary(containerId = 'cap-summary') {
   const deltaClass = deltaAvail > 0 ? 'money-pos' : deltaAvail < 0 ? 'money-neg' : 'money-warn';
   const deltaPrefix = deltaAvail > 0 ? '+' : '';
 
+  // Read-only Rookie Reserve for next year (does not affect current year)
+  let rookieNext = 0;
+  try {
+    const picks = getDraftPicksForSelectedTeam();
+    rookieNext = estimateRookieReserveForPicks(picks);
+  } catch {}
+
   el.innerHTML = `
     <div class="metric"><span class="label">Original Cap</span><span class="value">${fmtMoney(room)}</span></div>
     <div class="metric"><span class="label">Current Cap</span><span class="value">${fmtMoney(room)}</span></div>
     <div class="metric"><span class="label">Cap Spent</span><span class="value">${fmtMoney(spent)}</span></div>
     <div class="metric"><span class="label">Cap Space</span><span class="value">${fmtMoney(avail)}</span></div>
+    <div class="metric"><span class="label">Rookie Reserve (next year)</span><span class="value">${fmtMoney(rookieNext)}</span></div>
     <div class="metric"><span class="label">Cap Gain/Loss</span><span class="value ${deltaClass}">${deltaPrefix}${fmtMoney(deltaAvail)}</span></div>
     <div class="metric"><span class="label">Spent / Cap</span>
       <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
