@@ -50,7 +50,8 @@ Save the PRD into `{@artifacts_path}/requirements.md`.
 
 Status: Completed. See `.zenflow/tasks/roster-management-eade/requirements.md`.
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
+<!-- chat-id: df991ac4-d4f7-48af-aa97-dfd48302df78 -->
 
 Based on the PRD in `{@artifacts_path}/requirements.md`, create a detailed technical specification to be used by a coding agent to implement the feature. Follow this template:
 
@@ -87,6 +88,8 @@ The verification for each deliverable should be executable by a coding agent usi
 ```
 
 Save the spec to `{@artifacts_path}/spec.md`.
+
+Status: Completed. See `.zenflow/tasks/roster-management-eade/spec.md`.
 
 ### [ ] Step: Implementation Plan
 
