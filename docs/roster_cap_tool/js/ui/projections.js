@@ -44,6 +44,7 @@ export function mountProjections() {
     return estimateRookieReserveForPicks(defaultOneEach);
   });
   const rollover = State.getRolloverForSelectedTeam();
+  const y1Override = State.getY1CapOverrideForSelectedTeam();
   const dmBase = State.getBaselineDeadMoney();
   const baselineDMByYear = Array.from({ length: years }, (_, i) => {
     if (i === 0) return Number(dmBase?.year0 || 0) || 0;
@@ -63,6 +64,7 @@ export function mountProjections() {
     extraSpendingByYear,
     rolloverToNext: rollover,
     rolloverMax: 35_000_000,
+    overrideY1CapSpace: (y1Override !== null) ? Number(y1Override) : undefined,
   });
 
   // Build controls + table

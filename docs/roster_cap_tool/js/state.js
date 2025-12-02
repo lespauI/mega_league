@@ -26,6 +26,8 @@ const state = {
   baselineDeadMoneyByTeam: {},
   /** Rollover dollars to next year per team: { [abbr]: number } */
   rolloverByTeam: {},
+  /** Year+1 cap space override per team: { [abbr]: number } */
+  y1CapOverrideByTeam: {},
   /** Re-sign settings per team: { [abbr]: { reserve:number, useInGame:boolean, inGameValue:number } } */
   reSignSettingsByTeam: {},
   /** Position filters per table */
@@ -146,6 +148,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.reSignSettings');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.reSignSettingsByTeam = parsed;
+  } catch {}
+  // Load Year+1 cap override per team
+  try {
+    const raw = localStorage.getItem('rosterCap.y1CapOverride');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.y1CapOverrideByTeam = parsed;
   } catch {}
   // Load position filters from localStorage once
   try {
@@ -394,6 +402,37 @@ export function setReSignInGameForSelectedTeam(amount) {
   const nextAll = { ...(state.reSignSettingsByTeam || {}), [abbr]: nextTeam };
   state.reSignSettingsByTeam = nextAll;
   try { localStorage.setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
+  emit();
+}
+
+// ----- Year+1 Cap Space Override -----
+
+/** Get Year+1 cap space override for selected team, or 0 if unset. */
+export function getY1CapOverrideForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const raw = state.y1CapOverrideByTeam?.[abbr];
+  if (raw === undefined) return null;
+  const v = Number(raw);
+  return Number.isFinite(v) ? v : null;
+}
+
+/** Set Year+1 cap space override for selected team (pass 0 or empty to clear). */
+export function setY1CapOverrideForSelectedTeam(value) {
+  const abbr = state.selectedTeam || '';
+  let v = Number(value);
+  if (!Number.isFinite(v)) {
+    // Clear
+    const next = { ...(state.y1CapOverrideByTeam || {}) };
+    delete next[abbr];
+    state.y1CapOverrideByTeam = next;
+    try { localStorage.setItem('rosterCap.y1CapOverride', JSON.stringify(next)); } catch {}
+    emit();
+    return;
+  }
+  v = Math.floor(v);
+  const next = { ...(state.y1CapOverrideByTeam || {}), [abbr]: v };
+  state.y1CapOverrideByTeam = next;
+  try { localStorage.setItem('rosterCap.y1CapOverride', JSON.stringify(next)); } catch {}
   emit();
 }
 

@@ -246,59 +246,6 @@ Task instructions
 - Deliverable: Polished UI with sticky Cap Summary, color coding, responsive layout.
 - Verification: Manual checks on desktop/tablet/mobile widths.
 
-### [x] Step: Documentation & References (GitHub Pages)
-<!-- chat-id: a3f942ee-3336-493e-99c1-225070361e52 -->
-Task instructions
-- Definition: Update `README.md` and add `docs/roster_cap_tool/USAGE.md` documenting pure JS architecture, data folder, how to enable GitHub Pages (serve `/docs`), and verification steps; link to `spec/Salary Cap Works in Madden.md`.
-- Contracts: Reference PRD/spec paths.
-- Deliverable: Clear docs for running and verifying the tool from GitHub Pages.
-- Verification: Links and instructions validated locally; Pages loads post-publish.
-
-### [x] Step: Fix bug
-<!-- chat-id: 02298e49-e1af-4000-825c-83ad522c7258 -->
-
-I open roster and see its empty, same time free agents are in place, fix this bug
-
-Implementation notes:
-- Root cause: `players.team` in `MEGA_players.csv` uses full team names (e.g., "Bengals"), while `selectedTeam` uses `teams.abbrName` (e.g., "CIN"). Active roster filter compared `p.team === selectedTeam`, yielding no matches.
-- Fix: In `initState` normalize `player.team` to the team's `abbrName` using a mapping of `abbrName`/`displayName`/`teamName` → `abbrName`. Free agents remain unchanged.
-- File changed: `docs/roster_cap_tool/js/state.js`.
-- Verification: Load app and select any team. Active Roster lists players; Free Agents unchanged; actions work as before.
-
-### [x] Step: add ability to setup draft pics
-<!-- chat-id: ab4b0875-aa69-4113-b24f-1422282be294 -->
-
-We don't have data on draft picks; let's set the ability to set up draft picks and calculate the approximate rookie reserve required.
-
-Implementation notes:
-- Added rookie reserve estimation math in `docs/roster_cap_tool/js/capMath.js`:
-  - `estimateRookieYear1ForSlot(round, pickInRound)` and `estimateRookieReserveForPicks({1..7})` with a round-based linear scale.
-- Extended app state in `docs/roster_cap_tool/js/state.js`:
-  - Persist per-team draft picks under `localStorage` key `rosterCap.draftPicks`.
-  - New getters/setters: `getDraftPicksForSelectedTeam()`, `setDraftPicksForSelectedTeam()`, `getRookieReserveEstimate()`.
-  - `getCapSummary()` now includes `rookieReserveEstimate` and `capAfterRookies`.
-- New UI tab renderer `docs/roster_cap_tool/js/ui/draftPicks.js`:
-  - Per-round pick count inputs, estimated per-pick Year 1, per-round totals, and grand total.
-  - Reset/default buttons; advisory note.
-- Updated mounts:
-  - `main.js` mounts `mountDraftPicks()` on load and on state changes.
-  - `capSummary` now displays Rookie Reserve and Cap After Rookies.
-
-Verification:
-- Open `docs/roster_cap_tool/index.html` → Draft Picks tab:
-  - Change counts; Rookie Reserve total updates and persists per team.
-  - Cap Summary shows Rookie Reserve and Cap After Rookies reflecting the estimate.
-
-### [x] Step: Reset button whipe roster
-<!-- chat-id: 9d2fca8a-0f31-4716-b41a-98f16ea2d937 -->
-
-Bug: Hitting Reset cleared the visible roster. Root cause was `baselinePlayers` stored from raw CSV (full team names), while current filters rely on normalized team `abbrName`. Reset replaced normalized players with raw baseline, causing Active Roster filter to match zero rows.
-
-Fix implemented:
-- In `docs/roster_cap_tool/js/state.js`, set `baselinePlayers` to a deep copy of the normalized `state.players` (not the raw `players` array). This ensures Reset restores the true default roster.
-
-Verification:
-- Load app, switch team, perform a release/sign. Press Reset. Active Roster returns to original list; Free Agents and cap summary revert to baseline. Draft picks remain unchanged.
 
 ### [x] Step: Visual bug in roster
 <!-- chat-id: ee04d146-5b6f-4ca6-9469-7dcab0da45e3 -->
@@ -456,64 +403,31 @@ Changes:
 Verification:
 - Open the app header projections and compare Y+1 cap space before/after a manual check: base cap ~304M becomes ~331M cap basis for Y+1; cap space reflects this growth after rookies and rollover adjustments.
 
-### [x] Step: Calculate DAL Y+1 breakdown
-<!-- chat-id: on-demand -->
 
-### [x] Step: Simplify Re-sign input to in-game value
-<!-- chat-id: ui-resign-single-input -->
+### [x] Step:  Step: Need to rethink year+1 cap space
+<!-- chat-id: 9afad340-15de-4e4a-af37-f42cd9fd7c54 -->
 
-Replaced the re-sign reserve slider/toggle with a single input: “Use in-game ‘Re-sign Available’”. Projections apply this as X + ΔSpace (current cap space delta vs baseline) so cuts/conversions immediately affect Y+1. Controls updated in header projections and Projections tab; persisted per team.
+So the issue we have right now, the game didnt give us the real numbers so all our calculation is estimates.
 
-Added helper script `scripts/calc_team_y1_cap.py` to compute per-player Year+1 cap for a team (mirrors projectPlayerCapHits) and aggregate totals. Includes optional rookie reserve, baseline next-year dead money, and a tunable re-sign reserve factor.
+But i can come into the game and see the real value of avaliable cap space for year+1
+Lets imagene this case with dallas, our estimation fro year+1 is 33 millions, and its take into account all cap raize and rookie reserv.
+But now we looking into the game and see 2027 cup avaliable = 800k. This means dallas has bigger rooki reserv, or already sign some players.
+I want to allow my users to insert this value somhow and made adjustment in Prediction.
 
-Verification:
-- Run `python3 scripts/calc_team_y1_cap.py --team DAL --rookie-reserve 12600000 --resign-factor 0.35`.
-- Confirms roster Y+1 ≈ $276.76M; with rookies and ~35% re-sign reserve, Y+1 cap space ≈ $1.25M (tunable to match in-game ~0.8M).
 
-### [x] Step: Lets do validation of numbers and finde where we fucked up
-<!-- chat-id: 972ff175-9735-4bd9-92dc-110b1e304291 -->
-
-Actions taken:
-- Ran data re‑export: `bash scripts/sync_data_to_docs.sh --all` (copied updated MEGA_*.csv into `docs/roster_cap_tool/data/`).
-- Smoked local server: `bash scripts/smoke_roster_cap_tool.sh` (assets served OK).
-- Validated DAL team row from updated CSV: `capRoom=304,200,000 capAvailable=830,000 capSpent=303,370,000`.
-- Verified cap math checks: `python3 scripts/verify_cap_math.py` (15/15 passed).
-
-Findings (Dallas):
-- Year 1 Cap Space now anchors to team snapshot (capAvailable) and reads ~$0.83M, matching in‑game. The prior ~$68M issue came from summing roster caps; this was fixed earlier by anchoring Year 1 in `projectTeamCaps()` and using `calcCapSummary()` for the header.
-- Roster sum (~$321M) + dead (~$18M) ≈ $339M is higher than team `capRoom` due to rollover handling in‑game; our UI reflects the authoritative `capAvailable` field, not recomputed totals, so current‑year space is accurate.
-- Next‑year rookie reserve estimate remains close to reported (~$12.6M vs our ~$11.5M baseline); users can override via the Draft Picks tab.
-
-Conclusion:
-- After re‑export, Year 1 numbers for DAL are correct in the app (Cap Space ≈ $0.83M). No additional code changes required.
-
-### [x] Step: Baseline Dead Money affect on prediction bug
-<!-- chat-id: deb2ac94-9702-4105-bedd-3ad955be79ae -->
-
-Implemented baseline dead money impact on projections:
-- capMath: `projectTeamCaps` now applies `opts.baselineDeadMoneyByYear[0]` to Year 0 anchored totals (reducing cap space and rollover) and applies baseline dead money for all years, not only i>0.
-- UI: Header projections now pass both This Year and Next Year baseline dead money: `[year0, year1, 0, 0]`.
-
-Verification:
-- In the Dead Money tab, set This Year and Next Year baseline amounts and Save. Header Y+1 projection updates immediately; increasing This Year reduces possible rollover and lowers Y+1 cap space; setting Next Year lowers Y+1 cap space directly. Persist across re-renders.
-
-### [x] Step: Change Y1 and Y2 penalty
-<!-- chat-id: 798c9a2b-e1b7-481c-a63e-784149bb81a3 -->
-
-looks like there a bug in our data we showing penalty as low in year 1 and high in year 2, but in game it is opposite. Change it in our representation and calculations. So what we called yar 2 penalty must be year 1.
-
-Also we recalculate the Cap as 9% increes, but game also has a bug, lets hardcode Year 2 salary cap as 324 mil year 3 as 334 mil and year 4 as 344
-
-### [x] Step: Re-sign reserve
-<!-- chat-id: 30472e5c-9532-48d7-9154-35f454b33830 -->
-
-Implemented re-sign reserve in the Projections tab:
-- Added re-sign reserve computation (same as header) and applied it to Y+1 via `extraSpendingByYear` in `projectTeamCaps`.
-- Added a re-sign reserve slider and badge to the Projections controls; value persists in `localStorage` and triggers global re-render.
-- Updated note to clarify re-sign reserve is applied to Y+1 totals.
+Implementation:
+- State: Added per-team Year+1 cap space override with persistence (`y1CapOverrideByTeam`) and helpers `getY1CapOverrideForSelectedTeam()` / `setY1CapOverrideForSelectedTeam()`; stored in `localStorage` under `rosterCap.y1CapOverride`.
+- Math: `projectTeamCaps()` now accepts `opts.overrideY1CapSpace`; when provided, Year+1 `capSpace` is anchored to this value (post rookie reserve, baseline dead $, re-sign reserve, and rollover), with `totalSpent` adjusted accordingly.
+- UI: Header projections strip now includes a "Y+1 cap override" number input and a Clear button. When set, it immediately recalculates and displays the overridden Y+1 cap space. Tooltip updated to note override.
 
 Files changed:
+- `docs/roster_cap_tool/js/state.js`
+- `docs/roster_cap_tool/js/capMath.js`
+- `docs/roster_cap_tool/js/ui/capSummary.js`
 - `docs/roster_cap_tool/js/ui/projections.js`
 
 Verification:
-- Open Projections tab. Adjust the “Re-sign reserve” slider; Y+1 Cap Space changes accordingly and matches the header’s projection strip.
+- Open `docs/roster_cap_tool/index.html`.
+- Note the header projection values for Y+1.
+- Enter the in-game Y+1 cap space into the "Y+1 cap override" field (e.g., `800000`). The Y+1 badge updates to the exact value; Y+2/Y+3 remain projection-based.
+- Click Clear to remove the override; values revert to estimates.
