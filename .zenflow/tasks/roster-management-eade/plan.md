@@ -360,9 +360,17 @@ Verification:
 - Open Dead Money tab. Enter baseline values and Save; they persist per team and totals update.
 - Release/Trade a player; row shows both years; totals reflect changes.
 
-### [ ] Step: Add posobility to trade for the player
+### [x] Step: Add posobility to trade for the player
+<!-- chat-id: a74fcb3f-75a0-4b6b-b167-24506a9355a1 -->
 
-We have free agent sign but lets also add Trade IN button, to add player contract from any other roster, lets add search by player name. Remember when we trade for player we add only his salary, bonus is dead mone fro another team
+Implemented Trade In flow:
+- Added header button to open Trade In modal.
+- Search players across other teams; show acquiring Year 1 (salary only).
+- On confirm: move player to selected team, set `contractBonus = 0`, set `capHit` to salary-only, and add `tradeIn` move so cap summary updates.
+- Cap math: `simulateTradeIn()` and support for `tradeIn` in `calcCapSummary` and `projectTeamCaps`.
+
+Verification:
+- Open the app, click Trade In, search/select a player from another team. Confirm. Active Roster updates; Cap Summary reduces by the shown Year 1 amount. Projections show no bonus proration for the acquired player.
 
 ### [ ] Step: Add possitions colors and filter
 

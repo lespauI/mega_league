@@ -1,5 +1,6 @@
 import { getState, saveScenario, listScenarios, loadScenario, resetScenario, getScenarioEdits } from '../state.js';
 import { openScenarioSaveModal, openScenarioLoadModal, openScenarioCompareModal } from './modals/scenarioModals.js';
+import { openTradeInModal } from './modals/tradeInModal.js';
 
 /**
  * Mount Scenario controls (Save, Load, Reset, Compare) into header.
@@ -53,14 +54,19 @@ export function mountScenarioControls(containerId = 'scenario-controls') {
   btnCompare.textContent = 'Compare';
   btnCompare.addEventListener('click', () => openScenarioCompareModal());
 
+  const btnTradeIn = document.createElement('button');
+  btnTradeIn.className = 'btn';
+  btnTradeIn.textContent = 'Trade In';
+  btnTradeIn.title = 'Acquire a player from another roster';
+  btnTradeIn.addEventListener('click', () => openTradeInModal());
+
   const chip = document.createElement('span');
   chip.className = 'badge';
   chip.title = 'Edits / Moves in current scenario';
   chip.textContent = `${editCount} edits, ${moveCount} moves`;
 
-  wrap.append(btnSave, btnLoad, btnReset, btnCompare, chip);
+  wrap.append(btnSave, btnLoad, btnReset, btnCompare, btnTradeIn, chip);
   el.appendChild(wrap);
 }
 
 export default { mountScenarioControls };
-

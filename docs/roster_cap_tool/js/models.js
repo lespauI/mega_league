@@ -48,10 +48,11 @@
 /**
  * @typedef {{ type: 'release', playerId: string, penalty: number, savings: number, at: number }} ReleaseMove
  * @typedef {{ type: 'tradeQuick', playerId: string, penalty: number, at: number }} TradeQuickMove
+ * @typedef {{ type: 'tradeIn', playerId: string, year1CapHit: number, at: number }} TradeInMove
  * @typedef {{ type: 'extend', playerId: string, years: number, salary: number, bonus: number, capHitDelta: number, at: number }} ExtensionMove
  * @typedef {{ type: 'convert', playerId: string, convertAmount: number, yearsRemaining: number, capHitDelta: number, at: number }} ConversionMove
  * @typedef {{ type: 'sign', playerId: string, years: number, salary: number, bonus: number, year1CapHit: number, at: number }} SignMove
- * @typedef {ReleaseMove | TradeQuickMove | ExtensionMove | ConversionMove | SignMove} ScenarioMove
+ * @typedef {ReleaseMove | TradeQuickMove | TradeInMove | ExtensionMove | ConversionMove | SignMove} ScenarioMove
  */
 
 /**

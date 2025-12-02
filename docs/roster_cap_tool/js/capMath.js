@@ -65,6 +65,11 @@ export function calcCapSummary(team, moves = []) {
         deltaSpent += toFinite(mv.year1CapHit);
         break;
       }
+      case 'tradeIn': {
+        // Incoming trade adds the acquiring team's Year 1 salary-only cap hit
+        deltaSpent += toFinite(/** @type {any} */(mv).year1CapHit);
+        break;
+      }
       default:
         break;
     }
@@ -132,6 +137,36 @@ export function simulateTradeQuick(team, player) {
   // Tag move as tradeQuick
   res.move.type = 'tradeQuick';
   return res;
+}
+
+/**
+ * Simulate trading in a player from another team.
+ * Acquiring team only assumes the salary portion in Year 1; the original team's
+ * remaining signing bonus stays as their dead money (not counted here).
+ * Year 1 Acquiring Cap Hit ≈ player.capHit - (contractBonus / min(length, 5))
+ * Remaining Cap After = team.capAvailable - Year1AcquiringCapHit
+ * @param {Team} team
+ * @param {Player} player
+ */
+export function simulateTradeIn(team, player) {
+  // Approximate bonus proration per year the same way conversion math does
+  const totalBonus = toFinite(player.contractBonus, 0);
+  const lenRaw = toFinite(player.contractLength, 0);
+  const len = Math.max(1, Math.floor(Number.isFinite(lenRaw) && lenRaw > 0 ? lenRaw : toFinite(player.contractYearsLeft, 1)));
+  const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
+  const bonusPerYear = totalBonus > 0 ? (totalBonus / prorateYears) : 0;
+  const currentCapHit = toFinite(player.capHit);
+  const acquiringYear1 = Math.max(0, currentCapHit - bonusPerYear);
+  const remainingCapAfter = toFinite(team.capAvailable) - acquiringYear1;
+
+  const move = {
+    type: 'tradeIn',
+    playerId: player.id,
+    year1CapHit: acquiringYear1,
+    at: Date.now(),
+  };
+
+  return { year1CapHit: acquiringYear1, remainingCapAfter, canTradeIn: remainingCapAfter >= 0, move };
 }
 
 /**
@@ -254,6 +289,7 @@ export default {
   calcCapSummary,
   simulateRelease,
   simulateTradeQuick,
+  simulateTradeIn,
   simulateExtension,
   simulateConversion,
   simulateSigning,
@@ -384,6 +420,9 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5) {
         deltaSpent += toFinite(/** @type {any} */(mv).capHitDelta);
         break;
       case 'sign':
+        deltaSpent += toFinite(/** @type {any} */(mv).year1CapHit);
+        break;
+      case 'tradeIn':
         deltaSpent += toFinite(/** @type {any} */(mv).year1CapHit);
         break;
       default:
