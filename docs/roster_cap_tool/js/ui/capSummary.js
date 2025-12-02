@@ -67,7 +67,6 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     const rr2 = estimateRookieReserveForPicks(defaultOneEach);
     const rr3 = rr2;
     const rollover = State.getRolloverForSelectedTeam();
-    const y1Override = State.getY1CapOverrideForSelectedTeam();
 
     // Baseline dead money from the Dead Money tab (This Year and Next Year)
     const dmBase = State.getBaselineDeadMoney();
@@ -96,7 +95,6 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       rolloverToNext: rollover,
       rolloverMax: 35_000_000,
       capGrowthRate,
-      overrideY1CapSpace: (y1Override !== null) ? Number(y1Override) : undefined,
     });
     const y1 = proj[1]?.capSpace ?? 0;
     const y2 = proj[2]?.capSpace ?? 0;
@@ -113,12 +111,9 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         <span class="badge">Y+3 <span class="${c3}">${fmtMoney(y3)}</span></span>
         <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
         <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
-        <label class="label" for="resign-ingame-value" style="margin-left:.75rem;">Use in-game “Re-sign Available”</label>
-        <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" />
+        <label class="label" for="resign-ingame-value" style="margin-left:.75rem;" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
+        <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
         <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
-        <label class="label" for="y1-override" style="margin-left:.75rem;">Y+1 cap override</label>
-        <input id="y1-override" type="number" step="500000" value="${(y1Override !== null) ? Number(y1Override) : ''}" class="input-number" placeholder="Enter in-game Y+1 cap space" />
-        ${(y1Override !== null) ? `<button id=\"y1-override-clear\" class=\"btn btn-small\" title=\"Clear Y+1 override\">Clear</button>` : ''}
         <label class="label" for="cap-growth" style="margin-left:.75rem;">Cap growth</label>
         <input id="cap-growth" type="range" min="0" max="0.15" step="0.01" value="${capGrowthRate}" class="input-range" />
         <span class="badge">${(capGrowthRate*100).toFixed(0)}%</span>
@@ -147,21 +142,7 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         State.setState({});
       });
     }
-    const y1OverrideInput = /** @type {HTMLInputElement|null} */(el.querySelector('#y1-override'));
-    if (y1OverrideInput) {
-      y1OverrideInput.addEventListener('change', () => {
-        const raw = y1OverrideInput.value;
-        const v = raw === '' ? NaN : Number(raw);
-        State.setY1CapOverrideForSelectedTeam(v);
-        // Trigger re-render via state emit in setter
-      });
-    }
-    const y1OverrideClear = /** @type {HTMLButtonElement|null} */(el.querySelector('#y1-override-clear'));
-    if (y1OverrideClear) {
-      y1OverrideClear.addEventListener('click', () => {
-        State.setY1CapOverrideForSelectedTeam(NaN);
-      });
-    }
+    // Y+1 override input removed
   } catch {
     el.innerHTML = '';
   }

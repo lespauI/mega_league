@@ -44,7 +44,6 @@ export function mountProjections() {
     return estimateRookieReserveForPicks(defaultOneEach);
   });
   const rollover = State.getRolloverForSelectedTeam();
-  const y1Override = State.getY1CapOverrideForSelectedTeam();
   const dmBase = State.getBaselineDeadMoney();
   const baselineDMByYear = Array.from({ length: years }, (_, i) => {
     if (i === 0) return Number(dmBase?.year0 || 0) || 0;
@@ -64,7 +63,6 @@ export function mountProjections() {
     extraSpendingByYear,
     rolloverToNext: rollover,
     rolloverMax: 35_000_000,
-    overrideY1CapSpace: (y1Override !== null) ? Number(y1Override) : undefined,
   });
 
   // Build controls + table
@@ -74,8 +72,8 @@ export function mountProjections() {
       <input type="range" min="3" max="5" step="1" value="${years}" data-horizon style="width:160px" />
       <div id="proj-years-label" class="badge">${years} year(s)</div>
       <div style="width:1px; height:20px; background:var(--border); margin:0 .5rem;"></div>
-      <label class="label" for="proj-resign-ingame-value">Use in-game “Re-sign Available”</label>
-      <input id="proj-resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" />
+      <label class="label" for="proj-resign-ingame-value" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
+      <input id="proj-resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
       <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">

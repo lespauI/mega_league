@@ -591,16 +591,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       }
     }
 
-    // Apply explicit Year+1 cap space override (anchor to in-game value).
-    if (i === 1) {
-      const override = Number(/** @type {any} */(opts).overrideY1CapSpace);
-      if (Number.isFinite(override)) {
-        // Adjust totalSpent to maintain identity: capSpace = capRoomYear - totalSpent
-        const target = override;
-        capSpace = target;
-        totalSpent = capRoomYear - capSpace;
-      }
-    }
+    // (Removed) Explicit Year+1 cap override handling
 
     out.push({ yearOffset: i, capRoom: capRoomYear, rosterCap, deadMoney, totalSpent, capSpace });
   }
