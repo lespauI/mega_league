@@ -1,5 +1,5 @@
-import { getState } from '../state.js';
-import { projectTeamCaps } from '../capMath.js';
+import { getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam } from '../state.js';
+import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -35,7 +35,20 @@ export function mountProjections() {
     if (Number.isFinite(v) && v >= 3 && v <= 5) years = Math.floor(v);
   }
 
-  const proj = projectTeamCaps(team, st.players, st.moves, years);
+  // Build Rookie Reserve schedule and apply rollover to next year
+  const nextYearPicks = getDraftPicksForSelectedTeam();
+  const defaultOneEach = { 1:1,2:1,3:1,4:1,5:1,6:1,7:1 };
+  const rrByYear = Array.from({ length: years }, (_, i) => {
+    if (i === 0) return 0;
+    if (i === 1) return estimateRookieReserveForPicks(nextYearPicks);
+    return estimateRookieReserveForPicks(defaultOneEach);
+  });
+  const rollover = getRolloverForSelectedTeam();
+  const proj = projectTeamCaps(team, st.players, st.moves, years, {
+    rookieReserveByYear: rrByYear,
+    rolloverToNext: rollover,
+    rolloverMax: 35_000_000,
+  });
 
   // Build controls + table
   const controls = `
@@ -45,7 +58,7 @@ export function mountProjections() {
       <div id="proj-years-label" class="badge">${years} year(s)</div>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
-      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Roster Cap is derived; Dead Money reflects only scenario moves. Out-years are approximated from contract totals (salary ÷ length, bonus prorated up to 5 years). If contract details are missing, projections infer base from current cap hit and proration from release penalty.
+      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
     </div>
   `;
 

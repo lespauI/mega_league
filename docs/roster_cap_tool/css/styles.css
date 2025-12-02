@@ -44,6 +44,7 @@ body {
 .header-projections { flex-basis: 100%; display: flex; align-items: center; gap: .5rem; padding-top: .25rem; margin-top: .25rem; border-top: 1px solid #1f2937; flex-wrap: wrap; }
 .header-projections .proj-strip { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
 .header-projections .label { color: var(--muted); font-size: .8rem; margin-right: .25rem; }
+.input-number { background: #0b1324; color: var(--text); border: 1px solid #334155; padding: .25rem .5rem; border-radius: .375rem; width: 9ch; min-width: 130px; }
 
 .container { padding: 1rem; max-width: 1300px; margin: 0 auto; }
 

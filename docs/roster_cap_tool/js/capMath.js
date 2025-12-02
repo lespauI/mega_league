@@ -471,6 +471,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
 
   // Build result
   const out = [];
+  let y0CapSpace = 0;
   for (let i = 0; i < horizon; i++) {
     let rosterCap = rosterTotals[i] || 0;
     let deadMoney = dead[i] || 0;
@@ -488,6 +489,7 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
       // Derive a rosterCap that is consistent and non-negative.
       // Note: deadMoney here only includes new scenario moves; baseline dead money is folded into baseSpent.
       rosterCap = Math.max(0, totalSpent - deadMoney);
+      y0CapSpace = capSpace;
     }
 
     // Apply Rookie Reserve (future years only). Caller can provide a schedule
@@ -497,6 +499,17 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
     if (i > 0 && Number.isFinite(rr) && rr > 0) {
       totalSpent += rr;
       capSpace = capRoom - totalSpent;
+    }
+
+    // Apply rollover from current year into next year (i === 1) up to a cap.
+    if (i === 1) {
+      const requested = Math.max(0, toFinite(/** @type {any} */(opts).rolloverToNext, 0));
+      const cap = Math.max(0, toFinite(/** @type {any} */(opts).rolloverMax, 35_000_000));
+      const availableY0 = Math.max(0, toFinite(y0CapSpace, 0));
+      const applied = Math.min(requested, cap, availableY0);
+      if (applied > 0) {
+        capSpace += applied;
+      }
     }
 
     out.push({ yearOffset: i, capRoom, rosterCap, deadMoney, totalSpent, capSpace });

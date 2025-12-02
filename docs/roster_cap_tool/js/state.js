@@ -24,6 +24,8 @@ const state = {
   draftPicksByTeam: {},
   /** Persisted baseline dead money per team: { [abbr]: { year0:number, year1:number } } */
   baselineDeadMoneyByTeam: {},
+  /** Rollover dollars to next year per team: { [abbr]: number } */
+  rolloverByTeam: {},
   /** Position filters per table */
   positionFilters: { active: [], fa: [] },
 };
@@ -118,6 +120,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.deadMoneyBaseline');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.baselineDeadMoneyByTeam = parsed;
+  } catch {}
+  // Load rollover per team
+  try {
+    const raw = localStorage.getItem('rosterCap.rollover');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.rolloverByTeam = parsed;
   } catch {}
   // Load position filters from localStorage once
   try {
@@ -292,6 +300,25 @@ export function setDraftPicksForSelectedTeam(picksPerRound) {
 export function getRookieReserveEstimate() {
   const picks = getDraftPicksForSelectedTeam();
   return estimateRookieReserveForPicks(picks);
+}
+
+// ----- Rollover (carryover to next year) -----
+
+/** Get rollover amount for selected team (0..$35M). */
+export function getRolloverForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const v = Number(state.rolloverByTeam?.[abbr] || 0);
+  return Math.max(0, Math.min(35_000_000, Number.isFinite(v) ? v : 0));
+}
+
+/** Set rollover amount for selected team (clamped 0..$35M). */
+export function setRolloverForSelectedTeam(amount) {
+  const abbr = state.selectedTeam || '';
+  const v = Math.max(0, Math.min(35_000_000, Number(amount) || 0));
+  const next = { ...(state.rolloverByTeam || {}) , [abbr]: v };
+  state.rolloverByTeam = next;
+  try { localStorage.setItem('rosterCap.rollover', JSON.stringify(next)); } catch {}
+  emit();
 }
 
 // ----- Baseline Dead Money (manual input) -----

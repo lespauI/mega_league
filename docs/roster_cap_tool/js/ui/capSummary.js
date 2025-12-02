@@ -1,4 +1,4 @@
-import { getCapSummary, getState, getDraftPicksForSelectedTeam } from '../state.js';
+import { getCapSummary, getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, setRolloverForSelectedTeam } from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -58,7 +58,8 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     const rr1 = estimateRookieReserveForPicks(nextYearPicks);
     const rr2 = estimateRookieReserveForPicks(defaultOneEach);
     const rr3 = rr2;
-    const proj = projectTeamCaps(team, st.players, st.moves, horizon, { rookieReserveByYear: [rr0, rr1, rr2, rr3] });
+    const rollover = getRolloverForSelectedTeam();
+    const proj = projectTeamCaps(team, st.players, st.moves, horizon, { rookieReserveByYear: [rr0, rr1, rr2, rr3], rolloverToNext: rollover, rolloverMax: 35_000_000 });
     const y1 = proj[1]?.capSpace ?? 0;
     const y2 = proj[2]?.capSpace ?? 0;
     const y3 = proj[3]?.capSpace ?? 0;
@@ -72,8 +73,17 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         <span class="badge">Y+1 <span class="${c1}">${fmtMoney(y1)}</span></span>
         <span class="badge">Y+2 <span class="${c2}">${fmtMoney(y2)}</span></span>
         <span class="badge">Y+3 <span class="${c3}">${fmtMoney(y3)}</span></span>
+        <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
+        <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
       </div>
     `;
+    const input = /** @type {HTMLInputElement|null} */(el.querySelector('#rollover-input'));
+    if (input) {
+      input.addEventListener('change', () => {
+        const v = Math.max(0, Math.min(35_000_000, Number(input.value||0)));
+        setRolloverForSelectedTeam(v);
+      });
+    }
   } catch {
     el.innerHTML = '';
   }
