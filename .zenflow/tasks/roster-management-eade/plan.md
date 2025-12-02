@@ -190,7 +190,8 @@ Task instructions
 - Deliverable: Trade quick updates Dead Money tab and Cap Summary; IR tab present.
 - Verification: Manual quick trade; ensure dead money row appears and summary matches.
 
-### [ ] Step: Extension Flow
+### [x] Step: Extension Flow
+<!-- chat-id: 7f3aef75-d5a3-4da2-be40-c1ad9b28218c -->
 Task instructions
 - Definition: Add “Extension” action for players with `contractYearsLeft ≤ 2`; implement modal `js/ui/modals/extensionModal.js` with years slider (1–7), salary and bonus inputs; preview new cap hit `(salary + bonus)/years`; apply on confirm.
 - Contracts: `simulateExtension`.
@@ -198,6 +199,7 @@ Task instructions
 - Verification: Manual preview delta equals applied delta.
 
 ### [ ] Step: Conversion Flow
+<!-- chat-id: 245cad15-2389-4254-a174-01a6d8f6a679 -->
 Task instructions
 - Definition: Add “Conversion” action for high `capHit` players; implement modal `js/ui/modals/conversionModal.js` to convert base salary to signing bonus with proration and show multi-year impact.
 - Contracts: `simulateConversion`; proration max 5 years.
