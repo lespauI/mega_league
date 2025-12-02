@@ -79,10 +79,12 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       0,
     ];
 
-    // In-game Re-sign Available (X), applied as X + deltaAvailable to reflect live changes
-    const snapNow = State.getCapSummary();
+    // In-game Re-sign Available (X). Do NOT auto-add current-year deltaAvailable here.
+    // Reason: releases with zero dead cap (especially expiring contracts) should not
+    // mechanically reduce Y+1 cap by inflating the re-sign reserve. Users can adjust
+    // re-sign budget and rollover explicitly via the inputs.
     const inGameReSign = State.getReSignInGameForSelectedTeam();
-    const reSignReserve = Math.max(0, Number(inGameReSign || 0) + Number(snapNow?.deltaAvailable || 0));
+    const reSignReserve = Math.max(0, Number(inGameReSign || 0));
 
     const proj = projectTeamCaps(team, st.players, st.moves, horizon, {
       rookieReserveByYear: [rr0, rr1, rr2, rr3],
@@ -108,7 +110,7 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
         <label class="label" for="resign-ingame-value" style="margin-left:.75rem;" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
         <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
-        <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
+        <span class="badge" title="Applied to Y+1 exactly as entered (no auto delta)">Applied: ${fmtMoney(reSignReserve)}</span>
       </div>
     `;
     const input = /** @type {HTMLInputElement|null} */(el.querySelector('#rollover-input'));

@@ -467,3 +467,17 @@ Change:
 
 Verification:
 - Open the app header. Cap Space now equals `capRoom - capSpent` and updates with moves; progress bar remains correct.
+
+### [x] Step: Fix bug
+<!-- chat-id: c91044da-c4f1-4ed9-80d3-33c6b11c6b09 -->
+
+Fix: Releasing a zero–dead-cap player (e.g., DAL — Jawaan Taylor) incorrectly reduced Y+1 cap space due to adding current-year deltaAvailable into the re-sign reserve.
+
+Change:
+- `docs/roster_cap_tool/js/ui/capSummary.js`: Re-sign reserve now uses only the manual input value (no automatic `+ deltaAvailable`). Tooltip updated to reflect this.
+
+Result:
+- Zero–dead-cap releases (especially expiring contracts) no longer affect Y+1 projections. Users can still control Y+1 via the dedicated Re-sign budget and Rollover inputs.
+
+Verification:
+- Select DAL, note Y+1 projection. Release Jawaan Taylor (shows $0 dead cap). Y+1 remains unchanged. Adjust Re-sign budget or Rollover to see intended effects.
