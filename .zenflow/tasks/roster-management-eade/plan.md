@@ -415,17 +415,35 @@ But now we looking into the game and see 2027 cup avaliable = 800k. This means d
 I want to allow my users to insert this value somhow and made adjustment in Prediction.
 
 
-Implementation (updated per feedback):
-- Removed the Y+1 cap override feature entirely (state, math, UI, persistence).
-- Renamed the re-sign input label to "Resign budget" and added a hover hint: "Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" in both the header strip and projections panel.
+Implementation:
+- State: Added per-team Year+1 cap space override with persistence (`y1CapOverrideByTeam`) and helpers `getY1CapOverrideForSelectedTeam()` / `setY1CapOverrideForSelectedTeam()`; stored in `localStorage` under `rosterCap.y1CapOverride`.
+- Math: `projectTeamCaps()` now accepts `opts.overrideY1CapSpace`; when provided, Year+1 `capSpace` is anchored to this value (post rookie reserve, baseline dead $, re-sign reserve, and rollover), with `totalSpent` adjusted accordingly.
+- UI: Header projections strip now includes a "Y+1 cap override" number input and a Clear button. When set, it immediately recalculates and displays the overridden Y+1 cap space. Tooltip updated to note override.
 
 Files changed:
-- `docs/roster_cap_tool/js/state.js` (removed override state + getters/setters)
-- `docs/roster_cap_tool/js/capMath.js` (removed override handling)
-- `docs/roster_cap_tool/js/ui/capSummary.js` (removed override UI; renamed label + hint)
-- `docs/roster_cap_tool/js/ui/projections.js` (removed override; renamed label + hint)
+- `docs/roster_cap_tool/js/state.js`
+- `docs/roster_cap_tool/js/capMath.js`
+- `docs/roster_cap_tool/js/ui/capSummary.js`
+- `docs/roster_cap_tool/js/ui/projections.js`
 
 Verification:
 - Open `docs/roster_cap_tool/index.html`.
-- Confirm there is no Y+1 override control in the header.
-- Hover the "Resign budget" label or input to see the hint.
+- Note the header projection values for Y+1.
+- Enter the in-game Y+1 cap space into the "Y+1 cap override" field (e.g., `800000`). The Y+1 badge updates to the exact value; Y+2/Y+3 remain projection-based.
+- Click Clear to remove the override; values revert to estimates.
+
+
+### [ ] Step:  Trade fixes
+
+We need to fix trade 
+ - in a trade sub window move the trade button into the left from right
+ - Check the sallary, looks like it is not correct in the trade window, as for example Puka nakua shown as 0$ salary
+ - Get rid of "No enough money" validation, allow users to have negative cap
+### [x] Step: Remove Cap growth slider
+Removed the Cap growth slider from the header projections strip and all related localStorage/event logic. Projections now rely on the default internal growth rate only.
+
+Files changed:
+- `docs/roster_cap_tool/js/ui/capSummary.js`
+
+Verification:
+- Open the app header; the Cap growth slider and percentage badge no longer appear.
