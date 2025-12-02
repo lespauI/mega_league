@@ -34,6 +34,7 @@ body {
 }
 .app-title { font-size: 1.125rem; margin: 0; }
 .header__right { display: flex; align-items: center; gap: 1rem; }
+.scenario-controls { display:flex; gap:.5rem; align-items:center; }
 
 .container { padding: 1rem; max-width: 1300px; margin: 0 auto; }
 
@@ -79,6 +80,6 @@ dialog::backdrop { background: rgba(2, 6, 23, 0.6); }
 
 @media (max-width: 900px) {
   .cap-summary { grid-auto-flow: row; gap: .5rem; }
+  .scenario-controls { display:flex; gap:.25rem; }
   th { top: calc(58px + 84px); }
 }
-

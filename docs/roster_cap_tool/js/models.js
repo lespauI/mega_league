@@ -54,4 +54,30 @@
  * @typedef {ReleaseMove | TradeQuickMove | ExtensionMove | ConversionMove | SignMove} ScenarioMove
  */
 
+/**
+ * Scenario persistence (What-if mode)
+ * Stores only the necessary diffs from baseline to keep payload small.
+ * @typedef {Object} ScenarioRosterEdit
+ * @property {string} id Player id
+ * @property {{
+ *   isFreeAgent?: boolean,
+ *   team?: string,
+ *   capHit?: number,
+ *   contractSalary?: number,
+ *   contractBonus?: number,
+ *   contractLength?: number,
+ *   contractYearsLeft?: number,
+ * }} patch
+ */
+
+/**
+ * @typedef {Object} Scenario
+ * @property {string} id
+ * @property {string} name
+ * @property {string} teamAbbr
+ * @property {number} savedAt
+ * @property {Array<ScenarioMove>} moves
+ * @property {Array<ScenarioRosterEdit>} rosterEdits
+ */
+
 export const __models = true;

@@ -214,7 +214,8 @@ Task instructions
 - Deliverable: Read-only projections view for selected team.
 - Verification: Manual spot-checks with known examples.
 
-### [ ] Step: Scenario Save/Load (What-if Mode)
+### [x] Step: Scenario Save/Load (What-if Mode)
+<!-- chat-id: ec84ec4c-bb5d-4041-b1ce-c63b2958e810 -->
 Task instructions
 - Definition: Add scenario model and localStorage persistence; allow save, load, and compare scenarios.
 - Contracts: `Scenario` shape defined in `models.js`.

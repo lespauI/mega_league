@@ -5,6 +5,7 @@ import { mountTeamSelector } from './ui/teamSelector.js';
 import { mountCapSummary } from './ui/capSummary.js';
 import { mountRosterTabs } from './ui/rosterTabs.js';
 import { mountProjections } from './ui/projections.js';
+import { mountScenarioControls } from './ui/scenarioControls.js';
 
 // Basic tabs behavior
 function initTabs() {
@@ -55,12 +56,14 @@ async function boot() {
   initState({ teams, players });
   // Initial mounts
   mountTeamSelector();
+  mountScenarioControls();
   mountCapSummary();
   mountRosterTabs();
   mountProjections();
   // Subscribe to updates
   subscribe(() => {
     mountTeamSelector();
+    mountScenarioControls();
     mountCapSummary();
     mountRosterTabs();
     mountProjections();

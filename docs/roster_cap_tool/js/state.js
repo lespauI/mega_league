@@ -11,6 +11,9 @@ const state = {
   teams: [],
   /** @type {Array<any>} */
   players: [],
+  /** Baseline players snapshot for scenario reset/compare */
+  /** @type {Array<any>} */
+  baselinePlayers: [],
   /** @type {Array<any>} */
   deadMoneyLedger: [],
   /** @type {Array<any>} */
@@ -68,8 +71,123 @@ export function getCapSummary() {
 export function initState({ teams, players }) {
   state.teams = teams;
   state.players = players;
+  // Store a deep baseline copy for scenario reset/compare
+  try { state.baselinePlayers = JSON.parse(JSON.stringify(players)); } catch { state.baselinePlayers = players.map(p => ({ ...p })); }
   if (!state.selectedTeam && teams.length) {
     state.selectedTeam = teams[0].abbrName;
   }
   emit();
+}
+
+// ----- Scenario (What-if) persistence -----
+
+const SCENARIOS_KEY = 'rosterCap.scenarios';
+
+function loadAllScenarios() {
+  try {
+    const raw = localStorage.getItem(SCENARIOS_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch { return []; }
+}
+
+function saveAllScenarios(list) {
+  try { localStorage.setItem(SCENARIOS_KEY, JSON.stringify(list)); } catch {}
+}
+
+/** Compute minimal roster diff from baselinePlayers to current players */
+function computeRosterEdits() {
+  /** @type {Record<string, any>} */
+  const baseById = Object.create(null);
+  for (const p of state.baselinePlayers || []) baseById[p.id] = p;
+  const fields = ['isFreeAgent','team','capHit','contractSalary','contractBonus','contractLength','contractYearsLeft'];
+  /** @type {Array<{id:string, patch:any}>} */
+  const edits = [];
+  for (const cur of state.players || []) {
+    const base = baseById[cur.id];
+    if (!base) continue;
+    /** @type {any} */
+    const patch = {};
+    for (const k of fields) {
+      const bv = base[k];
+      const cv = cur[k];
+      // Compare loosely, normalize number-ish
+      const same = (Number.isFinite(bv) || Number.isFinite(cv)) ? (Number(bv) === Number(cv)) : (bv === cv);
+      if (!same) patch[k] = cv;
+    }
+    if (Object.keys(patch).length) edits.push({ id: cur.id, patch });
+  }
+  return edits;
+}
+
+/** Apply roster edits to a deep-cloned baseline */
+function applyRosterEdits(edits) {
+  let out;
+  try { out = JSON.parse(JSON.stringify(state.baselinePlayers || [])); } catch { out = (state.baselinePlayers || []).map(p => ({ ...p })); }
+  /** @type {Record<string, any>} */
+  const byId = Object.create(null);
+  for (const p of out) byId[p.id] = p;
+  for (const e of edits || []) {
+    const p = byId[e.id];
+    if (!p) continue;
+    Object.assign(p, e.patch || {});
+  }
+  return out;
+}
+
+/** Create and persist a scenario; returns saved scenario id */
+export function saveScenario(name = '') {
+  const id = `scn_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
+  const rosterEdits = computeRosterEdits();
+  const scenario = {
+    id,
+    name: name?.trim() || 'Untitled Scenario',
+    teamAbbr: state.selectedTeam || '',
+    savedAt: Date.now(),
+    moves: (state.moves || []).slice(),
+    rosterEdits,
+  };
+  const all = loadAllScenarios();
+  all.unshift(scenario);
+  saveAllScenarios(all);
+  return id;
+}
+
+/** List scenarios, optionally filtered by team abbr */
+export function listScenarios(teamAbbr) {
+  const all = loadAllScenarios();
+  if (!teamAbbr) return all;
+  return all.filter(s => s.teamAbbr === teamAbbr);
+}
+
+/** Delete a scenario by id */
+export function deleteScenario(id) {
+  const cur = loadAllScenarios();
+  const next = cur.filter(s => s.id !== id);
+  saveAllScenarios(next);
+}
+
+/** Load a scenario by id and apply to state */
+export function loadScenario(id) {
+  const cur = loadAllScenarios();
+  const scn = cur.find(s => s.id === id);
+  if (!scn) return false;
+  const players = applyRosterEdits(scn.rosterEdits || []);
+  const moves = (scn.moves || []).slice();
+  const selectedTeam = scn.teamAbbr || state.selectedTeam;
+  setState({ players, moves, selectedTeam, deadMoneyLedger: [] });
+  return true;
+}
+
+/** Reset to baseline players and clear moves */
+export function resetScenario() {
+  let players;
+  try { players = JSON.parse(JSON.stringify(state.baselinePlayers || [])); } catch { players = (state.baselinePlayers || []).map(p => ({ ...p })); }
+  setState({ players, moves: [], deadMoneyLedger: [] });
+}
+
+/** Return computed roster edits vs baseline (for UI stats) */
+export function getScenarioEdits() {
+  return computeRosterEdits();
 }
