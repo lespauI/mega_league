@@ -37,6 +37,34 @@ def to_int(s, default=0):
 def to_bool(s):
     return str(s).strip().lower() in ("1","true","yes","y")
 
+BASE_SALARY_WEIGHTS = {
+    2: [48.7, 51.3],
+    3: [31.7, 33.3, 35.0],
+    4: [23.2, 24.3, 25.5, 27.0],
+    5: [18.0, 19.0, 20.0, 21.0, 22.0],
+    6: [14.7, 15.4, 16.2, 17.0, 17.9, 18.8],
+    7: [12.3, 12.9, 13.5, 14.2, 14.9, 15.7, 16.5],
+}
+
+def build_base_schedule(total_salary: float, length: int):
+    if length <= 0:
+        return []
+    w = BASE_SALARY_WEIGHTS.get(length)
+    if not w or len(w) != length:
+        per = total_salary / length if length else 0.0
+        return [per] * length
+    s = sum(w) or 1.0
+    out = []
+    acc = 0.0
+    for i, pct in enumerate(w):
+        if i == length - 1:
+            out.append(max(0.0, total_salary - acc))
+        else:
+            v = total_salary * (pct / s)
+            out.append(v)
+            acc += v
+    return out
+
 def project_player_y1(p):
     """Return (y1_cap, base_component, bonus_component, meta) for a player row."""
     capHit = to_float(p.get('capHit', 0.0), 0.0)
@@ -58,15 +86,17 @@ def project_player_y1(p):
 
     # Base per year: prefer contractSalary/length else infer from capHit minus proration
     contractSalary = to_float(p.get('contractSalary', 0.0), 0.0)
-    if contractSalary > 0 and length > 0:
-        basePerYear = max(0.0, contractSalary / length)
-    else:
-        basePerYear = max(0.0, capHit - (bonusPerYear if remainingProrationNow > 0 else 0.0))
+    baseSchedule = build_base_schedule(contractSalary, length) if contractSalary > 0 else None
+    inferredBasePerYear = max(0.0, capHit - (bonusPerYear if remainingProrationNow > 0 else 0.0))
 
     i = 1  # Y+1
     withinContract = i < yearsLeft
     hasProration = i < remainingProrationNow
-    base = basePerYear if withinContract else 0.0
+    if withinContract:
+        idx = yearsElapsed + i
+        base = baseSchedule[idx] if baseSchedule and idx < len(baseSchedule) else inferredBasePerYear
+    else:
+        base = 0.0
     pr = bonusPerYear if hasProration else 0.0
     meta = {
         'length': length,
@@ -75,7 +105,7 @@ def project_player_y1(p):
         'prorateYears': prorateYears,
         'bonusTotal': bonusTotal,
         'bonusPerYear': bonusPerYear,
-        'basePerYear': basePerYear,
+        'basePerYear': (baseSchedule[yearsElapsed] if baseSchedule and yearsElapsed < len(baseSchedule) else inferredBasePerYear),
     }
     return base + pr, base, pr, meta
 
@@ -177,4 +207,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

@@ -105,12 +105,19 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     } catch {}
     const reSignReserve = Math.max(0, estReSign * factor);
 
+    // Cap growth rate tunable (persisted)
+    const capGrowthRate = (() => {
+      try { const raw = localStorage.getItem('rosterCap.capGrowthRate'); const v = Number(raw); if (Number.isFinite(v)) return v; } catch {}
+      return 0.09;
+    })();
+
     const proj = projectTeamCaps(team, st.players, st.moves, horizon, {
       rookieReserveByYear: [rr0, rr1, rr2, rr3],
       baselineDeadMoneyByYear: baselineDMByYear,
       extraSpendingByYear: [0, reSignReserve, 0, 0],
       rolloverToNext: rollover,
       rolloverMax: 35_000_000,
+      capGrowthRate,
     });
     const y1 = proj[1]?.capSpace ?? 0;
     const y2 = proj[2]?.capSpace ?? 0;
@@ -130,6 +137,9 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         <label class="label" for="resign-factor" style="margin-left:.75rem;">Re-sign reserve</label>
         <input id="resign-factor" type="range" min="0" max="1" step="0.05" value="${factor}" class="input-range" />
         <span class="badge" title="Estimated Year+1 re-sign budget">${fmtMoney(reSignReserve)}</span>
+        <label class="label" for="cap-growth" style="margin-left:.75rem;">Cap growth</label>
+        <input id="cap-growth" type="range" min="0" max="0.15" step="0.01" value="${capGrowthRate}" class="input-range" />
+        <span class="badge">${(capGrowthRate*100).toFixed(0)}%</span>
       </div>
     `;
     const input = /** @type {HTMLInputElement|null} */(el.querySelector('#rollover-input'));
@@ -145,6 +155,14 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         const v = Math.max(0, Math.min(1, Number(slider.value||0)));
         try { localStorage.setItem('rosterCap.reSignReserveFactor', String(v)); } catch {}
         // Trigger re-render
+        setState({});
+      });
+    }
+    const capGrowth = /** @type {HTMLInputElement|null} */(el.querySelector('#cap-growth'));
+    if (capGrowth) {
+      capGrowth.addEventListener('input', () => {
+        const v = Math.max(0, Math.min(0.15, Number(capGrowth.value||0)));
+        try { localStorage.setItem('rosterCap.capGrowthRate', String(v)); } catch {}
         setState({});
       });
     }

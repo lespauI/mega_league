@@ -22,6 +22,42 @@ function prorationYears(years) {
   return clamp(y, 1, MADDEN_BONUS_PRORATION_MAX_YEARS);
 }
 
+// Madden base-salary distribution weights by contract length (percentages that sum ~100%)
+// Source: spec/Salary Cap Works in Madden.md
+const BASE_SALARY_WEIGHTS = {
+  2: [48.7, 51.3],
+  3: [31.7, 33.3, 35.0],
+  4: [23.2, 24.3, 25.5, 27.0],
+  5: [18.0, 19.0, 20.0, 21.0, 22.0],
+  6: [14.7, 15.4, 16.2, 17.0, 17.9, 18.8],
+  7: [12.3, 12.9, 13.5, 14.2, 14.9, 15.7, 16.5],
+};
+
+function buildBaseSchedule(totalSalary, length) {
+  const len = Math.max(1, Math.floor(toFinite(length, 1)));
+  const tot = Math.max(0, toFinite(totalSalary, 0));
+  const w = BASE_SALARY_WEIGHTS[len];
+  if (!w || !Array.isArray(w) || w.length !== len) {
+    // Fallback to even distribution
+    const per = len > 0 ? (tot / len) : 0;
+    return Array.from({ length: len }, () => per);
+  }
+  const sum = w.reduce((a, b) => a + b, 0) || 1;
+  // Normalize to exact total avoiding floating drift by fixing last year as remainder
+  const out = new Array(len).fill(0);
+  let acc = 0;
+  for (let i = 0; i < len; i++) {
+    if (i === len - 1) {
+      out[i] = Math.max(0, tot - acc);
+    } else {
+      const v = (tot * (w[i] / sum));
+      out[i] = v;
+      acc += v;
+    }
+  }
+  return out;
+}
+
 /**
  * Calculate current cap snapshot after applying a list of scenario moves.
  * Assumptions:
@@ -336,31 +372,32 @@ export function projectPlayerCapHits(player, years = 5) {
   }
   const bonusPerYear = bonusTotal > 0 ? (bonusTotal / prorateYears) : 0;
 
-  // Base salary per year. Prefer explicit contractSalary/len; otherwise
-  // approximate from current capHit minus bonus-per-year (cannot be negative).
-  let basePerYear = 0;
+  // Base salary schedule per contract-year using Madden distribution weights when possible.
   const contractSalary = toFinite(player.contractSalary, 0);
-  if (contractSalary > 0) {
-    basePerYear = Math.max(0, contractSalary / len);
-  } else {
+  const baseSchedule = (contractSalary > 0)
+    ? buildBaseSchedule(contractSalary, len)
+    : null;
+  // Fallback per-year base when schedule unknown: infer from current capHit minus proration
+  const inferredBasePerYear = (() => {
     const cur = toFinite(player.capHit);
-    if (Number.isFinite(cur)) {
-      basePerYear = Math.max(0, cur - (remainingProrationNow > 0 ? bonusPerYear : 0));
-    } else {
-      basePerYear = 0;
-    }
-  }
+    if (Number.isFinite(cur)) return Math.max(0, cur - (remainingProrationNow > 0 ? bonusPerYear : 0));
+    return 0;
+  })();
 
   for (let i = 0; i < out.length; i++) {
     if (i === 0) {
-      // Use current capHit for Year 0 to reflect any live changes
+      // Use current capHit for Year 0 to reflect live state
       const cur = toFinite(player.capHit);
-      out[i] = Number.isFinite(cur) ? cur : (basePerYear + (remainingProrationNow > 0 ? bonusPerYear : 0));
+      out[i] = Number.isFinite(cur) ? cur : ((baseSchedule ? baseSchedule[yearsElapsed] || 0 : inferredBasePerYear) + (remainingProrationNow > 0 ? bonusPerYear : 0));
       continue;
     }
     const withinContract = i < yearsLeft;
     const hasProration = i < remainingProrationNow;
-    const base = withinContract ? basePerYear : 0;
+    let base = 0;
+    if (withinContract) {
+      const schedIdx = yearsElapsed + i;
+      base = baseSchedule ? (baseSchedule[schedIdx] || 0) : inferredBasePerYear;
+    }
     const pr = hasProration ? bonusPerYear : 0;
     out[i] = base + pr;
   }
