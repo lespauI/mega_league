@@ -456,6 +456,15 @@ Changes:
 Verification:
 - Open the app header projections and compare Y+1 cap space before/after a manual check: base cap ~304M becomes ~331M cap basis for Y+1; cap space reflects this growth after rookies and rollover adjustments.
 
+### [x] Step: Calculate DAL Y+1 breakdown
+<!-- chat-id: on-demand -->
+
+Added helper script `scripts/calc_team_y1_cap.py` to compute per-player Year+1 cap for a team (mirrors projectPlayerCapHits) and aggregate totals. Includes optional rookie reserve, baseline next-year dead money, and a tunable re-sign reserve factor.
+
+Verification:
+- Run `python3 scripts/calc_team_y1_cap.py --team DAL --rookie-reserve 12600000 --resign-factor 0.35`.
+- Confirms roster Y+1 ≈ $276.76M; with rookies and ~35% re-sign reserve, Y+1 cap space ≈ $1.25M (tunable to match in-game ~0.8M).
+
 ### [x] Step: Lets do validation of numbers and finde where we fucked up
 <!-- chat-id: 972ff175-9735-4bd9-92dc-110b1e304291 -->
 
