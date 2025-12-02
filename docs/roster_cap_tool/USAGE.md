@@ -1,0 +1,98 @@
+# Roster Cap Management Tool — Usage
+
+Interactive, Spotrac‑style salary cap manager for Madden. Runs as a static web app (no build, no backend). Loads `MEGA_players.csv` and `MEGA_teams.csv` from the `docs/roster_cap_tool/data/` folder and updates cap figures in real time as you release, trade, extend, convert, and sign players.
+
+## Requirements
+- Modern browser (Chrome, Edge, Firefox, Safari)
+- CSV data in `docs/roster_cap_tool/data/`:
+  - `MEGA_players.csv`
+  - `MEGA_teams.csv`
+- Optional helper scripts (local verification):
+  - `scripts/sync_data_to_docs.sh`
+  - `scripts/verify_cap_math.py`
+  - `scripts/smoke_roster_cap_tool.sh`
+
+## Data Setup
+Place fresh CSV exports at the repo root, then sync them into the Pages data folder:
+
+```bash
+bash scripts/sync_data_to_docs.sh          # copies MEGA_players.csv + MEGA_teams.csv
+# or
+bash scripts/sync_data_to_docs.sh --all    # copies all MEGA_*.csv to docs/roster_cap_tool/data
+```
+
+This populates:
+- `docs/roster_cap_tool/data/MEGA_players.csv`
+- `docs/roster_cap_tool/data/MEGA_teams.csv`
+
+## Run Locally
+```bash
+# from repo root
+python3 -m http.server 8000
+
+# open the app
+http://localhost:8000/docs/roster_cap_tool/
+
+# optional: open the browser smoke tests
+http://localhost:8000/docs/roster_cap_tool/test.html
+```
+
+The smoke tests print PASS/FAIL lines that sanity‑check core math and flows (release → sign → extension → conversion).
+
+## GitHub Pages
+1) Commit/push the repo to GitHub (ensure `docs/roster_cap_tool/` and its `data/` CSVs are committed)
+2) In repository Settings → Pages, set Source to “Deploy from a branch”, folder `/docs`
+3) Visit `https://<username>.github.io/<repo>/docs/roster_cap_tool/`
+
+Note: GitHub Pages serves only committed files. If you update root CSVs, re‑run the sync script and commit the updated files under `docs/roster_cap_tool/data/`.
+
+## Verify Functionality
+- Browser smoke tests: `docs/roster_cap_tool/test.html`
+- Math parity report (writes `output/cap_tool_verification.json`):
+  ```bash
+  python3 scripts/verify_cap_math.py \
+    --teams docs/roster_cap_tool/data/MEGA_teams.csv \
+    --players docs/roster_cap_tool/data/MEGA_players.csv \
+    --out output/cap_tool_verification.json
+  ```
+- Page + assets availability smoke:
+  ```bash
+  bash scripts/smoke_roster_cap_tool.sh
+  ```
+
+## Financial Rules Reference (Madden)
+Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
+
+- Year 1 Cap Hit = Base Salary + (Signing Bonus / Contract Length) + Roster Bonus
+- Release (simplified):
+  - Savings = `capReleaseNetSavings`
+  - Dead Money = `capReleasePenalty`
+  - If multi‑year: current year dead money ≈ 40% of penalty, remainder next year
+- Bonus proration capped at 5 years (Madden rule)
+
+## Architecture (Pure JS)
+- No bundler, no Node runtime — served as static files
+- Modules in `docs/roster_cap_tool/js/`:
+  - `csv.js` – loads/parses CSV via PapaParse (CDN)
+  - `validation.js` – coercion and row normalization
+  - `models.js` – JSDoc typedefs for Team/Player/Scenario
+  - `state.js` – simple pub/sub store and derived selectors
+  - `capMath.js` – pure functions for cap math and projections
+  - `ui/*` – team selector, cap summary, tabs/tables, modals:
+    - Modals: release, trade (quick), extension, conversion, offer/signing
+    - Projections and scenario save/load included
+
+## Troubleshooting
+- Blank tables: confirm both CSVs exist under `docs/roster_cap_tool/data/`
+- CORS/file errors: use a local web server (see “Run Locally”)
+- Cap math mismatch: run `scripts/verify_cap_math.py` and review `output/cap_tool_verification.json`
+- Pages not updating: ensure CSVs were synced, committed, and Pages deployed
+
+## Example Flow
+1) Select a team in the header
+2) Release a player → modal previews Dead Cap, Savings, and New Cap Space
+3) Sign a Free Agent → offer builder previews Year 1 Cap Hit and Remaining Cap
+4) Optional: Extension/Conversion for targeted cap adjustments
+
+For an in‑depth explanation of Madden’s cap mechanics, see `spec/Salary Cap Works in Madden.md`.
+

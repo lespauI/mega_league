@@ -246,7 +246,7 @@ Task instructions
 - Deliverable: Polished UI with sticky Cap Summary, color coding, responsive layout.
 - Verification: Manual checks on desktop/tablet/mobile widths.
 
-### [ ] Step: Documentation & References (GitHub Pages)
+### [x] Step: Documentation & References (GitHub Pages)
 <!-- chat-id: a3f942ee-3336-493e-99c1-225070361e52 -->
 Task instructions
 - Definition: Update `README.md` and add `docs/roster_cap_tool/USAGE.md` documenting pure JS architecture, data folder, how to enable GitHub Pages (serve `/docs`), and verification steps; link to `spec/Salary Cap Works in Madden.md`.
