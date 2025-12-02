@@ -1,0 +1,20 @@
+{
+  "scenarios": [
+    {
+      "id": "basic_release_sign",
+      "team": "SF",
+      "notes": "Release a roster player then sign a FA; verifies savings increase and signing decrease"
+    },
+    {
+      "id": "extension_conversion",
+      "team": "CHI",
+      "notes": "Extension and conversion on high-cap-hit player; verifies capHitDelta propagation"
+    },
+    {
+      "id": "trade_quick",
+      "team": "SF",
+      "notes": "Quick trade should behave like release for current-year savings"
+    }
+  ]
+}
+

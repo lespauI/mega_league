@@ -1,0 +1,409 @@
+{
+  "generated_at": "2025-12-02T17:35:25",
+  "teams_csv": "docs/roster_cap_tool/data/MEGA_teams.csv",
+  "players_csv": "docs/roster_cap_tool/data/MEGA_players.csv",
+  "fixtures": "scripts/fixtures/cap_scenarios.json",
+  "scenarios": [
+    {
+      "id": "basic_release_sign",
+      "team": "SF",
+      "baseline": {
+        "capRoom": 304200000.0,
+        "capSpent": 270330000.0,
+        "capAvailable": 33870000.0,
+        "deadMoney": 0.0,
+        "baselineAvailable": 33870000.0,
+        "deltaAvailable": 0.0
+      },
+      "ops": [
+        {
+          "type": "release",
+          "playerId": "1313380076",
+          "savings": 32020000.0,
+          "penaltyCurrentYear": 12000000.0,
+          "newCapSpacePreview": 65890000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 238310000.0,
+            "capAvailable": 65890000.0,
+            "deadMoney": 12000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 32020000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable increased by savings",
+              "pass": true,
+              "expected": 32020000.0,
+              "actual": 32020000.0
+            }
+          ]
+        },
+        {
+          "type": "tradeQuick",
+          "playerId": "1313380076",
+          "savings": 32020000.0,
+          "penaltyCurrentYear": 12000000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 206290000.0,
+            "capAvailable": 97910000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 64040000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable increased by savings (trade)",
+              "pass": true,
+              "expected": 32020000.0,
+              "actual": 32020000.0
+            }
+          ]
+        },
+        {
+          "type": "extend",
+          "playerId": "1313380076",
+          "capHitDelta": 7940000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 214230000.0,
+            "capAvailable": 89970000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 56100000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable changed by -capHitDelta (extension)",
+              "pass": true,
+              "expected": -7940000.0,
+              "actual": -7940000.0
+            }
+          ]
+        },
+        {
+          "type": "convert",
+          "playerId": "1313380076",
+          "capHitDelta": -8404000.0,
+          "perYearProration": 4202000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 205826000.0,
+            "capAvailable": 98374000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 64504000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable changed by -capHitDelta (conversion)",
+              "pass": true,
+              "expected": 8404000.0,
+              "actual": 8404000.0
+            }
+          ]
+        },
+        {
+          "type": "sign",
+          "playerId": "1313382406",
+          "year1CapHit": 2840000.0,
+          "warnLowball": false,
+          "canSign": true,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 208666000.0,
+            "capAvailable": 95534000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 61664000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable decreased by year1CapHit (signing)",
+              "pass": true,
+              "expected": -2840000.0,
+              "actual": -2840000.0
+            }
+          ]
+        }
+      ],
+      "final": {
+        "capRoom": 304200000.0,
+        "capSpent": 208666000.0,
+        "capAvailable": 95534000.0,
+        "deadMoney": 24000000.0,
+        "baselineAvailable": 33870000.0,
+        "deltaAvailable": 61664000.0
+      }
+    },
+    {
+      "id": "extension_conversion",
+      "team": "CHI",
+      "baseline": {
+        "capRoom": 304200000.0,
+        "capSpent": 281900000.0,
+        "capAvailable": 22300000.0,
+        "deadMoney": 0.0,
+        "baselineAvailable": 22300000.0,
+        "deltaAvailable": 0.0
+      },
+      "ops": [
+        {
+          "type": "release",
+          "playerId": "1313380121",
+          "savings": 24500000.0,
+          "penaltyCurrentYear": 7812000.0,
+          "newCapSpacePreview": 46800000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 257400000.0,
+            "capAvailable": 46800000.0,
+            "deadMoney": 7812000.0,
+            "baselineAvailable": 22300000.0,
+            "deltaAvailable": 24500000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable increased by savings",
+              "pass": true,
+              "expected": 24500000.0,
+              "actual": 24500000.0
+            }
+          ]
+        },
+        {
+          "type": "tradeQuick",
+          "playerId": "1313380121",
+          "savings": 24500000.0,
+          "penaltyCurrentYear": 7812000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 232900000.0,
+            "capAvailable": 71300000.0,
+            "deadMoney": 15624000.0,
+            "baselineAvailable": 22300000.0,
+            "deltaAvailable": 49000000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable increased by savings (trade)",
+              "pass": true,
+              "expected": 24500000.0,
+              "actual": 24500000.0
+            }
+          ]
+        },
+        {
+          "type": "extend",
+          "playerId": "1313380121",
+          "capHitDelta": 7025000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 239925000.0,
+            "capAvailable": 64275000.0,
+            "deadMoney": 15624000.0,
+            "baselineAvailable": 22300000.0,
+            "deltaAvailable": 41975000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable changed by -capHitDelta (extension)",
+              "pass": true,
+              "expected": -7025000.0,
+              "actual": -7025000.0
+            }
+          ]
+        },
+        {
+          "type": "convert",
+          "playerId": "1313380121",
+          "capHitDelta": -6412500.0,
+          "perYearProration": 2137500.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 233512500.0,
+            "capAvailable": 70687500.0,
+            "deadMoney": 15624000.0,
+            "baselineAvailable": 22300000.0,
+            "deltaAvailable": 48387500.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable changed by -capHitDelta (conversion)",
+              "pass": true,
+              "expected": 6412500.0,
+              "actual": 6412500.0
+            }
+          ]
+        },
+        {
+          "type": "sign",
+          "playerId": "1313382406",
+          "year1CapHit": 2840000.0,
+          "warnLowball": false,
+          "canSign": true,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 236352500.0,
+            "capAvailable": 67847500.0,
+            "deadMoney": 15624000.0,
+            "baselineAvailable": 22300000.0,
+            "deltaAvailable": 45547500.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable decreased by year1CapHit (signing)",
+              "pass": true,
+              "expected": -2840000.0,
+              "actual": -2840000.0
+            }
+          ]
+        }
+      ],
+      "final": {
+        "capRoom": 304200000.0,
+        "capSpent": 236352500.0,
+        "capAvailable": 67847500.0,
+        "deadMoney": 15624000.0,
+        "baselineAvailable": 22300000.0,
+        "deltaAvailable": 45547500.0
+      }
+    },
+    {
+      "id": "trade_quick",
+      "team": "SF",
+      "baseline": {
+        "capRoom": 304200000.0,
+        "capSpent": 270330000.0,
+        "capAvailable": 33870000.0,
+        "deadMoney": 0.0,
+        "baselineAvailable": 33870000.0,
+        "deltaAvailable": 0.0
+      },
+      "ops": [
+        {
+          "type": "release",
+          "playerId": "1313380076",
+          "savings": 32020000.0,
+          "penaltyCurrentYear": 12000000.0,
+          "newCapSpacePreview": 65890000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 238310000.0,
+            "capAvailable": 65890000.0,
+            "deadMoney": 12000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 32020000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable increased by savings",
+              "pass": true,
+              "expected": 32020000.0,
+              "actual": 32020000.0
+            }
+          ]
+        },
+        {
+          "type": "tradeQuick",
+          "playerId": "1313380076",
+          "savings": 32020000.0,
+          "penaltyCurrentYear": 12000000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 206290000.0,
+            "capAvailable": 97910000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 64040000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable increased by savings (trade)",
+              "pass": true,
+              "expected": 32020000.0,
+              "actual": 32020000.0
+            }
+          ]
+        },
+        {
+          "type": "extend",
+          "playerId": "1313380076",
+          "capHitDelta": 7940000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 214230000.0,
+            "capAvailable": 89970000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 56100000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable changed by -capHitDelta (extension)",
+              "pass": true,
+              "expected": -7940000.0,
+              "actual": -7940000.0
+            }
+          ]
+        },
+        {
+          "type": "convert",
+          "playerId": "1313380076",
+          "capHitDelta": -8404000.0,
+          "perYearProration": 4202000.0,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 205826000.0,
+            "capAvailable": 98374000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 64504000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable changed by -capHitDelta (conversion)",
+              "pass": true,
+              "expected": 8404000.0,
+              "actual": 8404000.0
+            }
+          ]
+        },
+        {
+          "type": "sign",
+          "playerId": "1313382406",
+          "year1CapHit": 2840000.0,
+          "warnLowball": false,
+          "canSign": true,
+          "after": {
+            "capRoom": 304200000.0,
+            "capSpent": 208666000.0,
+            "capAvailable": 95534000.0,
+            "deadMoney": 24000000.0,
+            "baselineAvailable": 33870000.0,
+            "deltaAvailable": 61664000.0
+          },
+          "assertions": [
+            {
+              "name": "capAvailable decreased by year1CapHit (signing)",
+              "pass": true,
+              "expected": -2840000.0,
+              "actual": -2840000.0
+            }
+          ]
+        }
+      ],
+      "final": {
+        "capRoom": 304200000.0,
+        "capSpent": 208666000.0,
+        "capAvailable": 95534000.0,
+        "deadMoney": 24000000.0,
+        "baselineAvailable": 33870000.0,
+        "deltaAvailable": 61664000.0
+      }
+    }
+  ],
+  "assertions_passed": 15,
+  "assertions_failed": 0
+}

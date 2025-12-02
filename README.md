@@ -479,6 +479,39 @@ The `docs/` folder is configured for GitHub Pages:
 
 Edit `scripts/calc_playoff_probabilities.py`:
 
+## 💸 Roster Cap Management Tool (Spotrac‑style)
+
+Interactive, Spotrac‑inspired salary cap manager for Madden that lets you manage rosters and see real‑time cap impact for releases, trades (quick), extensions, conversions, and free‑agent signings.
+
+Quick start (local):
+
+```bash
+# 1) Ensure fresh CSVs exist at repo root
+ls MEGA_players.csv MEGA_teams.csv
+
+# 2) Sync CSVs into GitHub Pages data folder
+bash scripts/sync_data_to_docs.sh
+
+# 3) Serve locally and open the tool
+python3 -m http.server 8000
+open http://localhost:8000/docs/roster_cap_tool/
+
+# Optional: browser smoke tests
+open http://localhost:8000/docs/roster_cap_tool/test.html
+```
+
+GitHub Pages:
+1. Commit/push `docs/roster_cap_tool/` (including `data/MEGA_players.csv` and `data/MEGA_teams.csv`)
+2. In Settings → Pages, set Source to `/docs`
+3. Visit `https://<username>.github.io/<repo>/docs/roster_cap_tool/`
+
+Docs and references:
+- Usage guide: `docs/roster_cap_tool/USAGE.md`
+- Madden cap rules reference: `spec/Salary Cap Works in Madden.md`
+- Data sync script: `scripts/sync_data_to_docs.sh`
+- Smoke page: `docs/roster_cap_tool/test.html`
+- Cap math verification: `scripts/verify_cap_math.py` (writes `output/cap_tool_verification.json`)
+
 ```python
 # Number of simulations (default: 1000)
 NUM_SIMULATIONS = 1000
