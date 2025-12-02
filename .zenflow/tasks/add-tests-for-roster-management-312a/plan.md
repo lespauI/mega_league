@@ -125,7 +125,7 @@ Deliverables:
 Verification:
 - `npx playwright test -g selectors` (if you add a small unit-ish spec) or import in smoke test without runtime errors.
 
-### [ ] Step: Smoke Test (Load + Cap Summary)
+### [x] Step: Smoke Test (Load + Cap Summary)
 <!-- chat-id: b9282348-16ab-45c0-8492-1520b1dd5a04 -->
 Task definition:
 - Add a basic smoke test to ensure the app loads, CSVs parse, and Cap Summary shows numbers.
