@@ -118,7 +118,8 @@ Verification
 - Run `npm run test:e2e` to confirm no regressions.
 - Manual: load app; ensure no UI/behavior changes yet and no console errors.
 
-### [ ] Step: Create Context Helpers Module
+### [x] Step: Create Context Helpers Module
+<!-- chat-id: b918d5e1-fbe7-447f-8700-5e538014d08d -->
 Task definition
 - Add `docs/roster_cap_tool/js/context.js` with pure helpers to compute contextual player and roster views for a given offset, without mutating inputs.
 
