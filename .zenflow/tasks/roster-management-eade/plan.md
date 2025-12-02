@@ -206,7 +206,8 @@ Task instructions
 - Deliverable: Modal displays current vs future cap hits; applying updates current year snapshot.
 - Verification: Manual compare preview vs applied change.
 
-### [ ] Step: Projections View (3–5 Years)
+### [x] Step: Projections View (3–5 Years)
+<!-- chat-id: a4f7e2c5-7824-40ee-9f99-9954519ad559 -->
 Task instructions
 - Definition: Implement projections panel `js/ui/projections.js` showing next 3–5 seasons impacts based on `contractYearsLeft` and dead money rules.
 - Contracts: Extend `capMath` with projection helpers; use store roster state.

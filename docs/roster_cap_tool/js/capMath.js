@@ -257,5 +257,140 @@ export default {
   simulateExtension,
   simulateConversion,
   simulateSigning,
+  projectPlayerCapHits,
+  deriveConversionIncrements,
+  deriveDeadMoneySchedule,
+  projectTeamCaps,
 };
 
+/**
+ * Project per-year cap hits for a player over N future seasons.
+ * Year 0 = current season and uses player.capHit (reflects conversions/extensions already applied).
+ * Future years use simplified model: base = totalSalary/length for remaining contract years,
+ * bonus proration = totalBonus / min(length, 5) for remaining proration years.
+ * @param {Player} player
+ * @param {number} years
+ * @returns {number[]} length `years` array
+ */
+export function projectPlayerCapHits(player, years = 5) {
+  const out = Array.from({ length: Math.max(0, Math.floor(toFinite(years, 0))) }, () => 0);
+  if (out.length === 0) return out;
+
+  const lenRaw = toFinite(player.contractLength);
+  const len = Math.max(1, Math.floor(Number.isFinite(lenRaw) && lenRaw > 0 ? lenRaw : toFinite(player.contractYearsLeft, 1)));
+  const yearsLeft = Math.max(0, Math.floor(toFinite(player.contractYearsLeft, 0)));
+  const yearsElapsed = clamp(len - yearsLeft, 0, len);
+  const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
+  const bonusTotal = Math.max(0, toFinite(player.contractBonus, 0));
+  const bonusPerYear = bonusTotal > 0 ? (bonusTotal / prorateYears) : 0;
+  const remainingProrationNow = Math.max(0, prorateYears - yearsElapsed);
+  const basePerYear = Math.max(0, toFinite(player.contractSalary, 0)) / len;
+
+  for (let i = 0; i < out.length; i++) {
+    if (i === 0) {
+      // Use current capHit for Year 0 to reflect any live changes
+      const cur = toFinite(player.capHit);
+      out[i] = Number.isFinite(cur) ? cur : (basePerYear + (remainingProrationNow > 0 ? bonusPerYear : 0));
+      continue;
+    }
+    const withinContract = i < yearsLeft;
+    const hasProration = i < remainingProrationNow;
+    const base = withinContract ? basePerYear : 0;
+    const pr = hasProration ? bonusPerYear : 0;
+    out[i] = base + pr;
+  }
+  return out;
+}
+
+/**
+ * Build a map of conversion increments per player over future years (offsets 1..pYears-1).
+ * @param {Array<ScenarioMove>} moves
+ * @param {number} years
+ */
+export function deriveConversionIncrements(moves = [], years = 5) {
+  /** @type {Record<string, number[]>} */
+  const inc = {};
+  const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
+  for (const mv of moves || []) {
+    if (!mv || mv.type !== 'convert') continue;
+    const pYears = prorationYears(/** @type {any} */(mv).yearsRemaining);
+    const perYear = Math.max(0, toFinite(/** @type {any} */(mv).convertAmount)) / pYears;
+    if (!inc[mv.playerId]) inc[mv.playerId] = Array.from({ length: horizon }, () => 0);
+    // Apply to offsets 1..pYears-1 within horizon
+    for (let o = 1; o < pYears && o < horizon; o++) {
+      inc[mv.playerId][o] += perYear;
+    }
+  }
+  return inc;
+}
+
+/**
+ * Compute dead money schedule over N years from release/trade moves.
+ * Year 0 includes current-year penalties; year 1 includes next-year penalties if split applies.
+ * @param {Array<ScenarioMove>} moves
+ * @param {Array<Player>} players
+ * @param {number} years
+ * @returns {number[]} length `years` array
+ */
+export function deriveDeadMoneySchedule(moves = [], players = [], years = 5) {
+  const out = Array.from({ length: Math.max(0, Math.floor(toFinite(years, 0))) }, () => 0);
+  if (out.length === 0) return out;
+  /** @type {Record<string, Player>} */
+  const byId = {};
+  for (const p of players || []) byId[p.id] = p;
+  for (const mv of moves || []) {
+    if (!mv) continue;
+    if (mv.type !== 'release' && mv.type !== 'tradeQuick') continue;
+    const pl = byId[mv.playerId];
+    if (!pl) continue;
+    // Recompute penalties from player fields
+    const sim = simulateRelease({ capAvailable: 0, capRoom: 0, capSpent: 0 }, pl);
+    out[0] += Math.max(0, toFinite(sim.penaltyCurrentYear));
+    if (out.length > 1) out[1] += Math.max(0, toFinite(sim.penaltyNextYear));
+  }
+  return out;
+}
+
+/**
+ * Project team cap over N years using roster players and moves.
+ * Returns an array of yearly snapshots: { yearOffset, capRoom, rosterCap, deadMoney, totalSpent, capSpace }.
+ * @param {Team} team
+ * @param {Array<Player>} players
+ * @param {Array<ScenarioMove>} moves
+ * @param {number} years
+ */
+export function projectTeamCaps(team, players = [], moves = [], years = 5) {
+  const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
+  const capRoom = toFinite(team.capRoom);
+  const active = (players || []).filter((p) => p && !p.isFreeAgent && p.team === team.abbrName);
+  const dead = deriveDeadMoneySchedule(moves, players, horizon);
+  const conv = deriveConversionIncrements(moves, horizon);
+
+  // Sum roster caps per year
+  const rosterTotals = Array.from({ length: horizon }, () => 0);
+  for (const p of active) {
+    const caps = projectPlayerCapHits(p, horizon);
+    // Overlay conversion increments for this player if any
+    const inc = conv[p.id];
+    if (inc) {
+      for (let i = 0; i < horizon; i++) {
+        caps[i] += inc[i] || 0;
+      }
+    }
+    for (let i = 0; i < horizon; i++) rosterTotals[i] += caps[i] || 0;
+  }
+
+  // Build result
+  const out = [];
+  for (let i = 0; i < horizon; i++) {
+    const rosterCap = rosterTotals[i] || 0;
+    const deadMoney = dead[i] || 0;
+    const totalSpent = rosterCap + deadMoney;
+    const capSpace = capRoom - totalSpent;
+    out.push({ yearOffset: i, capRoom, rosterCap, deadMoney, totalSpent, capSpace });
+  }
+  return out;
+}
+
+// Marker for tooling/tests
+export const __capMath_projections = true;
