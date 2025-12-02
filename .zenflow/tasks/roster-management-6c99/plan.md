@@ -203,7 +203,8 @@ Verification
 - Manual: switch context and confirm header updates.
 - New E2E will assert via `col-cap-label`.
 
-### [ ] Step: Context-Aware Actions (Release/Trade/Extend/Convert/Sign)
+### [x] Step: Context-Aware Actions (Release/Trade/Extend/Convert/Sign)
+<!-- chat-id: 2d1f88ed-2cd4-4b46-8fb9-0b35144bbd43 -->
 Task definition
 - Ensure simulation helpers and modals use contextual player view and cap snapshot for the selected year.
 - Update modal previews to reflect penalties/savings in the context year.

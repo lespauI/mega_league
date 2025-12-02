@@ -25,6 +25,7 @@ export function openExtensionModal(player) {
 
   const name = `${player.firstName || ''} ${player.lastName || ''}`.trim();
 
+
   // Initial defaults from player contract if available
   let years = Math.max(1, Math.min(7, Math.floor(Number(player.contractLength || player.contractYearsLeft || 3))));
   let totalSalary = Math.max(0, Number(player.contractSalary || ((player.capHit || 0) * years)));

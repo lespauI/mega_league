@@ -1,10 +1,11 @@
-import { getState, setState, getCapSummary, getContextLabel } from '../state.js';
+import { getState, setState, getCapSummary, getContextLabel, getYearContextForSelectedTeam } from '../state.js';
 import { simulateTradeQuick } from '../capMath.js';
 import { openReleaseModal } from './modals/releaseModal.js';
 import { openExtensionModal } from './modals/extensionModal.js';
 import { openConversionModal } from './modals/conversionModal.js';
 import { openOfferModal } from './modals/offerModal.js';
 import { confirmWithDialog } from './modals/confirmDialog.js';
+import { contextualizePlayer } from '../context.js';
 
 function fmtMoney(n) {
   return new Intl.NumberFormat('en-US', {
@@ -269,7 +270,19 @@ export function renderPlayerTable(containerId, players, options = {}) {
           if (!team) { sel.value = ''; return; }
           const snap = getCapSummary();
           const effTeam = { ...team, capAvailable: (Number.isFinite(Number(snap.capAvailableEffective)) ? Number(snap.capAvailableEffective) : (snap.capAvailable || 0)) };
-          const res = simulateTradeQuick(effTeam, p);
+          const offset = getYearContextForSelectedTeam();
+          const effPlayer = (() => {
+            if (!offset || offset <= 0) return p;
+            const pctx = contextualizePlayer(p, team, offset);
+            return {
+              ...p,
+              capHit: Number(pctx.capHit_ctx || p.capHit || 0),
+              contractYearsLeft: Number(pctx.contractYearsLeft_ctx != null ? pctx.contractYearsLeft_ctx : p.contractYearsLeft || 0),
+              capReleasePenalty: Number(pctx.capReleasePenalty_ctx || p.capReleasePenalty || 0),
+              capReleaseNetSavings: Number(pctx.capReleaseNetSavings_ctx || p.capReleaseNetSavings || 0),
+            };
+          })();
+          const res = simulateTradeQuick(effTeam, effPlayer);
           const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
           const rememberKey = `rosterCap.skipConfirm.tradeQuick.${team.abbrName}`;
           const ok = await confirmWithDialog({
