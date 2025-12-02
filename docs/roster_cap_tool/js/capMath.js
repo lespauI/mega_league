@@ -132,17 +132,33 @@ export function calcCapSummary(team, moves = []) {
  * @param {Player} player
  */
 export function simulateRelease(team, player) {
-  const savings = toFinite(player.capReleaseNetSavings);
   const penaltyTotal = Math.max(0, toFinite(player.capReleasePenalty));
   const yearsLeft = Math.max(0, Math.floor(toFinite(player.contractYearsLeft, 0)));
 
+  // Split penalties: default to ~40% current year, ~60% next year when multi-year per spec.
   let penaltyCurrentYear = penaltyTotal;
   let penaltyNextYear = 0;
   if (penaltyTotal > 0 && yearsLeft >= 2) {
-    // In-game behavior observed: larger portion hits immediately.
-    // Use 60% in current year, 40% next year for multi-year contracts.
-    penaltyNextYear = Math.round(penaltyTotal * 0.4);
-    penaltyCurrentYear = penaltyTotal - penaltyNextYear; // remainder (≈60%)
+    penaltyCurrentYear = Math.round(penaltyTotal * 0.4);
+    penaltyNextYear = penaltyTotal - penaltyCurrentYear; // remainder (~60%)
+  }
+
+  // Derive approximate current-year base salary to compute fallback savings when dataset lacks it
+  const totalBonus = toFinite(player.contractBonus, 0);
+  const lenRaw = toFinite(player.contractLength, 0);
+  const yearsLeftRaw = toFinite(player.contractYearsLeft, 0);
+  const len = Math.max(1, Math.floor(Number.isFinite(lenRaw) && lenRaw > 0 ? lenRaw : toFinite(player.contractYearsLeft, 1)));
+  const yearsLeft2 = Math.max(0, Math.floor(Number.isFinite(yearsLeftRaw) && yearsLeftRaw >= 0 ? yearsLeftRaw : 0));
+  const yearsElapsed = clamp(len - yearsLeft2, 0, Math.max(0, len - 1));
+  const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
+  const bonusPerYear = totalBonus > 0 ? (totalBonus / prorateYears) : 0;
+  const currentCapHit = toFinite(player.capHit);
+  const approxBaseSalary = Math.max(0, currentCapHit - bonusPerYear);
+
+  // Use provided net savings if available; else approximate as base minus current-year penalty
+  let savings = toFinite(player.capReleaseNetSavings);
+  if (!Number.isFinite(savings)) {
+    savings = approxBaseSalary - penaltyCurrentYear;
   }
 
   const newCapSpace = toFinite(team.capAvailable) + savings; // savings already net of current-year penalty
