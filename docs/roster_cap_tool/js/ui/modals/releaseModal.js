@@ -71,7 +71,15 @@ export function openReleaseModal(player) {
       if (p.id !== player.id) return p;
       return { ...p, isFreeAgent: true, team: '' };
     });
-    const ledgerEntry = { playerId: player.id, name, type: 'release', penalty: res.penaltyCurrentYear, at: Date.now() };
+    const ledgerEntry = {
+      playerId: player.id,
+      name,
+      type: 'release',
+      penaltyCurrentYear: res.penaltyCurrentYear,
+      penaltyNextYear: res.penaltyNextYear,
+      penaltyTotal: res.penaltyTotal,
+      at: Date.now(),
+    };
     const deadMoneyLedger = Array.isArray(current.deadMoneyLedger) ? [...current.deadMoneyLedger, ledgerEntry] : [ledgerEntry];
     setState({ moves, players, deadMoneyLedger });
 

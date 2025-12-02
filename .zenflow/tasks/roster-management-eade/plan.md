@@ -346,11 +346,24 @@ Files changed:
 Verification:
 - DAL totals now show `Cap Space` equal to the in‑game `capAvailable` for Year 1 and never negative; applying a release/sign adjusts by the move deltas. Future years remain projection‑based.
 
-### [ ] Step: Dead money
+### [x] Step: Dead money
 <!-- chat-id: 5dd9e963-f8d0-48b3-b800-6400bb0680d6 -->
 
-Dead money shoult be split to 2 years and we need to show it in dead money page. Also if we dont have current team dead money info, lets allow user to set it manualy
+Dead money is split across two years and displayed in the Dead Money tab. Added a manual baseline per-team editor (This Year and Next Year) with localStorage persistence. Ledger rows now include current and next year values; totals show moves-only and combined with baseline.
+
+Changes:
+- UI: `docs/roster_cap_tool/js/ui/deadMoneyTable.js` now shows This Year, Next Year, Total columns, a baseline editor with Save, and totals.
+- State: `docs/roster_cap_tool/js/state.js` added baseline dead money getters/setters and persistence under `rosterCap.deadMoneyBaseline`.
+- Moves: `docs/roster_cap_tool/js/ui/modals/releaseModal.js` and `docs/roster_cap_tool/js/ui/playerTable.js` now record `penaltyCurrentYear`, `penaltyNextYear`, and `penaltyTotal` in the dead money ledger.
+
+Verification:
+- Open Dead Money tab. Enter baseline values and Save; they persist per team and totals update.
+- Release/Trade a player; row shows both years; totals reflect changes.
 
 ### [ ] Step: Add posobility to trade for the player
 
 We have free agent sign but lets also add Trade IN button, to add player contract from any other roster, lets add search by player name. Remember when we trade for player we add only his salary, bonus is dead mone fro another team
+
+### [ ] Step: Add possitions colors and filter
+
+Lets add additional colors for every possition and ability to filter by possitions in Roster and in Free agents tables

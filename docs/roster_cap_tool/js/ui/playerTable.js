@@ -251,7 +251,15 @@ export function renderPlayerTable(containerId, players, options = {}) {
           // Apply move; also add ledger entry for dead money
           const moves = [...stNow.moves, res.move];
           const players = stNow.players.map((pl) => pl.id === p.id ? { ...pl, isFreeAgent: true, team: '' } : pl);
-          const ledgerEntry = { playerId: p.id, name, type: 'tradeQuick', penalty: res.penaltyCurrentYear, at: Date.now() };
+          const ledgerEntry = {
+            playerId: p.id,
+            name,
+            type: 'tradeQuick',
+            penaltyCurrentYear: res.penaltyCurrentYear,
+            penaltyNextYear: res.penaltyNextYear,
+            penaltyTotal: res.penaltyTotal,
+            at: Date.now(),
+          };
           const deadMoneyLedger = Array.isArray(stNow.deadMoneyLedger) ? [...stNow.deadMoneyLedger, ledgerEntry] : [ledgerEntry];
           setState({ moves, players, deadMoneyLedger });
           // Sanity assert

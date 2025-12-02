@@ -22,6 +22,8 @@ const state = {
   snapshot: null,
   /** Persisted draft picks config per team: { [abbr]: {1:number,...,7:number} } */
   draftPicksByTeam: {},
+  /** Persisted baseline dead money per team: { [abbr]: { year0:number, year1:number } } */
+  baselineDeadMoneyByTeam: {},
 };
 
 export function subscribe(fn) {
@@ -108,6 +110,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.draftPicks');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.draftPicksByTeam = parsed;
+  } catch {}
+  // Load baseline dead money per team from localStorage once
+  try {
+    const raw = localStorage.getItem('rosterCap.deadMoneyBaseline');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.baselineDeadMoneyByTeam = parsed;
   } catch {}
   emit();
 }
@@ -276,4 +284,26 @@ export function setDraftPicksForSelectedTeam(picksPerRound) {
 export function getRookieReserveEstimate() {
   const picks = getDraftPicksForSelectedTeam();
   return estimateRookieReserveForPicks(picks);
+}
+
+// ----- Baseline Dead Money (manual input) -----
+
+/** Return baseline dead money for selected team: { year0, year1 } */
+export function getBaselineDeadMoney() {
+  const abbr = state.selectedTeam || '';
+  const cur = state.baselineDeadMoneyByTeam?.[abbr];
+  return {
+    year0: Number(cur?.year0 || 0) || 0,
+    year1: Number(cur?.year1 || 0) || 0,
+  };
+}
+
+/** Update baseline dead money for selected team and persist. */
+export function setBaselineDeadMoney({ year0 = 0, year1 = 0 } = {}) {
+  const abbr = state.selectedTeam || '';
+  const next = { ...(state.baselineDeadMoneyByTeam || {}) };
+  next[abbr] = { year0: Math.max(0, Number(year0) || 0), year1: Math.max(0, Number(year1) || 0) };
+  state.baselineDeadMoneyByTeam = next;
+  try { localStorage.setItem('rosterCap.deadMoneyBaseline', JSON.stringify(next)); } catch {}
+  emit();
 }
