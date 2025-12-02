@@ -243,7 +243,8 @@ Deliverables:
 Verification:
 - `npx playwright test tests/e2e/projections.spec.ts --project=chromium` passes.
 
-### [ ] Step: Scenario Save/Load/Reset E2E
+### [x] Step: Scenario Save/Load/Reset E2E
+<!-- chat-id: 4bfffac5-1380-41a4-8a50-1dcebc73b4e3 -->
 Task definition:
 - Implement scenario persistence tests covering Save, Load, and Reset flows.
 
