@@ -106,128 +106,135 @@ Task instructions
 
 Status: Completed. Detailed implementation plan added below.
 
-### [ ] Step: Project Scaffolding & Dependencies
+### [ ] Step: Project Scaffolding (Pure JS)
 Task instructions
-- Definition: Initialize `web/` app with Vite + React + TypeScript + TailwindCSS + Zustand, set build output to `../docs/roster_cap_tool/`. Add Vitest and Playwright for tests.
-- Contracts: Project structure per spec “Source Code Structure”; none of the domain contracts yet.
-- Deliverable: `web/` folder with baseline app, Tailwind configured, Vite build emits to `docs/roster_cap_tool/`.
-- Verification: `cd web && npm ci && npm run build`; confirm `docs/roster_cap_tool/index.html` and bundle files exist. Optionally run `npm run preview`.
+- Definition: Create a static app under `docs/roster_cap_tool/` with `index.html`, `css/styles.css`, and ES module files in `js/`. No bundler, no transpiler, no Node runtime required. Use standards-based web components/DOM manipulation.
+- Contracts: Source layout now: `docs/roster_cap_tool/{index.html, css/, js/}`. No React/TS/Zustand.
+- Deliverable: Loadable page from file:// and GitHub Pages; app bootstraps with placeholder panels.
+- Verification: Open `docs/roster_cap_tool/index.html` locally or serve via `python3 -m http.server` and visit `http://localhost:8000/docs/roster_cap_tool/`.
 
-### [ ] Step: Data Schemas & Models
+### [ ] Step: Data Models (JS) & Validation
 Task instructions
-- Definition: Create `types/models.ts` (Team, Player, CapSnapshot, ScenarioMove) and `types/schema.ts` (Zod schemas for CSV rows with coercion and validation).
-- Contracts: “Contracts > Data models (TypeScript)” and “CSV contracts (Zod)” in spec; reference `spec/Salary Cap Works in Madden.md` for notes on fields.
-- Deliverable: Strongly typed models and Zod schemas exported for app-wide use.
-- Verification: Add unit tests for schema coercion with sample rows; run `cd web && npm run test`.
+- Definition: Define JS JSDoc typedefs in `js/models.js` for `Team`, `Player`, `CapSnapshot`, `ScenarioMove`. Implement small validation/coercion helpers (number/boolean parsing) in `js/validation.js`.
+- Contracts: Mirrors “Contracts > Data models”; replace Zod with lightweight manual validators.
+- Deliverable: Exported typedefs and validators used across the app.
+- Verification: Add a browser test page `docs/roster_cap_tool/test.html` that runs validation against sample rows and logs pass/fail to console.
 
 ### [ ] Step: CSV Loader & Normalization
 Task instructions
-- Definition: Implement `lib/csv.ts` using PapaParse to load `MEGA_players.csv` and `MEGA_teams.csv`, normalize with Zod schemas, surface validation warnings, and expose ready-to-use arrays.
-- Contracts: `playersCsvRow`, `teamsCsvRow` schemas; functions to return `Player[]`, `Team[]`.
-- Deliverable: Loader that returns parsed and validated data; warning panel plumbing stub.
-- Verification: Unit tests for numeric/boolean coercion and invalid row skip counts; run `npm run test`.
+- Definition: Implement `js/csv.js` using PapaParse (CDN) to fetch and parse CSVs; normalize rows with `validation.js`; expose `loadTeams()` and `loadPlayers()` returning arrays.
+- Contracts: Input files are served statically; normalization mirrors schema fields in PRD/spec.
+- Deliverable: Data loads from `./data/MEGA_players.csv` and `./data/MEGA_teams.csv`; warning panel gets invalid row counts.
+- Verification: Open `test.html` to execute loader smoke; or use browser devtools on `index.html` to view loaded counts and sample rows.
 
-### [ ] Step: Cap Math Library
+### [ ] Step: Data Placement for GitHub Pages
 Task instructions
-- Definition: Implement pure functions in `lib/capMath.ts`: `calcCapSummary`, `simulateRelease`, `simulateTradeQuick`, `simulateExtension`, `simulateConversion`, `simulateSigning` following spec math and proration rules (max 5 years).
-- Contracts: “Contracts > Cap math functions (lib/capMath.ts)” in spec; formulas and examples from `spec/Salary Cap Works in Madden.md`.
-- Deliverable: Exported functions with comprehensive unit tests (Vitest) using fixtures.
-- Verification: `cd web && npm run test` with cases for release/sign/extension/conversion/trade quick; ensure all pass.
+- Definition: Copy CSVs into `docs/roster_cap_tool/data/` so GitHub Pages can serve them (Pages does not serve repo root). Add a small sync script `scripts/sync_data_to_docs.sh` to copy updated CSVs when needed.
+- Contracts: Uses repo-root `MEGA_players.csv`, `MEGA_teams.csv` as source of truth.
+- Deliverable: `docs/roster_cap_tool/data/MEGA_players.csv` and `docs/roster_cap_tool/data/MEGA_teams.csv` checked in.
+- Verification: Access `docs/roster_cap_tool/data/MEGA_players.csv` in browser; CSV downloads successfully.
 
-### [ ] Step: Global Store & Selectors
+### [ ] Step: Cap Math Library (Pure Functions)
 Task instructions
-- Definition: Create Zustand store in `state/store.ts` with team selection, players, dead money ledger, and applied moves; add `selectors.ts` and `actions.ts` with `applyMove` and derived selectors (`selectCapSummary`, `selectActiveRoster`, `selectFreeAgents`, `selectByTeam`).
-- Contracts: “UI contracts” and store selectors from spec; uses `CapSnapshot` and `ScenarioMove`.
-- Deliverable: Store wired to initial data load; memoized selectors available to components.
-- Verification: Add lightweight unit tests for selectors with tiny fixtures; run `npm run test`.
+- Definition: Implement `js/capMath.js` with pure functions: `calcCapSummary`, `simulateRelease`, `simulateTradeQuick`, `simulateExtension`, `simulateConversion`, `simulateSigning` per spec and Madden rules (bonus proration max 5 years).
+- Contracts: Formulas and examples from `spec/Salary Cap Works in Madden.md`.
+- Deliverable: Functions exported via ES modules; used by UI and verification scripts.
+- Verification: Add cases to `test.html` to run these functions and assert outputs; also cross-check via `scripts/verify_cap_math.py`.
+
+### [ ] Step: App State (Pub/Sub Store)
+Task instructions
+- Definition: Implement `js/state.js` as a simple pub/sub store holding selected team, players, free agents, dead money ledger, and move history. Provide derived getters for cap summary and filtered lists.
+- Contracts: Same selectors concept from spec but implemented as functions: `getCapSummary()`, `getActiveRoster()`, `getFreeAgents()`.
+- Deliverable: Store initializes after CSV load; notifies listeners to re-render.
+- Verification: Log state transitions in devtools; `test.html` can exercise selectors.
 
 ### [ ] Step: Team Selector & Cap Summary Panel
 Task instructions
-- Definition: Implement `TeamSelector.tsx` and `CapSummary.tsx` with sticky header and progress bar; show original/current cap, cap spent, cap space, and delta.
-- Contracts: Store selectors; `calcCapSummary` for current snapshot; props interfaces.
-- Deliverable: Visible dashboard with live updates on team change.
-- Verification: Build and manual check; add RTL test asserting summary values change on team switch.
+- Definition: Implement `js/ui/teamSelector.js` and `js/ui/capSummary.js`; sticky header with progress bar; shows original/current cap, cap spent, cap space, and delta; updates on store changes.
+- Contracts: Uses store getters and `calcCapSummary`.
+- Deliverable: Interactive header that updates as actions occur.
+- Verification: Manual check in browser; console asserts for value changes when switching teams.
 
 ### [ ] Step: Roster Tabs & Tables (Active + Free Agents)
 Task instructions
-- Definition: Implement `RosterTabs.tsx` with `PlayerTable.tsx`; Active Roster and Free Agents tabs with columns specified (rank, player identity, cap fields, contract, FA year, action). Sort by cap hit; filter per spec.
-- Contracts: Table columns and filters from PRD; models `Player`, selectors for active/free agents.
-- Deliverable: Two working tables with sorting and row numbering.
-- Verification: RTL tests for filtering/sorting; manual smoke after build.
+- Definition: Implement `js/ui/rosterTabs.js` and `js/ui/playerTable.js`; Active Roster and Free Agents tabs with specified columns; sortable by cap hit; action column with dropdown.
+- Contracts: Columns and filters per PRD; uses `getActiveRoster()` and `getFreeAgents()`.
+- Deliverable: Two functional tables with sorting and row numbering.
+- Verification: Manual sort checks; console logs for selected actions.
 
 ### [ ] Step: Release Flow (Action + Modal)
 Task instructions
-- Definition: Add Action dropdown with “Release”; implement `ReleaseModal.tsx` showing Dead Cap Hit, Cap Savings, and New Cap Space; on confirm, apply move and update store.
+- Definition: Add Action dropdown with “Release”; implement a modal using `<dialog>` in `js/ui/modals/releaseModal.js` showing Dead Cap Hit, Cap Savings, and New Cap Space; on confirm apply move and update store.
 - Contracts: `simulateRelease`, `ScenarioMove` (ReleaseMove); fields `capReleasePenalty`, `capReleaseNetSavings`.
 - Deliverable: Releasing a player updates roster and Cap Summary in real time.
-- Verification: Unit tests for release math; Playwright step releasing a top-3 cap hit player and asserting cap increase.
+- Verification: Manual modal preview; console assert of cap increase equals previewed savings.
 
 ### [ ] Step: Free Agent Signing Flow (Offer Modal)
 Task instructions
-- Definition: Add “Make Offer” for FAs; implement `OfferModal.tsx` with years/salary/bonus inputs and cap preview; block signing if `capAvailable < year1CapHit`; on confirm, sign player and mark `isFreeAgent = false`.
-- Contracts: `simulateSigning`; validation thresholds (≥90% of desired for warning).
+- Definition: Add “Make Offer” for FAs; implement `js/ui/modals/offerModal.js` with years/salary/bonus inputs and cap preview; block signing if `capAvailable < year1CapHit`; on confirm, sign player and mark `isFreeAgent = false`.
+- Contracts: `simulateSigning`; warning if offer < 90% of desired terms.
 - Deliverable: Signing updates Active Roster and Cap Summary; warning shown when low offer.
-- Verification: Unit tests for Year 1 cap hit and validation; Playwright step making an offer equal to desired and confirming cap decrease.
+- Verification: Manual offer at desired values shows expected Year 1 Cap Hit and reduces cap accordingly.
 
 ### [ ] Step: Dead Money & IR Tabs + Trade Quick
 Task instructions
-- Definition: Implement “Dead Money” tab listing penalties accumulated; minimal IR tab filtered by available injury surrogate (e.g., `reSignStatus` flag) per spec fallback; add “Trade → Quick Simulate” that removes player and applies `capReleasePenalty`.
+- Definition: Implement “Dead Money” tab listing penalties accumulated; minimal IR tab filtered by available injury surrogate; add “Trade → Quick Simulate” that removes player and applies `capReleasePenalty`.
 - Contracts: `simulateTradeQuick`; store dead money ledger; table filters.
 - Deliverable: Trade quick updates Dead Money tab and Cap Summary; IR tab present.
-- Verification: Unit tests for trade quick math; Playwright step performing a quick trade and asserting dead money list grows.
+- Verification: Manual quick trade; ensure dead money row appears and summary matches.
 
 ### [ ] Step: Extension Flow
 Task instructions
-- Definition: Add “Extension” action for players with `contractYearsLeft ≤ 2`; implement `ExtensionModal.tsx` with years slider (1–7), salary and bonus inputs; preview new cap hit `(salary + bonus)/years`; apply on confirm.
-- Contracts: `simulateExtension`; UI contract that modal returns `ScenarioMove`.
+- Definition: Add “Extension” action for players with `contractYearsLeft ≤ 2`; implement modal `js/ui/modals/extensionModal.js` with years slider (1–7), salary and bonus inputs; preview new cap hit `(salary + bonus)/years`; apply on confirm.
+- Contracts: `simulateExtension`.
 - Deliverable: Before/after cap comparison in modal; applying updates Cap Summary.
-- Verification: Unit tests against examples in `spec/Salary Cap Works in Madden.md`; RTL/Playwright checks for modal preview delta.
+- Verification: Manual preview delta equals applied delta.
 
 ### [ ] Step: Conversion Flow
 Task instructions
-- Definition: Add “Conversion” action for high `capHit` players; implement `ConversionModal.tsx` to convert base salary to signing bonus with proration and show multi-year impact.
-- Contracts: `simulateConversion`; projection helpers; proration max 5 years.
+- Definition: Add “Conversion” action for high `capHit` players; implement modal `js/ui/modals/conversionModal.js` to convert base salary to signing bonus with proration and show multi-year impact.
+- Contracts: `simulateConversion`; proration max 5 years.
 - Deliverable: Modal displays current vs future cap hits; applying updates current year snapshot.
-- Verification: Unit tests for conversion math; RTL snapshot of modal values.
+- Verification: Manual compare preview vs applied change.
 
 ### [ ] Step: Projections View (3–5 Years)
 Task instructions
-- Definition: Implement a projections panel showing cap impact across next 3–5 seasons based on `contractYearsLeft` and dead money rules.
+- Definition: Implement projections panel `js/ui/projections.js` showing next 3–5 seasons impacts based on `contractYearsLeft` and dead money rules.
 - Contracts: Extend `capMath` with projection helpers; use store roster state.
-- Deliverable: Read-only projections table/graph for selected team.
-- Verification: Unit tests for projection math; manual inspection.
+- Deliverable: Read-only projections view for selected team.
+- Verification: Manual spot-checks with known examples.
 
 ### [ ] Step: Scenario Save/Load (What-if Mode)
 Task instructions
-- Definition: Add scenario model and persistence (in-memory + optional localStorage via feature-flag); ability to save, load, and compare scenarios.
-- Contracts: `Scenario` interface; persistence adapter in `state/persist.ts`.
+- Definition: Add scenario model and localStorage persistence; allow save, load, and compare scenarios.
+- Contracts: `Scenario` shape defined in `models.js`.
 - Deliverable: Scenario controls with save/load and baseline/active comparison.
-- Verification: Unit tests for serialization; Playwright quick save/load check.
+- Verification: Manual save/load; inspect localStorage entries.
 
-### [ ] Step: E2E Smoke via Playwright
+### [ ] Step: Browser Test Page (Smoke)
 Task instructions
-- Definition: Add Playwright config and an e2e test covering team load → release → sign flow per spec’s Verification Strategy.
-- Contracts: None beyond UI flows; uses selectors and aria labels.
-- Deliverable: Passing Playwright run locally.
-- Verification: `cd web && npx playwright test`.
+- Definition: Create `docs/roster_cap_tool/test.html` that programmatically simulates: load team → release a player → sign a FA; logs assertions to console for cap deltas.
+- Contracts: Uses exported functions and store actions.
+- Deliverable: One-click browser smoke test without Node tooling.
+- Verification: Open `test.html` and check console output for PASS lines.
 
 ### [ ] Step: Helper Verification Scripts & Fixtures
 Task instructions
 - Definition: Implement `scripts/verify_cap_math.py`, `scripts/smoke_roster_cap_tool.sh`, and `scripts/fixtures/cap_scenarios.json`. Generate `output/tiny_teams.csv` if missing for tiny tests.
 - Contracts: Script I/O per spec; relies on same formulas as `capMath`.
-- Deliverable: Scripts produce `output/cap_tool_verification.json` and smoke-check build output.
+- Deliverable: Scripts produce `output/cap_tool_verification.json` and smoke-check that `docs/roster_cap_tool/` contains required assets and serves via local http.server.
 - Verification: `python3 scripts/verify_cap_math.py`; `bash scripts/smoke_roster_cap_tool.sh`.
 
 ### [ ] Step: Styling, Accessibility, Responsive
 Task instructions
-- Definition: Apply Spotrac-inspired colors (green/red/yellow/blue), add responsive breakpoints for table/cards, accessible modals and focus management.
+- Definition: Apply Spotrac-inspired colors (green/red/yellow/blue) via plain CSS; responsive grid/tables; accessible `<dialog>` modals with focus trapping.
 - Contracts: None; aligns with PRD “UI/UX Requirements”.
 - Deliverable: Polished UI with sticky Cap Summary, color coding, responsive layout.
-- Verification: Manual checks on desktop/tablet/mobile widths; run Axe or basic a11y lint if available.
+- Verification: Manual checks on desktop/tablet/mobile widths.
 
-### [ ] Step: Documentation & References
+### [ ] Step: Documentation & References (GitHub Pages)
 Task instructions
-- Definition: Update `README.md` and add `docs/roster_cap_tool/USAGE.md` with build/run instructions, math references to `spec/Salary Cap Works in Madden.md`, and verification steps.
+- Definition: Update `README.md` and add `docs/roster_cap_tool/USAGE.md` documenting pure JS architecture, data folder, how to enable GitHub Pages (serve `/docs`), and verification steps; link to `spec/Salary Cap Works in Madden.md`.
 - Contracts: Reference PRD/spec paths.
-- Deliverable: Clear docs for running and verifying the tool.
-- Verification: Open docs locally; cross-check links and commands.
+- Deliverable: Clear docs for running and verifying the tool from GitHub Pages.
+- Verification: Links and instructions validated locally; Pages loads post-publish.
