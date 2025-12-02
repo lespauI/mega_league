@@ -9,7 +9,7 @@ const POSITION_ORDER = [
   // Offense
   'QB','RB','HB','FB','WR','TE','LT','LG','C','RG','RT','OL',
   // Defense
-  'LE','RE','DE','DT','DL','EDGE','LOLB','MLB','ROLB','OLB','LB','CB','FS','SS','S','DB',
+  'LE','RE','DE','DT','DL','LEDGE','REDGE','EDGE','LOLB','MLB','ROLB','OLB','LB','MIKE','SAM','WILL','CB','FS','SS','S','DB',
   // Specialists
   'K','P','LS'
 ];

@@ -16,10 +16,12 @@ function fmtMoney(n) {
 function fmtPlayerCell(p) {
   const name = `${p.firstName || ''} ${p.lastName || ''}`.trim();
   const posBadge = `<span class="badge pos-${(p.position || '').toUpperCase()}">${p.position || ''}</span>`;
+  const ovr = Number.isFinite(Number(p.playerBestOvr)) ? Number(p.playerBestOvr)
+    : (Number.isFinite(Number(p.playerSchemeOvr)) ? Number(p.playerSchemeOvr) : undefined);
+  const age = Number.isFinite(Number(p.age)) ? Number(p.age) : undefined;
   const meta = [
-    typeof p.age === 'number' ? `${p.age}y` : null,
-    p.height ? p.height : null,
-    typeof p.weight === 'number' ? `${p.weight} lb` : null,
+    ovr != null ? `OVR ${ovr}` : null,
+    age != null ? `Age ${age}` : null,
   ].filter(Boolean).join(' · ');
   return `
     <div><strong>${name}</strong> ${posBadge}</div>

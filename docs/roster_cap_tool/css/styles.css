@@ -40,6 +40,11 @@ body {
 .header__right { display: flex; align-items: center; gap: 1rem; }
 .scenario-controls { display:flex; gap:.5rem; align-items:center; }
 
+/* Bottom strip inside header for projections */
+.header-projections { flex-basis: 100%; display: flex; align-items: center; gap: .5rem; padding-top: .25rem; margin-top: .25rem; border-top: 1px solid #1f2937; flex-wrap: wrap; }
+.header-projections .proj-strip { display: flex; align-items: center; gap: .5rem; flex-wrap: wrap; }
+.header-projections .label { color: var(--muted); font-size: .8rem; margin-right: .25rem; }
+
 .container { padding: 1rem; max-width: 1300px; margin: 0 auto; }
 
 .team-selector select { background: #0b1324; color: var(--text); border: 1px solid #334155; padding: .5rem; border-radius: .375rem; }
@@ -51,7 +56,7 @@ body {
 .progress { height: 8px; background: #1f2937; border-radius: 8px; overflow: hidden; width: 220px; }
 .progress .bar { height: 100%; background: var(--accent); width: 0%; transition: width .25s ease-in-out; }
 
-.tabs { display: flex; gap: .5rem; padding: .5rem; border-bottom: 1px solid #1f2937; position: sticky; top: 58px; background: var(--bg); z-index: 40; }
+.tabs { display: flex; gap: .5rem; padding: .5rem; border-bottom: 1px solid #1f2937; position: sticky; top: 86px; background: var(--bg); z-index: 40; }
 .tab { background: #0b1324; color: var(--text); border: 1px solid #334155; padding: .5rem .75rem; border-radius: .375rem; cursor: pointer; }
 .tab.is-active { border-color: var(--blue); color: #cfe3ff; }
 
@@ -75,9 +80,9 @@ tr:hover td { background: rgba(148,163,184,0.06); }
 /* Offensive line */
 .pos-LT, .pos-LG, .pos-C, .pos-RG, .pos-RT, .pos-OL { border-color: #60a5fa; color: #60a5fa; }
 /* Defensive line / edge */
-.pos-LE, .pos-RE, .pos-DE, .pos-DT, .pos-DL, .pos-EDGE { border-color: #f97316; color: #f97316; }
+.pos-LE, .pos-RE, .pos-DE, .pos-DT, .pos-DL, .pos-EDGE, .pos-LEDGE, .pos-REDGE { border-color: #f97316; color: #f97316; }
 /* Linebackers */
-.pos-LB, .pos-OLB, .pos-ILB, .pos-LOLB, .pos-MLB, .pos-ROLB { border-color: #818cf8; color: #818cf8; }
+.pos-LB, .pos-OLB, .pos-ILB, .pos-LOLB, .pos-MLB, .pos-ROLB, .pos-MIKE, .pos-SAM, .pos-WILL { border-color: #818cf8; color: #818cf8; }
 /* Secondary */
 .pos-CB { border-color: #22d3ee; color: #22d3ee; }
 .pos-FS, .pos-SS, .pos-S, .pos-DB { border-color: #38bdf8; color: #38bdf8; }
@@ -114,6 +119,7 @@ dialog::backdrop { background: rgba(2, 6, 23, 0.6); }
 @media (max-width: 900px) {
   .cap-summary { grid-auto-flow: row; gap: .5rem; }
   .scenario-controls { display:flex; gap:.25rem; }
+  .header-projections { gap: .25rem; }
   /* Headers remain sticky at the top of their container */
   th { top: 0; }
 }

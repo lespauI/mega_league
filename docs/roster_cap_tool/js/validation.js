@@ -65,6 +65,10 @@ export function normalizePlayerRow(row) {
   const isOnIR = toBool(row.isOnIR);
   const yearsPro = Number.isFinite(toNum(row.yearsPro)) ? toNum(row.yearsPro) : undefined;
 
+  // Overall ratings
+  const playerBestOvr = Number.isFinite(toNum(row.playerBestOvr)) ? toNum(row.playerBestOvr) : undefined;
+  const playerSchemeOvr = Number.isFinite(toNum(row.playerSchemeOvr)) ? toNum(row.playerSchemeOvr) : undefined;
+
   const capHit = toNum(row.capHit);
   const capReleaseNetSavings = Number.isFinite(toNum(row.capReleaseNetSavings)) ? toNum(row.capReleaseNetSavings) : undefined;
   const capReleasePenalty = Number.isFinite(toNum(row.capReleasePenalty)) ? toNum(row.capReleasePenalty) : undefined;
@@ -93,6 +97,7 @@ export function normalizePlayerRow(row) {
       isFreeAgent, isOnIR, yearsPro, capHit, capReleaseNetSavings, capReleasePenalty,
       contractSalary, contractBonus, contractLength, contractYearsLeft,
       desiredSalary, desiredBonus, desiredLength, reSignStatus,
+      playerBestOvr, playerSchemeOvr,
     },
     errors,
   };

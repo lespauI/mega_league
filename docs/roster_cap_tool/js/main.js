@@ -2,8 +2,9 @@ import './models.js';
 import { initState, subscribe } from './state.js';
 import { loadTeams, loadPlayers } from './csv.js';
 import { mountTeamSelector } from './ui/teamSelector.js';
-import { mountCapSummary } from './ui/capSummary.js';
+import { mountCapSummary, mountHeaderProjections } from './ui/capSummary.js';
 import { mountRosterTabs } from './ui/rosterTabs.js';
+import { mountProjections } from './ui/projections.js';
 import { mountScenarioControls } from './ui/scenarioControls.js';
 import { mountDraftPicks } from './ui/draftPicks.js';
 
@@ -42,7 +43,7 @@ function initTabs() {
 
 function mountPlaceholders() {
   // Placeholder table headers for initial scaffold
-  const targetIds = ['active-roster-table','injured-reserve-table','dead-money-table','draft-picks-table','free-agents-table'];
+  const targetIds = ['active-roster-table','injured-reserve-table','dead-money-table','projections-view','draft-picks-table','free-agents-table'];
   for (const id of targetIds) {
     const cont = document.getElementById(id);
     if (!cont) continue;
@@ -77,14 +78,18 @@ async function boot() {
   mountTeamSelector();
   mountScenarioControls();
   mountCapSummary();
+  mountHeaderProjections();
   mountRosterTabs();
+  mountProjections();
   mountDraftPicks();
   // Subscribe to updates
   subscribe(() => {
     mountTeamSelector();
     mountScenarioControls();
     mountCapSummary();
+    mountHeaderProjections();
     mountRosterTabs();
+    mountProjections();
     mountDraftPicks();
   });
 }

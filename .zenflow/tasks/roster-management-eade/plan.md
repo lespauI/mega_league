@@ -427,3 +427,19 @@ Tech changes:
 - `capMath.projectTeamCaps(..., years, opts)` accepts `opts.rookieReserveByYear` and adds it to future-year spending (i>0).
 - `state.getDraftPicksForSelectedTeam()` defaults to 1 pick per round.
 - `capSummary` computes a 3-year projection with rookie reserve and renders badges.
+
+### [x] Step: UI fixes
+<!-- chat-id: 76a40b52-860c-4a9c-8d05-f7d486fa55f7 -->
+
+- Colorize LEDGE/REDGE (EDGE color) and MIKE/SAM/WILL (LB color).
+- Update player info to show OVR and Age (remove height/weight).
+
+Implementation:
+- CSS: badge classes added for `.pos-LEDGE`, `.pos-REDGE`, `.pos-MIKE`, `.pos-SAM`, `.pos-WILL`.
+- Ordering: added these roles to `POSITION_ORDER` for better chip sorting.
+- Data: normalized `playerBestOvr`/`playerSchemeOvr` in player rows.
+- UI: player row meta now renders `OVR {value} · Age {n}`.
+
+Verification:
+- Badges for the new roles display with colors in Active/FA tables.
+- Player meta shows like `OVR 88 · Age 27` instead of `28y · 76 · 266 lb`.
