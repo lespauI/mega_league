@@ -132,7 +132,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
         { label: '#', key: 'index' },
         { label: 'Player', key: 'player' },
         { label: '2025 Cap', key: 'capHit' },
-        { label: 'Dead Cap (Release)', key: 'deadRelease' },
+        { label: 'Free cap after release', key: 'deadRelease' },
         { label: 'Dead Cap (Trade)', key: 'deadTrade' },
         { label: 'Contract', key: 'contract' },
         { label: 'FA Year', key: 'faYear' },
@@ -205,7 +205,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
       const tdDeadRel = document.createElement('td');
       // Per PRD mapping for column, using capReleaseNetSavings here
       tdDeadRel.textContent = p.capReleaseNetSavings != null ? fmtMoney(p.capReleaseNetSavings) : '-';
-      tdDeadRel.setAttribute('data-label', 'Dead Cap (Release)');
+      tdDeadRel.setAttribute('data-label', 'Free cap after release');
       const tdDeadTrade = document.createElement('td');
       tdDeadTrade.textContent = p.capReleasePenalty != null ? fmtMoney(p.capReleasePenalty) : '-';
       tdDeadTrade.setAttribute('data-label', 'Dead Cap (Trade)');

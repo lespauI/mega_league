@@ -53,7 +53,7 @@ function mountPlaceholders() {
           <th>#</th>
           <th>Player</th>
           <th>2025 Cap</th>
-          <th>Dead Cap (Release)</th>
+          <th>Free cap after release</th>
           <th>Dead Cap (Trade)</th>
           <th>Contract</th>
           <th>FA Year</th>

@@ -402,3 +402,11 @@ Verification:
   - Year 1 remains anchored to team snapshot.
   - Future years reflect base = totalSalary/length + bonus proration; players with missing fields still show reasonable out-year caps.
   - Smoke check players with zero `contractSalary`/`contractBonus` still contribute via inferred values.
+
+### [x] Step: Dead Cap (Release) is incorect name
+<!-- chat-id: 1e25f3b1-5802-4e0b-b2a1-b5e98a36a48e -->
+
+Implemented label update:
+- Active Roster table column renamed from "Dead Cap (Release)" to "Free cap after release" in `docs/roster_cap_tool/js/ui/playerTable.js:121` and row data-label in `docs/roster_cap_tool/js/ui/playerTable.js:204`.
+- Placeholder header updated in `docs/roster_cap_tool/js/main.js:44`.
+Verification: Open the app; Active Roster table now displays the new column label; sorting and values unchanged (still uses `capReleaseNetSavings`).
