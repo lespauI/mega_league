@@ -1,4 +1,4 @@
-import { getCapSummary, getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, setRolloverForSelectedTeam, getBaselineDeadMoney, setState } from '../state.js';
+import { getCapSummary, getState, getDraftPicksForSelectedTeam, getRolloverForSelectedTeam, setRolloverForSelectedTeam, getBaselineDeadMoney, setState, getReSignSettingsForSelectedTeam, setReSignSettingsForSelectedTeam } from '../state.js';
 import { projectTeamCaps, estimateRookieReserveForPicks } from '../capMath.js';
 
 function fmtMoney(n) {
@@ -77,16 +77,7 @@ export function mountHeaderProjections(containerId = 'header-projections') {
       0,
     ];
 
-    // Re-sign reserve: approximate Year 1 cap for expiring/flagged players.
-    // Factor is user-tunable (0..1); default 0.40. Persisted in localStorage.
-    const factor = (() => {
-      try {
-        const raw = localStorage.getItem('rosterCap.reSignReserveFactor');
-        const v = Number(raw);
-        if (Number.isFinite(v)) return Math.max(0, Math.min(1, v));
-      } catch {}
-      return 0.4;
-    })();
+    // Estimate re-sign cost from roster to show as a helper; not used unless applied.
     let estReSign = 0;
     try {
       const pyears = (len) => Math.max(1, Math.min(5, Math.floor(Number(len) || 3)));
@@ -103,7 +94,9 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         }
       }
     } catch {}
-    const reSignReserve = Math.max(0, estReSign * factor);
+    // Settings per team: manual reserve, toggle to use in-game value, and the in-game value itself.
+    const reConf = getReSignSettingsForSelectedTeam();
+    const reSignReserve = Math.max(0, Number(reConf.useInGame ? reConf.inGameValue : reConf.reserve) || 0);
 
     // Cap growth rate tunable (persisted)
     const capGrowthRate = (() => {
@@ -134,9 +127,13 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         <span class="badge">Y+3 <span class="${c3}">${fmtMoney(y3)}</span></span>
         <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
         <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
-        <label class="label" for="resign-factor" style="margin-left:.75rem;">Re-sign reserve</label>
-        <input id="resign-factor" type="range" min="0" max="1" step="0.05" value="${factor}" class="input-range" />
-        <span class="badge" title="Estimated Year+1 re-sign budget">${fmtMoney(reSignReserve)}</span>
+        <label class="label" for="resign-reserve" style="margin-left:.75rem;">Re-sign reserve (Y+1)</label>
+        <input id="resign-reserve" type="number" min="0" step="500000" value="${Math.max(0, Number(reConf.reserve||0))}" class="input-number" ${reConf.useInGame ? 'disabled' : ''} />
+        <span class="badge" title="Current value used in projections">Using: ${fmtMoney(reSignReserve)}</span>
+        <button id="resign-use-estimate" class="btn" title="Set reserve to estimated cost">Use Estimate (${fmtMoney(estReSign)})</button>
+        <label class="label" for="resign-use-ingame" style="margin-left:.5rem;">Use in-game “Re-sign Available”</label>
+        <input id="resign-use-ingame" type="checkbox" ${reConf.useInGame ? 'checked' : ''} />
+        <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(reConf.inGameValue||0))}" class="input-number" ${reConf.useInGame ? '' : ''} placeholder="Enter in-game amount" />
         <label class="label" for="cap-growth" style="margin-left:.75rem;">Cap growth</label>
         <input id="cap-growth" type="range" min="0" max="0.15" step="0.01" value="${capGrowthRate}" class="input-range" />
         <span class="badge">${(capGrowthRate*100).toFixed(0)}%</span>
@@ -149,13 +146,31 @@ export function mountHeaderProjections(containerId = 'header-projections') {
         setRolloverForSelectedTeam(v);
       });
     }
-    const slider = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-factor'));
-    if (slider) {
-      slider.addEventListener('input', () => {
-        const v = Math.max(0, Math.min(1, Number(slider.value||0)));
-        try { localStorage.setItem('rosterCap.reSignReserveFactor', String(v)); } catch {}
-        // Trigger re-render
-        setState({});
+    const reInput = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-reserve'));
+    if (reInput) {
+      reInput.addEventListener('change', () => {
+        const v = Math.max(0, Number(reInput.value||0));
+        setReSignSettingsForSelectedTeam({ reserve: v });
+      });
+    }
+    const btnEstimate = /** @type {HTMLButtonElement|null} */(el.querySelector('#resign-use-estimate'));
+    if (btnEstimate) {
+      btnEstimate.addEventListener('click', () => {
+        setReSignSettingsForSelectedTeam({ reserve: Math.max(0, Number(estReSign||0)) });
+      });
+    }
+    const chkUseInGame = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-use-ingame'));
+    const inGameInput = /** @type {HTMLInputElement|null} */(el.querySelector('#resign-ingame-value'));
+    if (chkUseInGame) {
+      chkUseInGame.addEventListener('change', () => {
+        const use = !!chkUseInGame.checked;
+        setReSignSettingsForSelectedTeam({ useInGame: use });
+      });
+    }
+    if (inGameInput) {
+      inGameInput.addEventListener('change', () => {
+        const v = Math.max(0, Number(inGameInput.value||0));
+        setReSignSettingsForSelectedTeam({ inGameValue: v });
       });
     }
     const capGrowth = /** @type {HTMLInputElement|null} */(el.querySelector('#cap-growth'));

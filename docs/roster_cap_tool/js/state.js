@@ -26,6 +26,8 @@ const state = {
   baselineDeadMoneyByTeam: {},
   /** Rollover dollars to next year per team: { [abbr]: number } */
   rolloverByTeam: {},
+  /** Re-sign settings per team: { [abbr]: { reserve:number, useInGame:boolean, inGameValue:number } } */
+  reSignSettingsByTeam: {},
   /** Position filters per table */
   positionFilters: { active: [], fa: [] },
 };
@@ -126,6 +128,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.rollover');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.rolloverByTeam = parsed;
+  } catch {}
+  // Load re-sign settings per team
+  try {
+    const raw = localStorage.getItem('rosterCap.reSignSettings');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.reSignSettingsByTeam = parsed;
   } catch {}
   // Load position filters from localStorage once
   try {
@@ -330,6 +338,33 @@ export function setRolloverForSelectedTeam(amount) {
   const next = { ...(state.rolloverByTeam || {}) , [abbr]: v };
   state.rolloverByTeam = next;
   try { localStorage.setItem('rosterCap.rollover', JSON.stringify(next)); } catch {}
+  emit();
+}
+
+// ----- Re-sign Reserve Settings -----
+
+/** Get re-sign settings for selected team: { reserve, useInGame, inGameValue } */
+export function getReSignSettingsForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const cur = state.reSignSettingsByTeam?.[abbr] || {};
+  const reserve = Number(cur.reserve || 0) || 0;
+  const useInGame = !!cur.useInGame;
+  const inGameValue = Number(cur.inGameValue || 0) || 0;
+  return { reserve, useInGame, inGameValue };
+}
+
+/** Update re-sign settings for selected team and persist. Partial updates allowed. */
+export function setReSignSettingsForSelectedTeam(partial = {}) {
+  const abbr = state.selectedTeam || '';
+  const cur = state.reSignSettingsByTeam?.[abbr] || { reserve: 0, useInGame: false, inGameValue: 0 };
+  const nextTeam = {
+    reserve: Number(partial.reserve ?? cur.reserve) || 0,
+    useInGame: Boolean(partial.useInGame ?? cur.useInGame),
+    inGameValue: Number(partial.inGameValue ?? cur.inGameValue) || 0,
+  };
+  const nextAll = { ...(state.reSignSettingsByTeam || {}), [abbr]: nextTeam };
+  state.reSignSettingsByTeam = nextAll;
+  try { localStorage.setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
   emit();
 }
 
