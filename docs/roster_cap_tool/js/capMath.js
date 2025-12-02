@@ -740,3 +740,30 @@ export function estimateRookieReserveForPicks(roundCounts = {}) {
   }
   return total;
 }
+
+/**
+ * Context-aware cap summary for a future year offset using team projections.
+ * Reads the projected snapshot at `contextOffset` and returns a CapSnapshot-like
+ * object. Also computes baselineAvailable/deltaAvailable by comparing against
+ * a baseline run with no moves at the same offset.
+ * @param {Team} team
+ * @param {Array<Player>} players
+ * @param {Array<ScenarioMove>} moves
+ * @param {number} contextOffset
+ * @param {any} opts Options forwarded to projectTeamCaps (e.g., baselineDeadMoneyByYear)
+ */
+export function calcCapSummaryForContext(team, players = [], moves = [], contextOffset = 0, opts = {}) {
+  const off = Math.max(0, Math.floor(Number(contextOffset) || 0));
+  const horizon = off + 1; // only need up to selected offset
+  const proj = projectTeamCaps(team, players, moves, horizon, opts) || [];
+  const base = projectTeamCaps(team, players, [], horizon, opts) || [];
+  const snap = proj[off] || { capRoom: 0, totalSpent: 0, capSpace: 0, deadMoney: 0 };
+  const baseSnap = base[off] || { capSpace: 0 };
+  const capRoom = Number(snap.capRoom || 0) || 0;
+  const capSpent = Number(snap.totalSpent || 0) || 0;
+  const capAvailable = Number(snap.capSpace || 0) || 0;
+  const deadMoney = Number(snap.deadMoney || 0) || 0;
+  const baselineAvailable = Number(baseSnap.capSpace || 0) || 0;
+  const deltaAvailable = capAvailable - baselineAvailable;
+  return { capRoom, capSpent, capAvailable, deadMoney, baselineAvailable, deltaAvailable };
+}

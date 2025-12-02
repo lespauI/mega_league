@@ -1,6 +1,6 @@
 // Minimal pub/sub app state for the tool
 /** @typedef {import('./models.js').CapSnapshot} CapSnapshot */
-import { calcCapSummary, estimateRookieReserveForPicks } from './capMath.js';
+import { calcCapSummary, calcCapSummaryForContext, estimateRookieReserveForPicks } from './capMath.js';
 import { getContextualPlayers } from './context.js';
 
 const listeners = new Set();
@@ -101,7 +101,19 @@ export function getCapSummary() {
       capAfterRookies: 0,
     };
   }
-  const snap = calcCapSummary(team, state.moves);
+  const offset = getYearContextForSelectedTeam();
+  let snap;
+  if (offset > 0) {
+    // Build minimal opts used by projections: include baseline dead money schedule
+    const dm = getBaselineDeadMoney();
+    const baselineDeadMoneyByYear = [
+      Number(dm?.year0 || 0) || 0,
+      Number(dm?.year1 || 0) || 0,
+    ];
+    snap = calcCapSummaryForContext(team, state.players, state.moves, offset, { baselineDeadMoneyByYear });
+  } else {
+    snap = calcCapSummary(team, state.moves);
+  }
   const picks = getDraftPicksForSelectedTeam();
   const rookieReserveEstimate = estimateRookieReserveForPicks(picks);
   // If user entered in-game Re-sign Available, treat that as the authoritative Year 1 cap,

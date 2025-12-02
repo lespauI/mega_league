@@ -152,7 +152,8 @@ Verification
 - `npm run test:e2e` should still pass with default Y+0.
 - Manual: add a temporary `console.debug` of counts under `offset=1` toggle via devtools to sanity-check (remove before commit).
 
-### [ ] Step: Add Context Cap Summary
+### [x] Step: Add Context Cap Summary
+<!-- chat-id: cd83b630-56de-4690-acbc-a4b592cc9a99 -->
 Task definition
 - Implement `calcCapSummaryForContext(team, players, moves, contextOffset, opts)` per spec in `docs/roster_cap_tool/js/capMath.js` and export it.
 - Update `getCapSummary()` in `docs/roster_cap_tool/js/state.js` to call context-aware version when `offset>0`.
