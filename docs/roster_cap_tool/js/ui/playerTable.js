@@ -231,7 +231,11 @@ export function renderPlayerTable(containerId, players, options = {}) {
       tdDeadTrade.setAttribute('data-label', 'Dead Cap (Trade)');
       const tdContract = document.createElement('td');
       const len = p.contractLength; const sal = p.contractSalary;
-      tdContract.textContent = (len && sal) ? `${len} yrs, ${fmtMoney(sal)}` : (len ? `${len} yrs` : '-');
+      const hasLen = !!len;
+      const hasSal = (sal !== undefined && sal !== null && !Number.isNaN(Number(sal)));
+      tdContract.textContent = (hasLen && hasSal)
+        ? `${len} yrs, ${fmtMoney(Number(sal))}`
+        : (hasLen ? `${len} yrs` : (hasSal ? fmtMoney(Number(sal)) : '-'));
       tdContract.setAttribute('data-label', 'Contract');
       const tdFaYear = document.createElement('td');
       tdFaYear.textContent = calcFaYear(p, team?.seasonIndex);
@@ -260,7 +264,6 @@ export function renderPlayerTable(containerId, players, options = {}) {
       sel.addEventListener('change', async () => {
         if (!sel.value) return;
         const action = sel.value;
-        console.log('[action]', action, { playerId: p.id, name: `${p.firstName} ${p.lastName}` });
         if (action === 'release') {
           openReleaseModal(p);
         } else if (action === 'tradeQuick') {

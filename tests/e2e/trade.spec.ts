@@ -42,9 +42,12 @@ test.describe('Trade (Quick) E2E', () => {
     const before = await readCapAvailable(page);
     const expectedAfter = Math.round(before + savings);
 
-    // Trigger Trade (Quick) which uses a native confirm dialog
-    page.once('dialog', (d) => d.accept());
+    // Trigger Trade (Quick) and confirm via in-app dialog
     await rowActionSelect(row).selectOption('tradeQuick');
+    const dlg = page.getByRole('dialog');
+    await expect(dlg).toBeVisible();
+    await dlg.getByRole('button', { name: /Confirm Trade/i }).click();
+    await expect(dlg).toBeHidden();
 
     if (Math.round(before) !== expectedAfter) {
       // Wait for cap to change from the baseline "before"
@@ -78,4 +81,3 @@ test.describe('Trade (Quick) E2E', () => {
     ).toHaveCount(1);
   });
 });
-

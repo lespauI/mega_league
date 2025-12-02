@@ -263,7 +263,8 @@ Deliverable
 Verification
 - Run `npm run test:e2e` and ensure all tests (existing + new) pass.
 
-### [ ] Step: Regression & Polish
+### [x] Step: Regression & Polish
+<!-- chat-id: 060fccc7-5958-4a46-b81a-2c66a9378251 -->
 Task definition
 - Run full test suite; tidy console warnings; update `docs/roster_cap_tool/USAGE.md` with a short note on Year Context.
 

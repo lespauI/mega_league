@@ -67,8 +67,9 @@ test.describe('Extension + Conversion E2E', () => {
     await page.waitForTimeout(50);
     const after = await readCapAvailable(page);
 
-    // Assert delta matches and after aligns with before - previewDelta (modal math contract)
-    expect(Math.round(after - before)).toBe(Math.round(previewDelta));
+    // Assert delta semantics: previewDelta is Cap Impact (positive = less space).
+    // Cap Space after = before - previewDelta, so change in space = -(previewDelta).
+    expect(Math.round(after - before)).toBe(Math.round(-previewDelta));
     expect(Math.round(after)).toBe(Math.round(before - previewDelta));
 
     // Verify contract column updated (salary should reflect $0 now)
@@ -123,8 +124,8 @@ test.describe('Extension + Conversion E2E', () => {
     await page.waitForTimeout(50);
     const after = await readCapAvailable(page);
 
-    // Assert delta matches and after aligns with before - previewDelta
-    expect(Math.round(after - before)).toBe(Math.round(previewDelta));
+    // Assert delta semantics: change in Cap Space is the negative of Cap Impact.
+    expect(Math.round(after - before)).toBe(Math.round(-previewDelta));
     expect(Math.round(after)).toBe(Math.round(before - previewDelta));
 
     // Verify player's current-year cap cell updated by approx the preview delta
