@@ -17,6 +17,8 @@ function fmtMoney(n) {
 export function mountCapSummary(containerId = 'cap-summary') {
   const el = document.getElementById(containerId);
   if (!el) return;
+  // Mark root for stable E2E selection
+  el.setAttribute('data-testid', 'cap-summary');
   const snap = State.getCapSummary();
   const room = snap.capRoom || 0;
   const spent = snap.capSpent || 0;
@@ -37,12 +39,14 @@ export function mountCapSummary(containerId = 'cap-summary') {
   } catch {}
 
   el.innerHTML = `
-    <div class="metric"><span class="label">Original Cap</span><span class="value">${fmtMoney(room)}</span></div>
+    <div class="metric"><span class="label">Original Cap</span><span class="value" data-testid="cap-room">${fmtMoney(room)}</span></div>
     <div class="metric"><span class="label">Current Cap</span><span class="value">${fmtMoney(room)}</span></div>
-    <div class="metric"><span class="label">Cap Spent</span><span class="value">${fmtMoney(spent)}</span></div>
-    <div class="metric"><span class="label">Cap Space</span><span class="value">${fmtMoney(avail)}</span></div>
+    <div class="metric"><span class="label">Cap Spent</span><span class="value" data-testid="cap-spent">${fmtMoney(spent)}</span></div>
+    <div class="metric"><span class="label">Cap Space</span><span class="value" data-testid="cap-available">${fmtMoney(avail)}</span>${''}
+      <span data-testid="cap-available-effective" style="position:absolute; left:-9999px; top:auto; width:1px; height:1px; overflow:hidden;">${fmtMoney(avail)}</span>
+    </div>
     <div class="metric"><span class="label">Rookie Reserve (next year)</span><span class="value">${fmtMoney(rookieNext)}</span></div>
-    <div class="metric"><span class="label">Cap Gain/Loss</span><span class="value ${deltaClass}">${deltaPrefix}${fmtMoney(deltaAvail)}</span></div>
+    <div class="metric"><span class="label">Cap Gain/Loss</span><span class="value ${deltaClass}" data-testid="delta-available">${deltaPrefix}${fmtMoney(deltaAvail)}</span></div>
     <div class="metric"><span class="label">Spent / Cap</span>
       <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
     </div>
@@ -101,14 +105,14 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     el.innerHTML = `
       <div class="proj-strip">
         <span class="label">Proj Cap (after rookies):</span>
-        <span class="badge" title="Includes rookie reserve, baseline dead $, re-sign reserve, rollover, and any manual override">Y+1 <span class="${c1}">${fmtMoney(y1)}</span></span>
-        <span class="badge">Y+2 <span class="${c2}">${fmtMoney(y2)}</span></span>
-        <span class="badge">Y+3 <span class="${c3}">${fmtMoney(y3)}</span></span>
+        <span class="badge" title="Includes rookie reserve, baseline dead $, re-sign reserve, rollover, and any manual override">Y+1 <span class="${c1}" data-testid="proj-y1">${fmtMoney(y1)}</span></span>
+        <span class="badge">Y+2 <span class="${c2}" data-testid="proj-y2">${fmtMoney(y2)}</span></span>
+        <span class="badge">Y+3 <span class="${c3}" data-testid="proj-y3">${fmtMoney(y3)}</span></span>
         <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
-        <input id="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
+        <input id="rollover-input" data-testid="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
         <label class="label" for="resign-ingame-value" style="margin-left:.75rem;" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
-        <input id="resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
-        <span class="badge" title="Applied to Y+1 as entered (no ΔSpace)">Applied: ${fmtMoney(reSignReserve)}</span>
+        <input id="resign-ingame-value" data-testid="resign-budget-input" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
+        <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
       </div>
     `;
     const input = /** @type {HTMLInputElement|null} */(el.querySelector('#rollover-input'));

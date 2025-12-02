@@ -47,8 +47,14 @@ function mountPlaceholders() {
   for (const id of targetIds) {
     const cont = document.getElementById(id);
     if (!cont) continue;
+    const testId = id.includes('active-roster') ? 'table-active-roster'
+      : id.includes('injured-reserve') ? 'table-injured-reserve'
+      : id.includes('dead-money') ? 'table-dead-money'
+      : id.includes('free-agents') ? 'table-free-agents'
+      : id.includes('draft-picks') ? 'table-draft-picks'
+      : 'table-generic';
     cont.innerHTML = `
-      <table>
+      <table data-testid="${testId}">
         <thead><tr>
           <th>#</th>
           <th>Player</th>

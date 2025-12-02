@@ -31,6 +31,7 @@ export function openOfferModal(player) {
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-offer');
   dlg.innerHTML = `
     <h3 style="margin-top:0">Offer to ${name}</h3>
     <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:.75rem; align-items:center;">
@@ -53,19 +54,19 @@ export function openOfferModal(player) {
     <div style="margin-top:.75rem; display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
       <div>
         <div style="color:var(--muted); font-size:.85em">Year 1 Cap Hit</div>
-        <div id="offer-cap-hit" class="money-warn">$0</div>
+        <div id="offer-cap-hit" class="money-warn" data-testid="offer-cap-hit">$0</div>
       </div>
       <div>
         <div style="color:var(--muted); font-size:.85em">Remaining Cap After</div>
-        <div id="offer-remaining" class="">$0</div>
+        <div id="offer-remaining" class="" data-testid="offer-remaining">$0</div>
       </div>
     </div>
     <div id="offer-warning" style="margin-top:.25rem; font-size:.9em; color: var(--yellow); display:none;">Warning: Offer is below 90% of desired terms.</div>
     <div id="offer-error" style="margin-top:.25rem; font-size:.9em; color: var(--red); display:none;">Insufficient cap space for this offer.</div>
 
     <div class="modal-actions">
-      <button class="btn" data-action="cancel">Cancel</button>
-      <button class="btn primary" data-action="confirm">Confirm Signing</button>
+      <button class="btn" data-action="cancel" data-testid="cancel-offer">Cancel</button>
+      <button class="btn primary" data-action="confirm" data-testid="confirm-offer">Confirm Signing</button>
     </div>
   `;
 

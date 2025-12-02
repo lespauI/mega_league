@@ -31,6 +31,7 @@ export function openReleaseModal(player) {
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-release');
   dlg.innerHTML = `
     <h3 style="margin-top:0">Release ${name}?</h3>
     <div class="grid" style="display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
@@ -40,8 +41,8 @@ export function openReleaseModal(player) {
     </div>
     <p style="margin:.5rem 0 0; color:var(--muted); font-size:.85em">This will remove the player from the active roster and apply current-year dead money.</p>
     <div class="modal-actions">
-      <button class="btn" data-action="cancel">Cancel</button>
-      <button class="btn danger" data-action="confirm">Confirm Release</button>
+      <button class="btn" data-action="cancel" data-testid="cancel-release">Cancel</button>
+      <button class="btn danger" data-action="confirm" data-testid="confirm-release">Confirm Release</button>
     </div>
   `;
 

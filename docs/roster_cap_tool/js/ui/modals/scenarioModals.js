@@ -19,6 +19,7 @@ export function openScenarioSaveModal() {
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-scn-save');
   dlg.innerHTML = `
     <h3 style="margin-top:0">Save Scenario</h3>
     <label style="display:block; margin:.25rem 0 .75rem;">
@@ -26,8 +27,8 @@ export function openScenarioSaveModal() {
       <input id="scn-name" type="text" value="${defaultName}" style="width:100%; background:#0b1324; color:inherit; border:1px solid #334155; padding:.5rem; border-radius:.375rem;" />
     </label>
     <div class="modal-actions">
-      <button class="btn" data-action="cancel">Cancel</button>
-      <button class="btn primary" data-action="confirm">Save</button>
+      <button class="btn" data-action="cancel" data-testid="cancel-scn-save">Cancel</button>
+      <button class="btn primary" data-action="confirm" data-testid="confirm-scn-save">Save</button>
     </div>
   `;
   const nameEl = /** @type {HTMLInputElement} */(dlg.querySelector('#scn-name'));
@@ -50,6 +51,7 @@ export function openScenarioLoadModal() {
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-scn-load');
   const renderList = () => {
     const rows = scenarios.map((s) => {
       const when = new Date(s.savedAt);
@@ -60,8 +62,8 @@ export function openScenarioLoadModal() {
         <td>${whenStr}</td>
         <td>${meta}</td>
         <td style="text-align:right">
-          <button class="btn primary" data-action="load" data-id="${s.id}">Load</button>
-          <button class="btn danger" data-action="delete" data-id="${s.id}">Delete</button>
+          <button class="btn primary" data-action="load" data-id="${s.id}" data-testid="scn-load-item">Load</button>
+          <button class="btn danger" data-action="delete" data-id="${s.id}" data-testid="scn-delete-item">Delete</button>
         </td>
       </tr>`;
     }).join('');
@@ -77,7 +79,7 @@ export function openScenarioLoadModal() {
       </table>
     </div>
     <div class="modal-actions">
-      <button class="btn" data-action="close">Close</button>
+      <button class="btn" data-action="close" data-testid="close-scn-load">Close</button>
     </div>
   `;
 
@@ -134,6 +136,7 @@ export function openScenarioCompareModal() {
   const deltaSpent = (now.capSpent || 0) - (baseline.capSpent || 0);
 
   const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'modal-scn-compare');
   dlg.innerHTML = `
     <h3 style="margin-top:0">Scenario Compare — ${team.abbrName}</h3>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
@@ -161,7 +164,7 @@ export function openScenarioCompareModal() {
       </div>
     </div>
     <div class="modal-actions">
-      <button class="btn" data-action="close">Close</button>
+      <button class="btn" data-action="close" data-testid="close-scn-compare">Close</button>
     </div>
   `;
   dlg.querySelector('[data-action="close"]')?.addEventListener('click', () => closeAndRemove(dlg));

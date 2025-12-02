@@ -12,6 +12,7 @@ export function mountTeamSelector(containerId = 'team-selector') {
 
   const st = getState();
   const sel = document.createElement('select');
+  sel.setAttribute('data-testid', 'team-select');
   sel.setAttribute('aria-label', 'Select Team');
 
   st.teams.forEach((t) => {
@@ -27,4 +28,3 @@ export function mountTeamSelector(containerId = 'team-selector') {
 }
 
 export default { mountTeamSelector };
-
