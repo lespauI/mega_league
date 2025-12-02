@@ -22,7 +22,8 @@ Analyze the bug report and investigate the issue:
    - Affected components
    - Impact assessment
 
-### [ ] Step: Solution Design
+### [x] Step: Solution Design
+<!-- chat-id: 7f95c961-1b77-4ba0-9457-08b3b04bb048 -->
 
 Design a solution to fix the bug:
 
@@ -33,6 +34,10 @@ Design a solution to fix the bug:
    - Files to be modified
    - Testing strategy
    - Risk assessment
+
+Notes:
+- Proposed fixes documented in `{@artifacts_path}/solution.md`.
+- Cap Space = Current Cap − Cap Spent; gate in‑game re‑sign override; decouple Y+1 re‑sign reserve from ΔSpace; ensure Y+1 fully recalculates after releases.
 
 ### [ ] Step: Implementation
 
