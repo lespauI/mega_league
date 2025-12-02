@@ -106,35 +106,36 @@ Task instructions
 
 Status: Completed. Detailed implementation plan added below.
 
-### [ ] Step: Project Scaffolding (Pure JS)
+### [x] Step: Project Scaffolding (Pure JS)
 Task instructions
 - Definition: Create a static app under `docs/roster_cap_tool/` with `index.html`, `css/styles.css`, and ES module files in `js/`. No bundler, no transpiler, no Node runtime required. Use standards-based web components/DOM manipulation.
 - Contracts: Source layout now: `docs/roster_cap_tool/{index.html, css/, js/}`. No React/TS/Zustand.
 - Deliverable: Loadable page from file:// and GitHub Pages; app bootstraps with placeholder panels.
 - Verification: Open `docs/roster_cap_tool/index.html` locally or serve via `python3 -m http.server` and visit `http://localhost:8000/docs/roster_cap_tool/`.
 
-### [ ] Step: Data Models (JS) & Validation
+### [x] Step: Data Models (JS) & Validation
 Task instructions
 - Definition: Define JS JSDoc typedefs in `js/models.js` for `Team`, `Player`, `CapSnapshot`, `ScenarioMove`. Implement small validation/coercion helpers (number/boolean parsing) in `js/validation.js`.
 - Contracts: Mirrors “Contracts > Data models”; replace Zod with lightweight manual validators.
 - Deliverable: Exported typedefs and validators used across the app.
 - Verification: Add a browser test page `docs/roster_cap_tool/test.html` that runs validation against sample rows and logs pass/fail to console.
 
-### [ ] Step: CSV Loader & Normalization
+### [x] Step: CSV Loader & Normalization
 Task instructions
 - Definition: Implement `js/csv.js` using PapaParse (CDN) to fetch and parse CSVs; normalize rows with `validation.js`; expose `loadTeams()` and `loadPlayers()` returning arrays.
 - Contracts: Input files are served statically; normalization mirrors schema fields in PRD/spec.
 - Deliverable: Data loads from `./data/MEGA_players.csv` and `./data/MEGA_teams.csv`; warning panel gets invalid row counts.
 - Verification: Open `test.html` to execute loader smoke; or use browser devtools on `index.html` to view loaded counts and sample rows.
 
-### [ ] Step: Data Placement for GitHub Pages
+### [x] Step: Data Placement for GitHub Pages
 Task instructions
 - Definition: Copy CSVs into `docs/roster_cap_tool/data/` so GitHub Pages can serve them (Pages does not serve repo root). Add a small sync script `scripts/sync_data_to_docs.sh` to copy updated CSVs when needed.
 - Contracts: Uses repo-root `MEGA_players.csv`, `MEGA_teams.csv` as source of truth.
 - Deliverable: `docs/roster_cap_tool/data/MEGA_players.csv` and `docs/roster_cap_tool/data/MEGA_teams.csv` checked in.
 - Verification: Access `docs/roster_cap_tool/data/MEGA_players.csv` in browser; CSV downloads successfully.
 
-### [ ] Step: Cap Math Library (Pure Functions)
+### [x] Step: Cap Math Library (Pure Functions)
+<!-- chat-id: b67a3193-570c-43b2-a9b6-8084fd64ad8d -->
 Task instructions
 - Definition: Implement `js/capMath.js` with pure functions: `calcCapSummary`, `simulateRelease`, `simulateTradeQuick`, `simulateExtension`, `simulateConversion`, `simulateSigning` per spec and Madden rules (bonus proration max 5 years).
 - Contracts: Formulas and examples from `spec/Salary Cap Works in Madden.md`.

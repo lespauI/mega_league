@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Roster Cap Tool Smoke Tests</title>
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  </head>
+  <body>
+    <h1>Smoke Tests</h1>
+    <pre id="out"></pre>
+    <script type="module">
+      import { normalizeTeamRow, normalizePlayerRow, toNum, toBool } from './js/validation.js';
+      import { loadTeams, loadPlayers } from './js/csv.js';
+      import { calcCapSummary, simulateRelease, simulateTradeQuick, simulateExtension, simulateConversion, simulateSigning } from './js/capMath.js';
+
+      const out = document.getElementById('out');
+      function log(line) { out.textContent += line + "\n"; }
+
+      function assert(name, cond) { log(`${cond ? 'PASS' : 'FAIL'} - ${name}`); }
+      function assertNear(name, a, b, tol=2) { assert(`${name} ~ ${b} (got ${a})`, Math.abs((a||0) - (b||0)) <= tol); }
+
+      // Unit-like checks for coercion
+      assert('toNum extracts number from $12,345', toNum('$12,345') === 12345);
+      assert('toBool converts "true"', toBool('true') === true);
+      assert('toBool converts "0" to false', toBool('0') === false);
+
+      // Row normalization
+      const teamRow = normalizeTeamRow({ abbrName: 'NE', displayName: 'New England Patriots', capRoom: '304200000', capSpent: '250000000', capAvailable: '54200000', seasonIndex: '2025', weekIndex: '1' });
+      assert('team normalized ok', teamRow.ok && teamRow.team.abbrName === 'NE');
+
+      const playerRow = normalizePlayerRow({ firstName: 'Test', lastName: 'Player', position: 'QB', capHit: '10000000', isFreeAgent: 'false', team: 'NE' });
+      assert('player normalized ok', playerRow.ok && playerRow.player.position === 'QB');
+
+      // CSV load smoke
+      try {
+        const [teams, players] = await Promise.all([
+          loadTeams('./data/MEGA_teams.csv'),
+          loadPlayers('./data/MEGA_players.csv'),
+        ]);
+        assert('teams loaded > 0', (teams?.length || 0) > 0);
+        assert('players loaded > 0', (players?.length || 0) > 0);
+        log(`Loaded teams: ${teams.length}, players: ${players.length}`);
+
+        // Cap math unit tests (deterministic numbers)
+        const team = { capRoom: 304200000, capSpent: 248422144, capAvailable: 55777856 };
+
+        // 1) Release example (from user flow numbers)
+        const mike = { id: 'p1', capHit: 11000000, capReleaseNetSavings: 20008820, capReleasePenalty: 8008820, contractYearsLeft: 3 };
+        const rel = simulateRelease(team, mike);
+        assert('release: move tagged', rel.move?.type === 'release');
+        assert('release: penalty split (40/60)', rel.penaltyCurrentYear === Math.round(8008820 * 0.4));
+        assert('release: new cap space matches spec', rel.newCapSpace === 55777856 + 20008820);
+        const snap1 = calcCapSummary(team, [rel.move]);
+        assert('summary after release capAvailable matches preview', snap1.capAvailable === rel.newCapSpace);
+
+        // 2) Signing example (2 yrs, $3.5M/yr, $1M bonus)
+        const brian = { id: 'fa1', desiredSalary: 3500000, desiredBonus: 1000000, desiredLength: 2 };
+        const sign = simulateSigning({ ...team, capAvailable: rel.newCapSpace }, brian, { years: 2, salary: 3500000, bonus: 1000000 });
+        assert('sign: year1 cap hit is $4M', sign.year1CapHit === 4000000);
+        assert('sign: remaining cap is correct', sign.remainingCapAfter === (rel.newCapSpace - 4000000));
+        assert('sign: canSign true with sufficient cap', sign.canSign === true);
+        const snap2 = calcCapSummary(team, [rel.move, sign.move]);
+        assert('summary after release+sign matches', snap2.capAvailable === sign.remainingCapAfter);
+
+        // 3) Extension example (4 yrs, $65M salary, $20M bonus)
+        const barmore = { id: 'p2', capHit: 11344450 };
+        const ext = simulateExtension(barmore, { years: 4, totalSalary: 65000000, signingBonus: 20000000 });
+        assert('extension: new cap hit is $21.25M', ext.newCapHit === 21250000);
+        assert('extension: cap impact +$9,905,550', ext.capHitDelta === 9905550);
+
+        // 4) Conversion example (convert $10M, 3 years remaining → proration 3)
+        const bigCap = { id: 'p3', capHit: 25000000, contractBonus: 0, contractLength: 5 };
+        const conv = simulateConversion(bigCap, { convertAmount: 10000000, yearsRemaining: 3 });
+        assertNear('conversion: delta ~ -6,666,667', Math.round(conv.capHitDelta), -6666667, 2);
+        assert('conversion: proration per year = $3,333,333', Math.round(conv.perYearProration) === 3333333);
+
+        // 5) Combined summary after all moves
+        const combined = calcCapSummary(team, [rel.move, sign.move, ext.move, conv.move]);
+        const expected = team.capAvailable + 20008820 - 4000000 - 9905550 - Math.round(conv.capHitDelta);
+        assertNear('combined summary capAvailable matches arithmetic', Math.round(combined.capAvailable), Math.round(expected));
+      } catch (err) {
+        log('FAIL - CSV load error: ' + err.message);
+      }
+    </script>
+  </body>
+  </html>

@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Madden Roster Cap Management</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="../favicon.svg" />
+    <!-- PapaParse CDN for CSV parsing -->
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  </head>
+  <body>
+    <header id="app-header" class="header">
+      <div class="header__left">
+        <h1 class="app-title">Roster Cap Tool</h1>
+      </div>
+      <div class="header__right">
+        <div id="team-selector" class="team-selector">
+          <!-- Team selector mounts here -->
+        </div>
+        <div id="cap-summary" class="cap-summary">
+          <!-- Cap summary mounts here -->
+        </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <nav class="tabs" id="tabs">
+        <button class="tab is-active" data-tab="active-roster">Active Roster</button>
+        <button class="tab" data-tab="injured-reserve">Injured Reserve</button>
+        <button class="tab" data-tab="dead-money">Dead Money</button>
+        <button class="tab" data-tab="draft-picks">Draft Picks</button>
+        <button class="tab" data-tab="free-agents">Free Agents</button>
+      </nav>
+
+      <section id="tab-panels" class="panels">
+        <div id="panel-active-roster" class="panel is-active">
+          <div class="table-container" id="active-roster-table"></div>
+        </div>
+        <div id="panel-injured-reserve" class="panel">
+          <div class="table-container" id="injured-reserve-table"></div>
+        </div>
+        <div id="panel-dead-money" class="panel">
+          <div class="table-container" id="dead-money-table"></div>
+        </div>
+        <div id="panel-draft-picks" class="panel">
+          <div class="table-container" id="draft-picks-table"></div>
+        </div>
+        <div id="panel-free-agents" class="panel">
+          <div class="table-container" id="free-agents-table"></div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Modals mount point -->
+    <div id="modals-root"></div>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+  </html>
+
