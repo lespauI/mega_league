@@ -1,6 +1,8 @@
 import './models.js';
-import { initState, subscribe, getState, setState, getCapSummary } from './state.js';
+import { initState, subscribe } from './state.js';
 import { loadTeams, loadPlayers } from './csv.js';
+import { mountTeamSelector } from './ui/teamSelector.js';
+import { mountCapSummary } from './ui/capSummary.js';
 
 // Basic tabs behavior
 function initTabs() {
@@ -14,44 +16,6 @@ function initTabs() {
     tabsRoot.querySelectorAll('.tab').forEach((b) => b.classList.toggle('is-active', b === btn));
     panelsRoot.querySelectorAll('.panel').forEach((p) => p.classList.toggle('is-active', p.id === `panel-${tab}`));
   });
-}
-
-function mountTeamSelector() {
-  const el = document.getElementById('team-selector');
-  if (!el) return;
-  el.innerHTML = '';
-  const sel = document.createElement('select');
-  const st = getState();
-  st.teams.forEach((t) => {
-    const opt = document.createElement('option');
-    opt.value = t.abbrName; opt.textContent = `${t.abbrName} — ${t.displayName}`;
-    if (t.abbrName === st.selectedTeam) opt.selected = true;
-    sel.appendChild(opt);
-  });
-  sel.addEventListener('change', () => setState({ selectedTeam: sel.value }));
-  el.appendChild(sel);
-}
-
-function fmtMoney(n) {
-  return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n || 0);
-}
-
-function mountCapSummary() {
-  const el = document.getElementById('cap-summary');
-  if (!el) return;
-  const snap = getCapSummary();
-  const room = snap.capRoom;
-  const spent = snap.capSpent;
-  const avail = snap.capAvailable;
-  const pct = Math.max(0, Math.min(100, Math.round((spent / room) * 100)));
-  el.innerHTML = `
-    <div class="metric"><span class="label">Original Cap</span><span class="value">${fmtMoney(room)}</span></div>
-    <div class="metric"><span class="label">Cap Spent</span><span class="value">${fmtMoney(spent)}</span></div>
-    <div class="metric"><span class="label">Cap Space</span><span class="value">${fmtMoney(avail)}</span></div>
-    <div class="metric"><span class="label">Spent / Cap</span>
-      <div class="progress"><div class="bar" style="width:${pct}%"></div></div>
-    </div>
-  `;
 }
 
 function mountPlaceholders() {

@@ -91,7 +91,7 @@ Save the spec to `{@artifacts_path}/spec.md`.
 
 Status: Completed. See `.zenflow/tasks/roster-management-eade/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
 <!-- chat-id: 9ef309d5-3d2a-4e50-8e76-ac34563749e8 -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
@@ -150,7 +150,8 @@ Task instructions
 - Deliverable: Store initializes after CSV load; notifies listeners to re-render.
 - Verification: Log state transitions in devtools; `test.html` can exercise selectors.
 
-### [ ] Step: Team Selector & Cap Summary Panel
+### [x] Step: Team Selector & Cap Summary Panel
+<!-- chat-id: 77f1c5e4-7c52-4b76-90f1-654124cdf0de -->
 Task instructions
 - Definition: Implement `js/ui/teamSelector.js` and `js/ui/capSummary.js`; sticky header with progress bar; shows original/current cap, cap spent, cap space, and delta; updates on store changes.
 - Contracts: Uses store getters and `calcCapSummary`.
