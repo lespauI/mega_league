@@ -326,11 +326,30 @@ Changes:
 Verification:
 - Click any header in Active Roster or Free Agents; rows re-sort accordingly; clicking again toggles sort direction.
 
-### [ ] Step: In projection the Roster cap for DAL
+### [x] Step: In projection the Roster cap for DAL
 <!-- chat-id: 9467ffe8-6ca1-467f-b1f8-3f8bbfc6053e -->
 
-For dal the Roster cap shown as $321,560,000 for this season and it is -17 millions, i would like to understand how you calculate this, maybe you didnt get right the state of the season? we are ongoing season week 3, it is not possible to have a team with negative cap
+Issue: DAL showed Roster Cap $321,560,000 and Cap Space -$17M in Projections (Year 1). Root cause: Year 1 used a straight sum of all non-FA DAL players’ `capHit` (66 players = $321.56M) and compared it to `capRoom` ($304.2M), ignoring the in‑game baseline totals (`capSpent`/`capAvailable`). That mismatch produced an impossible negative space mid‑season.
+
+Fix implemented:
+- Anchored Year 1 (current season) in `projectTeamCaps()` to team snapshot:
+  - `totalSpent₀ = team.capSpent + deltaFromMoves`
+  - `capSpace₀ = team.capAvailable − deltaFromMoves`
+  - `deadMoney₀` reflects only new scenario moves; `rosterCap₀ = max(0, totalSpent₀ − deadMoney₀)`
+- Left future years (Year 2+) as roster‑sum projections with conversion and dead‑money schedules.
+- Added a UI note in Projections: “Year 1 is anchored to the in‑game snapshot (capSpent/capAvailable). Roster Cap is derived; Dead Money reflects only scenario moves.”
+
+Files changed:
+- `docs/roster_cap_tool/js/capMath.js` (Year 1 anchoring logic in `projectTeamCaps`)
+- `docs/roster_cap_tool/js/ui/projections.js` (explanatory note)
+
+Verification:
+- DAL totals now show `Cap Space` equal to the in‑game `capAvailable` for Year 1 and never negative; applying a release/sign adjusts by the move deltas. Future years remain projection‑based.
 
 ### [ ] Step: Dead money
 
 Dead money shoult be split to 2 years and we need to show it in dead money page. Also if we dont have current team dead money info, lets allow user to set it manualy
+
+### [ ] Step: Add posobility to trade for the player
+
+We have free agent sign but lets also add Trade IN button, to add player contract from any other roster, lets add search by player name. Remember when we trade for player we add only his salary, bonus is dead mone fro another team
