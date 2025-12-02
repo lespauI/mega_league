@@ -265,8 +265,8 @@ export function getScenarioEdits() {
 export function getDraftPicksForSelectedTeam() {
   const abbr = state.selectedTeam || '';
   const cur = state.draftPicksByTeam?.[abbr];
-  // Default 0 picks in all rounds
-  const out = { 1:0, 2:0, 3:0, 4:0, 5:0, 6:0, 7:0 };
+  // Default 1 pick in every round (average baseline)
+  const out = { 1:1, 2:1, 3:1, 4:1, 5:1, 6:1, 7:1 };
   if (cur && typeof cur === 'object') {
     for (let r = 1; r <= 7; r++) out[r] = Number(cur[r] || 0) || 0;
   }

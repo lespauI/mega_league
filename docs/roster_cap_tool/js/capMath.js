@@ -422,7 +422,7 @@ export function deriveDeadMoneySchedule(moves = [], players = [], years = 5) {
  * @param {Array<ScenarioMove>} moves
  * @param {number} years
  */
-export function projectTeamCaps(team, players = [], moves = [], years = 5) {
+export function projectTeamCaps(team, players = [], moves = [], years = 5, opts = {}) {
   const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
   const capRoom = toFinite(team.capRoom);
   const baseSpent = toFinite(team.capSpent);
@@ -488,6 +488,15 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5) {
       // Derive a rosterCap that is consistent and non-negative.
       // Note: deadMoney here only includes new scenario moves; baseline dead money is folded into baseSpent.
       rosterCap = Math.max(0, totalSpent - deadMoney);
+    }
+
+    // Apply Rookie Reserve (future years only). Caller can provide a schedule
+    // of rookie reserve dollars per year offset via opts.rookieReserveByYear.
+    // We only apply for i > 0 to avoid altering the anchored current year.
+    const rr = (opts && Array.isArray(opts.rookieReserveByYear)) ? Number(opts.rookieReserveByYear[i] || 0) : 0;
+    if (i > 0 && Number.isFinite(rr) && rr > 0) {
+      totalSpent += rr;
+      capSpace = capRoom - totalSpent;
     }
 
     out.push({ yearOffset: i, capRoom, rosterCap, deadMoney, totalSpent, capSpace });

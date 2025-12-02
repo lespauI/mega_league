@@ -410,3 +410,20 @@ Implemented label update:
 - Active Roster table column renamed from "Dead Cap (Release)" to "Free cap after release" in `docs/roster_cap_tool/js/ui/playerTable.js:121` and row data-label in `docs/roster_cap_tool/js/ui/playerTable.js:204`.
 - Placeholder header updated in `docs/roster_cap_tool/js/main.js:44`.
 Verification: Open the app; Active Roster table now displays the new column label; sorting and values unchanged (still uses `capReleaseNetSavings`).
+
+### [x] Step: Projections improvements
+<!-- chat-id: 1e2e4cf1-844c-4b45-9b29-f082ff5311fb -->
+
+Projections now account for Rookie Reserve:
+- Next year (Y+1): uses user-configured Draft Picks rookie reserve.
+- Out years (Y+2+): assumes 1 pick per round by default.
+- Default picks set to 1/round when no config exists.
+
+UI changes:
+- Removed the Projections tab/panel.
+- Added a projection strip to the header Cap Summary showing Y+1/Y+2/Y+3 Cap Space after rookies.
+
+Tech changes:
+- `capMath.projectTeamCaps(..., years, opts)` accepts `opts.rookieReserveByYear` and adds it to future-year spending (i>0).
+- `state.getDraftPicksForSelectedTeam()` defaults to 1 pick per round.
+- `capSummary` computes a 3-year projection with rookie reserve and renders badges.
