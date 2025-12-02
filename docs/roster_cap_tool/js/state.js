@@ -277,6 +277,8 @@ export function saveScenario(name = '') {
     name: name?.trim() || 'Untitled Scenario',
     teamAbbr: state.selectedTeam || '',
     savedAt: Date.now(),
+    // Persist current Year Context so loading restores the same Y+N view
+    yearContextOffset: getYearContextForSelectedTeam(),
     moves: (state.moves || []).slice(),
     rosterEdits,
   };
@@ -309,6 +311,8 @@ export function loadScenario(id) {
   const moves = (scn.moves || []).slice();
   const selectedTeam = scn.teamAbbr || state.selectedTeam;
   setState({ players, moves, selectedTeam, deadMoneyLedger: [] });
+  // Restore saved Year Context for this team (default to 0 if absent)
+  try { setYearContextForSelectedTeam(Math.max(0, Math.floor(Number(scn.yearContextOffset ?? 0) || 0))); } catch {}
   return true;
 }
 

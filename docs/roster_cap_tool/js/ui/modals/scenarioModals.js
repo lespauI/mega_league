@@ -24,11 +24,11 @@ export function openScenarioSaveModal() {
     <h3 style="margin-top:0">Save Scenario</h3>
     <label style="display:block; margin:.25rem 0 .75rem;">
       Name
-      <input id="scn-name" type="text" value="${defaultName}" style="width:100%; background:#0b1324; color:inherit; border:1px solid #334155; padding:.5rem; border-radius:.375rem;" />
+      <input id=\"scn-name\" type=\"text\" value=\"${defaultName}\" style=\"width:100%; background:#0b1324; color:inherit; border:1px solid #334155; padding:.5rem; border-radius:.375rem;\" />
     </label>
-    <div class="modal-actions">
-      <button class="btn" data-action="cancel" data-testid="cancel-scn-save">Cancel</button>
-      <button class="btn primary" data-action="confirm" data-testid="confirm-scn-save">Save</button>
+    <div class=\"modal-actions\">
+      <button class=\"btn\" data-action=\"cancel\" data-testid=\"cancel-scn-save\">Cancel</button>
+      <button class=\"btn primary\" data-action=\"confirm\" data-testid=\"confirm-scn-save\">Save</button>
     </div>
   `;
   const nameEl = /** @type {HTMLInputElement} */(dlg.querySelector('#scn-name'));
@@ -56,30 +56,31 @@ export function openScenarioLoadModal() {
     const rows = scenarios.map((s) => {
       const when = new Date(s.savedAt);
       const whenStr = isFinite(when.getTime()) ? when.toLocaleString() : '';
-      const meta = `${s.rosterEdits?.length || 0} edits, ${s.moves?.length || 0} moves`;
+      const yoff = Math.max(0, Math.floor(Number(s.yearContextOffset || 0)));
+      const meta = `Y+${yoff} • ${s.rosterEdits?.length || 0} edits, ${s.moves?.length || 0} moves`;
       return `<tr>
         <td>${s.name}</td>
         <td>${whenStr}</td>
         <td>${meta}</td>
-        <td style="text-align:right">
-          <button class="btn primary" data-action="load" data-id="${s.id}" data-testid="scn-load-item">Load</button>
-          <button class="btn danger" data-action="delete" data-id="${s.id}" data-testid="scn-delete-item">Delete</button>
+        <td style=\"text-align:right\">
+          <button class=\"btn primary\" data-action=\"load\" data-id=\"${s.id}\" data-testid=\"scn-load-item\">Load</button>
+          <button class=\"btn danger\" data-action=\"delete\" data-id=\"${s.id}\" data-testid=\"scn-delete-item\">Delete</button>
         </td>
       </tr>`;
     }).join('');
-    return rows || `<tr><td colspan="4">No saved scenarios for ${teamAbbr}.</td></tr>`;
+    return rows || `<tr><td colspan=\"4\">No saved scenarios for ${teamAbbr}.</td></tr>`;
   };
 
   dlg.innerHTML = `
-    <h3 style="margin-top:0">Load Scenario — ${teamAbbr}</h3>
-    <div class="table-container">
+    <h3 style=\"margin-top:0\">Load Scenario — ${teamAbbr}</h3>
+    <div class=\"table-container\">
       <table>
         <thead><tr><th>Name</th><th>Saved</th><th>Summary</th><th></th></tr></thead>
-        <tbody id="scn-list">${renderList()}</tbody>
+        <tbody id=\"scn-list\">${renderList()}</tbody>
       </table>
     </div>
-    <div class="modal-actions">
-      <button class="btn" data-action="close" data-testid="close-scn-load">Close</button>
+    <div class=\"modal-actions\">
+      <button class=\"btn\" data-action=\"close\" data-testid=\"close-scn-load\">Close</button>
     </div>
   `;
 
@@ -138,33 +139,33 @@ export function openScenarioCompareModal() {
   const dlg = document.createElement('dialog');
   dlg.setAttribute('data-testid', 'modal-scn-compare');
   dlg.innerHTML = `
-    <h3 style="margin-top:0">Scenario Compare — ${team.abbrName}</h3>
-    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <h3 style=\"margin-top:0\">Scenario Compare — ${team.abbrName}</h3>
+    <div style=\"display:grid; grid-template-columns: 1fr 1fr; gap: 1rem;\">
       <div>
-        <div style="color:var(--muted); font-size:.85em">Baseline Cap Space</div>
+        <div style=\"color:var(--muted); font-size:.85em\">Baseline Cap Space</div>
         <div>${fmtMoney(baseline.capAvailable || 0)}</div>
-        <div style="color:var(--muted); font-size:.85em; margin-top:.5rem">Baseline Spent</div>
+        <div style=\"color:var(--muted); font-size:.85em; margin-top:.5rem\">Baseline Spent</div>
         <div>${fmtMoney(baseline.capSpent || 0)}</div>
       </div>
       <div>
-        <div style="color:var(--muted); font-size:.85em">Current Cap Space</div>
+        <div style=\"color:var(--muted); font-size:.85em\">Current Cap Space</div>
         <div>${fmtMoney(now.capAvailable || 0)}</div>
-        <div style="color:var(--muted); font-size:.85em; margin-top:.5rem">Current Spent</div>
+        <div style=\"color:var(--muted); font-size:.85em; margin-top:.5rem\">Current Spent</div>
         <div>${fmtMoney(now.capSpent || 0)}</div>
       </div>
     </div>
-    <div style="margin-top:.75rem; display:grid; grid-template-columns: 1fr 1fr; gap:1rem;">
+    <div style=\"margin-top:.75rem; display:grid; grid-template-columns: 1fr 1fr; gap:1rem;\">
       <div>
-        <div style="color:var(--muted); font-size:.85em">Cap Space Delta</div>
-        <div class="${deltaAvail >= 0 ? 'money-pos' : 'money-neg'}">${deltaAvail >= 0 ? '+' : ''}${fmtMoney(deltaAvail)}</div>
+        <div style=\"color:var(--muted); font-size:.85em\">Cap Space Delta</div>
+        <div class=\"${deltaAvail >= 0 ? 'money-pos' : 'money-neg'}\">${deltaAvail >= 0 ? '+' : ''}${fmtMoney(deltaAvail)}</div>
       </div>
       <div>
-        <div style="color:var(--muted); font-size:.85em">Spent Delta</div>
-        <div class="${deltaSpent <= 0 ? 'money-pos' : 'money-neg'}">${deltaSpent >= 0 ? '+' : ''}${fmtMoney(deltaSpent)}</div>
+        <div style=\"color:var(--muted); font-size:.85em\">Spent Delta</div>
+        <div class=\"${deltaSpent <= 0 ? 'money-pos' : 'money-neg'}\">${deltaSpent >= 0 ? '+' : ''}${fmtMoney(deltaSpent)}</div>
       </div>
     </div>
-    <div class="modal-actions">
-      <button class="btn" data-action="close" data-testid="close-scn-compare">Close</button>
+    <div class=\"modal-actions\">
+      <button class=\"btn\" data-action=\"close\" data-testid=\"close-scn-compare\">Close</button>
     </div>
   `;
   dlg.querySelector('[data-action="close"]')?.addEventListener('click', () => closeAndRemove(dlg));
@@ -175,3 +176,4 @@ export function openScenarioCompareModal() {
 }
 
 export default { openScenarioSaveModal, openScenarioLoadModal, openScenarioCompareModal };
+

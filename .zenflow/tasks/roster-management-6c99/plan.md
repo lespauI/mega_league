@@ -220,7 +220,8 @@ Verification
 - Manual: try a release in Y+1 and compare against expected savings using proration rules.
 - E2E in a later step will automate checks.
 
-### [ ] Step: Scenario Persistence For Context
+### [x] Step: Scenario Persistence For Context
+<!-- chat-id: cfada683-f8d7-4dc7-818b-343446da519a -->
 Task definition
 - Include `yearContextOffset` in scenario save/load routines and ensure Reset behavior does not reset the context per PRD.
 
