@@ -109,7 +109,8 @@ Verification:
 - Run: `npm i && npx playwright install --with-deps`.
 - Execute a placeholder: `npx playwright test` (should start/stop server and pass with zero tests or a smoke).
 
-### [ ] Step: Test Fixtures and Selector Utils
+### [x] Step: Test Fixtures and Selector Utils
+<!-- chat-id: 44202e61-19db-4812-ac69-0cdff778f34d -->
 Task definition:
 - Create shared fixtures and selector helpers for resilient element access and consistent navigation.
 
@@ -125,6 +126,7 @@ Verification:
 - `npx playwright test -g selectors` (if you add a small unit-ish spec) or import in smoke test without runtime errors.
 
 ### [ ] Step: Smoke Test (Load + Cap Summary)
+<!-- chat-id: b9282348-16ab-45c0-8492-1520b1dd5a04 -->
 Task definition:
 - Add a basic smoke test to ensure the app loads, CSVs parse, and Cap Summary shows numbers.
 
