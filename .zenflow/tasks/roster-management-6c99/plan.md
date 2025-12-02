@@ -235,7 +235,8 @@ Verification
 - Manual: save a scenario under Y+2, reload and verify the selector shows Y+2.
 - E2E later will validate persist/restore.
 
-### [ ] Step: Helper Unit Tests (Node)
+### [x] Step: Helper Unit Tests (Node)
+<!-- chat-id: a672c3bd-cee8-495a-af23-69563d20ef49 -->
 Task definition
 - Add `scripts/test_year_context.mjs` to unit-test core computations in isolation.
 
