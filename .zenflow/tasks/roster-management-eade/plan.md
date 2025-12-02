@@ -253,3 +253,14 @@ Task instructions
 - Contracts: Reference PRD/spec paths.
 - Deliverable: Clear docs for running and verifying the tool from GitHub Pages.
 - Verification: Links and instructions validated locally; Pages loads post-publish.
+
+### [x] Step: Fix bug
+<!-- chat-id: 02298e49-e1af-4000-825c-83ad522c7258 -->
+
+I open roster and see its empty, same time free agents are in place, fix this bug
+
+Implementation notes:
+- Root cause: `players.team` in `MEGA_players.csv` uses full team names (e.g., "Bengals"), while `selectedTeam` uses `teams.abbrName` (e.g., "CIN"). Active roster filter compared `p.team === selectedTeam`, yielding no matches.
+- Fix: In `initState` normalize `player.team` to the team's `abbrName` using a mapping of `abbrName`/`displayName`/`teamName` → `abbrName`. Free agents remain unchanged.
+- File changed: `docs/roster_cap_tool/js/state.js`.
+- Verification: Load app and select any team. Active Roster lists players; Free Agents unchanged; actions work as before.

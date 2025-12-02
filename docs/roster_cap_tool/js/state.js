@@ -70,7 +70,25 @@ export function getCapSummary() {
 
 export function initState({ teams, players }) {
   state.teams = teams;
-  state.players = players;
+  // Normalize player.team to team abbrName so filters work
+  try {
+    /** @type {Record<string,string>} */
+    const teamKeyToAbbr = Object.create(null);
+    for (const t of teams || []) {
+      const keys = [t.abbrName, t.displayName, t.teamName].filter(Boolean);
+      for (const k of keys) {
+        teamKeyToAbbr[String(k).trim().toLowerCase()] = t.abbrName;
+      }
+    }
+    state.players = (players || []).map((p) => {
+      if (p && p.isFreeAgent) return p;
+      const raw = (p && p.team) ? String(p.team).trim().toLowerCase() : '';
+      const abbr = raw ? (teamKeyToAbbr[raw] || p.team) : p.team;
+      return { ...p, team: abbr };
+    });
+  } catch {
+    state.players = players;
+  }
   // Store a deep baseline copy for scenario reset/compare
   try { state.baselinePlayers = JSON.parse(JSON.stringify(players)); } catch { state.baselinePlayers = players.map(p => ({ ...p })); }
   if (!state.selectedTeam && teams.length) {
