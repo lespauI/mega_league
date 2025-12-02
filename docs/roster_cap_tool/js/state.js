@@ -101,7 +101,12 @@ export function initState({ teams, players }) {
     state.players = players;
   }
   // Store a deep baseline copy for scenario reset/compare
-  try { state.baselinePlayers = JSON.parse(JSON.stringify(players)); } catch { state.baselinePlayers = players.map(p => ({ ...p })); }
+  // Important: use the NORMALIZED players (state.players) so Reset restores a valid roster
+  try {
+    state.baselinePlayers = JSON.parse(JSON.stringify(state.players));
+  } catch {
+    state.baselinePlayers = (state.players || []).map(p => ({ ...p }));
+  }
   if (!state.selectedTeam && teams.length) {
     state.selectedTeam = teams[0].abbrName;
   }

@@ -289,10 +289,22 @@ Verification:
   - Change counts; Rookie Reserve total updates and persists per team.
   - Cap Summary shows Rookie Reserve and Cap After Rookies reflecting the estimate.
 
-### [ ] Step: Reset button whipe roster
+### [x] Step: Reset button whipe roster
+<!-- chat-id: 9d2fca8a-0f31-4716-b41a-98f16ea2d937 -->
 
-It is whipe the whole roster, but must return it into default state
+Bug: Hitting Reset cleared the visible roster. Root cause was `baselinePlayers` stored from raw CSV (full team names), while current filters rely on normalized team `abbrName`. Reset replaced normalized players with raw baseline, causing Active Roster filter to match zero rows.
+
+Fix implemented:
+- In `docs/roster_cap_tool/js/state.js`, set `baselinePlayers` to a deep copy of the normalized `state.players` (not the raw `players` array). This ensures Reset restores the true default roster.
+
+Verification:
+- Load app, switch team, perform a release/sign. Press Reset. Active Roster returns to original list; Free Agents and cap summary revert to baseline. Draft picks remain unchanged.
 
 ### [ ] Step: Visual bug in roster
+<!-- chat-id: ee04d146-5b6f-4ca6-9469-7dcab0da45e3 -->
 
 The #	Player	2025 Cap	Dead Cap (Release)	Dead Cap (Trade)	Contract	FA Year	Action is on a second row after player one insted to be the 0 row
+
+### [ ] Step: In projection the Roster cap for DAL
+
+For dal the Roster cap shown as $321,560,000 for this season and it is -17 millions, i would like to understand how you calculate this, maybe you didnt get right the state of the season? we are ongoing season week 3, it is not possible to have a team with negative cap
