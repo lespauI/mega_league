@@ -87,7 +87,8 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: 753d82c4-812a-4cc7-ab5c-2a3d09db1d2e -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
 
@@ -98,3 +99,169 @@ Task instructions
 ```
 
 "Step:" prefix is important, do not omit it!
+
+### [ ] Step: Add Year Context State & Contracts
+Task definition
+- Introduce per-team year context state and public accessors in `docs/roster_cap_tool/js/state.js`.
+- Backward compatible default `Y+0` when absent; do not change existing behavior until UI wiring.
+
+Contracts (from spec)
+- Add `state.yearContextByTeam: { [abbr: string]: number }` (offset in years, default 0).
+- Add functions: `getYearContextForSelectedTeam(): number`, `setYearContextForSelectedTeam(offset:number): void`, `getContextLabel(): string`.
+- Extend Scenario object model to support `yearContextOffset?: number` (optional, default 0) in `docs/roster_cap_tool/js/models.js` JSDoc.
+
+Deliverable
+- State accessors exported and no-op by default; existing E2E stay green.
+
+Verification
+- Run `npm run test:e2e` to confirm no regressions.
+- Manual: load app; ensure no UI/behavior changes yet and no console errors.
+
+### [ ] Step: Create Context Helpers Module
+Task definition
+- Add `docs/roster_cap_tool/js/context.js` with pure helpers to compute contextual player and roster views for a given offset, without mutating inputs.
+
+Contracts (from spec)
+- Export: `contextualizePlayer(player, team, offset)`, `contextualizeRoster(players, team, offset)`, `getContextualPlayers()` (wrapper using state).
+- Derived fields (suffix `_ctx` only on returned objects): `contractYearsLeft_ctx`, `isFreeAgent_ctx`, `capHit_ctx`, `capReleasePenalty_ctx`, `capReleaseNetSavings_ctx`.
+- Use proration logic and base schedule per spec.
+
+Deliverable
+- New module loads successfully and exports functions; not yet wired to UI/state getters.
+
+Verification
+- Node import smoke: `node -e "import('file://$PWD/docs/roster_cap_tool/js/context.js').then(()=>console.log('ok'))"` prints ok.
+- E2E unaffected: `npm run test:e2e`.
+
+### [ ] Step: Wire Roster Getters To Context
+Task definition
+- Update `getActiveRoster()` and `getFreeAgents()` in `docs/roster_cap_tool/js/state.js` to return contextualized players when year context offset > 0.
+- Ensure default behavior (`offset=0`) matches existing results bit-for-bit.
+
+Contracts (from spec)
+- `getContextualPlayers()` used internally by getters when `getYearContextForSelectedTeam() > 0`.
+- `isFreeAgent_ctx` determines membership in Active vs Free Agents for context > 0.
+
+Deliverable
+- Derived getters return contextual data behind the same API signature; no visual change until UI can switch offset.
+
+Verification
+- `npm run test:e2e` should still pass with default Y+0.
+- Manual: add a temporary `console.debug` of counts under `offset=1` toggle via devtools to sanity-check (remove before commit).
+
+### [ ] Step: Add Context Cap Summary
+Task definition
+- Implement `calcCapSummaryForContext(team, players, moves, contextOffset, opts)` per spec in `docs/roster_cap_tool/js/capMath.js` and export it.
+- Update `getCapSummary()` in `docs/roster_cap_tool/js/state.js` to call context-aware version when `offset>0`.
+
+Contracts (from spec)
+- Use `projectTeamCaps(team, players, moves, horizon, opts)` and read snapshot/baseline at index `contextOffset`.
+- Return `{ capRoom, capSpent, capAvailable, deadMoney, baselineAvailable, deltaAvailable }`.
+
+Deliverable
+- Accurate cap summary in context; default path unchanged for `offset=0`.
+
+Verification
+- `npm run test:e2e` to confirm no regressions in smoke/projections.
+- Later tied to unit tests in `scripts/test_year_context.mjs` (added in a subsequent step).
+
+### [ ] Step: Year Context UI Control
+Task definition
+- Add a new UI module `docs/roster_cap_tool/js/ui/yearContext.js` that renders a small selector (Y+0, Y+1, Y+2, Y+3...) and updates state.
+- Insert container `<div id="year-context"></div>` into `docs/roster_cap_tool/index.html` header (right side), next to the team selector.
+- Wire `mountYearContext()` calls in `docs/roster_cap_tool/js/main.js` alongside other mounts and on state subscription.
+
+Contracts (from spec)
+- Container: `#year-context`.
+- Buttons testids: `data-testid="year-context-0"`, `year-context-1`, `year-context-2`, …
+- Label helper: `data-testid="year-context-label"` displays `Y+N`.
+
+Deliverable
+- Visible year context control with default Y+0 selected; clicking updates state and triggers re-render.
+
+Verification
+- Manual: switch Y+0 → Y+1 and observe roster counts/cap summary change sensibly.
+- E2E will cover in a later step; interim smoke via `npm run test:e2e` should remain green.
+
+### [ ] Step: Update Column Headers For Context
+Task definition
+- Update roster table cap column label to include the current context (e.g., `Cap (Y+1)`) and add test id.
+
+Contracts (from spec)
+- In `docs/roster_cap_tool/js/ui/playerTable.js`, set header label with `data-testid="col-cap-label"` using `getContextLabel()`.
+
+Deliverable
+- Header text reflects selected year context across tables where applicable.
+
+Verification
+- Manual: switch context and confirm header updates.
+- New E2E will assert via `col-cap-label`.
+
+### [ ] Step: Context-Aware Actions (Release/Trade/Extend/Convert/Sign)
+Task definition
+- Ensure simulation helpers and modals use contextual player view and cap snapshot for the selected year.
+- Update modal previews to reflect penalties/savings in the context year.
+
+Contracts (from spec)
+- Modals under `docs/roster_cap_tool/js/ui/modals/*.js` should fetch players through contextual getters and use `getCapSummary()` (which is context-aware now).
+- Keep existing move encoding format; only calculations adapt to context.
+
+Deliverable
+- Releasing/trading/extending/etc while in Y+1/Y+2 shows correct penalties/savings and updates the cap summary consistently.
+
+Verification
+- Manual: try a release in Y+1 and compare against expected savings using proration rules.
+- E2E in a later step will automate checks.
+
+### [ ] Step: Scenario Persistence For Context
+Task definition
+- Include `yearContextOffset` in scenario save/load routines and ensure Reset behavior does not reset the context per PRD.
+
+Contracts (from spec)
+- Update scenario JSDoc in `docs/roster_cap_tool/js/models.js` and scenario helpers in `docs/roster_cap_tool/js/ui/scenarioControls.js`/modals to persist `yearContextOffset`.
+
+Deliverable
+- Saving and loading a scenario restores the selected context value; Reset keeps current context.
+
+Verification
+- Manual: save a scenario under Y+2, reload and verify the selector shows Y+2.
+- E2E later will validate persist/restore.
+
+### [ ] Step: Helper Unit Tests (Node)
+Task definition
+- Add `scripts/test_year_context.mjs` to unit-test core computations in isolation.
+
+Contracts (from spec)
+- Tests for `contextualizePlayer` across edge cases and `calcCapSummaryForContext` parity with `projectTeamCaps`.
+
+Deliverable
+- Node script exists and exits with code 0 when assertions pass.
+
+Verification
+- Run `node scripts/test_year_context.mjs` and ensure it finishes without throwing.
+
+### [ ] Step: E2E Tests For Year Context
+Task definition
+- Add `tests/e2e/year-context.spec.ts` that exercises the selector, header/column labels, roster counts, release modal preview in context, and scenario persistence.
+
+Contracts (from spec)
+- Use testids: `year-context-*`, `year-context-label`, `col-cap-label`, header projections stability, etc.
+
+Deliverable
+- Deterministic E2E covering Y+0 default and Y+1/Y+2 behavior; projections tab remains semantically unchanged.
+
+Verification
+- Run `npm run test:e2e` and ensure all tests (existing + new) pass.
+
+### [ ] Step: Regression & Polish
+Task definition
+- Run full test suite; tidy console warnings; update `docs/roster_cap_tool/USAGE.md` with a short note on Year Context.
+
+Contracts
+- None new; ensure backward-compatible defaults and unchanged behavior under Y+0.
+
+Deliverable
+- Clean run of all tests; concise docs note; no regressions in existing features.
+
+Verification
+- `npm run test:e2e` passes; quick manual click-through of tabs under Y+0 and Y+1.
