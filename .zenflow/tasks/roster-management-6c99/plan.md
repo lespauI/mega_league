@@ -188,7 +188,8 @@ Verification
 - Manual: switch Y+0 → Y+1 and observe roster counts/cap summary change sensibly.
 - E2E will cover in a later step; interim smoke via `npm run test:e2e` should remain green.
 
-### [ ] Step: Update Column Headers For Context
+### [x] Step: Update Column Headers For Context
+<!-- chat-id: 612bd776-f0bb-4cb5-9e18-34db5baa618a -->
 Task definition
 - Update roster table cap column label to include the current context (e.g., `Cap (Y+1)`) and add test id.
 

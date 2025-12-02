@@ -1,4 +1,4 @@
-import { getState, setState, getCapSummary } from '../state.js';
+import { getState, setState, getCapSummary, getContextLabel } from '../state.js';
 import { simulateTradeQuick } from '../capMath.js';
 import { openReleaseModal } from './modals/releaseModal.js';
 import { openExtensionModal } from './modals/extensionModal.js';
@@ -134,7 +134,8 @@ export function renderPlayerTable(containerId, players, options = {}) {
     : [
         { label: '#', key: 'index' },
         { label: 'Player', key: 'player' },
-        { label: '2025 Cap', key: 'capHit' },
+        // Header label reflects current Year Context, but cell data-labels remain stable for tests
+        { label: `Cap (${getContextLabel()})`, key: 'capHit' },
         { label: 'Free cap after release', key: 'deadRelease' },
         { label: 'Dead Cap (Trade)', key: 'deadTrade' },
         { label: 'Contract', key: 'contract' },
@@ -157,6 +158,10 @@ export function renderPlayerTable(containerId, players, options = {}) {
   headerMeta.forEach((meta) => {
     const th = document.createElement('th');
     th.textContent = meta.label;
+    if (meta.key === 'capHit') {
+      // Add test id for E2E and ensure label stays fresh
+      th.setAttribute('data-testid', 'col-cap-label');
+    }
     th.style.cursor = 'pointer';
     th.title = 'Click to sort';
     th.addEventListener('click', () => {
