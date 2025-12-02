@@ -100,7 +100,8 @@ Task instructions
 
 "Step:" prefix is important, do not omit it!
 
-### [ ] Step: Add Year Context State & Contracts
+### [x] Step: Add Year Context State & Contracts
+<!-- chat-id: 1230bf8e-3800-4b35-8977-25817bd17ec1 -->
 Task definition
 - Introduce per-team year context state and public accessors in `docs/roster_cap_tool/js/state.js`.
 - Backward compatible default `Y+0` when absent; do not change existing behavior until UI wiring.

@@ -20,6 +20,8 @@ const state = {
   moves: [],
   /** @type {CapSnapshot|null} */
   snapshot: null,
+  /** Per-team Year Context offset (Y+N) */
+  yearContextByTeam: {},
   /** Persisted draft picks config per team: { [abbr]: {1:number,...,7:number} } */
   draftPicksByTeam: {},
   /** Persisted baseline dead money per team: { [abbr]: { year0:number, year1:number } } */
@@ -148,6 +150,12 @@ export function initState({ teams, players }) {
     const raw = localStorage.getItem('rosterCap.reSignSettings');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.reSignSettingsByTeam = parsed;
+  } catch {}
+  // Load Year Context (per team) once
+  try {
+    const raw = localStorage.getItem('rosterCap.yearContext');
+    const parsed = raw ? JSON.parse(raw) : {};
+    if (parsed && typeof parsed === 'object') state.yearContextByTeam = parsed;
   } catch {}
   // Load position filters from localStorage once
   try {
@@ -322,6 +330,32 @@ export function setDraftPicksForSelectedTeam(picksPerRound) {
 export function getRookieReserveEstimate() {
   const picks = getDraftPicksForSelectedTeam();
   return estimateRookieReserveForPicks(picks);
+}
+
+// ----- Year Context (Y+N view only; no behavioral changes yet) -----
+
+/** Get Year Context offset (0 = current year) for selected team. */
+export function getYearContextForSelectedTeam() {
+  const abbr = state.selectedTeam || '';
+  const v = state.yearContextByTeam?.[abbr];
+  const n = Number(v);
+  if (!Number.isFinite(n)) return 0;
+  return Math.max(0, Math.floor(n));
+}
+
+/** Set Year Context offset (clamped to >= 0) for selected team and persist. */
+export function setYearContextForSelectedTeam(offset) {
+  const abbr = state.selectedTeam || '';
+  const next = { ...(state.yearContextByTeam || {}), [abbr]: Math.max(0, Math.floor(Number(offset) || 0)) };
+  state.yearContextByTeam = next;
+  try { localStorage.setItem('rosterCap.yearContext', JSON.stringify(next)); } catch {}
+  emit();
+}
+
+/** Return short label for current context (e.g., 'Y+0', 'Y+1'). */
+export function getContextLabel() {
+  const off = getYearContextForSelectedTeam();
+  return `Y+${off}`;
 }
 
 // ----- Rollover (carryover to next year) -----
