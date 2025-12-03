@@ -46,12 +46,12 @@ export function openContractEditor(player) {
   dlg.classList.add('drawer');
 
   const headerHtml = `
-    <div style="display:flex; align-items:center; gap:.75rem; justify-content: space-between;">
-      <div>
-        <h3 style="margin:0" data-dialog-title>Contract Distribution — ${name}</h3>
-        <div style="color:var(--muted); font-size:.875rem; margin:.25rem 0 .25rem">Enter values in millions (e.g., 22.7 = $22.7M)</div>
+    <div class="drawer__header">
+      <div class="drawer__titlewrap">
+        <h3 data-dialog-title>Contract Distribution — ${name}</h3>
+        <div class="drawer__subtitle">Enter values in millions (e.g., 22.7 = $22.7M)</div>
       </div>
-      <div style="display:flex; gap:.5rem; align-items:center;">
+      <div class="drawer__actions">
         <button class="btn primary" data-testid="ce-save" data-action="save" title="Apply changes to projections">Save</button>
         <button class="btn" data-testid="ce-reset" data-action="reset" title="Restore default 50/50">Reset</button>
         <button class="btn" data-testid="ce-close" data-action="close">Close</button>
@@ -66,10 +66,10 @@ export function openContractEditor(player) {
         const sM = (sAbs / 1_000_000).toFixed(1);
         const bM = (bAbs / 1_000_000).toFixed(1);
         return `
-          <div class="ce-col" style="display:grid; gap:.375rem; min-width: 140px;">
-            <div data-testid="ce-year" style="font-weight:600; text-align:center;">${yr}</div>
-            <label style="display:grid; gap:.25rem;">
-              <span style="color:var(--muted); font-size:.85em;">Salary (M)</span>
+          <div class="ce-col">
+            <div data-testid="ce-year">${yr}</div>
+            <label class="field">
+              <span class="field__label">Salary (M)</span>
               <input
                 type="number"
                 step="0.1"
@@ -79,12 +79,11 @@ export function openContractEditor(player) {
                 value="${sM}"
                 data-testid="ce-input-salary"
                 data-year="${yr}"
-                style="background:#0b1324;color:var(--text);border:1px solid #334155;border-radius:.375rem;padding:.375rem .5rem;"
               />
-              <div data-testid="ce-prev-salary" data-year="${yr}" style="color:var(--muted); font-size:.8em; text-align:right;">${formatMillions(sAbs)}</div>
+              <div data-testid="ce-prev-salary" data-year="${yr}">${formatMillions(sAbs)}</div>
             </label>
-            <label style="display:grid; gap:.25rem;">
-              <span style="color:var(--muted); font-size:.85em;">Bonus (M)</span>
+            <label class="field">
+              <span class="field__label">Bonus (M)</span>
               <input
                 type="number"
                 step="0.1"
@@ -94,17 +93,16 @@ export function openContractEditor(player) {
                 value="${bM}"
                 data-testid="ce-input-bonus"
                 data-year="${yr}"
-                style="background:#0b1324;color:var(--text);border:1px solid #334155;border-radius:.375rem;padding:.375rem .5rem;"
               />
-              <div data-testid="ce-prev-bonus" data-year="${yr}" style="color:var(--muted); font-size:.8em; text-align:right;">${formatMillions(bAbs)}</div>
+              <div data-testid="ce-prev-bonus" data-year="${yr}">${formatMillions(bAbs)}</div>
             </label>
           </div>
         `;
       }).join('')
-    : `<div style="color:var(--muted);">No remaining contract years.</div>`;
+    : `<div class="muted">No remaining contract years.</div>`;
 
   const gridHtml = `
-    <div class="ce-grid" style="display:grid; grid-auto-flow: column; gap:.75rem; overflow:auto; padding-bottom:.25rem;">
+    <div class="ce-grid">
       ${colsHtml}
     </div>
   `;

@@ -140,7 +140,18 @@ dialog.drawer[open] {
 dialog.drawer::backdrop { background: rgba(2, 6, 23, 0.6); }
 
 /* Contract Editor specific layout */
-.drawer [data-dialog-title] { font-size: 1.05rem; }
+.drawer [data-dialog-title] { font-size: 1.05rem; margin: 0; }
+
+/* Drawer header bar */
+.drawer__header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+.drawer__titlewrap { display:grid; gap:.25rem; }
+.drawer__subtitle { color: var(--muted); font-size: .875rem; margin: .125rem 0 0; }
+.drawer__actions { display:flex; gap:.5rem; align-items:center; }
+
+/* Generic field helpers */
+.field { display:grid; gap:.25rem; }
+.field__label { color: var(--muted); font-size: .85em; }
+.muted { color: var(--muted); }
 
 /* Grid with a column per year */
 .ce-grid {
