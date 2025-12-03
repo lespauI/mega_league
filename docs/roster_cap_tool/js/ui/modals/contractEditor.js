@@ -43,7 +43,8 @@ export function openContractEditor(player) {
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
   dlg.setAttribute('data-testid', 'contract-editor');
-  dlg.classList.add('drawer');
+  // Scoped class so CSS can style this drawer without affecting others
+  dlg.classList.add('drawer', 'contract-editor');
 
   const headerHtml = `
     <div class="drawer__header">
