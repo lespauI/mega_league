@@ -109,7 +109,6 @@ export function contextualizePlayer(player, team, offset = 0) {
   // Derive bonus and proration windows at the context year
   const yearsElapsed_ctx = clamp(len - yearsLeft_ctx, 0, len);
   const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
-  const remainingProration_ctx = Math.max(0, prorateYears - yearsElapsed_ctx);
   let bonusPerYear = 0;
   let remainingProration_ctx = Math.max(0, prorateYears - yearsElapsed_ctx);
   if (custom && baseCalendarYear > 0) {

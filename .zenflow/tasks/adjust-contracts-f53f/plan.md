@@ -321,3 +321,8 @@ Added Playwright E2E spec to validate impacts from manual contract adjustments:
 - Verifies: Projections (Roster Cap/Cap Space), Release preview savings, and Trade (Quick) savings all change for the edited year.
 
 Run: `npx playwright test tests/e2e/custom_contract_impacts.spec.ts`
+
+### [x] Step: fix bug
+<!-- chat-id: 0903bafc-cc97-4a2d-b781-fbd485472cbf -->
+
+Fixed duplicate identifier in `docs/roster_cap_tool/js/context.js` by removing the earlier `const remainingProration_ctx` and keeping a single `let remainingProration_ctx` initialization. This resolves the SyntaxError and preserves logic for custom/derived proration handling.
