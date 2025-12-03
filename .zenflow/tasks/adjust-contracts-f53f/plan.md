@@ -183,7 +183,8 @@ Deliverable
 Verification
 - Manually edit values; close the dialog; re-open for the same player and confirm the edited values are shown and formatted `$XM`.
 
-### [ ] Step: Add Reset Behavior
+### [x] Step: Add Reset Behavior
+<!-- chat-id: bf71f1cc-1561-4f49-a5df-178cde64f089 -->
 Task definition
 - Implement Reset button to clear player’s custom map via `resetCustomContract(player.id)` and re-render defaults.
 

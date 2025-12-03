@@ -1,5 +1,5 @@
 import { enhanceDialog } from '../a11y.js';
-import { getCustomContract, setCustomContract } from '../../state.js';
+import { getCustomContract, setCustomContract, resetCustomContract } from '../../state.js';
 import { computeDefaultDistribution } from '../../contractUtils.js';
 import { formatMillions, toAbsoluteDollarsFromMillions } from '../../format.js';
 
@@ -136,9 +136,27 @@ export function openContractEditor(player) {
     dlg.remove();
   });
 
-  // Reset wiring will be implemented in a later step. For now, keep as a no-op.
+  // Reset to default 50/50 split and clear custom map
   dlg.querySelector('[data-action="reset"]')?.addEventListener('click', (e) => {
     e.preventDefault();
+    try { resetCustomContract(String(player.id)); } catch {}
+    // Recompute defaults and update the in-dialog state and inputs/previews
+    const def = computeDefaultDistribution(player) || {};
+    for (const yr of years) {
+      const sAbs = Number(def[yr]?.salary || 0) || 0;
+      const bAbs = Number(def[yr]?.bonus || 0) || 0;
+      current[yr] = { salary: sAbs, bonus: bAbs };
+      // Update input fields (millions)
+      const sInp = dlg.querySelector(`input[data-testid="ce-input-salary"][data-year="${yr}"]`);
+      const bInp = dlg.querySelector(`input[data-testid="ce-input-bonus"][data-year="${yr}"]`);
+      if (sInp) sInp.value = (sAbs / 1_000_000).toFixed(1);
+      if (bInp) bInp.value = (bAbs / 1_000_000).toFixed(1);
+      // Update previews
+      const sPrev = dlg.querySelector(`[data-testid="ce-prev-salary"][data-year="${yr}"]`);
+      const bPrev = dlg.querySelector(`[data-testid="ce-prev-bonus"][data-year="${yr}"]`);
+      if (sPrev) sPrev.textContent = formatMillions(sAbs);
+      if (bPrev) bPrev.textContent = formatMillions(bAbs);
+    }
   });
 
   // Wire inputs to auto-save on input/change
