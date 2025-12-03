@@ -59,7 +59,7 @@ function mountPlaceholders() {
         <thead><tr>
           <th>#</th>
           <th>Player</th>
-          <th>2026 Cap</th>
+          <th>2025 Cap</th>
           <th>Free cap after release</th>
           <th>Dead Cap (Trade)</th>
           <th>Contract</th>
