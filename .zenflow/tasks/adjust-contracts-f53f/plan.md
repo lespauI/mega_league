@@ -243,7 +243,8 @@ Deliverable
 Verification
 - Run `npx playwright test` and confirm the new spec passes. Use the configured static server from `playwright.config.ts`.
 
-### [ ] Step: Update Usage Docs (Optional)
+### [x] Step: Update Usage Docs (Optional)
+<!-- chat-id: 49d62c22-9c38-4718-87f3-32d084a72f08 -->
 Task definition
 - Update `docs/roster_cap_tool/USAGE.md` with a short subsection describing the Contract Distribution Editor and how values are interpreted (millions, 1-decimal display, in-memory only).
 
@@ -256,7 +257,7 @@ Deliverable
 Verification
 - Rendered markdown reads clearly; links and file paths are correct.
 
-### [ ] Step: Get rid of years+1
+### [ ] Step: Get rid of years+1 and etc
 
 Currently we use Year+1 and etc, i want to replace it with actual years, 
 Current year = 2026
@@ -267,4 +268,4 @@ Please get rid of Y0 year+1 Y+1 etc.
 
 Also update the FA year with corresponding year. FA=1 is 2026, FA=2 is 2027 and etc
 
-Basicly create a simple dictionary, its must be just user representation change, all our logic can use Y+1 or whathewer, Just in interface base line year shuld be 2026 and shown as a 2026 not Year 1
+Basicly create a simple dictionary, its must be just user representation change, all our logic can use Y+1 or whathewer, Just in interface base line year shuld be 2026 and shown as a 2026 not Year 1 in every place in UI, new added and old already exist representation
