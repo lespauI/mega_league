@@ -19,12 +19,14 @@ export function mountDraftPicks(containerId = 'draft-picks-table') {
   if (!el) return;
   const st = getState();
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
+  const baseYear = Number(team?.calendarYear || 0);
+  const rookieYearLabel = (Number.isFinite(baseYear) && baseYear > 0) ? String(baseYear + 1) : 'Year 1';
   const picks = getDraftPicksForSelectedTeam();
 
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const header = document.createElement('tr');
-  ;['Round', 'Picks', 'Est. Per Pick (Year 1)', 'Est. Round Total'].forEach((h) => {
+  ;['Round', 'Picks', `Est. Per Pick (${rookieYearLabel})`, 'Est. Round Total'].forEach((h) => {
     const th = document.createElement('th');
     th.textContent = h;
     header.appendChild(th);
@@ -59,7 +61,7 @@ export function mountDraftPicks(containerId = 'draft-picks-table') {
     tdCount.appendChild(inp);
 
     const tdPer = document.createElement('td');
-    tdPer.setAttribute('data-label', 'Est. Per Pick (Year 1)');
+    tdPer.setAttribute('data-label', `Est. Per Pick (${rookieYearLabel})`);
     const per = estimateRookieYear1ForSlot(r, 16);
     tdPer.textContent = fmtMoney(per);
 
@@ -77,7 +79,7 @@ export function mountDraftPicks(containerId = 'draft-picks-table') {
   const tdLabel = document.createElement('td');
   tdLabel.colSpan = 3;
   tdLabel.style.textAlign = 'right';
-  tdLabel.innerHTML = '<strong>Estimated Rookie Reserve (Year 1)</strong>';
+  tdLabel.innerHTML = `<strong>Estimated Rookie Reserve (${rookieYearLabel})</strong>`;
   const tdTotal = document.createElement('td');
   tdTotal.innerHTML = `<strong>${fmtMoney(getRookieReserveEstimate())}</strong>`;
   foot.append(tdLabel, tdTotal);
@@ -125,4 +127,3 @@ export function mountDraftPicks(containerId = 'draft-picks-table') {
 }
 
 export default { mountDraftPicks };
-

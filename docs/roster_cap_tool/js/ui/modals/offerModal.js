@@ -1,4 +1,4 @@
-import { getState, setState, getCapSummary } from '../../state.js';
+import { getState, setState, getCapSummary, getYearContextForSelectedTeam } from '../../state.js';
 import { simulateSigning } from '../../capMath.js';
 import { toNum } from '../../validation.js';
 import { enhanceDialog } from '../a11y.js';
@@ -21,6 +21,11 @@ export function openOfferModal(player) {
   const st = getState();
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
   if (!team) return;
+  const offset = getYearContextForSelectedTeam();
+  const baseYear = Number(team?.calendarYear || 0);
+  const year1Label = (Number.isFinite(baseYear) && baseYear > 0)
+    ? String(baseYear + offset)
+    : 'Year 1';
 
   const name = `${player.firstName || ''} ${player.lastName || ''}`.trim();
 
@@ -53,7 +58,7 @@ export function openOfferModal(player) {
 
     <div style="margin-top:.75rem; display:grid; grid-template-columns: 1fr 1fr; gap:.5rem;">
       <div>
-        <div style="color:var(--muted); font-size:.85em">Year 1 Cap Hit</div>
+        <div style="color:var(--muted); font-size:.85em">${year1Label} Cap Hit</div>
         <div id="offer-cap-hit" class="money-warn" data-testid="offer-cap-hit">$0</div>
       </div>
       <div>
