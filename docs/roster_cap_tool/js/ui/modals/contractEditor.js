@@ -1,6 +1,7 @@
 import { enhanceDialog } from '../a11y.js';
-import { getCustomContract } from '../../state.js';
+import { getCustomContract, setCustomContract } from '../../state.js';
 import { computeDefaultDistribution } from '../../contractUtils.js';
+import { formatMillions, toAbsoluteDollarsFromMillions } from '../../format.js';
 
 /**
  * Open a side-drawer style contract distribution editor for a player.
@@ -29,6 +30,15 @@ export function openContractEditor(player) {
   }
 
   const years = Object.keys(values).map(Number).sort((a, b) => a - b);
+  // Keep a mutable copy for in-dialog edits (absolute dollars)
+  /** @type {Record<number, { salary: number, bonus: number }>} */
+  const current = {};
+  for (const yr of years) {
+    current[yr] = {
+      salary: Number(values[yr]?.salary || 0) || 0,
+      bonus: Number(values[yr]?.bonus || 0) || 0,
+    };
+  }
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
@@ -42,8 +52,10 @@ export function openContractEditor(player) {
 
   const colsHtml = years.length
     ? years.map((yr) => {
-        const sM = (Number(values[yr]?.salary || 0) / 1_000_000).toFixed(1);
-        const bM = (Number(values[yr]?.bonus || 0) / 1_000_000).toFixed(1);
+        const sAbs = Number(values[yr]?.salary || 0) || 0;
+        const bAbs = Number(values[yr]?.bonus || 0) || 0;
+        const sM = (sAbs / 1_000_000).toFixed(1);
+        const bM = (bAbs / 1_000_000).toFixed(1);
         return `
           <div class="ce-col" style="display:grid; gap:.375rem; min-width: 140px;">
             <div data-testid="ce-year" style="font-weight:600; text-align:center;">${yr}</div>
@@ -60,6 +72,7 @@ export function openContractEditor(player) {
                 data-year="${yr}"
                 style="background:#0b1324;color:var(--text);border:1px solid #334155;border-radius:.375rem;padding:.375rem .5rem;"
               />
+              <div data-testid="ce-prev-salary" data-year="${yr}" style="color:var(--muted); font-size:.8em; text-align:right;">${formatMillions(sAbs)}</div>
             </label>
             <label style="display:grid; gap:.25rem;">
               <span style="color:var(--muted); font-size:.85em;">Bonus (M)</span>
@@ -74,6 +87,7 @@ export function openContractEditor(player) {
                 data-year="${yr}"
                 style="background:#0b1324;color:var(--text);border:1px solid #334155;border-radius:.375rem;padding:.375rem .5rem;"
               />
+              <div data-testid="ce-prev-bonus" data-year="${yr}" style="color:var(--muted); font-size:.8em; text-align:right;">${formatMillions(bAbs)}</div>
             </label>
           </div>
         `;
@@ -95,6 +109,19 @@ export function openContractEditor(player) {
 
   dlg.innerHTML = headerHtml + gridHtml + actionsHtml;
 
+  // Helper to persist changes and update previews
+  const persistAndRender = (yr, kind, millionsValue) => {
+    const abs = Math.max(0, toAbsoluteDollarsFromMillions(millionsValue));
+    if (!current[yr]) current[yr] = { salary: 0, bonus: 0 };
+    current[yr][kind] = abs;
+    // Persist player's custom map (session-only)
+    try { setCustomContract(String(player.id), current); } catch {}
+    // Update preview
+    const sel = kind === 'salary' ? `[data-testid="ce-prev-salary"][data-year="${yr}"]` : `[data-testid="ce-prev-bonus"][data-year="${yr}"]`;
+    const el = dlg.querySelector(sel);
+    if (el) el.textContent = formatMillions(abs);
+  };
+
   // Click outside content to close
   dlg.addEventListener('click', (e) => {
     const r = dlg.getBoundingClientRect();
@@ -114,10 +141,29 @@ export function openContractEditor(player) {
     e.preventDefault();
   });
 
+  // Wire inputs to auto-save on input/change
+  dlg.querySelectorAll('[data-testid="ce-input-salary"]').forEach((inp) => {
+    const yr = Number(inp.getAttribute('data-year'));
+    const handler = (e) => {
+      const v = /** @type {HTMLInputElement} */(e.currentTarget).value;
+      persistAndRender(yr, 'salary', v);
+    };
+    inp.addEventListener('input', handler);
+    inp.addEventListener('change', handler);
+  });
+  dlg.querySelectorAll('[data-testid="ce-input-bonus"]').forEach((inp) => {
+    const yr = Number(inp.getAttribute('data-year'));
+    const handler = (e) => {
+      const v = /** @type {HTMLInputElement} */(e.currentTarget).value;
+      persistAndRender(yr, 'bonus', v);
+    };
+    inp.addEventListener('input', handler);
+    inp.addEventListener('change', handler);
+  });
+
   root.appendChild(dlg);
   enhanceDialog(/** @type {HTMLDialogElement} */(dlg), { opener: document.activeElement });
   try { dlg.showModal(); } catch { dlg.show(); }
 }
 
 export default { openContractEditor };
-

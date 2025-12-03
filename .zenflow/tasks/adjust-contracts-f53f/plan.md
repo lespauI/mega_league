@@ -166,7 +166,8 @@ Deliverable
 Verification
 - Temporarily call `openContractEditor(window.__anyPlayer)` from console to verify drawer renders, shows default columns and values.
 
-### [ ] Step: Wire Editor Inputs to In-Memory State (Auto-save)
+### [x] Step: Wire Editor Inputs to In-Memory State (Auto-save)
+<!-- chat-id: 90a47357-7452-4d57-ae56-58194faa46ba -->
 Task definition
 - On input `input`/`change`, parse values (millions) and save absolute dollars to `customContractsByPlayer` via `setCustomContract`.
 - Re-open editor loads and displays custom values if present.
