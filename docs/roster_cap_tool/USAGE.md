@@ -79,6 +79,7 @@ Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
   - Dead Money = `capReleasePenalty`
   - If multi‑year: current year dead money ≈ 60% of penalty, remainder next year
 - Bonus proration capped at 5 years (Madden rule)
+  - Zero-dead-money releases (e.g., acquired via trade): releasing a player with no signing bonus on your team frees the full salary for all remaining years; projections (Y+1, Y+2, …) add back those salary-only amounts.
 
 ## Data Notes
 - CSV source field inversion (cut penalty): Some CSV exports label “Penalty Year 1” and “Penalty Year 2”, but in‑game application is reversed. In practice, what the CSV calls “Year 2” applies to the current season, and what it calls “Year 1” applies to the following season. The tool normalizes this by allocating multi‑year dead money as ~60% to the current year and ~40% to next year, matching in‑game behavior. This change was made to correct mismatches observed between CSV labels and actual cap outcomes in the game.

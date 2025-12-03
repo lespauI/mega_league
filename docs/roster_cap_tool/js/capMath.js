@@ -401,12 +401,29 @@ export function deriveReleaseAddBackOverlay(moves = [], players = [], years = 5,
     seen.add(mv.playerId);
     const pl = byId[mv.playerId];
     if (!pl) continue;
-    const faYears = Math.max(0, Math.floor(toFinite(/** @type {any} */(mv).faYearsAtRelease, toFinite(pl.contractYearsLeft, 0))));
-    const freeOutYears = clamp(Math.floor(toFinite(/** @type {any} */(mv).freeOutYears, faYears - 2)), 0, 2);
+    // Determine years remaining at time of release, defaulting from player fields.
+    const yearsLeft = Math.max(0, Math.floor(toFinite(/** @type {any} */(mv).faYearsAtRelease, toFinite(pl.contractYearsLeft, 0))));
     const caps = projectPlayerCapHits(pl, horizon);
     const inc = convInc[mv.playerId] || null;
-    for (let o = 1 + freeOutYears; o < horizon; o++) {
-      let add = caps[o] || 0;
+
+    // Special-case: players with zero dead money (no signing bonus on acquiring team).
+    // In Madden, if a team traded for a player, the acquiring team does not carry
+    // the original signing bonus. Releasing such a player should free the entire
+    // salary portion for all remaining years (Y+1..FA year).
+    const noBonus = (toFinite(pl.contractBonus, 0) <= 0) && (toFinite(pl.capReleasePenalty, 0) <= 0);
+    const approxBase = Math.max(0, toFinite(pl.capHit, 0));
+
+    // Add back for all out-year offsets up to yearsLeft (exclusive of current year).
+    for (let o = 1; o < horizon; o++) {
+      if (o >= yearsLeft) break; // no contract beyond FA year
+      let add;
+      if (noBonus) {
+        // Use a robust salary-only approximation when bonus/proration is zero on this team.
+        // Prefer the player’s current cap hit (pure salary) as a floor for out-years.
+        add = approxBase;
+      } else {
+        add = caps[o] || 0;
+      }
       if (inc) add += (inc[o] || 0);
       overlay[o] += add;
     }
