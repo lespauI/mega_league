@@ -280,3 +280,19 @@ Completed:
   - Draft Picks: headers/footers now “20XX” instead of “Year 1”.
   - Placeholder table header updated from 2025 → 2026.
 - FA Year column already renders absolute year via calendarYear + yearsLeft.
+
+### [x] Step: Your solution simply didnt work.
+<!-- chat-id: 15fee268-5939-48a9-af17-ebfd8da1bf47 -->
+
+First, i still se Y0, the FA year just shown as -, And when i click on Player card the menu is simply empty with No remaining contract years., no years to input and etc. So you fucked up
+
+I dont know how you pass your tests. But this is very bad. Please fix
+
+Fix implemented:
+- Root cause was missing `calendarYear` in normalized team data, causing UI to fall back to `Y+N` labels and preventing the contract editor from computing default years (showed "No remaining contract years").
+- Added `calendarYear` parsing/validation to `docs/roster_cap_tool/js/validation.js#normalizeTeamRow` and pass it through on team objects.
+
+Outcomes:
+- Year context chips, projections, draft picks, and other views now render actual years (e.g., 2026) instead of `Y0/Y+1`.
+- FA Year column now shows the correct calendar year instead of `-`.
+- Contract Distribution Editor now displays year columns with editable Salary/Bonus for remaining years.
