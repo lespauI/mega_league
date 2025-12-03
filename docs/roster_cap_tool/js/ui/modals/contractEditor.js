@@ -115,8 +115,12 @@ export function openContractEditor(player) {
     const abs = Math.max(0, toAbsoluteDollarsFromMillions(millionsValue));
     if (!current[yr]) current[yr] = { salary: 0, bonus: 0 };
     current[yr][kind] = abs;
-    // Persist player's custom map (session-only)
-    try { setCustomContract(String(player.id), current); } catch {}
+    // Persist player's custom map (session-only) and notify subscribers
+    try {
+      setCustomContract(String(player.id), current);
+      // Trigger projections / cap summary recompute immediately
+      setState({});
+    } catch {}
     // Update preview
     const sel = kind === 'salary' ? `[data-testid="ce-prev-salary"][data-year="${yr}"]` : `[data-testid="ce-prev-bonus"][data-year="${yr}"]`;
     const el = dlg.querySelector(sel);
@@ -167,6 +171,8 @@ export function openContractEditor(player) {
       if (sPrev) sPrev.textContent = formatMillions(sAbs);
       if (bPrev) bPrev.textContent = formatMillions(bAbs);
     }
+    // Notify subscribers so projections/cap views recompute on reset
+    try { setState({}); } catch {}
   });
 
   // Wire inputs to auto-save on input/change
