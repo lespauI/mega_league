@@ -405,7 +405,7 @@ export function deriveReleaseAddBackOverlay(moves = [], players = [], years = 5,
  * @param {number} years
  * @returns {number[]} length `years` array
  */
-export function projectPlayerCapHits(player, years = 5) {
+export function projectPlayerCapHits(player, years = 5, opts = {}) {
   const out = Array.from({ length: Math.max(0, Math.floor(toFinite(years, 0))) }, () => 0);
   if (out.length === 0) return out;
 
@@ -441,11 +441,24 @@ export function projectPlayerCapHits(player, years = 5) {
     return 0;
   })();
 
+  // Optional custom override by absolute calendar year: use provided salary+bonus
+  /** @type {Record<number, { salary: number, bonus: number }>} */
+  const customByYear = (opts && typeof /** @type {any} */(opts).customByAbsoluteYear === 'object') ? /** @type {any} */(opts).customByAbsoluteYear : null;
+  const baseCalendarYearOpt = (opts && Number.isFinite(Number(/** @type {any} */(opts).baseCalendarYear))) ? Number(/** @type {any} */(opts).baseCalendarYear) : null;
+
   for (let i = 0; i < out.length; i++) {
     if (i === 0) {
       // Use current capHit for Year 0 to reflect live state
       const cur = toFinite(player.capHit);
       out[i] = Number.isFinite(cur) ? cur : ((baseSchedule ? baseSchedule[yearsElapsed] || 0 : inferredBasePerYear) + (remainingProrationNow > 0 ? bonusPerYear : 0));
+      // Allow override for Year 0 if absolute-year mapping provided
+      if (customByYear && baseCalendarYearOpt != null) {
+        const yr0 = baseCalendarYearOpt;
+        const v = customByYear[yr0];
+        if (v && (Number.isFinite(v.salary) || Number.isFinite(v.bonus))) {
+          out[i] = (Number(v.salary || 0) || 0) + (Number(v.bonus || 0) || 0);
+        }
+      }
       continue;
     }
     const withinContract = i < yearsLeft;
@@ -457,6 +470,14 @@ export function projectPlayerCapHits(player, years = 5) {
     }
     const pr = hasProration ? bonusPerYear : 0;
     out[i] = base + pr;
+    // Apply per-year override if provided
+    if (customByYear && baseCalendarYearOpt != null) {
+      const absYear = baseCalendarYearOpt + i;
+      const v = customByYear[absYear];
+      if (v && (Number.isFinite(v.salary) || Number.isFinite(v.bonus))) {
+        out[i] = (Number(v.salary || 0) || 0) + (Number(v.bonus || 0) || 0);
+      }
+    }
   }
   return out;
 }
@@ -565,8 +586,16 @@ export function projectTeamCaps(team, players = [], moves = [], years = 5, opts 
 
   // Sum roster caps per year
   const rosterTotals = Array.from({ length: horizon }, () => 0);
+  // Resolve base calendar year for absolute-year mapping if provided on team or opts
+  const baseCalendarYear = (opts && Number.isFinite(Number(/** @type {any} */(opts).baseCalendarYear)))
+    ? Number(/** @type {any} */(opts).baseCalendarYear)
+    : (Number.isFinite(Number(/** @type {any} */(team).calendarYear)) ? Number(/** @type {any} */(team).calendarYear) : null);
+  /** @type {Record<string, Record<number, { salary: number, bonus: number }>>} */
+  const customAll = (opts && typeof /** @type {any} */(opts).customContractsByPlayer === 'object') ? /** @type {any} */(opts).customContractsByPlayer : {};
+
   for (const p of active) {
-    const caps = projectPlayerCapHits(p, horizon);
+    const customByAbsoluteYear = customAll?.[p.id] || null;
+    const caps = projectPlayerCapHits(p, horizon, { customByAbsoluteYear, baseCalendarYear });
     // Overlay conversion increments for this player if any
     const inc = conv[p.id];
     if (inc) {

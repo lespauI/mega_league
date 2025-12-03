@@ -296,3 +296,23 @@ Outcomes:
 - Year context chips, projections, draft picks, and other views now render actual years (e.g., 2026) instead of `Y0/Y+1`.
 - FA Year column now shows the correct calendar year instead of `-`.
 - Contract Distribution Editor now displays year columns with editable Salary/Bonus for remaining years.
+
+### [x] Step: Edit works, but no affect on salary cup projections
+<!-- chat-id: b40592d8-b541-4452-91fa-3bc3dd2ea71d -->
+
+So i open Jenings card, and set his 2027 salary = 20 and bonus = 20, i expect this will be affect the 2027 salary cap. But this is not.
+
+We need to made affection on salary cup, and on release with this cup and etc. What the reason to have this editable if we not paying any attention on this edits? 
+
+Also made chage on this from, move edits on top from bottom. Add Save button wich will update all cap data and calculation with the info we setup
+
+Implementation notes:
+- Extended `projectPlayerCapHits` and `projectTeamCaps` to accept custom per-year overrides by absolute calendar year; if present, cap hits use `salary + bonus` from the override for that year.
+- Projections now pass `customContractsByPlayer` and base calendar year to `projectTeamCaps` so edited values affect out-year caps immediately.
+- Year-context calculations (release/trade preview) now respect custom distributions in `contextualizePlayer` by using overridden cap hits, base salary for the context year, and remaining bonus (sum of bonus from context year forward) for penalty.
+- Cap Summary in Year Context (`getCapSummary`) forwards overrides so header numbers reflect edits.
+- Contract Editor UI: actions moved to the header; added Save button which persists and triggers re-computation.
+
+### [ ] Step: create e2e tests
+
+create e2e. tests to be sure manual contract adjustment has an impact on cup projection, on cuts, on trade and etc

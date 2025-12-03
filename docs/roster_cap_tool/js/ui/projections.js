@@ -60,12 +60,25 @@ export function mountProjections() {
 
   const extraSpendingByYear = Array.from({ length: years }, (_, i) => (i === 1 ? reSignReserve : 0));
 
+  // Build custom contract overrides map for active players (absolute-year keyed)
+  /** @type {Record<string, Record<number, { salary: number, bonus: number }>>} */
+  const customContractsByPlayer = (() => {
+    const map = {};
+    for (const p of st.players || []) {
+      const cur = State.getCustomContract(p.id);
+      if (cur) map[p.id] = cur;
+    }
+    return map;
+  })();
+
   const proj = projectTeamCaps(team, st.players, st.moves, years, {
     rookieReserveByYear: rrByYear,
     baselineDeadMoneyByYear: baselineDMByYear,
     extraSpendingByYear,
     rolloverToNext: rollover,
     rolloverMax: 35_000_000,
+    baseCalendarYear: Number(team?.calendarYear || 0) || undefined,
+    customContractsByPlayer,
   });
 
   // Build controls + table

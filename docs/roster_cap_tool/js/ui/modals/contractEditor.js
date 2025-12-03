@@ -1,5 +1,5 @@
 import { enhanceDialog } from '../a11y.js';
-import { getCustomContract, setCustomContract, resetCustomContract } from '../../state.js';
+import { getCustomContract, setCustomContract, resetCustomContract, setState } from '../../state.js';
 import { computeDefaultDistribution } from '../../contractUtils.js';
 import { formatMillions, toAbsoluteDollarsFromMillions } from '../../format.js';
 
@@ -46,8 +46,17 @@ export function openContractEditor(player) {
   dlg.classList.add('drawer');
 
   const headerHtml = `
-    <h3 style="margin:0" data-dialog-title>Contract Distribution — ${name}</h3>
-    <div style="color:var(--muted); font-size:.875rem; margin:.25rem 0 .75rem">Enter values in millions (e.g., 22.7 = $22.7M)</div>
+    <div style="display:flex; align-items:center; gap:.75rem; justify-content: space-between;">
+      <div>
+        <h3 style="margin:0" data-dialog-title>Contract Distribution — ${name}</h3>
+        <div style="color:var(--muted); font-size:.875rem; margin:.25rem 0 .25rem">Enter values in millions (e.g., 22.7 = $22.7M)</div>
+      </div>
+      <div style="display:flex; gap:.5rem; align-items:center;">
+        <button class="btn primary" data-testid="ce-save" data-action="save" title="Apply changes to projections">Save</button>
+        <button class="btn" data-testid="ce-reset" data-action="reset" title="Restore default 50/50">Reset</button>
+        <button class="btn" data-testid="ce-close" data-action="close">Close</button>
+      </div>
+    </div>
   `;
 
   const colsHtml = years.length
@@ -100,14 +109,7 @@ export function openContractEditor(player) {
     </div>
   `;
 
-  const actionsHtml = `
-    <div class="modal-actions">
-      <button class="btn" data-testid="ce-reset" data-action="reset">Reset</button>
-      <button class="btn" data-testid="ce-close" data-action="close">Close</button>
-    </div>
-  `;
-
-  dlg.innerHTML = headerHtml + gridHtml + actionsHtml;
+  dlg.innerHTML = headerHtml + gridHtml;
 
   // Helper to persist changes and update previews
   const persistAndRender = (yr, kind, millionsValue) => {
@@ -132,6 +134,15 @@ export function openContractEditor(player) {
   });
 
   dlg.querySelector('[data-action="close"]')?.addEventListener('click', () => {
+    try { dlg.close(); } catch {}
+    dlg.remove();
+  });
+
+  // Save: persist current map and trigger global recompute, then close
+  dlg.querySelector('[data-action="save"]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+    try { setCustomContract(String(player.id), current); } catch {}
+    try { setState({}); } catch {}
     try { dlg.close(); } catch {}
     dlg.remove();
   });

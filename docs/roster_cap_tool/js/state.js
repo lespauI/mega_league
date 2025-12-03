@@ -112,7 +112,23 @@ export function getCapSummary() {
       Number(dm?.year0 || 0) || 0,
       Number(dm?.year1 || 0) || 0,
     ];
-    snap = calcCapSummaryForContext(team, state.players, state.moves, offset, { baselineDeadMoneyByYear });
+    // Build custom contract overrides for this session
+    /** @type {Record<string, Record<number, { salary: number, bonus: number }>>} */
+    const customContractsByPlayer = (() => {
+      const map = {};
+      for (const p of state.players || []) {
+        const id = String(p?.id || '').trim();
+        if (!id) continue;
+        const cur = getCustomContract(id);
+        if (cur) map[id] = cur;
+      }
+      return map;
+    })();
+    snap = calcCapSummaryForContext(team, state.players, state.moves, offset, {
+      baselineDeadMoneyByYear,
+      baseCalendarYear: Number(team?.calendarYear || 0) || undefined,
+      customContractsByPlayer,
+    });
   } else {
     snap = calcCapSummary(team, state.moves);
   }
