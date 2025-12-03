@@ -22,7 +22,6 @@ export function openConversionModal(player) {
   const st = getState();
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
   if (!team) return;
-  const baseYear = Number(team?.calendarYear || 0);
 
   const name = `${player.firstName || ''} ${player.lastName || ''}`.trim();
 
@@ -136,8 +135,7 @@ export function openConversionModal(player) {
         sim.futureYears.forEach((inc, i) => {
           const chip = document.createElement('div');
           chip.className = 'badge';
-          const yr = (Number.isFinite(baseYear) && baseYear > 0) ? String(baseYear + (i + 1)) : `Year +${i + 1}`;
-          chip.textContent = `${yr}: +${fmtMoney(inc)}`;
+          chip.textContent = `Year +${i + 1}: +${fmtMoney(inc)}`;
           futureEl.appendChild(chip);
         });
       } else {

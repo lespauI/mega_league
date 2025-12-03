@@ -32,7 +32,6 @@ export function normalizeTeamRow(row) {
   const capRoom = toNum(row.capRoom);
   const capSpent = toNum(row.capSpent);
   const capAvailable = toNum(row.capAvailable);
-  const calendarYear = toNum(row.calendarYear);
   const seasonIndex = toNum(row.seasonIndex);
   const weekIndex = toNum(row.weekIndex);
 
@@ -42,13 +41,12 @@ export function normalizeTeamRow(row) {
   if (!Number.isFinite(capRoom)) errors.push('capRoom invalid');
   if (!Number.isFinite(capSpent)) errors.push('capSpent invalid');
   if (!Number.isFinite(capAvailable)) errors.push('capAvailable invalid');
-  if (!Number.isFinite(calendarYear)) errors.push('calendarYear invalid');
   if (!Number.isFinite(seasonIndex)) errors.push('seasonIndex invalid');
   if (!Number.isFinite(weekIndex)) errors.push('weekIndex invalid');
 
   return {
     ok: errors.length === 0,
-    team: { abbrName, displayName, capRoom, capSpent, capAvailable, calendarYear, seasonIndex, weekIndex },
+    team: { abbrName, displayName, capRoom, capSpent, capAvailable, seasonIndex, weekIndex },
     errors,
   };
 }

@@ -70,20 +70,6 @@ Note: GitHub Pages serves only committed files. If you update root CSVs, re‑ru
 - Scenarios save and restore the selected Year Context; Reset clears edits/moves but keeps your current context.
 - Behavior under the current year is unchanged from previous versions.
 
-## Contract Distribution Editor
-- Open: click a player’s name in the Active Roster table (or pick “Contract Distribution” from the Action menu) to open a right‑side drawer.
-- Layout: one column per remaining contract year (e.g., 2026, 2027, …). Each column has two inputs: Salary (M) and Bonus (M).
-- Units and formatting:
-  - Enter values in millions; decimals supported (e.g., 22.7 means $22.7M).
-  - Values display as currency with one decimal place (e.g., $22.7M).
-- Defaults: if no custom values exist, each year is initialized to a 50/50 split of the player’s average annual value:
-  - Per‑year total = (contractSalary + contractBonus) / contractLength
-  - Salary = Bonus = per‑year total × 0.5 (rounded to dollars)
-- Auto‑save: changes update immediately in the UI and are stored for the session. Closing and reopening the editor for the same player shows your edits.
-- Reset: click Reset to clear any custom values and restore the default 50/50 distribution for that player.
-- Persistence: values are kept in memory only (no localStorage/database). Reloading the page clears custom distributions.
-- Constraints: no validation is enforced on totals; zero and any positive values are allowed.
-
 ## Financial Rules Reference (Madden)
 Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
 
