@@ -51,6 +51,7 @@ Example format (wrapped in code block to prevent parsing):
 - Kept columns consistent via `.ce-col` min-width; unit suffix auto via CSS
 
 ### [ ] Step: Verify behavior manually
+<!-- chat-id: 826c5d24-fecf-444b-ae46-3b78e3457152 -->
 - Check saving, resetting, previews and responsiveness
 - Ensure dialog open/close animations and focus behavior
 
