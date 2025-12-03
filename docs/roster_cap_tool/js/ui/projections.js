@@ -60,33 +60,15 @@ export function mountProjections() {
 
   const extraSpendingByYear = Array.from({ length: years }, (_, i) => (i === 1 ? reSignReserve : 0));
 
-  // Build custom contract overrides map for active players (absolute-year keyed)
-  /** @type {Record<string, Record<number, { salary: number, bonus: number }>>} */
-  const customContractsByPlayer = (() => {
-    const map = {};
-    for (const p of st.players || []) {
-      const cur = State.getCustomContract(p.id);
-      if (cur) map[p.id] = cur;
-    }
-    return map;
-  })();
-
   const proj = projectTeamCaps(team, st.players, st.moves, years, {
     rookieReserveByYear: rrByYear,
     baselineDeadMoneyByYear: baselineDMByYear,
     extraSpendingByYear,
     rolloverToNext: rollover,
     rolloverMax: 35_000_000,
-    baseCalendarYear: Number(team?.calendarYear || 0) || undefined,
-    customContractsByPlayer,
   });
 
   // Build controls + table
-  const nextYearLabel = (() => {
-    const base = Number(team?.calendarYear || 0);
-    return (Number.isFinite(base) && base > 0) ? String(base + 1) : 'Y+1';
-  })();
-
   const controls = `
     <div style="display:flex; align-items:center; gap:.75rem; margin:.25rem .25rem .5rem;">
       <div style="color:var(--muted)">Horizon</div>
@@ -95,7 +77,7 @@ export function mountProjections() {
       <div style="width:1px; height:20px; background:var(--border); margin:0 .5rem;"></div>
       <label class="label" for="proj-resign-ingame-value" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
       <input id="proj-resign-ingame-value" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
-      <span class="badge" title="Applied to ${nextYearLabel} as entered (no ΔSpace)">Applied: ${fmtMoney(reSignReserve)}</span>
+      <span class="badge" title="Applied to Y+1 as entered (no ΔSpace)">Applied: ${fmtMoney(reSignReserve)}</span>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
       Note: The current-year row is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve is applied starting with the next season. Re-sign uses in-game “Re-sign Available” as-is (no ΔSpace coupling). Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from the current year increases next-season Cap Space.
