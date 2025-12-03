@@ -44,7 +44,8 @@ Example format (wrapped in code block to prevent parsing):
 ### [x] Step: 3. Documentation
 - Update usage doc to clarify zero-dead-money releases add back salary in projections
 
-### [ ] Step: 4. Tests
+### [x] Step: 4. Tests
+<!-- chat-id: daade0b4-2dd1-44b2-946d-f7b0e82a8f0d -->
 - Add E2E test for Kenny Clark (SF) case
 - Verify Y+1 and Y+2 increase by ≥ $10M after release
 

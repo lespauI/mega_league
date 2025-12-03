@@ -48,21 +48,13 @@ test.describe('Zero-dead-money release projections', () => {
     await dialogConfirmButton(page, /Confirm Release/i).click();
     await expect(dlg).toBeHidden();
 
-    // Read projections after
-    const y1After = await page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="proj-y1"]');
-      const txt = (el?.textContent || '').replace(/[^0-9.\-]/g, '');
-      return Number(txt) || 0;
-    });
-    const y2After = await page.waitForFunction(() => {
-      const el = document.querySelector('[data-testid="proj-y2"]');
-      const txt = (el?.textContent || '').replace(/[^0-9.\-]/g, '');
-      return Number(txt) || 0;
-    });
+    // Expect both Y+1 and Y+2 projections to increase materially (≥ $10M)
+    await expect
+      .poll(async () => parseMoney(await projY1.innerText()), { timeout: 5000 })
+      .toBeGreaterThanOrEqual(y1Before + 10_000_000);
 
-    // Expect both Y+1 and Y+2 to increase materially (≥ $10M)
-    expect(Math.round((y1After as number) - y1Before)).toBeGreaterThanOrEqual(10_000_000);
-    expect(Math.round((y2After as number) - y2Before)).toBeGreaterThanOrEqual(10_000_000);
+    await expect
+      .poll(async () => parseMoney(await projY2.innerText()), { timeout: 5000 })
+      .toBeGreaterThanOrEqual(y2Before + 10_000_000);
   });
 });
-
