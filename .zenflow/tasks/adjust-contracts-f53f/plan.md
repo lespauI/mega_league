@@ -229,7 +229,8 @@ Deliverable
 Verification
 - Manual visual check; ensure mobile responsiveness doesn’t break layout; keyboard navigation works with `enhanceDialog`.
 
-### [ ] Step: E2E Test — Contract Editor
+### [x] Step: E2E Test — Contract Editor
+<!-- chat-id: 8dc2081e-c429-48bf-8f6d-e9a39d16233d -->
 Task definition
 - Add Playwright test `tests/e2e/contract_editor.spec.ts` to verify core flows end-to-end.
 
