@@ -112,6 +112,8 @@ export function openTradeInModal() {
         isFreeAgent: false,
         team: current.selectedTeam,
         contractBonus: 0,
+        capReleasePenalty: 0,
+        capReleaseNetSavings: sim.year1CapHit,
         capHit: sim.year1CapHit,
       };
     });
