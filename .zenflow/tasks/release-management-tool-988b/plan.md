@@ -49,6 +49,9 @@ Example format (wrapped in code block to prevent parsing):
 - Add E2E test for Kenny Clark (SF) case
 - Verify Y+1 and Y+2 increase by ≥ $10M after release
 
-### [ ] Step: 5. Validation
+### [x] Step: 5. Validation
+<!-- chat-id: 543b7c1a-bae8-4465-ae93-d685f9c72dd0 -->
 - Run Playwright tests locally
 - Run cap math verification script and review output
+- Result: Playwright release.spec.ts passed; zero_dead_money_release.spec.ts failed (Y+1/Y+2 projections did not increase by ≥ $10M).
+- Result: scripts/verify_cap_math.py completed with 15/15 assertions passing; report at output/cap_tool_verification.json.
