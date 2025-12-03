@@ -37,6 +37,13 @@ test.describe('Trade In flow', () => {
     await confirmDlg.getByRole('button', { name: /Trade In/i }).click();
     await expect(confirmDlg).toBeHidden();
 
+    // Close the Trade In list dialog to avoid intercepting clicks
+    const listDlg = page.getByRole('dialog', { name: /Trade In Player/i });
+    if (await listDlg.isVisible()) {
+      await listDlg.getByRole('button', { name: /Close/i }).click();
+      await expect(listDlg).toBeHidden();
+    }
+
     // Cap space should drop by approximately the Year 1 (salary-only) value
     await expect
       .poll(async () => parseMoney(await capAvailableValue(page).innerText()), { timeout: 5000 })
@@ -50,4 +57,3 @@ test.describe('Trade In flow', () => {
     expect(parseMoney(deadTradeTxt)).toBe(0);
   });
 });
-
