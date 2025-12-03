@@ -87,7 +87,8 @@ The verification for each deliverable should be executable by a coding agent usi
 
 Save the spec to `{@artifacts_path}/spec.md`.
 
-### [ ] Step: Implementation Plan
+### [x] Step: Implementation Plan
+<!-- chat-id: 3c26c94c-ecf0-495f-8c6b-7de62abd9fca -->
 
 Based on the technical spec in `{@artifacts_path}/spec.md`, create a detailed task plan and update `{@artifacts_path}/plan.md`. Each task should have task definition, references to contracts to be used/implemented, deliverable definition and verification instructions.
 
@@ -98,3 +99,151 @@ Task instructions
 ```
 
 "Step:" prefix is important, do not omit it!
+
+---
+
+### [ ] Step: Add Ephemeral State Store for Custom Contracts
+Task definition
+- Add in-memory map and API in `docs/roster_cap_tool/js/state.js` to store custom year-by-year contract distributions per player.
+
+Contracts to implement/use
+- State shape addition: `state.customContractsByPlayer: { [playerId: string]: { [year: number]: { salary: number, bonus: number } } }`
+- Public API (export from `state.js`):
+  - `getCustomContract(playerId: string): Record<number, { salary: number, bonus: number }> | null`
+  - `setCustomContract(playerId: string, map: Record<number, { salary: number, bonus: number }>): void`
+  - `resetCustomContract(playerId: string): void`
+
+Deliverable
+- Functions exported from `state.js`, emitting via existing `emit()` on updates. No persistence to localStorage.
+
+Verification
+- Open `docs/roster_cap_tool/test.html` in the browser or main app, execute in DevTools console:
+  - Call `window.__state = await import('./js/state.js')` then `__state.setCustomContract('p1', { 2026:{salary:22700000,bonus:0} })` and confirm subscribers fire (console debug) and `__state.getCustomContract('p1')` returns the map.
+  - Reload page and confirm data is gone (ephemeral only).
+
+### [ ] Step: Add Utilities for Years, Defaults, and Formatting
+Task definition
+- Implement helpers for computing start year, default 50/50 distribution, and currency formatting in millions.
+
+Contracts to implement/use
+- New util module `docs/roster_cap_tool/js/format.js` (or inline in editor module if preferred by code style):
+  - `formatMillions(n: number): string` → `$12.3M` with 1–2 decimals
+  - `toAbsoluteDollarsFromMillions(m: number|string): number`
+- Add pure helpers (co-located in editor module or separate `contractUtils.js` if desired):
+  - `computeStartYear(player)`: uses `getBaseCalendarYear()` and `player.contractLength/contractYearsLeft`
+  - `computeDefaultDistribution(player)`: remaining years only; per-year = `(salary+bonus)/length`; salary = bonus = per-year × 0.5
+
+Deliverable
+- Exported helpers available for the editor module; unit-free of UI.
+
+Verification
+- In DevTools console, create a sample player and verify:
+  - `computeStartYear` returns base year aligned with `getBaseCalendarYear()` and years elapsed.
+  - `computeDefaultDistribution` returns a map keyed by calendar year with split values.
+  - `formatMillions(22700000)` → `$22.7M`; `toAbsoluteDollarsFromMillions(22.7)` → `22700000`.
+
+### [ ] Step: Implement Contract Editor Drawer UI
+Task definition
+- Create `docs/roster_cap_tool/js/ui/modals/contractEditor.js` that exports `openContractEditor(player)` rendering a side-drawer `<dialog>`.
+- Drawer shows a table-like grid with a column per year, two inputs per column: Salary and Bonus (editable, millions).
+- Include footer actions: Reset and Close.
+
+Contracts to implement/use
+- Editor API: `openContractEditor(player)`
+- Use a11y helper: `enhanceDialog` from `docs/roster_cap_tool/js/ui/a11y.js`
+- Test hooks/selectors:
+  - Root: `[data-testid="contract-editor"]`
+  - Year header: `[data-testid="ce-year"]` (text = 4-digit year)
+  - Inputs: `[data-testid="ce-input-salary"][data-year="YYYY"]`, `[data-testid="ce-input-bonus"][data-year="YYYY"]`
+  - Buttons: `[data-testid="ce-reset"]`, `[data-testid="ce-close"]`
+
+Deliverable
+- New module renders drawer with default values populated from `computeDefaultDistribution(player)` (or custom map from state when present).
+
+Verification
+- Temporarily call `openContractEditor(window.__anyPlayer)` from console to verify drawer renders, shows default columns and values.
+
+### [ ] Step: Wire Editor Inputs to In-Memory State (Auto-save)
+Task definition
+- On input `input`/`change`, parse values (millions) and save absolute dollars to `customContractsByPlayer` via `setCustomContract`.
+- Re-open editor loads and displays custom values if present.
+- Display formatted preview next to inputs using `formatMillions`.
+
+Contracts to implement/use
+- `getCustomContract`, `setCustomContract`, `resetCustomContract`
+- `toAbsoluteDollarsFromMillions`, `formatMillions`
+
+Deliverable
+- Editing any Salary/Bonus cell updates the UI immediately and persists for the current session; re-opening reflects changes.
+
+Verification
+- Manually edit values; close the dialog; re-open for the same player and confirm the edited values are shown and formatted `$XM`.
+
+### [ ] Step: Add Reset Behavior
+Task definition
+- Implement Reset button to clear player’s custom map via `resetCustomContract(player.id)` and re-render defaults.
+
+Contracts to implement/use
+- `resetCustomContract(playerId)`
+- `computeDefaultDistribution(player)`
+
+Deliverable
+- Clicking Reset restores default 50/50 values and clears in-memory custom values for that player.
+
+Verification
+- Edit one or more cells, click Reset, observe defaults restored; re-open editor and verify no custom values remain.
+
+### [ ] Step: Hook Player Table to Open Editor
+Task definition
+- In `docs/roster_cap_tool/js/ui/playerTable.js`, attach a click handler on the Active Roster table’s `.cell-player` to call `openContractEditor(p)`.
+- Optionally add an action select item for “Contract Distribution” as a secondary entry point.
+
+Contracts to implement/use
+- Import `openContractEditor` from `./modals/contractEditor.js`.
+
+Deliverable
+- Clicking a player row (name cell) opens the Contract Distribution Editor for that player.
+
+Verification
+- Run the app and click a player in Active Roster; confirm the editor opens with correct year headers and values.
+
+### [ ] Step: Drawer and Grid Styles
+Task definition
+- Extend `docs/roster_cap_tool/css/styles.css` with styles for a right-side drawer look using `<dialog>`:
+  - `.drawer` container, `.drawer--open`, grid for year columns, input adornments for “M” suffix.
+- Reuse existing color variables and modal styling.
+
+Contracts to implement/use
+- No JS contracts; CSS classes referenced by `contractEditor.js` structure.
+
+Deliverable
+- Visual layout matches the side-drawer reference; inputs are clear and usable.
+
+Verification
+- Manual visual check; ensure mobile responsiveness doesn’t break layout; keyboard navigation works with `enhanceDialog`.
+
+### [ ] Step: E2E Test — Contract Editor
+Task definition
+- Add Playwright test `tests/e2e/contract_editor.spec.ts` to verify core flows end-to-end.
+
+Contracts to implement/use
+- Selectors as defined under the editor module test hooks.
+
+Deliverable
+- Test covers: open editor on click, default values, edit + persist on reopen, currency formatting, Reset restoring defaults.
+
+Verification
+- Run `npx playwright test` and confirm the new spec passes. Use the configured static server from `playwright.config.ts`.
+
+### [ ] Step: Update Usage Docs (Optional)
+Task definition
+- Update `docs/roster_cap_tool/USAGE.md` with a short subsection describing the Contract Distribution Editor and how values are interpreted (millions, 1-decimal display, in-memory only).
+
+Contracts to implement/use
+- None (documentation only).
+
+Deliverable
+- New doc section with a brief how-to and caveats.
+
+Verification
+- Rendered markdown reads clearly; links and file paths are correct.
