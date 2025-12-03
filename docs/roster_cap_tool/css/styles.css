@@ -143,7 +143,7 @@ dialog.drawer::backdrop { background: rgba(2, 6, 23, 0.6); }
 .drawer [data-dialog-title] { font-size: 1.05rem; margin: 0; }
 
 /* Drawer header bar */
-.drawer__header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; }
+.drawer__header { display:flex; align-items:center; justify-content:space-between; gap:.75rem; position: sticky; top: 0; background: var(--panel); padding-bottom: .5rem; border-bottom: 1px solid #1f2937; z-index: 5; }
 .drawer__titlewrap { display:grid; gap:.25rem; }
 .drawer__subtitle { color: var(--muted); font-size: .875rem; margin: .125rem 0 0; }
 .drawer__actions { display:flex; gap:.5rem; align-items:center; }
@@ -159,20 +159,24 @@ dialog.drawer::backdrop { background: rgba(2, 6, 23, 0.6); }
   grid-auto-flow: column;
   gap: .75rem;
   overflow: auto;
+  scroll-snap-type: x mandatory;
   padding-bottom: .25rem;
 }
 /* Each year column */
 .ce-col {
   display: grid;
-  gap: .375rem;
-  min-width: 160px;
+  gap: .5rem;
+  min-width: 200px;
+  background: #0b1324;
+  border: 1px solid #334155;
+  border-radius: .5rem;
+  padding: .75rem;
+  scroll-snap-align: start;
+  box-shadow: 0 1px 0 rgba(0,0,0,0.2);
 }
 
 /* Year header cell */
-[data-testid="ce-year"] {
-  text-align: center;
-  font-weight: 600;
-}
+[data-testid="ce-year"] { text-align: center; font-weight: 600; font-size: .95rem; padding: .25rem .5rem; border: 1px solid #334155; border-radius: .375rem; display: inline-block; margin: 0 auto .25rem; color: #cbd5e1; }
 
 /* Inputs inside the drawer */
 .drawer input[type="number"],
@@ -182,9 +186,14 @@ dialog.drawer::backdrop { background: rgba(2, 6, 23, 0.6); }
   color: var(--text);
   border: 1px solid #334155;
   border-radius: .375rem;
-  padding: .375rem .5rem;
+  padding: .5rem .625rem;
   width: 100%;
+  transition: border-color .12s ease-in-out, box-shadow .12s ease-in-out;
 }
+.drawer input[type="number"]::-webkit-outer-spin-button,
+.drawer input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.drawer input[type="number"] { -moz-appearance: textfield; }
+.drawer input:focus { border-color: var(--blue); box-shadow: 0 0 0 3px rgba(29,78,216,0.25); outline: none; }
 
 /* Small muted preview lines under inputs */
 [data-testid="ce-prev-salary"],
@@ -206,7 +215,7 @@ dialog.drawer::backdrop { background: rgba(2, 6, 23, 0.6); }
   position: absolute;
   right: .5rem;
   /* place roughly centered on the input line */
-  top: 2.15rem;
+  top: 2.35rem;
   color: var(--muted);
   pointer-events: none;
 }
