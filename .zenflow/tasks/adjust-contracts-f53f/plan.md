@@ -213,7 +213,8 @@ Deliverable
 Verification
 - Run the app and click a player in Active Roster; confirm the editor opens with correct year headers and values.
 
-### [ ] Step: Drawer and Grid Styles
+### [x] Step: Drawer and Grid Styles
+<!-- chat-id: 6ed94e26-d24d-4e18-bf49-ec087ddac071 -->
 Task definition
 - Extend `docs/roster_cap_tool/css/styles.css` with styles for a right-side drawer look using `<dialog>`:
   - `.drawer` container, `.drawer--open`, grid for year columns, input adornments for “M” suffix.
