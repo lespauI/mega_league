@@ -99,7 +99,10 @@ test.describe('Extension + Conversion E2E', () => {
 
     // Capture baseline cap space and the player's current-year cap cell
     const before = await readCapAvailable(page);
-    const oldCapText = await row.locator('td[data-label="2025 Cap"]').innerText();
+    // Determine the current-year cap column label dynamically (e.g., "Cap (2026)")
+    const capHeaderText = (await table.locator('thead [data-testid="col-cap-label"]').innerText()).trim();
+    const capLabel = capHeaderText || 'Cap (2026)';
+    const oldCapText = await row.locator(`td[data-label="${capLabel}"]`).innerText();
     const oldCap = parseMoney(oldCapText);
 
     // Open conversion modal
@@ -135,7 +138,7 @@ test.describe('Extension + Conversion E2E', () => {
       .filter({ has: page.locator('td[data-label="Player"] strong', { hasText: name }) })
       .first();
     await expect(rowByName).toHaveCount(1);
-    const newCapText = await rowByName.locator('td[data-label="2025 Cap"]').innerText();
+    const newCapText = await rowByName.locator(`td[data-label="${capLabel}"]`).innerText();
     const newCap = parseMoney(newCapText);
     expect(Math.round(newCap)).toBe(Math.round(oldCap + previewDelta));
   });

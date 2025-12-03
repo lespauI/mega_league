@@ -6,7 +6,7 @@
 /** @typedef {import('./models.js').Player} Player */
 
 import { projectPlayerCapHits, MADDEN_BONUS_PRORATION_MAX_YEARS } from './capMath.js';
-import { getState, getYearContextForSelectedTeam } from './state.js';
+import { getState, getYearContextForSelectedTeam, getCustomContract } from './state.js';
 
 function toFinite(n, fallback = 0) {
   const v = typeof n === 'number' ? n : Number(n);
@@ -98,15 +98,34 @@ export function contextualizePlayer(player, team, offset = 0) {
   const isFA_ctx = !!(player.isFreeAgent || yearsLeft_ctx <= 0);
 
   // Cap hit at the context year
-  const caps = projectPlayerCapHits(player, off + 1);
+  const baseCalendarYear = Number(team?.calendarYear || 0);
+  const custom = getCustomContract(player.id);
+  const caps = projectPlayerCapHits(player, off + 1, {
+    customByAbsoluteYear: custom || undefined,
+    baseCalendarYear: (Number.isFinite(baseCalendarYear) && baseCalendarYear > 0) ? baseCalendarYear : undefined,
+  });
   const capHit_ctx = caps[off] || 0;
 
   // Derive bonus and proration windows at the context year
   const yearsElapsed_ctx = clamp(len - yearsLeft_ctx, 0, len);
   const prorateYears = Math.min(len, MADDEN_BONUS_PRORATION_MAX_YEARS);
-  const remainingProration_ctx = Math.max(0, prorateYears - yearsElapsed_ctx);
-  const bonusTotal = deriveBonusTotal(player);
-  const bonusPerYear = bonusTotal > 0 ? (bonusTotal / prorateYears) : 0;
+  let bonusPerYear = 0;
+  let remainingProration_ctx = Math.max(0, prorateYears - yearsElapsed_ctx);
+  if (custom && baseCalendarYear > 0) {
+    // When custom distribution is present, approximate remaining bonus as sum of per-year bonus from this context forward
+    let totalRemain = 0;
+    const startYear = baseCalendarYear + off;
+    for (let i = 0; i < yearsLeft_ctx; i++) {
+      const v = custom[startYear + i];
+      if (v && Number.isFinite(Number(v.bonus))) totalRemain += Number(v.bonus);
+    }
+    // Distribute evenly across remaining proration windows for savings calc compatibility
+    bonusPerYear = (remainingProration_ctx > 0) ? (totalRemain / remainingProration_ctx) : 0;
+  } else {
+    const bonusTotal = deriveBonusTotal(player);
+    bonusPerYear = bonusTotal > 0 ? (bonusTotal / prorateYears) : 0;
+    remainingProration_ctx = Math.max(0, prorateYears - yearsElapsed_ctx);
+  }
 
   // Total penalty if released in this context equals remaining unamortized bonus
   const penaltyTotal_ctx = bonusPerYear * remainingProration_ctx;
@@ -116,14 +135,19 @@ export function contextualizePlayer(player, team, offset = 0) {
 
   // Approximate base salary for the context year
   let approxBase_ctx = 0;
-  const contractSalary = toFinite(player.contractSalary, 0);
-  if (contractSalary > 0 && len > 0) {
-    const sched = buildBaseSchedule(contractSalary, len);
-    const idx = clamp(yearsElapsed_ctx, 0, sched.length - 1);
-    approxBase_ctx = yearsLeft_ctx > 0 ? Math.max(0, toFinite(sched[idx], 0)) : 0;
+  if (custom && baseCalendarYear > 0) {
+    const v = custom[baseCalendarYear + off];
+    approxBase_ctx = v ? Math.max(0, Number(v.salary || 0)) : 0;
   } else {
-    // Fallback: base ≈ capHit - (bonusPerYear if proration remains)
-    approxBase_ctx = Math.max(0, toFinite(capHit_ctx, 0) - (remainingProration_ctx > 0 ? bonusPerYear : 0));
+    const contractSalary = toFinite(player.contractSalary, 0);
+    if (contractSalary > 0 && len > 0) {
+      const sched = buildBaseSchedule(contractSalary, len);
+      const idx = clamp(yearsElapsed_ctx, 0, sched.length - 1);
+      approxBase_ctx = yearsLeft_ctx > 0 ? Math.max(0, toFinite(sched[idx], 0)) : 0;
+    } else {
+      // Fallback: base ≈ capHit - (bonusPerYear if proration remains)
+      approxBase_ctx = Math.max(0, toFinite(capHit_ctx, 0) - (remainingProration_ctx > 0 ? bonusPerYear : 0));
+    }
   }
 
   const capReleaseNetSavings_ctx = isFA_ctx ? 0 : (approxBase_ctx - penaltyCurrent_ctx);
@@ -165,4 +189,3 @@ export default {
   contextualizeRoster,
   getContextualPlayers,
 };
-
