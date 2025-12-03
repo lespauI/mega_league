@@ -198,7 +198,8 @@ Deliverable
 Verification
 - Edit one or more cells, click Reset, observe defaults restored; re-open editor and verify no custom values remain.
 
-### [ ] Step: Hook Player Table to Open Editor
+### [x] Step: Hook Player Table to Open Editor
+<!-- chat-id: cc9439c5-b709-4db2-bda3-29b4536a9808 -->
 Task definition
 - In `docs/roster_cap_tool/js/ui/playerTable.js`, attach a click handler on the Active Roster table’s `.cell-player` to call `openContractEditor(p)`.
 - Optionally add an action select item for “Contract Distribution” as a secondary entry point.
