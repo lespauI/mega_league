@@ -60,15 +60,15 @@ Note: GitHub Pages serves only committed files. If you update root CSVs, re‑ru
   bash scripts/smoke_roster_cap_tool.sh
   ```
 
-## Year Context (Y+N)
-- Use the Year Context selector in the header to view future seasons (Y+1, Y+2, …). Default is Y+0.
+## Year Context (Calendar Years)
+- Use the Year Context selector in the header to view future seasons using real years (e.g., 2026, 2027, …). Default is the current year for the franchise file (2026 in this dataset).
 - When a future year is selected:
   - Rosters and Free Agents reflect expiring contracts for that future year.
   - Cap summary and penalties/savings are calculated for that context year.
   - Actions (Release/Trade/Extend/Convert/Sign) preview and apply math as if you are in that year.
-  - Column headers include the context label (e.g., “Cap (Y+1)”).
+  - Column headers include the context label (e.g., “Cap (2026)”, “Cap (2027)”).
 - Scenarios save and restore the selected Year Context; Reset clears edits/moves but keeps your current context.
-- Behavior under Y+0 is unchanged from previous versions.
+- Behavior under the current year is unchanged from previous versions.
 
 ## Financial Rules Reference (Madden)
 Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.

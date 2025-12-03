@@ -53,3 +53,12 @@ Example format (wrapped in code block to prevent parsing):
 <!-- chat-id: f2a73b43-4d46-4614-8118-8bb95b83dcc0 -->
 - Run Playwright tests locally (15/15 tests passed)
 - Run cap math verification script and review output (15/15 assertions passed; see output/cap_tool_verification.json)
+
+### [x] Step: Replayse Y0 Y1, year 1 with real years
+<!-- chat-id: b9760f65-84a1-42d1-9883-59f31ed0ef1a -->
+
+Actually, lets get rid of random Year 1 and etc and replce them with real
+year labels wired to calendar years, using 2026 as the current franchise
+season (so Y+0 = 2026, Y+1 = 2027, etc). Active roster FA Year now shows
+the actual calendar year (e.g. 2027) based on team.calendarYear and
+contractYearsLeft.

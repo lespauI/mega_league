@@ -383,9 +383,25 @@ export function setYearContextForSelectedTeam(offset) {
   emit();
 }
 
-/** Return short label for current context (e.g., 'Y+0', 'Y+1'). */
+/**
+ * Return the base calendar year for the currently selected team, if available.
+ * Falls back to null when the teams list is empty or year is missing.
+ */
+export function getBaseCalendarYear() {
+  const team = state.teams.find((t) => t.abbrName === state.selectedTeam);
+  const yr = Number(team?.calendarYear || 0);
+  if (!Number.isFinite(yr) || yr <= 0) return null;
+  return yr;
+}
+
+/** Return short label for current context using calendar years when possible. */
 export function getContextLabel() {
   const off = getYearContextForSelectedTeam();
+  const baseYear = getBaseCalendarYear();
+  if (baseYear != null) {
+    return String(baseYear + off);
+  }
+  // Fallback to generic Y+N label if calendar year is unavailable
   return `Y+${off}`;
 }
 

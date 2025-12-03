@@ -11,23 +11,23 @@ import {
 import { gotoTool } from './fixtures';
 
 test.describe('Year Context E2E', () => {
-  test('selector updates labels, counts, and cap summary across Y+0/Y+1/Y+2', async ({ page }) => {
+  test('selector updates labels, counts, and cap summary across 2026/2027/2028', async ({ page }) => {
     await gotoTool(page);
     await ensureTab(page, 'active-roster');
 
-    // Baseline assertions at Y+0
-    await expect(page.getByTestId('year-context-label')).toHaveText('Y+0');
-    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(Y\+0\)/);
+    // Baseline assertions at current year (2026)
+    await expect(page.getByTestId('year-context-label')).toHaveText('2026');
+    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(2026\)/);
 
     const active0 = await tableRows(activeRosterTable(page)).count();
     await ensureTab(page, 'free-agents');
     const fa0 = await tableRows(freeAgentsTable(page)).count();
     const cap0 = await readCapAvailable(page);
 
-    // Switch to Y+1
+    // Switch to next year (2027)
     await page.getByTestId('year-context-1').click();
-    await expect(page.getByTestId('year-context-label')).toHaveText('Y+1');
-    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(Y\+1\)/);
+    await expect(page.getByTestId('year-context-label')).toHaveText('2027');
+    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(2027\)/);
 
     await ensureTab(page, 'active-roster');
     const active1 = await tableRows(activeRosterTable(page)).count();
@@ -40,10 +40,10 @@ test.describe('Year Context E2E', () => {
     expect(fa1).toBeGreaterThanOrEqual(fa0);
     expect(cap1).not.toBe(cap0);
 
-    // Switch to Y+2
+    // Switch to year after next (2028)
     await page.getByTestId('year-context-2').click();
-    await expect(page.getByTestId('year-context-label')).toHaveText('Y+2');
-    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(Y\+2\)/);
+    await expect(page.getByTestId('year-context-label')).toHaveText('2028');
+    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(2028\)/);
 
     await ensureTab(page, 'active-roster');
     const active2 = await tableRows(activeRosterTable(page)).count();
@@ -59,9 +59,9 @@ test.describe('Year Context E2E', () => {
   test('release flow in Y+1 uses contextual preview (cap change == modal preview)', async ({ page }) => {
     await gotoTool(page);
 
-    // Switch to Y+1 context
+    // Switch to next-year context (2027)
     await page.getByTestId('year-context-1').click();
-    await expect(page.getByTestId('year-context-label')).toHaveText('Y+1');
+    await expect(page.getByTestId('year-context-label')).toHaveText('2027');
     await ensureTab(page, 'active-roster');
 
     const before = await readCapAvailable(page);
@@ -101,9 +101,9 @@ test.describe('Year Context E2E', () => {
   test('scenario save/load persists selected Year Context', async ({ page }) => {
     await gotoTool(page);
 
-    // Choose Y+2 and make a change (release) to enable Save
+    // Choose 2028 and make a change (release) to enable Save
     await page.getByTestId('year-context-2').click();
-    await expect(page.getByTestId('year-context-label')).toHaveText('Y+2');
+    await expect(page.getByTestId('year-context-label')).toHaveText('2028');
     await ensureTab(page, 'active-roster');
     const row = tableRows(activeRosterTable(page)).first();
     await row.locator('td[data-label="Action"] select').selectOption('release');
@@ -131,8 +131,8 @@ test.describe('Year Context E2E', () => {
     await loadDlg.locator('button:has-text("Load")').first().click();
     await expect(loadDlg).toBeHidden();
 
-    // Context should be restored to Y+2
-    await expect(page.getByTestId('year-context-label')).toHaveText('Y+2');
-    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(Y\+2\)/);
+    // Context should be restored to 2028
+    await expect(page.getByTestId('year-context-label')).toHaveText('2028');
+    await expect(activeRosterTable(page).getByTestId('col-cap-label')).toHaveText(/Cap \(2028\)/);
   });
 });
