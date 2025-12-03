@@ -144,7 +144,8 @@ Verification
   - `computeDefaultDistribution` returns a map keyed by calendar year with split values.
   - `formatMillions(22700000)` → `$22.7M`; `toAbsoluteDollarsFromMillions(22.7)` → `22700000`.
 
-### [ ] Step: Implement Contract Editor Drawer UI
+### [x] Step: Implement Contract Editor Drawer UI
+<!-- chat-id: f084602f-ba5b-48a5-a2a1-fa2d119a1b83 -->
 Task definition
 - Create `docs/roster_cap_tool/js/ui/modals/contractEditor.js` that exports `openContractEditor(player)` rendering a side-drawer `<dialog>`.
 - Drawer shows a table-like grid with a column per year, two inputs per column: Salary and Bonus (editable, millions).
@@ -249,3 +250,16 @@ Deliverable
 
 Verification
 - Rendered markdown reads clearly; links and file paths are correct.
+
+### [ ] Step: Get rid of years+1
+
+Currently we use Year+1 and etc, i want to replace it with actual years, 
+Current year = 2026
+year+1 = 2027
+year+2 = 2028 and etc
+
+Please get rid of Y0 year+1 Y+1 etc. 
+
+Also update the FA year with corresponding year. FA=1 is 2026, FA=2 is 2027 and etc
+
+Basicly create a simple dictionary, its must be just user representation change, all our logic can use Y+1 or whathewer, Just in interface base line year shuld be 2026 and shown as a 2026 not Year 1

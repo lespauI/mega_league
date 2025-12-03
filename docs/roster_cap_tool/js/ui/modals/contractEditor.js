@@ -1,0 +1,123 @@
+import { enhanceDialog } from '../a11y.js';
+import { getCustomContract } from '../../state.js';
+import { computeDefaultDistribution } from '../../contractUtils.js';
+
+/**
+ * Open a side-drawer style contract distribution editor for a player.
+ * Renders a column per contract year with Salary/Bonus inputs (millions).
+ * Note: This step renders UI only; save/reset wiring is added in later steps.
+ * @param {import('../../models.js').Player} player
+ */
+export function openContractEditor(player) {
+  if (!player) return;
+
+  const name = `${player.firstName || ''} ${player.lastName || ''}`.trim();
+
+  // Build values map: prefer custom (if present), otherwise default 50/50
+  /** @type {Record<number, { salary: number, bonus: number }>} */
+  const defaults = computeDefaultDistribution(player) || {};
+  /** @type {Record<number, { salary: number, bonus: number }>|null} */
+  const custom = getCustomContract(player.id);
+  /** @type {Record<number, { salary: number, bonus: number }>} */
+  const values = { ...defaults };
+  if (custom) {
+    for (const y of Object.keys(custom)) {
+      const yr = Number(y);
+      const v = custom[yr] || { salary: 0, bonus: 0 };
+      values[yr] = { salary: Number(v.salary || 0) || 0, bonus: Number(v.bonus || 0) || 0 };
+    }
+  }
+
+  const years = Object.keys(values).map(Number).sort((a, b) => a - b);
+
+  const root = document.getElementById('modals-root') || document.body;
+  const dlg = document.createElement('dialog');
+  dlg.setAttribute('data-testid', 'contract-editor');
+  dlg.classList.add('drawer');
+
+  const headerHtml = `
+    <h3 style="margin:0" data-dialog-title>Contract Distribution — ${name}</h3>
+    <div style="color:var(--muted); font-size:.875rem; margin:.25rem 0 .75rem">Enter values in millions (e.g., 22.7 = $22.7M)</div>
+  `;
+
+  const colsHtml = years.length
+    ? years.map((yr) => {
+        const sM = (Number(values[yr]?.salary || 0) / 1_000_000).toFixed(1);
+        const bM = (Number(values[yr]?.bonus || 0) / 1_000_000).toFixed(1);
+        return `
+          <div class="ce-col" style="display:grid; gap:.375rem; min-width: 140px;">
+            <div data-testid="ce-year" style="font-weight:600; text-align:center;">${yr}</div>
+            <label style="display:grid; gap:.25rem;">
+              <span style="color:var(--muted); font-size:.85em;">Salary (M)</span>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                inputmode="decimal"
+                aria-label="Salary in ${yr} (millions)"
+                value="${sM}"
+                data-testid="ce-input-salary"
+                data-year="${yr}"
+                style="background:#0b1324;color:var(--text);border:1px solid #334155;border-radius:.375rem;padding:.375rem .5rem;"
+              />
+            </label>
+            <label style="display:grid; gap:.25rem;">
+              <span style="color:var(--muted); font-size:.85em;">Bonus (M)</span>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                inputmode="decimal"
+                aria-label="Bonus in ${yr} (millions)"
+                value="${bM}"
+                data-testid="ce-input-bonus"
+                data-year="${yr}"
+                style="background:#0b1324;color:var(--text);border:1px solid #334155;border-radius:.375rem;padding:.375rem .5rem;"
+              />
+            </label>
+          </div>
+        `;
+      }).join('')
+    : `<div style="color:var(--muted);">No remaining contract years.</div>`;
+
+  const gridHtml = `
+    <div class="ce-grid" style="display:grid; grid-auto-flow: column; gap:.75rem; overflow:auto; padding-bottom:.25rem;">
+      ${colsHtml}
+    </div>
+  `;
+
+  const actionsHtml = `
+    <div class="modal-actions">
+      <button class="btn" data-testid="ce-reset" data-action="reset">Reset</button>
+      <button class="btn" data-testid="ce-close" data-action="close">Close</button>
+    </div>
+  `;
+
+  dlg.innerHTML = headerHtml + gridHtml + actionsHtml;
+
+  // Click outside content to close
+  dlg.addEventListener('click', (e) => {
+    const r = dlg.getBoundingClientRect();
+    if (e.target === dlg && (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom)) {
+      try { dlg.close(); } catch {}
+      dlg.remove();
+    }
+  });
+
+  dlg.querySelector('[data-action="close"]')?.addEventListener('click', () => {
+    try { dlg.close(); } catch {}
+    dlg.remove();
+  });
+
+  // Reset wiring will be implemented in a later step. For now, keep as a no-op.
+  dlg.querySelector('[data-action="reset"]')?.addEventListener('click', (e) => {
+    e.preventDefault();
+  });
+
+  root.appendChild(dlg);
+  enhanceDialog(/** @type {HTMLDialogElement} */(dlg), { opener: document.activeElement });
+  try { dlg.showModal(); } catch { dlg.show(); }
+}
+
+export default { openContractEditor };
+
