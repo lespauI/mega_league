@@ -122,7 +122,8 @@ Verification
   - Call `window.__state = await import('./js/state.js')` then `__state.setCustomContract('p1', { 2026:{salary:22700000,bonus:0} })` and confirm subscribers fire (console debug) and `__state.getCustomContract('p1')` returns the map.
   - Reload page and confirm data is gone (ephemeral only).
 
-### [ ] Step: Add Utilities for Years, Defaults, and Formatting
+### [x] Step: Add Utilities for Years, Defaults, and Formatting
+<!-- chat-id: 1d038291-fd97-456e-b9d8-f9bf68975169 -->
 Task definition
 - Implement helpers for computing start year, default 50/50 distribution, and currency formatting in millions.
 
