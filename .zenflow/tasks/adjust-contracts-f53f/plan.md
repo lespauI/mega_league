@@ -102,7 +102,8 @@ Task instructions
 
 ---
 
-### [ ] Step: Add Ephemeral State Store for Custom Contracts
+### [x] Step: Add Ephemeral State Store for Custom Contracts
+<!-- chat-id: 6b95cf3e-94df-4954-bb25-5139dd37e1c3 -->
 Task definition
 - Add in-memory map and API in `docs/roster_cap_tool/js/state.js` to store custom year-by-year contract distributions per player.
 
