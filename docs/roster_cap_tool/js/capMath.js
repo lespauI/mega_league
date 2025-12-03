@@ -388,30 +388,12 @@ export default {
  * @returns {number[]} length `years` array overlay to add to roster totals
  */
 export function deriveReleaseAddBackOverlay(moves = [], players = [], years = 5, convInc = {}) {
+  // Correct Madden behavior: once a player is released or traded away, their
+  // future contract years are voided. There are no out‑year roster charges to
+  // add back; only dead money (accelerated bonus) applies, which we account for
+  // separately in deriveDeadMoneySchedule (Y0 and possibly Y1 via 60/40).
   const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
-  const overlay = Array.from({ length: horizon }, () => 0);
-  if (horizon === 0) return overlay;
-  /** @type {Record<string, Player>} */
-  const byId = {};
-  for (const p of players || []) byId[p.id] = p;
-  const seen = new Set();
-  for (const mv of moves || []) {
-    if (!mv || (mv.type !== 'release' && mv.type !== 'tradeQuick')) continue;
-    if (seen.has(mv.playerId)) continue; // guard in case of duplicates
-    seen.add(mv.playerId);
-    const pl = byId[mv.playerId];
-    if (!pl) continue;
-    const faYears = Math.max(0, Math.floor(toFinite(/** @type {any} */(mv).faYearsAtRelease, toFinite(pl.contractYearsLeft, 0))));
-    const freeOutYears = clamp(Math.floor(toFinite(/** @type {any} */(mv).freeOutYears, faYears - 2)), 0, 2);
-    const caps = projectPlayerCapHits(pl, horizon);
-    const inc = convInc[mv.playerId] || null;
-    for (let o = 1 + freeOutYears; o < horizon; o++) {
-      let add = caps[o] || 0;
-      if (inc) add += (inc[o] || 0);
-      overlay[o] += add;
-    }
-  }
-  return overlay;
+  return Array.from({ length: horizon }, () => 0);
 }
 
 /**

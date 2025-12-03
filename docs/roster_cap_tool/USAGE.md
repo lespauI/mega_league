@@ -60,15 +60,15 @@ Note: GitHub Pages serves only committed files. If you update root CSVs, re‑ru
   bash scripts/smoke_roster_cap_tool.sh
   ```
 
-## Year Context (Y+N)
-- Use the Year Context selector in the header to view future seasons (Y+1, Y+2, …). Default is Y+0.
+## Year Context (Calendar Years)
+- Use the Year Context selector in the header to view future seasons using real years (e.g., 2026, 2027, …). Default is the current year for the franchise file (2026 in this dataset).
 - When a future year is selected:
   - Rosters and Free Agents reflect expiring contracts for that future year.
   - Cap summary and penalties/savings are calculated for that context year.
   - Actions (Release/Trade/Extend/Convert/Sign) preview and apply math as if you are in that year.
-  - Column headers include the context label (e.g., “Cap (Y+1)”).
+  - Column headers include the context label (e.g., “Cap (2026)”, “Cap (2027)”).
 - Scenarios save and restore the selected Year Context; Reset clears edits/moves but keeps your current context.
-- Behavior under Y+0 is unchanged from previous versions.
+- Behavior under the current year is unchanged from previous versions.
 
 ## Financial Rules Reference (Madden)
 Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
@@ -79,6 +79,7 @@ Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
   - Dead Money = `capReleasePenalty`
   - If multi‑year: current year dead money ≈ 60% of penalty, remainder next year
 - Bonus proration capped at 5 years (Madden rule)
+  - Zero-dead-money releases (e.g., acquired via trade): releasing a player with no signing bonus on your team frees the full salary for the current year and all remaining years; projections reflect this by removing their out‑year cap hits (no add‑backs) and only applying dead money where applicable (which is $0 in this case).
 
 ## Data Notes
 - CSV source field inversion (cut penalty): Some CSV exports label “Penalty Year 1” and “Penalty Year 2”, but in‑game application is reversed. In practice, what the CSV calls “Year 2” applies to the current season, and what it calls “Year 1” applies to the following season. The tool normalizes this by allocating multi‑year dead money as ~60% to the current year and ~40% to next year, matching in‑game behavior. This change was made to correct mismatches observed between CSV labels and actual cap outcomes in the game.

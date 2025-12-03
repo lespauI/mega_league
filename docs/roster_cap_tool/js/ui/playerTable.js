@@ -31,11 +31,16 @@ function fmtPlayerCell(p) {
   `;
 }
 
-function calcFaYear(p, seasonIndex) {
+function calcFaYear(p, team) {
   const left = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft : null;
-  const season = typeof seasonIndex === 'number' ? seasonIndex : null;
-  if (left == null || season == null) return '-';
-  try { return String(season + left); } catch { return '-'; }
+  const baseYear = Number(team?.calendarYear || 0);
+  if (left == null || !Number.isFinite(baseYear) || baseYear <= 0) return '-';
+  try {
+    // Contract years left is inclusive of the current season; free agency begins the following year.
+    return String(baseYear + left);
+  } catch {
+    return '-';
+  }
 }
 
 /**
@@ -135,7 +140,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
     : [
         { label: '#', key: 'index' },
         { label: 'Player', key: 'player' },
-        // Header label reflects current Year Context, but cell data-labels remain stable for tests
+        // Header label reflects current Year Context (calendar year when available)
         { label: `Cap (${getContextLabel()})`, key: 'capHit' },
         { label: 'Free cap after release', key: 'deadRelease' },
         { label: 'Dead Cap (Trade)', key: 'deadTrade' },
@@ -221,7 +226,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
       // Active roster columns
       const tdCap = document.createElement('td');
       tdCap.textContent = fmtMoney(p.capHit || 0);
-      tdCap.setAttribute('data-label', '2025 Cap');
+      tdCap.setAttribute('data-label', `Cap (${getContextLabel()})`);
       const tdDeadRel = document.createElement('td');
       // Per PRD mapping for column, using capReleaseNetSavings here
       tdDeadRel.textContent = p.capReleaseNetSavings != null ? fmtMoney(p.capReleaseNetSavings) : '-';
@@ -238,7 +243,7 @@ export function renderPlayerTable(containerId, players, options = {}) {
         : (hasLen ? `${len} yrs` : (hasSal ? fmtMoney(Number(sal)) : '-'));
       tdContract.setAttribute('data-label', 'Contract');
       const tdFaYear = document.createElement('td');
-      tdFaYear.textContent = calcFaYear(p, team?.seasonIndex);
+      tdFaYear.textContent = calcFaYear(p, team);
       tdFaYear.setAttribute('data-label', 'FA Year');
       tr.append(tdCap, tdDeadRel, tdDeadTrade, tdContract, tdFaYear);
 

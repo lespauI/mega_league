@@ -65,6 +65,11 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
     if (!team) { el.innerHTML = ''; return; }
 
+    const baseYear = Number(team.calendarYear || 0);
+    const y1Label = Number.isFinite(baseYear) && baseYear > 0 ? String(baseYear + 1) : 'Y+1';
+    const y2Label = Number.isFinite(baseYear) && baseYear > 0 ? String(baseYear + 2) : 'Y+2';
+    const y3Label = Number.isFinite(baseYear) && baseYear > 0 ? String(baseYear + 3) : 'Y+3';
+
     const horizon = 4; // show Y+1..Y+3
     const nextYearPicks = State.getDraftPicksForSelectedTeam();
     const defaultOneEach = { 1:1,2:1,3:1,4:1,5:1,6:1,7:1 };
@@ -105,14 +110,14 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     el.innerHTML = `
       <div class="proj-strip">
         <span class="label">Proj Cap (after rookies):</span>
-        <span class="badge" title="Includes rookie reserve, baseline dead $, re-sign reserve, rollover, and any manual override">Y+1 <span class="${c1}" data-testid="proj-y1">${fmtMoney(y1)}</span></span>
-        <span class="badge">Y+2 <span class="${c2}" data-testid="proj-y2">${fmtMoney(y2)}</span></span>
-        <span class="badge">Y+3 <span class="${c3}" data-testid="proj-y3">${fmtMoney(y3)}</span></span>
-        <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to Y+1</label>
+        <span class="badge" title="Includes rookie reserve, baseline dead $, re-sign reserve, rollover, and any manual override">${y1Label} <span class="${c1}" data-testid="proj-y1">${fmtMoney(y1)}</span></span>
+        <span class="badge">${y2Label} <span class="${c2}" data-testid="proj-y2">${fmtMoney(y2)}</span></span>
+        <span class="badge">${y3Label} <span class="${c3}" data-testid="proj-y3">${fmtMoney(y3)}</span></span>
+        <label class="label" for="rollover-input" style="margin-left:.75rem;">Rollover to ${y1Label}</label>
         <input id="rollover-input" data-testid="rollover-input" type="number" min="0" max="35000000" step="500000" value="${Math.max(0, Math.min(35000000, Number(rollover||0)))}" class="input-number" />
         <label class="label" for="resign-ingame-value" style="margin-left:.75rem;" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations">Resign budget</label>
         <input id="resign-ingame-value" data-testid="resign-budget-input" type="number" min="0" step="500000" value="${Math.max(0, Number(inGameReSign||0))}" class="input-number" placeholder="Enter in-game amount" title="Go to in game re-sign, and see how many money avaliabe nad adjust this to have proper calculations" />
-        <span class="badge" title="Applied to Y+1 as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
+        <span class="badge" title="Applied to ${y1Label} as X + ΔSpace">Applied: ${fmtMoney(reSignReserve)}</span>
       </div>
     `;
     const input = /** @type {HTMLInputElement|null} */(el.querySelector('#rollover-input'));

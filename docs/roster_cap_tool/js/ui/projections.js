@@ -10,9 +10,13 @@ function fmtMoney(n) {
 }
 
 function yearLabel(offset, team) {
-  // Use simple labels: Year 1 (Current), Year 2, ...
-  if (offset === 0) return 'Year 1 (Current)';
-  return `Year ${offset + 1}`;
+  const baseYear = Number(team?.calendarYear || 0);
+  if (Number.isFinite(baseYear) && baseYear > 0) {
+    const yr = baseYear + offset;
+    return offset === 0 ? `${yr} (Current)` : String(yr);
+  }
+  if (offset === 0) return 'Current';
+  return `Y+${offset}`;
 }
 
 /** Render projections table for selected team */
@@ -76,7 +80,7 @@ export function mountProjections() {
       <span class="badge" title="Applied to Y+1 as entered (no ΔSpace)">Applied: ${fmtMoney(reSignReserve)}</span>
     </div>
     <div style="margin:.25rem; color:var(--muted); font-size:12px;">
-      Note: Year 1 is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve applied to Y+1 and beyond. Re-sign uses in-game “Re-sign Available” as-is (no ΔSpace coupling). Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from current year increases Y+1 Cap Space.
+      Note: The current-year row is anchored to the in-game snapshot (capSpent/capAvailable). Rookie Reserve is applied starting with the next season. Re-sign uses in-game “Re-sign Available” as-is (no ΔSpace coupling). Out-years approximate base = salary/length and bonus prorated up to 5 years. Rollover up to $35M from the current year increases next-season Cap Space.
     </div>
   `;
 

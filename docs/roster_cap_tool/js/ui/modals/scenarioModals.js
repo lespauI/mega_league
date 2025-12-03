@@ -57,7 +57,12 @@ export function openScenarioLoadModal() {
       const when = new Date(s.savedAt);
       const whenStr = isFinite(when.getTime()) ? when.toLocaleString() : '';
       const yoff = Math.max(0, Math.floor(Number(s.yearContextOffset || 0)));
-      const meta = `Y+${yoff} • ${s.rosterEdits?.length || 0} edits, ${s.moves?.length || 0} moves`;
+      const team = st.teams.find((t) => t.abbrName === teamAbbr);
+      const baseYear = Number(team?.calendarYear || 0);
+      const ctxLabel = (Number.isFinite(baseYear) && baseYear > 0)
+        ? String(baseYear + yoff)
+        : `Y+${yoff}`;
+      const meta = `${ctxLabel} • ${s.rosterEdits?.length || 0} edits, ${s.moves?.length || 0} moves`;
       return `<tr>
         <td>${s.name}</td>
         <td>${whenStr}</td>
@@ -176,4 +181,3 @@ export function openScenarioCompareModal() {
 }
 
 export default { openScenarioSaveModal, openScenarioLoadModal, openScenarioCompareModal };
-
