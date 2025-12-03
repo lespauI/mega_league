@@ -313,6 +313,11 @@ Implementation notes:
 - Cap Summary in Year Context (`getCapSummary`) forwards overrides so header numbers reflect edits.
 - Contract Editor UI: actions moved to the header; added Save button which persists and triggers re-computation.
 
-### [ ] Step: create e2e tests
+### [x] Step: create e2e tests
+<!-- chat-id: 18851a61-87b9-4540-859a-d6cd73daea08 -->
 
-create e2e. tests to be sure manual contract adjustment has an impact on cup projection, on cuts, on trade and etc
+Added Playwright E2E spec to validate impacts from manual contract adjustments:
+- File: `tests/e2e/custom_contract_impacts.spec.ts`
+- Verifies: Projections (Roster Cap/Cap Space), Release preview savings, and Trade (Quick) savings all change for the edited year.
+
+Run: `npx playwright test tests/e2e/custom_contract_impacts.spec.ts`
