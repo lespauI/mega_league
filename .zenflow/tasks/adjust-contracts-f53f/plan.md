@@ -257,7 +257,8 @@ Deliverable
 Verification
 - Rendered markdown reads clearly; links and file paths are correct.
 
-### [ ] Step: Get rid of years+1 and etc
+### [x] Step: Get rid of years+1 and etc
+<!-- chat-id: 41f5e0ae-6727-48a8-9cd5-e3df45ffc7fa -->
 
 Currently we use Year+1 and etc, i want to replace it with actual years, 
 Current year = 2026
@@ -269,3 +270,13 @@ Please get rid of Y0 year+1 Y+1 etc.
 Also update the FA year with corresponding year. FA=1 is 2026, FA=2 is 2027 and etc
 
 Basicly create a simple dictionary, its must be just user representation change, all our logic can use Y+1 or whathewer, Just in interface base line year shuld be 2026 and shown as a 2026 not Year 1 in every place in UI, new added and old already exist representation
+
+Completed:
+- Replaced Y+N/Year 1 labels with actual calendar years using team.calendarYear (baseline 2026) across UI components:
+  - Offer Modal: “Year 1 Cap Hit” → “2026/20XX Cap Hit” depending on context.
+  - Trade In Modal: table header and confirm message updated to 20XX.
+  - Conversion Modal: future year chips now show 20XX instead of “Year +N”.
+  - Projections: badge text now “Applied to 20XX …”.
+  - Draft Picks: headers/footers now “20XX” instead of “Year 1”.
+  - Placeholder table header updated from 2025 → 2026.
+- FA Year column already renders absolute year via calendarYear + yearsLeft.
