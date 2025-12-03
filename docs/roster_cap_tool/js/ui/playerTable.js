@@ -4,7 +4,6 @@ import { openReleaseModal } from './modals/releaseModal.js';
 import { openExtensionModal } from './modals/extensionModal.js';
 import { openConversionModal } from './modals/conversionModal.js';
 import { openOfferModal } from './modals/offerModal.js';
-import { openContractEditor } from './modals/contractEditor.js';
 import { confirmWithDialog } from './modals/confirmDialog.js';
 import { contextualizePlayer } from '../context.js';
 
@@ -199,12 +198,6 @@ export function renderPlayerTable(containerId, players, options = {}) {
     tdPlayer.classList.add('cell-player');
     tdPlayer.setAttribute('data-label', 'Player');
     tdPlayer.innerHTML = fmtPlayerCell(p);
-    // Clicking the player cell opens the Contract Distribution Editor (active roster only)
-    if (type !== 'fa') {
-      tdPlayer.style.cursor = 'pointer';
-      tdPlayer.title = 'Edit contract distribution';
-      tdPlayer.addEventListener('click', () => openContractEditor(p));
-    }
     tr.appendChild(tdPlayer);
 
     if (type === 'fa') {
@@ -273,8 +266,6 @@ export function renderPlayerTable(containerId, players, options = {}) {
       const canExtend = typeof p.contractYearsLeft === 'number' ? p.contractYearsLeft <= 2 : false;
       addOpt('extend', 'Extension', canExtend);
       addOpt('convert', 'Conversion');
-      // Optional secondary entry point: open Contract Distribution editor
-      addOpt('contractDistribution', 'Contract Distribution');
       sel.addEventListener('change', async () => {
         if (!sel.value) return;
         const action = sel.value;
@@ -332,8 +323,6 @@ export function renderPlayerTable(containerId, players, options = {}) {
           openExtensionModal(p);
         } else if (action === 'convert') {
           openConversionModal(p);
-        } else if (action === 'contractDistribution') {
-          openContractEditor(p);
         }
         sel.value = '';
       });
