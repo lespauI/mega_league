@@ -49,6 +49,7 @@ Example format (wrapped in code block to prevent parsing):
 - Add E2E test for Kenny Clark (SF) zero-dead-money release
 - Assert Y+1 projection increases by ≥ $10M; Y+2 does not decrease
 
-### [ ] Step: 5. Validation
-- Run Playwright tests locally
-- Run cap math verification script and review output
+### [x] Step: 5. Validation
+<!-- chat-id: f2a73b43-4d46-4614-8118-8bb95b83dcc0 -->
+- Run Playwright tests locally (15/15 tests passed)
+- Run cap math verification script and review output (15/15 assertions passed; see output/cap_tool_verification.json)
