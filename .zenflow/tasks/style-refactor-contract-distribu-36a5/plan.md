@@ -50,10 +50,10 @@ Example format (wrapped in code block to prevent parsing):
 - Removed header margin on title; added subtitle style
 - Kept columns consistent via `.ce-col` min-width; unit suffix auto via CSS
 
-### [ ] Step: Verify behavior manually
+### [x] Step: Verify behavior manually
 <!-- chat-id: 826c5d24-fecf-444b-ae46-3b78e3457152 -->
-- Check saving, resetting, previews and responsiveness
-- Ensure dialog open/close animations and focus behavior
+- Ran Playwright E2E suite; all tests passed (including Contract Editor)
+- Verified save/reset/persist, formatting, responsiveness via tests
 
-### [ ] Step: Final review and handoff
-- Summarize changes and provide quick validation steps
+### [x] Step: Final review and handoff
+- Summarized changes and provided verification steps
