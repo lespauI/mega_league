@@ -388,47 +388,12 @@ export default {
  * @returns {number[]} length `years` array overlay to add to roster totals
  */
 export function deriveReleaseAddBackOverlay(moves = [], players = [], years = 5, convInc = {}) {
+  // Correct Madden behavior: once a player is released or traded away, their
+  // future contract years are voided. There are no out‑year roster charges to
+  // add back; only dead money (accelerated bonus) applies, which we account for
+  // separately in deriveDeadMoneySchedule (Y0 and possibly Y1 via 60/40).
   const horizon = Math.max(0, Math.floor(toFinite(years, 0)));
-  const overlay = Array.from({ length: horizon }, () => 0);
-  if (horizon === 0) return overlay;
-  /** @type {Record<string, Player>} */
-  const byId = {};
-  for (const p of players || []) byId[p.id] = p;
-  const seen = new Set();
-  for (const mv of moves || []) {
-    if (!mv || (mv.type !== 'release' && mv.type !== 'tradeQuick')) continue;
-    if (seen.has(mv.playerId)) continue; // guard in case of duplicates
-    seen.add(mv.playerId);
-    const pl = byId[mv.playerId];
-    if (!pl) continue;
-    // Determine years remaining at time of release, defaulting from player fields.
-    const yearsLeft = Math.max(0, Math.floor(toFinite(/** @type {any} */(mv).faYearsAtRelease, toFinite(pl.contractYearsLeft, 0))));
-    const caps = projectPlayerCapHits(pl, horizon);
-    const inc = convInc[mv.playerId] || null;
-
-    // Special-case: players with zero dead money (no signing bonus on acquiring team).
-    // In Madden, if a team traded for a player, the acquiring team does not carry
-    // the original signing bonus. Releasing such a player should free the entire
-    // salary portion for all remaining years (Y+1..FA year).
-    const noBonus = (toFinite(pl.contractBonus, 0) <= 0) && (toFinite(pl.capReleasePenalty, 0) <= 0);
-    const approxBase = Math.max(0, toFinite(pl.capHit, 0));
-
-    // Add back for all out-year offsets up to yearsLeft (exclusive of current year).
-    for (let o = 1; o < horizon; o++) {
-      if (o >= yearsLeft) break; // no contract beyond FA year
-      let add;
-      if (noBonus) {
-        // Use a robust salary-only approximation when bonus/proration is zero on this team.
-        // Prefer the player’s current cap hit (pure salary) as a floor for out-years.
-        add = approxBase;
-      } else {
-        add = caps[o] || 0;
-      }
-      if (inc) add += (inc[o] || 0);
-      overlay[o] += add;
-    }
-  }
-  return overlay;
+  return Array.from({ length: horizon }, () => 0);
 }
 
 /**

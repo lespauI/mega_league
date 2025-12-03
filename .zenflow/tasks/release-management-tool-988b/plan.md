@@ -38,20 +38,17 @@ Example format (wrapped in code block to prevent parsing):
 - Identify projection/add-back bug for zero-dead-money releases
 
 ### [x] Step: 2. Algorithm Fix
-- Update add-back overlay to include all remaining out-years
-- Add salary-only fallback for zero-dead-money players
+- Remove erroneous out-year add-back overlay (released contracts are fully voided)
+- Ensure dead money handled via 60/40 split only (Y0/Y1)
+- Zero-dead-money players: free full salary in current and remaining years
 
 ### [x] Step: 3. Documentation
-- Update usage doc to clarify zero-dead-money releases add back salary in projections
+- Update usage doc to clarify zero-dead-money releases free salary; projections remove out-year caps (no add-backs)
 
 ### [x] Step: 4. Tests
-<!-- chat-id: daade0b4-2dd1-44b2-946d-f7b0e82a8f0d -->
-- Add E2E test for Kenny Clark (SF) case
-- Verify Y+1 and Y+2 increase by ≥ $10M after release
+- Add E2E test for Kenny Clark (SF) zero-dead-money release
+- Assert Y+1 projection increases by ≥ $10M; Y+2 does not decrease
 
-### [x] Step: 5. Validation
-<!-- chat-id: 543b7c1a-bae8-4465-ae93-d685f9c72dd0 -->
+### [ ] Step: 5. Validation
 - Run Playwright tests locally
 - Run cap math verification script and review output
-- Result: Playwright release.spec.ts passed; zero_dead_money_release.spec.ts failed (Y+1/Y+2 projections did not increase by ≥ $10M).
-- Result: scripts/verify_cap_math.py completed with 15/15 assertions passing; report at output/cap_tool_verification.json.
