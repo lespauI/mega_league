@@ -33,6 +33,8 @@ const state = {
   reSignSettingsByTeam: {},
   /** Position filters per table */
   positionFilters: { active: [], fa: [] },
+  /** Ephemeral custom contract distributions per player: { [playerId]: { [year]: { salary, bonus } } } */
+  customContractsByPlayer: {},
 };
 
 export function subscribe(fn) {
@@ -191,6 +193,64 @@ export function initState({ teams, players }) {
     if (parsed && typeof parsed === 'object') state.positionFilters = { active: parsed.active || [], fa: parsed.fa || [] };
   } catch {}
   emit();
+}
+
+// ----- Custom Contract Distributions (ephemeral, in-memory only) -----
+
+/**
+ * Get custom contract distribution map for a player.
+ * @param {string} playerId
+ * @returns {Record<number, { salary: number, bonus: number }> | null}
+ */
+export function getCustomContract(playerId) {
+  const id = String(playerId || '').trim();
+  if (!id) return null;
+  const cur = state.customContractsByPlayer?.[id];
+  if (!cur || typeof cur !== 'object') return null;
+  // Return a shallow clone to prevent accidental external mutation
+  /** @type {Record<number, { salary: number, bonus: number }>} */
+  const out = {};
+  for (const y of Object.keys(cur)) {
+    const yr = Number(y);
+    const v = cur[y] || {};
+    out[yr] = { salary: Number(v.salary || 0) || 0, bonus: Number(v.bonus || 0) || 0 };
+  }
+  return out;
+}
+
+/**
+ * Set custom contract distribution for a player. Overwrites the entire map for the player.
+ * Does not persist to localStorage; session-only.
+ * @param {string} playerId
+ * @param {Record<number, { salary: number, bonus: number }>} map
+ */
+export function setCustomContract(playerId, map) {
+  const id = String(playerId || '').trim();
+  if (!id || !map || typeof map !== 'object') return;
+  /** @type {Record<string, { salary: number, bonus: number }>} */
+  const clean = {};
+  for (const key of Object.keys(map)) {
+    const yr = String(key);
+    const v = map[key] || {};
+    clean[yr] = { salary: Number(v.salary || 0) || 0, bonus: Number(v.bonus || 0) || 0 };
+  }
+  state.customContractsByPlayer = { ...(state.customContractsByPlayer || {}), [id]: clean };
+  emit();
+}
+
+/**
+ * Reset and clear any custom contract distribution for a player.
+ * @param {string} playerId
+ */
+export function resetCustomContract(playerId) {
+  const id = String(playerId || '').trim();
+  if (!id) return;
+  const next = { ...(state.customContractsByPlayer || {}) };
+  if (Object.prototype.hasOwnProperty.call(next, id)) {
+    delete next[id];
+    state.customContractsByPlayer = next;
+    emit();
+  }
 }
 
 /** Normalize players' team fields to team abbr based on provided teams list. */

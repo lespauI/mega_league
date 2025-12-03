@@ -24,6 +24,9 @@ export function openTradeInModal() {
   const st = getState();
   const team = st.teams.find((t) => t.abbrName === st.selectedTeam);
   if (!team) return;
+  const offset = getYearContextForSelectedTeam();
+  const baseYear = Number(team?.calendarYear || 0);
+  const y1Label = (Number.isFinite(baseYear) && baseYear > 0) ? String(baseYear + offset) : 'Year 1';
 
   const root = document.getElementById('modals-root') || document.body;
   const dlg = document.createElement('dialog');
@@ -42,7 +45,7 @@ export function openTradeInModal() {
             <th>Player</th>
             <th>From Team</th>
             <th>Pos</th>
-            <th>Year 1 (Salary Only)</th>
+            <th>${y1Label} (Salary Only)</th>
             <th>Contract</th>
           </tr>
         </thead>
@@ -92,7 +95,7 @@ export function openTradeInModal() {
     const rememberKey = `rosterCap.skipConfirm.tradeIn.${team.abbrName}`;
     const ok = await confirmWithDialog({
       title: `Trade In — ${name}`,
-      message: `Year 1 Cap Hit (salary only): ${fmtMoney(sim.year1CapHit)}\nCap After Trade: ${fmtMoney(sim.remainingCapAfter)}`,
+      message: `${y1Label} Cap Hit (salary only): ${fmtMoney(sim.year1CapHit)}\nCap After Trade: ${fmtMoney(sim.remainingCapAfter)}`,
       confirmText: 'Trade In',
       cancelText: 'Cancel',
       danger: false,
