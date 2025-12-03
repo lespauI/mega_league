@@ -139,77 +139,80 @@ dialog.drawer[open] {
 }
 dialog.drawer::backdrop { background: rgba(2, 6, 23, 0.6); }
 
-/* Contract Editor specific layout */
-.drawer [data-dialog-title] { font-size: 1.05rem; }
+/* Contract Editor specific layout (scoped to this drawer only) */
+.contract-editor [data-dialog-title] { font-size: 1.05rem; margin: 0; }
 
-/* Grid with a column per year */
-.ce-grid {
-  display: grid;
-  grid-auto-flow: column;
+.contract-editor .drawer__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .75rem;
+}
+.contract-editor .drawer__titlewrap { display: flex; flex-direction: column; gap: .25rem; }
+.contract-editor .drawer__subtitle { color: var(--muted); font-size: .85rem; }
+.contract-editor .drawer__actions { display: flex; gap: .5rem; align-items: center; }
+
+.contract-editor .field { display: flex; flex-direction: column; gap: .25rem; }
+.contract-editor .field__label { color: var(--muted); font-size: .8rem; }
+.contract-editor .muted { color: var(--muted); }
+
+/* Year columns */
+.contract-editor .ce-grid {
+  display: flex;
+  align-items: flex-start;
   gap: .75rem;
-  overflow: auto;
+  overflow-x: auto;
   padding-bottom: .25rem;
 }
-/* Each year column */
-.ce-col {
-  display: grid;
-  gap: .375rem;
-  min-width: 160px;
+.contract-editor .ce-col {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: .5rem;
+  padding: .75rem .75rem 1rem;
 }
-
-/* Year header cell */
-[data-testid="ce-year"] {
-  text-align: center;
+.contract-editor [data-testid="ce-year"] {
   font-weight: 600;
+  font-size: .9rem;
 }
 
-/* Inputs inside the drawer */
-.drawer input[type="number"],
-.drawer input[type="text"],
-.drawer input[type="search"] {
-  background: #0b1324;
+/* Inputs inside contract editor */
+.contract-editor input[type="number"],
+.contract-editor input[type="text"],
+.contract-editor input[type="search"] {
+  background: #020617;
   color: var(--text);
   border: 1px solid #334155;
   border-radius: .375rem;
-  padding: .375rem .5rem;
+  padding: .4rem .5rem;
   width: 100%;
 }
+.contract-editor input[type="number"]::-webkit-outer-spin-button,
+.contract-editor input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.contract-editor input[type="number"] { -moz-appearance: textfield; }
 
-/* Small muted preview lines under inputs */
-[data-testid="ce-prev-salary"],
-[data-testid="ce-prev-bonus"] {
+.contract-editor input:focus {
+  border-color: var(--blue);
+  outline: 2px solid rgba(37, 99, 235, 0.5);
+  outline-offset: 0;
+}
+
+.contract-editor [data-testid="ce-prev-salary"],
+.contract-editor [data-testid="ce-prev-bonus"] {
   color: var(--muted);
-  font-size: .8em;
+  font-size: .8rem;
   text-align: right;
 }
 
-/* Adornment: show "M" suffix for the millions unit.
-   Uses :has() to target labels that contain contract inputs. */
-.drawer label:has(> [data-testid="ce-input-salary"]),
-.drawer label:has(> [data-testid="ce-input-bonus"]) {
-  position: relative;
-}
-.drawer label:has(> [data-testid="ce-input-salary"])::after,
-.drawer label:has(> [data-testid="ce-input-bonus"])::after {
-  content: "M";
-  position: absolute;
-  right: .5rem;
-  /* place roughly centered on the input line */
-  top: 2.15rem;
-  color: var(--muted);
-  pointer-events: none;
-}
-/* Ensure input has space for the suffix */
-.drawer [data-testid="ce-input-salary"],
-.drawer [data-testid="ce-input-bonus"] {
-  padding-right: 1.4rem !important;
-}
-
-/* Scrollbar cosmetics in the horizontal grid */
-.ce-grid { scrollbar-color: #334155 transparent; scrollbar-width: thin; }
-.ce-grid::-webkit-scrollbar { height: 10px; }
-.ce-grid::-webkit-scrollbar-track { background: transparent; }
-.ce-grid::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
+/* Subtle scrollbar cosmetics for year strip */
+.contract-editor .ce-grid { scrollbar-color: #334155 transparent; scrollbar-width: thin; }
+.contract-editor .ce-grid::-webkit-scrollbar { height: 8px; }
+.contract-editor .ce-grid::-webkit-scrollbar-track { background: transparent; }
+.contract-editor .ce-grid::-webkit-scrollbar-thumb { background: #334155; border-radius: 8px; }
 
 /* Responsive drawer width and grid flow */
 @media (max-width: 640px) {

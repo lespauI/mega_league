@@ -93,12 +93,25 @@ export function mountHeaderProjections(containerId = 'header-projections') {
     // Decouple re-sign reserve from ΔSpace: apply only the in-game value
     const reSignReserve = Math.max(0, Number(inGameReSign || 0));
 
+    // Build custom contract overrides map for active players (absolute-year keyed)
+    /** @type {Record<string, Record<number, { salary: number, bonus: number }>>} */
+    const customContractsByPlayer = (() => {
+      const map = {};
+      for (const p of st.players || []) {
+        const cur = State.getCustomContract ? State.getCustomContract(p.id) : null;
+        if (cur) map[p.id] = cur;
+      }
+      return map;
+    })();
+
     const proj = projectTeamCaps(team, st.players, st.moves, horizon, {
       rookieReserveByYear: [rr0, rr1, rr2, rr3],
       baselineDeadMoneyByYear: baselineDMByYear,
       extraSpendingByYear: [0, reSignReserve, 0, 0],
       rolloverToNext: rollover,
       rolloverMax: 35_000_000,
+      baseCalendarYear: Number(team?.calendarYear || 0) || undefined,
+      customContractsByPlayer,
     });
     const y1 = proj[1]?.capSpace ?? 0;
     const y2 = proj[2]?.capSpace ?? 0;

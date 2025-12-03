@@ -198,4 +198,95 @@ test.describe('Custom contract distribution impacts projections, release, and tr
     await expect(confDlg2).toBeHidden();
     expect(Math.round(tradeSavings1)).not.toBe(Math.round(tradeSavings0));
   });
+
+  test('editing a future year updates header Proj Cap strip', async ({ page }) => {
+    await gotoTool(page);
+    await ensureTab(page, 'active-roster');
+
+    // Ensure selected team has a calendar year so editor + projections use absolute years
+    const baseYear: number = await page.evaluate(async () => {
+      const mod = await import('/docs/roster_cap_tool/js/state.js');
+      const st = mod.getState();
+      const sel = st.selectedTeam;
+      const byId = Object.fromEntries((st.teams || []).map((t: any) => [t.abbrName, t]));
+      const team = byId[sel];
+      const yr = 2026;
+      if (!team || Number(team.calendarYear) === yr) return yr;
+      const nextTeams = (st.teams || []).map((t: any) => t.abbrName === sel ? { ...t, calendarYear: yr } : t);
+      mod.setState({ teams: nextTeams });
+      return yr;
+    });
+
+    // Pick a player whose earliest editable contract year is within Y+1..Y+3
+    const table = activeRosterTable(page);
+    await expect(table).toBeVisible();
+    const rows = tableRows(table);
+    const count = await rows.count();
+
+    let chosenIndex = -1;
+    let targetYear = 0;
+    for (let i = 0; i < Math.min(count, 30); i++) {
+      const row = rows.nth(i);
+      const name = (await rowPlayerName(row).innerText().catch(() => '')).trim();
+      if (!name) continue;
+      await row.locator('td[data-label="Player"]').click();
+      const dlg = page.locator('dialog[data-testid="contract-editor"]');
+      await expect(dlg).toBeVisible();
+      const yearEls = dlg.locator('[data-testid="ce-year"]');
+      const yCount = await yearEls.count();
+      if (yCount === 0) {
+        await dlg.locator('[data-testid="ce-close"]').click();
+        await expect(dlg).toBeHidden();
+        continue;
+      }
+      const years: number[] = [];
+      for (let k = 0; k < yCount; k++) {
+        const txt = (await yearEls.nth(k).innerText()).trim();
+        const y = Number(txt);
+        if (Number.isFinite(y)) years.push(y);
+      }
+      const fut = years.find((y) => y > baseYear && y <= baseYear + 3);
+      if (fut) {
+        chosenIndex = i;
+        targetYear = fut;
+        await dlg.locator('[data-testid="ce-close"]').click();
+        await expect(dlg).toBeHidden();
+        break;
+      }
+      await dlg.locator('[data-testid="ce-close"]').click();
+      await expect(dlg).toBeHidden();
+    }
+
+    expect(chosenIndex).toBeGreaterThanOrEqual(0);
+    expect(targetYear).toBeGreaterThan(baseYear);
+    const offset = targetYear - baseYear; // 1..3
+
+    // Capture corresponding header projection before edit
+    const headerTarget = offset === 1
+      ? page.getByTestId('proj-y1')
+      : offset === 2
+        ? page.getByTestId('proj-y2')
+        : page.getByTestId('proj-y3');
+    await expect(headerTarget).toBeVisible();
+    const headerBefore = parseMoney(await headerTarget.innerText());
+
+    // Re-open editor for chosen row and bump that year's salary/bonus
+    const targetRow = rows.nth(chosenIndex);
+    await targetRow.locator('td[data-label="Player"]').click();
+    const ce = page.locator('dialog[data-testid="contract-editor"]');
+    await expect(ce).toBeVisible();
+    const sInp = ce.locator(`[data-testid="ce-input-salary"][data-year="${targetYear}"]`);
+    const bInp = ce.locator(`[data-testid="ce-input-bonus"][data-year="${targetYear}"]`);
+    await expect(sInp).toBeVisible();
+    await expect(bInp).toBeVisible();
+    await sInp.fill('20.0');
+    await bInp.fill('20.0');
+    await ce.locator('[data-testid="ce-save"]').click();
+    await expect(ce).toBeHidden();
+
+    // Header projection for that offset should change (cap space decreases)
+    await expect
+      .poll(async () => parseMoney(await headerTarget.innerText()), { timeout: 5000 })
+      .not.toBe(headerBefore);
+  });
 });
