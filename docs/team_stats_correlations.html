@@ -378,6 +378,21 @@
             }
           },
           {
+            xKey: 'punts_per_game',
+            yKey: 'pass_ints_per_game',
+            xLabel: 'Punts per Game',
+            yLabel: 'Interceptions Thrown per Game',
+            title: 'Drive Outcomes — Punts vs INTs Thrown',
+            insight: 'Turnovers often replace punts; conservative offenses punt more but protect the ball.',
+            metricHelp: '<strong>Punts vs INTs:</strong> Панты часто заменяют перехваты. Консервативные команды чаще пантуют, но реже теряют мяч через INT.',
+            quadrantHelp: {
+              topRight: 'High punts + high INTs: Dysfunctional offense stalling drives and turning the ball over. Poor decision-making and inefficient execution create both frequent punts and interceptions.',
+              topLeft: 'High punts + low INTs: Conservative ball-control approach. Drives stall frequently but ball security is prioritized. Field position strategy over risk-taking.',
+              bottomLeft: 'Low punts + low INTs: Efficient, steady offense sustaining drives while protecting the ball. High third-down conversion and controlled passing game.',
+              bottomRight: 'Low punts + high INTs: Aggressive, high-variance offense. Fewer punts because drives end via turnovers or explosive plays. Risk-heavy approach with volatile outcomes.'
+            }
+          },
+          {
             xKey: 'pass_rush_ratio',
             yKey: 'win_pct',
             xLabel: 'Pass/Rush Attempt Ratio',
@@ -787,7 +802,7 @@
   <div class="container">
     <h1>Team Statistics — Interesting Correlations</h1>
     <div class="subtitle">
-      34 non-obvious relationships between team metrics. Red = above trend, Blue = below trend.
+      35 non-obvious relationships between team metrics. Red = above trend, Blue = below trend.
       R² shows correlation strength. Each graph reveals strategic insights.
     </div>
     <div class="controls">
