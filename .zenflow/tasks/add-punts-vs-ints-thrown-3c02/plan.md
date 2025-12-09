@@ -46,16 +46,3 @@ Updated counts from 34 to 35 in `docs/team_stats_correlations.html`, `docs/stats
 ### [x] Step: Sanity-check data availability
 Verified the referenced keys exist in the CSV and match usage patterns elsewhere in the file.
 
-<!--
-Add steps here. Format:
-
-### [ ] Step: <step_name>
-Step instructions
-
-Example steps to consider:
-- Requirements / PRD
-- Technical specification
-- Planning
-- Implementation
-- Testing / Verification
--->
