@@ -2,10 +2,10 @@
   {
     "team": "Ravens",
     "games": 17,
-    "avg_opp_elo": 1213.5117647058828,
+    "avg_opp_elo": 1213.5117647058823,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 11.977389705882842,
-    "sos_index": 136.69297990383475,
+    "plus_minus_vs_avg": 11.977389705882388,
+    "sos_index": 136.69297990383382,
     "conference": "AFC",
     "division": "AFC North",
     "rank": 1
@@ -13,10 +13,10 @@
   {
     "team": "Buccaneers",
     "games": 17,
-    "avg_opp_elo": 1209.6058823529413,
+    "avg_opp_elo": 1209.605882352941,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 8.071507352941353,
-    "sos_index": 124.72722891780545,
+    "plus_minus_vs_avg": 8.071507352941126,
+    "sos_index": 124.72722891780505,
     "conference": "NFC",
     "division": "NFC South",
     "rank": 2
@@ -27,7 +27,7 @@
     "avg_opp_elo": 1207.8882352941175,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": 6.353860294117567,
-    "sos_index": 119.4651817974428,
+    "sos_index": 119.46518179744304,
     "conference": "AFC",
     "division": "AFC North",
     "rank": 3
@@ -38,7 +38,7 @@
     "avg_opp_elo": 1207.7176470588236,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": 6.183272058823604,
-    "sos_index": 118.94258122727035,
+    "sos_index": 118.94258122727058,
     "conference": "AFC",
     "division": "AFC North",
     "rank": 4
@@ -46,10 +46,10 @@
   {
     "team": "Falcons",
     "games": 17,
-    "avg_opp_elo": 1207.5470588235296,
+    "avg_opp_elo": 1207.5470588235294,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 6.012683823529642,
-    "sos_index": 118.4199806570979,
+    "plus_minus_vs_avg": 6.012683823529414,
+    "sos_index": 118.41998065709743,
     "conference": "NFC",
     "division": "NFC South",
     "rank": 5
@@ -57,10 +57,10 @@
   {
     "team": "Saints",
     "games": 17,
-    "avg_opp_elo": 1206.7882352941176,
+    "avg_opp_elo": 1206.7882352941178,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 5.253860294117658,
-    "sos_index": 116.09530915529353,
+    "plus_minus_vs_avg": 5.253860294117885,
+    "sos_index": 116.09530915529442,
     "conference": "NFC",
     "division": "NFC South",
     "rank": 6
@@ -68,10 +68,10 @@
   {
     "team": "Titans",
     "games": 17,
-    "avg_opp_elo": 1205.2294117647057,
+    "avg_opp_elo": 1205.229411764706,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 3.695036764705719,
-    "sos_index": 111.31982118647144,
+    "plus_minus_vs_avg": 3.6950367647059466,
+    "sos_index": 111.31982118647227,
     "conference": "AFC",
     "division": "AFC South",
     "rank": 7
@@ -79,10 +79,10 @@
   {
     "team": "Jaguars",
     "games": 17,
-    "avg_opp_elo": 1205.1117647058823,
+    "avg_opp_elo": 1205.1117647058825,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 3.5773897058822968,
-    "sos_index": 110.95940700014562,
+    "plus_minus_vs_avg": 3.577389705882524,
+    "sos_index": 110.95940700014644,
     "conference": "AFC",
     "division": "AFC South",
     "rank": 8
@@ -90,10 +90,10 @@
   {
     "team": "Giants",
     "games": 17,
-    "avg_opp_elo": 1204.641176470588,
+    "avg_opp_elo": 1204.6411764705883,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 3.1068014705881524,
-    "sos_index": 109.5177502548409,
+    "plus_minus_vs_avg": 3.1068014705883797,
+    "sos_index": 109.51775025484173,
     "conference": "NFC",
     "division": "NFC East",
     "rank": 9
@@ -101,10 +101,10 @@
   {
     "team": "Colts",
     "games": 17,
-    "avg_opp_elo": 1203.3999999999996,
+    "avg_opp_elo": 1203.3999999999999,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 1.8656249999996817,
-    "sos_index": 105.71538058909925,
+    "plus_minus_vs_avg": 1.865624999999909,
+    "sos_index": 105.71538058910002,
     "conference": "AFC",
     "division": "AFC South",
     "rank": 10
@@ -115,7 +115,7 @@
     "avg_opp_elo": 1203.3,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": 1.765625,
-    "sos_index": 105.40902853072299,
+    "sos_index": 105.40902853072306,
     "conference": "AFC",
     "division": "AFC North",
     "rank": 11
@@ -123,10 +123,10 @@
   {
     "team": "Seahawks",
     "games": 17,
-    "avg_opp_elo": 1202.5823529411764,
+    "avg_opp_elo": 1202.5823529411766,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 1.0479779411764412,
-    "sos_index": 103.21050199413337,
+    "plus_minus_vs_avg": 1.0479779411766685,
+    "sos_index": 103.21050199413409,
     "conference": "NFC",
     "division": "NFC West",
     "rank": 12
@@ -134,10 +134,10 @@
   {
     "team": "Panthers",
     "games": 17,
-    "avg_opp_elo": 1202.0176470588237,
+    "avg_opp_elo": 1202.0176470588235,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": 0.4832720588237862,
-    "sos_index": 101.4805138997687,
+    "plus_minus_vs_avg": 0.48327205882355884,
+    "sos_index": 101.48051389976801,
     "conference": "NFC",
     "division": "NFC South",
     "rank": 13
@@ -148,7 +148,7 @@
     "avg_opp_elo": 1201.9941176470588,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": 0.45974264705887435,
-    "sos_index": 101.40843106250283,
+    "sos_index": 101.40843106250286,
     "conference": "AFC",
     "division": "AFC South",
     "rank": 14
@@ -178,10 +178,10 @@
   {
     "team": "Raiders",
     "games": 17,
-    "avg_opp_elo": 1201.3529411764707,
+    "avg_opp_elo": 1201.3529411764705,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -0.18143382352923254,
-    "sos_index": 99.44417374702569,
+    "plus_minus_vs_avg": -0.18143382352945991,
+    "sos_index": 99.44417374702498,
     "conference": "AFC",
     "division": "AFC West",
     "rank": 17
@@ -192,7 +192,7 @@
     "avg_opp_elo": 1200.8,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -0.734375,
-    "sos_index": 97.7502270712922,
+    "sos_index": 97.75022707129217,
     "conference": "NFC",
     "division": "NFC North",
     "rank": 18
@@ -203,7 +203,7 @@
     "avg_opp_elo": 1200.7941176470588,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -0.7402573529411711,
-    "sos_index": 97.73220636197591,
+    "sos_index": 97.73220636197588,
     "conference": "AFC",
     "division": "AFC West",
     "rank": 19
@@ -211,10 +211,10 @@
   {
     "team": "Cardinals",
     "games": 17,
-    "avg_opp_elo": 1200.6294117647062,
+    "avg_opp_elo": 1200.629411764706,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -0.9049632352937351,
-    "sos_index": 97.22762650112045,
+    "plus_minus_vs_avg": -0.9049632352939625,
+    "sos_index": 97.22762650111972,
     "conference": "NFC",
     "division": "NFC West",
     "rank": 20
@@ -225,7 +225,7 @@
     "avg_opp_elo": 1200.4176470588234,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -1.1167279411765776,
-    "sos_index": 96.57888096573187,
+    "sos_index": 96.57888096573183,
     "conference": "AFC",
     "division": "AFC East",
     "rank": 21
@@ -236,7 +236,7 @@
     "avg_opp_elo": 1199.5235294117647,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -2.01084558823527,
-    "sos_index": 93.8397331496535,
+    "sos_index": 93.83973314965343,
     "conference": "AFC",
     "division": "AFC East",
     "rank": 22
@@ -247,7 +247,7 @@
     "avg_opp_elo": 1199.3117647058823,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -2.2226102941176578,
-    "sos_index": 93.1909876142663,
+    "sos_index": 93.19098761426623,
     "conference": "NFC",
     "division": "NFC East",
     "rank": 23
@@ -258,7 +258,7 @@
     "avg_opp_elo": 1199.2764705882353,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -2.2579044117646845,
-    "sos_index": 93.08286335836856,
+    "sos_index": 93.08286335836848,
     "conference": "AFC",
     "division": "AFC East",
     "rank": 24
@@ -266,10 +266,10 @@
   {
     "team": "Lions",
     "games": 17,
-    "avg_opp_elo": 1198.805882352941,
+    "avg_opp_elo": 1198.8058823529411,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -2.7284926470590563,
-    "sos_index": 91.64120661306316,
+    "plus_minus_vs_avg": -2.728492647058829,
+    "sos_index": 91.64120661306376,
     "conference": "NFC",
     "division": "NFC North",
     "rank": 25
@@ -277,10 +277,10 @@
   {
     "team": "Bears",
     "games": 17,
-    "avg_opp_elo": 1198.1411764705879,
+    "avg_opp_elo": 1198.141176470588,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -3.393198529412075,
-    "sos_index": 89.60486646032015,
+    "plus_minus_vs_avg": -3.3931985294118476,
+    "sos_index": 89.60486646032072,
     "conference": "NFC",
     "division": "NFC North",
     "rank": 26
@@ -291,7 +291,7 @@
     "avg_opp_elo": 1197.4823529411765,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -4.052022058823468,
-    "sos_index": 87.58654701689483,
+    "sos_index": 87.58654701689467,
     "conference": "NFC",
     "division": "NFC West",
     "rank": 27
@@ -299,10 +299,10 @@
   {
     "team": "Eagles",
     "games": 17,
-    "avg_opp_elo": 1195.1235294117644,
+    "avg_opp_elo": 1195.1235294117646,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -6.410845588235588,
-    "sos_index": 80.36024258105432,
+    "plus_minus_vs_avg": -6.410845588235361,
+    "sos_index": 80.36024258105478,
     "conference": "NFC",
     "division": "NFC East",
     "rank": 28
@@ -310,10 +310,10 @@
   {
     "team": "Jets",
     "games": 17,
-    "avg_opp_elo": 1193.9823529411767,
+    "avg_opp_elo": 1193.9823529411765,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -7.5520220588232405,
-    "sos_index": 76.8642249736924,
+    "plus_minus_vs_avg": -7.552022058823468,
+    "sos_index": 76.86422497369142,
     "conference": "AFC",
     "division": "AFC East",
     "rank": 29
@@ -321,10 +321,10 @@
   {
     "team": "Commanders",
     "games": 17,
-    "avg_opp_elo": 1193.1764705882351,
+    "avg_opp_elo": 1193.1764705882354,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -8.357904411764821,
-    "sos_index": 74.395387797357,
+    "plus_minus_vs_avg": -8.357904411764594,
+    "sos_index": 74.39538779735739,
     "conference": "NFC",
     "division": "NFC East",
     "rank": 30
@@ -332,10 +332,10 @@
   {
     "team": "Rams",
     "games": 17,
-    "avg_opp_elo": 1193.0294117647056,
+    "avg_opp_elo": 1193.0294117647059,
     "league_avg_opp_elo": 1201.534375,
-    "plus_minus_vs_avg": -8.504963235294326,
-    "sos_index": 73.94487006444902,
+    "plus_minus_vs_avg": -8.504963235294099,
+    "sos_index": 73.9448700644494,
     "conference": "NFC",
     "division": "NFC West",
     "rank": 31
@@ -346,7 +346,7 @@
     "avg_opp_elo": 1192.6529411764704,
     "league_avg_opp_elo": 1201.534375,
     "plus_minus_vs_avg": -8.881433823529505,
-    "sos_index": 72.79154466820569,
+    "sos_index": 72.79154466820535,
     "conference": "NFC",
     "division": "NFC North",
     "rank": 32
