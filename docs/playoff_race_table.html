@@ -12,7 +12,6 @@
             padding: 0;
             margin: 0;
             color: #1a1a1a;
-            overflow-x: hidden;
         }
         .container { 
             max-width: 1400px; 
@@ -21,6 +20,12 @@
             border-radius: 8px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
             overflow: hidden;
+        }
+        .table-wrap {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior-x: contain;
         }
         .header {
             padding: 24px 30px;
@@ -379,6 +384,7 @@
 
         <div class="conference-section">
             <div class="conference-header">AFC</div>
+            <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
@@ -1031,6 +1037,7 @@
         </div>
         <div class="conference-section">
             <div class="conference-header">NFC</div>
+            <div class="table-wrap">
             <table>
                 <thead>
                     <tr>
@@ -1666,6 +1673,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
         </div>
 
