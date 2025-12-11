@@ -7,7 +7,8 @@ Purpose
 - Calculate team-level distribution metrics for passing targets and rushing attempts; attach selected efficiency stats.
 
 Inputs
-- `MEGA_receiving.csv`, `MEGA_rushing.csv`, `MEGA_teams.csv`
+- `output/player_team_stints.csv` (per-team/per-player offensive stints; adjusted for trades)
+- `MEGA_teams.csv`
 - `output/team_aggregated_stats.csv` (for efficiency fields like qb_rating, sack_rate, etc.)
 
 Outputs
@@ -22,9 +23,12 @@ Outputs
     rec_yac_pct, total_turnovers, pass_rush_ratio
 
 Behavior
-- Aggregates per-team catch/rush totals by position using a **canonical team display name**:
-  - Team keys are normalized via `stats_scripts.stats_common.normalize_team_display` so rows like `"11:Browns"` and `"Browns"` are treated as the same team.
-- Computes shares and concentration indices from stat rows that belong to each canonical team; a traded player only contributes usage to the teams that appear on their stat rows.
+- Aggregates per-team catch/rush totals by position using the **stint** table:
+  - Reads `output/player_team_stints.csv` and groups rows by `team` (canonical display name).
+  - Uses the **adjusted** stint fields (`recTotalCatches`, `rushTotalAtt`, etc.) so that traded players’ contributions
+    match the trade-aware splits used in `team_aggregated_stats.csv`.
+- Computes shares and concentration indices from stint rows that belong to each canonical team; a traded player only
+  contributes usage to the teams that appear in their stints, and their stints are already scaled when needed.
 - Determines usage style heuristics (Concentrated/Balanced/Spread; Bellcow/RBBC/Feature Back).
 - Is consistent with the trade-aware contracts enforced by:
   - `output/player_team_stints.csv` (per-team/per-player season stints).

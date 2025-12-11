@@ -144,3 +144,8 @@ Wire the new trade-aware tools into the standard stats pipeline and document the
    - Run the full pipeline via `python3 scripts/run_all_stats.py` (and the verification script, if integrated).
    - Confirm all expected CSV outputs are generated without errors.
    - Spot-check documentation against actual script behavior and CLI usage.
+
+### [x] Step: Fixes
+<!-- chat-id: e2c79d80-26ad-4742-8ac2-37bdcc85f701 -->
+
+I see you evaluate traded players correctly thats grate, but when i looking into the stats graps, for example into Turnover Balance — Defensive INTs vs Offensive INTs i still can see ambigeous stats of doubled ints for Ravens And Browns, you must update the calculation and remove ambigeous stats for every our statistical calculations

@@ -17,11 +17,11 @@ def aggregate_player_usage(base_path):
     """Aggregate player usage patterns."""
     
     print("Loading data files...")
-    
-    receiving = load_csv(base_path / 'MEGA_receiving.csv')
-    rushing = load_csv(base_path / 'MEGA_rushing.csv')
-    teams_csv = load_csv(base_path / 'MEGA_teams.csv')
-    team_stats = load_csv(base_path / 'output' / 'team_aggregated_stats.csv')
+
+    # Trade-aware per-team/per-player stints drive usage volumes.
+    stints = load_csv(base_path / "output" / "player_team_stints.csv")
+    teams_csv = load_csv(base_path / "MEGA_teams.csv")
+    team_stats = load_csv(base_path / "output" / "team_aggregated_stats.csv")
     
     teams_map = {}
     for t in teams_csv:
@@ -54,11 +54,25 @@ def aggregate_player_usage(base_path):
         usage_data['losses'] = safe_float(team_info.get('totalLosses', 0))
         usage_data['ties'] = safe_float(team_info.get('totalTies', 0))
         
-        total_games = usage_data['wins'] + usage_data['losses'] + usage_data['ties']
-        usage_data['win_pct'] = (usage_data['wins'] + 0.5 * usage_data['ties']) / total_games if total_games > 0 else 0
-        
-        team_receiving = [r for r in receiving if normalize_team_display(r.get('team__displayName', '')) == team]
-        team_rushing = [r for r in rushing if normalize_team_display(r.get('team__displayName', '')) == team]
+        total_games = usage_data["wins"] + usage_data["losses"] + usage_data["ties"]
+        usage_data["win_pct"] = (
+            (usage_data["wins"] + 0.5 * usage_data["ties"]) / total_games
+            if total_games > 0
+            else 0
+        )
+
+        # Slice trade-aware stints for this team.
+        team_stints = [s for s in stints if s.get("team") == team]
+        team_receiving = [
+            r
+            for r in team_stints
+            if safe_float(r.get("recTotalCatches")) > 0
+        ]
+        team_rushing = [
+            r
+            for r in team_stints
+            if safe_float(r.get("rushTotalAtt")) > 0
+        ]
         
         total_catches = sum(safe_float(r.get('recTotalCatches')) for r in team_receiving)
         total_rec_yds = sum(safe_float(r.get('recTotalYds')) for r in team_receiving)
