@@ -117,6 +117,7 @@ def get_file_description(filename):
         'team_stats_explorer.html': '📊 Interactive Win% correlation explorer with 20+ team metrics',
         'team_stats_correlations.html': '🔍 35 cross-metric correlation graphs revealing strategic insights',
         'team_player_usage.html': '👥 25 player usage graphs (target distribution + performance impact: INTs, sacks, efficiency, TDs)',
+        'trade_dashboard.html': '🔁 Trades & multi-team players dashboard (team impact + per-player stint splits)',
         'rankings_explorer.html': '🎯 12 strategic ranking visualizations (offensive/defensive balance, pass/rush philosophy, efficiency patterns)',
         'afc_race.png': 'AFC playoff standings and race visualization',
         'afc_compl.png': 'AFC season completion metrics',

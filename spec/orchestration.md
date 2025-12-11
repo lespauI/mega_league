@@ -30,7 +30,9 @@ Sequences
   1) stats_scripts/aggregate_team_stats.py
   2) stats_scripts/aggregate_player_usage.py
   3) stats_scripts/aggregate_rankings_stats.py
-  4) scripts/generate_index.py
+  4) stats_scripts/build_player_team_stints.py
+  5) scripts/generate_index.py
+  6) scripts/verify_trade_stats.py
 
 Run
 - `python3 scripts/run_all.py`
@@ -41,4 +43,3 @@ Acceptance Criteria
 - Sequence executes in order; failures logged with clear status.
 - Expected outputs appear (see individual specs) given valid CSV inputs.
 - Optional steps do not fail the run if dependencies are missing.
-

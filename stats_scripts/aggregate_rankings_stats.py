@@ -4,27 +4,11 @@ Aggregate team rankings and statistics for correlation analysis.
 Combines MEGA_rankings.csv and MEGA_teams.csv data.
 """
 
-import csv
-import sys
 from pathlib import Path
 from collections import defaultdict
+import csv
 
-def load_csv(filepath):
-    """Load CSV with error handling."""
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            return list(reader)
-    except Exception as e:
-        print(f"Error loading {filepath}: {e}", file=sys.stderr)
-        return []
-
-def safe_float(value, default=0.0):
-    """Safely convert to float."""
-    try:
-        return float(value) if value and value != '' else default
-    except (ValueError, TypeError):
-        return default
+from stats_common import load_csv, safe_float, normalize_team_display
 
 def safe_int(value, default=0):
     """Safely convert to int."""
@@ -41,17 +25,50 @@ def aggregate_rankings_stats(base_path):
     # Load data
     rankings = load_csv(base_path / 'MEGA_rankings.csv')
     teams = load_csv(base_path / 'MEGA_teams.csv')
+
+    # Load team-level aggregated stats (player-based) and Elo ratings
+    team_stats_rows = load_csv(base_path / 'output' / 'team_aggregated_stats.csv')
+    
+    elo_map = {}
+    elo_path = base_path / 'mega_elo.csv'
+    try:
+        with elo_path.open('r', encoding='utf-8') as f:
+            reader = csv.reader(f, delimiter=';')
+            header = next(reader, None)
+            for row in reader:
+                if not row or len(row) < 3:
+                    continue
+                team_name = normalize_team_display(row[1])
+                if not team_name or team_name.lower() == 'team':
+                    continue
+                start_raw = row[2].strip()
+                elo_start = safe_float(start_raw.replace(',', '.'), 0.0) if start_raw else 0.0
+                elo_index = safe_int(row[0])
+                elo_map[team_name] = {
+                    'eloIndex': elo_index,
+                    'eloStart': elo_start,
+                }
+    except FileNotFoundError:
+        elo_map = {}
     
     # Create team lookup
     teams_map = {}
     for t in teams:
-        if t.get('displayName'):
-            teams_map[t['displayName']] = t
+        name = normalize_team_display(t.get('displayName', ''))
+        if name:
+            teams_map[name] = t
+    
+    # Map of aggregated team stats keyed by canonical team name
+    team_stats_map = {}
+    for s in team_stats_rows:
+        name = normalize_team_display(s.get('team', ''))
+        if name:
+            team_stats_map[name] = s
     
     # Get latest rankings (highest week)
     latest_rankings = {}
     for r in rankings:
-        team = r.get('team')
+        team = normalize_team_display(r.get('team', ''))
         week = safe_int(r.get('weekIndex', 0))
         if team:
             if team not in latest_rankings or week > latest_rankings[team]['weekIndex']:
@@ -71,7 +88,7 @@ def aggregate_rankings_stats(base_path):
     # Track week-to-week changes
     rank_changes = defaultdict(list)
     for r in rankings:
-        team = r.get('team')
+        team = normalize_team_display(r.get('team', ''))
         if team:
             rank_changes[team].append({
                 'week': safe_int(r.get('weekIndex')),
@@ -194,6 +211,19 @@ def aggregate_rankings_stats(base_path):
             row['earlySeasonRank'] = 0
             row['lateSeasonRank'] = 0
             row['rankImprovement'] = 0
+        
+        # Add Elo ratings if available
+        elo = elo_map.get(team_name, {})
+        row['eloIndex'] = elo.get('eloIndex', 0)
+        row['eloStart'] = elo.get('eloStart', 0.0)
+        
+        # Merge in player-based aggregated team stats where available,
+        # without overwriting existing keys.
+        agg_stats = team_stats_map.get(team_name)
+        if agg_stats:
+            for key, value in agg_stats.items():
+                if key not in row:
+                    row[key] = value
         
         # Calculate derived metrics
         

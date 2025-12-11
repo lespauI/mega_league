@@ -5,26 +5,10 @@ Creates CSV files with team-aggregated stats and derived efficiency metrics.
 """
 
 import csv
-import sys
 from pathlib import Path
 from collections import defaultdict
 
-def load_csv(filepath):
-    """Load CSV with error handling."""
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            return list(reader)
-    except Exception as e:
-        print(f"Error loading {filepath}: {e}", file=sys.stderr)
-        return []
-
-def safe_float(value, default=0.0):
-    """Safely convert to float."""
-    try:
-        return float(value) if value and value != '' else default
-    except (ValueError, TypeError):
-        return default
+from stats_common import load_csv, safe_float, normalize_team_display
 
 def safe_mean(values):
     """Calculate mean of list, ignoring non-numeric values."""
@@ -46,8 +30,9 @@ def aggregate_team_stats(base_path):
     
     teams_map = {}
     for t in teams:
-        if t.get('displayName'):
-            teams_map[t['displayName']] = t
+        name = normalize_team_display(t.get('displayName', ''))
+        if name:
+            teams_map[name] = t
     
     team_names = sorted(teams_map.keys())
     
@@ -71,12 +56,12 @@ def aggregate_team_stats(base_path):
         total_games = team_data['wins'] + team_data['losses'] + team_data['ties']
         team_data['win_pct'] = (team_data['wins'] + 0.5 * team_data['ties']) / total_games if total_games > 0 else 0
         
-        team_passing = [p for p in passing if p.get('team__displayName') == team]
-        team_rushing = [r for r in rushing if r.get('team__displayName') == team]
-        team_receiving = [r for r in receiving if r.get('team__displayName') == team]
-        team_defense = [d for d in defense if d.get('team__displayName') == team]
-        team_punting = [p for p in punting if p.get('team__displayName') == team]
-        team_kicking = [k for k in kicking if k.get('team__displayName') == team]
+        team_passing = [p for p in passing if normalize_team_display(p.get('team__displayName', '')) == team]
+        team_rushing = [r for r in rushing if normalize_team_display(r.get('team__displayName', '')) == team]
+        team_receiving = [r for r in receiving if normalize_team_display(r.get('team__displayName', '')) == team]
+        team_defense = [d for d in defense if normalize_team_display(d.get('team__displayName', '')) == team]
+        team_punting = [p for p in punting if normalize_team_display(p.get('team__displayName', '')) == team]
+        team_kicking = [k for k in kicking if normalize_team_display(k.get('team__displayName', '')) == team]
         
         team_data['pass_att'] = sum(safe_float(p.get('passTotalAtt')) for p in team_passing)
         team_data['pass_comp'] = sum(safe_float(p.get('passTotalComp')) for p in team_passing)
@@ -85,7 +70,6 @@ def aggregate_team_stats(base_path):
         team_data['pass_ints'] = sum(safe_float(p.get('passTotalInts')) for p in team_passing)
         team_data['pass_sacks'] = sum(safe_float(p.get('passTotalSacks')) for p in team_passing)
         team_data['qb_rating'] = safe_mean([p.get('passerAvgRating') for p in team_passing if safe_float(p.get('passTotalAtt')) >= 20])
-        team_data['pass_yds_per_game'] = safe_mean([p.get('passAvgYdsPerGame') for p in team_passing if safe_float(p.get('passTotalAtt')) >= 20])
         
         team_data['rush_att'] = sum(safe_float(r.get('rushTotalAtt')) for r in team_rushing)
         team_data['rush_yds'] = sum(safe_float(r.get('rushTotalYds')) for r in team_rushing)
@@ -94,14 +78,12 @@ def aggregate_team_stats(base_path):
         team_data['rush_broken_tackles'] = sum(safe_float(r.get('rushTotalBrokenTackles')) for r in team_rushing)
         team_data['rush_yac'] = sum(safe_float(r.get('rushTotalYdsAfterContact')) for r in team_rushing)
         team_data['rush_20plus'] = sum(safe_float(r.get('rushTotal20PlusYds')) for r in team_rushing)
-        team_data['rush_yds_per_game'] = safe_mean([r.get('rushAvgYdsPerGame') for r in team_rushing if safe_float(r.get('rushTotalAtt')) >= 10])
         
         team_data['rec_catches'] = sum(safe_float(r.get('recTotalCatches')) for r in team_receiving)
         team_data['rec_yds'] = sum(safe_float(r.get('recTotalYds')) for r in team_receiving)
         team_data['rec_tds'] = sum(safe_float(r.get('recTotalTDs')) for r in team_receiving)
         team_data['rec_drops'] = sum(safe_float(r.get('recTotalDrops')) for r in team_receiving)
         team_data['rec_yac'] = sum(safe_float(r.get('recTotalYdsAfterCatch')) for r in team_receiving)
-        team_data['rec_yds_per_game'] = safe_mean([r.get('recAvgYdsPerGame') for r in team_receiving if safe_float(r.get('recTotalCatches')) >= 5])
         
         team_data['def_sacks'] = sum(safe_float(d.get('defTotalSacks')) for d in team_defense)
         team_data['def_ints'] = sum(safe_float(d.get('defTotalInts')) for d in team_defense)
@@ -155,6 +137,9 @@ def aggregate_team_stats(base_path):
         
         games = max(team_data['wins'] + team_data['losses'] + team_data['ties'], 1)
         
+        team_data['pass_yds_per_game'] = team_data['pass_yds'] / games
+        team_data['rush_yds_per_game'] = team_data['rush_yds'] / games
+        team_data['rec_yds_per_game'] = team_data['rec_yds'] / games
         team_data['off_yds_per_game'] = team_data['total_off_yds'] / games
         team_data['pass_att_per_game'] = team_data['pass_att'] / games
         team_data['rush_att_per_game'] = team_data['rush_att'] / games

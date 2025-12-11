@@ -5,26 +5,9 @@ Calculates distribution metrics for passing targets, rushing attempts, etc.
 """
 
 import csv
-import sys
 from pathlib import Path
 from collections import defaultdict
-
-def load_csv(filepath):
-    """Load CSV with error handling."""
-    try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            reader = csv.DictReader(f)
-            return list(reader)
-    except Exception as e:
-        print(f"Error loading {filepath}: {e}", file=sys.stderr)
-        return []
-
-def safe_float(value, default=0.0):
-    """Safely convert to float."""
-    try:
-        return float(value) if value and value != '' else default
-    except (ValueError, TypeError):
-        return default
+from stats_common import load_csv, safe_float, normalize_team_display
 
 def calculate_herfindahl_index(shares):
     """Calculate Herfindahl-Hirschman Index for concentration."""
@@ -42,13 +25,15 @@ def aggregate_player_usage(base_path):
     
     teams_map = {}
     for t in teams_csv:
-        if t.get('displayName'):
-            teams_map[t['displayName']] = t
+        name = normalize_team_display(t.get('displayName', ''))
+        if name:
+            teams_map[name] = t
     
     stats_map = {}
     for s in team_stats:
-        if s.get('team'):
-            stats_map[s['team']] = s
+        name = normalize_team_display(s.get('team', ''))
+        if name:
+            stats_map[name] = s
     
     team_names = sorted(teams_map.keys())
     
@@ -72,8 +57,8 @@ def aggregate_player_usage(base_path):
         total_games = usage_data['wins'] + usage_data['losses'] + usage_data['ties']
         usage_data['win_pct'] = (usage_data['wins'] + 0.5 * usage_data['ties']) / total_games if total_games > 0 else 0
         
-        team_receiving = [r for r in receiving if r.get('team__displayName') == team]
-        team_rushing = [r for r in rushing if r.get('team__displayName') == team]
+        team_receiving = [r for r in receiving if normalize_team_display(r.get('team__displayName', '')) == team]
+        team_rushing = [r for r in rushing if normalize_team_display(r.get('team__displayName', '')) == team]
         
         total_catches = sum(safe_float(r.get('recTotalCatches')) for r in team_receiving)
         total_rec_yds = sum(safe_float(r.get('recTotalYds')) for r in team_receiving)

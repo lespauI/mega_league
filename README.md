@@ -61,6 +61,30 @@ This single command automatically:
 4. ✅ Generates full playoff race HTML report
 5. ✅ Generates draft pick race analysis
 
+### Step 3: Generate Trade-Aware Team & Player Stats (Recommended)
+
+To regenerate all team and player stats, including trade-aware splits for multi-team players:
+
+```bash
+python3 scripts/run_all_stats.py
+```
+
+This will:
+- Build `output/team_aggregated_stats.csv` (team stats, using canonical team keys).
+- Build `output/team_player_usage.csv` (team usage distribution, trade-aware).
+- Build `output/team_rankings_stats.csv` (team stats + rankings/ELO joins).
+- Build `output/player_team_stints.csv` (one row per player/team/season stint).
+
+For validation and a human-reviewable view of traded players, run:
+
+```bash
+python3 scripts/verify_trade_stats.py
+```
+
+This verification step:
+- Writes `output/traded_players_report.csv` (multi-team players and their per-team stat lines).
+- Checks invariants between `player_team_stints.csv` and `team_aggregated_stats.csv` to guard against doubled or mis-attributed production for traded players.
+
 **Output files:**
 - `docs/playoff_race.html` - Full playoff analysis report (open in browser)
 - `docs/playoff_race_table.html` - Interactive playoff race table

@@ -22,8 +22,13 @@ Outputs
     rec_yac_pct, total_turnovers, pass_rush_ratio
 
 Behavior
-- Aggregates per-team catch/rush totals by position; computes shares and concentration indices.
+- Aggregates per-team catch/rush totals by position using a **canonical team display name**:
+  - Team keys are normalized via `stats_scripts.stats_common.normalize_team_display` so rows like `"11:Browns"` and `"Browns"` are treated as the same team.
+- Computes shares and concentration indices from stat rows that belong to each canonical team; a traded player only contributes usage to the teams that appear on their stat rows.
 - Determines usage style heuristics (Concentrated/Balanced/Spread; Bellcow/RBBC/Feature Back).
+- Is consistent with the trade-aware contracts enforced by:
+  - `output/player_team_stints.csv` (per-team/per-player season stints).
+  - `scripts/verify_trade_stats.py` (invariant checks and traded-players report).
 
 Run
 - `python3 stats_scripts/aggregate_player_usage.py`
@@ -32,4 +37,3 @@ Acceptance Criteria
 - CSV exists with one row per team.
 - Shares sum logically (e.g., WR/TE/RB target shares ≈ 100% when data present).
 - Joins to aggregated team stats populate efficiency fields when available.
-

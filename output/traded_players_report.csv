@@ -1,0 +1,17 @@
+seasonIndex,team,team_abbrev,player__rosterId,player__fullName,player__position,gamesPlayed_passing,passTotalAtt,passTotalComp,passTotalYds,passTotalTDs,passTotalInts,passTotalSacks,gamesPlayed_rushing,rushTotalAtt,rushTotalYds,rushTotalTDs,rushTotalFum,rushTotal20PlusYds,rushTotalYdsAfterContact,gamesPlayed_receiving,recTotalCatches,recTotalYds,recTotalTDs,recTotalDrops,recTotalYdsAfterCatch,gamesPlayed_defense,defTotalTackles,defTotalSacks,defTotalInts,defTotalForcedFum,defTotalFumRec,defTotalTDs,multi_team_season,multi_team_teams,multi_team_team_count
+1,Browns,CLE,553388322,Shedeur Sanders,QB,4.0,104.0,70.0,862.0,7.0,9.0,9.0,4.0,5.0,5.0,0.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Browns|Ravens,2
+1,Browns,CLE,553387273,Lamar Jackson,QB,3.0,119.0,77.0,1081.0,9.0,13.0,4.0,2.0,6.0,82.0,2.0,0.0,1.0,23.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Browns|Ravens,2
+1,Buccaneers,TB,553387689,Baker Mayfield,QB,2.0,10.0,5.0,54.0,1.0,0.0,1.0,1.0,2.0,27.0,0.0,0.0,1.0,2.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Buccaneers|Jets,2
+1,Jets,NYJ,553387689,Baker Mayfield,QB,4.0,83.0,56.0,776.0,8.0,3.0,7.0,3.0,12.0,125.0,0.0,0.0,1.0,21.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Buccaneers|Jets,2
+1,Ravens,BAL,553388322,Shedeur Sanders,QB,4.0,96.0,64.0,935.0,8.0,8.0,5.0,3.0,4.0,8.0,0.0,1.0,0.0,1.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Browns|Ravens,2
+1,Ravens,BAL,553387273,Lamar Jackson,QB,4.0,161.0,96.0,1437.0,11.0,17.0,5.0,3.0,8.0,105.0,2.0,0.0,1.0,25.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Browns|Ravens,2
+1,Rams,LAR,553388893,Kyren Williams,HB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,19.0,103.0,1.0,1.0,0.0,14.0,3.0,4.0,12.0,0.0,0.0,19.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Rams|Titans,2
+1,Titans,TEN,553388893,Kyren Williams,HB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,19.0,103.0,1.0,1.0,0.0,14.0,3.0,4.0,12.0,0.0,0.0,19.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Rams|Titans,2
+1,Rams,LAR,553386096,Elic Ayomanor,WR,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,7.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Rams|Titans,2
+1,Titans,TEN,553386096,Elic Ayomanor,WR,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,1.0,1.0,7.0,0.0,0.0,3.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,True,Rams|Titans,2
+1,Bengals,CIN,553388449,Roquan Smith,MIKE,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,11.0,2.0,2.0,1.0,0.0,0.0,True,Bengals|Ravens,2
+1,Broncos,DEN,553388971,Tariq Woolen,CB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,9.0,0.0,1.0,0.0,1.0,1.0,True,Broncos|Seahawks,2
+1,Broncos,DEN,553388549,Patrick Surtain II,CB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,7.0,0.0,0.0,0.0,0.0,0.0,True,Broncos|Seahawks,2
+1,Ravens,BAL,553388449,Roquan Smith,MIKE,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,4.0,11.0,2.0,2.0,1.0,0.0,0.0,True,Bengals|Ravens,2
+1,Seahawks,SEA,553388971,Tariq Woolen,CB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,5.0,10.0,0.0,1.0,0.0,1.0,1.0,True,Broncos|Seahawks,2
+1,Seahawks,SEA,553388549,Patrick Surtain II,CB,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,3.0,7.0,0.0,0.0,0.0,0.0,0.0,True,Broncos|Seahawks,2

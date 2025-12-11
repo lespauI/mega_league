@@ -8,6 +8,7 @@ Purpose
 
 Inputs
 - `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv`
+ - Shared helpers from `stats_scripts/stats_common.py` (notably `normalize_team_display`).
 
 Outputs
 - `output/team_aggregated_stats.csv` with columns including (non-exhaustive):
@@ -22,8 +23,15 @@ Outputs
     per-game splits and ratios, pass_rush_ratio
 
 Behavior
-- Joins per-team across all CSVs via `team__displayName`.
-- Computes per-team totals, per-play rates, per-game and percentage metrics.
+- Joins per-team across all CSVs using a **canonical team display name**, derived by `normalize_team_display`:
+  - Strips whitespace.
+  - Removes any leading numeric index and colon from stat rows (e.g., `"11:Browns"` → `"Browns"`), so they match `MEGA_teams.displayName`.
+- Computes per-team totals, per-play rates, per-game and percentage metrics using:
+  - Volume fields from player stat CSVs (attempts, yards, TDs, INTs, sacks, tackles, etc.).
+  - Team games and record context from `MEGA_teams.csv` (wins/losses/ties), rather than per-player “per game” averages.
+- Treats **traded / multi-team players** as strictly per-row contributions:
+  - Each stat row is only counted for the canonical team on that row.
+  - Combined with `output/player_team_stints.csv` and `scripts/verify_trade_stats.py`, this ensures no double-counting of production across teams.
 
 Run
 - `python3 stats_scripts/aggregate_team_stats.py`
@@ -32,4 +40,3 @@ Acceptance Criteria
 - CSV exists with one row per team and >60 metrics.
 - Numeric fields parseable; win_pct derived from W/L/T when present.
 - Values consistent with raw sums from source CSVs.
-

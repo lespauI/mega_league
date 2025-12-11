@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trades & Multi‑Team Players Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body {
+      margin: 16px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: #f7f7f7;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 12px 16px 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      margin: 8px 0 10px;
+      font-size: 13px;
+    }
+    .controls label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    select, input[type="text"] {
+      font-size: 13px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+    .info {
+      background: #f3f6fa;
+      border: 1px solid #e1e7ef;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #243246;
+      font-size: 13px;
+      margin: 4px 0 10px;
+    }
+    .info strong { font-weight: 600; }
+    .panel {
+      margin: 12px 0 14px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .panel > summary {
+      padding: 9px 14px;
+      background: #f5f7fa;
+      border-bottom: 1px solid #ebeff5;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      font-size: 13px;
+    }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
+    .panel-body { padding: 8px 12px 10px; font-size: 13px; }
+    .team-table, .stint-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 4px 0 2px;
+      font-size: 12px;
+    }
+    .team-table th, .team-table td,
+    .stint-table th, .stint-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: right;
+      white-space: nowrap;
+    }
+    .team-table th:first-child,
+    .team-table td:first-child,
+    .stint-table th:first-child,
+    .stint-table td:first-child {
+      text-align: left;
+    }
+    .team-table thead tr,
+    .stint-table thead tr {
+      background: #f8fafc;
+    }
+    .team-table tbody tr:nth-child(even),
+    .stint-table tbody tr:nth-child(even) {
+      background: #f9fafb;
+    }
+    .pill {
+      display: inline-block;
+      padding: 1px 8px;
+      border-radius: 999px;
+      font-size: 11px;
+      background: #eef2ff;
+      color: #3730a3;
+      margin-left: 6px;
+    }
+    .pill.small { padding: 0 6px; font-size: 10px; }
+    .badge {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      font-size: 10px;
+      background: #fee2e2;
+      color: #b91c1c;
+      margin-left: 6px;
+    }
+    .badge.qb { background: #dcfce7; color: #166534; }
+    .metric-note {
+      color: #6b7280;
+      font-size: 11px;
+      margin-top: 4px;
+    }
+    .empty-state {
+      font-size: 13px;
+      color: #6b7280;
+      padding: 8px 0 4px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Trades & Multi‑Team Players Dashboard</h1>
+    <p class="subtitle">
+      Built from <code>output/player_team_stints.csv</code> and <code>output/traded_players_report.csv</code>.
+      Run <code>python3 scripts/run_all_stats.py</code> to refresh.
+    </p>
+
+    <div class="controls">
+      <label>
+        Season:
+        <select id="season-select"></select>
+      </label>
+      <label>
+        Player filter:
+        <input type="text" id="player-filter" placeholder="e.g. Jackson, Mayfield" />
+      </label>
+      <span style="font-size:12px; color:#6b7280;">
+        Showing only players with stats for multiple teams in the same season.
+      </span>
+    </div>
+
+    <div class="info">
+      <strong>How to read this:</strong>
+      Top panel aggregates how much production on each team comes from
+      players who logged stats for multiple teams in the selected season.
+      Each player panel then shows that player’s per‑team stints and how their
+      yards and TDs are split across teams (e.g. Lamar Jackson on Browns vs Ravens).
+    </div>
+
+    <details class="panel" open>
+      <summary>Team impact from multi‑team players</summary>
+      <div class="panel-body">
+        <div id="team-impact"></div>
+        <div class="metric-note">
+          Yards = passing + rushing + receiving from players who appear for
+          multiple teams in the season. This is not directional “trade gain/loss”,
+          but a view of how much each team’s offense involves multi‑team players.
+        </div>
+      </div>
+    </details>
+
+    <div id="players-root"></div>
+  </div>
+
+  <script>
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function fmt0(x) { return d3.format('.0f')(x || 0); }
+    function fmt1(x) { return d3.format('.1f')(x || 0); }
+    function toPct1(x) { return d3.format('.1%')(x || 0); }
+
+    async function loadData() {
+      const traded = await tryCsv([
+        '../output/traded_players_report.csv',
+        'output/traded_players_report.csv',
+        '/output/traded_players_report.csv'
+      ]);
+      return traded;
+    }
+
+    function buildTeamImpact(rows, holder) {
+      holder.html('');
+      if (!rows.length) {
+        holder.append('div').attr('class', 'empty-state')
+          .text('No multi‑team players found for this season.');
+        return;
+      }
+
+      const teamMap = new Map();
+      for (const r of rows) {
+        const key = r.team || '';
+        if (!key) continue;
+        let agg = teamMap.get(key);
+        if (!agg) {
+          agg = {
+            team: key,
+            team_abbrev: r.team_abbrev || '',
+            totalYds: 0,
+            passYds: 0,
+            rushYds: 0,
+            recYds: 0,
+            offTDs: 0,
+            players: new Set()
+          };
+          teamMap.set(key, agg);
+        }
+        const passYds = +r.passTotalYds || 0;
+        const rushYds = +r.rushTotalYds || 0;
+        const recYds = +r.recTotalYds || 0;
+        const offTDs = (+r.passTotalTDs || 0) + (+r.rushTotalTDs || 0) + (+r.recTotalTDs || 0);
+
+        agg.passYds += passYds;
+        agg.rushYds += rushYds;
+        agg.recYds += recYds;
+        agg.totalYds += passYds + rushYds + recYds;
+        agg.offTDs += offTDs;
+        agg.players.add(String(r.player__rosterId || ''));
+      }
+
+      const rowsArr = Array.from(teamMap.values())
+        .map(d => ({ ...d, playerCount: d.players.size }))
+        .sort((a, b) => d3.descending(a.totalYds, b.totalYds));
+
+      const leagueTotal = d3.sum(rowsArr, d => d.totalYds);
+
+      const table = holder.append('table').attr('class', 'team-table');
+      const thead = table.append('thead').append('tr');
+      thead.selectAll('th').data([
+        'Team',
+        'Multi‑team players',
+        'Total yards',
+        'Pass yds',
+        'Rush yds',
+        'Rec yds',
+        'Off TDs',
+        'Share of league multi‑team yds'
+      ]).enter().append('th').text(d => d);
+
+      const tbody = table.append('tbody');
+      const tr = tbody.selectAll('tr').data(rowsArr).enter().append('tr');
+      tr.append('td').text(d => d.team_abbrev ? `${d.team} (${d.team_abbrev})` : d.team);
+      tr.append('td').text(d => d.playerCount);
+      tr.append('td').text(d => fmt0(d.totalYds));
+      tr.append('td').text(d => fmt0(d.passYds));
+      tr.append('td').text(d => fmt0(d.rushYds));
+      tr.append('td').text(d => fmt0(d.recYds));
+      tr.append('td').text(d => fmt0(d.offTDs));
+      tr.append('td').text(d => leagueTotal > 0 ? toPct1(d.totalYds / leagueTotal) : '0.0%');
+    }
+
+    function buildPlayerPanels(rows, holder, filterText) {
+      holder.html('');
+      if (!rows.length) {
+        holder.append('div').attr('class', 'empty-state')
+          .text('No traded / multi‑team players found for this season.');
+        return;
+      }
+
+      const groups = d3.group(rows, d => String(d.player__rosterId || ''));
+      let players = [];
+      for (const [rosterId, stintRows] of groups) {
+        const first = stintRows[0];
+        const fullName = first.player__fullName || `Player ${rosterId}`;
+        const pos = first.player__position || '';
+        const teams = (first.multi_team_teams || '').split('|').filter(Boolean);
+
+        const totals = stintRows.reduce((acc, r) => {
+          const passYds = +r.passTotalYds || 0;
+          const rushYds = +r.rushTotalYds || 0;
+          const recYds = +r.recTotalYds || 0;
+          const offTDs = (+r.passTotalTDs || 0) + (+r.rushTotalTDs || 0) + (+r.recTotalTDs || 0);
+          acc.passYds += passYds;
+          acc.rushYds += rushYds;
+          acc.recYds += recYds;
+          acc.totalYds += passYds + rushYds + recYds;
+          acc.offTDs += offTDs;
+          acc.games = Math.max(
+            acc.games,
+            +r.gamesPlayed_passing || 0,
+            +r.gamesPlayed_rushing || 0,
+            +r.gamesPlayed_receiving || 0,
+            +r.gamesPlayed_defense || 0
+          );
+          return acc;
+        }, { passYds: 0, rushYds: 0, recYds: 0, totalYds: 0, offTDs: 0, games: 0 });
+
+        players.push({
+          rosterId,
+          rows: stintRows,
+          fullName,
+          pos,
+          teams,
+          totals
+        });
+      }
+
+      if (filterText) {
+        const q = filterText.toLowerCase();
+        players = players.filter(p =>
+          p.fullName.toLowerCase().includes(q) ||
+          p.pos.toLowerCase().includes(q) ||
+          p.teams.some(t => t.toLowerCase().includes(q))
+        );
+      }
+
+      players.sort((a, b) => d3.descending(a.totals.totalYds, b.totals.totalYds));
+
+      if (!players.length) {
+        holder.append('div').attr('class', 'empty-state')
+          .text('No players match this filter.');
+        return;
+      }
+
+      const root = holder;
+      players.forEach((p, idx) => {
+        const panel = root.append('details')
+          .attr('class', 'panel')
+          .attr('open', idx < 5);
+
+        const summary = panel.append('summary');
+        summary.text(`${p.fullName} (${p.pos || 'N/A'}) — ${p.teams.join(' / ')}`);
+        summary.append('span')
+          .attr('class', 'pill')
+          .text(`${fmt0(p.totals.totalYds)} yds, ${fmt0(p.totals.offTDs)} TDs in ${fmt1(p.totals.games)} g`);
+        if (p.pos === 'QB') {
+          summary.append('span').attr('class', 'badge qb').text('QB');
+        }
+
+        const body = panel.append('div').attr('class', 'panel-body');
+        const table = body.append('table').attr('class', 'stint-table');
+        const thead = table.append('thead').append('tr');
+        thead.selectAll('th').data([
+          'Team',
+          'Games',
+          'Pass yds',
+          'Rush yds',
+          'Rec yds',
+          'Total yds',
+          'Pass TDs',
+          'Rush TDs',
+          'Rec TDs',
+          'Share of player yds'
+        ]).enter().append('th').text(d => d);
+
+        const tbody = table.append('tbody');
+        const stintRows = [...p.rows].slice().sort((a, b) =>
+          d3.descending((+a.passTotalYds || 0) + (+a.rushTotalYds || 0) + (+a.recTotalYds || 0),
+                        (+b.passTotalYds || 0) + (+b.rushTotalYds || 0) + (+b.recTotalYds || 0))
+        );
+
+        stintRows.forEach(r => {
+          const passYds = +r.passTotalYds || 0;
+          const rushYds = +r.rushTotalYds || 0;
+          const recYds = +r.recTotalYds || 0;
+          const totalYds = passYds + rushYds + recYds;
+          const passTDs = +r.passTotalTDs || 0;
+          const rushTDs = +r.rushTotalTDs || 0;
+          const recTDs = +r.recTotalTDs || 0;
+          const games = Math.max(
+            +r.gamesPlayed_passing || 0,
+            +r.gamesPlayed_rushing || 0,
+            +r.gamesPlayed_receiving || 0,
+            +r.gamesPlayed_defense || 0
+          );
+          const share = p.totals.totalYds > 0 ? totalYds / p.totals.totalYds : 0;
+
+          const tr = tbody.append('tr');
+          tr.append('td').text(r.team || '');
+          tr.append('td').text(fmt1(games));
+          tr.append('td').text(fmt0(passYds));
+          tr.append('td').text(fmt0(rushYds));
+          tr.append('td').text(fmt0(recYds));
+          tr.append('td').text(fmt0(totalYds));
+          tr.append('td').text(fmt0(passTDs));
+          tr.append('td').text(fmt0(rushTDs));
+          tr.append('td').text(fmt0(recTDs));
+          tr.append('td').text(toPct1(share));
+        });
+
+        body.append('div')
+          .attr('class', 'metric-note')
+          .text('Games = max of passing/rushing/receiving/defensive games for each stint. '
+            + 'Totals are raw season stat exports split by team; they do not include explicit trade dates.');
+      });
+    }
+
+    function render() {
+      loadData().then(traded => {
+        const seasons = Array.from(new Set(traded.map(d => d.seasonIndex)))
+          .filter(d => d !== undefined && d !== null && d !== '')
+          .sort((a, b) => d3.ascending(+a, +b));
+
+        const seasonSelect = d3.select('#season-select');
+        seasonSelect.selectAll('option').data(seasons).enter()
+          .append('option')
+          .attr('value', d => d)
+          .text(d => `Season ${d}`);
+
+        const defaultSeason = seasons.length ? seasons[seasons.length - 1] : null;
+        if (defaultSeason != null) {
+          seasonSelect.property('value', defaultSeason);
+        }
+
+        const playerFilter = d3.select('#player-filter');
+        const teamImpactHolder = d3.select('#team-impact');
+        const playersRoot = d3.select('#players-root');
+
+        function update() {
+          const season = seasonSelect.property('value');
+          const filterText = playerFilter.property('value') || '';
+          const seasonRows = traded.filter(d => String(d.seasonIndex) === String(season));
+          buildTeamImpact(seasonRows, teamImpactHolder);
+          buildPlayerPanels(seasonRows, playersRoot, filterText.trim());
+        }
+
+        seasonSelect.on('change', update);
+        playerFilter.on('input', () => {
+          // Debounce is overkill here; dataset is small
+          update();
+        });
+
+        update();
+      }).catch(err => {
+        console.error(err);
+        d3.select('#team-impact').html('');
+        d3.select('#players-root')
+          .append('div')
+          .attr('class', 'empty-state')
+          .text('Error loading traded players data. Make sure you have run scripts/run_all_stats.py and scripts/verify_trade_stats.py.');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>
+
