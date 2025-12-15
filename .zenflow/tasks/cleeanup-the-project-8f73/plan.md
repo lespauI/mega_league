@@ -23,7 +23,8 @@ Save the PRD to `{@artifacts_path}/requirements.md` with:
 - Functional requirements
 - Success criteria
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
+<!-- chat-id: f95f51bd-2d75-4b78-86bc-c24ecbe4cf28 -->
 
 Create a technical specification based on the PRD in `{@artifacts_path}/requirements.md`.
 
