@@ -7,7 +7,9 @@ Comprehensive NFL statistics analysis and visualization system for the MEGA Leag
 ```
 MEGA_neonsportz_stats/
 ├── scripts/                           # Analysis scripts
-│   ├── run_all_playoff_analysis.py   # 🚀 RUN THIS - Executes all scripts
+│   ├── run_all.py                    # 🚀 Full pipeline (SoS S2 + playoff + stats + index)
+│   ├── run_all_playoff_analysis.py   # Playoff + draft race pipeline
+│   ├── run_all_stats.py              # Stats-only pipeline (team/player usage + rankings joins)
 │   ├── calc_sos_by_rankings.py       # Calculate SOS using team rankings
 │   ├── calc_remaining_sos.py         # Calculate remaining schedule strength
 │   ├── calc_playoff_probabilities.py # Calculate playoff chances with Monte Carlo simulation
@@ -27,6 +29,19 @@ MEGA_neonsportz_stats/
 ├── index.html                         # GitHub Pages landing page
 └── README.md                          # This file
 ```
+
+## 🧭 Architecture at a Glance
+
+At a high level, the project is split into four domains. Each domain has clear CSV inputs, one or more orchestrator scripts, data outputs, and user-facing HTML pages:
+
+| Domain               | Inputs CSVs                                                                                                                                  | Orchestrators / core scripts                                                                                                  | Outputs (data)                                                                                                         | Key HTML pages                                                                                               |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Playoff + draft race | `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv`                                                                                      | `scripts/run_all_playoff_analysis.py`, `scripts/calc_sos_by_rankings.py`, `scripts/calc_playoff_probabilities.py`, `scripts/top_pick_race_analysis.py` | `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `output/draft_race/draft_race_report.md` | `docs/playoff_race.html`, `docs/playoff_race_table.html`                                                    |
+| Stats aggregation    | `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv` | `scripts/run_all_stats.py`, `stats_scripts/aggregate_team_stats.py`, `stats_scripts/aggregate_player_usage.py`, `stats_scripts/aggregate_rankings_stats.py` | `output/team_aggregated_stats.csv`, `output/team_player_usage.csv`, `output/team_rankings_stats.csv`, `output/player_team_stints.csv` | `docs/team_stats_explorer.html`, `docs/team_stats_correlations.html`, `docs/stats_dashboard.html`           |
+| SoS Season 2 (ELO)   | `MEGA_games.csv`, `MEGA_teams.csv`, `mega_elo.csv`                                                                                           | `scripts/run_all.py`, `scripts/calc_sos_season2_elo.py`                                                                       | `output/sos/season2_elo.csv`, `output/sos/season2_elo.json`                                                          | `docs/sos_season2.html`, `docs/sos_graphs.html`                                                              |
+| Roster / cap         | `MEGA_players.csv`, `MEGA_teams.csv`                                                                                                        | `scripts/power_rankings_roster.py`, `scripts/calc_team_y1_cap.py`, `scripts/sync_data_to_docs.sh`                            | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json`                                              | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html`, `docs/power_rankings_roster_charts.html` |
+
+For a tour of the dashboards and which scripts power each HTML page, see `docs/README.md`.
 
 ## 🚀 Quick Start
 
@@ -49,17 +64,44 @@ MEGA_neonsportz_stats/
 ```bash
 # Navigate to project directory
 cd /path/to/MEGA_neonsportz_stats
-
-# Run the complete analysis pipeline
-python3 scripts/run_all_playoff_analysis.py
+# Choose one of the canonical workflows below
 ```
 
-This single command automatically:
-1. ✅ Calculates strength of schedule (SOS)
-2. ✅ Calculates playoff probabilities using Monte Carlo simulation
-3. ✅ Generates interactive playoff race table
-4. ✅ Generates full playoff race HTML report
-5. ✅ Generates draft pick race analysis
+**Canonical workflows:**
+
+- **Full pipeline (SoS Season 2 + playoff/draft + stats + index)**
+
+  ```bash
+  python3 scripts/run_all.py
+  ```
+
+- **Playoff + draft race only**
+
+  ```bash
+  python3 scripts/run_all_playoff_analysis.py
+  ```
+
+  This playoff + draft workflow automatically:
+  1. ✅ Calculates strength of schedule (SOS)
+  2. ✅ Calculates playoff probabilities using Monte Carlo simulation
+  3. ✅ Generates interactive playoff race table
+  4. ✅ Generates full playoff race HTML report
+  5. ✅ Generates draft pick race analysis
+
+- **Stats only (team/player usage + rankings joins)**
+
+  ```bash
+  python3 scripts/run_all_stats.py
+  ```
+
+- **Season 2 SoS only (ELO-based)**
+
+  ```bash
+  python3 scripts/calc_sos_season2_elo.py --season2-start-row 287
+  ```
+
+  See the “Season 2 Strength of Schedule (ELO)” section below for additional options and flags.
+You can run any of these from the project root; they share the same CSV inputs.
 
 ### Step 3: Generate Trade-Aware Team & Player Stats (Recommended)
 
@@ -420,10 +462,17 @@ The scripts expect these CSV files in the root directory (exported from Neon Spo
 #    - Download teams, games, and rankings CSV files
 #    - Place in project root directory
 
-# 2. Run complete analysis pipeline
-python3 scripts/run_all_playoff_analysis.py
+# 2. Run one of the canonical pipelines
+#    - Full pipeline (SoS S2 + playoff/draft + stats + index)
+python3 scripts/run_all.py
+#    - Playoff + draft race only
+# python3 scripts/run_all_playoff_analysis.py
+#    - Stats only (team & player usage)
+# python3 scripts/run_all_stats.py
+#    - Season 2 SoS only (ELO-based)
+# python3 scripts/calc_sos_season2_elo.py --season2-start-row 287
 
-# 3. View results
+# 3. View results (see docs/README.md for more dashboards)
 open docs/playoff_race.html
 
 # 4. (Optional) Generate index page for GitHub Pages

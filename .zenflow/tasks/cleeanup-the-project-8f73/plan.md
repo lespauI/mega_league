@@ -54,7 +54,8 @@ If the feature is trivial and doesn't warrant full specification, update this wo
 
 Save to `{@artifacts_path}/plan.md`.
 
-### [ ] Step: Phase 1 – Architecture map & docs
+### [x] Step: Phase 1 – Architecture map & docs
+<!-- chat-id: 46fa4779-3b50-484c-b435-07fe592dd0c3 -->
 
 Align high-level architecture documentation with the PRD and spec.
 
