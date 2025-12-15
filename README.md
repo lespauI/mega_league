@@ -742,6 +742,11 @@ End-to-end tests for the Spotrac-style cap tool live under `tests/e2e/` and exer
 From the repo root:
 
 ```bash
+# 0) (Recommended) Sync latest CSV data into the cap tool data folder
+bash scripts/tools/sync_data_to_docs.sh --all
+```
+
+```bash
 # 1) Install Node dev dependencies
 npm install
 
@@ -760,7 +765,7 @@ What happens:
 - Tests hit `http://127.0.0.1:8000/docs/roster_cap_tool/`.
 - CSVs are read from `docs/roster_cap_tool/data/` (sync with `bash scripts/tools/sync_data_to_docs.sh`).
 
-For more details, see `tests/e2e/README.md`. Some tests may fail if the local data or HTML diverges from the expectations baked into the fixtures.
+For more details, see `tests/e2e/README.md`. Some tests may fail if the local data or HTML diverges from the expectations baked into the fixtures or if the CSVs under `docs/roster_cap_tool/data/` are out of sync with your league.
 
 ### Where to Add New Scripts
 
@@ -795,6 +800,18 @@ Whenever you add a new script that generates CSV/JSON or HTML:
 When wiring a new visualization:
 - Decide which orchestrator regenerates its backing data (`run_all.py`, `run_all_stats.py`, `run_all_playoff_analysis.py`, or a new `run_all_*`).
 - Document that command in this README under the relevant domain and in `docs/README.md`.
+
+### Manual Dashboard Spot-Check
+
+After adding new features or updating data, it’s a good idea to quickly check the main HTML entry points:
+
+```bash
+python3 -m http.server 8000
+```
+
+Then in a browser:
+- Open `http://localhost:8000/index.html` and follow links to playoff and stats dashboards described in `docs/README.md`.
+- Open `http://localhost:8000/docs/roster_cap_tool/` and confirm the header, tabs, and cap summary render as expected.
 
 ---
 
