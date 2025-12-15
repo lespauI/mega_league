@@ -68,7 +68,7 @@ def main():
         print("\nGenerated files:")
         print("  • output/team_aggregated_stats.csv - Team statistics (trade-aware, 80+ metrics)")
         print("  • output/team_player_usage.csv - Player usage distribution (trade-aware, 40+ metrics)")
-        print("  • output/rankings_aggregated_stats.csv - Rankings and statistics combined")
+        print("  • output/team_rankings_stats.csv - Rankings and statistics combined")
         print("  • output/player_team_stints.csv - Player/team season stints (per-team splits for multi-team players)")
         print("  • output/traded_players_report.csv - Multi-team player summary & verification view")
         print("  • docs/index.html - Main navigation page")

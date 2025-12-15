@@ -97,7 +97,8 @@ Clarify the role and structure of `scripts/` and isolate non-Python helpers.
     - `bash scripts/smoke/smoke_generate_draft_2026.sh`
     - `bash scripts/smoke/smoke_roster_cap_tool.sh`
 
-### [ ] Step: Phase 3 – Stats & docs cohesion
+### [x] Step: Phase 3 – Stats & docs cohesion
+<!-- chat-id: a4c15cce-7015-4f11-a9a7-9a59747b4840 -->
 
 Tighten the connection between stats aggregation scripts, outputs, and dashboards.
 
