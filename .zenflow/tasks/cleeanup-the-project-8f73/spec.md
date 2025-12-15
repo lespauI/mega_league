@@ -3,7 +3,7 @@
 ## 1. Technical Context
 
 - **Languages / runtimes**
-  - Python 3.9+ for all data processing and orchestration (`scripts/`, `stats_scripts/`, `tests/test_power_rankings_roster.py`).
+  - Python 3.7+ for all data processing and orchestration (`scripts/`, `stats_scripts/`, `tests/test_power_rankings_roster.py`), invoked as `python3 ...`.
   - Browser‑executed HTML/CSS/JS for dashboards under `docs/` (vanilla JS + D3 from CDN).
   - Node.js + Playwright for roster cap tool E2E tests (`tests/e2e`, `package.json`).
 - **Execution model**
@@ -16,10 +16,20 @@
   - Node: `playwright`, `@playwright/test` as devDependencies for E2E only.
   - No frameworks (Django/Flask/React/etc.) and no build pipeline are introduced as part of this cleanup.
 
-Assumptions:
+### 1.1 Dependencies and assumptions
+
 - Current orchestrators (`scripts/run_all.py`, `scripts/run_all_playoff_analysis.py`, `scripts/run_all_stats.py`) remain the canonical way to run workflows.
 - CSV schemas and file names are stable and already documented in `spec/data_inputs.md` and `README.md`.
 - The cleanup focuses on structure, naming, and documentation clarity, not on changing simulation formulas or domain logic.
+- Node.js and Playwright are required only for E2E tests; they are optional for core Python workflows.
+- All required CSVs (`MEGA_*.csv`, `mega_elo.csv`) must be present at the repo root for pipelines to succeed.
+
+### 1.2 Out of scope
+
+- No changes to simulation or statistical algorithms (Monte Carlo, SoS formulas, roster metrics, etc.).
+- No changes to CSV schemas or column names.
+- No changes to public HTML URLs under `docs/` (only documentation and internal references may be updated).
+- No introduction of new frameworks or build systems (keep everything script‑driven).
 
 ---
 
@@ -75,9 +85,11 @@ To‑be layout (conceptual):
       - `generate_draft_class_analytics.py`
       - `verify_draft_class_analytics.py`
       - `export_2026_rookies.py`
-    - Roster / cap:
+  - Roster / cap:
       - `power_rankings_roster.py`
       - `calc_team_y1_cap.py`
+    - Docs / metrics helpers:
+      - `add_metric_helps.py` (helper to regenerate docs/metrics snippets; will be documented but not renamed in this cleanup).
   - **Python verifiers (kept flat, documented via naming)**
     - `verify_cap_math.py`
     - `verify_draft_round1_recap.py`
@@ -85,10 +97,11 @@ To‑be layout (conceptual):
     - `verify_power_rankings_roster_html.py`
     - `verify_team_rosters_export.py`
     - `verify_trade_stats.py`
-    - plus `verify_sos_season2_elo.py` and `verify_draft_class_analytics.py` above.
+    - `verify_sos_season2_elo.py` (Season 2 SoS verifier).
+    - `verify_draft_class_analytics.py` (draft analytics verifier).
   - **Python fixtures/utilities**
     - `fixtures/` (unchanged; referenced by tests and/or scripts).
-  - **Non‑Python helpers moved into subfolders for clarity**
+- **Non‑Python helpers moved into subfolders for clarity**
     - `scripts/tests/` (dev/test‑only JS/MJS helpers)
       - `check_year_context.js`
       - `check_year_context_port.js`
@@ -104,8 +117,11 @@ Key points:
 - **Python script locations stay the same** to avoid churn in imports (e.g., `tests/test_power_rankings_roster.py` continues to import `from scripts import power_rankings_roster`).
 - Only **JS/MJS/shell files are moved** into clearly named subfolders; README/docs will be updated where paths change.
 - A new `scripts/README.md` will document:
-  - Entry points vs domain tools vs verifiers vs test helpers.
-  - Conventions for adding new scripts (prefixes like `run_all_`, `verify_`).
+  - Overview of the `scripts/` folder and how it fits into the overall architecture.
+  - Script categories: entry points, domain tools, verifiers, smoke scripts, and dev/test helpers.
+  - Per‑category tables listing script name, short description, and main inputs/outputs.
+  - Conventions for adding new scripts (file naming like `run_all_`, `verify_`, placement by domain).
+  - A short “How to add a new analysis script” subsection pointing to the right folder and how to hook into orchestrators.
 
 #### 2.2.2 `stats_scripts/` alignment
 
@@ -141,6 +157,7 @@ To‑be:
 - Keep `docs/roster_cap_tool/` structure as a self‑contained SPA:
   - Clarify in `USAGE.md` how `scripts/sync_data_to_docs.sh` feeds `docs/roster_cap_tool/data/`.
   - Ensure any references to shell scripts reflect the new `scripts/smoke/` path (e.g., `bash scripts/smoke/smoke_roster_cap_tool.sh`).
+  - Briefly mention how to add a new visualization page under `docs/roster_cap_tool/` if ever needed (where JS/CSS live, how data is loaded).
 
 #### 2.2.4 Specs and architecture map
 
@@ -155,8 +172,17 @@ To‑be:
   - Links to:
     - `spec/README.md` for deeper feature specs.
     - `stats_scripts/README.md` and `docs/README.md` for domain‑specific overviews.
-- Optional (lightweight) addition to `spec/README.md`:
+  - Optional (lightweight) addition to `spec/README.md`:
   - One paragraph noting that the main architecture map lives in `README.md` and cross‑linking back.
+
+Example architecture table (shape only, actual content will live in `README.md`):
+
+| Domain                | Inputs                          | Orchestrators / Scripts                     | Outputs (data)                             | Key HTML / Docs                 |
+|-----------------------|---------------------------------|---------------------------------------------|--------------------------------------------|---------------------------------|
+| Playoff + draft race  | `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv` | `run_all_playoff_analysis.py`, `calc_sos_by_rankings.py`, `calc_playoff_probabilities.py`, `top_pick_race_analysis.py` | `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `output/draft_race/draft_race_report.md` | `docs/playoff_race.html`, `docs/playoff_race_table.html` |
+| Stats aggregation     | `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv` | `run_all_stats.py`, `aggregate_team_stats.py`, `aggregate_player_usage.py`, `aggregate_rankings_stats.py` | `output/team_aggregated_stats.csv`, `output/team_player_usage.csv`, `output/team_rankings_stats.csv` | `docs/team_stats_explorer.html`, `docs/team_stats_correlations.html` |
+| SoS Season 2 (ELO)    | `MEGA_games.csv`, `MEGA_teams.csv`, `mega_elo.csv` | `run_all.py`, `calc_sos_season2_elo.py` | `output/sos/season2_elo.csv`, `output/sos/season2_elo.json` | `docs/sos_season2.html`, `docs/sos_graphs.html` |
+| Roster / cap          | `MEGA_players.csv`, `MEGA_teams.csv` | `power_rankings_roster.py`, `calc_team_y1_cap.py`, `sync_data_to_docs.sh` | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json` | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html` |
 
 ---
 
@@ -227,29 +253,34 @@ The cleanup will be implemented in small, testable steps that can be committed i
 
 Verification:
 - Manual doc review in a browser/editor.
-- Confirm all script names and paths used in docs exist via `rg`/`ls`.
+- Confirm all script names and paths used in docs exist via `rg`/`ls`, for example:
+  - `rg "python3 scripts/\\w+\\.py" README.md docs -o --no-filename | sort -u`
+  - For each referenced script, confirm `ls scripts/<name>.py` succeeds.
 
 ### Phase 2 – `scripts/` structure and conventions
 
 - Create `scripts/README.md`:
-  - Categorize scripts as entry points, domain tools, verifiers, and helpers.
-  - Document conventions for new scripts (file naming, where to place them).
+  - Categorize scripts as entry points, domain tools, verifiers, smoke scripts, and dev/test helpers.
+  - Document conventions for new scripts (file naming, where to place them, how to hook into `run_all*.py`).
+  - Include a short “How to add a new visualization” note pointing from scripts to `docs/` (which HTML page to regenerate).
 - Create subfolders and move non‑Python helpers:
   - `scripts/tests/`: move `check_year_context.js`, `check_year_context_port.js`, `test_cap_tool.mjs`, `test_year_context.mjs`.
   - `scripts/smoke/`: move `smoke_generate_draft_2026.sh`, `smoke_roster_cap_tool.sh`.
   - `scripts/tools/`: move `sync_data_to_docs.sh`.
 - Update references:
-  - In `README.md`, `docs/roster_cap_tool/USAGE.md`, comments inside moved scripts, and any other mentions, replace old paths with new ones.
+  - In `README.md`, `docs/roster_cap_tool/USAGE.md`, comments inside moved scripts, relevant `.zenflow/tasks/*`, and any other mentions, replace old paths with new ones.
 
 Verification:
 - `python -m compileall scripts` to ensure Python scripts remain valid after moves (no path changes for them).
-- `rg "scripts/smoke_generate_draft_2026.sh" -n` and `rg "scripts/smoke_roster_cap_tool.sh" -n` to ensure references are updated to `scripts/smoke/...`.
-- Optionally run one or two smoke scripts manually (if environment and data are present).
+- `rg "scripts/(smoke_|sync_data)" -n .` to ensure references are updated to the new subfolders (`scripts/smoke/`, `scripts/tools/`), including `.zenflow/` plans.
+- Optionally run key smoke scripts (if environment and data are present) and check for exit code 0:
+  - `bash scripts/smoke/smoke_generate_draft_2026.sh`
+  - `bash scripts/smoke/smoke_roster_cap_tool.sh`
 
 ### Phase 3 – Stats and docs cohesion
 
 - Update `stats_scripts/README.md` to:
-  - Reference `output/team_aggregated_stats.csv` and other real output paths.
+  - Reference `output/team_aggregated_stats.csv` and other real output paths (fixing any remaining `stats_scripts/output/...` references).
   - Mention `scripts/run_all_stats.py` as the primary entry point for regenerating stats.
   - Link to `docs/team_stats_explorer.html` and `docs/team_stats_correlations.html`.
 - Add or update `docs/README.md` (from Phase 1) to ensure:
@@ -268,11 +299,34 @@ Verification:
 - For roster cap tool (optional / when environment available):
   - Install Playwright deps: `npm install` then `npm run pw:install`.
   - Run a small subset of E2E tests: `npm run test:e2e -- --grep cap`.
-- Briefly document these commands under a “Developer Guide” section in `README.md`.
+- Add or update a “Developer Guide” section in `README.md` that covers:
+  - Environment setup (Python version, optional Node/Playwright for E2E).
+  - How to run Python unit tests and Playwright E2E tests.
+  - How to add a new analysis script (where to place it in `scripts/` or `stats_scripts/`, how to wire it into an orchestrator).
+  - How to add a new HTML/JS visualization (where to place files in `docs/`, which data outputs it should consume, and which generator script to run).
 
 Verification:
 - All targeted tests pass.
 - Basic manual spot‑check: open key HTML outputs in a browser and verify navigation links (e.g., from `index.html` to playoff pages and stats dashboards).
+
+If any of the structural changes (especially file moves) cause problems, rollback is simply reverting the corresponding Git commit or, in a local branch, restoring the previous folder layout for the moved helper scripts.
+
+---
+
+## 5.1 User story mapping
+
+- **Story 1 – Understand the architecture in 5 minutes**
+  - Addressed primarily by Phase 1 (Architecture map in `README.md`, `docs/README.md`, cross‑links from `spec/README.md`).
+- **Story 2 – One obvious command per workflow**
+  - Addressed by Phase 1 and 3 via explicit canonical commands in `README.md` and per‑domain docs.
+- **Story 3 – Find the right place to add new code**
+  - Addressed by Phase 2 (script categorization and conventions in `scripts/README.md`) and Phase 4 (Developer Guide “how to add new script/visualization”).
+- **Story 4 – Distinguish core scripts from helpers and verifiers**
+  - Addressed by Phase 2 via `scripts/README.md` categories and naming conventions (`run_all_`, `verify_`, `smoke_`).
+- **Story 5 – Keep the roster cap tool clearly scoped**
+  - Addressed by Phase 1 and 2.2.3 (docs for `docs/roster_cap_tool/`, clear data sync and verifier relationships, and stable URLs).
+- **Story 6 – Lower the “WTF” factor for future you**
+  - Addressed across all phases by clearer docs, architecture map, script categorization, and a concrete Developer Guide.
 
 ---
 
@@ -299,3 +353,19 @@ The following checks will be used to confirm the cleanup is safe and aligned wit
 
 This technical specification keeps the implementation incremental and low‑risk: most changes are documentation and small file moves for non‑Python helpers, without introducing new abstractions or altering domain logic. The result should be a project that is easier to navigate, with clear entry points and boundaries, while remaining familiar to current workflows.
 
+---
+
+## 6. Success metrics
+
+To align with the PRD success criteria, the cleanup will be considered successful if:
+
+- **Onboarding speed**
+  - A new contributor can, in under 10 minutes, read `README.md` and the new docs and identify main domains, entry‑point commands, and where scripts live.
+- **Weekly run simplicity**
+  - Weekly league updates can be run with ≤ 3 documented commands (e.g., `run_all.py`, `run_all_stats.py`, selected verifiers).
+- **Scripts folder clarity**
+  - The flat `scripts/` directory primarily contains Python scripts (≈ 25–30 files), with JS/MJS/shell helpers moved into clearly named subfolders.
+- **Consistency between docs and code**
+  - References to script paths and outputs in `README.md`, `docs/README.md`, `stats_scripts/README.md`, and `.zenflow/` tasks match the actual file layout.
+- **No regressions**
+  - All existing key workflows and verifiers continue to pass using the same inputs as before the cleanup.
