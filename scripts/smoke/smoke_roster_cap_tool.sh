@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-ROOT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+ROOT_DIR=$(cd "$(dirname "$0")/../.." && pwd)
 DOCS_DIR="$ROOT_DIR/docs/roster_cap_tool"
 
 echo "[smoke] Checking required assets..."
@@ -52,4 +52,3 @@ if ! grep -qi "Cap" "/tmp/roster_cap_tool.index.html"; then
 fi
 
 echo "[smoke] PASS: docs/roster_cap_tool served with required assets."
-

@@ -44,7 +44,7 @@
   - `main()`: CLI arg parsing, file IO, generation, and printing summary.
 - Helper scripts to be added for verification (see Verification Strategy):
   - `scripts/verify_draft_class_analytics.py`
-  - `scripts/smoke_generate_draft_2026.sh`
+  - `scripts/smoke/smoke_generate_draft_2026.sh`
 
 ## Contracts
 - Data contracts (inputs):
@@ -72,7 +72,7 @@
    - Validate rookie filter, OVR fallback, dev mapping, and basic aggregates.
 2. Verification helpers
    - Add `scripts/verify_draft_class_analytics.py` to compute expected totals from CSV and assert presence in HTML.
-   - Add `scripts/smoke_generate_draft_2026.sh` to run end-to-end generation + verification.
+   - Add `scripts/smoke/smoke_generate_draft_2026.sh` to run end-to-end generation + verification.
 3. Resilience and UX polish
    - Improve error messages for missing files/columns and add exit codes.
    - Add `--league-prefix` override or auto-detection (optional) if non-MEGA files are used in other environments.
@@ -110,7 +110,7 @@
       - If teams file present, at least one `<img class="logo"` exists.
       - Hidden Spotlight cards include round/pick when available.
     - Exit non-zero and print diffs when mismatches occur.
-  - `scripts/smoke_generate_draft_2026.sh`:
+  - `scripts/smoke/smoke_generate_draft_2026.sh`:
     - Runs generation for 2026 and then `verify_draft_class_analytics.py 2026`.
     - Returns non-zero on failure; prints locations of outputs.
 

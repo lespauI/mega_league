@@ -167,7 +167,7 @@ Deliverable
 
 Verification
 - `npm run test:e2e` to confirm no regressions in smoke/projections.
-- Later tied to unit tests in `scripts/test_year_context.mjs` (added in a subsequent step).
+- Later tied to unit tests in `scripts/tests/test_year_context.mjs` (added in a subsequent step).
 
 ### [x] Step: Year Context UI Control
 <!-- chat-id: 4403fb39-3928-4f4b-8965-9f800666c4cd -->
@@ -238,7 +238,7 @@ Verification
 ### [x] Step: Helper Unit Tests (Node)
 <!-- chat-id: a672c3bd-cee8-495a-af23-69563d20ef49 -->
 Task definition
-- Add `scripts/test_year_context.mjs` to unit-test core computations in isolation.
+- Add `scripts/tests/test_year_context.mjs` to unit-test core computations in isolation.
 
 Contracts (from spec)
 - Tests for `contextualizePlayer` across edge cases and `calcCapSummaryForContext` parity with `projectTeamCaps`.
@@ -247,7 +247,7 @@ Deliverable
 - Node script exists and exits with code 0 when assertions pass.
 
 Verification
-- Run `node scripts/test_year_context.mjs` and ensure it finishes without throwing.
+- Run `node scripts/tests/test_year_context.mjs` and ensure it finishes without throwing.
 
 ### [x] Step: E2E Tests For Year Context
 <!-- chat-id: 8d108562-3650-4eee-93e1-4626de22afab -->

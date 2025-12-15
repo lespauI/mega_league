@@ -1,5 +1,5 @@
 // Node unit tests for Year Context helpers
-// Run: node scripts/test_year_context.mjs
+// Run: node scripts/tests/test_year_context.mjs
 
 import assert from 'node:assert/strict';
 import {
@@ -7,8 +7,8 @@ import {
   projectTeamCaps,
   calcCapSummaryForContext,
   simulateRelease,
-} from '../docs/roster_cap_tool/js/capMath.js';
-import { contextualizePlayer } from '../docs/roster_cap_tool/js/context.js';
+} from '../../docs/roster_cap_tool/js/capMath.js';
+import { contextualizePlayer } from '../../docs/roster_cap_tool/js/context.js';
 
 function approxEqual(a, b, eps = 1) {
   assert.ok(Number.isFinite(a) && Number.isFinite(b), `non-finite compare: ${a} vs ${b}`);
@@ -177,4 +177,3 @@ async function main() {
 }
 
 main();
-

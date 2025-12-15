@@ -2,6 +2,8 @@
 
 This folder contains concise specifications for each feature in the MEGA League NFL Stats Analysis project. Each spec outlines purpose, inputs, outputs, behavior, run commands, and acceptance criteria.
 
+For a high-level map of domains, inputs, orchestrators, outputs, and dashboards, start with the **“Architecture at a Glance”** section in the root `README.md`, then use the files below for per-feature details.
+
 Scope covers scripts in `scripts/` and `stats_scripts/`, generated HTML/MD assets in `docs/`, and orchestration entries.
 
 Index:

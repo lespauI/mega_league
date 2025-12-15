@@ -31,7 +31,7 @@
 ## Testing Strategy
 - Browser smoke tests: `docs/roster_cap_tool/test.html`
   - Already asserts 60/40 current/next split for release; should pass after the change.
-- Script parity check: `scripts/verify_cap_math.py` and `scripts/test_cap_tool.mjs`
+- Script parity check: `scripts/verify_cap_math.py` and `scripts/tests/test_cap_tool.mjs`
   - Ensure computed current‑year and next‑year penalties match expectations and that Y+1 projections reflect the corrected next‑year dead money.
 - Manual UI validation:
   - Release modal dead cap shows larger current‑year portion (~60%).
@@ -48,4 +48,3 @@
 - Low risk to code structure — the change is localized to `simulateRelease()` and documentation.
 - Behavioral shift in UI and projections (current‑year dead money increases; next‑year decreases) — this corrects a known mismatch and aligns with our docs and tests.
 - If any downstream logic assumed 40/60, it will now align with the documented 60/40 rule; tests that encoded 60/40 expectations should start passing.
-

@@ -129,7 +129,7 @@ Task instructions
 
 ### [x] Step: Data Placement for GitHub Pages
 Task instructions
-- Definition: Copy CSVs into `docs/roster_cap_tool/data/` so GitHub Pages can serve them (Pages does not serve repo root). Add a small sync script `scripts/sync_data_to_docs.sh` to copy updated CSVs when needed.
+- Definition: Copy CSVs into `docs/roster_cap_tool/data/` so GitHub Pages can serve them (Pages does not serve repo root). Add a small sync script `scripts/tools/sync_data_to_docs.sh` to copy updated CSVs when needed.
 - Contracts: Uses repo-root `MEGA_players.csv`, `MEGA_teams.csv` as source of truth.
 - Deliverable: `docs/roster_cap_tool/data/MEGA_players.csv` and `docs/roster_cap_tool/data/MEGA_teams.csv` checked in.
 - Verification: Access `docs/roster_cap_tool/data/MEGA_players.csv` in browser; CSV downloads successfully.
@@ -233,10 +233,10 @@ Task instructions
 ### [x] Step: Helper Verification Scripts & Fixtures
 <!-- chat-id: 4d1055c7-33ea-4d07-9bf2-cce74451181f -->
 Task instructions
-- Definition: Implement `scripts/verify_cap_math.py`, `scripts/smoke_roster_cap_tool.sh`, and `scripts/fixtures/cap_scenarios.json`. Generate `output/tiny_teams.csv` if missing for tiny tests.
+- Definition: Implement `scripts/verify_cap_math.py`, `scripts/smoke/smoke_roster_cap_tool.sh`, and `scripts/fixtures/cap_scenarios.json`. Generate `output/tiny_teams.csv` if missing for tiny tests.
 - Contracts: Script I/O per spec; relies on same formulas as `capMath`.
 - Deliverable: Scripts produce `output/cap_tool_verification.json` and smoke-check that `docs/roster_cap_tool/` contains required assets and serves via local http.server.
-- Verification: `python3 scripts/verify_cap_math.py`; `bash scripts/smoke_roster_cap_tool.sh`.
+- Verification: `python3 scripts/verify_cap_math.py`; `bash scripts/smoke/smoke_roster_cap_tool.sh`.
 
 ### [x] Step: Styling, Accessibility, Responsive
 <!-- chat-id: 3a3ba701-4138-4fce-a783-b18c9db6f0a9 -->

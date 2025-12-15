@@ -4,10 +4,10 @@ set -euo pipefail
 # Sync selected CSVs into the GitHub Pages data directory.
 # Default: players and teams CSVs. Use --all to copy all MEGA_*.csv files.
 # Usage:
-#   bash scripts/sync_data_to_docs.sh          # copy players+teams
-#   bash scripts/sync_data_to_docs.sh --all    # copy all MEGA_*.csv
+#   bash scripts/tools/sync_data_to_docs.sh          # copy players+teams
+#   bash scripts/tools/sync_data_to_docs.sh --all    # copy all MEGA_*.csv
 
-REPO_ROOT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
+REPO_ROOT_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 DEST_DIR="$REPO_ROOT_DIR/docs/roster_cap_tool/data"
 
 mkdir -p "$DEST_DIR"
@@ -36,4 +36,3 @@ else
 fi
 
 echo "[done] Data sync complete → $DEST_DIR"
-

@@ -156,7 +156,7 @@ Deliverables:
 - Updates in `docs/roster_cap_tool/index.html`, `docs/roster_cap_tool/js/ui/*.js` to add attributes as specified.
 
 Verification:
-- `bash scripts/smoke_roster_cap_tool.sh` still passes (page + assets served).
+- `bash scripts/smoke/smoke_roster_cap_tool.sh` still passes (page + assets served).
 - Run smoke test; selectors using `data-testid` resolve without timeouts.
 
 ### [x] Step: Release Flow E2E

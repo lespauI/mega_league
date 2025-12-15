@@ -5,18 +5,28 @@ This folder contains scripts and outputs for team-level statistical analysis and
 
 ## What Was Built
 
-### 1. Data Aggregation Script
-**File**: `aggregate_team_stats.py`
+### 1. Data Aggregation & Pipeline
+**File**: `aggregate_team_stats.py` (run via `scripts/run_all_stats.py`)
 
 Aggregates player-level statistics from MEGA CSV files into team-level metrics.
 
-**Run it:**
+**Recommended entry point (from project root):**
 ```bash
-cd /Users/lespaul/Downloads/MEGA_neonsportz_stats
+python3 scripts/run_all_stats.py
+```
+
+This pipeline builds:
+- `output/team_aggregated_stats.csv` – team-level stats and efficiency metrics.
+- `output/team_player_usage.csv` – team usage distributions.
+- `output/team_rankings_stats.csv` – rankings + stats joins for correlation work.
+- `output/player_team_stints.csv` – trade-aware season stints per player/team.
+
+You can still run the team aggregation script directly if needed:
+```bash
 python3 stats_scripts/aggregate_team_stats.py
 ```
 
-**Output**: `stats_scripts/output/team_aggregated_stats.csv`
+**Output (team aggregation)**: `output/team_aggregated_stats.csv`
 - 32 teams
 - 71 metrics including:
   - Offensive stats (passing, rushing, receiving)
@@ -72,15 +82,25 @@ python3 stats_scripts/aggregate_team_stats.py
 
 ```
 stats_scripts/
-├── aggregate_team_stats.py      # Aggregation script
-├── output/
-│   └── team_aggregated_stats.csv # Generated team data
-├── STATS_VISUALIZATION_PLAN.md  # Full plan and ideas
-└── README.md                     # This file
+├── aggregate_team_stats.py        # Team stats aggregation
+├── aggregate_player_usage.py      # Usage distributions
+├── aggregate_rankings_stats.py    # Rankings + stats join
+├── build_player_team_stints.py    # Trade-aware stints builder
+├── STATS_VISUALIZATION_PLAN.md    # Full plan and ideas
+├── RANKINGS_VISUALIZATION_PLAN.md # Rankings-focused visualization ideas
+├── CORRELATION_IDEAS.md           # Extra correlation concepts
+└── README.md                      # This file
+
+../output/
+├── team_aggregated_stats.csv      # Team stats (input to most dashboards)
+├── team_player_usage.csv          # Usage metrics (backing team_player_usage.html)
+├── team_rankings_stats.csv        # Rankings + stats (backing rankings_explorer.html)
+└── player_team_stints.csv         # Trade-aware stints (backing trade_dashboard.html)
 
 ../docs/
-├── team_stats_explorer.html      # Interactive Win% explorer
-└── team_stats_correlations.html  # 10 interesting correlations
+├── team_stats_explorer.html       # Interactive Win% explorer
+├── team_stats_correlations.html   # 10 interesting correlations
+└── stats_dashboard.html           # Hub page linking stats tools
 ```
 
 ## How It Works
@@ -94,7 +114,7 @@ MEGA_defense.csv  ─┼──> aggregate_team_stats.py ──> team_aggregated_
 MEGA_punting.csv  ─┤
 MEGA_teams.csv    ─┘
 
-team_aggregated_stats.csv ──> D3.js HTML Visualizations
+output/team_aggregated_stats.csv ──> docs/team_stats_explorer.html, docs/team_stats_correlations.html
 ```
 
 ### Visualization Style
@@ -136,20 +156,35 @@ See `STATS_VISUALIZATION_PLAN.md` for:
 
 ## Usage
 
-1. **Run aggregation** (if data changed):
+1. **Run the full stats pipeline (recommended)**:
    ```bash
-   python3 stats_scripts/aggregate_team_stats.py
+   python3 scripts/run_all_stats.py
    ```
 
-2. **View visualizations**:
+2. **(Optional) Run a single aggregation script**:
+   ```bash
+   python3 stats_scripts/aggregate_team_stats.py
+   python3 stats_scripts/aggregate_player_usage.py
+   python3 stats_scripts/aggregate_rankings_stats.py
+   python3 stats_scripts/build_player_team_stints.py
+   ```
+
+3. **View visualizations**:
    - Open `index.html` in browser
-   - Click "Team Stats Explorer" or "Interesting Correlations"
+   - Click "Team Stats Explorer" or "Interesting Correlations" (or open `docs/stats_dashboard.html`)
    
-3. **Serve locally** (optional, if paths don't resolve):
+4. **Serve locally** (optional, if paths don't resolve):
    ```bash
    python3 -m http.server 8000
    # Then open http://localhost:8000
    ```
+
+## Further Reading & Design Docs
+
+For deeper background and future ideas, see:
+- `STATS_VISUALIZATION_PLAN.md` – full plan for team stats visualizations.
+- `RANKINGS_VISUALIZATION_PLAN.md` – concepts for rankings-focused charts and dashboards.
+- `CORRELATION_IDEAS.md` – additional cross-metric correlation ideas.
 
 ## Dependencies
 

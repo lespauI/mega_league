@@ -11,14 +11,14 @@
   - Added `deriveReleaseAddBackOverlay(...)` helper to compute add-back schedule for unaffected out-years (docs/roster_cap_tool/js/capMath.js:388).
   - projectTeamCaps: applied add-back overlay to roster totals so that releases only free cap for the correct number of seasons per FA year (docs/roster_cap_tool/js/capMath.js:449).
 
-- scripts/test_cap_tool.mjs: updated and extended tests to the new rules
-  - Scenario B (FA=2): Year+1 now increases only by next-year dead penalty; salary remains (scripts/test_cap_tool.mjs:47).
-  - Scenario C (FA=3): Year+1 reflects removal + next-year penalty; Year+2 unchanged (scripts/test_cap_tool.mjs:84).
-  - Added Scenario D (FA=4): Y+1 and Y+2 free salary (Y+1 also adds penalty); Y+3 unchanged (scripts/test_cap_tool.mjs:106).
+- scripts/tests/test_cap_tool.mjs: updated and extended tests to the new rules
+  - Scenario B (FA=2): Year+1 now increases only by next-year dead penalty; salary remains (scripts/tests/test_cap_tool.mjs:47).
+  - Scenario C (FA=3): Year+1 reflects removal + next-year penalty; Year+2 unchanged (scripts/tests/test_cap_tool.mjs:84).
+  - Added Scenario D (FA=4): Y+1 and Y+2 free salary (Y+1 also adds penalty); Y+3 unchanged (scripts/tests/test_cap_tool.mjs:106).
 
 ## Test Results
 
-- Ran `node scripts/test_cap_tool.mjs` locally.
+- Ran `node scripts/tests/test_cap_tool.mjs` locally.
 - All assertions pass; process exits with code 0.
 - Console: "Cap tool tests completed. Check exit code for failures." confirms run completion with no failures.
 
@@ -36,4 +36,3 @@
 
 - Dead money schedule logic unchanged; penalties continue to apply across current and next year.
 - Backward compatibility: if older moves lack the new fields, `projectTeamCaps` infers `freeOutYears` from the player’s `contractYearsLeft` at projection time.
-

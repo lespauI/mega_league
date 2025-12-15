@@ -43,7 +43,7 @@
   - Verify spotlight section title equals “Elites Spotlight”.
   - Verify team and position table headers include the new dev columns.
   - Verify two rounds tables exist with correct subtitles/footnotes.
-- `scripts/smoke_generate_draft_2026.sh`
+- `scripts/smoke/smoke_generate_draft_2026.sh`
   - No CLI change; update messaging.
   - Call the updated verify script.
 - `README.md`
@@ -88,7 +88,7 @@
 - Built-in commands
   - Generate for a known year: `python3 scripts/generate_draft_class_analytics.py --year 2026 --out docs/draft_class_2026_test.html`
   - Run verifier: `python3 scripts/verify_draft_class_analytics.py 2026 --html docs/draft_class_2026_test.html`
-  - Smoke: `bash scripts/smoke_generate_draft_2026.sh`
+  - Smoke: `bash scripts/smoke/smoke_generate_draft_2026.sh`
 
 - Verifier updates (to implement)
   - Compute XF/SS/Star/Normal counts from CSV.
@@ -121,4 +121,3 @@ Notes
 - Keep injection approach (template placeholders + `.replace`) to minimize refactor scope.
 - Ensure numbers are formatted consistently: counts as ints; percentages as one decimal; averages with two decimals as today.
 - Maintain performance; operations are O(n) over rookies.
-

@@ -7,7 +7,9 @@ Comprehensive NFL statistics analysis and visualization system for the MEGA Leag
 ```
 MEGA_neonsportz_stats/
 ├── scripts/                           # Analysis scripts
-│   ├── run_all_playoff_analysis.py   # 🚀 RUN THIS - Executes all scripts
+│   ├── run_all.py                    # 🚀 Full pipeline (SoS S2 + playoff + stats + index)
+│   ├── run_all_playoff_analysis.py   # Playoff + draft race pipeline
+│   ├── run_all_stats.py              # Stats-only pipeline (team/player usage + rankings joins)
 │   ├── calc_sos_by_rankings.py       # Calculate SOS using team rankings
 │   ├── calc_remaining_sos.py         # Calculate remaining schedule strength
 │   ├── calc_playoff_probabilities.py # Calculate playoff chances with Monte Carlo simulation
@@ -27,6 +29,19 @@ MEGA_neonsportz_stats/
 ├── index.html                         # GitHub Pages landing page
 └── README.md                          # This file
 ```
+
+## 🧭 Architecture at a Glance
+
+At a high level, the project is split into four domains. Each domain has clear CSV inputs, one or more orchestrator scripts, data outputs, and user-facing HTML pages:
+
+| Domain               | Inputs CSVs                                                                                                                                  | Orchestrators / core scripts                                                                                                  | Outputs (data)                                                                                                         | Key HTML pages                                                                                               |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------|------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Playoff + draft race | `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv`                                                                                      | `scripts/run_all_playoff_analysis.py`, `scripts/calc_sos_by_rankings.py`, `scripts/calc_playoff_probabilities.py`, `scripts/top_pick_race_analysis.py` | `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `output/draft_race/draft_race_report.md` | `docs/playoff_race.html`, `docs/playoff_race_table.html`                                                    |
+| Stats aggregation    | `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv` | `scripts/run_all_stats.py`, `stats_scripts/aggregate_team_stats.py`, `stats_scripts/aggregate_player_usage.py`, `stats_scripts/aggregate_rankings_stats.py` | `output/team_aggregated_stats.csv`, `output/team_player_usage.csv`, `output/team_rankings_stats.csv`, `output/player_team_stints.csv` | `docs/team_stats_explorer.html`, `docs/team_stats_correlations.html`, `docs/stats_dashboard.html`           |
+| SoS Season 2 (ELO)   | `MEGA_games.csv`, `MEGA_teams.csv`, `mega_elo.csv`                                                                                           | `scripts/run_all.py`, `scripts/calc_sos_season2_elo.py`                                                                       | `output/sos/season2_elo.csv`, `output/sos/season2_elo.json`                                                          | `docs/sos_season2.html`, `docs/sos_graphs.html`                                                              |
+| Roster / cap         | `MEGA_players.csv`, `MEGA_teams.csv`                                                                                                        | `scripts/power_rankings_roster.py`, `scripts/calc_team_y1_cap.py`, `scripts/tools/sync_data_to_docs.sh`                      | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json`                                              | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html`, `docs/power_rankings_roster_charts.html` |
+
+For a tour of the dashboards and which scripts power each HTML page, see `docs/README.md`.
 
 ## 🚀 Quick Start
 
@@ -49,17 +64,44 @@ MEGA_neonsportz_stats/
 ```bash
 # Navigate to project directory
 cd /path/to/MEGA_neonsportz_stats
-
-# Run the complete analysis pipeline
-python3 scripts/run_all_playoff_analysis.py
+# Choose one of the canonical workflows below
 ```
 
-This single command automatically:
-1. ✅ Calculates strength of schedule (SOS)
-2. ✅ Calculates playoff probabilities using Monte Carlo simulation
-3. ✅ Generates interactive playoff race table
-4. ✅ Generates full playoff race HTML report
-5. ✅ Generates draft pick race analysis
+**Canonical workflows:**
+
+- **Full pipeline (SoS Season 2 + playoff/draft + stats + index)**
+
+  ```bash
+  python3 scripts/run_all.py
+  ```
+
+- **Playoff + draft race only**
+
+  ```bash
+  python3 scripts/run_all_playoff_analysis.py
+  ```
+
+  This playoff + draft workflow automatically:
+  1. ✅ Calculates strength of schedule (SOS)
+  2. ✅ Calculates playoff probabilities using Monte Carlo simulation
+  3. ✅ Generates interactive playoff race table
+  4. ✅ Generates full playoff race HTML report
+  5. ✅ Generates draft pick race analysis
+
+- **Stats only (team/player usage + rankings joins)**
+
+  ```bash
+  python3 scripts/run_all_stats.py
+  ```
+
+- **Season 2 SoS only (ELO-based)**
+
+  ```bash
+  python3 scripts/calc_sos_season2_elo.py --season2-start-row 287
+  ```
+
+  See the “Season 2 Strength of Schedule (ELO)” section below for additional options and flags.
+You can run any of these from the project root; they share the same CSV inputs.
 
 ### Step 3: Generate Trade-Aware Team & Player Stats (Recommended)
 
@@ -349,7 +391,7 @@ This runs the end‑to‑end analysis and regenerates `index.html` with links to
   - Verifier script (recommended):
     - `python3 scripts/verify_draft_class_analytics.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html`
   - Smoke test (end-to-end):
-    - `bash scripts/smoke_generate_draft_2026.sh`
+    - `bash scripts/smoke/smoke_generate_draft_2026.sh`
 
 Additional checks (optional):
 - Ensure dual rounds sections exist:
@@ -420,10 +462,17 @@ The scripts expect these CSV files in the root directory (exported from Neon Spo
 #    - Download teams, games, and rankings CSV files
 #    - Place in project root directory
 
-# 2. Run complete analysis pipeline
-python3 scripts/run_all_playoff_analysis.py
+# 2. Run one of the canonical pipelines
+#    - Full pipeline (SoS S2 + playoff/draft + stats + index)
+python3 scripts/run_all.py
+#    - Playoff + draft race only
+# python3 scripts/run_all_playoff_analysis.py
+#    - Stats only (team & player usage)
+# python3 scripts/run_all_stats.py
+#    - Season 2 SoS only (ELO-based)
+# python3 scripts/calc_sos_season2_elo.py --season2-start-row 287
 
-# 3. View results
+# 3. View results (see docs/README.md for more dashboards)
 open docs/playoff_race.html
 
 # 4. (Optional) Generate index page for GitHub Pages
@@ -514,7 +563,7 @@ Quick start (local):
 ls MEGA_players.csv MEGA_teams.csv
 
 # 2) Sync CSVs into GitHub Pages data folder
-bash scripts/sync_data_to_docs.sh
+bash scripts/tools/sync_data_to_docs.sh
 
 # 3) Serve locally and open the tool
 python3 -m http.server 8000
@@ -532,7 +581,7 @@ GitHub Pages:
 Docs and references:
 - Usage guide: `docs/roster_cap_tool/USAGE.md`
 - Madden cap rules reference: `spec/Salary Cap Works in Madden.md`
-- Data sync script: `scripts/sync_data_to_docs.sh`
+- Data sync script: `scripts/tools/sync_data_to_docs.sh`
 - Smoke page: `docs/roster_cap_tool/test.html`
 - Cap math verification: `scripts/verify_cap_math.py` (writes `output/cap_tool_verification.json`)
 
@@ -655,6 +704,97 @@ When running scripts individually (not using `run_all_playoff_analysis.py`):
 4. **Fourth:** `playoff_race_html.py` - Generates full report
 5. **Optional:** `top_pick_race_analysis.py` - Draft analysis
 6. **Optional:** `generate_index.py` - GitHub Pages landing page
+
+## 🧑‍💻 Developer Guide
+
+This section is for league commissioners and contributors who want to extend the project safely or run automated tests.
+
+### Environment Setup
+
+- **Python:** 3.7+ (3.10+ recommended). Core scripts use only the standard library.
+- **Node.js (optional):** 18+ recommended, required only for the roster cap tool Playwright E2E tests.
+- **Playwright (optional):** Installed via npm (see below) for browser automation.
+
+### Running Python Unit Tests
+
+- Run the full test suite:
+
+  ```bash
+  python3 -m unittest
+  ```
+
+- Run just the roster power rankings tests (fast smoke test for `scripts/power_rankings_roster.py`):
+
+  ```bash
+  python3 -m unittest tests/test_power_rankings_roster.py
+  ```
+
+  These tests validate:
+  - Normalization helpers (`normalize_unit_scores`)
+  - Overall score weighting (`compute_overall_score`)
+  - Team metrics and ranking logic (`build_team_metrics`)
+  - HTML report generation (`render_html_report`) including the sortable table helper
+
+### Roster Cap Tool – Playwright E2E Tests
+
+End-to-end tests for the Spotrac-style cap tool live under `tests/e2e/` and exercise real browser flows (release, trade, signing, extensions, conversions, year context, etc.).
+
+From the repo root:
+
+```bash
+# 1) Install Node dev dependencies
+npm install
+
+# 2) Install Playwright browsers & system deps
+npm run pw:install
+
+# 3) Run the full E2E suite (headless)
+npm run test:e2e
+
+# 4) Run a focused subset (recommended for day-to-day work)
+npm run test:e2e -- --grep cap
+```
+
+What happens:
+- Playwright starts `python3 -m http.server 8000` from the repo root.
+- Tests hit `http://127.0.0.1:8000/docs/roster_cap_tool/`.
+- CSVs are read from `docs/roster_cap_tool/data/` (sync with `bash scripts/tools/sync_data_to_docs.sh`).
+
+For more details, see `tests/e2e/README.md`. Some tests may fail if the local data or HTML diverges from the expectations baked into the fixtures.
+
+### Where to Add New Scripts
+
+Use these conventions when extending analysis:
+
+- **Orchestrators / pipelines:**  
+  - Add new end-to-end runners under `scripts/` (e.g., `run_all_<something>.py`).  
+  - Reuse existing ones where possible: `scripts/run_all.py`, `scripts/run_all_playoff_analysis.py`, `scripts/run_all_stats.py`.
+- **Analysis scripts:**  
+  - Put single-purpose analysis that reads `MEGA_*.csv` under `scripts/`.  
+  - Put stats-focused aggregations that feed stats dashboards under `stats_scripts/` (see `stats_scripts/README.md`).
+- **Verifiers & smoke tests:**  
+  - Add `verify_*.py` validators at the top level of `scripts/`.  
+  - Add shell-based smoke tests under `scripts/smoke/`.  
+  - Add dev/test helpers (Node/Playwright, small JS utilities) under `scripts/tests/`.  
+  - Small maintenance utilities belong in `scripts/tools/`.
+
+Whenever you add a new script that generates CSV/JSON or HTML:
+- Update the **“Architecture at a Glance”** table near the top of this README (which domain it belongs to, what inputs/outputs it uses).
+- Update `scripts/README.md` with a short description and category.
+- If it powers a dashboard, also update `docs/README.md` under the relevant domain table.
+
+### Adding New Dashboards / Visualizations
+
+- Place new HTML pages under `docs/` (or a subfolder).  
+- Source data should live under `output/` (for CSV/JSON) or `docs/roster_cap_tool/data/` for cap tool–style apps.
+- Link new dashboards from:
+  - `index.html` (landing page for GitHub Pages),
+  - `docs/README.md` (so it shows up in the domain tables),
+  - Optionally `docs/tools_guide.html` if it’s a user-facing tool.
+
+When wiring a new visualization:
+- Decide which orchestrator regenerates its backing data (`run_all.py`, `run_all_stats.py`, `run_all_playoff_analysis.py`, or a new `run_all_*`).
+- Document that command in this README under the relevant domain and in `docs/README.md`.
 
 ---
 

@@ -24,8 +24,8 @@
    This matches the “penalties for 2 years” constraint, but combined with (1) it removes the player’s Year+1 cap AND adds next‑year dead money — double‑impact to Year+1 for “FA year 2”, which is not desired.
 
 3) Tests encode the current (undesired) behavior
-   - `scripts/test_cap_tool.mjs` Scenario B expects that releasing a 2‑year player increases Year+1 cap space (because the player is removed and only next‑year dead remains). This contradicts the new requested behavior (FA=2 should not affect Year+1).
-   - File reference: scripts/test_cap_tool.mjs:46-92
+  - `scripts/tests/test_cap_tool.mjs` Scenario B expects that releasing a 2‑year player increases Year+1 cap space (because the player is removed and only next‑year dead remains). This contradicts the new requested behavior (FA=2 should not affect Year+1).
+  - File reference: scripts/tests/test_cap_tool.mjs:46-92
 
 ## Affected Components
 - Cap math core:
@@ -38,7 +38,7 @@
 - Projections UI (renders the results):
   - docs/roster_cap_tool/js/ui/projections.js
 - Tests that assert current behavior:
-  - scripts/test_cap_tool.mjs
+  - scripts/tests/test_cap_tool.mjs
 
 ## Impact Assessment
 - User‑visible:
@@ -56,7 +56,7 @@
       - FA=3 → affectOutYears = [1]
       - FA=4+ → affectOutYears = [1, 2] (cap removal capped at next two seasons)
   - Alternatively, enrich the `release` move with an `affectsOffsets` field (computed at release time) and have `projectTeamCaps` apply that overlay instead of blanket removal.
-  - Update tests in `scripts/test_cap_tool.mjs` to reflect the new logic (e.g., Scenario B will need to expect Year+1 unchanged for FA=2).
+  - Update tests in `scripts/tests/test_cap_tool.mjs` to reflect the new logic (e.g., Scenario B will need to expect Year+1 unchanged for FA=2).
 
 ## Notes / Assumptions
 - “FA year N” is interpreted as `contractYearsLeft = N` at the time of release.
@@ -67,4 +67,4 @@
 - cap math core: docs/roster_cap_tool/js/capMath.js:360-642, esp. 497-642, 134-181, 462-487
 - release flow: docs/roster_cap_tool/js/ui/modals/releaseModal.js:1-160
 - projections UI: docs/roster_cap_tool/js/ui/projections.js:1-220
-- tests: scripts/test_cap_tool.mjs:1-220
+- tests: scripts/tests/test_cap_tool.mjs:1-220

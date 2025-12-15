@@ -8,17 +8,17 @@ Interactive, Spotrac‑style salary cap manager for Madden. Runs as a static web
   - `MEGA_players.csv`
   - `MEGA_teams.csv`
 - Optional helper scripts (local verification):
-  - `scripts/sync_data_to_docs.sh`
+  - `scripts/tools/sync_data_to_docs.sh`
   - `scripts/verify_cap_math.py`
-  - `scripts/smoke_roster_cap_tool.sh`
+  - `scripts/smoke/smoke_roster_cap_tool.sh`
 
 ## Data Setup
 Place fresh CSV exports at the repo root, then sync them into the Pages data folder:
 
 ```bash
-bash scripts/sync_data_to_docs.sh          # copies MEGA_players.csv + MEGA_teams.csv
+bash scripts/tools/sync_data_to_docs.sh          # copies MEGA_players.csv + MEGA_teams.csv
 # or
-bash scripts/sync_data_to_docs.sh --all    # copies all MEGA_*.csv to docs/roster_cap_tool/data
+bash scripts/tools/sync_data_to_docs.sh --all    # copies all MEGA_*.csv to docs/roster_cap_tool/data
 ```
 
 This populates:
@@ -57,7 +57,7 @@ Note: GitHub Pages serves only committed files. If you update root CSVs, re‑ru
   ```
 - Page + assets availability smoke:
   ```bash
-  bash scripts/smoke_roster_cap_tool.sh
+  bash scripts/smoke/smoke_roster_cap_tool.sh
   ```
 
 ## Year Context (Calendar Years)
