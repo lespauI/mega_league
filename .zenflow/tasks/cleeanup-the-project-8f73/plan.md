@@ -118,7 +118,8 @@ Tighten the connection between stats aggregation scripts, outputs, and dashboard
   - Check that expected outputs exist under `output/` with the filenames documented in `stats_scripts/README.md`.
   - Manually verify that `docs/team_stats_explorer.html` and `docs/team_stats_correlations.html` are mentioned in both `stats_scripts/README.md` and `docs/README.md` with consistent descriptions.
 
-### [ ] Step: Phase 4 – Tests & developer guide
+### [x] Step: Phase 4 – Tests & developer guide
+<!-- chat-id: 92e6f455-8498-4ef0-b375-406ae49d7652 -->
 
 Reinforce safety nets and document how to extend the project safely.
 

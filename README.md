@@ -705,6 +705,97 @@ When running scripts individually (not using `run_all_playoff_analysis.py`):
 5. **Optional:** `top_pick_race_analysis.py` - Draft analysis
 6. **Optional:** `generate_index.py` - GitHub Pages landing page
 
+## 🧑‍💻 Developer Guide
+
+This section is for league commissioners and contributors who want to extend the project safely or run automated tests.
+
+### Environment Setup
+
+- **Python:** 3.7+ (3.10+ recommended). Core scripts use only the standard library.
+- **Node.js (optional):** 18+ recommended, required only for the roster cap tool Playwright E2E tests.
+- **Playwright (optional):** Installed via npm (see below) for browser automation.
+
+### Running Python Unit Tests
+
+- Run the full test suite:
+
+  ```bash
+  python3 -m unittest
+  ```
+
+- Run just the roster power rankings tests (fast smoke test for `scripts/power_rankings_roster.py`):
+
+  ```bash
+  python3 -m unittest tests/test_power_rankings_roster.py
+  ```
+
+  These tests validate:
+  - Normalization helpers (`normalize_unit_scores`)
+  - Overall score weighting (`compute_overall_score`)
+  - Team metrics and ranking logic (`build_team_metrics`)
+  - HTML report generation (`render_html_report`) including the sortable table helper
+
+### Roster Cap Tool – Playwright E2E Tests
+
+End-to-end tests for the Spotrac-style cap tool live under `tests/e2e/` and exercise real browser flows (release, trade, signing, extensions, conversions, year context, etc.).
+
+From the repo root:
+
+```bash
+# 1) Install Node dev dependencies
+npm install
+
+# 2) Install Playwright browsers & system deps
+npm run pw:install
+
+# 3) Run the full E2E suite (headless)
+npm run test:e2e
+
+# 4) Run a focused subset (recommended for day-to-day work)
+npm run test:e2e -- --grep cap
+```
+
+What happens:
+- Playwright starts `python3 -m http.server 8000` from the repo root.
+- Tests hit `http://127.0.0.1:8000/docs/roster_cap_tool/`.
+- CSVs are read from `docs/roster_cap_tool/data/` (sync with `bash scripts/tools/sync_data_to_docs.sh`).
+
+For more details, see `tests/e2e/README.md`. Some tests may fail if the local data or HTML diverges from the expectations baked into the fixtures.
+
+### Where to Add New Scripts
+
+Use these conventions when extending analysis:
+
+- **Orchestrators / pipelines:**  
+  - Add new end-to-end runners under `scripts/` (e.g., `run_all_<something>.py`).  
+  - Reuse existing ones where possible: `scripts/run_all.py`, `scripts/run_all_playoff_analysis.py`, `scripts/run_all_stats.py`.
+- **Analysis scripts:**  
+  - Put single-purpose analysis that reads `MEGA_*.csv` under `scripts/`.  
+  - Put stats-focused aggregations that feed stats dashboards under `stats_scripts/` (see `stats_scripts/README.md`).
+- **Verifiers & smoke tests:**  
+  - Add `verify_*.py` validators at the top level of `scripts/`.  
+  - Add shell-based smoke tests under `scripts/smoke/`.  
+  - Add dev/test helpers (Node/Playwright, small JS utilities) under `scripts/tests/`.  
+  - Small maintenance utilities belong in `scripts/tools/`.
+
+Whenever you add a new script that generates CSV/JSON or HTML:
+- Update the **“Architecture at a Glance”** table near the top of this README (which domain it belongs to, what inputs/outputs it uses).
+- Update `scripts/README.md` with a short description and category.
+- If it powers a dashboard, also update `docs/README.md` under the relevant domain table.
+
+### Adding New Dashboards / Visualizations
+
+- Place new HTML pages under `docs/` (or a subfolder).  
+- Source data should live under `output/` (for CSV/JSON) or `docs/roster_cap_tool/data/` for cap tool–style apps.
+- Link new dashboards from:
+  - `index.html` (landing page for GitHub Pages),
+  - `docs/README.md` (so it shows up in the domain tables),
+  - Optionally `docs/tools_guide.html` if it’s a user-facing tool.
+
+When wiring a new visualization:
+- Decide which orchestrator regenerates its backing data (`run_all.py`, `run_all_stats.py`, `run_all_playoff_analysis.py`, or a new `run_all_*`).
+- Document that command in this README under the relevant domain and in `docs/README.md`.
+
 ---
 
 ## 🎓 New to Python or GitHub?

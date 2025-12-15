@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Roster Power Rankings — Roster Analytics</title>
+  <style>
+    :root { --text:#0f172a; --sub:#64748b; --muted:#94a3b8; --grid:#e2e8f0; --bg:#f7f7f7; --card:#ffffff; --accent:#3b82f6; }
+    body { margin:16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color:var(--text); background:var(--bg); }
+    .topbar { max-width: 1200px; margin: 0 auto 10px; display:flex; align-items:center; gap:10px; }
+    .back { display:inline-flex; align-items:center; gap:8px; font-size:13px; color:#1e293b; text-decoration:none; background:#fff; border:1px solid #e5e7eb; padding:6px 10px; border-radius:8px; box-shadow:0 1px 2px rgba(0,0,0,.05); }
+    .back:hover { background:#f8fafc; }
+    .container { max-width: 1200px; margin: 0 auto; background: var(--card); border: 1px solid #e5e7eb; border-radius: 12px; box-shadow: 0 1px 3px rgba(0,0,0,.06); overflow:hidden; }
+    header { padding: 18px 20px 10px; border-bottom: 1px solid #ececec; background:linear-gradient(180deg,#ffffff 0%,#fafafa 100%); }
+    h1 { margin:0; font-size: 22px; }
+    .subtitle { color: var(--sub); margin:8px 0 4px; font-size: 13px; }
+    .pill { display:inline-block; margin-left:8px; padding:2px 8px; border-radius:999px; border:1px solid #bfdbfe; background:#dbeafe; color:#1e3a8a; font-size:12px; }
+    .panel { padding: 14px 18px; border-bottom: 1px solid #f0f0f0; }
+    .section-title { font-size: 14px; font-weight: 700; margin: 0 0 10px; border-left:3px solid var(--accent); padding-left:8px; }
+    .section-intro { white-space: pre-wrap; color: #334155; font-size: 13px; margin: 4px 0 10px; }
+    .kpis { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px; }
+    .kpi { background:#f8fafc; padding: 10px 12px; border: 1px solid #e5e7eb; border-radius: 10px; }
+    .kpi b { display:block; font-size: 12px; color:#0f172a; }
+    .kpi span { color:#334155; font-size: 18px; font-weight: 700; }
+    .kpi .gbar { margin-top:6px; height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+    .kpi .gbar .fill { height:100%; background: linear-gradient(90deg, #60a5fa, #22c55e); }
+    .controls { display:flex; flex-wrap:wrap; align-items:center; gap:10px; font-size:13px; }
+    .controls label { font-weight:500; color:#475569; }
+    .controls input[type='search'] { padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; min-width: 220px; font-size:13px; }
+    .controls select { padding:6px 8px; border-radius:8px; border:1px solid #e5e7eb; font-size:13px; }
+    .table-wrap { margin-top:10px; border:1px solid #e5e7eb; border-radius:10px; overflow:auto; }
+    table { width:100%; border-collapse:collapse; font-size:12px; }
+    thead { background:#f8fafc; position:sticky; top:0; z-index:1; }
+    th, td { padding:6px 8px; border-bottom:1px solid #e5e7eb; text-align:left; }
+    th { font-weight:600; color:#475569; cursor:pointer; white-space:nowrap; }
+    tr:nth-child(even) { background:#f9fafb; }
+    tr:hover { background:#eef2ff; }
+    .num { text-align:right; font-variant-numeric: tabular-nums; }
+    .rank-cell { font-weight:700; }
+    .team-cell { display:flex; align-items:center; gap:6px; }
+    .team-tag { display:inline-flex; align-items:center; gap:4px; font-weight:600; }
+    .team-tag span { font-size:11px; color:#64748b; }
+    .metric { display:flex; flex-direction:column; gap:2px; }
+    .metric-value { font-weight:600; }
+    .metric-bar { height:6px; background:#e5e7eb; border-radius:999px; overflow:hidden; }
+    .metric-bar-fill { height:100%; background:linear-gradient(90deg,#3b82f6,#22c55e); }
+    .dev-chips { display:flex; flex-wrap:wrap; gap:4px; }
+    .chip { padding:2px 6px; border-radius:999px; border:1px solid #e5e7eb; font-size:11px; background:#f9fafb; }
+    .chip-xf { border-color:#fecaca; background:#fee2e2; color:#b91c1c; }
+    .chip-ss { border-color:#facc15; background:#fef9c3; color:#854d0e; }
+    .chip-star { border-color:#d4d4d8; background:#e4e4e7; color:#27272a; }
+    .chip-norm { border-color:#c4b5fd; background:#e0e7ff; color:#3730a3; }
+    .chart-strip { margin-top:8px; display:flex; flex-wrap:wrap; gap:4px; }
+    .chart-bar { flex:1 1 40px; min-width:40px; height:36px; background:#f8fafc; border:1px solid #e5e7eb; border-radius:6px; position:relative; overflow:hidden; }
+    .chart-bar-fill { position:absolute; left:0; top:0; bottom:0; background:linear-gradient(90deg,#22c55e,#16a34a); opacity:0.3; }
+    .chart-bar-label { position:relative; z-index:1; padding:4px 6px; font-size:11px; display:flex; flex-direction:column; justify-content:center; }
+    .chart-bar-label b { font-size:12px; }
+    .methodology-grid { display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px; margin-top:8px; font-size:12px; color:#111827; }
+    .methodology-col { background:#f8fafc; border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; }
+    .methodology-col h3 { margin:0 0 6px; font-size:12px; text-transform:uppercase; letter-spacing:0.03em; color:#6b7280; }
+    .methodology-list { margin:0; padding-left:16px; }
+    .methodology-list li { margin:2px 0; }
+    .team-grid { display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px; }
+    .team-card { border:1px solid #e5e7eb; border-radius:10px; padding:10px 12px; background:#f9fafb; display:flex; flex-direction:column; gap:8px; }
+    .team-card-header { display:flex; justify-content:space-between; align-items:baseline; gap:8px; }
+    .team-card-title { font-size:13px; font-weight:600; color:#0f172a; }
+    .team-card-sub { font-size:11px; color:#6b7280; }
+    .team-card-dev { font-size:11px; color:#4b5563; }
+    .team-card-dev strong { font-weight:600; }
+    .team-card-dev span { margin-right:6px; }
+    .team-card.dev-elite { border-color:#f97316; box-shadow:0 0 0 1px rgba(249,115,22,0.35); }
+    .team-card-body { display:flex; gap:10px; align-items:stretch; }
+    .radar-shell { flex:0 0 120px; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+    .radar-chart { width:120px; height:120px; }
+    .radar-bg polygon { fill:#eff6ff; stroke:#dbeafe; stroke-width:1; }
+    .radar-axes line { stroke:#e5e7eb; stroke-width:1; }
+    .radar-poly { fill:rgba(59,130,246,0.3); stroke:#2563eb; stroke-width:1.5; }
+    .radar-point { fill:#1d4ed8; stroke:#eff6ff; stroke-width:1; r:2; }
+    .radar-labels { display:flex; flex-wrap:wrap; gap:4px; justify-content:center; margin-top:4px; font-size:10px; color:#6b7280; }
+    .radar-labels span { padding:1px 4px; border-radius:999px; background:#e5e7eb; }
+    .team-narrative { flex:1 1 auto; font-size:12px; color:#111827; display:flex; flex-direction:column; gap:4px; }
+    .team-narrative p { margin:0; }
+    .team-narrative strong { color:#0f172a; }
+    .team-narrative .label { text-transform:uppercase; font-size:11px; letter-spacing:0.04em; color:#6b7280; }
+    #teams-table tbody tr, .team-card { cursor:pointer; }
+    .team-detail-overlay { position:fixed; inset:0; display:none; align-items:flex-start; justify-content:center; padding:40px 12px; z-index:40; }
+    .team-detail-overlay.visible { display:flex; }
+    .team-detail-backdrop { position:absolute; inset:0; background:rgba(15,23,42,0.55); }
+    .team-detail-panel { position:relative; max-width:980px; width:100%; max-height:100%; background:#ffffff; border-radius:12px; box-shadow:0 22px 45px rgba(15,23,42,0.45); padding:16px 18px 18px; overflow:auto; }
+    .team-detail-close { position:absolute; top:8px; right:10px; border:none; background:transparent; font-size:18px; cursor:pointer; color:#64748b; }
+    .team-detail-header h2 { margin:0; font-size:18px; }
+    .team-detail-sub { margin:2px 0 10px; font-size:12px; color:#6b7280; }
+    .team-detail-body { font-size:11px; color:#111827; }
+    .team-detail-radar-shell { margin-bottom:8px; display:flex; justify-content:center; }
+    .team-detail-columns { display:grid; grid-template-columns: minmax(0,1.4fr) minmax(0,1.1fr); gap:12px; }
+    .team-detail-col h3 { margin:0 0 6px; font-size:13px; }
+    .team-detail-table { width:100%; border-collapse:collapse; font-size:11px; }
+    .team-detail-table th, .team-detail-table td { padding:4px 6px; border-bottom:1px solid #e5e7eb; text-align:left; }
+    .team-detail-table th { font-weight:600; color:#475569; background:#f9fafb; position:sticky; top:0; z-index:1; }
+    .team-detail-table .num { text-align:right; font-variant-numeric:tabular-nums; }
+    .team-detail-attr { font-variant-numeric:tabular-nums; }
+    .team-detail-breakdown { font-size:11px; display:flex; flex-direction:column; gap:6px; }
+    .team-detail-breakdown-unit { border:1px solid #e5e7eb; border-radius:8px; padding:6px 8px; background:#f8fafc; }
+    .team-detail-breakdown-unit h4 { margin:0 0 4px; font-size:12px; }
+    .team-detail-breakdown-unit table { width:100%; border-collapse:collapse; font-size:11px; }
+    .team-detail-breakdown-unit th, .team-detail-breakdown-unit td { padding:2px 4px; text-align:left; }
+    .team-detail-breakdown-unit th { color:#6b7280; font-weight:500; }
+    @media (max-width: 900px) { .kpis { grid-template-columns: repeat(2, minmax(0,1fr)); } .team-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .kpis { grid-template-columns: 1fr; } th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6) { display:none; } .team-card-body { flex-direction:column; } .team-detail-columns { grid-template-columns: 1fr; } .team-detail-panel { padding:12px 10px 14px; } }
+  </style>
+  <script>
+  // Simple table sorter: click any <th> in a .sortable table to sort by that column
+  (function() {
+    function getCellValue(tr, idx) {
+      const td = tr.children[idx];
+      if (!td) return '';
+      // Prefer data-sort attribute when provided
+      const ds = td.getAttribute('data-sort');
+      const txt = ds != null ? ds : td.textContent || '';
+      return txt.trim();
+    }
+
+    function asNumber(v) {
+      if (v === '' || v == null) return NaN;
+      const n = parseFloat(v.replace(/[,\s]/g, ''));
+      return isNaN(n) ? NaN : n;
+    }
+
+    function makeComparer(idx, asc) {
+      return function(a, b) {
+        const va = getCellValue(a, idx);
+        const vb = getCellValue(b, idx);
+        const na = asNumber(va);
+        const nb = asNumber(vb);
+        let cmp;
+        if (!isNaN(na) && !isNaN(nb)) {
+          cmp = na - nb;
+        } else {
+          cmp = va.localeCompare(vb, undefined, {numeric:true, sensitivity:'base'});
+        }
+        return asc ? cmp : -cmp;
+      }
+    }
+
+    function initSortableTables() {
+      document.querySelectorAll('table.sortable').forEach(function(table) {
+        const thead = table.tHead;
+        if (!thead) return;
+        const headers = thead.rows[0]?.cells || [];
+        Array.from(headers).forEach(function(th, idx) {
+          th.addEventListener('click', function() {
+            const tbody = table.tBodies[0];
+            if (!tbody) return;
+            const rows = Array.from(tbody.rows);
+            const current = th.getAttribute('data-sort-dir') || 'desc';
+            const nextDir = current === 'asc' ? 'desc' : 'asc';
+            rows.sort(makeComparer(idx, nextDir === 'asc'));
+            // Update attributes for visual state (optional)
+            Array.from(headers).forEach(h => h.removeAttribute('data-sort-dir'));
+            th.setAttribute('data-sort-dir', nextDir);
+            // Re-append rows
+            rows.forEach(r => tbody.appendChild(r));
+          });
+        });
+      });
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSortableTables);
+    } else {
+      initSortableTables();
+    }
+  })();
+  (function() {
+    function getData() {
+      const el = document.getElementById('teams-data');
+      if (!el) return null;
+      try { return JSON.parse(el.textContent || '{}'); } catch (e) { return null; }
+    }
+    function initSearch() {
+      const input = document.getElementById("team-search");
+      if (!input) return;
+      input.addEventListener("input", function() {
+        const q = (this.value || '').toLowerCase();
+        const rows = document.querySelectorAll("#teams-table tbody tr");
+        rows.forEach(function(tr) {
+          const name = (tr.getAttribute("data-team-name") || '').toLowerCase();
+          const abbr = (tr.getAttribute("data-team-abbr") || '').toLowerCase();
+          const hay = name + ' '+ abbr;
+          tr.style.display = hay.indexOf(q) === -1 ? 'none' : '';
+        });
+      });
+    }
+    function closeTeamDetail() {
+      const overlay = document.getElementById('team-detail-overlay');
+      if (!overlay) return;
+      overlay.classList.remove('visible');
+      overlay.setAttribute('aria-hidden', 'true');
+    }
+    function openTeamDetail(abbr, DATA) {
+      if (!DATA || !DATA.rosters) return;
+      const rosterMap = DATA.rosters || {};
+      const unitsMap = DATA.unit_breakdowns || {};
+      const roster = rosterMap[abbr];
+      if (!roster || !roster.length) return;
+      const overlay = document.getElementById('team-detail-overlay');
+      if (!overlay) return;
+      const teamMeta = (DATA.teams || []).find(function(t) { return String(t.team_abbrev || '') === String(abbr || ''); });
+      const titleEl = document.getElementById('team-detail-title');
+      const subEl = document.getElementById('team-detail-subtitle');
+      const rosterTable = document.getElementById('team-detail-roster');
+      const breakdownRoot = document.getElementById('team-detail-breakdown');
+      if (!rosterTable || !breakdownRoot) return;
+      const name = teamMeta && (teamMeta.team_name || teamMeta.team_abbrev || abbr) || abbr;
+      const rank = teamMeta && teamMeta.overall_rank;
+      const overall = teamMeta && teamMeta.overall_score;
+      if (titleEl) { titleEl.textContent = name + ' (' + abbr + ')'; }
+      if (subEl) {
+        const bits = [];
+        if (typeof rank === 'number' && rank) bits.push('#' + rank + ' overall roster grade');
+        if (typeof overall === 'number') bits.push('Overall ' + overall.toFixed(1));
+        subEl.textContent = bits.join(' • ');
+      }
+      const radarHost = document.getElementById('team-detail-radar');
+      if (radarHost) {
+        radarHost.innerHTML = '';
+        let source = null;
+        document.querySelectorAll('.radar-chart').forEach(function(el) {
+          if (String(el.getAttribute('data-team-abbr') || '') === String(abbr || '')) { source = el; }
+        });
+        if (source) { radarHost.innerHTML = source.outerHTML; }
+      }
+      const byId = {};
+      roster.forEach(function(p) { if (p && p.player_id != null) byId[String(p.player_id)] = p; });
+      rosterTable.innerHTML = '';
+      const thead = document.createElement('thead');
+      thead.innerHTML = '<tr><th>Pos</th><th>Player</th><th class=num>OVR</th><th>Dev</th><th>Top attributes</th></tr>';
+      rosterTable.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      roster.forEach(function(p) {
+        const tr = document.createElement('tr');
+        const attrs = (p.top_attrs || []).map(function(a) { return a.key + ': ' + a.value; }).join(', ');
+        tr.innerHTML = '<td>' + (p.position || '') + '</td>' +
+          '<td>' + (p.name || '') + '</td>' +
+          '<td class=num>' + (p.ovr != null ? p.ovr : '') + '</td>' +
+          '<td>' + (p.dev_label || '') + '</td>' +
+          '<td class=team-detail-attr>' + attrs + '</td>';
+        tbody.appendChild(tr);
+      });
+      rosterTable.appendChild(tbody);
+      breakdownRoot.innerHTML = '';
+      const allUnits = ['off_pass','off_run','def_coverage','pass_rush','run_defense'];
+      const labels = { off_pass: 'Off Pass', off_run: 'Off Run', def_coverage: 'Pass Coverage', pass_rush: 'Pass Rush', run_defense: 'Run Defense' };
+      const teamUnits = unitsMap && unitsMap[abbr];
+      if (teamUnits) {
+        allUnits.forEach(function(key) {
+          const u = teamUnits[key];
+          if (!u) return;
+          const card = document.createElement('div');
+          card.className = 'team-detail-breakdown-unit';
+          const h = document.createElement('h4');
+          const label = (u.label || labels[key] || key);
+          let grade = '';
+          if (typeof u.norm_score === 'number') grade = ' — grade ' + u.norm_score.toFixed(1);
+          h.textContent = label + grade;
+          card.appendChild(h);
+          if (typeof u.raw_score === 'number') {
+            const p = document.createElement('p');
+            p.textContent = 'Raw starter blend: ' + u.raw_score.toFixed(1);
+            card.appendChild(p);
+          }
+          const tbl = document.createElement('table');
+          const th = document.createElement('thead');
+          th.innerHTML = '<tr><th>Pos</th><th class=num>Wt%</th><th class=num>Pos score</th><th>Starters used</th></tr>';
+          tbl.appendChild(th);
+          const tb = document.createElement('tbody');
+          (u.positions || []).forEach(function(posInfo) {
+            const tr = document.createElement('tr');
+            const wtPct = (posInfo.weight_share != null ? (posInfo.weight_share * 100).toFixed(0) : '');
+            const posScore = (posInfo.avg_unit_score != null ? posInfo.avg_unit_score.toFixed(1) : '');
+            const starters = (posInfo.players || []).map(function(pl) {
+              const pid = pl.player_id != null ? String(pl.player_id) : '';
+              const base = pid && byId[pid] ? byId[pid] : null;
+              if (!base) return '';
+              const tag = (base.position || '') + ' ' + (base.name || '');
+              const ovr = base.ovr != null ? base.ovr : '';
+              const dev = base.dev_label || '';
+              const parts = [tag];
+              if (ovr !== '') parts.push(String(ovr));
+              if (dev) parts.push(dev);
+              return parts.join(' ');
+            }).filter(Boolean).join('; ');
+            tr.innerHTML = '<td>' + (posInfo.pos || '') + '</td>' +
+              '<td class=num>' + wtPct + '</td>' +
+              '<td class=num>' + posScore + '</td>' +
+              '<td>' + starters + '</td>';
+            tb.appendChild(tr);
+          });
+          tbl.appendChild(tb);
+          card.appendChild(tbl);
+          breakdownRoot.appendChild(card);
+        });
+      }
+      overlay.classList.add('visible');
+      overlay.setAttribute('aria-hidden', 'false');
+    }
+    function attachTeamDetailHandlers() {
+      initSearch();
+      const DATA = getData();
+      if (!DATA) return;
+      const rows = document.querySelectorAll('#teams-table tbody tr[data-team-abbr]');
+      rows.forEach(function(tr) {
+        tr.addEventListener('click', function() {
+          const abbr = tr.getAttribute('data-team-abbr');
+          if (abbr) openTeamDetail(abbr, DATA);
+        });
+      });
+      const cards = document.querySelectorAll('.team-card[data-team-abbr]');
+      cards.forEach(function(card) {
+        card.addEventListener('click', function() {
+          const abbr = card.getAttribute('data-team-abbr');
+          if (abbr) openTeamDetail(abbr, DATA);
+        });
+      });
+      const overlay = document.getElementById('team-detail-overlay');
+      if (overlay) {
+        const closeBtn = overlay.querySelector('.team-detail-close');
+        const backdrop = overlay.querySelector('.team-detail-backdrop');
+        if (closeBtn) closeBtn.addEventListener('click', closeTeamDetail);
+        if (backdrop) backdrop.addEventListener('click', closeTeamDetail);
+      }
+      document.addEventListener('keydown', function(ev) { if (ev.key === 'Escape') closeTeamDetail(); });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', attachTeamDetailHandlers);
+    } else {
+      attachTeamDetailHandlers();
+    }
+  })();
+  </script>
+</head>
+<body>
+  <div class="topbar"><a class="back" href="../index.html" title="Back to index">&#8592; Back to Index</a></div>
+  <div class="container">
+    <header>
+      <h1>Roster Power Rankings — Roster Analytics <span class="pill">Roster-based</span></h1>
+      <div class="subtitle">League-wide roster strength overview (normalization: zscore)</div>
+      <div class="subtitle">For X/Y roster unit comparison charts (Off vs Def, Pass vs Run, coverage vs pass rush), open the <a href='power_rankings_roster_charts.html'>Roster Power Explorer</a>.</div>
+    </header>
+    <section class="panel" id="overview">
+      <div class="section-title">League Overview</div>
+      <div class="section-intro">Scores are normalized 0–100 across the league. Around 50 is an average roster, 70+ is contender territory, and 40 or below flags a problem build. These snapshots show the spread of overall roster strength this season.</div>
+      <div class="kpis">
+        <div class="kpi"><b>Best roster score</b><span>—</span><div class="gbar"><div class="fill" style="width: —%"></div></div></div>
+        <div class="kpi"><b>League median</b><span>—</span><div class="gbar"><div class="fill" style="width: —%"></div></div></div>
+        <div class="kpi"><b>Weakest roster score</b><span>—</span><div class="gbar"><div class="fill" style="width: —%"></div></div></div>
+      </div>
+      <div class="chart-strip" id="overall-chart"></div>
+    </section>
+    <section class="panel" id="methodology">
+      <div class="section-title">Methodology &amp; Config</div>
+      <div class="section-intro">Each unit score is a position-weighted blend of starter-quality ratings, boosted by premium dev traits at high OVR bands and then normalized to a 0–100 scale (z-score (mean ~50, spread by standard deviation)).</div>
+      <div class="methodology-grid">
+        <div class="methodology-col">
+          <h3>Units &amp; position weighting</h3>
+          <ul class="methodology-list">
+            <li>Off Pass (QB/WR/TE/OL): QB 45%, WR 30%, OL 15%, TE 10%</li>
+            <li>Off Run (RB/FB/TE/OL): OL 40%, RB 35%, TE 15%, FB 10%</li>
+            <li>Pass Coverage (CB/S/LB): CB 50%, S 30%, LB 20%</li>
+            <li>Pass Rush (DE/DT/LB): DE 40%, DT 30%, LB 30%</li>
+            <li>Run Defense (DE/DT/LB/S): DT 35%, LB 30%, DE 25%, S 10%</li>
+          </ul>
+        </div>
+        <div class="methodology-col">
+          <h3>Dev traits impact</h3>
+          <ul class="methodology-list">
+            <li>X-Factor: +10% above 85 OVR, +5% above 80 OVR</li>
+            <li>Superstar: +7% above 85 OVR, +3% above 80 OVR</li>
+            <li>Star: baseline impact only (no extra multiplier by default).</li>
+            <li>Normal: baseline impact only (no extra multiplier by default).</li>
+          </ul>
+        </div>
+        <div class="methodology-col">
+          <h3>Normalization &amp; overall score</h3>
+          <p>Overall roster power combines normalized unit scores using: Off Pass 30% + Off Run 20% + Pass Coverage 30% + Pass Rush 20%. Run Defense is shown as its own unit but not currently weighted into the composite score by default.</p>
+          <p>Normalization method: zscore (z-score (mean ~50, spread by standard deviation)).</p>
+        </div>
+      </div>
+    </section>
+    <section class="panel" id="teams">
+      <div class="section-title">Teams – Roster Power Table</div>
+      <div class="controls">
+        <label for="team-search">Search team:</label>
+        <input id="team-search" type="search" placeholder="Filter by team or abbrev..." />
+        <span style="flex:1 0 auto"></span>
+        <span>Tip: click column headers to sort (overall or any unit).</span>
+      </div>
+      <div class="table-wrap">
+        <table class="sortable" id="teams-table">
+          <thead><tr><th>Rank</th><th>Team</th><th>Overall</th><th>Off Pass</th><th>Off Run</th><th>Def Coverage</th><th>Pass Rush</th><th>Run Def</th><th>Dev traits</th><th>Top contributors</th></tr></thead>
+          <tbody>
+            <tr data-team-abbr="AAA" data-team-name="Alpha">
+              <td class="num rank-cell" data-sort="1">1</td>
+              <td><div class="team-cell"><span class="team-tag">Alpha<span>AAA</span></span></div></td>
+              <td class="num" data-sort="75.0"><div class="metric"><span class="metric-value">75.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 75.0%"></div></div></div></td>
+              <td class="num" data-sort="80.0"><div class="metric"><span class="metric-value">80.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 80.0%"></div></div></div></td>
+              <td class="num" data-sort="70.0"><div class="metric"><span class="metric-value">70.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 70.0%"></div></div></div></td>
+              <td class="num" data-sort="65.0"><div class="metric"><span class="metric-value">65.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 65.0%"></div></div></div></td>
+              <td class="num" data-sort="60.0"><div class="metric"><span class="metric-value">60.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 60.0%"></div></div></div></td>
+              <td class="num" data-sort="55.0"><div class="metric"><span class="metric-value">55.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.0%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 1</span><span class="chip chip-ss">SS 2</span><span class="chip chip-star">Star 3</span><span class="chip chip-norm">Norm 4</span></div></td>
+              <td></td>
+            </tr>
+            <tr data-team-abbr="BBB" data-team-name="Beta">
+              <td class="num rank-cell" data-sort="2">2</td>
+              <td><div class="team-cell"><span class="team-tag">Beta<span>BBB</span></span></div></td>
+              <td class="num" data-sort="50.0"><div class="metric"><span class="metric-value">50.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.0%"></div></div></div></td>
+              <td class="num" data-sort="40.0"><div class="metric"><span class="metric-value">40.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 40.0%"></div></div></div></td>
+              <td class="num" data-sort="45.0"><div class="metric"><span class="metric-value">45.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 45.0%"></div></div></div></td>
+              <td class="num" data-sort="55.0"><div class="metric"><span class="metric-value">55.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 55.0%"></div></div></div></td>
+              <td class="num" data-sort="50.0"><div class="metric"><span class="metric-value">50.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 50.0%"></div></div></div></td>
+              <td class="num" data-sort="60.0"><div class="metric"><span class="metric-value">60.0</span><div class="metric-bar"><div class="metric-bar-fill" style="width: 60.0%"></div></div></div></td>
+              <td><div class="dev-chips"><span class="chip chip-xf">XF 0</span><span class="chip chip-ss">SS 1</span><span class="chip chip-star">Star 2</span><span class="chip chip-norm">Norm 5</span></div></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="panel" id="team-insights">
+      <div class="section-title">Team Unit Profiles &amp; Narratives</div>
+      <div class="section-intro">Per-team view of unit balance, dev-trait composition, and roster storylines. Use alongside the table above when scouting matchups or trade targets.</div>
+      <div class="team-grid">
+        <article class="team-card" data-team-abbr="AAA">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Alpha <span>(AAA)</span></div>
+              <div class="team-card-sub">Overall 75.0 (rank 1)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 1</span><span>SS 2</span><span>Star 3</span><span>Norm 4</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="AAA"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,26.4 88.0,50.9 76.0,82.1 45.2,80.4 38.0,52.9"/><circle class="radar-point" cx="60.0" cy="26.4" r="2"/><circle class="radar-point" cx="88.0" cy="50.9" r="2"/><circle class="radar-point" cx="76.0" cy="82.1" r="2"/><circle class="radar-point" cx="45.2" cy="80.4" r="2"/><circle class="radar-point" cx="38.0" cy="52.9" r="2"/></svg>
+              <div class="radar-labels"><span>Off Pass 80</span><span>Off Run 70</span><span>Coverage 65</span><span>Pass Rush 60</span><span>Run Def 55</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="AAA">
+              <p class="label">Summary</p>
+              <p>Alpha currently grades #1 in roster power with a solid premium dev core. Off Pass unit grades as a clear strength (80.0). Run Defense lags behind the rest of the build.</p>
+              <p class="label">Strengths</p>
+              <p>Off Pass unit grades as a clear strength (80.0). Off Run unit grades as a clear strength (70.0).</p>
+              <p class="label">Weaknesses</p>
+              <p>Run Defense lags behind the rest of the build.</p>
+            </div>
+          </div>
+        </article>
+        <article class="team-card" data-team-abbr="BBB">
+          <div class="team-card-header">
+            <div>
+              <div class="team-card-title">Beta <span>(BBB)</span></div>
+              <div class="team-card-sub">Overall 50.0 (rank 2)</div>
+            </div>
+            <div class="team-card-dev">
+              <strong>Dev traits:</strong> <span>XF 0</span><span>SS 1</span><span>Star 2</span><span>Norm 5</span>
+            </div>
+          </div>
+          <div class="team-card-body">
+            <div class="radar-shell">
+              <svg class="radar-chart" viewBox="0 0 120 120" data-team-abbr="BBB"><g class="radar-bg"><polygon points="60.0,30.6 88.0,50.9 77.3,83.8 42.7,83.8 32.0,50.9"/></g><g class="radar-axes"><line x1="60.0" y1="60.0" x2="60.0" y2="18.0"/><line x1="60.0" y1="60.0" x2="99.9" y2="47.0"/><line x1="60.0" y1="60.0" x2="84.7" y2="94.0"/><line x1="60.0" y1="60.0" x2="35.3" y2="94.0"/><line x1="60.0" y1="60.0" x2="20.1" y2="47.0"/></g><polygon class="radar-poly" points="60.0,43.2 78.0,54.2 73.6,78.7 47.7,77.0 36.0,52.2"/><circle class="radar-point" cx="60.0" cy="43.2" r="2"/><circle class="radar-point" cx="78.0" cy="54.2" r="2"/><circle class="radar-point" cx="73.6" cy="78.7" r="2"/><circle class="radar-point" cx="47.7" cy="77.0" r="2"/><circle class="radar-point" cx="36.0" cy="52.2" r="2"/></svg>
+              <div class="radar-labels"><span>Off Pass 40</span><span>Off Run 45</span><span>Coverage 55</span><span>Pass Rush 50</span><span>Run Def 60</span></div>
+            </div>
+            <div class="team-narrative" data-team-abbr="BBB">
+              <p class="label">Summary</p>
+              <p>Beta currently grades #2 in roster power. Run Defense is the most reliable unit on this roster. Off Pass unit looks like a liability (40.0).</p>
+              <p class="label">Strengths</p>
+              <p>Run Defense is the most reliable unit on this roster.</p>
+              <p class="label">Weaknesses</p>
+              <p>Off Pass unit looks like a liability (40.0).</p>
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+    <div id="team-detail-overlay" class="team-detail-overlay" aria-hidden="true">
+      <div class="team-detail-backdrop"></div>
+      <div class="team-detail-panel">
+        <button type="button" class="team-detail-close" aria-label="Close team detail">&#x00D7;</button>
+        <div class="team-detail-header">
+          <h2 id="team-detail-title"></h2>
+          <p id="team-detail-subtitle" class="team-detail-sub"></p>
+        </div>
+        <div class="team-detail-body">
+          <div class="team-detail-radar-shell"><div id="team-detail-radar"></div></div>
+          <div class="team-detail-columns">
+            <section class="team-detail-col">
+              <h3>Roster overview (OVR &amp; key attributes)</h3>
+              <table id="team-detail-roster" class="team-detail-table"></table>
+            </section>
+            <section class="team-detail-col">
+              <h3>Unit strength breakdown</h3>
+              <div id="team-detail-breakdown" class="team-detail-breakdown"></div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script id="teams-data" type="application/json">
+{"teams": [{"team_abbrev": "AAA", "team_name": "Alpha", "overall_score": 75.0, "overall_rank": 1, "off_pass_score": 80.0, "off_run_score": 70.0, "def_cover_score": 65.0, "def_pass_rush_score": 60.0, "def_run_score": 55.0, "dev_xf": 1, "dev_ss": 2, "dev_star": 3, "dev_normal": 4}, {"team_abbrev": "BBB", "team_name": "Beta", "overall_score": 50.0, "overall_rank": 2, "off_pass_score": 40.0, "off_run_score": 45.0, "def_cover_score": 55.0, "def_pass_rush_score": 50.0, "def_run_score": 60.0, "dev_xf": 0, "dev_ss": 1, "dev_star": 2, "dev_normal": 5}], "config": {}, "league": {}}
+  </script>
+</body>
+</html>
