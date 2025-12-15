@@ -119,7 +119,7 @@ Notes:
 
 ## Verification Strategy
 - Local quick checks
-  - Sanity: `bash scripts/smoke_roster_cap_tool.sh` — verifies server and assets.
+- Sanity: `bash scripts/smoke/smoke_roster_cap_tool.sh` — verifies server and assets.
   - Install + run tests:
     - `npm i` (adds Playwright dev deps)
     - `npx playwright install --with-deps`
@@ -152,4 +152,3 @@ Notes:
 - Tab buttons: `data-testid="tab-active-roster"`, `...-free-agents`, etc., or `getByRole('tab', { name: 'Active Roster' })`.
 - Row actions on first player (Active): within `data-testid="table-active-roster"` → first `data-testid="player-row"` → buttons per action.
 - Modals: dialog with corresponding `data-testid` and confirm button by role/name.
-

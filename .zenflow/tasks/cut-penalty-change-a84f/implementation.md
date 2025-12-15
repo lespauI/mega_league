@@ -11,12 +11,12 @@
 - `docs/roster_cap_tool/USAGE.md`
 
 ## Tests and Results
-- Node unit tests: `node scripts/test_cap_tool.mjs` — passed (exit code 0).
+- Node unit tests: `node scripts/tests/test_cap_tool.mjs` — passed (exit code 0).
 - Python parity check: `python3 scripts/verify_cap_math.py --teams docs/roster_cap_tool/data/MEGA_teams.csv --players docs/roster_cap_tool/data/MEGA_players.csv --out output/cap_tool_verification.json` — 15/15 assertions passed.
 - Browser smoke (`docs/roster_cap_tool/test.html`): contains an assertion for 60/40 split; with the code change, this is expected to pass when opened in a browser.
 
 ## Verification Steps
-1. Ran `node scripts/test_cap_tool.mjs` to validate projections and penalty allocation logic.
+1. Ran `node scripts/tests/test_cap_tool.mjs` to validate projections and penalty allocation logic.
 2. Ran `python3 scripts/verify_cap_math.py` to confirm parity and overall cap math consistency.
 3. Reviewed `docs/roster_cap_tool/test.html` to ensure its 60/40 expectation matches the new implementation.
 

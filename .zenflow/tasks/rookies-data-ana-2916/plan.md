@@ -199,7 +199,7 @@ Verification
 ### [x] Step: Refresh smoke script and messaging
 <!-- chat-id: 347c640e-fc80-400b-be34-8514dfa99721 -->
 Task definition
-- Adjust `scripts/smoke_generate_draft_2026.sh` to run the generator and updated verifier; tweak echo messages to match new terminology (Elites, XF/SS/Star/Normal).
+- Adjust `scripts/smoke/smoke_generate_draft_2026.sh` to run the generator and updated verifier; tweak echo messages to match new terminology (Elites, XF/SS/Star/Normal).
 
 Contracts to use/implement
 - No CLI changes; relies on updated generator and verifier.
@@ -208,7 +208,7 @@ Deliverable
 - Updated smoke script that exits successfully on passing verification and clearly logs the new sections.
 
 Verification
-- Run: `bash scripts/smoke_generate_draft_2026.sh` and confirm success.
+- Run: `bash scripts/smoke/smoke_generate_draft_2026.sh` and confirm success.
 
 ### [x] Step: Update README documentation
 <!-- chat-id: c9f21e89-334e-49ed-b486-e3e1d8db20c5 -->

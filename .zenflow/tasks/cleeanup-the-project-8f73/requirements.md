@@ -29,7 +29,7 @@ Mixed concerns in a single flat directory:
 - Orchestrators: `run_all.py`, `run_all_playoff_analysis.py`, `run_all_stats.py`.
 - Core domain scripts: `calc_sos_by_rankings.py`, `calc_remaining_sos.py`, `calc_playoff_probabilities.py`, `calc_sos_season2_elo.py`, `playoff_race_table.py`, `playoff_race_html.py`, `top_pick_race_analysis.py`, `generate_index.py`, `power_rankings_roster.py`, `week18_simulator.py`, `export_2026_rookies.py`, `generate_draft_class.py`, `generate_draft_class_analytics.py`, `add_metric_helps.py`, `calc_team_y1_cap.py`.
 - Verification scripts: `verify_cap_math.py`, `verify_draft_class_analytics.py`, `verify_draft_round1_recap.py`, `verify_power_rankings_roster_csv.py`, `verify_power_rankings_roster_html.py`, `verify_sos_season2_elo.py`, `verify_table_scroll_wrap.py`, `verify_team_rosters_export.py`, `verify_trade_stats.py`.
-- Smoke/test helpers and utilities: `smoke_generate_draft_2026.sh`, `smoke_roster_cap_tool.sh`, `sync_data_to_docs.sh`, `check_year_context.js`, `check_year_context_port.js`, `test_cap_tool.mjs`, `test_year_context.mjs`, `fixtures/` (JSON/fixtures for tests).
+- Smoke/test helpers and utilities: `scripts/smoke/smoke_generate_draft_2026.sh`, `scripts/smoke/smoke_roster_cap_tool.sh`, `scripts/tools/sync_data_to_docs.sh`, `scripts/tests/check_year_context.js`, `scripts/tests/check_year_context_port.js`, `scripts/tests/test_cap_tool.mjs`, `scripts/tests/test_year_context.mjs`, `fixtures/` (JSON/fixtures for tests).
 
 Examples of “messy” aspects:
 - **Flat namespace**: 30+ heterogeneous scripts in one directory with no subfolders by domain (playoff vs stats vs draft vs roster cap vs verification).
@@ -222,7 +222,7 @@ so that I can work on it without accidentally breaking league‑wide stats pipel
 - Given I open `docs/roster_cap_tool/`,  
   When I read its usage and dev documentation,  
   Then it:
-  - Explains its relationship to the main Python scripts (data sync via `scripts/sync_data_to_docs.sh`, verification via `verify_cap_math.py`).
+  - Explains its relationship to the main Python scripts (data sync via `scripts/tools/sync_data_to_docs.sh`, verification via `verify_cap_math.py`).
   - Clarifies that it’s a front‑end JS app with its own data and UI code.
 
 - Given I make local changes only within `docs/roster_cap_tool/` and its related test scripts,  
@@ -295,7 +295,7 @@ so that I don’t have to re‑reverse‑engineer everything or dig through old 
 ### 5.5 Roster Cap Tool Boundaries
 
 - The roster cap tool SHALL:
-  - Continue to load its data from `docs/roster_cap_tool/data/` (synced via `scripts/sync_data_to_docs.sh`).
+  - Continue to load its data from `docs/roster_cap_tool/data/` (synced via `scripts/tools/sync_data_to_docs.sh`).
   - Be documented as a standalone JS app backed by CSV exports, with cross‑links to the cap math spec (`spec/Salary Cap Works in Madden.md`) and verification script.
 - Any changes to repo structure SHALL ensure:
   - Existing URLs like `/docs/roster_cap_tool/` remain valid or are updated intentionally with clear migration notes.

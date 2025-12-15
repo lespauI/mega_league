@@ -199,7 +199,7 @@ Python cross-check scripts (repo `scripts/`)
   - Computes expected `capAvailable`, `capSpent`, and `deadMoney` after applying scenario moves using the same formulas.
   - Outputs: `output/cap_tool_verification.json` with per-step and final snapshots.
   - Run: `python3 scripts/verify_cap_math.py`
-- `scripts/smoke_roster_cap_tool.sh` (to be added):
+- `scripts/smoke/smoke_roster_cap_tool.sh` (to be added):
   - Builds the web app, validates artifacts exist under `docs/roster_cap_tool/`, greps for app mount point.
   - Optionally launches a local static server (python `http.server`) and curls root to ensure bundle loads.
 
@@ -225,4 +225,3 @@ Verification per phase
 ## References
 - Cap rules source of truth: `spec/Salary Cap Works in Madden.md`
 - PRD: `.zenflow/tasks/roster-management-eade/requirements.md`
-

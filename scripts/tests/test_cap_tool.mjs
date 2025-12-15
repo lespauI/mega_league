@@ -1,7 +1,7 @@
 // Lightweight Node tests for roster cap tool projections
-// Run with: node scripts/test_cap_tool.mjs
+// Run with: node scripts/tests/test_cap_tool.mjs
 import { readFile } from 'node:fs/promises';
-const capMathCode = await readFile(new URL('../docs/roster_cap_tool/js/capMath.js', import.meta.url), 'utf8');
+const capMathCode = await readFile(new URL('../../docs/roster_cap_tool/js/capMath.js', import.meta.url), 'utf8');
 const capMathMod = await import('data:text/javascript;base64,' + Buffer.from(capMathCode).toString('base64'));
 const { projectTeamCaps, simulateRelease, projectPlayerCapHits } = capMathMod;
 

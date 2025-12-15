@@ -169,11 +169,11 @@ Create HTML validator for Round 1 and intro blocks.
 Extend smoke script to include new verification.
 
 - Definition:
-  - Update `scripts/smoke_generate_draft_2026.sh` to run generator with section-intros and then run the new verifier.
+  - Update `scripts/smoke/smoke_generate_draft_2026.sh` to run generator with section-intros and then run the new verifier.
 - Contracts to use:
   - Example invocation in {@artifacts_path}/spec.md (Verification Strategy).
 - Deliverable:
-  - Updated `scripts/smoke_generate_draft_2026.sh` including:
+  - Updated `scripts/smoke/smoke_generate_draft_2026.sh` including:
     - `python3 scripts/generate_draft_class_analytics.py ... --section-intros scripts/fixtures/section_intros_example.json`
     - `python3 scripts/verify_draft_round1_recap.py ...`
 - Verification:

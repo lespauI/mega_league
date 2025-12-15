@@ -201,7 +201,7 @@ Verification
 ### [x] Step: Smoke Test Script
 <!-- chat-id: f511d9fb-ec49-4379-aeef-22f55a33b770 -->
 Task definition
-- Create `scripts/smoke_generate_draft_2026.sh` to run generation for 2026 and then the verification script.
+- Create `scripts/smoke/smoke_generate_draft_2026.sh` to run generation for 2026 and then the verification script.
 - Make script executable and fail-fast on any error.
 
 Contracts to use
@@ -211,7 +211,7 @@ Deliverables
 - Executable smoke script that returns non-zero on failure and prints output locations.
 
 Verification
-- `bash scripts/smoke_generate_draft_2026.sh` completes successfully and exits 0.
+- `bash scripts/smoke/smoke_generate_draft_2026.sh` completes successfully and exits 0.
 
 ### [x] Step: Resilience & UX Polish
 <!-- chat-id: 728164d9-56f0-43fb-844b-c264a340a87f -->

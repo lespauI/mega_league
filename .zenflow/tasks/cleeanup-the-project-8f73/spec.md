@@ -155,7 +155,7 @@ To‑be:
     - Misc: `trade_dashboard.html`, `week18_simulator.html`, etc.
   - Links back to `README.md` for entry commands.
 - Keep `docs/roster_cap_tool/` structure as a self‑contained SPA:
-  - Clarify in `USAGE.md` how `scripts/sync_data_to_docs.sh` feeds `docs/roster_cap_tool/data/`.
+- Clarify in `USAGE.md` how `scripts/tools/sync_data_to_docs.sh` feeds `docs/roster_cap_tool/data/`.
   - Ensure any references to shell scripts reflect the new `scripts/smoke/` path (e.g., `bash scripts/smoke/smoke_roster_cap_tool.sh`).
   - Briefly mention how to add a new visualization page under `docs/roster_cap_tool/` if ever needed (where JS/CSS live, how data is loaded).
 
@@ -182,7 +182,7 @@ Example architecture table (shape only, actual content will live in `README.md`)
 | Playoff + draft race  | `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv` | `run_all_playoff_analysis.py`, `calc_sos_by_rankings.py`, `calc_playoff_probabilities.py`, `top_pick_race_analysis.py` | `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `output/draft_race/draft_race_report.md` | `docs/playoff_race.html`, `docs/playoff_race_table.html` |
 | Stats aggregation     | `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv` | `run_all_stats.py`, `aggregate_team_stats.py`, `aggregate_player_usage.py`, `aggregate_rankings_stats.py` | `output/team_aggregated_stats.csv`, `output/team_player_usage.csv`, `output/team_rankings_stats.csv` | `docs/team_stats_explorer.html`, `docs/team_stats_correlations.html` |
 | SoS Season 2 (ELO)    | `MEGA_games.csv`, `MEGA_teams.csv`, `mega_elo.csv` | `run_all.py`, `calc_sos_season2_elo.py` | `output/sos/season2_elo.csv`, `output/sos/season2_elo.json` | `docs/sos_season2.html`, `docs/sos_graphs.html` |
-| Roster / cap          | `MEGA_players.csv`, `MEGA_teams.csv` | `power_rankings_roster.py`, `calc_team_y1_cap.py`, `sync_data_to_docs.sh` | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json` | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html` |
+| Roster / cap          | `MEGA_players.csv`, `MEGA_teams.csv` | `power_rankings_roster.py`, `calc_team_y1_cap.py`, `scripts/tools/sync_data_to_docs.sh` | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json` | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html` |
 
 ---
 

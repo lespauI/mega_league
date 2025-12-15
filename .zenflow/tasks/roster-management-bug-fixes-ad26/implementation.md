@@ -18,11 +18,11 @@
 
 ## Tests Added
 
-- Added `scripts/test_cap_tool.mjs` (Node ESM script) to validate projection behavior:
+- Added `scripts/tests/test_cap_tool.mjs` (Node ESM script) to validate projection behavior:
   - Scenario A: Release a 1‑year player with 0 dead cap → Y+1 cap space unchanged.
   - Scenario B: Release a 2‑year player with bonus → Y+1 cap space increases vs baseline (salary removed, only dead penalty remains).
 
-Run: `node scripts/test_cap_tool.mjs`
+Run: `node scripts/tests/test_cap_tool.mjs`
 
 ## Test Results
 
@@ -42,4 +42,3 @@ Run: `node scripts/test_cap_tool.mjs`
    - Y+1 Cap Space decreases by exactly this value; current ΔSpace no longer affects it.
 
 These changes align with the plan and address both reported issues.
-

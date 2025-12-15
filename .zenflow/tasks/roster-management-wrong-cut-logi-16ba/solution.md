@@ -54,14 +54,14 @@ Notes:
 - `docs/roster_cap_tool/js/ui/modals/releaseModal.js`
   - No UI changes required. It already takes `res.move` from `simulateRelease`; the new fields will be present automatically. Keep the explanatory text; behavior changes are reflected in projections.
 
-- `scripts/test_cap_tool.mjs`
+- `scripts/tests/test_cap_tool.mjs`
   - Update expectations:
     - FA=2 case: Year+1 totalSpent should increase by next-year dead penalty only (no salary removal benefit), i.e., `ΔY+1 ≈ +penaltyNextYear`.
     - FA=3 case: Year+1 reflects removal + penalty; Year+2 unchanged vs baseline.
     - FA=4 case: Years 1 and 2 reflect removal (Year+1 also gets penalty); Year+3 unchanged vs baseline.
 
 ## Testing Strategy
-- Unit tests (Node): extend `scripts/test_cap_tool.mjs` with targeted scenarios:
+- Unit tests (Node): extend `scripts/tests/test_cap_tool.mjs` with targeted scenarios:
   1) FA=2 (2y left): verify Year+1 roster salary is still included; only dead penalty affects Y+1; Year+2 baseline unaffected by contract termination.
   2) FA=3 (3y left): verify Y+1 decreases by (removed salary − next-year penalty); Y+2 unchanged vs baseline.
   3) FA=4 (4y left): verify Y+1 and Y+2 decrease by removed salary (Y+1 also adds penalty); Y+3 unchanged.
@@ -78,4 +78,3 @@ Notes:
 - Conversion overlays: Ensure add-back includes conversion increments for removed players to prevent undercounting in unaffected years.
 - Performance: Additional per-move loop with simple arrays; negligible overhead relative to existing projection work.
 - Data correctness: Edge cases where multiple moves exist for the same player should be either prevented by UI or deduped in overlay (we’ll guard by only processing the first release/tradeQuick per player).
-

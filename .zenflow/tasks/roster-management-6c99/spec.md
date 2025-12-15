@@ -5,7 +5,7 @@
   - Core modules: `js/state.js`, `js/capMath.js`, `js/models.js`, `js/ui/*`
   - Data: CSVs parsed with PapaParse CDN (`data/MEGA_teams.csv`, `data/MEGA_players.csv`)
   - Persistence: `localStorage` (scenarios, filters, rollover, re-sign, dead money baselines)
-- Tests: Playwright E2E (`tests/e2e/*`), local Node scripts (`scripts/test_cap_tool.mjs`)
+- Tests: Playwright E2E (`tests/e2e/*`), local Node scripts (`scripts/tests/test_cap_tool.mjs`)
 - Dev server: Playwright spins `python3 -m http.server 8000` (see `playwright.config.ts`)
 
 ## Technical Implementation Brief
@@ -113,7 +113,7 @@ Key design choices:
 
 Commands
 - E2E tests: `npm run test:e2e` (starts server and runs Playwright)
-- Node tests: `node scripts/test_cap_tool.mjs` (existing) and `node scripts/test_year_context.mjs` (to be added)
+- Node tests: `node scripts/tests/test_cap_tool.mjs` (existing) and `node scripts/tests/test_year_context.mjs` (to be added)
 
 MCP servers (recommended)
 - Filesystem server: to read/write repo files during automated verification
@@ -121,7 +121,7 @@ MCP servers (recommended)
 - Git server (optional): to diff/inspect changes during iterative development
 
 Helper scripts to add
-- `scripts/test_year_context.mjs`:
+- `scripts/tests/test_year_context.mjs`:
   - Unit-test `contextualizePlayer` transformation across edge cases:
     - Contract with 0, 1, 2+ years left at various offsets
     - Verify `capHit_ctx` follows base schedule index advancement
@@ -146,4 +146,3 @@ Sample input artifacts
 Acceptance/Regression checks
 - Existing E2E tests (`smoke.spec.ts`, `projections.spec.ts`) must continue to pass under `Y+0` default
 - New tests ensure correctness under `Y+1+` without changing default behavior
-

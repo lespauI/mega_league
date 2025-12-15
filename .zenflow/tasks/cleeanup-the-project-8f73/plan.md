@@ -73,7 +73,8 @@ Align high-level architecture documentation with the PRD and spec.
     - Commands and script paths in docs correspond to real files under `scripts/` and `stats_scripts/`.
   - Use `rg "python3 scripts/.*\\.py" README.md docs -n` to confirm all referenced script paths exist and are consistent.
 
-### [ ] Step: Phase 2 – Scripts layout & helpers
+### [x] Step: Phase 2 – Scripts layout & helpers
+<!-- chat-id: b8fc60a0-cfab-47ff-b9ee-528cf79fe154 -->
 
 Clarify the role and structure of `scripts/` and isolate non-Python helpers.
 

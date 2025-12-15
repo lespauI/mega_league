@@ -39,7 +39,7 @@ At a high level, the project is split into four domains. Each domain has clear C
 | Playoff + draft race | `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv`                                                                                      | `scripts/run_all_playoff_analysis.py`, `scripts/calc_sos_by_rankings.py`, `scripts/calc_playoff_probabilities.py`, `scripts/top_pick_race_analysis.py` | `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `output/draft_race/draft_race_report.md` | `docs/playoff_race.html`, `docs/playoff_race_table.html`                                                    |
 | Stats aggregation    | `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv` | `scripts/run_all_stats.py`, `stats_scripts/aggregate_team_stats.py`, `stats_scripts/aggregate_player_usage.py`, `stats_scripts/aggregate_rankings_stats.py` | `output/team_aggregated_stats.csv`, `output/team_player_usage.csv`, `output/team_rankings_stats.csv`, `output/player_team_stints.csv` | `docs/team_stats_explorer.html`, `docs/team_stats_correlations.html`, `docs/stats_dashboard.html`           |
 | SoS Season 2 (ELO)   | `MEGA_games.csv`, `MEGA_teams.csv`, `mega_elo.csv`                                                                                           | `scripts/run_all.py`, `scripts/calc_sos_season2_elo.py`                                                                       | `output/sos/season2_elo.csv`, `output/sos/season2_elo.json`                                                          | `docs/sos_season2.html`, `docs/sos_graphs.html`                                                              |
-| Roster / cap         | `MEGA_players.csv`, `MEGA_teams.csv`                                                                                                        | `scripts/power_rankings_roster.py`, `scripts/calc_team_y1_cap.py`, `scripts/sync_data_to_docs.sh`                            | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json`                                              | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html`, `docs/power_rankings_roster_charts.html` |
+| Roster / cap         | `MEGA_players.csv`, `MEGA_teams.csv`                                                                                                        | `scripts/power_rankings_roster.py`, `scripts/calc_team_y1_cap.py`, `scripts/tools/sync_data_to_docs.sh`                      | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json`                                              | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html`, `docs/power_rankings_roster_charts.html` |
 
 For a tour of the dashboards and which scripts power each HTML page, see `docs/README.md`.
 
@@ -391,7 +391,7 @@ This runs the end‑to‑end analysis and regenerates `index.html` with links to
   - Verifier script (recommended):
     - `python3 scripts/verify_draft_class_analytics.py 2026 --players MEGA_players.csv --teams MEGA_teams.csv --html docs/draft_class_2026.html`
   - Smoke test (end-to-end):
-    - `bash scripts/smoke_generate_draft_2026.sh`
+    - `bash scripts/smoke/smoke_generate_draft_2026.sh`
 
 Additional checks (optional):
 - Ensure dual rounds sections exist:
@@ -563,7 +563,7 @@ Quick start (local):
 ls MEGA_players.csv MEGA_teams.csv
 
 # 2) Sync CSVs into GitHub Pages data folder
-bash scripts/sync_data_to_docs.sh
+bash scripts/tools/sync_data_to_docs.sh
 
 # 3) Serve locally and open the tool
 python3 -m http.server 8000
@@ -581,7 +581,7 @@ GitHub Pages:
 Docs and references:
 - Usage guide: `docs/roster_cap_tool/USAGE.md`
 - Madden cap rules reference: `spec/Salary Cap Works in Madden.md`
-- Data sync script: `scripts/sync_data_to_docs.sh`
+- Data sync script: `scripts/tools/sync_data_to_docs.sh`
 - Smoke page: `docs/roster_cap_tool/test.html`
 - Cap math verification: `scripts/verify_cap_math.py` (writes `output/cap_tool_verification.json`)
 
