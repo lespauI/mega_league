@@ -744,9 +744,7 @@ From the repo root:
 ```bash
 # 0) (Recommended) Sync latest CSV data into the cap tool data folder
 bash scripts/tools/sync_data_to_docs.sh --all
-```
 
-```bash
 # 1) Install Node dev dependencies
 npm install
 
@@ -812,7 +810,6 @@ python3 -m http.server 8000
 Then in a browser:
 - Open `http://localhost:8000/index.html` and follow links to playoff and stats dashboards described in `docs/README.md`.
 - Open `http://localhost:8000/docs/roster_cap_tool/` and confirm the header, tabs, and cap summary render as expected.
-
 ---
 
 ## 🎓 New to Python or GitHub?

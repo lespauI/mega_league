@@ -144,3 +144,8 @@ Reinforce safety nets and document how to extend the project safely.
     - `scripts/README.md`.
     - `docs/README.md`.
     - Key test commands (Python + E2E).
+
+### [x] Step: Get latest master and resolve conflicts
+<!-- chat-id: 3ff259b2-daf0-4c08-be22-b7757b9cea26 -->
+
+Get latest master and resolve conflicts
