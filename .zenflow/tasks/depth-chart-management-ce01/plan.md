@@ -18,47 +18,47 @@ Do not make assumptions on important decisions — get clarification first.
 
 ## Workflow Steps
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
 
-Assess the task's difficulty, as underestimating it leads to poor outcomes.
-- easy: Straightforward implementation, trivial bug fix or feature
-- medium: Moderate complexity, some edge cases or caveats to consider
-- hard: Complex logic, many caveats, architectural considerations, or high-risk changes
+**Difficulty**: Medium
 
-Create a technical specification for the task that is appropriate for the complexity level:
-- Review the existing codebase architecture and identify reusable components.
-- Define the implementation approach based on established patterns in the project.
-- Identify all source code files that will be created or modified.
-- Define any necessary data model, API, or interface changes.
-- Describe verification steps using the project's test and lint commands.
-
-Save the output to `{@artifacts_path}/spec.md` with:
-- Technical context (language, dependencies)
-- Implementation approach
-- Source code structure changes
-- Data model / API / interface changes
-- Verification approach
-
-If the task is complex enough, create a detailed implementation plan based on `{@artifacts_path}/spec.md`:
-- Break down the work into concrete tasks (incrementable, testable milestones)
-- Each task should reference relevant contracts and include verification steps
-- Replace the Implementation step below with the planned tasks
-
-Rule of thumb for step size: each step should represent a coherent unit of work (e.g., implement a component, add an API endpoint, write tests for a module). Avoid steps that are too granular (single function).
-
-Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warrant this breakdown, keep the Implementation step below as is.
+Created `spec.md` with:
+- Architecture following `roster_cap_tool` patterns (vanilla JS, ES modules, PapaParse)
+- Depth chart grid layout with position slots and 1-4 string depth
+- Position mapping logic for CSV positions to depth chart slots
+- Color coding for status (normal, needs, draft, FA)
 
 ---
 
-### [ ] Step: Implementation
+### [ ] Step: Create Directory Structure and HTML
 
-Implement the task according to the technical specification and general engineering best practices.
+Create `docs/depth_chart/` with:
+- `index.html` - Main page with team selector and depth chart container
+- `css/styles.css` - Adapted from roster_cap_tool
+- `js/` directory for modules
 
-1. Break the task into steps where possible.
-2. Implement the required changes in the codebase.
-3. Add and run relevant tests and linters.
-4. Perform basic manual verification if applicable.
-5. After completion, write a report to `{@artifacts_path}/report.md` describing:
-   - What was implemented
-   - How the solution was tested
-   - The biggest issues or challenges encountered
+---
+
+### [ ] Step: Implement Core JavaScript Modules
+
+Create JS modules:
+- `js/csv.js` - Copy from roster_cap_tool
+- `js/state.js` - Simplified state management (team selection, players)
+- `js/ui/teamSelector.js` - Copy from roster_cap_tool
+- `js/ui/depthChart.js` - Core depth chart rendering logic
+- `js/main.js` - Boot and initialization
+
+---
+
+### [ ] Step: Add Link to Root Index
+
+Add navigation link to the new depth chart tool from `index.html`.
+
+---
+
+### [ ] Step: Manual Verification and Report
+
+1. Load tool and verify team selector works
+2. Verify players appear in correct position slots
+3. Verify OVR-based ordering
+4. Write report to `report.md`
