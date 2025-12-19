@@ -30,7 +30,8 @@ Created `spec.md` with:
 
 ---
 
-### [ ] Step: Create Directory Structure and HTML
+### [x] Step: Create Directory Structure and HTML
+<!-- chat-id: 3bf73d4a-2e4d-45c4-b195-97a47da810b7 -->
 
 Create `docs/depth_chart/` with:
 - `index.html` - Main page with team selector and depth chart container
