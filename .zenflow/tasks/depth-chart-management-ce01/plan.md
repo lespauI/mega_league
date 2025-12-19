@@ -52,7 +52,8 @@ Create JS modules:
 
 ---
 
-### [ ] Step: Add Link to Root Index
+### [x] Step: Add Link to Root Index
+<!-- chat-id: 15d29ea7-babe-405d-9569-7fa4c6fbfdf5 -->
 
 Add navigation link to the new depth chart tool from `index.html`.
 
