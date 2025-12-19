@@ -59,7 +59,10 @@ Players ranked within each slot by `playerBestOvr` (or `playerSchemeOvr` as fall
 
 ### Empty Slots & Needs Highlighting
 
-- If a slot has fewer than expected starters, highlight cell (cyan in mockup = "needs attention")
+**Current Implementation:**
+- If a slot has fewer than expected starters, highlight cell with cyan = "needs attention"
+
+**Future Enhancement (not implemented):**
 - "draft" label = position need for draft planning
 - "FA" label = free agent target
 
@@ -117,8 +120,7 @@ const DEPTH_CHART_SLOTS = [
 // Player display in cell
 {
   name: "J.Herbert",       // Formatted as "FirstInitial.LastName"
-  ovr: 88,
-  status: 'normal' | 'need' | 'draft' | 'fa'
+  ovr: 88
 }
 ```
 
@@ -130,11 +132,15 @@ Grid-based layout with:
 - Row per position slot
 - Cells showing player name (abbreviated), can be styled by status
 
-### Color Coding (matching mockup)
+### Color Coding
+
+**Current Implementation:**
 - Normal cell: default panel background
-- Cyan (`#06b6d4`): Position needs attention (uncertainty/target)
+- Cyan (`#06b6d4`): Empty slot needs attention (fewer players than `max`)
+
+**Future Enhancement (from mockup, not implemented):**
 - Yellow (`#eab308`): Specific need highlight
-- Orange (`#f97316`): Free agent
+- Orange (`#f97316`): Free agent target
 
 ## Verification Approach
 
@@ -144,9 +150,7 @@ Grid-based layout with:
    - Verify sorting by OVR works correctly
    - Verify position splitting (WR1/WR2, EDGE1/EDGE2, etc.) works
 
-2. **E2E Test** (optional):
-   - Add smoke test to verify page loads and team selector works
-   - Test in `tests/e2e/depth_chart.spec.ts`
+**Note:** E2E tests are out of scope for this phase.
 
 ## Implementation Steps
 

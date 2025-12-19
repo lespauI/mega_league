@@ -76,3 +76,10 @@ Review feedback resolved:
 2. **Position Mapping** - Updated spec to document all fallback positions (`ROLB`, `MLB`, `LOLB`, `LE`, `RE`)
 3. **LS Position** - Added LS to implementation (`DEPTH_CHART_SLOTS` and `POSITION_GROUPS`)
 4. **Filter vs Split** - Updated spec data model to use `split` property matching implementation
+5. **Status Tracking** - Clarified in spec: current impl only highlights empty slots; draft/FA labels are future enhancement
+6. **Player Data Model** - Removed unused `status` field from player object in spec
+7. **E2E Tests** - Clarified in spec that E2E tests are out of scope for this phase
+
+### [ ] Step: Add e2e tests with playwright
+
+Covver every happy path, think about edgecases and negative cases
