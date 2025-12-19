@@ -29,7 +29,7 @@ The Depth Chart Management tool has been successfully implemented and verified.
   - Interior DL (DT x2)
   - Linebackers (SAM, MIKE, WILL)
   - Secondary (CB1, CB2, FS, SS)
-  - Specialists (K, P)
+  - Specialists (K, P, LS)
 
 ### 3. OVR-Based Ordering
 - **Status**: PASS

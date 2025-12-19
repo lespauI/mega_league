@@ -113,3 +113,17 @@ Created `tests/e2e/depth_chart.spec.ts` with 25 tests covering:
 <!-- agent: CODEX:5_1_HIGH -->
 
 I need you to complete a review
+
+### [x] Step: Fixes after review
+<!-- chat-id: 675d5ff4-3b78-4276-9221-c6b019481e58 -->
+<!-- agent: ZEN_CLI:MAX -->
+
+Fixed all items from review.md:
+
+1. **CSS Cleanup** - Removed unused `.dc-*` grid rules and old grid media queries; kept flex-based layout
+2. **CSV Loading** - Updated `docs/depth_chart/js/csv.js` to import and use `normalizeTeamRow`/`normalizePlayerRow` from `roster_cap_tool/js/validation.js`
+3. **Test Fixes** - Fixed tautological assertion in team selector test; renamed "no console errors" to "no runtime errors" for accuracy
+4. **Gitignore** - Added `dist/`, `build/`, `.cache/`, `coverage/`, `*.log`
+5. **Documentation** - Updated report.md to include LS in Specialists group
+
+All 25 depth chart tests pass.

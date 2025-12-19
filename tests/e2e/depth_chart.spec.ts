@@ -20,8 +20,8 @@ test.describe('Depth Chart: Page Load', () => {
     const selector = page.locator('[data-testid="team-select"]');
     await expect(selector).toBeVisible();
     const options = selector.locator('option');
-    await expect(options).toHaveCount(await options.count());
-    expect(await options.count()).toBeGreaterThan(0);
+    const count = await options.count();
+    expect(count).toBeGreaterThan(0);
   });
 
   test('depth chart grid renders', async ({ page }) => {
@@ -341,7 +341,7 @@ test.describe('Depth Chart: Negative Cases', () => {
     expect(errors).toHaveLength(0);
   });
 
-  test('no console errors on team change', async ({ page }) => {
+  test('no runtime errors on team change', async ({ page }) => {
     const errors: string[] = [];
     page.on('pageerror', (err) => errors.push(err.message));
 
