@@ -66,3 +66,13 @@ Add navigation link to the new depth chart tool from `index.html`.
 2. Verify players appear in correct position slots
 3. Verify OVR-based ordering
 4. Write report to `report.md`
+
+### [x] Step: Review
+<!-- chat-id: a7cae3ad-638c-4520-8037-390cb66f22bc -->
+
+Review feedback resolved:
+
+1. **Data Path Specification** - Added explicit CSV paths to spec: `../roster_cap_tool/data/MEGA_*.csv`
+2. **Position Mapping** - Updated spec to document all fallback positions (`ROLB`, `MLB`, `LOLB`, `LE`, `RE`)
+3. **LS Position** - Added LS to implementation (`DEPTH_CHART_SLOTS` and `POSITION_GROUPS`)
+4. **Filter vs Split** - Updated spec data model to use `split` property matching implementation

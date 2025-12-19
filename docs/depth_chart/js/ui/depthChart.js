@@ -25,6 +25,7 @@ const DEPTH_CHART_SLOTS = [
   { id: 'SS', label: 'SS', positions: ['SS'], max: 2 },
   { id: 'K', label: 'K', positions: ['K'], max: 1 },
   { id: 'P', label: 'P', positions: ['P'], max: 1 },
+  { id: 'LS', label: 'LS', positions: ['LS'], max: 1 },
 ];
 
 const POSITION_GROUPS = [
@@ -34,7 +35,7 @@ const POSITION_GROUPS = [
   { name: 'Interior DL', slots: ['DT1', 'DT2'] },
   { name: 'Linebackers', slots: ['SAM', 'MIKE', 'WILL'] },
   { name: 'Secondary', slots: ['CB1', 'CB2', 'FS', 'SS'] },
-  { name: 'Specialists', slots: ['K', 'P'] },
+  { name: 'Specialists', slots: ['K', 'P', 'LS'] },
 ];
 
 function getOvr(player) {

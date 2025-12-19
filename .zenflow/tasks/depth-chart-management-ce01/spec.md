@@ -9,7 +9,7 @@ Multi-position roster visualization with grouped layout, similar to existing ros
 - **Language**: JavaScript (ES Modules, vanilla JS)
 - **Dependencies**: PapaParse (CSV parsing via CDN)
 - **Existing Pattern**: `docs/roster_cap_tool/` - team selector, state management, table rendering
-- **Data Source**: MEGA_players.csv, MEGA_teams.csv
+- **Data Source**: `../roster_cap_tool/data/MEGA_players.csv`, `../roster_cap_tool/data/MEGA_teams.csv` (relative paths from depth_chart directory)
 
 ## Implementation Approach
 
@@ -41,12 +41,14 @@ Map CSV positions to depth chart slots:
 - `QB` → QB
 - `HB`, `RB` → HB
 - `FB` → FB
-- `WR` → WR1/WR2 (top 2 by OVR are WR1, next 2 are WR2, etc.)
+- `WR` → WR1/WR2 (top half by OVR are WR1, bottom half are WR2)
 - `TE` → TE
 - `LT`, `LG`, `C`, `RG`, `RT` → Respective OL positions
-- `LEDGE`, `REDGE` → EDGE (combined)
-- `DT` → DT
-- `SAM`, `MIKE`, `WILL` → Respective LB positions
+- `LEDGE`, `REDGE`, `LE`, `RE` → EDGE (combined, split into EDGE1/EDGE2)
+- `DT` → DT (split into DT1/DT2)
+- `SAM`, `ROLB` → SAM
+- `MIKE`, `MLB` → MIKE
+- `WILL`, `LOLB` → WILL
 - `CB` → CB1/CB2 (top by OVR split between slots)
 - `FS`, `SS` → Respective safety positions
 - `K`, `P`, `LS` → Specialists
@@ -83,27 +85,28 @@ Also link from root `index.html` for discoverability.
 
 ```javascript
 // Depth chart slot configuration
+// `split: 0` = first half of sorted players, `split: 1` = second half
 const DEPTH_CHART_SLOTS = [
   { id: 'QB', label: 'QB', positions: ['QB'], max: 3 },
   { id: 'HB', label: 'HB', positions: ['HB', 'RB'], max: 3 },
   { id: 'FB', label: 'FB', positions: ['FB'], max: 1 },
-  { id: 'WR1', label: 'WR1', positions: ['WR'], max: 4, filter: (players, idx) => idx < Math.ceil(players.length / 2) },
-  { id: 'WR2', label: 'WR2', positions: ['WR'], max: 4, filter: (players, idx) => idx >= Math.ceil(players.length / 2) },
+  { id: 'WR1', label: 'WR1', positions: ['WR'], max: 4, split: 0 },
+  { id: 'WR2', label: 'WR2', positions: ['WR'], max: 4, split: 1 },
   { id: 'TE', label: 'TE', positions: ['TE'], max: 4 },
   { id: 'LT', label: 'LT', positions: ['LT'], max: 2 },
   { id: 'LG', label: 'LG', positions: ['LG'], max: 2 },
   { id: 'C', label: 'C', positions: ['C'], max: 2 },
   { id: 'RG', label: 'RG', positions: ['RG'], max: 2 },
   { id: 'RT', label: 'RT', positions: ['RT'], max: 2 },
-  { id: 'EDGE1', label: 'EDGE', positions: ['LEDGE', 'REDGE'], max: 3, filter: (players, idx) => idx < Math.ceil(players.length / 2) },
-  { id: 'EDGE2', label: 'EDGE', positions: ['LEDGE', 'REDGE'], max: 3, filter: (players, idx) => idx >= Math.ceil(players.length / 2) },
-  { id: 'DT1', label: 'DT', positions: ['DT'], max: 3, filter: (players, idx) => idx < Math.ceil(players.length / 2) },
-  { id: 'DT2', label: 'DT', positions: ['DT'], max: 3, filter: (players, idx) => idx >= Math.ceil(players.length / 2) },
-  { id: 'SAM', label: 'SAM', positions: ['SAM'], max: 2 },
-  { id: 'MIKE', label: 'MIKE', positions: ['MIKE'], max: 2 },
-  { id: 'WILL', label: 'WILL', positions: ['WILL'], max: 2 },
-  { id: 'CB1', label: 'CB1', positions: ['CB'], max: 4, filter: (players, idx) => idx < Math.ceil(players.length / 2) },
-  { id: 'CB2', label: 'CB2', positions: ['CB'], max: 4, filter: (players, idx) => idx >= Math.ceil(players.length / 2) },
+  { id: 'EDGE1', label: 'EDGE', positions: ['LEDGE', 'REDGE', 'LE', 'RE'], max: 3, split: 0 },
+  { id: 'EDGE2', label: 'EDGE', positions: ['LEDGE', 'REDGE', 'LE', 'RE'], max: 3, split: 1 },
+  { id: 'DT1', label: 'DT', positions: ['DT'], max: 3, split: 0 },
+  { id: 'DT2', label: 'DT', positions: ['DT'], max: 3, split: 1 },
+  { id: 'SAM', label: 'SAM', positions: ['ROLB', 'SAM'], max: 2 },
+  { id: 'MIKE', label: 'MIKE', positions: ['MLB', 'MIKE'], max: 2 },
+  { id: 'WILL', label: 'WILL', positions: ['LOLB', 'WILL'], max: 2 },
+  { id: 'CB1', label: 'CB1', positions: ['CB'], max: 4, split: 0 },
+  { id: 'CB2', label: 'CB2', positions: ['CB'], max: 4, split: 1 },
   { id: 'FS', label: 'FS', positions: ['FS'], max: 2 },
   { id: 'SS', label: 'SS', positions: ['SS'], max: 2 },
   { id: 'K', label: 'K', positions: ['K'], max: 1 },
