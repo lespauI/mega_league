@@ -197,3 +197,75 @@ body {
 @media (prefers-reduced-motion: reduce) {
   * { transition: none !important; }
 }
+
+.depth-chart-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.depth-group {
+  flex: 1 1 300px;
+  min-width: 300px;
+}
+
+.depth-group__header {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: .5rem;
+  padding: .25rem 0;
+  border-bottom: 2px solid var(--accent);
+}
+
+.depth-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .85rem;
+}
+
+.depth-table th {
+  background: var(--panel);
+  color: var(--muted);
+  font-weight: 500;
+  padding: .5rem .4rem;
+  text-align: center;
+  border-bottom: 1px solid #334155;
+}
+
+.depth-table th:first-child {
+  text-align: left;
+  width: 50px;
+}
+
+.depth-cell {
+  padding: .4rem;
+  text-align: center;
+  border-bottom: 1px solid #1f2937;
+  vertical-align: middle;
+}
+
+.depth-cell--pos {
+  font-weight: 600;
+  text-align: left;
+  color: var(--text);
+}
+
+.depth-cell--need {
+  background: rgba(6, 182, 212, 0.1);
+  color: var(--muted);
+}
+
+.player-name {
+  display: block;
+  font-size: .8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.player-ovr {
+  display: block;
+  font-size: .7rem;
+  color: var(--muted);
+}

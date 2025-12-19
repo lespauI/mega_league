@@ -40,7 +40,8 @@ Create `docs/depth_chart/` with:
 
 ---
 
-### [ ] Step: Implement Core JavaScript Modules
+### [x] Step: Implement Core JavaScript Modules
+<!-- chat-id: d200b30f-e247-402e-b4a8-534b891f86d1 -->
 
 Create JS modules:
 - `js/csv.js` - Copy from roster_cap_tool
