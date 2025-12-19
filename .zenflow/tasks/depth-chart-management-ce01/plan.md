@@ -80,6 +80,30 @@ Review feedback resolved:
 6. **Player Data Model** - Removed unused `status` field from player object in spec
 7. **E2E Tests** - Clarified in spec that E2E tests are out of scope for this phase
 
-### [ ] Step: Add e2e tests with playwright
+### [x] Step: Add e2e tests with playwright
+<!-- chat-id: d27712cc-361f-48d6-8e98-3bd2c75182db -->
 
-Covver every happy path, think about edgecases and negative cases
+Created `tests/e2e/depth_chart.spec.ts` with 25 tests covering:
+
+**Happy paths:**
+- Page load with correct title and header
+- Team selector visible and populated
+- Depth chart grid renders with 7 position groups
+- All position groups (Offense Skill, O-Line, Edge, DT, LB, Secondary, Specialists)
+- Players display with name (F.LastName format) and OVR
+- Players ordered by OVR descending within position
+- Team selection changes update depth chart
+
+**Edge cases:**
+- Position splits (WR1/WR2, CB1/CB2, DT1/DT2, EDGE1/EDGE2) show different players
+- Empty needed slots show dash with need styling
+- Empty slots beyond max position depth don't show dash
+- Correct table column structure (Pos, 1, 2, 3, 4)
+- Rapid team switching stability
+- Page refresh handling
+
+**Negative cases:**
+- Direct navigation works
+- No JavaScript errors on load
+- No console errors on team change
+- CSV assets accessibility
