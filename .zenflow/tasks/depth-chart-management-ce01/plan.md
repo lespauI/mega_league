@@ -59,7 +59,8 @@ Add navigation link to the new depth chart tool from `index.html`.
 
 ---
 
-### [ ] Step: Manual Verification and Report
+### [x] Step: Manual Verification and Report
+<!-- chat-id: 197a7795-c952-4897-9bb4-78e1237f5927 -->
 
 1. Load tool and verify team selector works
 2. Verify players appear in correct position slots
