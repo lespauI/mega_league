@@ -127,5 +127,5 @@ This is amaizing how bad it is from css perspective, i cant belive, check the sc
 
 I would like you to get a screenshot of the app, and check if its human readable. If no, plan the adjsutment and do again, until you will not success with the results
 
-### [ ] Step: get latest main and rebase 
+### [x] Step: get latest main and rebase 
 as we already merge part of the work into master, you need to rebase your worktree branch
