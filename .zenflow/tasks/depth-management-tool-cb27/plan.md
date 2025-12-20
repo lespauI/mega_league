@@ -138,3 +138,6 @@ I would like you to get a screenshot of the app, and check if its human readable
 
 ### [x] Step: hide Roster and FA pannel by default
 <!-- chat-id: 63ebd3c9-8b4d-4612-8741-c227a618b2ec -->
+
+### [x] Step: Run the app and take screenshot with playwright
+<!-- chat-id: 4a0ae29f-6dc8-4f1f-b7b6-5f73a0885a7a -->
