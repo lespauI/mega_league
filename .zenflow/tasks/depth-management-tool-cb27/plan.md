@@ -36,7 +36,8 @@ Save to `{@artifacts_path}/spec.md` with:
 - Delivery phases (incremental, testable milestones)
 - Verification approach using project lint/test commands
 
-### [ ] Step: Planning
+### [x] Step: Planning
+<!-- chat-id: 4f5f8a5f-3b4e-4930-826b-68ae2ab3da3a -->
 
 Create a detailed implementation plan based on `{@artifacts_path}/spec.md`.
 
@@ -50,8 +51,62 @@ If the feature is trivial and doesn't warrant full specification, update this wo
 
 Save to `{@artifacts_path}/plan.md`.
 
-### [ ] Step: Implementation
+### [ ] Step: Data alignment
 
-This step should be replaced with detailed implementation tasks from the Planning step.
+Implement the shared player model and baseline roster loading for the depth tool (spec section 3.1, 4.1).
 
-If Planning didn't replace this step, execute the tasks in `{@artifacts_path}/plan.md`, updating checkboxes as you go. Run planned tests/lint and record results in plan.md.
+1. Update `docs/depth_chart/js/csv.js` and `docs/depth_chart/js/state.js` to reuse `normalizePlayerRow` and expose `baselinePlayers` / `playersById`.
+2. Ensure the depth chart still renders read-only depth using the updated data shape.
+3. Wire depth chart state so that future `DepthPlan` work can read from `baselinePlayers`.
+4. Verification: run `npm test -- depth_chart` (or the closest existing depth-chart tests) if present, and manually open `/docs/depth_chart/` to confirm the current layout still works and player/contract data match the cap tool.
+
+### [ ] Step: Depth plan model & persistence
+
+Introduce the `DepthPlan` data structure, editing helpers, and `localStorage` wiring (spec sections 3.2, 3.3, 4.3, 7).
+
+1. Define `DepthPlan`, `DepthSlotAssignment`, and acquisition type enums in `docs/depth_chart/js/state.js` (or a new shared module) based on the spec.
+2. Implement helpers: `buildInitialDepthPlanForTeam`, `ensureDepthPlanForTeam`, `updateDepthSlot`, `clearDepthSlot`, and `resetTeamRosterAndPlan`.
+3. Add roster edit helpers (`setRosterEdit`, `getPlayersForTeam`, `getFreeAgents`) and connect them to `DepthPlan` updates.
+4. Persist `rosterEdits` and `depthPlans` in `localStorage` under the versioned keys defined in the spec.
+5. Temporarily keep the existing table layout but render from `DepthPlan` instead of recomputing from players each time.
+6. Verification: manually change depth ordering and assignments for a team, reload the page, and confirm the same `DepthPlan` is restored from `localStorage`.
+
+### [ ] Step: Game-like layout & contract display
+
+Replace the table layout with the game-like offense/defense/special formations and surface contract/FA information (spec sections 3.4, 3.5, 4.2, 5.2).
+
+1. Update `docs/depth_chart/js/ui/depthChart.js` to render offense, defense, and special teams as position cards laid out on “field” containers driven by `DepthPlan`.
+2. Implement or reuse a `getContractSummary` helper to show contract length, years left, and “FA after season” flags in depth rows, roster lists, and FA search results.
+3. Update `docs/depth_chart/css/styles.css` to add `.depth-layout`, offense/defense/special field grids, `.position-card`, depth-row styles, and acquisition/FA badges that match the spec’s formations.
+4. Keep or adapt existing team selector wiring so that changing teams reloads the corresponding `DepthPlan`.
+5. Verification: visually confirm the new layout for offense/defense/special teams matches the requested formation for a few sample teams and that contract/FA markers appear where expected.
+
+### [ ] Step: Editing interactions, FA search & roster panel
+
+Add interactive editing for depth slots, free-agent search, and roster management (spec sections 2.1–2.5, 3.4, 5.1, 5.3, 5.4).
+
+1. Implement `docs/depth_chart/js/ui/slotEditor.js` to allow selecting current roster players, searching FAs, choosing placeholders (`Draft R1`, `Draft R2`, `Trade`, `FA`), and clearing slots, all backed by `updateDepthSlot` and `setRosterEdit`.
+2. Add an optional but recommended `docs/depth_chart/js/ui/rosterPanel.js` that shows current team roster and FA pool with controls for cut, sign, and trade operations.
+3. Wire click handlers from each depth slot row in `depthChart.js` to open the slot editor with the correct `slotId` and `depthIndex`.
+4. Ensure that assigning a FA player updates both roster state (moves from FA to team) and the appropriate `DepthPlan` slot.
+5. Handle edge cases such as duplicate assignments (a player appearing in multiple slots or teams) by clearing previous slots when a player is reassigned.
+6. Verification: manually perform flows to cut a player to FA, sign a FA into a slot, mark draft/trade/FA placeholders, and confirm state is persisted across reloads.
+
+### [ ] Step: Depth ordering controls & CSV export
+
+Support manual depth reordering and exporting the current team plan to CSV (spec sections 3.3, 5.5, 5.6, 4.4).
+
+1. Add up/down controls (or similar) on depth rows in `depthChart.js` to reorder `DepthSlotAssignment` entries within a slot and persist the new order via `DepthPlan`.
+2. Implement a CSV builder (`docs/depth_chart/js/csvExport.js` or equivalent) that produces rows with the columns described in the spec (`team`, `side`, `positionSlot`, `depth`, `playerName`, `acquisition`, `ovr`, `contractLength`, `contractYearsLeft`, `faAfterSeason`).
+3. Add an “Export CSV” button near the depth chart header that builds CSV for the currently selected team and triggers a download (e.g., `depth-plan-{TEAM}.csv`).
+4. Verification: change depth ordering, export CSV, and open the file to confirm rows reflect the current plan and acquisition/contract fields are correct.
+
+### [ ] Step: Polish, reset flows & automated tests
+
+Finalize UX, reset behavior, and automated coverage for the depth management tool (spec sections 3.3, 3.4, 6, 7).
+
+1. Implement a “Reset to baseline” control per team that clears `rosterEdits` and `DepthPlan` for that team and rebuilds from baseline players.
+2. Harden state management against malformed or missing `localStorage` entries, absent teams, or unexpected CSV data.
+3. Ensure basic accessibility for interactive elements: focus handling for the slot editor, keyboard navigation for primary actions, and ARIA labels where appropriate.
+4. Update or extend Playwright E2E tests in `tests/e2e/depth_chart.spec.ts` to cover new layout, slot editing, FA search, persistence, reset, and CSV export.
+5. Verification: run `npm run test:e2e -- tests/e2e/depth_chart.spec.ts` (or the appropriate command from the spec) and confirm all depth-chart tests pass, then do a final manual sanity pass through key user flows.
