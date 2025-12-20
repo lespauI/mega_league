@@ -96,7 +96,8 @@ Add interactive editing for depth slots, free-agent search, and roster managemen
 5. Handle edge cases such as duplicate assignments (a player appearing in multiple slots or teams) by clearing previous slots when a player is reassigned.
 6. Verification: manually perform flows to cut a player to FA, sign a FA into a slot, mark draft/trade/FA placeholders, and confirm state is persisted across reloads.
 
-### [ ] Step: Depth ordering controls & CSV export
+### [x] Step: Depth ordering controls & CSV export
+<!-- chat-id: 4459fb69-1b7d-4ddb-ae9c-6cb9fe2e3eae -->
 
 Support manual depth reordering and exporting the current team plan to CSV (spec sections 3.3, 5.5, 5.6, 4.4).
 

@@ -65,6 +65,34 @@ body {
   padding: 1rem;
 }
 
+.depth-chart-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.depth-chart-toolbar__actions {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+}
+
+.depth-chart-toolbar__btn {
+  border-radius: .375rem;
+  border: 1px solid #334155;
+  background: #020617;
+  color: var(--text);
+  font-size: .75rem;
+  padding: .25rem .6rem;
+  cursor: pointer;
+}
+
+.depth-chart-toolbar__btn:hover {
+  border-color: rgba(56, 189, 248, 0.7);
+}
+
 .roster-panel {
   background: var(--panel);
   border: 1px solid #1f2937;
@@ -488,6 +516,29 @@ body {
   align-items: center;
   gap: .25rem;
   flex-shrink: 0;
+}
+
+.depth-row__controls {
+  display: flex;
+  flex-direction: column;
+  gap: .1rem;
+  flex-shrink: 0;
+}
+
+.depth-row__btn {
+  border-radius: .25rem;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--muted);
+  font-size: .65rem;
+  padding: 0;
+  width: 1.1rem;
+  height: 1.1rem;
+  cursor: pointer;
+}
+
+.depth-row__btn:hover {
+  color: var(--text);
 }
 
 .depth-row__ovr {

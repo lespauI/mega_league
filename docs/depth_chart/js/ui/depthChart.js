@@ -1,11 +1,18 @@
-import { getDepthPlanForSelectedTeam, getState } from '../state.js';
-import { DEPTH_CHART_SLOTS, getOvr } from '../slots.js';
+import { getDepthPlanForSelectedTeam, getState, reorderDepthSlot } from '../state.js';
+import {
+  DEPTH_CHART_SLOTS,
+  OFFENSE_SLOT_IDS,
+  DEFENSE_SLOT_IDS,
+  SPECIAL_SLOT_IDS,
+  getOvr,
+} from '../slots.js';
 import { formatName, getContractSummary } from './playerFormatting.js';
 import { openSlotEditor } from './slotEditor.js';
+import { buildDepthCsvForTeam, downloadCsv } from '../csvExport.js';
 
-const OFFENSE_SLOTS = ['LT', 'LG', 'C', 'RG', 'RT', 'QB', 'HB', 'FB', 'WR1', 'WR2', 'TE'];
-const DEFENSE_SLOTS = ['FS', 'SS', 'CB1', 'CB2', 'SAM', 'MIKE', 'WILL', 'DT1', 'DT2', 'EDGE1', 'EDGE2'];
-const SPECIAL_SLOTS = ['K', 'P', 'LS'];
+const OFFENSE_SLOTS = OFFENSE_SLOT_IDS;
+const DEFENSE_SLOTS = DEFENSE_SLOT_IDS;
+const SPECIAL_SLOTS = SPECIAL_SLOT_IDS;
 
 function getSlotDefinition(slotId) {
   return DEPTH_CHART_SLOTS.find((s) => s.id === slotId) || null;
@@ -57,6 +64,44 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
 
   const contentRight = doc.createElement('span');
   contentRight.className = 'depth-row__meta';
+
+  const controls = doc.createElement('span');
+  controls.className = 'depth-row__controls';
+
+  const canMove = !!assignment && (assignment.playerId || assignment.placeholder);
+
+  if (canMove) {
+    const moveUp = doc.createElement('button');
+    moveUp.type = 'button';
+    moveUp.className = 'depth-row__btn depth-row__btn--up';
+    moveUp.textContent = '↑';
+    moveUp.title = 'Move up';
+    moveUp.addEventListener('click', (event) => {
+      event.stopPropagation();
+      reorderDepthSlot({
+        slotId: slot.id,
+        depthIndex,
+        direction: 'up',
+      });
+    });
+
+    const moveDown = doc.createElement('button');
+    moveDown.type = 'button';
+    moveDown.className = 'depth-row__btn depth-row__btn--down';
+    moveDown.textContent = '↓';
+    moveDown.title = 'Move down';
+    moveDown.addEventListener('click', (event) => {
+      event.stopPropagation();
+      reorderDepthSlot({
+        slotId: slot.id,
+        depthIndex,
+        direction: 'down',
+      });
+    });
+
+    controls.appendChild(moveUp);
+    controls.appendChild(moveDown);
+  }
 
   if (player) {
     row.classList.add('depth-row--player');
@@ -118,6 +163,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
 
   row.appendChild(contentLeft);
   row.appendChild(contentRight);
+  row.appendChild(controls);
 
   row.addEventListener('click', () => {
     openSlotEditor({
@@ -181,11 +227,46 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
   const el = document.getElementById(containerId);
   if (!el) return;
 
+  const container = document.getElementById('depth-chart-container');
+
   const depthPlan = getDepthPlanForSelectedTeam();
-  const { playersById = {} } = getState();
+  const { playersById = {}, selectedTeam } = getState();
   el.innerHTML = '';
 
   const doc = el.ownerDocument || document;
+
+  if (container) {
+    let toolbar = container.querySelector('.depth-chart-toolbar');
+    if (!toolbar) {
+      toolbar = doc.createElement('div');
+      toolbar.className = 'depth-chart-toolbar';
+
+      const spacer = doc.createElement('div');
+      spacer.className = 'depth-chart-toolbar__spacer';
+      toolbar.appendChild(spacer);
+
+      const actions = doc.createElement('div');
+      actions.className = 'depth-chart-toolbar__actions';
+
+      const exportBtn = doc.createElement('button');
+      exportBtn.type = 'button';
+      exportBtn.className = 'depth-chart-toolbar__btn';
+      exportBtn.textContent = 'Export CSV';
+      exportBtn.addEventListener('click', () => {
+        const { selectedTeam: currentTeam, playersById: currentPlayersById = {} } = getState();
+        const currentPlan = getDepthPlanForSelectedTeam();
+        if (!currentTeam || !currentPlan) return;
+        const csv = buildDepthCsvForTeam(currentTeam, currentPlan, currentPlayersById);
+        if (!csv) return;
+        const filename = `depth-plan-${currentTeam}.csv`;
+        downloadCsv(filename, csv);
+      });
+
+      actions.appendChild(exportBtn);
+      toolbar.appendChild(actions);
+      container.insertBefore(toolbar, container.firstChild);
+    }
+  }
 
   const layout = doc.createElement('div');
   layout.className = 'depth-layout';

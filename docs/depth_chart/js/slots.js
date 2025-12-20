@@ -1,3 +1,21 @@
+export const OFFENSE_SLOT_IDS = ['LT', 'LG', 'C', 'RG', 'RT', 'QB', 'HB', 'FB', 'WR1', 'WR2', 'TE'];
+
+export const DEFENSE_SLOT_IDS = [
+  'FS',
+  'SS',
+  'CB1',
+  'CB2',
+  'SAM',
+  'MIKE',
+  'WILL',
+  'DT1',
+  'DT2',
+  'EDGE1',
+  'EDGE2',
+];
+
+export const SPECIAL_SLOT_IDS = ['K', 'P', 'LS'];
+
 export const DEPTH_CHART_SLOTS = [
   { id: 'QB', label: 'QB', positions: ['QB'], max: 3 },
   { id: 'HB', label: 'HB', positions: ['HB', 'RB'], max: 3 },
@@ -42,6 +60,14 @@ export function getOvr(player) {
   return player.playerBestOvr || player.playerSchemeOvr || 0;
 }
 
+export function getSlotSide(slotId) {
+  if (!slotId) return '';
+  if (OFFENSE_SLOT_IDS.includes(slotId)) return 'Offense';
+  if (DEFENSE_SLOT_IDS.includes(slotId)) return 'Defense';
+  if (SPECIAL_SLOT_IDS.includes(slotId)) return 'Special Teams';
+  return '';
+}
+
 export function getPlayersForSlot(slot, allPlayers) {
   const matched = (allPlayers || []).filter((p) =>
     slot.positions.some((pos) => String(p.position || '').toUpperCase() === pos.toUpperCase())
@@ -55,4 +81,3 @@ export function getPlayersForSlot(slot, allPlayers) {
 
   return matched;
 }
-

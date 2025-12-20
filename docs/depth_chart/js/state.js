@@ -356,6 +356,39 @@ export function clearPlayerFromAllDepthSlots(playerId) {
   }
 }
 
+export function reorderDepthSlot({ teamAbbr, slotId, depthIndex, direction }) {
+  const team = teamAbbr || state.selectedTeam;
+  if (!team || !slotId || !depthIndex || !direction) return;
+
+  const plan = ensureDepthPlanForTeam(team);
+  if (!plan || !plan.slots || !Array.isArray(plan.slots[slotId])) return;
+
+  const current = plan.slots[slotId].filter(Boolean);
+  if (current.length <= 1) return;
+
+  const fromIdx = Math.max(0, Math.min(current.length - 1, depthIndex - 1));
+  const delta = direction === 'up' ? -1 : direction === 'down' ? 1 : 0;
+  if (!delta) return;
+
+  const toIdx = fromIdx + delta;
+  if (toIdx < 0 || toIdx >= current.length) return;
+
+  const updated = current.slice();
+  const [moved] = updated.splice(fromIdx, 1);
+  updated.splice(toIdx, 0, moved);
+
+  for (let i = 0; i < updated.length; i++) {
+    const entry = updated[i];
+    if (entry) {
+      entry.depthIndex = i + 1;
+    }
+  }
+
+  plan.slots[slotId] = updated;
+  persistDepthPlans();
+  emit();
+}
+
 /* Internal helpers */
 
 function normalizePlayersTeams(players, teams) {
