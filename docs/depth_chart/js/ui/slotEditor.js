@@ -39,6 +39,7 @@ function ensureRoot() {
       closeSlotEditor();
     }
   });
+
   doc.body.appendChild(backdropEl);
 }
 
