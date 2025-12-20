@@ -57,10 +57,9 @@ export function getContractSummary(player) {
   if (isFaNow) {
     label = 'FA';
   } else if (length !== null && yearsLeft !== null) {
-    label = `${length} yrs (${yearsLeft} left)`;
+    label = `${yearsLeft}/${length} yrs`;
   } else if (yearsLeft !== null) {
-    const yrs = yearsLeft;
-    label = `${yrs} yr${yrs === 1 ? '' : 's'} left`;
+    label = `${yearsLeft} yrs`;
   }
 
   return { label, isFaAfterSeason };

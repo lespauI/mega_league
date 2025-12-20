@@ -168,7 +168,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     }
 
     const { label: contractLabel, isFaAfterSeason } = getContractSummary(player);
-    if (showFullContractDetails && contractLabel) {
+    if (contractLabel) {
       const contractEl = doc.createElement('span');
       contractEl.className = 'depth-row__contract';
       contractEl.textContent = contractLabel;
@@ -183,7 +183,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
       contentRight.appendChild(badge);
     }
 
-    if (showFullContractDetails && isFaAfterSeason) {
+    if (isFaAfterSeason) {
       const faBadge = doc.createElement('span');
       faBadge.className = 'badge badge--fa-after';
       faBadge.textContent = 'FA after season';
