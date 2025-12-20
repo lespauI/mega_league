@@ -361,7 +361,6 @@ export function clearPlayerFromAllDepthSlots(playerId) {
   }
 }
 
-<<<<<<< HEAD
 export function reorderDepthSlot({ teamAbbr, slotId, depthIndex, direction }) {
   const team = teamAbbr || state.selectedTeam;
   if (!team || !slotId || !depthIndex || !direction) return;
@@ -395,8 +394,6 @@ export function reorderDepthSlot({ teamAbbr, slotId, depthIndex, direction }) {
   emit();
 }
 
-=======
->>>>>>> 032149f (Editing interactions, FA search & roster panel)
 /* Internal helpers */
 
 function normalizePlayersTeams(players, teams) {
