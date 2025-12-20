@@ -286,7 +286,7 @@ New and updated modules:
     const length = player.contractLength ?? player.contractYearsLeft ?? null;
     const yearsLeft = player.contractYearsLeft ?? null;
     const isFaNow = !!player.isFreeAgent;
-    const isFaAfterSeason = !isFaNow && (Number(yearsLeft) === 1 || Number(yearsLeft) === 0);
+    const isFaAfterSeason = !isFaNow && Number(yearsLeft) === 1;
     let label = '';
     if (isFaNow) label = 'FA';
     else if (length != null && yearsLeft != null) {
@@ -300,7 +300,7 @@ New and updated modules:
 
 - This keeps semantics aligned with the cap tool’s CSV fields without importing full projection logic:
   - Uses `contractLength` and `contractYearsLeft` as defined in `normalizePlayerRow`.
-  - Treats `contractYearsLeft <= 1` (and non-FA) as “becomes FA after this season”.
+  - Treats `contractYearsLeft === 1` (and non-FA) as “becomes FA after this season” in the current-season (Y+0) view.
 
 ### 4.3 Depth plan representation
 
@@ -488,4 +488,3 @@ Each phase is incremental and testable in isolation.
     - `npm run test:e2e -- tests/e2e/depth_chart.spec.ts`.
 
 This specification keeps the depth chart tool aligned with the cap tool’s data model while adding the interactive planning features, contract visibility, acquisition tagging, CSV export, and game-like layout described in the PRD.
-
