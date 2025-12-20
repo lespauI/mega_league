@@ -9,6 +9,17 @@ async function gotoDepthChart(page: import('@playwright/test').Page) {
   await expect(page.locator('#depth-chart-grid .depth-layout')).toBeVisible();
 }
 
+async function openRosterPanel(page: import('@playwright/test').Page) {
+  const rosterPanel = page.locator('#roster-panel');
+  const isVisible = await rosterPanel.isVisible();
+  if (isVisible) return;
+
+  const toggleBtn = page.locator('button.depth-chart-toolbar__btn--roster-toggle');
+  await expect(toggleBtn).toBeVisible();
+  await toggleBtn.click();
+  await expect(rosterPanel).toBeVisible();
+}
+
 test.describe('Depth Chart: Page Load & Layout', () => {
   test('page loads with correct title and header', async ({ page }) => {
     await page.goto(DEPTH_CHART_URL);
@@ -325,6 +336,7 @@ test.describe('Depth Chart: Roster, editing & export flows', () => {
 
   test('roster panel cut to FA updates roster, FA list and depth chart', async ({ page }) => {
     await gotoDepthChart(page);
+    await openRosterPanel(page);
 
     const rosterSection = page
       .locator('.roster-panel__section')
@@ -355,7 +367,7 @@ test.describe('Depth Chart: Roster, editing & export flows', () => {
     await gotoDepthChart(page);
 
     const targetRow = page.locator(
-      '.depth-row[data-slot-id="WR1"][data-depth-index="4"]'
+      '.depth-row[data-slot-id="WR1"][data-depth-index="3"]'
     );
     await expect(targetRow).toBeVisible();
 
@@ -466,5 +478,16 @@ test.describe('Depth Chart: Negative & error cases', () => {
     }
 
     expect(errors).toHaveLength(0);
+  });
+});
+
+test.describe('Depth Chart: Visual Snapshot', () => {
+  test('capture main layout screenshot', async ({ page }) => {
+    await gotoDepthChart(page);
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.screenshot({
+      path: 'test-results/depth-chart-main.png',
+      fullPage: true,
+    });
   });
 });
