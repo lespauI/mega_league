@@ -85,8 +85,6 @@ export function normalizePlayerRow(row) {
   const desiredLength = Number.isFinite(toNum(row.desiredLength)) ? toNum(row.desiredLength) : undefined;
   const reSignStatus = Number.isFinite(toNum(row.reSignStatus)) ? toNum(row.reSignStatus) : undefined;
 
-  const devTrait = toStr(row.devTrait || '');
-
   const errors = [];
   if (!firstName) errors.push('firstName missing');
   if (!lastName) errors.push('lastName missing');
@@ -101,7 +99,7 @@ export function normalizePlayerRow(row) {
       isFreeAgent, isOnIR, yearsPro, capHit, capReleaseNetSavings, capReleasePenalty,
       contractSalary, contractBonus, contractLength, contractYearsLeft,
       desiredSalary, desiredBonus, desiredLength, reSignStatus,
-      playerBestOvr, playerSchemeOvr, devTrait,
+      playerBestOvr, playerSchemeOvr,
     },
     errors,
   };
