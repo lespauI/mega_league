@@ -521,11 +521,20 @@ body {
 }
 
 .depth-row__name {
-  flex: 1 1 auto;
-  min-width: 0;
+  flex: 1 1 0;
+  min-width: 50px;
+  display: flex;
+  align-items: center;
+  gap: .25rem;
+  overflow: hidden;
+}
+
+.depth-row__name .player-name {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 500;
+  font-size: .72rem;
 }
 
 .depth-row__meta {
@@ -559,9 +568,50 @@ body {
 }
 
 .depth-row__ovr {
-  font-size: .7rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.6rem;
+  padding: 0 .25rem;
+  border-radius: .25rem;
+  border: 1px solid rgba(148, 163, 184, 0.5);
+  background: rgba(15, 23, 42, 0.95);
+  font-size: .68rem;
+  font-weight: 700;
   font-variant-numeric: tabular-nums;
+}
+
+.depth-row__salary {
+  font-size: .65rem;
+  color: var(--cyan);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.depth-row__dev {
+  font-size: .6rem;
+  font-weight: 700;
+  padding: 0 .2rem;
+  border-radius: .15rem;
+  line-height: 1.2;
+}
+
+.dev-trait--x {
+  background: rgba(220, 38, 38, 0.25);
+  color: #fca5a5;
+  border: 1px solid rgba(220, 38, 38, 0.6);
+}
+
+.dev-trait--ss {
+  background: rgba(234, 179, 8, 0.25);
+  color: #fde047;
+  border: 1px solid rgba(234, 179, 8, 0.6);
+}
+
+.dev-trait--star {
+  background: rgba(148, 163, 184, 0.2);
+  color: #cbd5e1;
+  border: 1px solid rgba(148, 163, 184, 0.5);
 }
 
 .depth-row__contract {
