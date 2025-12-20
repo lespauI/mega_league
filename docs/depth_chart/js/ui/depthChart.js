@@ -11,35 +11,13 @@ import {
   SPECIAL_SLOT_IDS,
   getOvr,
 } from '../slots.js';
-import { formatName, getContractSummary, formatSalary, getDevTraitInfo } from './playerFormatting.js';
+import { formatName, getContractSummary } from './playerFormatting.js';
 import { openSlotEditor } from './slotEditor.js';
 import { buildDepthCsvForTeam, downloadCsv } from '../csvExport.js';
 
 const OFFENSE_SLOTS = OFFENSE_SLOT_IDS;
 const DEFENSE_SLOTS = DEFENSE_SLOT_IDS;
 const SPECIAL_SLOTS = SPECIAL_SLOT_IDS;
-
-function setRosterPanelVisibility(isVisible) {
-  const panel = document.getElementById('roster-panel');
-  const main = document.querySelector('main.container');
-  if (!panel || !main) return;
-
-  if (isVisible) {
-    panel.classList.remove('roster-panel--collapsed');
-    main.classList.remove('container--roster-collapsed');
-  } else {
-    panel.classList.add('roster-panel--collapsed');
-    main.classList.add('container--roster-collapsed');
-  }
-}
-
-function syncRosterToggleButton(button) {
-  if (!button) return;
-  const panel = document.getElementById('roster-panel');
-  const isCollapsed = !panel || panel.classList.contains('roster-panel--collapsed');
-  button.textContent = isCollapsed ? 'Show roster & FA' : 'Hide roster & FA';
-  button.setAttribute('aria-pressed', String(!isCollapsed));
-}
 
 function getSlotDefinition(slotId) {
   return DEPTH_CHART_SLOTS.find((s) => s.id === slotId) || null;
@@ -61,7 +39,7 @@ function getAcquisitionLabel(assignment) {
   if (!assignment || !assignment.acquisition) return '';
   switch (assignment.acquisition) {
     case 'existing':
-      return '';
+      return 'Existing';
     case 'faPlayer':
       return 'FA Player';
     case 'draftR1':
@@ -85,8 +63,6 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
   row.dataset.depthIndex = String(depthIndex);
 
   const maxDepthForNeed = slot.max || 4;
-   // Only show full contract + FA details for the top player in each slot.
-  const showFullContractDetails = depthIndex === 1;
 
   const contentLeft = doc.createElement('span');
   contentLeft.className = 'depth-row__name';
@@ -139,33 +115,15 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
   if (player) {
     row.classList.add('depth-row--player');
 
-    const ovrEl = doc.createElement('span');
-    ovrEl.className = 'depth-row__ovr player-ovr';
-    ovrEl.textContent = String(getOvr(player));
-    contentLeft.appendChild(ovrEl);
-
-    const { label: devLabel, colorClass: devClass } = getDevTraitInfo(player);
-    if (devLabel) {
-      const devEl = doc.createElement('span');
-      devEl.className = `depth-row__dev ${devClass}`;
-      devEl.textContent = devLabel;
-      contentLeft.appendChild(devEl);
-    }
-
-    const nameEl = doc.createElement('span');
-    nameEl.className = 'player-name';
-    nameEl.textContent = formatName(player);
-    contentLeft.appendChild(nameEl);
+    contentLeft.classList.add('player-name');
+    contentLeft.textContent = formatName(player);
 
     ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
 
-    const salary = formatSalary(player);
-    if (salary) {
-      const salaryEl = doc.createElement('span');
-      salaryEl.className = 'depth-row__salary';
-      salaryEl.textContent = salary;
-      contentRight.appendChild(salaryEl);
-    }
+    const ovrEl = doc.createElement('span');
+    ovrEl.className = 'depth-row__ovr player-ovr';
+    ovrEl.textContent = String(getOvr(player));
+    contentRight.appendChild(ovrEl);
 
     const { label: contractLabel, isFaAfterSeason } = getContractSummary(player);
     if (contractLabel) {
@@ -265,7 +223,7 @@ function renderPositionCard(doc, slotId, depthPlan, playersById) {
       ? depthPlan.slots[slot.id].filter(Boolean)
       : [];
 
-  const maxDepthRows = 3;
+  const maxDepthRows = 4;
   for (let i = 0; i < maxDepthRows; i++) {
     const depthIndex = i + 1;
     const assignment =
@@ -308,21 +266,6 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
       const actions = doc.createElement('div');
       actions.className = 'depth-chart-toolbar__actions';
 
-      const rosterToggleBtn = doc.createElement('button');
-      rosterToggleBtn.type = 'button';
-      rosterToggleBtn.className =
-        'depth-chart-toolbar__btn depth-chart-toolbar__btn--roster-toggle';
-      rosterToggleBtn.setAttribute(
-        'aria-label',
-        'Toggle visibility of roster and free-agent panel'
-      );
-      rosterToggleBtn.addEventListener('click', () => {
-        const panel = document.getElementById('roster-panel');
-        const isCollapsed = !panel || panel.classList.contains('roster-panel--collapsed');
-        setRosterPanelVisibility(isCollapsed);
-        syncRosterToggleButton(rosterToggleBtn);
-      });
-
       const exportBtn = doc.createElement('button');
       exportBtn.type = 'button';
       exportBtn.className = 'depth-chart-toolbar__btn';
@@ -354,16 +297,8 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
 
       actions.appendChild(resetBtn);
       actions.appendChild(exportBtn);
-      actions.appendChild(rosterToggleBtn);
       toolbar.appendChild(actions);
       container.insertBefore(toolbar, container.firstChild);
-    }
-
-    const existingToggle = toolbar.querySelector(
-      '.depth-chart-toolbar__btn--roster-toggle'
-    );
-    if (existingToggle) {
-      syncRosterToggleButton(existingToggle);
     }
   }
 

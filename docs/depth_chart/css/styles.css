@@ -49,10 +49,6 @@ body {
   align-items: flex-start;
 }
 
-.container--roster-collapsed {
-  grid-template-columns: minmax(0, 1fr);
-}
-
 .team-selector select {
   background: #0b1324;
   color: var(--text);
@@ -113,10 +109,6 @@ body {
   padding: .75rem;
   max-height: 80vh;
   overflow: auto;
-}
-
-.roster-panel--collapsed {
-  display: none;
 }
 
 .roster-panel__inner {

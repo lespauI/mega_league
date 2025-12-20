@@ -116,36 +116,3 @@ Finalize UX, reset behavior, and automated coverage for the depth management too
 3. Ensure basic accessibility for interactive elements: focus handling for the slot editor, keyboard navigation for primary actions, and ARIA labels where appropriate.
 4. Update or extend Playwright E2E tests in `tests/e2e/depth_chart.spec.ts` to cover new layout, slot editing, FA search, persistence, reset, and CSV export.
 5. Verification: run `npm run test:e2e -- tests/e2e/depth_chart.spec.ts` (or the appropriate command from the spec) and confirm all depth-chart tests pass, then do a final manual sanity pass through key user flows.
-
-### [x] Step: Style absolutly terrible
-<!-- chat-id: 18b9005d-ba34-48d0-87c4-c9da5c6db217 -->
-
-This is amaizing how bad it is from css perspective, i cant belive, check the scrrenshot i attached and refactor styling
-
-### [x] Step: Run playwright and get the screenshot
-<!-- chat-id: 1771d2a7-924f-4cc5-b9f5-d2ef945836d8 -->
-
-I would like you to get a screenshot of the app, and check if its human readable. If no, plan the adjsutment and do again, until you will not success with the results
-
-### [x] Step: get latest main and rebase 
-<!-- chat-id: 572fdace-e963-4c95-a4ad-709781b9ef5c -->
-as we already merge part of the work into master, you need to rebase your worktree branch
-
-### [x] Step: Step: Run playwright and get the screenshot
-<!-- chat-id: 604dee6c-6e6e-4dad-9c36-4dfdc40fa56f -->
-
-I would like you to get a screenshot of the app, and check if its human readable. If no, plan the adjsutment and do again, until you will not success with the results
-
-### [x] Step: hide Roster and FA pannel by default
-<!-- chat-id: 63ebd3c9-8b4d-4612-8741-c227a618b2ec -->
-
-### [x] Step: Run the app and take screenshot with playwright
-<!-- chat-id: 4a0ae29f-6dc8-4f1f-b7b6-5f73a0885a7a -->
-
-### [x] Step: Fix app layout
-<!-- chat-id: 34c08e61-cb74-4665-bad3-f6e9a7f2ae90 -->
-<!-- agent: ZEN_CLI:MAX -->
-
-our depth tool layout is absolutly terrible. Your goal is to fix it and then use playwright to get a screenshot, if layout is still with bugs. Fix it again, untill you will get the results that is good enough to share with me. 
-
-Made changes, run screenshot playwright, check screenshot with view tool, and repeat
