@@ -73,7 +73,8 @@ Introduce the `DepthPlan` data structure, editing helpers, and `localStorage` wi
 5. Temporarily keep the existing table layout but render from `DepthPlan` instead of recomputing from players each time.
 6. Verification: manually change depth ordering and assignments for a team, reload the page, and confirm the same `DepthPlan` is restored from `localStorage`.
 
-### [ ] Step: Game-like layout & contract display
+### [x] Step: Game-like layout & contract display
+<!-- chat-id: b374ea6e-fd46-4555-b039-7e819d3863ec -->
 
 Replace the table layout with the game-like offense/defense/special formations and surface contract/FA information (spec sections 3.4, 3.5, 4.2, 5.2).
 
