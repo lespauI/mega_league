@@ -106,7 +106,7 @@ Support manual depth reordering and exporting the current team plan to CSV (spec
 3. Add an “Export CSV” button near the depth chart header that builds CSV for the currently selected team and triggers a download (e.g., `depth-plan-{TEAM}.csv`).
 4. Verification: change depth ordering, export CSV, and open the file to confirm rows reflect the current plan and acquisition/contract fields are correct.
 
-### [ ] Step: Polish, reset flows & automated tests
+### [x] Step: Polish, reset flows & automated tests
 <!-- chat-id: d40f5922-75d1-42fa-a5fe-6f93a155c807 -->
 
 Finalize UX, reset behavior, and automated coverage for the depth management tool (spec sections 3.3, 3.4, 6, 7).
