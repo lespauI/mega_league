@@ -135,3 +135,5 @@ as we already merge part of the work into master, you need to rebase your worktr
 <!-- chat-id: 604dee6c-6e6e-4dad-9c36-4dfdc40fa56f -->
 
 I would like you to get a screenshot of the app, and check if its human readable. If no, plan the adjsutment and do again, until you will not success with the results
+
+### [ ] Step: hide Roster and FA pannel by default
