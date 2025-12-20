@@ -31,11 +31,13 @@ The design should feel similar in data model and behavior to the existing cap ma
 - Surface contract information for players in the depth chart, based on the same CSV and normalization logic used by the roster cap tool:
   - Contract length (`contractLength`).
   - Years remaining on contract (`contractYearsLeft`).
-  - Cap‑tool–consistent notion of “becomes a free agent at the end of this season”.
+  - A clear notion of “becomes a free agent at the end of this season”.
 - For each player shown in the depth chart:
   - Display a concise contract summary (e.g., `3 yrs (2 left)`).
   - Indicate if the player is expected to be a free agent at the end of the current season (e.g., tag like `FA after season` or icon).
-- Depth chart data loading must reuse or align with `normalizePlayerRow` and any contract/year‑context behavior already implemented in the cap tool, to avoid diverging calculations or field names.
+- Depth chart data loading must reuse `normalizePlayerRow` so that field names and contract values match the cap tool, but **v1 operates in the current‑season (Y+0) context only**:
+  - “FA at end of current season” is determined directly from CSV contract fields (e.g., treating `contractYearsLeft === 1` as “FA after this season”).
+  - The depth tool does **not** implement the cap tool’s multi‑year year‑context selector or projections; those remain specific to the cap tool.
 
 ### 2.3 Depth Slot Acquisition Type (Draft / Trade / FA / Existing)
 
@@ -68,14 +70,15 @@ The design should feel similar in data model and behavior to the existing cap ma
 ### 2.5 Editable Depth Ordering
 
 - Users should be able to control depth ordering rather than relying only on auto‑sorted OVR:
-  - Reorder players within a position’s depth chart (e.g., drag‑and‑drop or arrow controls).
+  - Reorder players within a position’s depth chart via simple controls (e.g., up/down arrow buttons or small “move” actions), not full drag‑and‑drop, to keep behavior predictable within the 2D layout.
   - Override auto‑ordering while still showing OVR for reference.
 - Depth ordering edits must persist locally per team in `localStorage`.
 - Even for placeholder acquisitions (Draft/Trade/FA), users can control which depth level they occupy (1st, 2nd, 3rd, 4th).
+- For initial seeding only, keep the existing “split” semantics from `docs/depth_chart/js/ui/depthChart.js` (e.g., dividing WR pool into WR1/WR2, CB pool into CB1/CB2, DT/EDGE into paired slots). Once the user edits depth for a slot, their manual ordering is authoritative and should not be re‑split automatically.
 
 ### 2.6 CSV Export
 
-- Provide an “Export CSV” action for the current team’s depth plan.
+- Provide an “Export CSV” action for the **currently selected team’s** depth plan (multi‑team export is out of scope for v1).
 - Export format should be flat and analysis‑friendly (one row per depth slot), including at least:
   - Team abbreviation.
   - Side (`Offense`, `Defense`, `Special Teams`).
@@ -90,7 +93,7 @@ The design should feel similar in data model and behavior to the existing cap ma
 
 ### 2.7 Layout & Visual Design (“Like in a Game”)
 
-The current implementation groups positions into tables. The new layout should visually approximate an on‑field game view, while still being desktop‑friendly and readable.
+The current implementation groups positions into tables by position group and renders them as traditional `<table>` elements. The new layout should visually approximate an on‑field game view, while still being desktop‑friendly and readable. This represents a **fundamental change in layout architecture** from grouped tables to a 2D positional grid, and will require new container structure and CSS (rather than simply restyling the existing tables).
 
 **Offense layout (relative positioning):**
 
@@ -110,7 +113,7 @@ The current implementation groups positions into tables. The new layout should v
 
 **Special teams:**
 
-- Provide a compact section for K, P, LS – layout can remain tabular or simple row; no “field” realism required.
+- Provide a compact section for K, P, LS rendered as a simple horizontal row or mini‑table, grouped together in its own block below the main offense/defense field layout; no “field” realism is required here.
 
 **General layout requirements:**
 
@@ -122,11 +125,12 @@ The current implementation groups positions into tables. The new layout should v
 
 - Player and team data should continue to be sourced from the shared CSVs used by `docs/roster_cap_tool`:
   - `MEGA_teams.csv` for team metadata.
-  - `MEGA_players.csv` for player metadata, including contract fields.
+  - `MEGA_players.csv` for player metadata, including contract fields (`contractLength`, `contractYearsLeft`, `contractSalary`, `contractBonus`, etc.). These columns are already present in the current CSV.
 - Any additional fields used for contracts or FA timing must align with the cap tool’s understanding of:
   - `contractLength`
   - `contractYearsLeft`
-  - Current calendar year / season context (where needed to compute “FA at end of season”).
+  - Current calendar year / season context where needed to compute “FA at end of season” (even though the depth tool itself remains a current‑season view in v1).
+- The depth chart’s CSV loader (`docs/depth_chart/js/csv.js`) must be updated so `loadPlayers()` passes through the player `id` and contract fields exposed by `normalizePlayerRow`, ensuring the depth tool and cap tool share a consistent player model.
 - Depth management changes (local edits, assignments, placeholders) are **local to this tool** and do not modify the underlying CSVs.
 
 ## 3. Out‑of‑Scope / Non‑Goals
@@ -174,8 +178,8 @@ Key use cases:
 ## 6. Data Model & Persistence Requirements (Conceptual)
 
 - Extend the depth chart’s internal player representation to include:
-  - Player `id` from `normalizePlayerRow`.
-  - Contract fields (`contractLength`, `contractYearsLeft`, plus any basic salary/bonus fields if needed for FA timing).
+  - Player `id` from `normalizePlayerRow` (required for stable persistence and slot assignment).
+  - Contract fields (`contractLength`, `contractYearsLeft`, plus basic salary/bonus fields as needed for FA timing display).
 - Represent each depth slot with:
   - Position slot id (e.g., `QB`, `WR1`, `EDGE1`).
   - Depth index (1–4).
@@ -197,7 +201,7 @@ Key use cases:
 
 - Users are comfortable with basic depth chart concepts and terminology.
 - A player may appear in multiple depth slots (e.g., start at one position and serve as backup elsewhere); we will allow this in the first version rather than enforcing uniqueness.
-- Contract length and “FA at end of season” calculations can reuse the same year context assumptions as the cap tool, without new inputs from the user.
+- “FA at end of season” is derived directly from the CSV contract fields in a current‑season (Y+0) view (e.g., treating `contractYearsLeft === 1` as expiring after this season); we do not introduce a separate year‑context selector in this tool.
 - One per‑team plan is sufficient for now; multiple named scenarios are not required in this task.
 
 ### 8.2 Open Questions (for future clarification)
@@ -206,4 +210,3 @@ Key use cases:
 - Should depth chart edits influence any values or projections back in the cap tool, or remain completely separate?
 - Do users want position‑specific draft round planning beyond Round 1 and Round 2 (e.g., R3–R7)?
 - Are there any league‑specific constraints (e.g., minimum number of players per position, practice squad) that should be enforced or at least surfaced?
-
