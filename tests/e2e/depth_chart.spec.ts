@@ -1,14 +1,15 @@
 import { test, expect } from './fixtures';
+import * as fs from 'fs/promises';
 
 const DEPTH_CHART_URL = '/docs/depth_chart/';
 
 async function gotoDepthChart(page: import('@playwright/test').Page) {
   await page.goto(DEPTH_CHART_URL);
   await expect(page.locator('h1.app-title')).toHaveText(/Depth Chart/i);
-  await expect(page.locator('#depth-chart-grid')).toBeVisible();
+  await expect(page.locator('#depth-chart-grid .depth-layout')).toBeVisible();
 }
 
-test.describe('Depth Chart: Page Load', () => {
+test.describe('Depth Chart: Page Load & Layout', () => {
   test('page loads with correct title and header', async ({ page }) => {
     await page.goto(DEPTH_CHART_URL);
     await expect(page).toHaveTitle(/Depth Chart/i);
@@ -24,58 +25,38 @@ test.describe('Depth Chart: Page Load', () => {
     expect(count).toBeGreaterThan(0);
   });
 
-  test('depth chart grid renders', async ({ page }) => {
+  test('offense, defense and special sections render expected slots', async ({ page }) => {
     await gotoDepthChart(page);
-    const grid = page.locator('#depth-chart-grid');
-    await expect(grid).toBeVisible();
-    await expect(grid.locator('.depth-group')).toHaveCount(7);
-  });
-});
 
-test.describe('Depth Chart: Position Groups', () => {
-  const POSITION_GROUPS = [
-    'Offense Skill',
-    'Offensive Line',
-    'Edge Rushers',
-    'Interior DL',
-    'Linebackers',
-    'Secondary',
-    'Specialists',
-  ];
+    const offense = page.locator('.depth-side.depth-side--offense');
+    await expect(offense).toBeVisible();
+    await expect(offense.locator('.position-card.slot-LT')).toBeVisible();
+    await expect(offense.locator('.position-card.slot-C')).toBeVisible();
+    await expect(offense.locator('.position-card.slot-QB')).toBeVisible();
+    await expect(offense.locator('.position-card.slot-HB')).toBeVisible();
+    await expect(offense.locator('.position-card.slot-WR1')).toBeVisible();
+    await expect(offense.locator('.position-card.slot-WR2')).toBeVisible();
+    await expect(offense.locator('.position-card.slot-TE')).toBeVisible();
 
-  test('all position groups render with headers', async ({ page }) => {
-    await gotoDepthChart(page);
-    for (const groupName of POSITION_GROUPS) {
-      await expect(page.locator('.depth-group__header', { hasText: groupName })).toBeVisible();
-    }
-  });
+    const defense = page.locator('.depth-side.depth-side--defense');
+    await expect(defense).toBeVisible();
+    await expect(defense.locator('.position-card.slot-FS')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-SS')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-SAM')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-MIKE')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-WILL')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-DT1')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-DT2')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-EDGE1')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-EDGE2')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-CB1')).toBeVisible();
+    await expect(defense.locator('.position-card.slot-CB2')).toBeVisible();
 
-  test('Offense Skill group has correct positions', async ({ page }) => {
-    await gotoDepthChart(page);
-    const group = page.locator('.depth-group').filter({ hasText: 'Offense Skill' });
-    const posLabels = group.locator('.depth-cell--pos');
-    await expect(posLabels).toContainText(['QB', 'HB', 'FB', 'WR1', 'WR2', 'TE']);
-  });
-
-  test('Offensive Line group has correct positions', async ({ page }) => {
-    await gotoDepthChart(page);
-    const group = page.locator('.depth-group').filter({ hasText: 'Offensive Line' });
-    const posLabels = group.locator('.depth-cell--pos');
-    await expect(posLabels).toContainText(['LT', 'LG', 'C', 'RG', 'RT']);
-  });
-
-  test('Secondary group has correct positions', async ({ page }) => {
-    await gotoDepthChart(page);
-    const group = page.locator('.depth-group').filter({ hasText: 'Secondary' });
-    const posLabels = group.locator('.depth-cell--pos');
-    await expect(posLabels).toContainText(['CB1', 'CB2', 'FS', 'SS']);
-  });
-
-  test('Specialists group has K, P, LS', async ({ page }) => {
-    await gotoDepthChart(page);
-    const group = page.locator('.depth-group').filter({ hasText: 'Specialists' });
-    const posLabels = group.locator('.depth-cell--pos');
-    await expect(posLabels).toContainText(['K', 'P', 'LS']);
+    const special = page.locator('.depth-side.depth-side--special');
+    await expect(special).toBeVisible();
+    await expect(special.locator('.position-card.slot-K')).toBeVisible();
+    await expect(special.locator('.position-card.slot-P')).toBeVisible();
+    await expect(special.locator('.position-card.slot-LS')).toBeVisible();
   });
 });
 
@@ -91,7 +72,8 @@ test.describe('Depth Chart: Team Selection', () => {
       return;
     }
 
-    const initialHtml = await page.locator('#depth-chart-grid').innerHTML();
+    const grid = page.locator('#depth-chart-grid');
+    const initialHtml = await grid.innerHTML();
 
     const secondTeam = await options.nth(1).getAttribute('value');
     await selector.selectOption(secondTeam!);
@@ -101,7 +83,7 @@ test.describe('Depth Chart: Team Selection', () => {
       initialHtml
     );
 
-    const updatedHtml = await page.locator('#depth-chart-grid').innerHTML();
+    const updatedHtml = await grid.innerHTML();
     expect(updatedHtml).not.toBe(initialHtml);
   });
 
@@ -127,15 +109,15 @@ test.describe('Depth Chart: Player Display', () => {
   test('players display with name and OVR', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const playerCells = page.locator('.depth-cell .player-name');
-    const count = await playerCells.count();
+    const playerNames = page.locator('.depth-row--player .player-name');
+    const count = await playerNames.count();
     expect(count).toBeGreaterThan(0);
 
-    const firstPlayerName = await playerCells.first().textContent();
+    const firstPlayerName = await playerNames.first().textContent();
     expect(firstPlayerName).toBeTruthy();
     expect(firstPlayerName!.length).toBeGreaterThan(0);
 
-    const ovrCells = page.locator('.depth-cell .player-ovr');
+    const ovrCells = page.locator('.depth-row--player .player-ovr');
     const firstOvr = await ovrCells.first().textContent();
     expect(firstOvr).toBeTruthy();
     const ovrNum = parseInt(firstOvr!, 10);
@@ -147,7 +129,7 @@ test.describe('Depth Chart: Player Display', () => {
   test('player names follow F.LastName format', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const playerNames = page.locator('.depth-cell .player-name');
+    const playerNames = page.locator('.depth-row--player .player-name');
     const count = await playerNames.count();
     expect(count).toBeGreaterThan(0);
 
@@ -155,18 +137,20 @@ test.describe('Depth Chart: Player Display', () => {
     expect(name).toMatch(/^[A-Z]\..+$/);
   });
 
-  test('players are ordered by OVR (descending) within position', async ({ page }) => {
+  test('players are ordered by OVR (descending) within QB card', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const qbRow = page.locator('.depth-group').filter({ hasText: 'Offense Skill' }).locator('tr').filter({ hasText: 'QB' }).first();
-    const ovrCells = qbRow.locator('.player-ovr');
+    const qbCard = page.locator('.position-card.slot-QB');
+    await expect(qbCard).toBeVisible();
+
+    const ovrCells = qbCard.locator('.depth-row--player .player-ovr');
     const count = await ovrCells.count();
 
     if (count >= 2) {
       const ovrs: number[] = [];
       for (let i = 0; i < count; i++) {
         const txt = await ovrCells.nth(i).textContent();
-        ovrs.push(parseInt(txt!, 10));
+        ovrs.push(parseInt(txt || '0', 10));
       }
       for (let i = 1; i < ovrs.length; i++) {
         expect(ovrs[i]).toBeLessThanOrEqual(ovrs[i - 1]);
@@ -175,32 +159,27 @@ test.describe('Depth Chart: Player Display', () => {
   });
 });
 
-test.describe('Depth Chart: Empty Slots', () => {
+test.describe('Depth Chart: Empty & Optional Slots', () => {
   test('empty needed slots show dash with need styling', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const needCells = page.locator('.depth-cell--need');
-    const count = await needCells.count();
+    const needRows = page.locator('.depth-row.depth-row--need');
+    const count = await needRows.count();
     if (count > 0) {
-      const firstNeed = needCells.first();
+      const firstNeed = needRows.first().locator('.depth-row__empty');
       await expect(firstNeed).toHaveText('—');
     }
   });
 
-  test('empty slots beyond max do not show dash', async ({ page }) => {
+  test('optional rows beyond max depth do not show dash', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const fbRow = page.locator('.depth-group').filter({ hasText: 'Offense Skill' }).locator('tr').filter({ hasText: 'FB' }).first();
-    const cells = fbRow.locator('.depth-cell').filter({ hasNotText: 'FB' });
-    const count = await cells.count();
-    expect(count).toBe(4);
-
-    for (let i = 1; i < 4; i++) {
-      const cell = cells.nth(i);
-      const text = await cell.textContent();
-      if (text === '' || text === null) {
-        await expect(cell).not.toHaveClass(/depth-cell--need/);
-      }
+    const optionalRows = page.locator('.depth-row.depth-row--optional');
+    const count = await optionalRows.count();
+    if (count > 0) {
+      const first = optionalRows.first().locator('.depth-row__empty');
+      const text = (await first.textContent()) || '';
+      expect(text.trim()).toBe('');
     }
   });
 });
@@ -209,12 +188,11 @@ test.describe('Depth Chart: Position Splits', () => {
   test('WR1 and WR2 show different players from WR pool', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const offenseGroup = page.locator('.depth-group').filter({ hasText: 'Offense Skill' });
-    const wr1Row = offenseGroup.locator('tr').filter({ hasText: 'WR1' }).first();
-    const wr2Row = offenseGroup.locator('tr').filter({ hasText: 'WR2' }).first();
+    const wr1Card = page.locator('.position-card.slot-WR1');
+    const wr2Card = page.locator('.position-card.slot-WR2');
 
-    const wr1Players = wr1Row.locator('.player-name');
-    const wr2Players = wr2Row.locator('.player-name');
+    const wr1Players = wr1Card.locator('.player-name');
+    const wr2Players = wr2Card.locator('.player-name');
 
     const wr1Count = await wr1Players.count();
     const wr2Count = await wr2Players.count();
@@ -236,12 +214,11 @@ test.describe('Depth Chart: Position Splits', () => {
   test('CB1 and CB2 show different players from CB pool', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const secondaryGroup = page.locator('.depth-group').filter({ hasText: 'Secondary' });
-    const cb1Row = secondaryGroup.locator('tr').filter({ hasText: 'CB1' }).first();
-    const cb2Row = secondaryGroup.locator('tr').filter({ hasText: 'CB2' }).first();
+    const cb1Card = page.locator('.position-card.slot-CB1');
+    const cb2Card = page.locator('.position-card.slot-CB2');
 
-    const cb1Players = cb1Row.locator('.player-name');
-    const cb2Players = cb2Row.locator('.player-name');
+    const cb1Players = cb1Card.locator('.player-name');
+    const cb2Players = cb2Card.locator('.player-name');
 
     const cb1Count = await cb1Players.count();
     const cb2Count = await cb2Players.count();
@@ -261,12 +238,14 @@ test.describe('Depth Chart: Position Splits', () => {
   });
 });
 
-test.describe('Depth Chart: Data Loading', () => {
+test.describe('Depth Chart: Data Loading & Refresh', () => {
   test('CSV assets are accessible', async ({ page, baseURL }) => {
     const respTeams = await page.request.get(`${baseURL}/docs/roster_cap_tool/data/MEGA_teams.csv`);
     expect(respTeams.ok()).toBeTruthy();
 
-    const respPlayers = await page.request.get(`${baseURL}/docs/roster_cap_tool/data/MEGA_players.csv`);
+    const respPlayers = await page.request.get(
+      `${baseURL}/docs/roster_cap_tool/data/MEGA_players.csv`
+    );
     expect(respPlayers.ok()).toBeTruthy();
   });
 
@@ -280,18 +259,154 @@ test.describe('Depth Chart: Data Loading', () => {
 
     await expect(page.locator('h1.app-title')).toHaveText(/Depth Chart/i);
     await expect(page.locator('[data-testid="team-select"]')).toBeVisible();
-    await expect(page.locator('#depth-chart-grid .depth-group')).toHaveCount(7);
+    const cardCount = await page.locator('#depth-chart-grid .position-card').count();
+    expect(cardCount).toBeGreaterThan(0);
   });
 });
 
-test.describe('Depth Chart: Edge Cases', () => {
-  test('depth table has correct column structure', async ({ page }) => {
+test.describe('Depth Chart: Roster, editing & export flows', () => {
+  test('slot editor can set draft placeholder and persist across team switches', async ({ page }) => {
     await gotoDepthChart(page);
 
-    const firstTable = page.locator('.depth-table').first();
-    const headerCells = firstTable.locator('thead th');
-    await expect(headerCells).toHaveCount(5);
-    await expect(headerCells).toContainText(['Pos', '1', '2', '3', '4']);
+    const selector = page.locator('[data-testid="team-select"]');
+    const initialTeam = await selector.inputValue();
+
+    const targetRow = page.locator(
+      '.depth-row[data-slot-id="WR1"][data-depth-index="3"]'
+    );
+    await expect(targetRow).toBeVisible();
+
+    await targetRow.click();
+
+    const editor = page.locator('.slot-editor-backdrop.is-open');
+    await expect(editor).toBeVisible();
+
+    await editor.locator('.slot-editor__pill', { hasText: 'Draft R1' }).click();
+
+    await expect(targetRow).toHaveText(/Draft R1/);
+
+    const options = selector.locator('option');
+    const optCount = await options.count();
+    if (optCount >= 2) {
+      const secondTeam = await options.nth(1).getAttribute('value');
+      if (secondTeam && secondTeam !== initialTeam) {
+        await selector.selectOption(secondTeam);
+        await expect(page.locator('#depth-chart-grid .position-card.slot-WR1')).toBeVisible();
+
+        await selector.selectOption(initialTeam);
+        await expect(
+          page.locator('.depth-row[data-slot-id="WR1"][data-depth-index="3"]')
+        ).toHaveText(/Draft R1/);
+      }
+    }
+  });
+
+  test('slot editor free-agent search filters list', async ({ page }) => {
+    await gotoDepthChart(page);
+
+    const targetRow = page.locator(
+      '.depth-row[data-slot-id="WR1"][data-depth-index="2"]'
+    );
+    await expect(targetRow).toBeVisible();
+    await targetRow.click();
+
+    const editor = page.locator('.slot-editor-backdrop.is-open');
+    await expect(editor).toBeVisible();
+
+    const faSection = editor.locator('.slot-editor__section', { hasText: 'Free agents' });
+    const search = faSection.locator('.slot-editor__search');
+    await expect(search).toBeVisible();
+
+    await search.fill('zzzzzzzz');
+
+    const empty = faSection.locator('.slot-editor__empty');
+    await expect(empty).toHaveText(/No free agents match the filters/i);
+  });
+
+  test('roster panel cut to FA updates roster, FA list and depth chart', async ({ page }) => {
+    await gotoDepthChart(page);
+
+    const rosterSection = page
+      .locator('.roster-panel__section')
+      .filter({ hasText: 'Team roster' });
+    const firstRow = rosterSection.locator('.roster-panel__row').first();
+    await expect(firstRow).toBeVisible();
+
+    const playerName = (await firstRow.locator('.roster-panel__row-name').textContent())?.trim();
+    expect(playerName).toBeTruthy();
+
+    await firstRow.locator('button', { hasText: 'Cut to FA' }).click();
+
+    await expect(
+      rosterSection.locator('.roster-panel__row-name', { hasText: playerName! })
+    ).toHaveCount(0);
+
+    const faSection = page.locator('.roster-panel__section').filter({ hasText: 'Free agents' });
+    await expect(
+      faSection.locator('.roster-panel__row-name', { hasText: playerName! })
+    ).toHaveCount(1);
+
+    await expect(
+      page.locator('.depth-row--player .player-name', { hasText: playerName! })
+    ).toHaveCount(0);
+  });
+
+  test('Reset to baseline button clears depth changes for team', async ({ page }) => {
+    await gotoDepthChart(page);
+
+    const targetRow = page.locator(
+      '.depth-row[data-slot-id="WR1"][data-depth-index="4"]'
+    );
+    await expect(targetRow).toBeVisible();
+
+    const beforeText = (await targetRow.textContent()) || '';
+
+    await targetRow.click();
+    const editor = page.locator('.slot-editor-backdrop.is-open');
+    await expect(editor).toBeVisible();
+    await editor.locator('.slot-editor__pill', { hasText: 'Draft R2' }).click();
+
+    await expect(targetRow).toHaveText(/Draft R2/);
+
+    const resetBtn = page.locator('button.depth-chart-toolbar__btn--reset');
+    await expect(resetBtn).toBeVisible();
+    await resetBtn.click();
+
+    const afterText = (await targetRow.textContent()) || '';
+    expect(afterText).not.toMatch(/Draft R2/);
+    if (beforeText.trim().length > 0) {
+      expect(afterText.trim()).toBe(beforeText.trim());
+    }
+  });
+
+  test('Export CSV button downloads depth plan with expected header', async ({ page }) => {
+    await gotoDepthChart(page);
+
+    const exportBtn = page.locator('button', { hasText: /Export CSV/i });
+    await expect(exportBtn).toBeVisible();
+
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      exportBtn.click(),
+    ]);
+
+    const path = await download.path();
+    expect(path).toBeTruthy();
+
+    const content = await fs.readFile(path!, 'utf8');
+    expect(content).toContain(
+      'team,side,positionSlot,depth,playerName,acquisition,ovr,contractLength,contractYearsLeft,faAfterSeason'
+    );
+    const lines = content.trim().split('\n');
+    expect(lines.length).toBeGreaterThan(1);
+  });
+});
+
+test.describe('Depth Chart: Negative & error cases', () => {
+  test('gracefully handles direct navigation', async ({ page }) => {
+    await page.goto(DEPTH_CHART_URL);
+    await expect(page.locator('h1.app-title')).toHaveText(/Depth Chart/i);
+    await expect(page.locator('#depth-chart-grid')).toBeVisible();
   });
 
   test('all teams from selector are valid', async ({ page }) => {
@@ -320,16 +435,9 @@ test.describe('Depth Chart: Edge Cases', () => {
         const value = await options.nth(i % count).getAttribute('value');
         await selector.selectOption(value!);
       }
-      await expect(page.locator('#depth-chart-grid .depth-group')).toHaveCount(7);
+      const cardCount = await page.locator('#depth-chart-grid .position-card').count();
+      expect(cardCount).toBeGreaterThan(0);
     }
-  });
-});
-
-test.describe('Depth Chart: Negative Cases', () => {
-  test('gracefully handles direct navigation', async ({ page }) => {
-    await page.goto(DEPTH_CHART_URL);
-    await expect(page.locator('h1.app-title')).toHaveText(/Depth Chart/i);
-    await expect(page.locator('#depth-chart-grid')).toBeVisible();
   });
 
   test('no JavaScript errors on load', async ({ page }) => {

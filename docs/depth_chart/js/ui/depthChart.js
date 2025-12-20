@@ -1,129 +1,354 @@
-import { getTeamPlayers } from '../state.js';
+import {
+  getDepthPlanForSelectedTeam,
+  getState,
+  reorderDepthSlot,
+  resetTeamRosterAndPlan,
+} from '../state.js';
+import {
+  DEPTH_CHART_SLOTS,
+  OFFENSE_SLOT_IDS,
+  DEFENSE_SLOT_IDS,
+  SPECIAL_SLOT_IDS,
+  getOvr,
+} from '../slots.js';
+import { formatName, getContractSummary } from './playerFormatting.js';
+import { openSlotEditor } from './slotEditor.js';
+import { buildDepthCsvForTeam, downloadCsv } from '../csvExport.js';
 
-const DEPTH_CHART_SLOTS = [
-  { id: 'QB', label: 'QB', positions: ['QB'], max: 3 },
-  { id: 'HB', label: 'HB', positions: ['HB', 'RB'], max: 3 },
-  { id: 'FB', label: 'FB', positions: ['FB'], max: 1 },
-  { id: 'WR1', label: 'WR1', positions: ['WR'], max: 4, split: 0 },
-  { id: 'WR2', label: 'WR2', positions: ['WR'], max: 4, split: 1 },
-  { id: 'TE', label: 'TE', positions: ['TE'], max: 4 },
-  { id: 'LT', label: 'LT', positions: ['LT'], max: 2 },
-  { id: 'LG', label: 'LG', positions: ['LG'], max: 2 },
-  { id: 'C', label: 'C', positions: ['C'], max: 2 },
-  { id: 'RG', label: 'RG', positions: ['RG'], max: 2 },
-  { id: 'RT', label: 'RT', positions: ['RT'], max: 2 },
-  { id: 'EDGE1', label: 'EDGE', positions: ['LEDGE', 'REDGE', 'LE', 'RE'], max: 3, split: 0 },
-  { id: 'EDGE2', label: 'EDGE', positions: ['LEDGE', 'REDGE', 'LE', 'RE'], max: 3, split: 1 },
-  { id: 'DT1', label: 'DT', positions: ['DT'], max: 3, split: 0 },
-  { id: 'DT2', label: 'DT', positions: ['DT'], max: 3, split: 1 },
-  { id: 'SAM', label: 'SAM', positions: ['ROLB', 'SAM'], max: 2 },
-  { id: 'MIKE', label: 'MIKE', positions: ['MLB', 'MIKE'], max: 2 },
-  { id: 'WILL', label: 'WILL', positions: ['LOLB', 'WILL'], max: 2 },
-  { id: 'CB1', label: 'CB1', positions: ['CB'], max: 4, split: 0 },
-  { id: 'CB2', label: 'CB2', positions: ['CB'], max: 4, split: 1 },
-  { id: 'FS', label: 'FS', positions: ['FS'], max: 2 },
-  { id: 'SS', label: 'SS', positions: ['SS'], max: 2 },
-  { id: 'K', label: 'K', positions: ['K'], max: 1 },
-  { id: 'P', label: 'P', positions: ['P'], max: 1 },
-  { id: 'LS', label: 'LS', positions: ['LS'], max: 1 },
-];
+const OFFENSE_SLOTS = OFFENSE_SLOT_IDS;
+const DEFENSE_SLOTS = DEFENSE_SLOT_IDS;
+const SPECIAL_SLOTS = SPECIAL_SLOT_IDS;
 
-const POSITION_GROUPS = [
-  { name: 'Offense Skill', slots: ['QB', 'HB', 'FB', 'WR1', 'WR2', 'TE'] },
-  { name: 'Offensive Line', slots: ['LT', 'LG', 'C', 'RG', 'RT'] },
-  { name: 'Edge Rushers', slots: ['EDGE1', 'EDGE2'] },
-  { name: 'Interior DL', slots: ['DT1', 'DT2'] },
-  { name: 'Linebackers', slots: ['SAM', 'MIKE', 'WILL'] },
-  { name: 'Secondary', slots: ['CB1', 'CB2', 'FS', 'SS'] },
-  { name: 'Specialists', slots: ['K', 'P', 'LS'] },
-];
-
-function getOvr(player) {
-  return player.playerBestOvr || player.playerSchemeOvr || 0;
+function getSlotDefinition(slotId) {
+  return DEPTH_CHART_SLOTS.find((s) => s.id === slotId) || null;
 }
 
-function formatName(player) {
-  const first = player.firstName || '';
-  const last = player.lastName || '';
-  const initial = first.charAt(0);
-  return initial ? `${initial}.${last}` : last;
-}
-
-function getPlayersForSlot(slot, allPlayers) {
-  const matched = allPlayers.filter((p) =>
-    slot.positions.some((pos) => p.position.toUpperCase() === pos.toUpperCase())
-  );
-  matched.sort((a, b) => getOvr(b) - getOvr(a));
-
-  if (slot.split !== undefined) {
-    const half = Math.ceil(matched.length / 2);
-    return slot.split === 0 ? matched.slice(0, half) : matched.slice(half);
+function getPositionClassForSlot(slot) {
+  if (!slot) return '';
+  if (slot.id === 'WR1' || slot.id === 'WR2') return 'WR';
+  if (slot.id === 'EDGE1' || slot.id === 'EDGE2') return 'EDGE';
+  if (slot.id === 'DT1' || slot.id === 'DT2') return 'DT';
+  if (slot.id === 'CB1' || slot.id === 'CB2') return 'CB';
+  if (Array.isArray(slot.positions) && slot.positions.length > 0) {
+    return slot.positions[0];
   }
-  return matched;
+  return slot.id;
+}
+
+function getAcquisitionLabel(assignment) {
+  if (!assignment || !assignment.acquisition) return '';
+  switch (assignment.acquisition) {
+    case 'existing':
+      return 'Existing';
+    case 'faPlayer':
+      return 'FA Player';
+    case 'draftR1':
+      return 'Draft R1';
+    case 'draftR2':
+      return 'Draft R2';
+    case 'trade':
+      return 'Trade';
+    case 'faPlaceholder':
+      return 'FA';
+    default:
+      return '';
+  }
+}
+
+function renderDepthRow(doc, slot, depthIndex, assignment, player) {
+  const row = doc.createElement('button');
+  row.type = 'button';
+  row.className = 'depth-row';
+  row.dataset.slotId = slot.id;
+  row.dataset.depthIndex = String(depthIndex);
+
+  const maxDepthForNeed = slot.max || 4;
+
+  const contentLeft = doc.createElement('span');
+  contentLeft.className = 'depth-row__name';
+
+  const contentRight = doc.createElement('span');
+  contentRight.className = 'depth-row__meta';
+
+  const controls = doc.createElement('span');
+  controls.className = 'depth-row__controls';
+
+  const canMove = !!assignment && (assignment.playerId || assignment.placeholder);
+
+  if (canMove) {
+    const moveUp = doc.createElement('button');
+    moveUp.type = 'button';
+    moveUp.className = 'depth-row__btn depth-row__btn--up';
+    moveUp.textContent = '↑';
+    moveUp.title = 'Move up';
+    moveUp.setAttribute('aria-label', 'Move up in depth order');
+    moveUp.addEventListener('click', (event) => {
+      event.stopPropagation();
+      reorderDepthSlot({
+        slotId: slot.id,
+        depthIndex,
+        direction: 'up',
+      });
+    });
+
+    const moveDown = doc.createElement('button');
+    moveDown.type = 'button';
+    moveDown.className = 'depth-row__btn depth-row__btn--down';
+    moveDown.textContent = '↓';
+    moveDown.title = 'Move down';
+    moveDown.setAttribute('aria-label', 'Move down in depth order');
+    moveDown.addEventListener('click', (event) => {
+      event.stopPropagation();
+      reorderDepthSlot({
+        slotId: slot.id,
+        depthIndex,
+        direction: 'down',
+      });
+    });
+
+    controls.appendChild(moveUp);
+    controls.appendChild(moveDown);
+  }
+
+  let ariaDetail = '';
+
+  if (player) {
+    row.classList.add('depth-row--player');
+
+    contentLeft.classList.add('player-name');
+    contentLeft.textContent = formatName(player);
+
+    ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
+
+    const ovrEl = doc.createElement('span');
+    ovrEl.className = 'depth-row__ovr player-ovr';
+    ovrEl.textContent = String(getOvr(player));
+    contentRight.appendChild(ovrEl);
+
+    const { label: contractLabel, isFaAfterSeason } = getContractSummary(player);
+    if (contractLabel) {
+      const contractEl = doc.createElement('span');
+      contractEl.className = 'depth-row__contract';
+      contractEl.textContent = contractLabel;
+      contentRight.appendChild(contractEl);
+    }
+
+    const acqLabel = getAcquisitionLabel(assignment);
+    if (acqLabel) {
+      const badge = doc.createElement('span');
+      badge.className = `badge badge--acq badge--acq-${assignment.acquisition}`;
+      badge.textContent = acqLabel;
+      contentRight.appendChild(badge);
+    }
+
+    if (isFaAfterSeason) {
+      const faBadge = doc.createElement('span');
+      faBadge.className = 'badge badge--fa-after';
+      faBadge.textContent = 'FA after season';
+      contentRight.appendChild(faBadge);
+    }
+  } else if (assignment && assignment.placeholder) {
+    row.classList.add('depth-row--placeholder');
+    contentLeft.textContent = assignment.placeholder;
+
+    ariaDetail = `Placeholder ${assignment.placeholder}`;
+
+    const acqLabel = getAcquisitionLabel(assignment);
+    if (acqLabel) {
+      const badge = doc.createElement('span');
+      badge.className = `badge badge--acq badge--acq-${assignment.acquisition}`;
+      badge.textContent = acqLabel;
+      contentRight.appendChild(badge);
+    }
+  } else if (depthIndex <= maxDepthForNeed) {
+    row.classList.add('depth-row--need');
+    const empty = doc.createElement('span');
+    empty.className = 'depth-row__empty';
+    empty.textContent = '—';
+    contentLeft.appendChild(empty);
+    ariaDetail = 'Empty need slot';
+  } else {
+    row.classList.add('depth-row--optional');
+    const empty = doc.createElement('span');
+    empty.className = 'depth-row__empty';
+    empty.textContent = '';
+    contentLeft.appendChild(empty);
+    ariaDetail = 'Empty optional slot';
+  }
+
+  const baseLabel = `${slot.label} depth ${depthIndex}`;
+  row.setAttribute('aria-label', ariaDetail ? `${baseLabel}. ${ariaDetail}.` : baseLabel);
+
+  row.appendChild(contentLeft);
+  row.appendChild(contentRight);
+  row.appendChild(controls);
+
+  row.addEventListener('click', () => {
+    openSlotEditor({
+      slotId: slot.id,
+      depthIndex,
+    });
+  });
+
+  return row;
+}
+
+function renderPositionCard(doc, slotId, depthPlan, playersById) {
+  const slot = getSlotDefinition(slotId);
+  if (!slot) return null;
+
+  const card = doc.createElement('div');
+  card.className = `position-card slot-${slot.id}`;
+  card.dataset.slotId = slot.id;
+
+  const header = doc.createElement('div');
+  header.className = 'position-card__header';
+
+  const posLabel = doc.createElement('span');
+  const posClass = getPositionClassForSlot(slot);
+  posLabel.className = 'position-card__label';
+  if (posClass) {
+    posLabel.classList.add(`pos-${posClass}`);
+  }
+  posLabel.textContent = slot.label;
+  header.appendChild(posLabel);
+
+  card.appendChild(header);
+
+  const body = doc.createElement('div');
+  body.className = 'position-card__body';
+
+  const planSlot =
+    depthPlan && depthPlan.slots && Array.isArray(depthPlan.slots[slot.id])
+      ? depthPlan.slots[slot.id].filter(Boolean)
+      : [];
+
+  const maxDepthRows = 4;
+  for (let i = 0; i < maxDepthRows; i++) {
+    const depthIndex = i + 1;
+    const assignment =
+      planSlot.find((a) => a && a.depthIndex === depthIndex) || planSlot[i] || null;
+    const player =
+      assignment && assignment.playerId && playersById[assignment.playerId]
+        ? playersById[assignment.playerId]
+        : null;
+
+    const row = renderDepthRow(doc, slot, depthIndex, assignment, player);
+    body.appendChild(row);
+  }
+
+  card.appendChild(body);
+  return card;
 }
 
 export function mountDepthChart(containerId = 'depth-chart-grid') {
   const el = document.getElementById(containerId);
   if (!el) return;
 
-  const players = getTeamPlayers();
+  const container = document.getElementById('depth-chart-container');
+
+  const depthPlan = getDepthPlanForSelectedTeam();
+  const { playersById = {}, selectedTeam } = getState();
   el.innerHTML = '';
 
-  for (const group of POSITION_GROUPS) {
-    const groupDiv = document.createElement('div');
-    groupDiv.className = 'depth-group';
+  const doc = el.ownerDocument || document;
 
-    const header = document.createElement('div');
-    header.className = 'depth-group__header';
-    header.textContent = group.name;
-    groupDiv.appendChild(header);
+  if (container) {
+    let toolbar = container.querySelector('.depth-chart-toolbar');
+    if (!toolbar) {
+      toolbar = doc.createElement('div');
+      toolbar.className = 'depth-chart-toolbar';
 
-    const table = document.createElement('table');
-    table.className = 'depth-table';
+      const spacer = doc.createElement('div');
+      spacer.className = 'depth-chart-toolbar__spacer';
+      toolbar.appendChild(spacer);
 
-    const thead = document.createElement('thead');
-    const headerRow = document.createElement('tr');
-    headerRow.innerHTML = '<th>Pos</th><th>1</th><th>2</th><th>3</th><th>4</th>';
-    thead.appendChild(headerRow);
-    table.appendChild(thead);
+      const actions = doc.createElement('div');
+      actions.className = 'depth-chart-toolbar__actions';
 
-    const tbody = document.createElement('tbody');
+      const exportBtn = doc.createElement('button');
+      exportBtn.type = 'button';
+      exportBtn.className = 'depth-chart-toolbar__btn';
+      exportBtn.textContent = 'Export CSV';
+      exportBtn.setAttribute('aria-label', 'Export current team depth plan as CSV');
+      exportBtn.addEventListener('click', () => {
+        const { selectedTeam: currentTeam, playersById: currentPlayersById = {} } = getState();
+        const currentPlan = getDepthPlanForSelectedTeam();
+        if (!currentTeam || !currentPlan) return;
+        const csv = buildDepthCsvForTeam(currentTeam, currentPlan, currentPlayersById);
+        if (!csv) return;
+        const filename = `depth-plan-${currentTeam}.csv`;
+        downloadCsv(filename, csv);
+      });
 
-    for (const slotId of group.slots) {
-      const slot = DEPTH_CHART_SLOTS.find((s) => s.id === slotId);
-      if (!slot) continue;
+      const resetBtn = doc.createElement('button');
+      resetBtn.type = 'button';
+      resetBtn.className = 'depth-chart-toolbar__btn depth-chart-toolbar__btn--reset';
+      resetBtn.textContent = 'Reset to baseline';
+      resetBtn.setAttribute(
+        'aria-label',
+        'Reset this team roster and depth chart to baseline'
+      );
+      resetBtn.addEventListener('click', () => {
+        const { selectedTeam: currentTeam } = getState();
+        if (!currentTeam) return;
+        resetTeamRosterAndPlan(currentTeam);
+      });
 
-      const slotPlayers = getPlayersForSlot(slot, players);
-      const row = document.createElement('tr');
-
-      const posCell = document.createElement('td');
-      posCell.className = 'depth-cell depth-cell--pos';
-      posCell.textContent = slot.label;
-      row.appendChild(posCell);
-
-      for (let i = 0; i < 4; i++) {
-        const cell = document.createElement('td');
-        cell.className = 'depth-cell';
-
-        if (i < slotPlayers.length) {
-          const p = slotPlayers[i];
-          const ovr = getOvr(p);
-          cell.innerHTML = `<span class="player-name">${formatName(p)}</span><span class="player-ovr">${ovr}</span>`;
-        } else if (i < slot.max) {
-          cell.className += ' depth-cell--need';
-          cell.textContent = '—';
-        } else {
-          cell.textContent = '';
-        }
-
-        row.appendChild(cell);
-      }
-
-      tbody.appendChild(row);
+      actions.appendChild(resetBtn);
+      actions.appendChild(exportBtn);
+      toolbar.appendChild(actions);
+      container.insertBefore(toolbar, container.firstChild);
     }
-
-    table.appendChild(tbody);
-    groupDiv.appendChild(table);
-    el.appendChild(groupDiv);
   }
+
+  const layout = doc.createElement('div');
+  layout.className = 'depth-layout';
+
+  const offenseSection = doc.createElement('section');
+  offenseSection.className = 'depth-side depth-side--offense';
+  const offenseHeader = doc.createElement('div');
+  offenseHeader.className = 'depth-side__header';
+  offenseHeader.textContent = 'Offense';
+  offenseSection.appendChild(offenseHeader);
+  const offenseField = doc.createElement('div');
+  offenseField.className = 'field field--offense';
+  for (const slotId of OFFENSE_SLOTS) {
+    const card = renderPositionCard(doc, slotId, depthPlan, playersById);
+    if (card) offenseField.appendChild(card);
+  }
+  offenseSection.appendChild(offenseField);
+  layout.appendChild(offenseSection);
+
+  const defenseSection = doc.createElement('section');
+  defenseSection.className = 'depth-side depth-side--defense';
+  const defenseHeader = doc.createElement('div');
+  defenseHeader.className = 'depth-side__header';
+  defenseHeader.textContent = 'Defense';
+  defenseSection.appendChild(defenseHeader);
+  const defenseField = doc.createElement('div');
+  defenseField.className = 'field field--defense';
+  for (const slotId of DEFENSE_SLOTS) {
+    const card = renderPositionCard(doc, slotId, depthPlan, playersById);
+    if (card) defenseField.appendChild(card);
+  }
+  defenseSection.appendChild(defenseField);
+  layout.appendChild(defenseSection);
+
+  const specialSection = doc.createElement('section');
+  specialSection.className = 'depth-side depth-side--special';
+  const specialHeader = doc.createElement('div');
+  specialHeader.className = 'depth-side__header';
+  specialHeader.textContent = 'Special Teams';
+  specialSection.appendChild(specialHeader);
+  const specialBody = doc.createElement('div');
+  specialBody.className = 'depth-side__body depth-side__body--special';
+  for (const slotId of SPECIAL_SLOTS) {
+    const card = renderPositionCard(doc, slotId, depthPlan, playersById);
+    if (card) specialBody.appendChild(card);
+  }
+  specialSection.appendChild(specialBody);
+  layout.appendChild(specialSection);
+
+  el.appendChild(layout);
 }
