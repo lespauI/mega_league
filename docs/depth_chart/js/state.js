@@ -4,6 +4,10 @@ const state = {
   selectedTeam: null,
   teams: [],
   players: [],
+  // Deep snapshot of the initial, normalized roster for all teams
+  baselinePlayers: [],
+  // Quick lookup map of current players by id
+  playersById: {},
 };
 
 export function subscribe(fn) {
@@ -20,7 +24,24 @@ export function getState() {
 }
 
 export function setState(partial) {
-  Object.assign(state, partial);
+  if (partial && typeof partial === 'object') {
+    let next = partial;
+    // If callers pass a fresh players array, normalize team keys and
+    // keep playersById in sync. baselinePlayers is intentionally
+    // only set in initState (it represents the CSV baseline).
+    if (Array.isArray(partial.players)) {
+      const teams = partial.teams || state.teams;
+      const normalized = normalizePlayersTeams(partial.players, teams);
+      next = {
+        ...partial,
+        players: normalized,
+        playersById: buildPlayersById(normalized),
+      };
+    }
+    Object.assign(state, next);
+  } else {
+    Object.assign(state, partial);
+  }
   emit();
 }
 
@@ -30,8 +51,21 @@ export function getTeamPlayers() {
 }
 
 export function initState({ teams, players }) {
-  state.teams = teams;
-  state.players = normalizePlayersTeams(players, teams);
+  state.teams = teams || [];
+  // Normalize player.team to team abbrName so filters work
+  try {
+    state.players = normalizePlayersTeams(players || [], state.teams || []);
+  } catch {
+    state.players = players || [];
+  }
+  // Store a deep baseline copy for future reset/compare and depth planning.
+  try {
+    state.baselinePlayers = JSON.parse(JSON.stringify(state.players));
+  } catch {
+    state.baselinePlayers = (state.players || []).map((p) => ({ ...p }));
+  }
+  // Build quick lookup map for depth planning and CSV export.
+  state.playersById = buildPlayersById(state.players);
   if (!state.selectedTeam && teams.length) {
     state.selectedTeam = teams[0].abbrName;
   }
@@ -52,4 +86,15 @@ function normalizePlayersTeams(players, teams) {
     const abbr = raw ? (teamKeyToAbbr[raw] || p.team) : p.team;
     return { ...p, team: abbr };
   });
+}
+
+function buildPlayersById(players) {
+  const byId = Object.create(null);
+  for (const p of players || []) {
+    if (!p) continue;
+    const id = String(p.id || '').trim();
+    if (!id) continue;
+    byId[id] = p;
+  }
+  return byId;
 }

@@ -31,14 +31,12 @@ export async function loadPlayers(url) {
     const result = normalizePlayerRow(row);
     if (result.ok) {
       const p = result.player;
+      // Keep the full normalized player model used by the cap tool
+      // and add a convenience `ovr` field for depth ordering.
+      const ovr = (p.playerBestOvr || p.playerSchemeOvr || 0) || 0;
       players.push({
-        firstName: p.firstName,
-        lastName: p.lastName,
-        position: p.position,
-        team: p.team,
-        isFreeAgent: p.isFreeAgent,
-        playerBestOvr: p.playerBestOvr || 0,
-        playerSchemeOvr: p.playerSchemeOvr || 0,
+        ...p,
+        ovr,
       });
     }
   }

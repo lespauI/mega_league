@@ -51,7 +51,8 @@ If the feature is trivial and doesn't warrant full specification, update this wo
 
 Save to `{@artifacts_path}/plan.md`.
 
-### [ ] Step: Data alignment
+### [x] Step: Data alignment
+<!-- chat-id: 9cdd0a2e-95b6-4249-b579-fd3b23045ce6 -->
 
 Implement the shared player model and baseline roster loading for the depth tool (spec section 3.1, 4.1).
 
