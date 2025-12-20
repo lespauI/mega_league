@@ -1,49 +1,11 @@
 import { getDepthPlanForSelectedTeam, getState } from '../state.js';
 import { DEPTH_CHART_SLOTS, getOvr } from '../slots.js';
+import { formatName, getContractSummary } from './playerFormatting.js';
+import { openSlotEditor } from './slotEditor.js';
 
 const OFFENSE_SLOTS = ['LT', 'LG', 'C', 'RG', 'RT', 'QB', 'HB', 'FB', 'WR1', 'WR2', 'TE'];
 const DEFENSE_SLOTS = ['FS', 'SS', 'CB1', 'CB2', 'SAM', 'MIKE', 'WILL', 'DT1', 'DT2', 'EDGE1', 'EDGE2'];
 const SPECIAL_SLOTS = ['K', 'P', 'LS'];
-
-export function formatName(player) {
-  const first = player.firstName || '';
-  const last = player.lastName || '';
-  const initial = first.charAt(0);
-  return initial ? `${initial}.${last}` : last;
-}
-
-export function getContractSummary(player) {
-  if (!player) {
-    return { label: '', isFaAfterSeason: false };
-  }
-
-  const lengthRaw =
-    player.contractLength !== undefined && player.contractLength !== null
-      ? Number(player.contractLength)
-      : undefined;
-  const yearsLeftRaw =
-    player.contractYearsLeft !== undefined && player.contractYearsLeft !== null
-      ? Number(player.contractYearsLeft)
-      : undefined;
-
-  const length = Number.isFinite(lengthRaw) ? lengthRaw : yearsLeftRaw ?? null;
-  const yearsLeft = Number.isFinite(yearsLeftRaw) ? yearsLeftRaw : null;
-
-  const isFaNow = !!player.isFreeAgent;
-  const isFaAfterSeason = !isFaNow && yearsLeft !== null && Number(yearsLeft) === 1;
-
-  let label = '';
-  if (isFaNow) {
-    label = 'FA';
-  } else if (length !== null && yearsLeft !== null) {
-    label = `${length} yrs (${yearsLeft} left)`;
-  } else if (yearsLeft !== null) {
-    const yrs = yearsLeft;
-    label = `${yrs} yr${yrs === 1 ? '' : 's'} left`;
-  }
-
-  return { label, isFaAfterSeason };
-}
 
 function getSlotDefinition(slotId) {
   return DEPTH_CHART_SLOTS.find((s) => s.id === slotId) || null;
@@ -156,6 +118,14 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
 
   row.appendChild(contentLeft);
   row.appendChild(contentRight);
+
+  row.addEventListener('click', () => {
+    openSlotEditor({
+      slotId: slot.id,
+      depthIndex,
+    });
+  });
+
   return row;
 }
 

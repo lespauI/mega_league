@@ -1,0 +1,396 @@
+import {
+  clearDepthSlot,
+  getDepthPlanForSelectedTeam,
+  getFreeAgents,
+  getPlayersForTeam,
+  getState,
+  updateDepthSlot,
+  setRosterEdit,
+} from '../state.js';
+import { DEPTH_CHART_SLOTS, getOvr } from '../slots.js';
+import { formatName, getContractSummary } from './playerFormatting.js';
+
+let backdropEl = null;
+let panelEl = null;
+
+function ensureRoot() {
+  if (backdropEl && panelEl) return;
+
+  const doc = document;
+  backdropEl = doc.createElement('div');
+  backdropEl.className = 'slot-editor-backdrop';
+  backdropEl.setAttribute('role', 'dialog');
+  backdropEl.setAttribute('aria-modal', 'true');
+
+  panelEl = doc.createElement('div');
+  panelEl.className = 'slot-editor';
+  backdropEl.appendChild(panelEl);
+
+  backdropEl.addEventListener('click', (event) => {
+    if (event.target === backdropEl) {
+      closeSlotEditor();
+    }
+  });
+
+  doc.body.appendChild(backdropEl);
+}
+
+export function closeSlotEditor() {
+  if (!backdropEl) return;
+  backdropEl.classList.remove('is-open');
+  if (panelEl) {
+    panelEl.innerHTML = '';
+  }
+}
+
+function findSlotDefinition(slotId) {
+  return DEPTH_CHART_SLOTS.find((s) => s.id === slotId) || null;
+}
+
+function getCurrentAssignment(slotId, depthIndex) {
+  const plan = getDepthPlanForSelectedTeam();
+  if (!plan || !plan.slots || !Array.isArray(plan.slots[slotId])) return { assignment: null, player: null };
+
+  const planSlot = plan.slots[slotId].filter(Boolean);
+  const assignment =
+    planSlot.find((a) => a && a.depthIndex === depthIndex) || planSlot[depthIndex - 1] || null;
+
+  if (!assignment || !assignment.playerId) {
+    return { assignment, player: null };
+  }
+
+  const { playersById = {} } = getState();
+  const player = playersById[assignment.playerId] || null;
+  return { assignment, player };
+}
+
+function createPlayerRow(doc, player, options) {
+  const { actionLabel, onClick } = options;
+  const row = doc.createElement('button');
+  row.type = 'button';
+  row.className = 'slot-editor__option';
+
+  const main = doc.createElement('div');
+  main.className = 'slot-editor__option-main';
+
+  const name = doc.createElement('div');
+  name.className = 'slot-editor__option-name';
+  name.textContent = formatName(player);
+  main.appendChild(name);
+
+  const meta = doc.createElement('div');
+  meta.className = 'slot-editor__option-meta';
+
+  const posEl = doc.createElement('span');
+  posEl.className = 'slot-editor__option-pos';
+  posEl.textContent = String(player.position || '').toUpperCase();
+  meta.appendChild(posEl);
+
+  const ovrEl = doc.createElement('span');
+  ovrEl.className = 'slot-editor__option-ovr';
+  ovrEl.textContent = String(getOvr(player));
+  meta.appendChild(ovrEl);
+
+  const { label: contractLabel, isFaAfterSeason } = getContractSummary(player);
+  if (contractLabel) {
+    const contractEl = doc.createElement('span');
+    contractEl.className = 'slot-editor__option-contract';
+    contractEl.textContent = contractLabel;
+    meta.appendChild(contractEl);
+  }
+
+  if (isFaAfterSeason) {
+    const faEl = doc.createElement('span');
+    faEl.className = 'slot-editor__option-fa';
+    faEl.textContent = 'FA after season';
+    meta.appendChild(faEl);
+  }
+
+  main.appendChild(meta);
+  row.appendChild(main);
+
+  const action = doc.createElement('span');
+  action.className = 'slot-editor__option-action';
+  action.textContent = actionLabel;
+  row.appendChild(action);
+
+  row.addEventListener('click', () => {
+    onClick();
+  });
+
+  return row;
+}
+
+export function openSlotEditor({ slotId, depthIndex }) {
+  const st = getState();
+  const teamAbbr = st.selectedTeam;
+  if (!teamAbbr || !slotId || !depthIndex) return;
+
+  ensureRoot();
+
+  const doc = panelEl.ownerDocument || document;
+  panelEl.innerHTML = '';
+  backdropEl.classList.add('is-open');
+
+  const slot = findSlotDefinition(slotId);
+  const { assignment, player: currentPlayer } = getCurrentAssignment(slotId, depthIndex);
+
+  const header = doc.createElement('div');
+  header.className = 'slot-editor__header';
+
+  const title = doc.createElement('h2');
+  title.className = 'slot-editor__title';
+  title.textContent = `${slot ? slot.label : slotId} — Depth ${depthIndex}`;
+  header.appendChild(title);
+
+  const closeBtn = doc.createElement('button');
+  closeBtn.type = 'button';
+  closeBtn.className = 'slot-editor__close';
+  closeBtn.textContent = '×';
+  closeBtn.setAttribute('aria-label', 'Close slot editor');
+  closeBtn.addEventListener('click', () => {
+    closeSlotEditor();
+  });
+  header.appendChild(closeBtn);
+
+  panelEl.appendChild(header);
+
+  if (currentPlayer || (assignment && assignment.placeholder)) {
+    const current = doc.createElement('div');
+    current.className = 'slot-editor__current';
+
+    const label = doc.createElement('div');
+    label.className = 'slot-editor__current-label';
+    label.textContent = 'Current assignment';
+    current.appendChild(label);
+
+    const value = doc.createElement('div');
+    value.className = 'slot-editor__current-value';
+    if (currentPlayer) {
+      value.textContent = formatName(currentPlayer);
+    } else if (assignment && assignment.placeholder) {
+      value.textContent = assignment.placeholder;
+    }
+    current.appendChild(value);
+
+    panelEl.appendChild(current);
+  }
+
+  const rosterSection = doc.createElement('section');
+  rosterSection.className = 'slot-editor__section';
+
+  const rosterHeading = doc.createElement('h3');
+  rosterHeading.className = 'slot-editor__section-title';
+  rosterHeading.textContent = 'Team roster';
+  rosterSection.appendChild(rosterHeading);
+
+  const rosterList = doc.createElement('div');
+  rosterList.className = 'slot-editor__list';
+
+  const teamPlayers = getPlayersForTeam(teamAbbr);
+  const rosterCandidates = slot ? getEligiblePlayersForSlot(slot, teamPlayers) : teamPlayers;
+
+  if (rosterCandidates.length === 0) {
+    const empty = doc.createElement('div');
+    empty.className = 'slot-editor__empty';
+    empty.textContent = 'No eligible players on roster for this position.';
+    rosterList.appendChild(empty);
+  } else {
+    for (const p of rosterCandidates) {
+      const row = createPlayerRow(doc, p, {
+        actionLabel: 'Assign',
+        onClick: () => {
+          updateDepthSlot({
+            teamAbbr,
+            slotId,
+            depthIndex,
+            assignment: {
+              acquisition: 'existing',
+              playerId: String(p.id),
+            },
+          });
+          closeSlotEditor();
+        },
+      });
+      rosterList.appendChild(row);
+    }
+  }
+
+  rosterSection.appendChild(rosterList);
+  panelEl.appendChild(rosterSection);
+
+  const faSection = doc.createElement('section');
+  faSection.className = 'slot-editor__section';
+
+  const faHeading = doc.createElement('h3');
+  faHeading.className = 'slot-editor__section-title';
+  faHeading.textContent = 'Free agents';
+  faSection.appendChild(faHeading);
+
+  const faFilters = doc.createElement('div');
+  faFilters.className = 'slot-editor__filters';
+
+  const searchInput = doc.createElement('input');
+  searchInput.type = 'search';
+  searchInput.className = 'slot-editor__search';
+  searchInput.placeholder = 'Search FA by name';
+  searchInput.setAttribute('aria-label', 'Search free agents by name');
+  faFilters.appendChild(searchInput);
+
+  const posSelect = doc.createElement('select');
+  posSelect.className = 'slot-editor__position-filter';
+  const optionSlot = doc.createElement('option');
+  optionSlot.value = 'slot';
+  optionSlot.textContent = 'Slot positions';
+  posSelect.appendChild(optionSlot);
+  const optionAll = doc.createElement('option');
+  optionAll.value = 'all';
+  optionAll.textContent = 'All positions';
+  posSelect.appendChild(optionAll);
+  posSelect.value = 'slot';
+  faFilters.appendChild(posSelect);
+
+  faSection.appendChild(faFilters);
+
+  const faList = doc.createElement('div');
+  faList.className = 'slot-editor__list';
+  faSection.appendChild(faList);
+
+  const allFa = getFreeAgents();
+
+  function renderFaList() {
+    faList.innerHTML = '';
+    let candidates;
+    if (slot && posSelect.value === 'slot') {
+      candidates = getEligiblePlayersForSlot(slot, allFa);
+    } else if (slot) {
+      candidates = [...allFa];
+    } else {
+      candidates = [...allFa];
+    }
+
+    const query = searchInput.value.trim().toLowerCase();
+    if (query) {
+      candidates = candidates.filter((p) => {
+        const name = `${p.firstName || ''} ${p.lastName || ''}`.toLowerCase();
+        return name.includes(query);
+      });
+    }
+
+    candidates.sort((a, b) => getOvr(b) - getOvr(a));
+
+    if (!candidates.length) {
+      const empty = doc.createElement('div');
+      empty.className = 'slot-editor__empty';
+      empty.textContent = 'No free agents match the filters.';
+      faList.appendChild(empty);
+      return;
+    }
+
+    for (const p of candidates) {
+      const row = createPlayerRow(doc, p, {
+        actionLabel: 'Sign & assign',
+        onClick: () => {
+          setRosterEdit(p.id, { isFreeAgent: false, team: teamAbbr });
+          updateDepthSlot({
+            teamAbbr,
+            slotId,
+            depthIndex,
+            assignment: {
+              acquisition: 'faPlayer',
+              playerId: String(p.id),
+            },
+          });
+          closeSlotEditor();
+        },
+      });
+      faList.appendChild(row);
+    }
+  }
+
+  searchInput.addEventListener('input', () => {
+    renderFaList();
+  });
+  posSelect.addEventListener('change', () => {
+    renderFaList();
+  });
+
+  renderFaList();
+
+  panelEl.appendChild(faSection);
+
+  const placeholdersSection = doc.createElement('section');
+  placeholdersSection.className = 'slot-editor__section';
+
+  const placeholdersHeading = doc.createElement('h3');
+  placeholdersHeading.className = 'slot-editor__section-title';
+  placeholdersHeading.textContent = 'Placeholders';
+  placeholdersSection.appendChild(placeholdersHeading);
+
+  const placeholdersRow = doc.createElement('div');
+  placeholdersRow.className = 'slot-editor__placeholders';
+
+  const placeholderDefs = [
+    { label: 'Draft R1', acquisition: 'draftR1', placeholder: 'Draft R1' },
+    { label: 'Draft R2', acquisition: 'draftR2', placeholder: 'Draft R2' },
+    { label: 'Trade', acquisition: 'trade', placeholder: 'Trade' },
+    { label: 'FA', acquisition: 'faPlaceholder', placeholder: 'FA' },
+  ];
+
+  for (const item of placeholderDefs) {
+    const btn = doc.createElement('button');
+    btn.type = 'button';
+    btn.className = 'slot-editor__pill';
+    btn.textContent = item.label;
+    btn.addEventListener('click', () => {
+      updateDepthSlot({
+        teamAbbr,
+        slotId,
+        depthIndex,
+        assignment: {
+          acquisition: item.acquisition,
+          placeholder: item.placeholder,
+        },
+      });
+      closeSlotEditor();
+    });
+    placeholdersRow.appendChild(btn);
+  }
+
+  placeholdersSection.appendChild(placeholdersRow);
+  panelEl.appendChild(placeholdersSection);
+
+  const footer = doc.createElement('div');
+  footer.className = 'slot-editor__footer';
+
+  const clearBtn = doc.createElement('button');
+  clearBtn.type = 'button';
+  clearBtn.className = 'slot-editor__clear';
+  clearBtn.textContent = 'Clear slot';
+  clearBtn.addEventListener('click', () => {
+    clearDepthSlot({ teamAbbr, slotId, depthIndex });
+    closeSlotEditor();
+  });
+  footer.appendChild(clearBtn);
+
+  panelEl.appendChild(footer);
+
+  const focusTarget =
+    panelEl.querySelector('button.slot-editor__pill') ||
+    panelEl.querySelector('button.slot-editor__close') ||
+    panelEl.querySelector('button.slot-editor__option');
+  if (focusTarget && typeof focusTarget.focus === 'function') {
+    focusTarget.focus();
+  }
+}
+
+function getEligiblePlayersForSlot(slot, players) {
+  if (!slot) return players || [];
+  const primaryPositions = slot.positions || [];
+  if (!primaryPositions.length) return players || [];
+  const normalizedPositions = primaryPositions.map((p) => String(p || '').toUpperCase());
+  return (players || []).filter((p) =>
+    normalizedPositions.includes(String(p.position || '').toUpperCase())
+  );
+}
+

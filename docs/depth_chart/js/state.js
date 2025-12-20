@@ -258,6 +258,15 @@ export function updateDepthSlot({ teamAbbr, slotId, depthIndex, assignment }) {
   const plan = ensureDepthPlanForTeam(team);
   if (!plan) return;
 
+  const playerId =
+    assignment.playerId !== undefined && assignment.playerId !== null
+      ? String(assignment.playerId).trim()
+      : '';
+
+  if (playerId) {
+    removePlayerFromAllDepthPlans(playerId);
+  }
+
   const idx = Math.max(0, depthIndex - 1);
   const currentSlot = Array.isArray(plan.slots[slotId]) ? [...plan.slots[slotId]] : [];
 
@@ -303,6 +312,48 @@ export function clearDepthSlot({ teamAbbr, slotId, depthIndex }) {
 
   persistDepthPlans();
   emit();
+}
+
+export function clearPlayerFromAllDepthSlots(playerId) {
+  const id = playerId !== undefined && playerId !== null ? String(playerId).trim() : '';
+  if (!id || !state.depthPlansByTeam) return;
+
+  let changed = false;
+
+  for (const team of Object.keys(state.depthPlansByTeam)) {
+    const plan = state.depthPlansByTeam[team];
+    if (!plan || !plan.slots) continue;
+
+    const slots = plan.slots;
+    for (const slotId of Object.keys(slots)) {
+      const arr = slots[slotId];
+      if (!Array.isArray(arr) || !arr.length) continue;
+
+      let touched = false;
+      for (let i = 0; i < arr.length; i++) {
+        const entry = arr[i];
+        if (entry && String(entry.playerId || '').trim() === id) {
+          arr[i] = null;
+          touched = true;
+          changed = true;
+        }
+      }
+
+      if (touched) {
+        while (arr.length && arr[arr.length - 1] == null) {
+          arr.pop();
+        }
+        if (!arr.length) {
+          delete slots[slotId];
+        }
+      }
+    }
+  }
+
+  if (changed) {
+    persistDepthPlans();
+    emit();
+  }
 }
 
 /* Internal helpers */
@@ -419,3 +470,36 @@ function persistDepthPlans() {
   saveDepthPlans(state.depthPlansByTeam || {});
 }
 
+function removePlayerFromAllDepthPlans(playerId) {
+  const id = playerId !== undefined && playerId !== null ? String(playerId).trim() : '';
+  if (!id || !state.depthPlansByTeam) return;
+
+  for (const team of Object.keys(state.depthPlansByTeam)) {
+    const plan = state.depthPlansByTeam[team];
+    if (!plan || !plan.slots) continue;
+
+    const slots = plan.slots;
+    for (const slotId of Object.keys(slots)) {
+      const arr = slots[slotId];
+      if (!Array.isArray(arr) || !arr.length) continue;
+
+      let touched = false;
+      for (let i = 0; i < arr.length; i++) {
+        const entry = arr[i];
+        if (entry && String(entry.playerId || '').trim() === id) {
+          arr[i] = null;
+          touched = true;
+        }
+      }
+
+      if (touched) {
+        while (arr.length && arr[arr.length - 1] == null) {
+          arr.pop();
+        }
+        if (!arr.length) {
+          delete slots[slotId];
+        }
+      }
+    }
+  }
+}

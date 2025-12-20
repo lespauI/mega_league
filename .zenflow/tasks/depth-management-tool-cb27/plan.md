@@ -84,7 +84,8 @@ Replace the table layout with the game-like offense/defense/special formations a
 4. Keep or adapt existing team selector wiring so that changing teams reloads the corresponding `DepthPlan`.
 5. Verification: visually confirm the new layout for offense/defense/special teams matches the requested formation for a few sample teams and that contract/FA markers appear where expected.
 
-### [ ] Step: Editing interactions, FA search & roster panel
+### [x] Step: Editing interactions, FA search & roster panel
+<!-- chat-id: 9d7c7d58-667e-40bb-a548-508c9ff47c44 -->
 
 Add interactive editing for depth slots, free-agent search, and roster management (spec sections 2.1–2.5, 3.4, 5.1, 5.3, 5.4).
 
