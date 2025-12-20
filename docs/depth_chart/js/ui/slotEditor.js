@@ -21,6 +21,7 @@ function ensureRoot() {
   backdropEl.className = 'slot-editor-backdrop';
   backdropEl.setAttribute('role', 'dialog');
   backdropEl.setAttribute('aria-modal', 'true');
+  backdropEl.setAttribute('aria-labelledby', 'slot-editor-title');
 
   panelEl = doc.createElement('div');
   panelEl.className = 'slot-editor';
@@ -28,6 +29,13 @@ function ensureRoot() {
 
   backdropEl.addEventListener('click', (event) => {
     if (event.target === backdropEl) {
+      closeSlotEditor();
+    }
+  });
+
+  backdropEl.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape') {
+      event.stopPropagation();
       closeSlotEditor();
     }
   });
@@ -140,6 +148,7 @@ export function openSlotEditor({ slotId, depthIndex }) {
 
   const title = doc.createElement('h2');
   title.className = 'slot-editor__title';
+  title.id = 'slot-editor-title';
   title.textContent = `${slot ? slot.label : slotId} — Depth ${depthIndex}`;
   header.appendChild(title);
 
@@ -393,4 +402,3 @@ function getEligiblePlayersForSlot(slot, players) {
     normalizedPositions.includes(String(p.position || '').toUpperCase())
   );
 }
-

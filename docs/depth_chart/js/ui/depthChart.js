@@ -1,4 +1,9 @@
-import { getDepthPlanForSelectedTeam, getState, reorderDepthSlot } from '../state.js';
+import {
+  getDepthPlanForSelectedTeam,
+  getState,
+  reorderDepthSlot,
+  resetTeamRosterAndPlan,
+} from '../state.js';
 import {
   DEPTH_CHART_SLOTS,
   OFFENSE_SLOT_IDS,
@@ -76,6 +81,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     moveUp.className = 'depth-row__btn depth-row__btn--up';
     moveUp.textContent = '↑';
     moveUp.title = 'Move up';
+    moveUp.setAttribute('aria-label', 'Move up in depth order');
     moveUp.addEventListener('click', (event) => {
       event.stopPropagation();
       reorderDepthSlot({
@@ -90,6 +96,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     moveDown.className = 'depth-row__btn depth-row__btn--down';
     moveDown.textContent = '↓';
     moveDown.title = 'Move down';
+    moveDown.setAttribute('aria-label', 'Move down in depth order');
     moveDown.addEventListener('click', (event) => {
       event.stopPropagation();
       reorderDepthSlot({
@@ -103,11 +110,15 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     controls.appendChild(moveDown);
   }
 
+  let ariaDetail = '';
+
   if (player) {
     row.classList.add('depth-row--player');
 
     contentLeft.classList.add('player-name');
     contentLeft.textContent = formatName(player);
+
+    ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
 
     const ovrEl = doc.createElement('span');
     ovrEl.className = 'depth-row__ovr player-ovr';
@@ -140,6 +151,8 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     row.classList.add('depth-row--placeholder');
     contentLeft.textContent = assignment.placeholder;
 
+    ariaDetail = `Placeholder ${assignment.placeholder}`;
+
     const acqLabel = getAcquisitionLabel(assignment);
     if (acqLabel) {
       const badge = doc.createElement('span');
@@ -153,13 +166,18 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     empty.className = 'depth-row__empty';
     empty.textContent = '—';
     contentLeft.appendChild(empty);
+    ariaDetail = 'Empty need slot';
   } else {
     row.classList.add('depth-row--optional');
     const empty = doc.createElement('span');
     empty.className = 'depth-row__empty';
     empty.textContent = '';
     contentLeft.appendChild(empty);
+    ariaDetail = 'Empty optional slot';
   }
+
+  const baseLabel = `${slot.label} depth ${depthIndex}`;
+  row.setAttribute('aria-label', ariaDetail ? `${baseLabel}. ${ariaDetail}.` : baseLabel);
 
   row.appendChild(contentLeft);
   row.appendChild(contentRight);
@@ -252,6 +270,7 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
       exportBtn.type = 'button';
       exportBtn.className = 'depth-chart-toolbar__btn';
       exportBtn.textContent = 'Export CSV';
+      exportBtn.setAttribute('aria-label', 'Export current team depth plan as CSV');
       exportBtn.addEventListener('click', () => {
         const { selectedTeam: currentTeam, playersById: currentPlayersById = {} } = getState();
         const currentPlan = getDepthPlanForSelectedTeam();
@@ -262,6 +281,21 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
         downloadCsv(filename, csv);
       });
 
+      const resetBtn = doc.createElement('button');
+      resetBtn.type = 'button';
+      resetBtn.className = 'depth-chart-toolbar__btn depth-chart-toolbar__btn--reset';
+      resetBtn.textContent = 'Reset to baseline';
+      resetBtn.setAttribute(
+        'aria-label',
+        'Reset this team roster and depth chart to baseline'
+      );
+      resetBtn.addEventListener('click', () => {
+        const { selectedTeam: currentTeam } = getState();
+        if (!currentTeam) return;
+        resetTeamRosterAndPlan(currentTeam);
+      });
+
+      actions.appendChild(resetBtn);
       actions.appendChild(exportBtn);
       toolbar.appendChild(actions);
       container.insertBefore(toolbar, container.firstChild);

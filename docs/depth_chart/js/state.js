@@ -54,11 +54,7 @@ export function getState() {
 }
 
 export function setState(partial) {
-  if (!partial || typeof partial !== 'object') {
-    Object.assign(state, partial);
-    emit();
-    return;
-  }
+  if (!partial || typeof partial !== 'object') return;
 
   let next = partial;
   // If callers pass a fresh players array, normalize team keys and
@@ -97,7 +93,7 @@ export function initState({ teams, players }) {
 
   // Load persisted roster edits and depth plans.
   state.rosterEdits = loadPersistedRosterEdits();
-  state.depthPlansByTeam = loadPersistedDepthPlans();
+  state.depthPlansByTeam = loadPersistedDepthPlans(state.teams);
 
   const appliedPlayers = applyRosterEdits(state.baselinePlayers, state.rosterEdits);
 
@@ -241,7 +237,16 @@ export function ensureDepthPlanForTeam(teamAbbr) {
   if (!state.depthPlansByTeam) state.depthPlansByTeam = {};
   let plan = state.depthPlansByTeam[team];
 
-  if (!plan) {
+  const needsRebuild =
+    !plan ||
+    typeof plan !== 'object' ||
+    !plan.teamAbbr ||
+    plan.teamAbbr !== team ||
+    !plan.slots ||
+    typeof plan.slots !== 'object' ||
+    Array.isArray(plan.slots);
+
+  if (needsRebuild) {
     const teamPlayers = getPlayersForTeam(team);
     plan = buildInitialDepthPlanForTeam(team, teamPlayers);
     state.depthPlansByTeam[team] = plan;
@@ -456,7 +461,7 @@ function safeParseJSON(text, fallback) {
   if (!text) return fallback;
   try {
     const value = JSON.parse(text);
-    if (value && typeof value === 'object') {
+    if (value && typeof value === 'object' && !Array.isArray(value)) {
       return value;
     }
   } catch {
@@ -469,7 +474,16 @@ function loadPersistedRosterEdits() {
   const storage = getStorage();
   if (!storage) return {};
   const raw = storage.getItem(STORAGE_KEYS.rosterEdits);
-  return safeParseJSON(raw, {});
+  const parsed = safeParseJSON(raw, {});
+  if (!parsed || typeof parsed !== 'object') return {};
+
+  const safe = {};
+  for (const key of Object.keys(parsed)) {
+    const value = parsed[key];
+    if (!value || typeof value !== 'object' || Array.isArray(value)) continue;
+    safe[key] = { ...value };
+  }
+  return safe;
 }
 
 function saveRosterEdits(edits) {
@@ -482,11 +496,40 @@ function saveRosterEdits(edits) {
   }
 }
 
-function loadPersistedDepthPlans() {
+function loadPersistedDepthPlans(teams) {
   const storage = getStorage();
   if (!storage) return {};
   const raw = storage.getItem(STORAGE_KEYS.depthPlans);
-  return safeParseJSON(raw, {});
+  const parsed = safeParseJSON(raw, {});
+  if (!parsed || typeof parsed !== 'object') return {};
+
+  const validTeams = new Set(
+    (teams || state.teams || []).map((t) => (t && t.abbrName ? String(t.abbrName) : '')).filter(
+      Boolean
+    )
+  );
+
+  const safePlans = {};
+
+  for (const teamKey of Object.keys(parsed)) {
+    if (validTeams.size && !validTeams.has(teamKey)) continue;
+    const rawPlan = parsed[teamKey];
+    if (!rawPlan || typeof rawPlan !== 'object') continue;
+
+    const slots =
+      rawPlan.slots && typeof rawPlan.slots === 'object' && !Array.isArray(rawPlan.slots)
+        ? rawPlan.slots
+        : {};
+
+    safePlans[teamKey] = {
+      teamAbbr: typeof rawPlan.teamAbbr === 'string' && rawPlan.teamAbbr
+        ? rawPlan.teamAbbr
+        : teamKey,
+      slots,
+    };
+  }
+
+  return safePlans;
 }
 
 function saveDepthPlans(plans) {
