@@ -19,6 +19,28 @@ const OFFENSE_SLOTS = OFFENSE_SLOT_IDS;
 const DEFENSE_SLOTS = DEFENSE_SLOT_IDS;
 const SPECIAL_SLOTS = SPECIAL_SLOT_IDS;
 
+function setRosterPanelVisibility(isVisible) {
+  const panel = document.getElementById('roster-panel');
+  const main = document.querySelector('main.container');
+  if (!panel || !main) return;
+
+  if (isVisible) {
+    panel.classList.remove('roster-panel--collapsed');
+    main.classList.remove('container--roster-collapsed');
+  } else {
+    panel.classList.add('roster-panel--collapsed');
+    main.classList.add('container--roster-collapsed');
+  }
+}
+
+function syncRosterToggleButton(button) {
+  if (!button) return;
+  const panel = document.getElementById('roster-panel');
+  const isCollapsed = !panel || panel.classList.contains('roster-panel--collapsed');
+  button.textContent = isCollapsed ? 'Show roster & FA' : 'Hide roster & FA';
+  button.setAttribute('aria-pressed', String(!isCollapsed));
+}
+
 function getSlotDefinition(slotId) {
   return DEPTH_CHART_SLOTS.find((s) => s.id === slotId) || null;
 }
@@ -266,6 +288,21 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
       const actions = doc.createElement('div');
       actions.className = 'depth-chart-toolbar__actions';
 
+      const rosterToggleBtn = doc.createElement('button');
+      rosterToggleBtn.type = 'button';
+      rosterToggleBtn.className =
+        'depth-chart-toolbar__btn depth-chart-toolbar__btn--roster-toggle';
+      rosterToggleBtn.setAttribute(
+        'aria-label',
+        'Toggle visibility of roster and free-agent panel'
+      );
+      rosterToggleBtn.addEventListener('click', () => {
+        const panel = document.getElementById('roster-panel');
+        const isCollapsed = !panel || panel.classList.contains('roster-panel--collapsed');
+        setRosterPanelVisibility(isCollapsed);
+        syncRosterToggleButton(rosterToggleBtn);
+      });
+
       const exportBtn = doc.createElement('button');
       exportBtn.type = 'button';
       exportBtn.className = 'depth-chart-toolbar__btn';
@@ -297,8 +334,16 @@ export function mountDepthChart(containerId = 'depth-chart-grid') {
 
       actions.appendChild(resetBtn);
       actions.appendChild(exportBtn);
+      actions.appendChild(rosterToggleBtn);
       toolbar.appendChild(actions);
       container.insertBefore(toolbar, container.firstChild);
+    }
+
+    const existingToggle = toolbar.querySelector(
+      '.depth-chart-toolbar__btn--roster-toggle'
+    );
+    if (existingToggle) {
+      syncRosterToggleButton(existingToggle);
     }
   }
 
