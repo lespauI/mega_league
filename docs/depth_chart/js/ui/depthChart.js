@@ -11,7 +11,7 @@ import {
   SPECIAL_SLOT_IDS,
   getOvr,
 } from '../slots.js';
-import { formatName, getContractSummary } from './playerFormatting.js';
+import { formatName, getContractSummary, formatSalary, getDevTraitInfo } from './playerFormatting.js';
 import { openSlotEditor } from './slotEditor.js';
 import { buildDepthCsvForTeam, downloadCsv } from '../csvExport.js';
 
@@ -139,15 +139,33 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
   if (player) {
     row.classList.add('depth-row--player');
 
-    contentLeft.classList.add('player-name');
-    contentLeft.textContent = formatName(player);
-
-    ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
-
     const ovrEl = doc.createElement('span');
     ovrEl.className = 'depth-row__ovr player-ovr';
     ovrEl.textContent = String(getOvr(player));
-    contentRight.appendChild(ovrEl);
+    contentLeft.appendChild(ovrEl);
+
+    const { label: devLabel, colorClass: devClass } = getDevTraitInfo(player);
+    if (devLabel) {
+      const devEl = doc.createElement('span');
+      devEl.className = `depth-row__dev ${devClass}`;
+      devEl.textContent = devLabel;
+      contentLeft.appendChild(devEl);
+    }
+
+    const nameEl = doc.createElement('span');
+    nameEl.className = 'player-name';
+    nameEl.textContent = formatName(player);
+    contentLeft.appendChild(nameEl);
+
+    ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
+
+    const salary = formatSalary(player);
+    if (salary) {
+      const salaryEl = doc.createElement('span');
+      salaryEl.className = 'depth-row__salary';
+      salaryEl.textContent = salary;
+      contentRight.appendChild(salaryEl);
+    }
 
     const { label: contractLabel, isFaAfterSeason } = getContractSummary(player);
     if (showFullContractDetails && contractLabel) {
