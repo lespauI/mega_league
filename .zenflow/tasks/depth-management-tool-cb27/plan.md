@@ -61,7 +61,8 @@ Implement the shared player model and baseline roster loading for the depth tool
 3. Wire depth chart state so that future `DepthPlan` work can read from `baselinePlayers`.
 4. Verification: run `npm test -- depth_chart` (or the closest existing depth-chart tests) if present, and manually open `/docs/depth_chart/` to confirm the current layout still works and player/contract data match the cap tool.
 
-### [ ] Step: Depth plan model & persistence
+### [x] Step: Depth plan model & persistence
+<!-- chat-id: 23e70fab-afa2-4be3-a651-7cd340ab1dcd -->
 
 Introduce the `DepthPlan` data structure, editing helpers, and `localStorage` wiring (spec sections 3.2, 3.3, 4.3, 7).
 
