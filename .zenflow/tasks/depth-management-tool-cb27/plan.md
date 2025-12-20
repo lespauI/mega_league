@@ -116,3 +116,4 @@ Finalize UX, reset behavior, and automated coverage for the depth management too
 3. Ensure basic accessibility for interactive elements: focus handling for the slot editor, keyboard navigation for primary actions, and ARIA labels where appropriate.
 4. Update or extend Playwright E2E tests in `tests/e2e/depth_chart.spec.ts` to cover new layout, slot editing, FA search, persistence, reset, and CSV export.
 5. Verification: run `npm run test:e2e -- tests/e2e/depth_chart.spec.ts` (or the appropriate command from the spec) and confirm all depth-chart tests pass, then do a final manual sanity pass through key user flows.
+
