@@ -61,7 +61,7 @@ function getAcquisitionLabel(assignment) {
   if (!assignment || !assignment.acquisition) return '';
   switch (assignment.acquisition) {
     case 'existing':
-      return 'Existing';
+      return '';
     case 'faPlayer':
       return 'FA Player';
     case 'draftR1':
@@ -85,6 +85,8 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
   row.dataset.depthIndex = String(depthIndex);
 
   const maxDepthForNeed = slot.max || 4;
+   // Only show full contract + FA details for the top player in each slot.
+  const showFullContractDetails = depthIndex === 1;
 
   const contentLeft = doc.createElement('span');
   contentLeft.className = 'depth-row__name';
@@ -148,7 +150,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     contentRight.appendChild(ovrEl);
 
     const { label: contractLabel, isFaAfterSeason } = getContractSummary(player);
-    if (contractLabel) {
+    if (showFullContractDetails && contractLabel) {
       const contractEl = doc.createElement('span');
       contractEl.className = 'depth-row__contract';
       contractEl.textContent = contractLabel;
@@ -163,7 +165,7 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
       contentRight.appendChild(badge);
     }
 
-    if (isFaAfterSeason) {
+    if (showFullContractDetails && isFaAfterSeason) {
       const faBadge = doc.createElement('span');
       faBadge.className = 'badge badge--fa-after';
       faBadge.textContent = 'FA after season';
