@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Depth Chart Management</title>
+    <link rel="stylesheet" href="css/styles.css" />
+    <link rel="icon" href="../favicon.svg" />
+    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  </head>
+  <body>
+    <header id="app-header" class="header">
+      <div class="header__left">
+        <h1 class="app-title">Depth Chart</h1>
+      </div>
+      <div class="header__right">
+        <div id="team-selector" class="team-selector"></div>
+      </div>
+    </header>
+
+    <main class="container">
+      <section id="depth-chart-container" class="depth-chart-container">
+        <div class="depth-chart-grid" id="depth-chart-grid"></div>
+      </section>
+    </main>
+
+    <script type="module" src="js/main.js"></script>
+  </body>
+</html>
