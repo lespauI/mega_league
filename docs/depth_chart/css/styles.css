@@ -65,6 +65,7 @@ body {
   padding: 1rem;
 }
 
+<<<<<<< HEAD
 .depth-chart-toolbar {
   display: flex;
   align-items: center;
@@ -102,6 +103,8 @@ body {
   border-color: rgba(248, 113, 113, 0.9);
 }
 
+=======
+>>>>>>> 032149f (Editing interactions, FA search & roster panel)
 .roster-panel {
   background: var(--panel);
   border: 1px solid #1f2937;
