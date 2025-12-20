@@ -468,3 +468,14 @@ test.describe('Depth Chart: Negative & error cases', () => {
     expect(errors).toHaveLength(0);
   });
 });
+
+test.describe('Depth Chart: Visual Snapshot', () => {
+  test('capture main layout screenshot', async ({ page }) => {
+    await gotoDepthChart(page);
+    await page.setViewportSize({ width: 1280, height: 720 });
+    await page.screenshot({
+      path: 'test-results/depth-chart-main.png',
+      fullPage: true,
+    });
+  });
+});
