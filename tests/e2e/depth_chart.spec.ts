@@ -367,7 +367,7 @@ test.describe('Depth Chart: Roster, editing & export flows', () => {
     await gotoDepthChart(page);
 
     const targetRow = page.locator(
-      '.depth-row[data-slot-id="WR1"][data-depth-index="4"]'
+      '.depth-row[data-slot-id="WR1"][data-depth-index="3"]'
     );
     await expect(targetRow).toBeVisible();
 

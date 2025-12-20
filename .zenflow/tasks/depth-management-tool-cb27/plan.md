@@ -142,7 +142,7 @@ I would like you to get a screenshot of the app, and check if its human readable
 ### [x] Step: Run the app and take screenshot with playwright
 <!-- chat-id: 4a0ae29f-6dc8-4f1f-b7b6-5f73a0885a7a -->
 
-### [ ] Step: Fix app layout
+### [x] Step: Fix app layout
 <!-- chat-id: 34c08e61-cb74-4665-bad3-f6e9a7f2ae90 -->
 <!-- agent: ZEN_CLI:MAX -->
 
