@@ -144,20 +144,20 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
     ovrEl.textContent = String(getOvr(player));
     contentLeft.appendChild(ovrEl);
 
-    const { label: devLabel, colorClass: devClass } = getDevTraitInfo(player);
-    if (devLabel) {
-      const devEl = doc.createElement('span');
-      devEl.className = `depth-row__dev ${devClass}`;
-      devEl.textContent = devLabel;
-      contentLeft.appendChild(devEl);
-    }
-
     const nameEl = doc.createElement('span');
     nameEl.className = 'player-name';
     nameEl.textContent = formatName(player);
     contentLeft.appendChild(nameEl);
 
     ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
+
+    const { label: devLabel, colorClass: devClass } = getDevTraitInfo(player);
+    if (devLabel) {
+      const devEl = doc.createElement('span');
+      devEl.className = `depth-row__dev ${devClass}`;
+      devEl.textContent = devLabel;
+      contentRight.appendChild(devEl);
+    }
 
     const salary = formatSalary(player);
     if (salary) {
