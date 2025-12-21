@@ -265,9 +265,17 @@ export function buildInitialDepthPlanForTeam(teamAbbr, playersForTeam) {
 
   assignAlternatingSplitPair('WR1', 'WR2');
   assignAlternatingSplitPair('DT1', 'DT2');
+  assignAlternatingSplitPair('CB1', 'CB2');
 
   for (const slot of DEPTH_CHART_SLOTS) {
-    if (slot.id === 'WR1' || slot.id === 'WR2' || slot.id === 'DT1' || slot.id === 'DT2') {
+    if (
+      slot.id === 'WR1' ||
+      slot.id === 'WR2' ||
+      slot.id === 'DT1' ||
+      slot.id === 'DT2' ||
+      slot.id === 'CB1' ||
+      slot.id === 'CB2'
+    ) {
       continue;
     }
 
