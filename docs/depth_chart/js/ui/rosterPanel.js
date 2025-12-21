@@ -200,7 +200,9 @@ export function mountRosterPanel(containerId = 'roster-panel') {
       return;
     }
 
-    for (const p of candidates) {
+    const visible = query ? candidates : candidates.slice(0, 5);
+
+    for (const p of visible) {
       const row = doc.createElement('div');
       row.className = 'roster-panel__row';
 
@@ -258,6 +260,13 @@ export function mountRosterPanel(containerId = 'roster-panel') {
 
       faList.appendChild(row);
     }
+
+    if (!query && candidates.length > visible.length) {
+      const more = doc.createElement('div');
+      more.className = 'roster-panel__more';
+      more.textContent = `Showing top ${visible.length} of ${candidates.length} free agents. Use search to see more.`;
+      faList.appendChild(more);
+    }
   }
 
   faSearch.addEventListener('input', () => {
@@ -269,4 +278,3 @@ export function mountRosterPanel(containerId = 'roster-panel') {
   wrapper.appendChild(faSection);
   el.appendChild(wrapper);
 }
-

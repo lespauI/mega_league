@@ -843,6 +843,12 @@ body {
   cursor: pointer;
 }
 
+.slot-editor__more {
+  margin-top: .25rem;
+  font-size: .7rem;
+  color: var(--muted);
+}
+
 .slot-editor__footer {
   margin-top: .75rem;
   display: flex;

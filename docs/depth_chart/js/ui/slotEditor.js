@@ -164,6 +164,48 @@ export function openSlotEditor({ slotId, depthIndex }) {
 
   panelEl.appendChild(header);
 
+  // Placeholders (Draft picks / Trade / FA) — shown at the top for quick access
+  const placeholdersSection = doc.createElement('section');
+  placeholdersSection.className = 'slot-editor__section';
+
+  const placeholdersHeading = doc.createElement('h3');
+  placeholdersHeading.className = 'slot-editor__section-title';
+  placeholdersHeading.textContent = 'Placeholders';
+  placeholdersSection.appendChild(placeholdersHeading);
+
+  const placeholdersRow = doc.createElement('div');
+  placeholdersRow.className = 'slot-editor__placeholders';
+
+  const placeholderDefs = [
+    { label: 'Draft R1', acquisition: 'draftR1', placeholder: 'Draft R1' },
+    { label: 'Draft R2', acquisition: 'draftR2', placeholder: 'Draft R2' },
+    { label: 'Trade', acquisition: 'trade', placeholder: 'Trade' },
+    { label: 'FA', acquisition: 'faPlaceholder', placeholder: 'FA' },
+  ];
+
+  for (const item of placeholderDefs) {
+    const btn = doc.createElement('button');
+    btn.type = 'button';
+    btn.className = 'slot-editor__pill';
+    btn.textContent = item.label;
+    btn.addEventListener('click', () => {
+      updateDepthSlot({
+        teamAbbr,
+        slotId,
+        depthIndex,
+        assignment: {
+          acquisition: item.acquisition,
+          placeholder: item.placeholder,
+        },
+      });
+      closeSlotEditor();
+    });
+    placeholdersRow.appendChild(btn);
+  }
+
+  placeholdersSection.appendChild(placeholdersRow);
+  panelEl.appendChild(placeholdersSection);
+
   if (currentPlayer || (assignment && assignment.placeholder)) {
     const current = doc.createElement('div');
     current.className = 'slot-editor__current';
@@ -296,7 +338,9 @@ export function openSlotEditor({ slotId, depthIndex }) {
       return;
     }
 
-    for (const p of candidates) {
+    const visible = query ? candidates : candidates.slice(0, 5);
+
+    for (const p of visible) {
       const row = createPlayerRow(doc, p, {
         actionLabel: 'Sign & assign',
         onClick: () => {
@@ -315,6 +359,13 @@ export function openSlotEditor({ slotId, depthIndex }) {
       });
       faList.appendChild(row);
     }
+
+    if (!query && candidates.length > visible.length) {
+      const more = doc.createElement('div');
+      more.className = 'slot-editor__more';
+      more.textContent = `Showing top ${visible.length} of ${candidates.length} free agents. Use search or position filter to see more.`;
+      faList.appendChild(more);
+    }
   }
 
   searchInput.addEventListener('input', () => {
@@ -327,47 +378,6 @@ export function openSlotEditor({ slotId, depthIndex }) {
   renderFaList();
 
   panelEl.appendChild(faSection);
-
-  const placeholdersSection = doc.createElement('section');
-  placeholdersSection.className = 'slot-editor__section';
-
-  const placeholdersHeading = doc.createElement('h3');
-  placeholdersHeading.className = 'slot-editor__section-title';
-  placeholdersHeading.textContent = 'Placeholders';
-  placeholdersSection.appendChild(placeholdersHeading);
-
-  const placeholdersRow = doc.createElement('div');
-  placeholdersRow.className = 'slot-editor__placeholders';
-
-  const placeholderDefs = [
-    { label: 'Draft R1', acquisition: 'draftR1', placeholder: 'Draft R1' },
-    { label: 'Draft R2', acquisition: 'draftR2', placeholder: 'Draft R2' },
-    { label: 'Trade', acquisition: 'trade', placeholder: 'Trade' },
-    { label: 'FA', acquisition: 'faPlaceholder', placeholder: 'FA' },
-  ];
-
-  for (const item of placeholderDefs) {
-    const btn = doc.createElement('button');
-    btn.type = 'button';
-    btn.className = 'slot-editor__pill';
-    btn.textContent = item.label;
-    btn.addEventListener('click', () => {
-      updateDepthSlot({
-        teamAbbr,
-        slotId,
-        depthIndex,
-        assignment: {
-          acquisition: item.acquisition,
-          placeholder: item.placeholder,
-        },
-      });
-      closeSlotEditor();
-    });
-    placeholdersRow.appendChild(btn);
-  }
-
-  placeholdersSection.appendChild(placeholdersRow);
-  panelEl.appendChild(placeholdersSection);
 
   const footer = doc.createElement('div');
   footer.className = 'slot-editor__footer';
