@@ -526,7 +526,7 @@ body {
   text-overflow: ellipsis;
   font-weight: 500;
   font-size: .72rem;
-  flex-shrink: 1;
+  flex: 1 1 0;
   min-width: 45px;
 }
 

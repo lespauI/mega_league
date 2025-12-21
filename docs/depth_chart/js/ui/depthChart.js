@@ -139,25 +139,25 @@ function renderDepthRow(doc, slot, depthIndex, assignment, player) {
   if (player) {
     row.classList.add('depth-row--player');
 
-    const ovrEl = doc.createElement('span');
-    ovrEl.className = 'depth-row__ovr player-ovr';
-    ovrEl.textContent = String(getOvr(player));
-    contentLeft.appendChild(ovrEl);
+    const { label: devLabel, colorClass: devClass } = getDevTraitInfo(player);
+    if (devLabel) {
+      const devEl = doc.createElement('span');
+      devEl.className = `depth-row__dev ${devClass}`;
+      devEl.textContent = devLabel;
+      contentLeft.appendChild(devEl);
+    }
 
     const nameEl = doc.createElement('span');
     nameEl.className = 'player-name';
     nameEl.textContent = formatName(player);
     contentLeft.appendChild(nameEl);
 
-    ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
+    const ovrEl = doc.createElement('span');
+    ovrEl.className = 'depth-row__ovr player-ovr';
+    ovrEl.textContent = String(getOvr(player));
+    contentLeft.appendChild(ovrEl);
 
-    const { label: devLabel, colorClass: devClass } = getDevTraitInfo(player);
-    if (devLabel) {
-      const devEl = doc.createElement('span');
-      devEl.className = `depth-row__dev ${devClass}`;
-      devEl.textContent = devLabel;
-      contentRight.appendChild(devEl);
-    }
+    ariaDetail = `Assigned to ${formatName(player)} (OVR ${getOvr(player)})`;
 
     const salary = formatSalary(player);
     if (salary) {
