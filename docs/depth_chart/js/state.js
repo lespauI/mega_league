@@ -204,7 +204,81 @@ export function buildInitialDepthPlanForTeam(teamAbbr, playersForTeam) {
 
   const rosterPlayers = playersForTeam || getPlayersForTeam(team);
 
+   // Special handling for split positions where the top two players
+   // should be the WR1/WR2 and DT1/DT2 starters by default.
+  function assignAlternatingSplitPair(primaryId, secondaryId) {
+    const primarySlot = DEPTH_CHART_SLOTS.find((s) => s.id === primaryId);
+    const secondarySlot = DEPTH_CHART_SLOTS.find((s) => s.id === secondaryId);
+    if (!primarySlot || !secondarySlot) return;
+
+    const baseSlot = {
+      id: primarySlot.id,
+      label: primarySlot.label,
+      positions: primarySlot.positions,
+      max: Math.max(primarySlot.max || 4, secondarySlot.max || 4),
+    };
+
+    const allEligible = getPlayersForSlot(baseSlot, rosterPlayers);
+    if (!allEligible.length) return;
+
+    const primaryMaxDepth = Math.min(primarySlot.max || 4, 4);
+    const secondaryMaxDepth = Math.min(secondarySlot.max || 4, 4);
+
+    const primaryAssignments = [];
+    const secondaryAssignments = [];
+
+    for (let i = 0; i < allEligible.length; i++) {
+      const player = allEligible[i];
+      const id = String(player.id || '').trim();
+      if (!id) continue;
+
+      if (i % 2 === 0) {
+        const depthIndex = primaryAssignments.length + 1;
+        if (depthIndex <= primaryMaxDepth) {
+          primaryAssignments.push({
+            slotId: primarySlot.id,
+            depthIndex,
+            acquisition: 'existing',
+            playerId: id,
+          });
+        }
+      } else {
+        const depthIndex = secondaryAssignments.length + 1;
+        if (depthIndex <= secondaryMaxDepth) {
+          secondaryAssignments.push({
+            slotId: secondarySlot.id,
+            depthIndex,
+            acquisition: 'existing',
+            playerId: id,
+          });
+        }
+      }
+    }
+
+    if (primaryAssignments.length) {
+      plan.slots[primarySlot.id] = primaryAssignments;
+    }
+    if (secondaryAssignments.length) {
+      plan.slots[secondarySlot.id] = secondaryAssignments;
+    }
+  }
+
+  assignAlternatingSplitPair('WR1', 'WR2');
+  assignAlternatingSplitPair('DT1', 'DT2');
+  assignAlternatingSplitPair('CB1', 'CB2');
+
   for (const slot of DEPTH_CHART_SLOTS) {
+    if (
+      slot.id === 'WR1' ||
+      slot.id === 'WR2' ||
+      slot.id === 'DT1' ||
+      slot.id === 'DT2' ||
+      slot.id === 'CB1' ||
+      slot.id === 'CB2'
+    ) {
+      continue;
+    }
+
     const eligible = getPlayersForSlot(slot, rosterPlayers);
     if (!eligible.length) continue;
 
