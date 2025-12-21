@@ -262,6 +262,35 @@ body {
   color: var(--muted);
 }
 
+.roster-panel__picks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: .25rem .5rem;
+  margin-top: .25rem;
+}
+
+.roster-panel__pick-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .25rem;
+}
+
+.roster-panel__pick-label {
+  font-size: .7rem;
+  color: var(--muted);
+}
+
+.roster-panel__pick-input {
+  width: 3rem;
+  border-radius: .25rem;
+  border: 1px solid #334155;
+  background: #020617;
+  color: var(--text);
+  font-size: .7rem;
+  padding: .1rem .25rem;
+}
+
 .pos-QB { color: #f59e0b; }
 .pos-WR { color: #22c55e; }
 .pos-RB, .pos-HB { color: #06b6d4; }
@@ -643,7 +672,12 @@ body {
 }
 
 .badge--acq-draftR1,
-.badge--acq-draftR2 {
+.badge--acq-draftR2,
+.badge--acq-draftR3,
+.badge--acq-draftR4,
+.badge--acq-draftR5,
+.badge--acq-draftR6,
+.badge--acq-draftR7 {
   background: rgba(249, 115, 22, 0.12);
   border-color: rgba(249, 115, 22, 0.7);
   color: #fed7aa;
@@ -843,13 +877,30 @@ body {
   cursor: pointer;
 }
 
+.slot-editor__pill[disabled] {
+  opacity: .4;
+  cursor: not-allowed;
+  border-style: dashed;
+}
+
 .slot-editor__footer {
   margin-top: .75rem;
   display: flex;
   justify-content: flex-end;
+  gap: .5rem;
 }
 
 .slot-editor__clear {
+  border-radius: .375rem;
+  border: 1px solid rgba(248, 113, 113, 0.7);
+  background: #020617;
+  color: #fecaca;
+  font-size: .75rem;
+  padding: .25rem .6rem;
+  cursor: pointer;
+}
+
+.slot-editor__cut {
   border-radius: .375rem;
   border: 1px solid rgba(248, 113, 113, 0.7);
   background: #020617;
