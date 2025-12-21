@@ -19,6 +19,7 @@ const STORAGE_PREFIX = 'depthChartPlanner.v1';
 const STORAGE_KEYS = {
   rosterEdits: `${STORAGE_PREFIX}.rosterEdits`,
   depthPlans: `${STORAGE_PREFIX}.depthPlans`,
+  selectedTeam: `${STORAGE_PREFIX}.selectedTeam`,
 };
 
 const listeners = new Set();
@@ -74,6 +75,7 @@ export function setState(partial) {
 
   if (Object.prototype.hasOwnProperty.call(next, 'selectedTeam') && next.selectedTeam) {
     ensureDepthPlanForTeam(next.selectedTeam);
+    saveSelectedTeam(next.selectedTeam);
   }
 
   emit();
@@ -97,7 +99,9 @@ export function initState({ teams, players }) {
 
   const appliedPlayers = applyRosterEdits(state.baselinePlayers, state.rosterEdits);
 
+  const persistedTeam = loadPersistedSelectedTeam(state.teams);
   const defaultTeam =
+    persistedTeam ||
     state.selectedTeam ||
     (state.teams && state.teams.length ? state.teams[0].abbrName : null);
 
@@ -618,6 +622,35 @@ function saveDepthPlans(plans) {
 
 function persistDepthPlans() {
   saveDepthPlans(state.depthPlansByTeam || {});
+}
+
+function loadPersistedSelectedTeam(teams) {
+  const storage = getStorage();
+  if (!storage) return null;
+  const raw = storage.getItem(STORAGE_KEYS.selectedTeam);
+  if (!raw || typeof raw !== 'string') return null;
+  
+  const teamAbbr = raw.trim();
+  if (!teamAbbr) return null;
+  
+  const validTeams = (teams || state.teams || []).map((t) => t && t.abbrName).filter(Boolean);
+  if (validTeams.length && !validTeams.includes(teamAbbr)) {
+    return null;
+  }
+  
+  return teamAbbr;
+}
+
+function saveSelectedTeam(teamAbbr) {
+  const storage = getStorage();
+  if (!storage) return;
+  try {
+    if (teamAbbr && typeof teamAbbr === 'string') {
+      storage.setItem(STORAGE_KEYS.selectedTeam, teamAbbr);
+    }
+  } catch {
+    // ignore
+  }
 }
 
 function removePlayerFromAllDepthPlans(playerId) {

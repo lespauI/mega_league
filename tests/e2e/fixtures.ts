@@ -1,18 +1,25 @@
 import { test as base, expect } from '@playwright/test';
 
-// Re-export test and expect for convenience
-export const test = base;
-export { expect } from '@playwright/test';
+type TestOptions = {
+  clearStorage: boolean;
+};
 
-// Clear localStorage before app scripts run on every navigation
-test.beforeEach(async ({ page }) => {
-  await page.addInitScript(() => {
-    try {
-      localStorage.clear();
-      sessionStorage.clear?.();
-    } catch {}
-  });
+export const test = base.extend<TestOptions>({
+  clearStorage: [true, { option: true }],
+  page: async ({ page, clearStorage }, use) => {
+    if (clearStorage) {
+      await page.addInitScript(() => {
+        try {
+          localStorage.clear();
+          sessionStorage.clear?.();
+        } catch {}
+      });
+    }
+    await use(page);
+  },
 });
+
+export { expect } from '@playwright/test';
 
 /**
  * Navigate to the roster cap tool and wait for key UI to be ready.
