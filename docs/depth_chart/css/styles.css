@@ -497,6 +497,7 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: .08em;
+  text-align: center;
 }
 
 .position-card__body {
