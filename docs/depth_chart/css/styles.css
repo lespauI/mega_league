@@ -876,7 +876,10 @@ body {
   padding: .15rem .5rem;
   cursor: pointer;
 }
-
+.slot-editor__more {
+  margin-top: .25rem;
+  font-size: .7rem;
+  color: var(--muted);
 .slot-editor__pill[disabled] {
   opacity: .4;
   cursor: not-allowed;

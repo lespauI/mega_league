@@ -354,6 +354,10 @@ test.describe('Depth Chart: Roster, editing & export flows', () => {
     ).toHaveCount(0);
 
     const faSection = page.locator('.roster-panel__section').filter({ hasText: 'Free agents' });
+    const faSearch = faSection.locator('.roster-panel__search');
+    await expect(faSearch).toBeVisible();
+    await faSearch.fill(playerName!);
+
     await expect(
       faSection.locator('.roster-panel__row-name', { hasText: playerName! })
     ).toHaveCount(1);

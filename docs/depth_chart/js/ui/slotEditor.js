@@ -168,6 +168,99 @@ export function openSlotEditor({ slotId, depthIndex }) {
 
   panelEl.appendChild(header);
 
+  // Placeholders (Draft picks / Trade / FA) — shown at the top for quick access
+  const placeholdersSectionTop = doc.createElement('section');
+  placeholdersSectionTop.className = 'slot-editor__section';
+
+  const placeholdersHeadingTop = doc.createElement('h3');
+  placeholdersHeadingTop.className = 'slot-editor__section-title';
+  placeholdersHeadingTop.textContent = 'Placeholders';
+  placeholdersSectionTop.appendChild(placeholdersHeadingTop);
+
+  const placeholdersRowTop = doc.createElement('div');
+  placeholdersRowTop.className = 'slot-editor__placeholders';
+
+  const draftPicks = getDraftPicksForTeam(teamAbbr);
+  /** @type {{[round:number]:number}} */
+  const usedByRound = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 };
+
+  if (depthPlan && depthPlan.slots) {
+    for (const slotKey of Object.keys(depthPlan.slots)) {
+      const arr = depthPlan.slots[slotKey];
+      if (!Array.isArray(arr)) continue;
+      for (const entry of arr) {
+        if (!entry || !entry.acquisition) continue;
+        const acq = String(entry.acquisition);
+        if (acq.startsWith('draftR')) {
+          const round = Number(acq.slice(6));
+          if (round >= 1 && round <= 7) {
+            usedByRound[round] = (usedByRound[round] || 0) + 1;
+          }
+        }
+      }
+    }
+  }
+
+  const placeholderDefsTop = [];
+  for (let r = 1; r <= 7; r++) {
+    placeholderDefsTop.push({
+      label: `Draft R${r}`,
+      acquisition: /** @type {import('../state.js').AcquisitionType} */ (`draftR${r}`),
+      placeholder: `Draft R${r}`,
+      round: r,
+    });
+  }
+  placeholderDefsTop.push(
+    { label: 'Trade', acquisition: 'trade', placeholder: 'Trade' },
+    { label: 'FA', acquisition: 'faPlaceholder', placeholder: 'FA' },
+  );
+
+  for (const item of placeholderDefsTop) {
+    const btn = doc.createElement('button');
+    btn.type = 'button';
+    btn.className = 'slot-editor__pill';
+
+    let label = item.label;
+    /** @type {number|undefined} */
+    let remaining;
+
+    if (Object.prototype.hasOwnProperty.call(item, 'round')) {
+      const round = /** @type {number} */ (item.round);
+      const total = Number(draftPicks[round] || 0);
+      const used = Number(usedByRound[round] || 0);
+      const isCurrent =
+        assignment && assignment.acquisition === item.acquisition ? 1 : 0;
+      remaining = Math.max(0, total - (used - isCurrent));
+      if (total > 0 && remaining >= 0 && remaining < total) {
+        label = `${label} (${remaining} left)`;
+      }
+      if (!total || remaining <= 0) {
+        btn.disabled = !isCurrent;
+      }
+      btn.title = `Round ${round} draft placeholder`;
+    }
+
+    btn.textContent = label;
+
+    btn.addEventListener('click', () => {
+      if (btn.disabled) return;
+      updateDepthSlot({
+        teamAbbr,
+        slotId,
+        depthIndex,
+        assignment: {
+          acquisition: item.acquisition,
+          placeholder: item.placeholder,
+        },
+      });
+      closeSlotEditor();
+    });
+    placeholdersRowTop.appendChild(btn);
+  }
+
+  placeholdersSectionTop.appendChild(placeholdersRowTop);
+  panelEl.appendChild(placeholdersSectionTop);
+
   if (currentPlayer || (assignment && assignment.placeholder)) {
     const current = doc.createElement('div');
     current.className = 'slot-editor__current';
@@ -300,7 +393,9 @@ export function openSlotEditor({ slotId, depthIndex }) {
       return;
     }
 
-    for (const p of candidates) {
+    const visible = query ? candidates : candidates.slice(0, 5);
+
+    for (const p of visible) {
       const row = createPlayerRow(doc, p, {
         actionLabel: 'Sign & assign',
         onClick: () => {
@@ -319,6 +414,13 @@ export function openSlotEditor({ slotId, depthIndex }) {
       });
       faList.appendChild(row);
     }
+
+    if (!query && candidates.length > visible.length) {
+      const more = doc.createElement('div');
+      more.className = 'slot-editor__more';
+      more.textContent = `Showing top ${visible.length} of ${candidates.length} free agents. Use search or position filter to see more.`;
+      faList.appendChild(more);
+    }
   }
 
   searchInput.addEventListener('input', () => {
@@ -331,99 +433,6 @@ export function openSlotEditor({ slotId, depthIndex }) {
   renderFaList();
 
   panelEl.appendChild(faSection);
-
-  const placeholdersSection = doc.createElement('section');
-  placeholdersSection.className = 'slot-editor__section';
-
-  const placeholdersHeading = doc.createElement('h3');
-  placeholdersHeading.className = 'slot-editor__section-title';
-  placeholdersHeading.textContent = 'Placeholders';
-  placeholdersSection.appendChild(placeholdersHeading);
-
-  const placeholdersRow = doc.createElement('div');
-  placeholdersRow.className = 'slot-editor__placeholders';
-
-  const draftPicks = getDraftPicksForTeam(teamAbbr);
-  /** @type {{[round:number]:number}} */
-  const usedByRound = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 };
-
-  if (depthPlan && depthPlan.slots) {
-    for (const slotKey of Object.keys(depthPlan.slots)) {
-      const arr = depthPlan.slots[slotKey];
-      if (!Array.isArray(arr)) continue;
-      for (const entry of arr) {
-        if (!entry || !entry.acquisition) continue;
-        const acq = String(entry.acquisition);
-        if (acq.startsWith('draftR')) {
-          const round = Number(acq.slice(6));
-          if (round >= 1 && round <= 7) {
-            usedByRound[round] = (usedByRound[round] || 0) + 1;
-          }
-        }
-      }
-    }
-  }
-
-  const placeholderDefs = [];
-  for (let r = 1; r <= 7; r++) {
-    placeholderDefs.push({
-      label: `Draft R${r}`,
-      acquisition: /** @type {import('../state.js').AcquisitionType} */ (`draftR${r}`),
-      placeholder: `Draft R${r}`,
-      round: r,
-    });
-  }
-  placeholderDefs.push(
-    { label: 'Trade', acquisition: 'trade', placeholder: 'Trade' },
-    { label: 'FA', acquisition: 'faPlaceholder', placeholder: 'FA' },
-  );
-
-  for (const item of placeholderDefs) {
-    const btn = doc.createElement('button');
-    btn.type = 'button';
-    btn.className = 'slot-editor__pill';
-
-    let label = item.label;
-    /** @type {number|undefined} */
-    let remaining;
-
-    if (Object.prototype.hasOwnProperty.call(item, 'round')) {
-      const round = /** @type {number} */ (item.round);
-      const total = Number(draftPicks[round] || 0);
-      const used = Number(usedByRound[round] || 0);
-      const isCurrent =
-        assignment && assignment.acquisition === item.acquisition ? 1 : 0;
-      remaining = Math.max(0, total - (used - isCurrent));
-      if (total > 0 && remaining >= 0 && remaining < total) {
-        label = `${label} (${remaining} left)`;
-      }
-      if (!total || remaining <= 0) {
-        btn.disabled = !isCurrent;
-      }
-      btn.title = `Round ${round} draft placeholder`;
-    }
-
-    btn.textContent = label;
-
-    btn.addEventListener('click', () => {
-      if (btn.disabled) return;
-      updateDepthSlot({
-        teamAbbr,
-        slotId,
-        depthIndex,
-        assignment: {
-          acquisition: item.acquisition,
-          placeholder: item.placeholder,
-        },
-      });
-      closeSlotEditor();
-    });
-    placeholdersRow.appendChild(btn);
-  }
-
-  placeholdersSection.appendChild(placeholdersRow);
-  panelEl.appendChild(placeholdersSection);
-
   const footer = doc.createElement('div');
   footer.className = 'slot-editor__footer';
 
