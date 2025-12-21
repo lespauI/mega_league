@@ -1,7 +1,7 @@
 import { DEPTH_CHART_SLOTS, getPlayersForSlot } from './slots.js';
 
 /**
- * @typedef {'existing' | 'faPlayer' | 'draftR1' | 'draftR2' | 'trade' | 'faPlaceholder'} AcquisitionType
+ * @typedef {'existing' | 'faPlayer' | 'draftR1' | 'draftR2' | 'draftR3' | 'draftR4' | 'draftR5' | 'draftR6' | 'draftR7' | 'trade' | 'faPlaceholder'} AcquisitionType
  *
  * @typedef {Object} DepthSlotAssignment
  * @property {string} slotId
