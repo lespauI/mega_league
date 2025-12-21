@@ -64,3 +64,12 @@ Implement the task according to the technical specification and general engineer
    - What was implemented
    - How the solution was tested
    - The biggest issues or challenges encountered
+
+### [x] Step: Validate solution
+<!-- chat-id: fc31796a-c837-4bc0-976a-2a9d02234d8a -->
+
+I would like you to get a screenshot of the app, and check if its human readable. If no, plan the adjsutment and do again, until you will not success with the results
+
+### [ ] Step: Increes e2e coverage
+
+runn all tests be sure they pass and mit requrements
