@@ -75,8 +75,24 @@ export function getPlayersForSlot(slot, allPlayers) {
   matched.sort((a, b) => getOvr(b) - getOvr(a));
 
   if (slot.split !== undefined) {
-    const half = Math.ceil(matched.length / 2);
-    return slot.split === 0 ? matched.slice(0, half) : matched.slice(half);
+    if (!matched.length) return [];
+    if (matched.length === 1) {
+      return slot.split === 0 ? [matched[0]] : [];
+    }
+
+    const primary1 = matched[0];
+    const primary2 = matched[1];
+    const remaining = matched.slice(2);
+
+    if (!remaining.length) {
+      return slot.split === 0 ? [primary1] : [primary2];
+    }
+
+    const half = Math.ceil(remaining.length / 2);
+    const group1 = remaining.slice(0, half);
+    const group2 = remaining.slice(half);
+
+    return slot.split === 0 ? [primary1, ...group1] : [primary2, ...group2];
   }
 
   return matched;

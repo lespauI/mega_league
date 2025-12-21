@@ -7,6 +7,7 @@ import {
 } from '../state.js';
 import { getOvr } from '../slots.js';
 import { formatName, getContractSummary } from './playerFormatting.js';
+import { getDraftPicksForTeam, setDraftPicksForTeam } from '../draftPicks.js';
 
 export function mountRosterPanel(containerId = 'roster-panel') {
   const el = document.getElementById(containerId);
@@ -276,5 +277,61 @@ export function mountRosterPanel(containerId = 'roster-panel') {
   renderFaList();
 
   wrapper.appendChild(faSection);
+
+  const picksSection = doc.createElement('section');
+  picksSection.className = 'roster-panel__section';
+
+  const picksHeader = doc.createElement('div');
+  picksHeader.className = 'roster-panel__section-header';
+
+  const picksTitle = doc.createElement('h3');
+  picksTitle.className = 'roster-panel__section-title';
+  picksTitle.textContent = 'Draft picks';
+  picksHeader.appendChild(picksTitle);
+
+  picksSection.appendChild(picksHeader);
+
+  const picksGrid = doc.createElement('div');
+  picksGrid.className = 'roster-panel__picks';
+
+  const picks = getDraftPicksForTeam(teamAbbr);
+  /** @type {{[round:number]: HTMLInputElement}} */
+  const pickInputs = {};
+
+  function commitPicks() {
+    const next = {};
+    for (let r = 1; r <= 7; r++) {
+      const input = pickInputs[r];
+      if (!input) continue;
+      const v = Number(input.value || 0);
+      next[r] = Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0;
+    }
+    setDraftPicksForTeam(teamAbbr, next);
+  }
+
+  for (let round = 1; round <= 7; round++) {
+    const row = doc.createElement('div');
+    row.className = 'roster-panel__pick-row';
+
+    const label = doc.createElement('span');
+    label.className = 'roster-panel__pick-label';
+    label.textContent = `R${round}`;
+    row.appendChild(label);
+
+    const input = doc.createElement('input');
+    input.type = 'number';
+    input.min = '0';
+    input.step = '1';
+    input.value = String(picks[round] || 0);
+    input.className = 'roster-panel__pick-input';
+    input.addEventListener('change', commitPicks);
+    pickInputs[round] = input;
+    row.appendChild(input);
+
+    picksGrid.appendChild(row);
+  }
+
+  picksSection.appendChild(picksGrid);
+  wrapper.appendChild(picksSection);
   el.appendChild(wrapper);
 }

@@ -1,6 +1,7 @@
 import {
   clearDepthSlot,
   getDepthPlanForSelectedTeam,
+  clearPlayerFromAllDepthSlots,
   getFreeAgents,
   getPlayersForTeam,
   getState,
@@ -9,6 +10,7 @@ import {
 } from '../state.js';
 import { DEPTH_CHART_SLOTS, getOvr } from '../slots.js';
 import { formatName, getContractSummary } from './playerFormatting.js';
+import { getDraftPicksForTeam } from '../draftPicks.js';
 
 let backdropEl = null;
 let panelEl = null;
@@ -143,6 +145,8 @@ export function openSlotEditor({ slotId, depthIndex }) {
   const slot = findSlotDefinition(slotId);
   const { assignment, player: currentPlayer } = getCurrentAssignment(slotId, depthIndex);
 
+  const depthPlan = getDepthPlanForSelectedTeam();
+
   const header = doc.createElement('div');
   header.className = 'slot-editor__header';
 
@@ -165,30 +169,81 @@ export function openSlotEditor({ slotId, depthIndex }) {
   panelEl.appendChild(header);
 
   // Placeholders (Draft picks / Trade / FA) — shown at the top for quick access
-  const placeholdersSection = doc.createElement('section');
-  placeholdersSection.className = 'slot-editor__section';
+  const placeholdersSectionTop = doc.createElement('section');
+  placeholdersSectionTop.className = 'slot-editor__section';
 
-  const placeholdersHeading = doc.createElement('h3');
-  placeholdersHeading.className = 'slot-editor__section-title';
-  placeholdersHeading.textContent = 'Placeholders';
-  placeholdersSection.appendChild(placeholdersHeading);
+  const placeholdersHeadingTop = doc.createElement('h3');
+  placeholdersHeadingTop.className = 'slot-editor__section-title';
+  placeholdersHeadingTop.textContent = 'Placeholders';
+  placeholdersSectionTop.appendChild(placeholdersHeadingTop);
 
-  const placeholdersRow = doc.createElement('div');
-  placeholdersRow.className = 'slot-editor__placeholders';
+  const placeholdersRowTop = doc.createElement('div');
+  placeholdersRowTop.className = 'slot-editor__placeholders';
 
-  const placeholderDefs = [
-    { label: 'Draft R1', acquisition: 'draftR1', placeholder: 'Draft R1' },
-    { label: 'Draft R2', acquisition: 'draftR2', placeholder: 'Draft R2' },
+  const draftPicks = getDraftPicksForTeam(teamAbbr);
+  /** @type {{[round:number]:number}} */
+  const usedByRound = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0 };
+
+  if (depthPlan && depthPlan.slots) {
+    for (const slotKey of Object.keys(depthPlan.slots)) {
+      const arr = depthPlan.slots[slotKey];
+      if (!Array.isArray(arr)) continue;
+      for (const entry of arr) {
+        if (!entry || !entry.acquisition) continue;
+        const acq = String(entry.acquisition);
+        if (acq.startsWith('draftR')) {
+          const round = Number(acq.slice(6));
+          if (round >= 1 && round <= 7) {
+            usedByRound[round] = (usedByRound[round] || 0) + 1;
+          }
+        }
+      }
+    }
+  }
+
+  const placeholderDefsTop = [];
+  for (let r = 1; r <= 7; r++) {
+    placeholderDefsTop.push({
+      label: `Draft R${r}`,
+      acquisition: /** @type {import('../state.js').AcquisitionType} */ (`draftR${r}`),
+      placeholder: `Draft R${r}`,
+      round: r,
+    });
+  }
+  placeholderDefsTop.push(
     { label: 'Trade', acquisition: 'trade', placeholder: 'Trade' },
     { label: 'FA', acquisition: 'faPlaceholder', placeholder: 'FA' },
-  ];
+  );
 
-  for (const item of placeholderDefs) {
+  for (const item of placeholderDefsTop) {
     const btn = doc.createElement('button');
     btn.type = 'button';
     btn.className = 'slot-editor__pill';
-    btn.textContent = item.label;
+
+    let label = item.label;
+    /** @type {number|undefined} */
+    let remaining;
+
+    if (Object.prototype.hasOwnProperty.call(item, 'round')) {
+      const round = /** @type {number} */ (item.round);
+      const total = Number(draftPicks[round] || 0);
+      const used = Number(usedByRound[round] || 0);
+      const isCurrent =
+        assignment && assignment.acquisition === item.acquisition ? 1 : 0;
+      remaining = Math.max(0, total - (used - isCurrent));
+      if (total > 0 && remaining >= 0 && remaining < total) {
+        label = `${label} (${remaining} left)`;
+      }
+      if (!total || remaining <= 0) {
+        btn.disabled = !isCurrent;
+      }
+      btn.title = `Round ${round} draft placeholder`;
+    }
+
+    btn.textContent = label;
+
     btn.addEventListener('click', () => {
+      if (btn.disabled) return;
       updateDepthSlot({
         teamAbbr,
         slotId,
@@ -200,11 +255,11 @@ export function openSlotEditor({ slotId, depthIndex }) {
       });
       closeSlotEditor();
     });
-    placeholdersRow.appendChild(btn);
+    placeholdersRowTop.appendChild(btn);
   }
 
-  placeholdersSection.appendChild(placeholdersRow);
-  panelEl.appendChild(placeholdersSection);
+  placeholdersSectionTop.appendChild(placeholdersRowTop);
+  panelEl.appendChild(placeholdersSectionTop);
 
   if (currentPlayer || (assignment && assignment.placeholder)) {
     const current = doc.createElement('div');
@@ -378,9 +433,21 @@ export function openSlotEditor({ slotId, depthIndex }) {
   renderFaList();
 
   panelEl.appendChild(faSection);
-
   const footer = doc.createElement('div');
   footer.className = 'slot-editor__footer';
+
+  if (currentPlayer) {
+    const cutBtn = doc.createElement('button');
+    cutBtn.type = 'button';
+    cutBtn.className = 'slot-editor__cut';
+    cutBtn.textContent = 'Cut to FA';
+    cutBtn.addEventListener('click', () => {
+      clearPlayerFromAllDepthSlots(currentPlayer.id);
+      setRosterEdit(currentPlayer.id, { isFreeAgent: true, team: '' });
+      closeSlotEditor();
+    });
+    footer.appendChild(cutBtn);
+  }
 
   const clearBtn = doc.createElement('button');
   clearBtn.type = 'button';

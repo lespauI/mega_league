@@ -68,6 +68,16 @@ function getAcquisitionLabel(assignment) {
       return 'Draft R1';
     case 'draftR2':
       return 'Draft R2';
+    case 'draftR3':
+      return 'Draft R3';
+    case 'draftR4':
+      return 'Draft R4';
+    case 'draftR5':
+      return 'Draft R5';
+    case 'draftR6':
+      return 'Draft R6';
+    case 'draftR7':
+      return 'Draft R7';
     case 'trade':
       return 'Trade';
     case 'faPlaceholder':
@@ -265,7 +275,9 @@ function renderPositionCard(doc, slotId, depthPlan, playersById) {
       ? depthPlan.slots[slot.id].filter(Boolean)
       : [];
 
-  const maxDepthRows = 3;
+  const baseDepthRows = Math.max(slot.max || 0, 3);
+  const maxDepthRows = Math.max(baseDepthRows, planSlot.length || 0);
+
   for (let i = 0; i < maxDepthRows; i++) {
     const depthIndex = i + 1;
     const assignment =
