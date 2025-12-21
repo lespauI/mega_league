@@ -70,6 +70,7 @@ Implement the task according to the technical specification and general engineer
 
 I would like you to get a screenshot of the app, and check if its human readable. If no, plan the adjsutment and do again, until you will not success with the results
 
-### [ ] Step: Increes e2e coverage
+### [x] Step: Increes e2e coverage
+<!-- chat-id: 7bcfa9c8-baae-499e-a348-c84e61525d6d -->
 
 runn all tests be sure they pass and mit requrements
