@@ -1,29 +1,18 @@
 # Roster Cap Management Tool — Usage
 
-Interactive, Spotrac‑style salary cap manager for Madden. Runs as a static web app (no build, no backend). Loads `MEGA_players.csv` and `MEGA_teams.csv` from the `docs/roster_cap_tool/data/` folder and updates cap figures in real time as you release, trade, extend, convert, and sign players.
+Interactive, Spotrac‑style salary cap manager for Madden. Runs as a static web app (no build, no backend). Loads `MEGA_players.csv` and `MEGA_teams.csv` directly from the project root and updates cap figures in real time as you release, trade, extend, convert, and sign players.
 
 ## Requirements
 - Modern browser (Chrome, Edge, Firefox, Safari)
-- CSV data in `docs/roster_cap_tool/data/`:
+- CSV data in project root:
   - `MEGA_players.csv`
   - `MEGA_teams.csv`
 - Optional helper scripts (local verification):
-  - `scripts/tools/sync_data_to_docs.sh`
   - `scripts/verify_cap_math.py`
   - `scripts/smoke/smoke_roster_cap_tool.sh`
 
 ## Data Setup
-Place fresh CSV exports at the repo root, then sync them into the Pages data folder:
-
-```bash
-bash scripts/tools/sync_data_to_docs.sh          # copies MEGA_players.csv + MEGA_teams.csv
-# or
-bash scripts/tools/sync_data_to_docs.sh --all    # copies all MEGA_*.csv to docs/roster_cap_tool/data
-```
-
-This populates:
-- `docs/roster_cap_tool/data/MEGA_players.csv`
-- `docs/roster_cap_tool/data/MEGA_teams.csv`
+Place fresh CSV exports from Neon Sports at the project root. The tools will load them directly from there.
 
 ## Run Locally
 ```bash
@@ -40,19 +29,19 @@ http://localhost:8000/docs/roster_cap_tool/test.html
 The smoke tests print PASS/FAIL lines that sanity‑check core math and flows (release → sign → extension → conversion).
 
 ## GitHub Pages
-1) Commit/push the repo to GitHub (ensure `docs/roster_cap_tool/` and its `data/` CSVs are committed)
-2) In repository Settings → Pages, set Source to “Deploy from a branch”, folder `/docs`
+1) Commit/push the repo to GitHub (ensure root CSVs `MEGA_players.csv` and `MEGA_teams.csv` are committed)
+2) In repository Settings → Pages, set Source to "Deploy from a branch", folder `/docs`
 3) Visit `https://<username>.github.io/<repo>/docs/roster_cap_tool/`
 
-Note: GitHub Pages serves only committed files. If you update root CSVs, re‑run the sync script and commit the updated files under `docs/roster_cap_tool/data/`.
+Note: GitHub Pages serves only committed files. If you update root CSVs, commit them and push to update the live site.
 
 ## Verify Functionality
 - Browser smoke tests: `docs/roster_cap_tool/test.html`
 - Math parity report (writes `output/cap_tool_verification.json`):
   ```bash
   python3 scripts/verify_cap_math.py \
-    --teams docs/roster_cap_tool/data/MEGA_teams.csv \
-    --players docs/roster_cap_tool/data/MEGA_players.csv \
+    --teams MEGA_teams.csv \
+    --players MEGA_players.csv \
     --out output/cap_tool_verification.json
   ```
 - Page + assets availability smoke:
@@ -111,10 +100,10 @@ Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
     - Projections and scenario save/load included
 
 ## Troubleshooting
-- Blank tables: confirm both CSVs exist under `docs/roster_cap_tool/data/`
-- CORS/file errors: use a local web server (see “Run Locally”)
+- Blank tables: confirm both CSVs exist in the project root
+- CORS/file errors: use a local web server (see "Run Locally")
 - Cap math mismatch: run `scripts/verify_cap_math.py` and review `output/cap_tool_verification.json`
-- Pages not updating: ensure CSVs were synced, committed, and Pages deployed
+- Pages not updating: ensure CSVs were committed and Pages deployed
 
 ## Example Flow
 1) Select a team in the header

@@ -251,11 +251,11 @@ test.describe('Depth Chart: Position Splits', () => {
 
 test.describe('Depth Chart: Data Loading & Refresh', () => {
   test('CSV assets are accessible', async ({ page, baseURL }) => {
-    const respTeams = await page.request.get(`${baseURL}/docs/roster_cap_tool/data/MEGA_teams.csv`);
+    const respTeams = await page.request.get(`${baseURL}/MEGA_teams.csv`);
     expect(respTeams.ok()).toBeTruthy();
 
     const respPlayers = await page.request.get(
-      `${baseURL}/docs/roster_cap_tool/data/MEGA_players.csv`
+      `${baseURL}/MEGA_players.csv`
     );
     expect(respPlayers.ok()).toBeTruthy();
   });

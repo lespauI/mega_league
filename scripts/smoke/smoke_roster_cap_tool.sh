@@ -43,8 +43,8 @@ done
 
 echo "[smoke] Fetching app HTML and CSVs..."
 curl -fsS "http://127.0.0.1:8000/docs/roster_cap_tool/index.html" >/tmp/roster_cap_tool.index.html
-curl -fsS "http://127.0.0.1:8000/docs/roster_cap_tool/data/MEGA_teams.csv" >/tmp/roster_cap_tool.teams.csv
-curl -fsS "http://127.0.0.1:8000/docs/roster_cap_tool/data/MEGA_players.csv" >/tmp/roster_cap_tool.players.csv
+curl -fsS "http://127.0.0.1:8000/MEGA_teams.csv" >/tmp/roster_cap_tool.teams.csv
+curl -fsS "http://127.0.0.1:8000/MEGA_players.csv" >/tmp/roster_cap_tool.players.csv
 
 if ! grep -qi "Cap" "/tmp/roster_cap_tool.index.html"; then
   echo "error: index.html does not appear to contain Cap UI text" >&2

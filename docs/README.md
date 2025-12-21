@@ -37,7 +37,7 @@ python3 scripts/run_all_stats.py
 
 | Page                                   | Purpose                                                | How to (re)generate / update data                                                 |
 |----------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
-| `roster_cap_tool/index.html`          | Interactive Spotrac‑style roster & cap manager         | Static JS app; sync CSVs with `bash scripts/tools/sync_data_to_docs.sh`          |
+| `roster_cap_tool/index.html`          | Interactive Spotrac‑style roster & cap manager         | Static JS app; loads CSVs directly from project root          |
 | `power_rankings_roster.html`          | Roster power rankings report (table + narrative)       | `python3 scripts/power_rankings_roster.py` (writes CSV + HTML)                   |
 | `power_rankings_roster_charts.html`   | X/Y scatter charts from roster power scores            | Reads `output/power_rankings_roster.csv` produced by `scripts/power_rankings_roster.py` |
 

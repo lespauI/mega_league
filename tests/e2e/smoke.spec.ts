@@ -38,9 +38,9 @@ test.describe('Smoke: Load + Cap Summary', () => {
     expect(spent).toBeGreaterThanOrEqual(0);
 
     // Ensure CSV assets are accessible (parsing relies on them)
-    const respTeams = await page.request.get(`${baseURL}/docs/roster_cap_tool/data/MEGA_teams.csv`);
+    const respTeams = await page.request.get(`${baseURL}/MEGA_teams.csv`);
     expect(respTeams.ok()).toBeTruthy();
-    const respPlayers = await page.request.get(`${baseURL}/docs/roster_cap_tool/data/MEGA_players.csv`);
+    const respPlayers = await page.request.get(`${baseURL}/MEGA_players.csv`);
     expect(respPlayers.ok()).toBeTruthy();
   });
 });

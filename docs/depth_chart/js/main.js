@@ -6,8 +6,8 @@ import { mountRosterPanel } from './ui/rosterPanel.js';
 
 async function boot() {
   const [teams, players] = await Promise.all([
-    loadTeams('../roster_cap_tool/data/MEGA_teams.csv'),
-    loadPlayers('../roster_cap_tool/data/MEGA_players.csv'),
+    loadTeams('../../MEGA_teams.csv'),
+    loadPlayers('../../MEGA_players.csv'),
   ]);
 
   initState({ teams, players });

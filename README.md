@@ -39,7 +39,7 @@ At a high level, the project is split into four domains. Each domain has clear C
 | Playoff + draft race | `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv`                                                                                      | `scripts/run_all_playoff_analysis.py`, `scripts/calc_sos_by_rankings.py`, `scripts/calc_playoff_probabilities.py`, `scripts/top_pick_race_analysis.py` | `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `output/draft_race/draft_race_report.md` | `docs/playoff_race.html`, `docs/playoff_race_table.html`                                                    |
 | Stats aggregation    | `MEGA_passing.csv`, `MEGA_rushing.csv`, `MEGA_receiving.csv`, `MEGA_defense.csv`, `MEGA_punting.csv`, `MEGA_kicking.csv`, `MEGA_teams.csv` | `scripts/run_all_stats.py`, `stats_scripts/aggregate_team_stats.py`, `stats_scripts/aggregate_player_usage.py`, `stats_scripts/aggregate_rankings_stats.py` | `output/team_aggregated_stats.csv`, `output/team_player_usage.csv`, `output/team_rankings_stats.csv`, `output/player_team_stints.csv` | `docs/team_stats_explorer.html`, `docs/team_stats_correlations.html`, `docs/stats_dashboard.html`           |
 | SoS Season 2 (ELO)   | `MEGA_games.csv`, `MEGA_teams.csv`, `mega_elo.csv`                                                                                           | `scripts/run_all.py`, `scripts/calc_sos_season2_elo.py`                                                                       | `output/sos/season2_elo.csv`, `output/sos/season2_elo.json`                                                          | `docs/sos_season2.html`, `docs/sos_graphs.html`                                                              |
-| Roster / cap         | `MEGA_players.csv`, `MEGA_teams.csv`                                                                                                        | `scripts/power_rankings_roster.py`, `scripts/calc_team_y1_cap.py`, `scripts/tools/sync_data_to_docs.sh`                      | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json`                                              | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html`, `docs/power_rankings_roster_charts.html` |
+| Roster / cap         | `MEGA_players.csv`, `MEGA_teams.csv`                                                                                                        | `scripts/power_rankings_roster.py`, `scripts/calc_team_y1_cap.py`                      | `output/power_rankings_roster.csv`, `output/cap_tool_verification.json`                                              | `docs/roster_cap_tool/index.html`, `docs/power_rankings_roster.html`, `docs/power_rankings_roster_charts.html` |
 
 For a tour of the dashboards and which scripts power each HTML page, see `docs/README.md`.
 
@@ -562,10 +562,7 @@ Quick start (local):
 # 1) Ensure fresh CSVs exist at repo root
 ls MEGA_players.csv MEGA_teams.csv
 
-# 2) Sync CSVs into GitHub Pages data folder
-bash scripts/tools/sync_data_to_docs.sh
-
-# 3) Serve locally and open the tool
+# 2) Serve locally and open the tool
 python3 -m http.server 8000
 open http://localhost:8000/docs/roster_cap_tool/
 
@@ -574,14 +571,13 @@ open http://localhost:8000/docs/roster_cap_tool/test.html
 ```
 
 GitHub Pages:
-1. Commit/push `docs/roster_cap_tool/` (including `data/MEGA_players.csv` and `data/MEGA_teams.csv`)
+1. Commit/push root CSVs (`MEGA_players.csv`, `MEGA_teams.csv`) and `docs/roster_cap_tool/`
 2. In Settings → Pages, set Source to `/docs`
 3. Visit `https://<username>.github.io/<repo>/docs/roster_cap_tool/`
 
 Docs and references:
 - Usage guide: `docs/roster_cap_tool/USAGE.md`
 - Madden cap rules reference: `spec/Salary Cap Works in Madden.md`
-- Data sync script: `scripts/tools/sync_data_to_docs.sh`
 - Smoke page: `docs/roster_cap_tool/test.html`
 - Cap math verification: `scripts/verify_cap_math.py` (writes `output/cap_tool_verification.json`)
 
@@ -742,9 +738,6 @@ End-to-end tests for the Spotrac-style cap tool live under `tests/e2e/` and exer
 From the repo root:
 
 ```bash
-# 0) (Recommended) Sync latest CSV data into the cap tool data folder
-bash scripts/tools/sync_data_to_docs.sh --all
-
 # 1) Install Node dev dependencies
 npm install
 
@@ -761,9 +754,9 @@ npm run test:e2e -- --grep cap
 What happens:
 - Playwright starts `python3 -m http.server 8000` from the repo root.
 - Tests hit `http://127.0.0.1:8000/docs/roster_cap_tool/`.
-- CSVs are read from `docs/roster_cap_tool/data/` (sync with `bash scripts/tools/sync_data_to_docs.sh`).
+- CSVs are read directly from the project root.
 
-For more details, see `tests/e2e/README.md`. Some tests may fail if the local data or HTML diverges from the expectations baked into the fixtures or if the CSVs under `docs/roster_cap_tool/data/` are out of sync with your league.
+For more details, see `tests/e2e/README.md`. Some tests may fail if the local data or HTML diverges from the expectations baked into the fixtures.
 
 ### Where to Add New Scripts
 
@@ -789,7 +782,7 @@ Whenever you add a new script that generates CSV/JSON or HTML:
 ### Adding New Dashboards / Visualizations
 
 - Place new HTML pages under `docs/` (or a subfolder).  
-- Source data should live under `output/` (for CSV/JSON) or `docs/roster_cap_tool/data/` for cap tool–style apps.
+- Source data should live under `output/` (for CSV/JSON) or project root (for MEGA_*.csv files).
 - Link new dashboards from:
   - `index.html` (landing page for GitHub Pages),
   - `docs/README.md` (so it shows up in the domain tables),

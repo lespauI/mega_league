@@ -7,8 +7,8 @@ Compute Year+1 cap projection for a given team from MEGA CSVs.
 
 Usage:
   python3 scripts/calc_team_y1_cap.py --team DAL \
-      --players docs/roster_cap_tool/data/MEGA_players.csv \
-      --teams docs/roster_cap_tool/data/MEGA_teams.csv \
+      --players MEGA_players.csv \
+      --teams MEGA_teams.csv \
       [--growth 0.09] [--rookie-reserve 0] [--baseline-dead-next 0] [--resign-factor 0.4]
 
 Prints a sorted breakdown and totals for roster-only Y+1 spend, then adds
@@ -132,8 +132,8 @@ def estimate_resign_reserve(players, team_name, factor=0.4):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--team', required=True, help='Team abbr (e.g., DAL)')
-    ap.add_argument('--players', default='docs/roster_cap_tool/data/MEGA_players.csv')
-    ap.add_argument('--teams', default='docs/roster_cap_tool/data/MEGA_teams.csv')
+    ap.add_argument('--players', default='MEGA_players.csv')
+    ap.add_argument('--teams', default='MEGA_teams.csv')
     ap.add_argument('--growth', type=float, default=0.09, help='Cap growth rate for Y+1')
     ap.add_argument('--rookie-reserve', type=float, default=0.0)
     ap.add_argument('--baseline-dead-next', type=float, default=0.0)

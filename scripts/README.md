@@ -58,7 +58,6 @@ Non‑Python helpers are isolated in subfolders so the top‑level `scripts/` vi
   - `smoke_generate_draft_2026.sh` – Generates `docs/draft_class_2026.html` and runs draft verifiers.
   - `smoke_roster_cap_tool.sh` – Serves the repo and checks that `docs/roster_cap_tool` + CSVs are available.
 - `scripts/tools/` – Small maintenance utilities.
-  - `sync_data_to_docs.sh` – Copies `MEGA_*.csv` from the repo root into `docs/roster_cap_tool/data/` for the cap tool.
 
 Run these helpers from the repo root, for example:
 
@@ -67,7 +66,6 @@ node scripts/tests/test_cap_tool.mjs
 node scripts/tests/test_year_context.mjs
 bash scripts/smoke/smoke_generate_draft_2026.sh
 bash scripts/smoke/smoke_roster_cap_tool.sh
-bash scripts/tools/sync_data_to_docs.sh --all
 ```
 
 ## Conventions for new scripts

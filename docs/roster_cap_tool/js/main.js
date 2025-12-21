@@ -75,10 +75,10 @@ function mountPlaceholders() {
 async function boot() {
   initTabs();
   mountPlaceholders();
-  // Load CSV data from Pages data directory
+  // Load CSV data from project root
   const [teams, players] = await Promise.all([
-    loadTeams('./data/MEGA_teams.csv'),
-    loadPlayers('./data/MEGA_players.csv'),
+    loadTeams('../../MEGA_teams.csv'),
+    loadPlayers('../../MEGA_players.csv'),
   ]);
   initState({ teams, players });
   // Initial mounts

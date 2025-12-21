@@ -36,8 +36,8 @@
       // CSV load smoke
       try {
         const [teams, players] = await Promise.all([
-          loadTeams('./data/MEGA_teams.csv'),
-          loadPlayers('./data/MEGA_players.csv'),
+          loadTeams('../../MEGA_teams.csv'),
+          loadPlayers('../../MEGA_players.csv'),
         ]);
         assert('teams loaded > 0', (teams?.length || 0) > 0);
         assert('players loaded > 0', (players?.length || 0) > 0);

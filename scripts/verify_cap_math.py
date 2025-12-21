@@ -7,8 +7,8 @@ summarizes scenario simulations (release, trade quick, extension, conversion,
 signing) and basic invariants on cap deltas.
 
 Defaults:
-  - Teams CSV: docs/roster_cap_tool/data/MEGA_teams.csv (falls back to MEGA_teams.csv)
-  - Players CSV: docs/roster_cap_tool/data/MEGA_players.csv (falls back to MEGA_players.csv)
+  - Teams CSV: MEGA_teams.csv
+  - Players CSV: MEGA_players.csv
   - Fixtures: scripts/fixtures/cap_scenarios.json (auto-generates if missing)
   - Output JSON: output/cap_tool_verification.json
 
@@ -17,8 +17,8 @@ the first few rows from the teams CSV for tiny tests.
 
 Usage:
   python3 scripts/verify_cap_math.py \
-      --teams docs/roster_cap_tool/data/MEGA_teams.csv \
-      --players docs/roster_cap_tool/data/MEGA_players.csv \
+      --teams MEGA_teams.csv \
+      --players MEGA_players.csv \
       --fixtures scripts/fixtures/cap_scenarios.json \
       --out output/cap_tool_verification.json
 """
@@ -425,8 +425,8 @@ def ensure_tiny_teams(teams_csv: str, out_path: str = os.path.join("output", "ti
 
 def main() -> None:
     ap = argparse.ArgumentParser(description="Verify cap math parity and produce a JSON report")
-    ap.add_argument("--teams", default="docs/roster_cap_tool/data/MEGA_teams.csv", help="Teams CSV path")
-    ap.add_argument("--players", default="docs/roster_cap_tool/data/MEGA_players.csv", help="Players CSV path")
+    ap.add_argument("--teams", default="MEGA_teams.csv", help="Teams CSV path")
+    ap.add_argument("--players", default="MEGA_players.csv", help="Players CSV path")
     ap.add_argument("--fixtures", default="scripts/fixtures/cap_scenarios.json", help="Scenarios JSON path")
     ap.add_argument("--out", default="output/cap_tool_verification.json", help="Output JSON report path")
     args = ap.parse_args()
