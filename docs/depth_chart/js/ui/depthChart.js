@@ -265,7 +265,9 @@ function renderPositionCard(doc, slotId, depthPlan, playersById) {
       ? depthPlan.slots[slot.id].filter(Boolean)
       : [];
 
-  const maxDepthRows = 3;
+  const baseDepthRows = Math.max(slot.max || 0, 3);
+  const maxDepthRows = Math.max(baseDepthRows, planSlot.length || 0);
+
   for (let i = 0; i < maxDepthRows; i++) {
     const depthIndex = i + 1;
     const assignment =
