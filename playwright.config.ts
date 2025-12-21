@@ -33,7 +33,19 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: { 
+        ...devices['Desktop Chrome'],
+        clearStorage: true,
+      },
+      grepInvert: /persists after page reload/,
+    },
+    {
+      name: 'chromium-persist-storage',
+      use: { 
+        ...devices['Desktop Chrome'],
+        clearStorage: false,
+      },
+      grep: /persists after page reload/,
     },
   ],
 });

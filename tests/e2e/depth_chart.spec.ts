@@ -114,6 +114,26 @@ test.describe('Depth Chart: Team Selection', () => {
 
     await expect(selector).toHaveValue(secondTeamValue!);
   });
+
+  test('selected team persists after page reload', async ({ page }) => {
+    await gotoDepthChart(page);
+
+    const selector = page.locator('[data-testid="team-select"]');
+    const options = selector.locator('option');
+    const optCount = await options.count();
+    if (optCount < 2) {
+      test.skip();
+      return;
+    }
+
+    const secondTeam = await options.nth(1).getAttribute('value');
+
+    await selector.selectOption(secondTeam!);
+    await expect(selector).toHaveValue(secondTeam!);
+
+    await page.reload();
+    await expect(page.locator('[data-testid="team-select"]')).toHaveValue(secondTeam!);
+  });
 });
 
 test.describe('Depth Chart: Player Display', () => {
