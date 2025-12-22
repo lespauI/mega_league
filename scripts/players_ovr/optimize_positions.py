@@ -349,7 +349,13 @@ def main():
             print(f"{'-'*100}")
         
         ovr_change = rec['ovr_change']
-        change_str = f"{ovr_change:+d} OVR" if ovr_change != 0 else "No change"
+        
+        if ovr_change > 0:
+            change_str = f"\033[92m{ovr_change:+d} OVR\033[0m"
+        elif ovr_change < 0:
+            change_str = f"\033[91m{ovr_change:+d} OVR\033[0m"
+        else:
+            change_str = "No change"
         
         print(f"{rec['name']:<25} {rec['current_position']} ({rec['current_ovr']})".ljust(40) +
               f" {rec['suggested_position']} ({rec['predicted_ovr']})".ljust(30) +
