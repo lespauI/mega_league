@@ -228,7 +228,7 @@ def calculate_ovr_for_position(player_data, target_position):
     
     return round(predicted_ovr)
 
-def analyze_position_changes(team_filter=None, position_group_filter=None):
+def analyze_position_changes(team_filter=None, position_group_filter=None, show_all_changes=False):
     players_file = '../../MEGA_players.csv'
     recommendations = []
     
@@ -274,6 +274,9 @@ def analyze_position_changes(team_filter=None, position_group_filter=None):
                     ovr_change = predicted_ovr - current_ovr
                     
                     if abs(ovr_change) > 15:
+                        continue
+                    
+                    if not show_all_changes and ovr_change <= 0:
                         continue
                     
                     recommendations.append({
@@ -324,7 +327,8 @@ def main():
         print(f"Filtering for {filter_msg}\n")
     
     print("Analyzing position changes...")
-    recommendations = analyze_position_changes(team_filter, position_group_filter)
+    show_all_changes = position_group_filter is not None
+    recommendations = analyze_position_changes(team_filter, position_group_filter, show_all_changes)
     
     recommendations.sort(key=lambda x: (x['team'], x['name']))
     
