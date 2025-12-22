@@ -131,8 +131,11 @@ def calculate_position_formula(position_file):
     return result
 
 def main():
+    import pickle
+    
     positions_dir = '../../output/positions'
     output_file = '../../output/individual_position_formulas.txt'
+    models_dir = '../../output/trained_models'
     
     position_files = sorted(glob.glob(os.path.join(positions_dir, '*.csv')))
     
@@ -143,6 +146,117 @@ def main():
         print(f"\n{'='*80}")
         print(f"Analyzing: {position}")
         print(f"{'='*80}")
+        
+        # Special handling for Guard position - save as pickle model
+        if position == 'G':
+            with open(position_file, 'r') as f:
+                reader = csv.DictReader(f)
+                rows = list(reader)
+            
+            attribute_names = [col for col in rows[0].keys() 
+                              if col not in ['position', 'fullName', 'team', 'playerBestOvr']]
+            
+            X_data = []
+            y_data = []
+            
+            for row in rows:
+                try:
+                    ovr = float(row['playerBestOvr'])
+                    if ovr < 40:
+                        continue
+                    
+                    attributes = []
+                    skip_row = False
+                    for attr in attribute_names:
+                        val = row[attr]
+                        if val == '' or val is None:
+                            val = 0
+                        try:
+                            attributes.append(float(val))
+                        except ValueError:
+                            skip_row = True
+                            break
+                    
+                    if not skip_row and len(attributes) == len(attribute_names):
+                        X_data.append(attributes)
+                        y_data.append(ovr)
+                except (ValueError, KeyError):
+                    continue
+            
+            X = np.array(X_data)
+            y = np.array(y_data)
+            
+            # Train Guard model
+            best_r2 = 0
+            best_model = None
+            best_poly = None
+            best_config = None
+            
+            configs = [
+                {'name': 'Poly2-Ridge1', 'poly_degree': 2, 'alpha': 1.0},
+                {'name': 'Poly2-Ridge5', 'poly_degree': 2, 'alpha': 5.0},
+                {'name': 'Poly2-Ridge10', 'poly_degree': 2, 'alpha': 10.0},
+            ]
+            
+            for config in configs:
+                try:
+                    poly = PolynomialFeatures(degree=config['poly_degree'], include_bias=False)
+                    X_poly = poly.fit_transform(X)
+                    model = Ridge(alpha=config['alpha'])
+                    model.fit(X_poly, y)
+                    r2 = model.score(X_poly, y)
+                    
+                    if r2 > best_r2:
+                        best_r2 = r2
+                        best_model = model
+                        best_poly = poly
+                        best_config = config
+                except Exception:
+                    continue
+            
+            if best_model:
+                # Save model for optimize_positions.py
+                os.makedirs(models_dir, exist_ok=True)
+                model_data = {
+                    'model': best_model,
+                    'poly': best_poly,
+                    'attributes': attribute_names,
+                    'config': best_config
+                }
+                with open(os.path.join(models_dir, 'G.pkl'), 'wb') as f:
+                    pickle.dump(model_data, f)
+                
+                # Create result for formulas.txt
+                y_pred = best_model.predict(best_poly.transform(X))
+                residuals = y - y_pred
+                mae = np.mean(np.abs(residuals))
+                rmse = np.sqrt(np.mean(residuals**2))
+                
+                feature_names = best_poly.get_feature_names_out(attribute_names)
+                
+                result = {
+                    'position': 'G',
+                    'sample_size': len(X_data),
+                    'r2_score': best_r2,
+                    'mae': mae,
+                    'rmse': rmse,
+                    'config': best_config['name'],
+                    'intercept': best_model.intercept_,
+                    'attribute_names': attribute_names,
+                    'feature_names': list(feature_names),
+                    'coefficients': list(best_model.coef_),
+                    'avg_ovr': np.mean(y),
+                    'min_ovr': np.min(y),
+                    'max_ovr': np.max(y)
+                }
+                
+                results.append(result)
+                print(f"Trained and saved Guard model (R²={best_r2:.6f}, MAE={mae:.3f})")
+            continue
+        
+        # Skip individual LG/RG (they're combined into G)
+        if position in ['LG', 'RG']:
+            continue
         
         result = calculate_position_formula(position_file)
         

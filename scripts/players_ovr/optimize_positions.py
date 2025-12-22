@@ -33,6 +33,9 @@ POSITION_ATTRIBUTES = {
     'RG': ['runBlockRating', 'passBlockRating', 'strengthRating', 'powerMovesRating',
            'awareRating', 'finesseMovesRating', 'impactBlockRating',
            'passBlockPowerRating', 'passBlockFinesseRating', 'runBlockPowerRating', 'runBlockFinesseRating'],
+    'G': ['runBlockRating', 'passBlockRating', 'strengthRating', 'powerMovesRating',
+          'awareRating', 'finesseMovesRating', 'impactBlockRating',
+          'passBlockPowerRating', 'passBlockFinesseRating', 'runBlockPowerRating', 'runBlockFinesseRating'],
     'C': ['passBlockRating', 'runBlockRating', 'strengthRating', 'awareRating',
           'powerMovesRating', 'impactBlockRating', 'finesseMovesRating',
           'passBlockPowerRating', 'passBlockFinesseRating', 'runBlockPowerRating', 'runBlockFinesseRating'],
@@ -70,11 +73,11 @@ POSITION_ATTRIBUTES = {
 POSITION_CHANGES = {
     'SS': ['FS'],
     'FS': ['SS'],
-    'LT': ['RT', 'LG', 'RG', 'C'],
-    'RT': ['LT', 'LG', 'RG', 'C'],
-    'LG': ['LT', 'RT', 'RG', 'C'],
-    'RG': ['LT', 'RT', 'LG', 'C'],
-    'C': ['LT', 'RT', 'LG', 'RG'],
+    'LT': ['RT', 'C'],
+    'RT': ['LT', 'C'],
+    'LG': ['RG'],
+    'RG': ['LG'],
+    'C': ['LT', 'RT'],
     'SAM': ['MIKE', 'WILL', 'LEDGE', 'REDGE'],
     'MIKE': ['SAM', 'WILL', 'LEDGE', 'REDGE'],
     'WILL': ['SAM', 'MIKE', 'LEDGE', 'REDGE'],
@@ -87,6 +90,7 @@ POSITION_CHANGES = {
 
 POSITION_GROUPS = {
     'OL': ['LT', 'RT', 'LG', 'RG', 'C'],
+    'G': ['LG', 'RG'],
     'LB': ['MIKE', 'WILL', 'SAM'],
     'EDGE': ['LEDGE', 'REDGE'],
     'DL': ['DT', 'LEDGE', 'REDGE'],
@@ -187,9 +191,25 @@ def train_model_for_position(position_file):
     }
 
 def load_all_models():
+    import pickle
+    
     positions_dir = '../../output/positions'
+    models_dir = '../../output/trained_models'
+    
+    # Load unified Guard model for LG, RG, and G
+    guard_model_file = os.path.join(models_dir, 'G.pkl')
+    if os.path.exists(guard_model_file):
+        with open(guard_model_file, 'rb') as f:
+            guard_model = pickle.load(f)
+            trained_models['LG'] = guard_model
+            trained_models['RG'] = guard_model
+            trained_models['G'] = guard_model
+            print(f"Loaded unified Guard model for LG, RG, and G")
     
     for position in POSITION_ATTRIBUTES.keys():
+        if position in ['LG', 'RG', 'G']:
+            continue
+        
         position_file = os.path.join(positions_dir, f'{position}.csv')
         if os.path.exists(position_file):
             model_info = train_model_for_position(position_file)
@@ -202,7 +222,9 @@ def calculate_ovr_for_position(player_data, target_position):
         return None
     
     model_info = trained_models[target_position]
-    attribute_names = model_info['attribute_names']
+    
+    # Handle both old format (attribute_names) and new format (attributes)
+    attribute_names = model_info.get('attribute_names') or model_info.get('attributes')
     
     attributes = []
     for attr in attribute_names:

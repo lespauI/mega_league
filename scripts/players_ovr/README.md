@@ -56,13 +56,23 @@ python optimize_positions.py Cowboys
 - `../../output/positions/*.csv` - Individual position CSV files (22 positions, used for training)
 - `../../output/individual_position_formulas.txt` - Complete formulas with coefficients and R² scores
 
-## Position Optimization
+## Key Features
+
+### Unified Guard (G) Formula
+LG and RG positions use a **single unified formula** based on in-game validation:
+- Moving a player LG ↔ RG produces the **same OVR** (confirmed via in-game testing)
+- The Guard formula is trained on 217 combined players (105 LG + 112 RG)
+- **R² = 99.12%** with MAE = 0.5 OVR
+- Prioritizes real-world accuracy over pure statistical fit
+
+### Position Optimization
 
 The **optimize_positions.py** script evaluates players at alternative positions and shows **all OVR predictions** (positive, negative, and no change).
 
 ### Allowed Position Changes
 - **SS ↔ FS** (Safety positions are interchangeable)
-- **OL positions** (LT, RT, LG, RG, C can move to any other OL position)
+- **Guards** (LG ↔ RG use the same unified formula, no OVR change)
+- **OL positions** (LT ↔ RT ↔ C)
 - **Linebackers ↔ Edge** (SAM, MIKE, WILL ↔ LEDGE, REDGE)
 - **Edge ↔ DT** (LEDGE, REDGE ↔ DT)
 - **TE ↔ FB** (Tight ends and fullbacks can interchange)
@@ -70,6 +80,7 @@ The **optimize_positions.py** script evaluates players at alternative positions 
 ### Position Groups
 Filter analysis by position group:
 - **OL** - Offensive Line (LT, RT, LG, RG, C)
+- **G** - Guards only (LG, RG) - uses unified Guard formula
 - **LB** - Linebackers (MIKE, WILL, SAM)
 - **EDGE** - Edge Rushers (LEDGE, REDGE)
 - **DL** - Defensive Line (DT, LEDGE, REDGE)

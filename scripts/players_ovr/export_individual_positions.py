@@ -5,11 +5,12 @@ from collections import defaultdict
 POSITION_CHANGES = {
     'SS': ['FS'],
     'FS': ['SS'],
-    'LT': ['RT', 'LG', 'RG', 'C'],
-    'RT': ['LT', 'LG', 'RG', 'C'],
+    'LT': ['RT', 'G', 'C'],
+    'RT': ['LT', 'G', 'C'],
     'LG': ['LT', 'RT', 'RG', 'C'],
     'RG': ['LT', 'RT', 'LG', 'C'],
-    'C': ['LT', 'RT', 'LG', 'RG'],
+    'G': ['LT', 'RT', 'C'],
+    'C': ['LT', 'RT', 'G'],
     'SAM': ['MIKE', 'WILL', 'LEDGE', 'REDGE'],
     'MIKE': ['SAM', 'WILL', 'LEDGE', 'REDGE'],
     'WILL': ['SAM', 'MIKE', 'LEDGE', 'REDGE'],
@@ -70,6 +71,12 @@ POSITION_CORE_ATTRIBUTES = {
         'passBlockPowerRating', 'passBlockFinesseRating', 'runBlockPowerRating', 'runBlockFinesseRating'
     ],
     'RG': [
+        'position', 'fullName', 'team', 'playerBestOvr',
+        'runBlockRating', 'passBlockRating', 'strengthRating', 'powerMovesRating',
+        'awareRating', 'finesseMovesRating', 'impactBlockRating',
+        'passBlockPowerRating', 'passBlockFinesseRating', 'runBlockPowerRating', 'runBlockFinesseRating'
+    ],
+    'G': [
         'position', 'fullName', 'team', 'playerBestOvr',
         'runBlockRating', 'passBlockRating', 'strengthRating', 'powerMovesRating',
         'awareRating', 'finesseMovesRating', 'impactBlockRating',
@@ -169,6 +176,7 @@ def main():
     os.makedirs(output_dir, exist_ok=True)
     
     position_players = defaultdict(list)
+    guard_players = []
     
     with open('../../MEGA_players.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -181,7 +189,17 @@ def main():
             
             attributes = get_all_attributes_for_position(position)
             player_data = {attr: row.get(attr, '') for attr in attributes}
-            position_players[position].append(player_data)
+            
+            # Combine LG and RG into unified Guard position
+            if position in ['LG', 'RG']:
+                player_data['position'] = 'G'
+                guard_players.append(player_data)
+            else:
+                position_players[position].append(player_data)
+    
+    # Add unified Guard position
+    if guard_players:
+        position_players['G'] = guard_players
     
     for position, players in sorted(position_players.items()):
         if not players:
