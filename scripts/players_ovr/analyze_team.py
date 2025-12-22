@@ -4,13 +4,21 @@ import subprocess
 
 def main():
     if len(sys.argv) < 2:
-        print("Usage: python analyze_team.py <TeamName>")
-        print("Example: python analyze_team.py Cowboys")
+        print("Usage: python analyze_team.py <TeamName> [PositionGroup]")
+        print("\nExamples:")
+        print("  python analyze_team.py Cowboys")
+        print("  python analyze_team.py Cowboys OL")
+        print("  python analyze_team.py Cowboys LB")
         sys.exit(1)
     
     team = sys.argv[1]
+    position_group = sys.argv[2] if len(sys.argv) > 2 else None
     
-    print(f"\nAnalyzing position optimizations for: {team}", flush=True)
+    filter_msg = f"{team}"
+    if position_group:
+        filter_msg += f" - {position_group.upper()}"
+    
+    print(f"\nAnalyzing position optimizations for: {filter_msg}", flush=True)
     print("="*80, flush=True)
     
     print("[1/3] Exporting position data from MEGA_players.csv...", flush=True)
@@ -27,9 +35,14 @@ def main():
         print(f"ERROR: {result.stderr}")
         sys.exit(1)
     
-    print(f"[3/3] Finding optimal positions for {team}...\n", flush=True)
+    print(f"[3/3] Finding optimal positions for {filter_msg}...\n", flush=True)
     print("="*80 + "\n", flush=True)
-    result = subprocess.run([sys.executable, "optimize_positions.py", team])
+    
+    cmd = [sys.executable, "optimize_positions.py", team]
+    if position_group:
+        cmd.append(position_group)
+    
+    result = subprocess.run(cmd)
     
     sys.exit(result.returncode)
 

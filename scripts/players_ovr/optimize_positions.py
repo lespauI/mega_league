@@ -85,6 +85,17 @@ POSITION_CHANGES = {
     'FB': ['TE']
 }
 
+POSITION_GROUPS = {
+    'OL': ['LT', 'RT', 'LG', 'RG', 'C'],
+    'LB': ['MIKE', 'WILL', 'SAM'],
+    'EDGE': ['LEDGE', 'REDGE'],
+    'DL': ['DT', 'LEDGE', 'REDGE'],
+    'S': ['SS', 'FS'],
+    'OFFENSE': ['QB', 'HB', 'FB', 'WR', 'TE', 'LT', 'RT', 'LG', 'RG', 'C'],
+    'DEFENSE': ['CB', 'FS', 'SS', 'DT', 'MIKE', 'WILL', 'SAM', 'LEDGE', 'REDGE'],
+    'SPECIAL': ['K', 'P', 'LS']
+}
+
 trained_models = {}
 
 def train_model_for_position(position_file):
@@ -217,9 +228,17 @@ def calculate_ovr_for_position(player_data, target_position):
     
     return round(predicted_ovr)
 
-def analyze_position_changes(team_filter=None):
+def analyze_position_changes(team_filter=None, position_group_filter=None):
     players_file = '../../MEGA_players.csv'
     recommendations = []
+    
+    position_filter_set = None
+    if position_group_filter:
+        position_group_upper = position_group_filter.upper()
+        if position_group_upper in POSITION_GROUPS:
+            position_filter_set = set(POSITION_GROUPS[position_group_upper])
+        else:
+            position_filter_set = {position_group_filter}
     
     with open(players_file, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -230,6 +249,9 @@ def analyze_position_changes(team_filter=None):
             full_name = row.get('fullName', '')
             
             if team_filter and team != team_filter:
+                continue
+            
+            if position_filter_set and position not in position_filter_set:
                 continue
             
             if position not in POSITION_CHANGES:
@@ -248,10 +270,10 @@ def analyze_position_changes(team_filter=None):
             for alt_pos in alternative_positions:
                 predicted_ovr = calculate_ovr_for_position(row, alt_pos)
                 
-                if predicted_ovr and predicted_ovr > current_ovr:
-                    ovr_gain = predicted_ovr - current_ovr
+                if predicted_ovr is not None:
+                    ovr_change = predicted_ovr - current_ovr
                     
-                    if ovr_gain > 15:
+                    if abs(ovr_change) > 15:
                         continue
                     
                     recommendations.append({
@@ -261,7 +283,7 @@ def analyze_position_changes(team_filter=None):
                         'current_ovr': current_ovr,
                         'suggested_position': alt_pos,
                         'predicted_ovr': predicted_ovr,
-                        'ovr_gain': ovr_gain
+                        'ovr_change': ovr_change
                     })
     
     return recommendations
@@ -269,17 +291,40 @@ def analyze_position_changes(team_filter=None):
 def main():
     import sys
     
+    if len(sys.argv) > 1 and sys.argv[1] in ['-h', '--help']:
+        print("\nUsage: python optimize_positions.py [TEAM] [POSITION_GROUP]")
+        print("\nExamples:")
+        print("  python optimize_positions.py                    # All teams, all positions")
+        print("  python optimize_positions.py Cowboys             # Cowboys only, all positions")
+        print("  python optimize_positions.py Cowboys OL          # Cowboys offensive line only")
+        print("  python optimize_positions.py Cowboys LB          # Cowboys linebackers only")
+        print("\nAvailable Position Groups:")
+        for group, positions in sorted(POSITION_GROUPS.items()):
+            print(f"  {group:<10} {', '.join(positions)}")
+        print()
+        return
+    
     print("Loading position models...")
     load_all_models()
     print(f"\nLoaded {len(trained_models)} position models\n")
     
     team_filter = None
+    position_group_filter = None
+    
     if len(sys.argv) > 1:
         team_filter = sys.argv[1]
-        print(f"Filtering for team: {team_filter}\n")
+    
+    if len(sys.argv) > 2:
+        position_group_filter = sys.argv[2]
+    
+    if team_filter:
+        filter_msg = f"Team: {team_filter}"
+        if position_group_filter:
+            filter_msg += f", Position Group: {position_group_filter.upper()}"
+        print(f"Filtering for {filter_msg}\n")
     
     print("Analyzing position changes...")
-    recommendations = analyze_position_changes(team_filter)
+    recommendations = analyze_position_changes(team_filter, position_group_filter)
     
     recommendations.sort(key=lambda x: (x['team'], x['name']))
     
@@ -288,7 +333,7 @@ def main():
         return
     
     print(f"\n{'='*100}")
-    print(f"POSITION OPTIMIZATION RECOMMENDATIONS")
+    print(f"POSITION OPTIMIZATION ANALYSIS")
     print(f"{'='*100}\n")
     
     current_team = None
@@ -303,9 +348,12 @@ def main():
             print(f"{'Player':<25} {'Current':<15} {'Suggested':<15} {'OVR Change':>15}")
             print(f"{'-'*100}")
         
+        ovr_change = rec['ovr_change']
+        change_str = f"{ovr_change:+d} OVR" if ovr_change != 0 else "No change"
+        
         print(f"{rec['name']:<25} {rec['current_position']} ({rec['current_ovr']})".ljust(40) +
               f" {rec['suggested_position']} ({rec['predicted_ovr']})".ljust(30) +
-              f" +{rec['ovr_gain']} OVR".rjust(30))
+              f" {change_str}".rjust(30))
     
     print(f"\n{'='*100}")
     print(f"Total Recommendations: {len(recommendations)}")

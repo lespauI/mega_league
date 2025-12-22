@@ -11,8 +11,10 @@ source ../../myenv/bin/activate
 pip install -r requirements.txt
 
 # One-liner: Analyze a team (runs full pipeline)
-python analyze_team.py Cowboys
-python analyze_team.py Eagles
+python analyze_team.py Cowboys          # All positions
+python analyze_team.py Cowboys OL       # Offensive line only
+python analyze_team.py Cowboys LB       # Linebackers only
+python analyze_team.py Eagles S         # Safeties only
 ```
 
 ## Manual Pipeline (Optional)
@@ -56,7 +58,7 @@ python optimize_positions.py Cowboys
 
 ## Position Optimization
 
-The **optimize_positions.py** script evaluates players at alternative positions and recommends changes that improve OVR ratings.
+The **optimize_positions.py** script evaluates players at alternative positions and shows **all OVR predictions** (positive, negative, and no change).
 
 ### Allowed Position Changes
 - **SS ↔ FS** (Safety positions are interchangeable)
@@ -65,14 +67,33 @@ The **optimize_positions.py** script evaluates players at alternative positions 
 - **Edge ↔ DT** (LEDGE, REDGE ↔ DT)
 - **TE ↔ FB** (Tight ends and fullbacks can interchange)
 
+### Position Groups
+Filter analysis by position group:
+- **OL** - Offensive Line (LT, RT, LG, RG, C)
+- **LB** - Linebackers (MIKE, WILL, SAM)
+- **EDGE** - Edge Rushers (LEDGE, REDGE)
+- **DL** - Defensive Line (DT, LEDGE, REDGE)
+- **S** - Safeties (SS, FS)
+- **OFFENSE** - All offensive positions
+- **DEFENSE** - All defensive positions
+- **SPECIAL** - Special teams (K, P, LS)
+
 ### Usage Examples
 ```bash
-# All teams
+# All teams, all positions
 python optimize_positions.py
 
-# Specific team
+# Specific team, all positions
 python optimize_positions.py Cowboys
-python optimize_positions.py Patriots
+
+# Specific team and position group
+python optimize_positions.py Cowboys OL       # Offensive line only
+python optimize_positions.py Cowboys LB       # Linebackers only
+python optimize_positions.py Cowboys S        # Safeties only
+python optimize_positions.py Eagles EDGE      # Edge rushers only
+
+# Help
+python optimize_positions.py --help
 ```
 
 ## Position List
