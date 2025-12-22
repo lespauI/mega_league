@@ -10,3 +10,6 @@ build/
 .cache/
 coverage/
 *.log
+myenv/
+output/positions/
+output/individual_position_formulas.txt
