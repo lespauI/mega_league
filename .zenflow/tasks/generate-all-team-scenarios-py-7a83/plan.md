@@ -72,7 +72,17 @@ Update HTML generation to:
 
 ---
 
-### [ ] Step: Add playwright tests
+### [x] Step: Add playwright tests
+<!-- chat-id: 56852695-e5a8-424e-8372-03a873950564 -->
 
 Verify with playwright, select random teams (3) and check everything is working and present
+
+**Results**: Created `tests/e2e/team_scenarios.spec.ts` with 5 tests:
+- Page loads with header and team selector
+- Selecting a team displays all sections correctly (3 random teams)
+- Stats show valid probability values (3 random teams)
+- Games table shows valid win/loss probabilities (3 random teams)
+- Resetting selection hides content
+
+All 5 tests passed.
 
