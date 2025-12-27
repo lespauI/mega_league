@@ -448,6 +448,10 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
     """
     Check if team is mathematically clinched or eliminated.
     Returns: 'clinched', 'eliminated', or None
+    
+    Uses conference-aware logic for games not involving target team:
+    - Worst-case: Same-conference rivals win their games
+    - Best-case: Same-conference rivals lose their games
     """
     remaining_games = [g for g in games if not g['completed']]
     if not remaining_games:
@@ -462,8 +466,23 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
             winner = away if home == team_name else home
             loser = team_name
         else:
-            winner = home
-            loser = away
+            home_conf = teams_info.get(home, {}).get('conference', '')
+            away_conf = teams_info.get(away, {}).get('conference', '')
+            home_is_rival = (home_conf == conf)
+            away_is_rival = (away_conf == conf)
+            if home_is_rival and not away_is_rival:
+                winner, loser = home, away
+            elif away_is_rival and not home_is_rival:
+                winner, loser = away, home
+            elif home_is_rival and away_is_rival:
+                home_wins = stats.get(home, {}).get('W', 0)
+                away_wins = stats.get(away, {}).get('W', 0)
+                if home_wins >= away_wins:
+                    winner, loser = home, away
+                else:
+                    winner, loser = away, home
+            else:
+                winner, loser = home, away
         worst_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
     
     playoff_teams, _, _ = determine_playoff_teams(teams_info, stats, worst_case_games)
@@ -477,8 +496,23 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
             winner = team_name
             loser = away if home == team_name else home
         else:
-            winner = home
-            loser = away
+            home_conf = teams_info.get(home, {}).get('conference', '')
+            away_conf = teams_info.get(away, {}).get('conference', '')
+            home_is_rival = (home_conf == conf)
+            away_is_rival = (away_conf == conf)
+            if home_is_rival and not away_is_rival:
+                winner, loser = away, home
+            elif away_is_rival and not home_is_rival:
+                winner, loser = home, away
+            elif home_is_rival and away_is_rival:
+                home_wins = stats.get(home, {}).get('W', 0)
+                away_wins = stats.get(away, {}).get('W', 0)
+                if home_wins >= away_wins:
+                    winner, loser = away, home
+                else:
+                    winner, loser = home, away
+            else:
+                winner, loser = home, away
         best_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
     
     playoff_teams, _, _ = determine_playoff_teams(teams_info, stats, best_case_games)

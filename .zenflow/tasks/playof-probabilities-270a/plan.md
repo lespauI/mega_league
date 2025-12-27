@@ -92,7 +92,8 @@ Implement probability capping with mathematical certainty detection in `scripts/
 
 I need you to do a review of whole playoff probability and sugest improvements
 
-### [ ] Step: Fix certainty check logic for other teams' games
+### [x] Step: Fix certainty check logic for other teams' games
+<!-- chat-id: 4fff8b74-4e95-4211-ab4e-68c8c4298d31 -->
 <!-- Priority: High -->
 
 Fix `check_mathematical_certainty()` - currently uses arbitrary home team as winner for games not involving target team. Should use conference-aware logic:
