@@ -47,7 +47,8 @@ Modify to run simulations once for all teams and output consolidated JSON:
 
 ---
 
-### [ ] Step 2: Rework generate_team_scenario_html.py
+### [x] Step 2: Rework generate_team_scenario_html.py
+<!-- chat-id: c44e44f8-86ea-41b1-8437-253bd4926583 -->
 
 Update HTML generation to:
 - Read from `output/team_scenarios.json`
