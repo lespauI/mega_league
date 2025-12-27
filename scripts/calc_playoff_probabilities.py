@@ -20,6 +20,10 @@ def load_data():
     with open('MEGA_games.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            if int(row.get('seasonIndex', 0)) != 1:
+                continue
+            if int(row.get('stageIndex', 0)) != 1:
+                continue
             status = int(row['status']) if row['status'] else 1
             games.append({
                 'home': row['homeTeam'].strip(),

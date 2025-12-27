@@ -62,7 +62,7 @@ def compute_strength_score(row, w_off=0.4, w_def=0.4, w_rank=0.2):
 
 
 def read_latest_rankings(rankings_csv_path):
-    # Keep latest by (seasonIndex, stageIndex, weekIndex)
+    # Keep latest by (seasonIndex, stageIndex, weekIndex) for Season 2 only
     latest = {}
     with open(rankings_csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -70,9 +70,11 @@ def read_latest_rankings(rankings_csv_path):
             team = (row.get("team") or "").strip()
             if not team:
                 continue
-            key = team
             si = to_int(row.get("seasonIndex"), -1)
             sti = to_int(row.get("stageIndex"), -1)
+            if si != 1:
+                continue
+            key = team
             wi = to_int(row.get("weekIndex"), -1)
             cur_key = (si, sti, wi)
             prev = latest.get(key)
@@ -97,6 +99,10 @@ def read_games_split(games_csv_path):
     with open(games_csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
         for row in reader:
+            si = to_int(row.get("seasonIndex"), -1)
+            sti = to_int(row.get("stageIndex"), -1)
+            if si != 1 or sti != 1:
+                continue
             status = (row.get("status") or "").strip()
             home = (row.get("homeTeam") or "").strip()
             away = (row.get("awayTeam") or "").strip()
