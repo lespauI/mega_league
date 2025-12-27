@@ -86,3 +86,8 @@ Implement probability capping with mathematical certainty detection in `scripts/
 4. Run script and verify output:
    - No false 100%/0% for non-certain teams
    - Mathematically certain teams show true 100%/0%
+
+### [x] Step: Review the montecarlo suggest improvements
+<!-- chat-id: 362bb8a3-81d3-47ec-bc7f-a36ff9d6460e -->
+
+I need you to do a review of whole playoff probability and sugest improvements
