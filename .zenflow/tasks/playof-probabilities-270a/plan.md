@@ -91,3 +91,35 @@ Implement probability capping with mathematical certainty detection in `scripts/
 <!-- chat-id: 362bb8a3-81d3-47ec-bc7f-a36ff9d6460e -->
 
 I need you to do a review of whole playoff probability and sugest improvements
+
+### [ ] Step: Fix certainty check logic for other teams' games
+<!-- Priority: High -->
+
+Fix `check_mathematical_certainty()` - currently uses arbitrary home team as winner for games not involving target team. Should use conference-aware logic:
+- **Worst-case**: Same-conference rivals should win their games
+- **Best-case**: Same-conference rivals should lose their games
+
+### [ ] Step: Fix division/bye probability capping
+<!-- Priority: Medium -->
+
+Division and bye probabilities shouldn't use same `certainty` status as playoff probability. A team can be clinched for playoffs but not for division winner. Add separate certainty checks for division/bye or only apply capping to playoff probability.
+
+### [ ] Step: Add configurable simulation count
+<!-- Priority: Medium -->
+
+Replace hardcoded `num_simulations=1000` with configurable parameter. Consider increasing default to 10,000 for better statistical precision.
+
+### [ ] Step: Add random seed for reproducibility
+<!-- Priority: Low -->
+
+Add optional `random.seed()` parameter for debugging and reproducible results.
+
+### [ ] Step: Track conference points in simulation
+<!-- Priority: Low -->
+
+Lines 360-366 update conference wins but don't update `conference_points_for/against`. Add point tracking if needed for tiebreakers.
+
+### [ ] Step: Consider tie games in simulation
+<!-- Priority: Low -->
+
+Real NFL has rare ties (~0.3% of games). Currently simulation only produces wins/losses. Add small probability for ties if desired for realism.
