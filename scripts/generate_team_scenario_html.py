@@ -545,11 +545,13 @@ def main():
             let conference = '', division = '';
             
             lines.forEach(line => {
-                if (line.includes('**Conference:**')) {
-                    conference = line.match(/\\*\\*Conference:\\*\\* (\\w+)/)?.[1] || '';
+                if (line.includes('Conference:**')) {
+                    const match = line.match(/Conference:\\*\\*\\s+(\\w+)/);
+                    conference = match ? match[1] : '';
                 }
-                if (line.includes('**Division:**')) {
-                    division = line.match(/\\*\\*Division:\\*\\* (.*?)  $/)?.[1] || '';
+                if (line.includes('Division:**')) {
+                    const match = line.match(/Division:\\*\\*\\s+([^<\\s]+(?:\\s+[^<\\s]+)*)/);
+                    division = match ? match[1].trim() : '';
                 }
             });
             
@@ -572,13 +574,16 @@ def main():
             
             lines.forEach(line => {
                 if (line.includes('**Make Playoffs:**')) {
-                    playoffProb = line.match(/\\*\\*Make Playoffs:\\*\\* ([\\d.]+)%/)?.[1] + '%' || '0%';
+                    const match = line.match(/([\\d.]+)%<\\/span>/);
+                    playoffProb = match ? match[1] + '%' : '0%';
                 }
                 if (line.includes('**Win Division:**')) {
-                    divisionProb = line.match(/\\*\\*Win Division:\\*\\* ([\\d.]+)%/)?.[1] + '%' || '0%';
+                    const match = line.match(/([\\d.]+)%<\\/span>/);
+                    divisionProb = match ? match[1] + '%' : '0%';
                 }
                 if (line.includes('**Earn Bye:**')) {
-                    byeProb = line.match(/\\*\\*Earn Bye:\\*\\* ([\\d.]+)%/)?.[1] + '%' || '0%';
+                    const match = line.match(/([\\d.]+)%<\\/span>/);
+                    byeProb = match ? match[1] + '%' : '0%';
                 }
                 if (line.includes('**Current Record:**')) {
                     currentRecord = line.match(/\\*\\*Current Record:\\*\\* ([\\d-]+)/)?.[1] || '0-0-0';
@@ -627,7 +632,9 @@ def main():
                         records.push(parts[0]);
                         const freq = parseInt(parts[1].replace(/,/g, ''));
                         frequencies.push(freq);
-                        const playoffProb = parseFloat(parts[3].replace('%', ''));
+                        
+                        const probMatch = parts[3].match(/([\\d.]+)%<\\/span>/);
+                        const playoffProb = probMatch ? parseFloat(probMatch[1]) : 0;
                         playoffProbs.push(playoffProb);
                     }
                 }
