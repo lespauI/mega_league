@@ -252,6 +252,8 @@ def main():
         ('scripts/calc_playoff_probabilities.py', 'Playoff Probability Calculation', False),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False),
         ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False),
+        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis', False),
+        ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False),
         ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True),
     ]
     
@@ -280,10 +282,13 @@ def main():
         print("  • docs/playoff_race_table.html - Interactive playoff race table")
         print("  • docs/playoff_race.html - Full playoff analysis report (with embedded table)")
         print("  • docs/playoff_race_report.md - Markdown playoff report")
+        print("  • docs/team_scenarios/*.md - Individual team scenario reports (32 teams)")
+        print("  • docs/team_scenarios.html - Team scenario viewer with dropdown selector")
         print("  • output/draft_race/draft_pick_race.png - Draft pick visualization")
         print("  • output/draft_race/tank_battle.png - Tank battle scatter plot")
         print("  • output/draft_race/draft_race_report.md - Draft analysis report")
         print("\nView docs/playoff_race.html in your browser for full analysis!")
+        print("View docs/team_scenarios.html to explore individual team playoff scenarios!")
     else:
         print("\n⚠️  Some scripts failed. Check the output above for details.")
         sys.exit(1)
