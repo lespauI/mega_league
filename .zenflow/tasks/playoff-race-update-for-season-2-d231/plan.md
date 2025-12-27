@@ -71,6 +71,9 @@ Modify data loading functions:
 
 ---
 
-### [ ] Step: Write Report
+### [x] Step: Write Report
+<!-- chat-id: 204f374f-61e2-4fd4-bc58-ec0fa3086566 -->
 
 Document what was implemented, how it was tested, and any issues encountered in `report.md`.
+
+**Completed**: Created `report.md` documenting all changes to `calc_playoff_probabilities.py` and `calc_sos_by_rankings.py`, verification results, and testing approach.
