@@ -42,13 +42,16 @@ Modify `load_data()` function to filter games by:
 
 ---
 
-### [ ] Step: Update calc_sos_by_rankings.py
+### [x] Step: Update calc_sos_by_rankings.py
+<!-- chat-id: c2d7faf8-64cc-444f-af8e-da57b1be8c1e -->
 
 Modify data loading functions:
 1. `read_games_split()` - filter by seasonIndex=1 and stageIndex=1
 2. `read_latest_rankings()` - filter rankings by seasonIndex=1
 
 **Verification**: Run script and confirm SoS data is for Season 2.
+
+**Completed**: Added filters at lines 73-76 in `read_latest_rankings()` to skip non-Season 2 rankings. Added filters at lines 102-105 in `read_games_split()` to filter by seasonIndex=1 and stageIndex=1. Verified: Script outputs Season 2 data with 6 remaining games per team.
 
 ---
 
