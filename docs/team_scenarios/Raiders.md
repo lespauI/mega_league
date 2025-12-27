@@ -1,123 +1,124 @@
-# Monte Carlo Scenario Report: Raiders
+# 🏈 Monte Carlo Scenario Report: Raiders
 
-**Conference:** AFC  
-**Division:** AFC West  
-**Current Record:** 6-6-0  
-**Win %:** 0.500  
-**Simulations:** 2,000
+**📍 Conference:** AFC  
+**🏆 Division:** AFC West  
+**📊 Current Record:** 6-6-0  
+**📈 Win %:** 0.500  
+**🎲 Simulations:** 10,000
 
 ---
 
-## Remaining Games & Win Probabilities
+## 📅 Remaining Games & Win Probabilities
 
 | Week | Opponent | Location | Win % | Tie % | Loss % |
 |------|----------|----------|-------|-------|--------|
-| 13 | Rams | AWAY | 44.5% | 0.3% | 55.2% |
-| 14 | Chiefs | AWAY | 53.1% | 0.3% | 46.6% |
-| 15 | Chargers | HOME | 58.7% | 0.3% | 41.0% |
-| 16 | Dolphins | AWAY | 58.7% | 0.3% | 41.0% |
-| 17 | Saints | HOME | 48.1% | 0.3% | 51.6% |
+| 13 | Rams | ✈️ AWAY | <span class='prob-medium'>44.5%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>55.2%</span> |
+| 14 | Chiefs | ✈️ AWAY | <span class='prob-medium'>53.1%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>46.6%</span> |
+| 15 | Chargers | 🏠 HOME | <span class='prob-medium'>58.7%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>41.0%</span> |
+| 16 | Dolphins | ✈️ AWAY | <span class='prob-medium'>58.7%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>41.0%</span> |
+| 17 | Saints | 🏠 HOME | <span class='prob-medium'>48.1%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>51.6%</span> |
 
 ---
 
-## Most Probable Outcome
+## 🎯 Most Probable Outcome
 
-**Final Record:** 9-8-0  
-**Probability:** 33.05% (661/2,000 simulations)
+**📌 Final Record:** 9-8-0  
+**🎲 Probability:** 🔴 <span class='prob-low'>31.9%</span> (3,188/10,000 simulations)
 
-### Example of how this happens:
+### 🎬 Example of how this happens:
 
-- ✓ @ Rams (WIN)
-- ✗ @ Chiefs (LOSS)
-- ✓ vs Chargers (WIN)
-- ✗ @ Dolphins (LOSS)
-- ✓ vs Saints (WIN)
+- ❌ @ Rams **(LOSS)**
+- ✅ @ Chiefs **(WIN)**
+- ✅ vs Chargers **(WIN)**
+- ✅ @ Dolphins **(WIN)**
+- ❌ vs Saints **(LOSS)**
 
-**With this 9-8-0 record:**
-- Make Playoffs: **46.9%**
-- Win Division: **0.0%**
-- Earn Bye: **0.0%**
-
----
-
-## Overall Probabilities
-
-- **Make Playoffs:** 37.00% (740/2,000 simulations)
-- **Win Division:** 0.20% (4/2,000 simulations)
-- **Earn Bye:** 0.00% (0/2,000 simulations)
+**🎲 With this 9-8-0 record:**
+- 🏆 Make Playoffs: 🟡 <span class='prob-medium'>45.6%</span>
+- 👑 Win Division: 🔴 <span class='prob-low'>0.0%</span>
+- 🎫 Earn Bye: 🔴 <span class='prob-low'>0.0%</span>
 
 ---
 
-## All Scenario Outcomes
+## 📊 Overall Probabilities
+
+- **🏆 Make Playoffs:** 🔴 <span class='prob-low'>36.7%</span> (3,667/10,000 simulations)
+- **👑 Win Division:** 🔴 <span class='prob-low'>0.2%</span> (21/10,000 simulations)
+- **🎫 Earn Bye:** 🔴 <span class='prob-low'>0.0%</span> (0/10,000 simulations)
+
+---
+
+## 📋 All Scenario Outcomes
 
 | Final Record | Frequency | % | Playoff % | Division % | Bye % |
 |--------------|-----------|---|-----------|------------|-------|
-| 11-6-0 | 91 | 4.55% | 100.0% | 3.3% | 0.0% |
-| 10-6-1 | 2 | 0.10% | 100.0% | 0.0% | 0.0% |
-| 10-7-0 | 334 | 16.70% | 91.9% | 0.3% | 0.0% |
-| 9-7-1 | 9 | 0.45% | 55.6% | 0.0% | 0.0% |
-| 9-8-0 | 661 | 33.05% | 46.9% | 0.0% | 0.0% |
-| 8-8-1 | 12 | 0.60% | 8.3% | 0.0% | 0.0% |
-| 8-9-0 | 571 | 28.55% | 4.2% | 0.0% | 0.0% |
-| 7-9-1 | 7 | 0.35% | 0.0% | 0.0% | 0.0% |
-| 7-10-0 | 274 | 13.70% | 0.0% | 0.0% | 0.0% |
-| 6-11-0 | 39 | 1.95% | 0.0% | 0.0% | 0.0% |
+| 11-6-0 | 387 | <span class='prob-verylow'>3.87%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>4.4%</span> | <span class='prob-low'>0.0%</span> |
+| 10-6-1 | 8 | <span class='prob-verylow'>0.08%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 10-7-0 | 1,795 | <span class='prob-low'>17.9%</span> | <span class='prob-high'>93.3%</span> | <span class='prob-low'>0.2%</span> | <span class='prob-low'>0.0%</span> |
+| 9-7-1 | 47 | <span class='prob-verylow'>0.47%</span> | <span class='prob-medium'>57.4%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 9-8-0 | 3,188 | <span class='prob-low'>31.9%</span> | <span class='prob-medium'>45.6%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-8-1 | 66 | <span class='prob-verylow'>0.66%</span> | <span class='prob-low'>13.6%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-9-0 | 2,970 | <span class='prob-low'>29.7%</span> | <span class='prob-low'>3.6%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-9-1 | 31 | <span class='prob-verylow'>0.31%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-10-0 | 1,270 | <span class='prob-low'>12.7%</span> | <span class='prob-low'>0.1%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 6-10-1 | 4 | <span class='prob-verylow'>0.04%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 6-11-0 | 234 | <span class='prob-verylow'>2.34%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
 
 ---
 
-## Top 5 Most Common Scenarios
+## 🔥 Top 5 Most Common Scenarios
 
-### #1: 11-6-0 (91 times, 4.55%)
+### 🥇 #1: 11-6-0 (387 times, 🔴 <span class='prob-low'>3.9%</span>)
 
-**Example game outcomes:**
-- ✓ @ Rams
-- ✓ @ Chiefs
-- ✓ vs Chargers
-- ✓ @ Dolphins
-- ✓ vs Saints
+**🎬 Example game outcomes:**
+- ✅ @ Rams
+- ✅ @ Chiefs
+- ✅ vs Chargers
+- ✅ @ Dolphins
+- ✅ vs Saints
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### #2: 10-6-1 (2 times, 0.10%)
+### 🥈 #2: 10-6-1 (8 times, 🔴 <span class='prob-low'>0.1%</span>)
 
-**Example game outcomes:**
-- ✓ @ Rams
-- ○ @ Chiefs
-- ✓ vs Chargers
-- ✓ @ Dolphins
-- ✓ vs Saints
+**🎬 Example game outcomes:**
+- ✅ @ Rams
+- ✅ @ Chiefs
+- 🟡 vs Chargers
+- ✅ @ Dolphins
+- ✅ vs Saints
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### #3: 10-7-0 (334 times, 16.70%)
+### 🥉 #3: 10-7-0 (1,795 times, 🔴 <span class='prob-low'>17.9%</span>)
 
-**Example game outcomes:**
-- ✓ @ Rams
-- ✓ @ Chiefs
-- ✓ vs Chargers
-- ✓ @ Dolphins
-- ✗ vs Saints
+**🎬 Example game outcomes:**
+- ✅ @ Rams
+- ❌ @ Chiefs
+- ✅ vs Chargers
+- ✅ @ Dolphins
+- ✅ vs Saints
 
-**Playoff chances with this record:** 91.9%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>93.3%</span>
 
-### #4: 9-7-1 (9 times, 0.45%)
+### 4️⃣ #4: 9-7-1 (47 times, 🔴 <span class='prob-low'>0.5%</span>)
 
-**Example game outcomes:**
-- ✓ @ Rams
-- ✓ @ Chiefs
-- ○ vs Chargers
-- ✓ @ Dolphins
-- ✗ vs Saints
+**🎬 Example game outcomes:**
+- 🟡 @ Rams
+- ❌ @ Chiefs
+- ✅ vs Chargers
+- ✅ @ Dolphins
+- ✅ vs Saints
 
-**Playoff chances with this record:** 55.6%
+**🏆 Playoff chances with this record:** 🟡 <span class='prob-medium'>57.4%</span>
 
-### #5: 9-8-0 (661 times, 33.05%)
+### 5️⃣ #5: 9-8-0 (3,188 times, 🔴 <span class='prob-low'>31.9%</span>)
 
-**Example game outcomes:**
-- ✓ @ Rams
-- ✗ @ Chiefs
-- ✓ vs Chargers
-- ✗ @ Dolphins
-- ✓ vs Saints
+**🎬 Example game outcomes:**
+- ❌ @ Rams
+- ✅ @ Chiefs
+- ✅ vs Chargers
+- ✅ @ Dolphins
+- ❌ vs Saints
 
-**Playoff chances with this record:** 46.9%
+**🏆 Playoff chances with this record:** 🟡 <span class='prob-medium'>45.6%</span>

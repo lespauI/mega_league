@@ -1,124 +1,126 @@
-# Monte Carlo Scenario Report: Cardinals
+# 🏈 Monte Carlo Scenario Report: Cardinals
 
-**Conference:** NFC  
-**Division:** NFC West  
-**Current Record:** 1-11-0  
-**Win %:** 0.083  
-**Simulations:** 2,000
+**📍 Conference:** NFC  
+**🏆 Division:** NFC West  
+**📊 Current Record:** 1-11-0  
+**📈 Win %:** 0.083  
+**🎲 Simulations:** 10,000
 
 ---
 
-## Remaining Games & Win Probabilities
+## 📅 Remaining Games & Win Probabilities
 
 | Week | Opponent | Location | Win % | Tie % | Loss % |
 |------|----------|----------|-------|-------|--------|
-| 12 | Jets | AWAY | 40.4% | 0.3% | 59.3% |
-| 14 | Packers | AWAY | 42.3% | 0.3% | 57.4% |
-| 15 | Cowboys | AWAY | 26.0% | 0.3% | 73.7% |
-| 16 | 49ers | AWAY | 28.7% | 0.3% | 71.0% |
-| 17 | Chargers | HOME | 39.3% | 0.3% | 60.4% |
+| 12 | Jets | ✈️ AWAY | <span class='prob-medium'>40.4%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>59.3%</span> |
+| 14 | Packers | ✈️ AWAY | <span class='prob-medium'>42.3%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>57.4%</span> |
+| 15 | Cowboys | ✈️ AWAY | <span class='prob-low'>26.0%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-high'>73.7%</span> |
+| 16 | 49ers | ✈️ AWAY | <span class='prob-low'>28.7%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-high'>71.0%</span> |
+| 17 | Chargers | 🏠 HOME | <span class='prob-low'>39.3%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-high'>60.4%</span> |
 
 ---
 
-## Most Probable Outcome
+## 🎯 Most Probable Outcome
 
-**Final Record:** 3-14-0  
-**Probability:** 33.30% (666/2,000 simulations)
+**📌 Final Record:** 3-14-0  
+**🎲 Probability:** 🔴 <span class='prob-low'>33.8%</span> (3,382/10,000 simulations)
 
-### Example of how this happens:
+### 🎬 Example of how this happens:
 
-- ✗ @ Jets (LOSS)
-- ✓ @ Packers (WIN)
-- ✗ @ Cowboys (LOSS)
-- ✓ @ 49ers (WIN)
-- ✗ vs Chargers (LOSS)
+- ✅ @ Jets **(WIN)**
+- ❌ @ Packers **(LOSS)**
+- ❌ @ Cowboys **(LOSS)**
+- ❌ @ 49ers **(LOSS)**
+- ✅ vs Chargers **(WIN)**
 
-**With this 3-14-0 record:**
-- Make Playoffs: **0.0%**
-- Win Division: **0.0%**
-- Earn Bye: **0.0%**
-
----
-
-## Overall Probabilities
-
-- **Make Playoffs:** 0.00% (0/2,000 simulations)
-- **Win Division:** 0.00% (0/2,000 simulations)
-- **Earn Bye:** 0.00% (0/2,000 simulations)
+**🎲 With this 3-14-0 record:**
+- 🏆 Make Playoffs: 🔴 <span class='prob-low'>0.0%</span>
+- 👑 Win Division: 🔴 <span class='prob-low'>0.0%</span>
+- 🎫 Earn Bye: 🔴 <span class='prob-low'>0.0%</span>
 
 ---
 
-## All Scenario Outcomes
+## 📊 Overall Probabilities
+
+- **🏆 Make Playoffs:** 🔴 <span class='prob-low'>0.0%</span> (0/10,000 simulations)
+- **👑 Win Division:** 🔴 <span class='prob-low'>0.0%</span> (0/10,000 simulations)
+- **🎫 Earn Bye:** 🔴 <span class='prob-low'>0.0%</span> (0/10,000 simulations)
+
+---
+
+## 📋 All Scenario Outcomes
 
 | Final Record | Frequency | % | Playoff % | Division % | Bye % |
 |--------------|-----------|---|-----------|------------|-------|
-| 6-11-0 | 9 | 0.45% | 0.0% | 0.0% | 0.0% |
-| 5-12-0 | 106 | 5.30% | 0.0% | 0.0% | 0.0% |
-| 4-12-1 | 4 | 0.20% | 0.0% | 0.0% | 0.0% |
-| 4-13-0 | 349 | 17.45% | 0.0% | 0.0% | 0.0% |
-| 3-13-1 | 9 | 0.45% | 0.0% | 0.0% | 0.0% |
-| 3-14-0 | 666 | 33.30% | 0.0% | 0.0% | 0.0% |
-| 2-13-2 | 1 | 0.05% | 0.0% | 0.0% | 0.0% |
-| 2-14-1 | 11 | 0.55% | 0.0% | 0.0% | 0.0% |
-| 2-15-0 | 597 | 29.85% | 0.0% | 0.0% | 0.0% |
-| 1-15-1 | 6 | 0.30% | 0.0% | 0.0% | 0.0% |
-| 1-16-0 | 242 | 12.10% | 0.0% | 0.0% | 0.0% |
+| 6-11-0 | 61 | <span class='prob-verylow'>0.61%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 5-11-1 | 2 | <span class='prob-verylow'>0.02%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 5-12-0 | 481 | <span class='prob-verylow'>4.81%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 4-12-1 | 24 | <span class='prob-verylow'>0.24%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 4-13-0 | 1,833 | <span class='prob-low'>18.3%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 3-13-1 | 56 | <span class='prob-verylow'>0.56%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 3-14-0 | 3,382 | <span class='prob-low'>33.8%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 2-13-2 | 1 | <span class='prob-verylow'>0.01%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 2-14-1 | 57 | <span class='prob-verylow'>0.57%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 2-15-0 | 2,996 | <span class='prob-low'>30.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 1-14-2 | 1 | <span class='prob-verylow'>0.01%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 1-15-1 | 18 | <span class='prob-verylow'>0.18%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 1-16-0 | 1,088 | <span class='prob-low'>10.9%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
 
 ---
 
-## Top 5 Most Common Scenarios
+## 🔥 Top 5 Most Common Scenarios
 
-### #1: 6-11-0 (9 times, 0.45%)
+### 🥇 #1: 6-11-0 (61 times, 🔴 <span class='prob-low'>0.6%</span>)
 
-**Example game outcomes:**
-- ✓ @ Jets
-- ✓ @ Packers
-- ✓ @ Cowboys
-- ✓ @ 49ers
-- ✓ vs Chargers
+**🎬 Example game outcomes:**
+- ✅ @ Jets
+- ✅ @ Packers
+- ✅ @ Cowboys
+- ✅ @ 49ers
+- ✅ vs Chargers
 
-**Playoff chances with this record:** 0.0%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>0.0%</span>
 
-### #2: 5-12-0 (106 times, 5.30%)
+### 🥈 #2: 5-11-1 (2 times, 🔴 <span class='prob-low'>0.0%</span>)
 
-**Example game outcomes:**
-- ✓ @ Jets
-- ✗ @ Packers
-- ✓ @ Cowboys
-- ✓ @ 49ers
-- ✓ vs Chargers
+**🎬 Example game outcomes:**
+- ✅ @ Jets
+- ✅ @ Packers
+- ✅ @ Cowboys
+- ✅ @ 49ers
+- 🟡 vs Chargers
 
-**Playoff chances with this record:** 0.0%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>0.0%</span>
 
-### #3: 4-12-1 (4 times, 0.20%)
+### 🥉 #3: 5-12-0 (481 times, 🔴 <span class='prob-low'>4.8%</span>)
 
-**Example game outcomes:**
-- ✗ @ Jets
-- ✓ @ Packers
-- ○ @ Cowboys
-- ✓ @ 49ers
-- ✓ vs Chargers
+**🎬 Example game outcomes:**
+- ✅ @ Jets
+- ✅ @ Packers
+- ✅ @ Cowboys
+- ❌ @ 49ers
+- ✅ vs Chargers
 
-**Playoff chances with this record:** 0.0%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>0.0%</span>
 
-### #4: 4-13-0 (349 times, 17.45%)
+### 4️⃣ #4: 4-12-1 (24 times, 🔴 <span class='prob-low'>0.2%</span>)
 
-**Example game outcomes:**
-- ✓ @ Jets
-- ✓ @ Packers
-- ✗ @ Cowboys
-- ✓ @ 49ers
-- ✗ vs Chargers
+**🎬 Example game outcomes:**
+- ✅ @ Jets
+- ❌ @ Packers
+- 🟡 @ Cowboys
+- ✅ @ 49ers
+- ✅ vs Chargers
 
-**Playoff chances with this record:** 0.0%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>0.0%</span>
 
-### #5: 3-13-1 (9 times, 0.45%)
+### 5️⃣ #5: 4-13-0 (1,833 times, 🔴 <span class='prob-low'>18.3%</span>)
 
-**Example game outcomes:**
-- ○ @ Jets
-- ✓ @ Packers
-- ✗ @ Cowboys
-- ✗ @ 49ers
-- ✓ vs Chargers
+**🎬 Example game outcomes:**
+- ✅ @ Jets
+- ✅ @ Packers
+- ❌ @ Cowboys
+- ❌ @ 49ers
+- ✅ vs Chargers
 
-**Playoff chances with this record:** 0.0%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>0.0%</span>

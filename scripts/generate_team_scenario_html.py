@@ -22,6 +22,17 @@ def main():
         'Steelers': '#FFB612', 'Texans': '#03202F', 'Titans': '#0C2340', 'Vikings': '#4F2683'
     }
     
+    team_logos = {
+        '49ers': 'SF', 'Bears': 'CHI', 'Bengals': 'CIN', 'Bills': 'BUF',
+        'Broncos': 'DEN', 'Browns': 'CLE', 'Buccaneers': 'TB', 'Cardinals': 'ARI',
+        'Chargers': 'LAC', 'Chiefs': 'KC', 'Colts': 'IND', 'Commanders': 'WAS',
+        'Cowboys': 'DAL', 'Dolphins': 'MIA', 'Eagles': 'PHI', 'Falcons': 'ATL',
+        'Giants': 'NYG', 'Jaguars': 'JAX', 'Jets': 'NYJ', 'Lions': 'DET',
+        'Packers': 'GB', 'Panthers': 'CAR', 'Patriots': 'NE', 'Raiders': 'LV',
+        'Rams': 'LAR', 'Ravens': 'BAL', 'Saints': 'NO', 'Seahawks': 'SEA',
+        'Steelers': 'PIT', 'Texans': 'HOU', 'Titans': 'TEN', 'Vikings': 'MIN'
+    }
+    
     html = '''<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -89,6 +100,44 @@ def main():
         .header p {
             font-size: 1.2em;
             opacity: 0.9;
+        }
+        
+        .team-logo-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .team-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .team-logo-info {
+            flex: 1;
+        }
+        
+        .team-logo-info h2 {
+            font-size: 2em;
+            font-weight: 800;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+        
+        .team-logo-info .team-subtitle {
+            font-size: 1.1em;
+            color: var(--gray-600);
+            font-weight: 500;
         }
         
         .selector-container {
@@ -337,19 +386,55 @@ def main():
             font-size: 0.9em;
         }
         
-        .prob-high {
-            background: #dcfce7;
+        #report-content .prob-high {
+            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
             color: #166534;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(22, 101, 52, 0.1);
         }
         
-        .prob-medium {
-            background: #fef3c7;
+        #report-content .prob-medium {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
             color: #92400e;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(146, 64, 14, 0.1);
         }
         
-        .prob-low {
-            background: #fee2e2;
+        #report-content .prob-low {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
             color: #991b1b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 700;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(153, 27, 27, 0.1);
+        }
+        
+        #report-content .prob-verylow {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            color: #64748b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        
+        #report-content .prob-tie {
+            background: #f8fafc;
+            color: #64748b;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            display: inline-block;
+            border: 1px solid #e2e8f0;
         }
         
         @media (max-width: 768px) {
@@ -409,6 +494,8 @@ def main():
             </select>
         </div>
         
+        <div id="team-logo-header" style="display: none;"></div>
+        
         <div id="stats-overview" class="stats-overview" style="display: none;"></div>
         
         <div id="charts-container" style="display: none;">
@@ -431,16 +518,51 @@ def main():
     
     <script>
         const TEAM_COLORS = ''' + json.dumps(team_colors) + ''';
+        const TEAM_LOGOS = ''' + json.dumps(team_logos) + ''';
         
         const teamSelect = document.getElementById('team-select');
         const reportContent = document.getElementById('report-content');
         const statsOverview = document.getElementById('stats-overview');
         const chartsContainer = document.getElementById('charts-container');
+        const teamLogoHeader = document.getElementById('team-logo-header');
         let recordChart = null;
         let probChart = null;
         
         function getTeamColor(teamName) {
             return TEAM_COLORS[teamName] || '#2563eb';
+        }
+        
+        function getTeamLogoUrl(teamName) {
+            const abbr = TEAM_LOGOS[teamName];
+            if (!abbr) return '';
+            return `https://a.espncdn.com/i/teamlogos/nfl/500/${abbr}.png`;
+        }
+        
+        function createTeamLogoHeader(data) {
+            const lines = data.split('\\n');
+            const teamName = teamSelect.options[teamSelect.selectedIndex].text;
+            const logoUrl = getTeamLogoUrl(teamName);
+            let conference = '', division = '';
+            
+            lines.forEach(line => {
+                if (line.includes('**Conference:**')) {
+                    conference = line.match(/\\*\\*Conference:\\*\\* (\\w+)/)?.[1] || '';
+                }
+                if (line.includes('**Division:**')) {
+                    division = line.match(/\\*\\*Division:\\*\\* (.*?)  $/)?.[1] || '';
+                }
+            });
+            
+            teamLogoHeader.innerHTML = `
+                <div class="team-logo-header">
+                    <img src="${logoUrl}" alt="${teamName} logo" class="team-logo" onerror="this.style.display='none'">
+                    <div class="team-logo-info">
+                        <h2>${teamName}</h2>
+                        <div class="team-subtitle">${division} • ${conference}</div>
+                    </div>
+                </div>
+            `;
+            teamLogoHeader.style.display = 'block';
         }
         
         function createStatsCards(data) {
@@ -628,12 +750,14 @@ def main():
                 reportContent.innerHTML = '<div class="loading">Select a team above to view their playoff scenario analysis</div>';
                 statsOverview.style.display = 'none';
                 chartsContainer.style.display = 'none';
+                teamLogoHeader.style.display = 'none';
                 return;
             }
             
             reportContent.innerHTML = '<div class="loading">Loading scenario analysis</div>';
             statsOverview.style.display = 'none';
             chartsContainer.style.display = 'none';
+            teamLogoHeader.style.display = 'none';
             
             try {
                 const response = await fetch(`team_scenarios/${teamFile}.md`);
@@ -643,6 +767,7 @@ def main():
                 }
                 
                 const markdown = await response.text();
+                createTeamLogoHeader(markdown);
                 createStatsCards(markdown);
                 createCharts(markdown);
                 

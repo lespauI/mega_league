@@ -1,124 +1,124 @@
-# Monte Carlo Scenario Report: Chiefs
+# 🏈 Monte Carlo Scenario Report: Chiefs
 
-**Conference:** AFC  
-**Division:** AFC West  
-**Current Record:** 5-7-0  
-**Win %:** 0.417  
-**Simulations:** 2,000
+**📍 Conference:** AFC  
+**🏆 Division:** AFC West  
+**📊 Current Record:** 5-7-0  
+**📈 Win %:** 0.417  
+**🎲 Simulations:** 10,000
 
 ---
 
-## Remaining Games & Win Probabilities
+## 📅 Remaining Games & Win Probabilities
 
 | Week | Opponent | Location | Win % | Tie % | Loss % |
 |------|----------|----------|-------|-------|--------|
-| 13 | Patriots | HOME | 43.6% | 0.3% | 56.1% |
-| 14 | Raiders | HOME | 46.6% | 0.3% | 53.1% |
-| 15 | Dolphins | AWAY | 55.5% | 0.3% | 44.2% |
-| 16 | Steelers | AWAY | 49.1% | 0.3% | 50.6% |
-| 17 | Panthers | HOME | 47.3% | 0.3% | 52.4% |
+| 13 | Patriots | 🏠 HOME | <span class='prob-medium'>43.6%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>56.1%</span> |
+| 14 | Raiders | 🏠 HOME | <span class='prob-medium'>46.6%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>53.1%</span> |
+| 15 | Dolphins | ✈️ AWAY | <span class='prob-medium'>55.5%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>44.2%</span> |
+| 16 | Steelers | ✈️ AWAY | <span class='prob-medium'>49.1%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>50.6%</span> |
+| 17 | Panthers | 🏠 HOME | <span class='prob-medium'>47.3%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>52.4%</span> |
 
 ---
 
-## Most Probable Outcome
+## 🎯 Most Probable Outcome
 
-**Final Record:** 7-10-0  
-**Probability:** 31.50% (630/2,000 simulations)
+**📌 Final Record:** 7-10-0  
+**🎲 Probability:** 🔴 <span class='prob-low'>31.8%</span> (3,178/10,000 simulations)
 
-### Example of how this happens:
+### 🎬 Example of how this happens:
 
-- ✗ vs Patriots (LOSS)
-- ✓ vs Raiders (WIN)
-- ✓ @ Dolphins (WIN)
-- ✗ @ Steelers (LOSS)
-- ✗ vs Panthers (LOSS)
+- ❌ vs Patriots **(LOSS)**
+- ✅ vs Raiders **(WIN)**
+- ❌ @ Dolphins **(LOSS)**
+- ✅ @ Steelers **(WIN)**
+- ❌ vs Panthers **(LOSS)**
 
-**With this 7-10-0 record:**
-- Make Playoffs: **0.0%**
-- Win Division: **0.0%**
-- Earn Bye: **0.0%**
-
----
-
-## Overall Probabilities
-
-- **Make Playoffs:** 8.60% (172/2,000 simulations)
-- **Win Division:** 0.00% (0/2,000 simulations)
-- **Earn Bye:** 0.00% (0/2,000 simulations)
+**🎲 With this 7-10-0 record:**
+- 🏆 Make Playoffs: 🔴 <span class='prob-low'>0.0%</span>
+- 👑 Win Division: 🔴 <span class='prob-low'>0.0%</span>
+- 🎫 Earn Bye: 🔴 <span class='prob-low'>0.0%</span>
 
 ---
 
-## All Scenario Outcomes
+## 📊 Overall Probabilities
+
+- **🏆 Make Playoffs:** 🔴 <span class='prob-low'>8.7%</span> (870/10,000 simulations)
+- **👑 Win Division:** 🔴 <span class='prob-low'>0.0%</span> (0/10,000 simulations)
+- **🎫 Earn Bye:** 🔴 <span class='prob-low'>0.0%</span> (0/10,000 simulations)
+
+---
+
+## 📋 All Scenario Outcomes
 
 | Final Record | Frequency | % | Playoff % | Division % | Bye % |
 |--------------|-----------|---|-----------|------------|-------|
-| 10-7-0 | 55 | 2.75% | 90.9% | 0.0% | 0.0% |
-| 9-7-1 | 2 | 0.10% | 100.0% | 0.0% | 0.0% |
-| 9-8-0 | 280 | 14.00% | 39.6% | 0.0% | 0.0% |
-| 8-8-1 | 6 | 0.30% | 0.0% | 0.0% | 0.0% |
-| 8-9-0 | 610 | 30.50% | 1.5% | 0.0% | 0.0% |
-| 7-9-1 | 6 | 0.30% | 0.0% | 0.0% | 0.0% |
-| 7-10-0 | 630 | 31.50% | 0.0% | 0.0% | 0.0% |
-| 6-10-1 | 6 | 0.30% | 0.0% | 0.0% | 0.0% |
-| 6-11-0 | 334 | 16.70% | 0.0% | 0.0% | 0.0% |
-| 5-11-1 | 1 | 0.05% | 0.0% | 0.0% | 0.0% |
-| 5-12-0 | 70 | 3.50% | 0.0% | 0.0% | 0.0% |
+| 10-7-0 | 266 | <span class='prob-verylow'>2.66%</span> | <span class='prob-high'>95.5%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 9-7-1 | 6 | <span class='prob-verylow'>0.06%</span> | <span class='prob-high'>66.7%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 9-8-0 | 1,409 | <span class='prob-low'>14.1%</span> | <span class='prob-low'>39.2%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-8-1 | 41 | <span class='prob-verylow'>0.41%</span> | <span class='prob-low'>7.3%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-9-0 | 2,978 | <span class='prob-low'>29.8%</span> | <span class='prob-low'>1.9%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-9-1 | 66 | <span class='prob-verylow'>0.66%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-10-0 | 3,178 | <span class='prob-low'>31.8%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 6-10-1 | 36 | <span class='prob-verylow'>0.36%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 6-11-0 | 1,635 | <span class='prob-low'>16.4%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 5-11-1 | 4 | <span class='prob-verylow'>0.04%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 5-12-0 | 381 | <span class='prob-verylow'>3.81%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
 
 ---
 
-## Top 5 Most Common Scenarios
+## 🔥 Top 5 Most Common Scenarios
 
-### #1: 10-7-0 (55 times, 2.75%)
+### 🥇 #1: 10-7-0 (266 times, 🔴 <span class='prob-low'>2.7%</span>)
 
-**Example game outcomes:**
-- ✓ vs Patriots
-- ✓ vs Raiders
-- ✓ @ Dolphins
-- ✓ @ Steelers
-- ✓ vs Panthers
+**🎬 Example game outcomes:**
+- ✅ vs Patriots
+- ✅ vs Raiders
+- ✅ @ Dolphins
+- ✅ @ Steelers
+- ✅ vs Panthers
 
-**Playoff chances with this record:** 90.9%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>95.5%</span>
 
-### #2: 9-7-1 (2 times, 0.10%)
+### 🥈 #2: 9-7-1 (6 times, 🔴 <span class='prob-low'>0.1%</span>)
 
-**Example game outcomes:**
-- ○ vs Patriots
-- ✓ vs Raiders
-- ✓ @ Dolphins
-- ✓ @ Steelers
-- ✓ vs Panthers
+**🎬 Example game outcomes:**
+- 🟡 vs Patriots
+- ✅ vs Raiders
+- ✅ @ Dolphins
+- ✅ @ Steelers
+- ✅ vs Panthers
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>66.7%</span>
 
-### #3: 9-8-0 (280 times, 14.00%)
+### 🥉 #3: 9-8-0 (1,409 times, 🔴 <span class='prob-low'>14.1%</span>)
 
-**Example game outcomes:**
-- ✗ vs Patriots
-- ✓ vs Raiders
-- ✓ @ Dolphins
-- ✓ @ Steelers
-- ✓ vs Panthers
+**🎬 Example game outcomes:**
+- ✅ vs Patriots
+- ❌ vs Raiders
+- ✅ @ Dolphins
+- ✅ @ Steelers
+- ✅ vs Panthers
 
-**Playoff chances with this record:** 39.6%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>39.2%</span>
 
-### #4: 8-8-1 (6 times, 0.30%)
+### 4️⃣ #4: 8-8-1 (41 times, 🔴 <span class='prob-low'>0.4%</span>)
 
-**Example game outcomes:**
-- ✓ vs Patriots
-- ✓ vs Raiders
-- ✗ @ Dolphins
-- ○ @ Steelers
-- ✓ vs Panthers
+**🎬 Example game outcomes:**
+- ✅ vs Patriots
+- ✅ vs Raiders
+- ❌ @ Dolphins
+- ✅ @ Steelers
+- 🟡 vs Panthers
 
-**Playoff chances with this record:** 0.0%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>7.3%</span>
 
-### #5: 8-9-0 (610 times, 30.50%)
+### 5️⃣ #5: 8-9-0 (2,978 times, 🔴 <span class='prob-low'>29.8%</span>)
 
-**Example game outcomes:**
-- ✓ vs Patriots
-- ✓ vs Raiders
-- ✓ @ Dolphins
-- ✗ @ Steelers
-- ✗ vs Panthers
+**🎬 Example game outcomes:**
+- ✅ vs Patriots
+- ❌ vs Raiders
+- ✅ @ Dolphins
+- ✅ @ Steelers
+- ❌ vs Panthers
 
-**Playoff chances with this record:** 1.5%
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>1.9%</span>

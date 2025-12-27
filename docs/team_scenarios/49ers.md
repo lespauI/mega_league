@@ -1,131 +1,135 @@
-# Monte Carlo Scenario Report: 49ers
+# 🏈 Monte Carlo Scenario Report: 49ers
 
-**Conference:** NFC  
-**Division:** NFC West  
-**Current Record:** 7-4-0  
-**Win %:** 0.636  
-**Simulations:** 2,000
+**📍 Conference:** NFC  
+**🏆 Division:** NFC West  
+**📊 Current Record:** 7-4-0  
+**📈 Win %:** 0.636  
+**🎲 Simulations:** 10,000
 
 ---
 
-## Remaining Games & Win Probabilities
+## 📅 Remaining Games & Win Probabilities
 
 | Week | Opponent | Location | Win % | Tie % | Loss % |
 |------|----------|----------|-------|-------|--------|
-| 12 | Giants | HOME | 43.2% | 0.3% | 56.5% |
-| 13 | Commanders | HOME | 55.3% | 0.3% | 44.4% |
-| 14 | Seahawks | AWAY | 46.3% | 0.3% | 53.4% |
-| 15 | Rams | AWAY | 47.4% | 0.3% | 52.3% |
-| 16 | Cardinals | HOME | 71.0% | 0.3% | 28.7% |
-| 17 | Broncos | HOME | 45.2% | 0.3% | 54.5% |
+| 12 | Giants | 🏠 HOME | <span class='prob-medium'>43.2%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>56.5%</span> |
+| 13 | Commanders | 🏠 HOME | <span class='prob-medium'>55.3%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>44.4%</span> |
+| 14 | Seahawks | ✈️ AWAY | <span class='prob-medium'>46.3%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>53.4%</span> |
+| 15 | Rams | ✈️ AWAY | <span class='prob-medium'>47.4%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>52.3%</span> |
+| 16 | Cardinals | 🏠 HOME | <span class='prob-high'>71.0%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-low'>28.7%</span> |
+| 17 | Broncos | 🏠 HOME | <span class='prob-medium'>45.2%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>54.5%</span> |
 
 ---
 
-## Most Probable Outcome
+## 🎯 Most Probable Outcome
 
-**Final Record:** 10-7-0  
-**Probability:** 29.50% (590/2,000 simulations)
+**📌 Final Record:** 10-7-0  
+**🎲 Probability:** 🔴 <span class='prob-low'>30.7%</span> (3,072/10,000 simulations)
 
-### Example of how this happens:
+### 🎬 Example of how this happens:
 
-- ✗ vs Giants (LOSS)
-- ✓ vs Commanders (WIN)
-- ✗ @ Seahawks (LOSS)
-- ✓ @ Rams (WIN)
-- ✓ vs Cardinals (WIN)
-- ✗ vs Broncos (LOSS)
+- ✅ vs Giants **(WIN)**
+- ❌ vs Commanders **(LOSS)**
+- ❌ @ Seahawks **(LOSS)**
+- ❌ @ Rams **(LOSS)**
+- ✅ vs Cardinals **(WIN)**
+- ✅ vs Broncos **(WIN)**
 
-**With this 10-7-0 record:**
-- Make Playoffs: **73.2%**
-- Win Division: **0.7%**
-- Earn Bye: **0.0%**
-
----
-
-## Overall Probabilities
-
-- **Make Playoffs:** 63.35% (1,267/2,000 simulations)
-- **Win Division:** 13.65% (273/2,000 simulations)
-- **Earn Bye:** 2.00% (40/2,000 simulations)
+**🎲 With this 10-7-0 record:**
+- 🏆 Make Playoffs: 🟢 <span class='prob-high'>75.3%</span>
+- 👑 Win Division: 🔴 <span class='prob-low'>1.2%</span>
+- 🎫 Earn Bye: 🔴 <span class='prob-low'>0.0%</span>
 
 ---
 
-## All Scenario Outcomes
+## 📊 Overall Probabilities
+
+- **🏆 Make Playoffs:** 🟢 <span class='prob-high'>64.5%</span> (6,453/10,000 simulations)
+- **👑 Win Division:** 🔴 <span class='prob-low'>13.6%</span> (1,356/10,000 simulations)
+- **🎫 Earn Bye:** 🔴 <span class='prob-low'>2.0%</span> (198/10,000 simulations)
+
+---
+
+## 📋 All Scenario Outcomes
 
 | Final Record | Frequency | % | Playoff % | Division % | Bye % |
 |--------------|-----------|---|-----------|------------|-------|
-| 13-4-0 | 36 | 1.80% | 100.0% | 100.0% | 61.1% |
-| 12-5-0 | 196 | 9.80% | 100.0% | 69.9% | 9.2% |
-| 11-5-1 | 5 | 0.25% | 100.0% | 0.0% | 0.0% |
-| 11-6-0 | 518 | 25.90% | 98.8% | 18.5% | 0.0% |
-| 10-6-1 | 8 | 0.40% | 100.0% | 0.0% | 0.0% |
-| 10-7-0 | 590 | 29.50% | 73.2% | 0.7% | 0.0% |
-| 9-7-1 | 12 | 0.60% | 33.3% | 0.0% | 0.0% |
-| 9-8-0 | 450 | 22.50% | 16.4% | 0.0% | 0.0% |
-| 8-8-1 | 4 | 0.20% | 0.0% | 0.0% | 0.0% |
-| 8-9-0 | 161 | 8.05% | 0.0% | 0.0% | 0.0% |
-| 7-10-0 | 20 | 1.00% | 0.0% | 0.0% | 0.0% |
+| 13-4-0 | 173 | <span class='prob-verylow'>1.73%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-medium'>55.5%</span> |
+| 12-4-1 | 5 | <span class='prob-verylow'>0.05%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>60.0%</span> | <span class='prob-low'>0.0%</span> |
+| 12-5-0 | 1,005 | <span class='prob-low'>10.1%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>68.9%</span> | <span class='prob-low'>10.0%</span> |
+| 11-5-1 | 30 | <span class='prob-verylow'>0.30%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>30.0%</span> | <span class='prob-low'>0.0%</span> |
+| 11-6-0 | 2,505 | <span class='prob-low'>25.1%</span> | <span class='prob-high'>99.5%</span> | <span class='prob-low'>17.7%</span> | <span class='prob-low'>0.1%</span> |
+| 10-6-1 | 57 | <span class='prob-verylow'>0.57%</span> | <span class='prob-high'>91.2%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 10-7-0 | 3,072 | <span class='prob-low'>30.7%</span> | <span class='prob-high'>75.3%</span> | <span class='prob-low'>1.2%</span> | <span class='prob-low'>0.0%</span> |
+| 9-6-2 | 1 | <span class='prob-verylow'>0.01%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 9-7-1 | 58 | <span class='prob-verylow'>0.58%</span> | <span class='prob-low'>22.4%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 9-8-0 | 2,180 | <span class='prob-low'>21.8%</span> | <span class='prob-low'>16.6%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-7-2 | 2 | <span class='prob-verylow'>0.02%</span> | <span class='prob-medium'>50.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-8-1 | 23 | <span class='prob-verylow'>0.23%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-9-0 | 765 | <span class='prob-low'>7.6%</span> | <span class='prob-low'>0.8%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-9-1 | 4 | <span class='prob-verylow'>0.04%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-10-0 | 120 | <span class='prob-verylow'>1.20%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
 
 ---
 
-## Top 5 Most Common Scenarios
+## 🔥 Top 5 Most Common Scenarios
 
-### #1: 13-4-0 (36 times, 1.80%)
+### 🥇 #1: 13-4-0 (173 times, 🔴 <span class='prob-low'>1.7%</span>)
 
-**Example game outcomes:**
-- ✓ vs Giants
-- ✓ vs Commanders
-- ✓ @ Seahawks
-- ✓ @ Rams
-- ✓ vs Cardinals
-- ✓ vs Broncos
+**🎬 Example game outcomes:**
+- ✅ vs Giants
+- ✅ vs Commanders
+- ✅ @ Seahawks
+- ✅ @ Rams
+- ✅ vs Cardinals
+- ✅ vs Broncos
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### #2: 12-5-0 (196 times, 9.80%)
+### 🥈 #2: 12-4-1 (5 times, 🔴 <span class='prob-low'>0.1%</span>)
 
-**Example game outcomes:**
-- ✓ vs Giants
-- ✓ vs Commanders
-- ✗ @ Seahawks
-- ✓ @ Rams
-- ✓ vs Cardinals
-- ✓ vs Broncos
+**🎬 Example game outcomes:**
+- ✅ vs Giants
+- ✅ vs Commanders
+- 🟡 @ Seahawks
+- ✅ @ Rams
+- ✅ vs Cardinals
+- ✅ vs Broncos
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### #3: 11-5-1 (5 times, 0.25%)
+### 🥉 #3: 12-5-0 (1,005 times, 🔴 <span class='prob-low'>10.1%</span>)
 
-**Example game outcomes:**
-- ✓ vs Giants
-- ✓ vs Commanders
-- ✓ @ Seahawks
-- ○ @ Rams
-- ✓ vs Cardinals
-- ✗ vs Broncos
+**🎬 Example game outcomes:**
+- ✅ vs Giants
+- ✅ vs Commanders
+- ❌ @ Seahawks
+- ✅ @ Rams
+- ✅ vs Cardinals
+- ✅ vs Broncos
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### #4: 11-6-0 (518 times, 25.90%)
+### 4️⃣ #4: 11-5-1 (30 times, 🔴 <span class='prob-low'>0.3%</span>)
 
-**Example game outcomes:**
-- ✓ vs Giants
-- ✗ vs Commanders
-- ✓ @ Seahawks
-- ✓ @ Rams
-- ✗ vs Cardinals
-- ✓ vs Broncos
+**🎬 Example game outcomes:**
+- ✅ vs Giants
+- ❌ vs Commanders
+- ✅ @ Seahawks
+- 🟡 @ Rams
+- ✅ vs Cardinals
+- ✅ vs Broncos
 
-**Playoff chances with this record:** 98.8%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### #5: 10-6-1 (8 times, 0.40%)
+### 5️⃣ #5: 11-6-0 (2,505 times, 🔴 <span class='prob-low'>25.1%</span>)
 
-**Example game outcomes:**
-- ✗ vs Giants
-- ○ vs Commanders
-- ✓ @ Seahawks
-- ✗ @ Rams
-- ✓ vs Cardinals
-- ✓ vs Broncos
+**🎬 Example game outcomes:**
+- ✅ vs Giants
+- ❌ vs Commanders
+- ✅ @ Seahawks
+- ❌ @ Rams
+- ✅ vs Cardinals
+- ✅ vs Broncos
 
-**Playoff chances with this record:** 100.0%
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>99.5%</span>

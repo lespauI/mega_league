@@ -140,6 +140,17 @@ def run_team_scenarios(team_name, teams_info, stats, sos_data, games, num_simula
         'num_simulations': num_simulations
     }
 
+def format_prob(value, include_emoji=False):
+    if value >= 60:
+        emoji = "🟢 " if include_emoji else ""
+        return f"{emoji}<span class='prob-high'>{value:.1f}%</span>"
+    elif value < 40:
+        emoji = "🔴 " if include_emoji else ""
+        return f"{emoji}<span class='prob-low'>{value:.1f}%</span>"
+    else:
+        emoji = "🟡 " if include_emoji else ""
+        return f"{emoji}<span class='prob-medium'>{value:.1f}%</span>"
+
 def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_simulations=10000):
     conf = teams_info[team_name]['conference']
     div = teams_info[team_name]['division']
@@ -158,39 +169,49 @@ def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_
                            key=lambda x: (-int(x[0].split('-')[0]), int(x[0].split('-')[1])))
     
     md = []
-    md.append(f"# Monte Carlo Scenario Report: {team_name}\n")
-    md.append(f"**Conference:** {conf}  ")
-    md.append(f"**Division:** {div}  ")
-    md.append(f"**Current Record:** {current_record}  ")
-    md.append(f"**Win %:** {stats[team_name]['win_pct']:.3f}  ")
-    md.append(f"**Simulations:** {num_simulations:,}\n")
+    md.append(f"# 🏈 Monte Carlo Scenario Report: {team_name}\n")
+    md.append(f"**📍 Conference:** {conf}  ")
+    md.append(f"**🏆 Division:** {div}  ")
+    md.append(f"**📊 Current Record:** {current_record}  ")
+    md.append(f"**📈 Win %:** {stats[team_name]['win_pct']:.3f}  ")
+    md.append(f"**🎲 Simulations:** {num_simulations:,}\n")
     
     md.append("---\n")
-    md.append("## Remaining Games & Win Probabilities\n")
+    md.append("## 📅 Remaining Games & Win Probabilities\n")
     
     if not remaining_games:
-        md.append("*No remaining games - season complete!*\n")
+        md.append("*✅ No remaining games - season complete!*\n")
     else:
         md.append("| Week | Opponent | Location | Win % | Tie % | Loss % |")
         md.append("|------|----------|----------|-------|-------|--------|")
         for gp in game_probs:
-            location = "HOME" if gp['is_home'] else "AWAY"
-            md.append(f"| {gp['week']} | {gp['opponent']} | {location} | {gp['win_prob']:.1f}% | {gp['tie_prob']:.1f}% | {gp['loss_prob']:.1f}% |")
+            location = "🏠 HOME" if gp['is_home'] else "✈️ AWAY"
+            win_formatted = format_prob(gp['win_prob'])
+            tie_formatted = f"<span class='prob-tie'>{gp['tie_prob']:.1f}%</span>"
+            loss_formatted = format_prob(100 - gp['win_prob'] - gp['tie_prob'])
+            md.append(f"| {gp['week']} | {gp['opponent']} | {location} | {win_formatted} | {tie_formatted} | {loss_formatted} |")
         md.append("")
     
     md.append("---\n")
-    md.append("## Most Probable Outcome\n")
-    md.append(f"**Final Record:** {most_likely_record}  ")
-    md.append(f"**Probability:** {most_likely_pct:.2f}% ({most_likely_count:,}/{num_simulations:,} simulations)\n")
+    md.append("## 🎯 Most Probable Outcome\n")
+    md.append(f"**📌 Final Record:** {most_likely_record}  ")
+    md.append(f"**🎲 Probability:** {format_prob(most_likely_pct, True)} ({most_likely_count:,}/{num_simulations:,} simulations)\n")
     
     matching_scenarios = [s for s in results['scenarios'] if s['record'] == most_likely_record]
     if matching_scenarios and matching_scenarios[0]['game_outcomes']:
-        md.append("### Example of how this happens:\n")
+        md.append("### 🎬 Example of how this happens:\n")
         for go in matching_scenarios[0]['game_outcomes']:
             location = "vs" if go['is_home'] else "@"
-            outcome_symbol = "✓" if go['outcome'] == 'W' else ("○" if go['outcome'] == 'T' else "✗")
-            outcome_text = "WIN" if go['outcome'] == 'W' else ("TIE" if go['outcome'] == 'T' else "LOSS")
-            md.append(f"- {outcome_symbol} {location} {go['opponent']} ({outcome_text})")
+            if go['outcome'] == 'W':
+                outcome_symbol = "✅"
+                outcome_text = "WIN"
+            elif go['outcome'] == 'T':
+                outcome_symbol = "🟡"
+                outcome_text = "TIE"
+            else:
+                outcome_symbol = "❌"
+                outcome_text = "LOSS"
+            md.append(f"- {outcome_symbol} {location} {go['opponent']} **({outcome_text})**")
         md.append("")
     
     playoff_count = results['playoff_by_record'][most_likely_record]
@@ -201,13 +222,13 @@ def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_
     division_pct_for_record = (division_count / most_likely_count * 100) if most_likely_count > 0 else 0
     bye_pct_for_record = (bye_count / most_likely_count * 100) if most_likely_count > 0 else 0
     
-    md.append(f"**With this {most_likely_record} record:**")
-    md.append(f"- Make Playoffs: **{playoff_pct_for_record:.1f}%**")
-    md.append(f"- Win Division: **{division_pct_for_record:.1f}%**")
-    md.append(f"- Earn Bye: **{bye_pct_for_record:.1f}%**\n")
+    md.append(f"**🎲 With this {most_likely_record} record:**")
+    md.append(f"- 🏆 Make Playoffs: {format_prob(playoff_pct_for_record, True)}")
+    md.append(f"- 👑 Win Division: {format_prob(division_pct_for_record, True)}")
+    md.append(f"- 🎫 Earn Bye: {format_prob(bye_pct_for_record, True)}\n")
     
     md.append("---\n")
-    md.append("## Overall Probabilities\n")
+    md.append("## 📊 Overall Probabilities\n")
     
     total_playoff = sum(results['playoff_by_record'].values())
     total_division = sum(results['division_by_record'].values())
@@ -217,12 +238,12 @@ def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_
     division_prob = (total_division / num_simulations) * 100
     bye_prob = (total_bye / num_simulations) * 100
     
-    md.append(f"- **Make Playoffs:** {playoff_prob:.2f}% ({total_playoff:,}/{num_simulations:,} simulations)")
-    md.append(f"- **Win Division:** {division_prob:.2f}% ({total_division:,}/{num_simulations:,} simulations)")
-    md.append(f"- **Earn Bye:** {bye_prob:.2f}% ({total_bye:,}/{num_simulations:,} simulations)\n")
+    md.append(f"- **🏆 Make Playoffs:** {format_prob(playoff_prob, True)} ({total_playoff:,}/{num_simulations:,} simulations)")
+    md.append(f"- **👑 Win Division:** {format_prob(division_prob, True)} ({total_division:,}/{num_simulations:,} simulations)")
+    md.append(f"- **🎫 Earn Bye:** {format_prob(bye_prob, True)} ({total_bye:,}/{num_simulations:,} simulations)\n")
     
     md.append("---\n")
-    md.append("## All Scenario Outcomes\n")
+    md.append("## 📋 All Scenario Outcomes\n")
     md.append("| Final Record | Frequency | % | Playoff % | Division % | Bye % |")
     md.append("|--------------|-----------|---|-----------|------------|-------|")
     
@@ -232,33 +253,40 @@ def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_
         division_pct = (results['division_by_record'][record] / count * 100) if count > 0 else 0
         bye_pct = (results['bye_by_record'][record] / count * 100) if count > 0 else 0
         
-        md.append(f"| {record} | {count:,} | {freq_pct:.2f}% | {playoff_pct:.1f}% | {division_pct:.1f}% | {bye_pct:.1f}% |")
+        freq_formatted = format_prob(freq_pct) if freq_pct >= 5 else f"<span class='prob-verylow'>{freq_pct:.2f}%</span>"
+        md.append(f"| {record} | {count:,} | {freq_formatted} | {format_prob(playoff_pct)} | {format_prob(division_pct)} | {format_prob(bye_pct)} |")
     
     md.append("")
     md.append("---\n")
-    md.append("## Top 5 Most Common Scenarios\n")
+    md.append("## 🔥 Top 5 Most Common Scenarios\n")
     
     top_scenarios = sorted_records[:5]
     
     for i, (record, count) in enumerate(top_scenarios, 1):
         freq_pct = (count / num_simulations) * 100
-        md.append(f"### #{i}: {record} ({count:,} times, {freq_pct:.2f}%)\n")
+        emoji_rank = ["🥇", "🥈", "🥉", "4️⃣", "5️⃣"][i-1]
+        md.append(f"### {emoji_rank} #{i}: {record} ({count:,} times, {format_prob(freq_pct, True)})\n")
         
         matching_scenarios = [s for s in results['scenarios'] if s['record'] == record]
         if matching_scenarios:
             example = matching_scenarios[0]
             
             if example['game_outcomes']:
-                md.append("**Example game outcomes:**")
+                md.append("**🎬 Example game outcomes:**")
                 for go in example['game_outcomes']:
                     location = "vs" if go['is_home'] else "@"
-                    outcome_symbol = "✓" if go['outcome'] == 'W' else ("○" if go['outcome'] == 'T' else "✗")
+                    if go['outcome'] == 'W':
+                        outcome_symbol = "✅"
+                    elif go['outcome'] == 'T':
+                        outcome_symbol = "🟡"
+                    else:
+                        outcome_symbol = "❌"
                     md.append(f"- {outcome_symbol} {location} {go['opponent']}")
                 md.append("")
             
             playoff_count = results['playoff_by_record'][record]
             playoff_pct_for_record = (playoff_count / count * 100) if count > 0 else 0
-            md.append(f"**Playoff chances with this record:** {playoff_pct_for_record:.1f}%\n")
+            md.append(f"**🏆 Playoff chances with this record:** {format_prob(playoff_pct_for_record, True)}\n")
     
     return "\n".join(md)
 
