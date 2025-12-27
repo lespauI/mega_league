@@ -444,6 +444,16 @@ def calculate_playoff_probability_simulation(team_name, teams_info, stats, sos_d
         'bye_probability': bye_probability
     }
 
+def cap_probability(raw_probability, remaining_games):
+    """Cap simulation probabilities to avoid false 100%/0% unless season is complete."""
+    if remaining_games == 0:
+        return raw_probability
+    if raw_probability >= 100:
+        return 99.9
+    if raw_probability <= 0:
+        return 0.1
+    return raw_probability
+
 def main():
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
@@ -463,6 +473,7 @@ def main():
         for i, team in enumerate(conf_teams, 1):
             print(f"  [{i}/{len(conf_teams)}] Simulating {team}...")
             prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=1000)
+            remaining_games = int(sos_data[team]['remaining_games']) if team in sos_data else 4
             results[team] = {
                 'conference': conf,
                 'division': teams_info[team]['division'],
@@ -473,11 +484,11 @@ def main():
                 'division_pct': stats[team]['division_pct'],
                 'strength_of_victory': stats[team]['strength_of_victory'],
                 'strength_of_schedule': stats[team]['strength_of_schedule'],
-                'playoff_probability': round(prob_results['playoff_probability'], 1),
-                'division_win_probability': round(prob_results['division_probability'], 1),
-                'bye_probability': round(prob_results['bye_probability'], 1),
+                'playoff_probability': round(cap_probability(prob_results['playoff_probability'], remaining_games), 1),
+                'division_win_probability': round(cap_probability(prob_results['division_probability'], remaining_games), 1),
+                'bye_probability': round(cap_probability(prob_results['bye_probability'], remaining_games), 1),
                 'remaining_sos': float(sos_data[team]['ranked_sos_avg']) if team in sos_data else 0.5,
-                'remaining_games': int(sos_data[team]['remaining_games']) if team in sos_data else 4,
+                'remaining_games': remaining_games,
                 'past_sos': teams_info[team]['past_sos']
             }
     
