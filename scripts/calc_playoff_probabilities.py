@@ -7,6 +7,7 @@ import json
 import random
 
 DEFAULT_NUM_SIMULATIONS = 10000
+TIE_PROBABILITY = 0.003  # ~0.3% of NFL games end in ties
 
 def load_data():
     teams_info = {}
@@ -265,24 +266,43 @@ def simulate_remaining_games(teams_info, stats, sos_data, games):
         home_prob = max(0.25, min(0.75, home_prob))
         
         rand_val = random.random()
-        if rand_val < home_prob:
+        if rand_val < TIE_PROBABILITY:
+            tie_score = random.randint(10, 27)
+            simulated_games.append({
+                'home': home,
+                'away': away,
+                'is_tie': True,
+                'home_score': tie_score,
+                'away_score': tie_score
+            })
+        elif rand_val < TIE_PROBABILITY + home_prob * (1 - TIE_PROBABILITY):
             winner = home
             loser = away
+            winner_score = random.randint(17, 35)
+            loser_score = random.randint(7, winner_score - 1)
+            simulated_games.append({
+                'home': home,
+                'away': away,
+                'is_tie': False,
+                'winner': winner,
+                'loser': loser,
+                'winner_score': winner_score,
+                'loser_score': loser_score
+            })
         else:
             winner = away
             loser = home
-        
-        winner_score = random.randint(17, 35)
-        loser_score = random.randint(7, winner_score - 1)
-        
-        simulated_games.append({
-            'home': home,
-            'away': away,
-            'winner': winner,
-            'loser': loser,
-            'winner_score': winner_score,
-            'loser_score': loser_score
-        })
+            winner_score = random.randint(17, 35)
+            loser_score = random.randint(7, winner_score - 1)
+            simulated_games.append({
+                'home': home,
+                'away': away,
+                'is_tie': False,
+                'winner': winner,
+                'loser': loser,
+                'winner_score': winner_score,
+                'loser_score': loser_score
+            })
     
     return simulated_games
 
@@ -351,35 +371,57 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
     for game in simulated_games:
         home = game['home']
         away = game['away']
-        winner = game['winner']
-        loser = game['loser']
-        
-        sim_stats[winner]['W'] += 1
-        sim_stats[loser]['L'] += 1
-        sim_stats[winner]['head_to_head'][loser]['W'] += 1
-        sim_stats[loser]['head_to_head'][winner]['L'] += 1
-        sim_stats[winner]['defeated_opponents'].append(loser)
-        sim_stats[winner]['opponents'].append(loser)
-        sim_stats[loser]['opponents'].append(winner)
         
         home_conf = teams_info[home]['conference']
         away_conf = teams_info[away]['conference']
         home_div = teams_info[home]['division']
         away_div = teams_info[away]['division']
         
-        if home_conf == away_conf:
-            sim_stats[winner]['conference_W'] += 1
-            sim_stats[loser]['conference_L'] += 1
-            winner_score = game.get('winner_score', 0)
-            loser_score = game.get('loser_score', 0)
-            sim_stats[winner]['conference_points_for'] += winner_score
-            sim_stats[winner]['conference_points_against'] += loser_score
-            sim_stats[loser]['conference_points_for'] += loser_score
-            sim_stats[loser]['conference_points_against'] += winner_score
-        
-        if home_div == away_div:
-            sim_stats[winner]['division_W'] += 1
-            sim_stats[loser]['division_L'] += 1
+        if game.get('is_tie', False):
+            sim_stats[home]['T'] += 1
+            sim_stats[away]['T'] += 1
+            sim_stats[home]['head_to_head'][away]['T'] += 1
+            sim_stats[away]['head_to_head'][home]['T'] += 1
+            sim_stats[home]['opponents'].append(away)
+            sim_stats[away]['opponents'].append(home)
+            
+            if home_conf == away_conf:
+                sim_stats[home]['conference_T'] += 1
+                sim_stats[away]['conference_T'] += 1
+                tie_score = game.get('home_score', 0)
+                sim_stats[home]['conference_points_for'] += tie_score
+                sim_stats[home]['conference_points_against'] += tie_score
+                sim_stats[away]['conference_points_for'] += tie_score
+                sim_stats[away]['conference_points_against'] += tie_score
+            
+            if home_div == away_div:
+                sim_stats[home]['division_T'] += 1
+                sim_stats[away]['division_T'] += 1
+        else:
+            winner = game['winner']
+            loser = game['loser']
+            
+            sim_stats[winner]['W'] += 1
+            sim_stats[loser]['L'] += 1
+            sim_stats[winner]['head_to_head'][loser]['W'] += 1
+            sim_stats[loser]['head_to_head'][winner]['L'] += 1
+            sim_stats[winner]['defeated_opponents'].append(loser)
+            sim_stats[winner]['opponents'].append(loser)
+            sim_stats[loser]['opponents'].append(winner)
+            
+            if home_conf == away_conf:
+                sim_stats[winner]['conference_W'] += 1
+                sim_stats[loser]['conference_L'] += 1
+                winner_score = game.get('winner_score', 0)
+                loser_score = game.get('loser_score', 0)
+                sim_stats[winner]['conference_points_for'] += winner_score
+                sim_stats[winner]['conference_points_against'] += loser_score
+                sim_stats[loser]['conference_points_for'] += loser_score
+                sim_stats[loser]['conference_points_against'] += winner_score
+            
+            if home_div == away_div:
+                sim_stats[winner]['division_W'] += 1
+                sim_stats[loser]['division_L'] += 1
     
     for team in sim_stats:
         total = sim_stats[team]['W'] + sim_stats[team]['L'] + sim_stats[team]['T']

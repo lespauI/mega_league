@@ -132,7 +132,10 @@ Lines 360-366 update conference wins but don't update `conference_points_for/aga
 
 **Completed**: Added simulated scores to `simulate_remaining_games()` (winner_score: 17-35, loser_score: 7 to winner_score-1). Updated `determine_playoff_teams()` to copy `conference_points_for/against` from base stats and update them for conference games in simulation. This enables future tiebreaker enhancements that use net conference points.
 
-### [ ] Step: Consider tie games in simulation
+### [x] Step: Consider tie games in simulation
+<!-- chat-id: b767a797-5b97-488f-ae2b-fc7eded68f48 -->
 <!-- Priority: Low -->
 
 Real NFL has rare ties (~0.3% of games). Currently simulation only produces wins/losses. Add small probability for ties if desired for realism.
+
+**Completed**: Added `TIE_PROBABILITY = 0.003` (~0.3%) constant. Updated `simulate_remaining_games()` to randomly generate tie games with shared scores. Updated `determine_playoff_teams()` to properly handle tie games by incrementing tie counters for overall record, head-to-head, conference, and division stats.
