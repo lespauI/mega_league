@@ -625,6 +625,12 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Calculate NFL playoff probabilities using Monte Carlo simulation')
     parser.add_argument('-n', '--num-simulations', type=int, default=DEFAULT_NUM_SIMULATIONS,
                         help=f'Number of simulations to run (default: {DEFAULT_NUM_SIMULATIONS})')
+    parser.add_argument('-s', '--seed', type=int, default=None,
+                        help='Random seed for reproducible results (default: None)')
     args = parser.parse_args()
+    
+    if args.seed is not None:
+        random.seed(args.seed)
+        print(f"Using random seed: {args.seed}")
     
     main(num_simulations=args.num_simulations)

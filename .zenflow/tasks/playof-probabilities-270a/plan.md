@@ -116,10 +116,13 @@ Replace hardcoded `num_simulations=1000` with configurable parameter. Consider i
 
 **Completed**: Added `argparse` support with `-n`/`--num-simulations` command-line argument. Default increased from 1,000 to 10,000 simulations for better statistical precision. Usage: `python3 scripts/calc_playoff_probabilities.py -n 5000`
 
-### [ ] Step: Add random seed for reproducibility
+### [x] Step: Add random seed for reproducibility
+<!-- chat-id: 9cacc604-a8ea-463b-bada-c7002ee2830b -->
 <!-- Priority: Low -->
 
 Add optional `random.seed()` parameter for debugging and reproducible results.
+
+**Completed**: Added `-s`/`--seed` command-line argument. When provided, sets `random.seed()` before running simulations for reproducible results. Usage: `python3 scripts/calc_playoff_probabilities.py -s 42`
 
 ### [ ] Step: Track conference points in simulation
 <!-- Priority: Low -->
