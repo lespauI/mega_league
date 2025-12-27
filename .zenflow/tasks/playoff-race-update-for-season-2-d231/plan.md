@@ -77,3 +77,13 @@ Modify data loading functions:
 Document what was implemented, how it was tested, and any issues encountered in `report.md`.
 
 **Completed**: Created `report.md` documenting all changes to `calc_playoff_probabilities.py` and `calc_sos_by_rankings.py`, verification results, and testing approach.
+
+### [x] Step: Run scripts to recalculate probabilities
+<!-- chat-id: b1239893-eaca-45ee-8f80-b597b91ce8a6 -->
+
+Run scripts for season 2 and check the data is correct, and we dont have any bugs
+
+**Completed**: Ran `python3 scripts/run_all_playoff_analysis.py` successfully. Verified:
+- 272 Season 2 regular season games (179 completed, 92 pending in weeks 12-17)
+- Team records match raw CSV data (Broncos 9-2, Browns 9-2, Bengals 9-3)
+- All output files generated: playoff_probabilities.json, playoff_race.html, playoff_race_table.html, draft_race files

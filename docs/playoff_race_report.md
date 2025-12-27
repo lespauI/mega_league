@@ -13,15 +13,15 @@
 - **Seed 4:** Patriots (7-4) - East | Playoff: 99.5% | SOS: 0.539
 
 **Wild Card Race:**
-- **Seed 5:** Bengals (9-3) | Playoff: 99.5% | SOS: 0.534
-- **Seed 6:** Bills (7-4) | Playoff: 86.0% | SOS: 0.495
-- **Seed 7:** Titans (6-5) | Playoff: 56.1% | SOS: 0.504
-- **Seed 8:** Raiders (6-6) | Playoff: 38.0% | SOS: 0.507
-- **Seed 9:** Colts (5-6) | Playoff: 22.6% | SOS: 0.442
+- **Seed 5:** Bengals (9-3) | Playoff: 99.3% | SOS: 0.534
+- **Seed 6:** Bills (7-4) | Playoff: 87.1% | SOS: 0.495
+- **Seed 7:** Titans (6-5) | Playoff: 54.9% | SOS: 0.504
+- **Seed 8:** Raiders (6-6) | Playoff: 35.5% | SOS: 0.507
+- **Seed 9:** Colts (5-6) | Playoff: 22.4% | SOS: 0.442
 
 **On the Bubble:**
-- **10.** Steelers (5-6) | Playoff: 17.8% | SOS: 0.513
-- **11.** Chiefs (5-7) | Playoff: 9.6% | SOS: 0.514
+- **10.** Steelers (5-6) | Playoff: 15.6% | SOS: 0.513
+- **11.** Chiefs (5-7) | Playoff: 9.2% | SOS: 0.514
 - **12.** Texans (4-7) | Playoff: 2.4% | SOS: 0.526
 
 ### NFC Playoff Standings
@@ -33,16 +33,16 @@
 - **Seed 4:** Saints (7-5) - South | Playoff: 99.5% | SOS: 0.477
 
 **Wild Card Race:**
-- **Seed 5:** Cowboys (8-3) | Playoff: 95.5% | SOS: 0.470
-- **Seed 6:** Rams (8-3) | Playoff: 83.2% | SOS: 0.595
-- **Seed 7:** 49ers (7-4) | Playoff: 62.6% | SOS: 0.577
-- **Seed 8:** Bears (7-5) | Playoff: 57.6% | SOS: 0.439
-- **Seed 9:** Panthers (6-5) | Playoff: 29.2% | SOS: 0.514
+- **Seed 5:** Cowboys (8-3) | Playoff: 94.9% | SOS: 0.470
+- **Seed 6:** Rams (8-3) | Playoff: 80.7% | SOS: 0.595
+- **Seed 7:** 49ers (7-4) | Playoff: 61.9% | SOS: 0.577
+- **Seed 8:** Bears (7-5) | Playoff: 59.3% | SOS: 0.439
+- **Seed 9:** Panthers (6-5) | Playoff: 30.2% | SOS: 0.514
 
 **On the Bubble:**
-- **10.** Falcons (6-5) | Playoff: 33.8% | SOS: 0.602
-- **11.** Commanders (5-6) | Playoff: 6.7% | SOS: 0.550
-- **12.** Vikings (4-7) | Playoff: 0.9% | SOS: 0.508
+- **10.** Falcons (6-5) | Playoff: 33.3% | SOS: 0.602
+- **11.** Commanders (5-6) | Playoff: 6.1% | SOS: 0.550
+- **12.** Vikings (4-7) | Playoff: 0.6% | SOS: 0.508
 
 ---
 
@@ -59,9 +59,9 @@
 
 Three teams at 8-5, one at 7-6. Anyone can win this division:
 
-- **Saints** (7-5): Playoff 60.0% | SOS 0.477
-- **Panthers** (6-5): Playoff 29.2% | SOS 0.514
-- **Falcons** (6-5): Playoff 33.8% | SOS 0.602
+- **Saints** (7-5): Playoff 62.4% | SOS 0.477
+- **Panthers** (6-5): Playoff 30.2% | SOS 0.514
+- **Falcons** (6-5): Playoff 33.3% | SOS 0.602
 - **Buccaneers** (0-11): Playoff 0.0% | SOS 0.529
 
 **Analysis:** Falcons (0.433) vs Saints (0.612) - massive 0.179 SOS gap could flip the division!
