@@ -108,10 +108,13 @@ Division and bye probabilities shouldn't use same `certainty` status as playoff 
 
 **Completed**: Added `cap_simulation_probability()` function that caps division/bye probabilities at 99.9%/0.1% without using playoff certainty status. Division and bye probabilities now only get simulation-based capping (preventing false 100%/0%) while playoff probability continues to use mathematical certainty detection.
 
-### [ ] Step: Add configurable simulation count
+### [x] Step: Add configurable simulation count
+<!-- chat-id: 12a4f52b-a0ef-4ed6-9985-26c05c0cd22b -->
 <!-- Priority: Medium -->
 
 Replace hardcoded `num_simulations=1000` with configurable parameter. Consider increasing default to 10,000 for better statistical precision.
+
+**Completed**: Added `argparse` support with `-n`/`--num-simulations` command-line argument. Default increased from 1,000 to 10,000 simulations for better statistical precision. Usage: `python3 scripts/calc_playoff_probabilities.py -n 5000`
 
 ### [ ] Step: Add random seed for reproducibility
 <!-- Priority: Low -->

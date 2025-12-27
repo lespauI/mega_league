@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import itertools
 from collections import defaultdict
 import json
 import random
+
+DEFAULT_NUM_SIMULATIONS = 10000
 
 def load_data():
     teams_info = {}
@@ -547,14 +550,14 @@ def cap_simulation_probability(raw_probability):
         return 0.1
     return raw_probability
 
-def main():
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
     
     print("\n" + "="*80)
     print("SIMULATING PLAYOFF SCENARIOS")
     print("="*80)
-    print("Running 1,000 simulations for each team's playoff chances...")
+    print(f"Running {num_simulations:,} simulations for each team's playoff chances...")
     print("Using 70/30 weighted rating (Win% + Past SoS)")
     print("No home field advantage (Madden game)\n")
     
@@ -566,7 +569,7 @@ def main():
         for i, team in enumerate(conf_teams, 1):
             print(f"  [{i}/{len(conf_teams)}] Simulating {team}...")
             certainty = check_mathematical_certainty(team, teams_info, stats, games)
-            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=1000)
+            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=num_simulations)
             remaining_games = int(sos_data[team]['remaining_games']) if team in sos_data else 4
             results[team] = {
                 'conference': conf,
@@ -594,7 +597,7 @@ def main():
     print("\n" + "="*80)
     print("PLAYOFF PROBABILITY CALCULATION COMPLETE!")
     print("="*80)
-    print("\nUsing Monte Carlo simulation (1,000 iterations per team)")
+    print(f"\nUsing Monte Carlo simulation ({num_simulations:,} iterations per team)")
     print("Features:")
     print("  ✓ 70% weight on Win Percentage + 30% weight on Past SoS")
     print("  ✓ Removed home field advantage (Madden game)")
@@ -618,4 +621,10 @@ def main():
 if __name__ == "__main__":
     import os
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    main()
+    
+    parser = argparse.ArgumentParser(description='Calculate NFL playoff probabilities using Monte Carlo simulation')
+    parser.add_argument('-n', '--num-simulations', type=int, default=DEFAULT_NUM_SIMULATIONS,
+                        help=f'Number of simulations to run (default: {DEFAULT_NUM_SIMULATIONS})')
+    args = parser.parse_args()
+    
+    main(num_simulations=args.num_simulations)
