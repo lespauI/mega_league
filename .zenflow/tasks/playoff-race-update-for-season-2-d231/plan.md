@@ -29,13 +29,16 @@ See `spec.md` for full specification.
 
 ---
 
-### [ ] Step: Update calc_playoff_probabilities.py
+### [x] Step: Update calc_playoff_probabilities.py
+<!-- chat-id: 2d2433a3-159c-401f-889f-ebfbc52693ad -->
 
 Modify `load_data()` function to filter games by:
 - `seasonIndex=1` (Season 2)
 - `stageIndex=1` (Regular season only)
 
 **Verification**: Run script and confirm team records match Season 2 data.
+
+**Completed**: Added filters at lines 23-26 to skip games where `seasonIndex != 1` or `stageIndex != 1`. Verified: 272 Season 2 games loaded (179 completed, 93 pending).
 
 ---
 
