@@ -139,6 +139,7 @@ def read_teams_info(teams_csv_path):
                 "conference": (row.get("conferenceName") or "").strip(),
                 "W": to_int0(row.get("totalWins")),
                 "L": to_int0(row.get("totalLosses")),
+                "T": to_int0(row.get("totalTies")),
             }
     return info
 
@@ -184,6 +185,7 @@ def compute_ranked_sos(teams_info, strength_scores, remaining_games, past_games)
                 "conference": meta.get("conference", ""),
                 "W": meta.get("W", 0),
                 "L": meta.get("L", 0),
+                "T": meta.get("T", 0),
                 "remaining_games": len(rem),
                 "ranked_sos_avg": round(ranked_sos_avg, 4),
                 "ranked_sos_sum": round(ranked_sos_sum, 4),
@@ -205,6 +207,7 @@ def write_output(results, output_path):
         "conference",
         "W",
         "L",
+        "T",
         "remaining_games",
         "ranked_sos_avg",
         "ranked_sos_sum",
@@ -241,7 +244,7 @@ def main():
         top5 = sorted(by_conf[conf], key=lambda x: -x["ranked_sos_avg"])[:5]
         for row in top5:
             print(
-                f"  {row['team']} (record {row['W']}-{row['L']}): "
+                f"  {row['team']} (record {row['W']}-{row['L']}-{row['T']}): "
                 f"games={row['remaining_games']}, avg={row['ranked_sos_avg']}, sum={row['ranked_sos_sum']}, "
                 f"past_avg={row['past_ranked_sos_avg']}, total_sum={row['total_ranked_sos']}"
             )

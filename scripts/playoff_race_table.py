@@ -50,6 +50,7 @@ def read_standings():
         conf = row['conference']
         w = int(row['W'])
         l = int(row['L'])
+        t = int(row.get('T', 0))
         
         if team in teams_div:
             div = teams_div[team]['division']
@@ -70,7 +71,8 @@ def read_standings():
                 'team': team,
                 'W': w,
                 'L': l,
-                'win_pct': w / (w + l) if (w + l) > 0 else 0,
+                'T': t,
+                'win_pct': (w + 0.5 * t) / (w + l + t) if (w + l + t) > 0 else 0,
                 'remaining_sos': float(row['ranked_sos_avg']),
                 'remaining_games': int(row['remaining_games']),
                 'logo_url': teams_div[team]['logo_url'],
@@ -121,12 +123,15 @@ def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, 
 def get_playoff_tooltip(playoff_prob, team_name, team_data):
     wins = team_data['W']
     losses = team_data['L']
+    ties = team_data['T']
     remaining = team_data['remaining_games']
+    
+    record_str = f"{wins}-{losses}-{ties}" if ties > 0 else f"{wins}-{losses}"
     
     return f'''<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: {playoff_prob:.0f}%</strong><br><br>
         Рассчитано методом Монте-Карло (1000 симуляций):<br>
-        • Текущий счёт: {wins}-{losses}<br>
+        • Текущий счёт: {record_str}<br>
         • Осталось игр: {remaining}<br>
         • В {playoff_prob:.0f}% симуляций команда попала в топ-7 конференции<br><br>
         Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
@@ -137,16 +142,20 @@ def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
     position = div_teams.index(team) + 1
     wins = team['W']
     losses = team['L']
+    ties = team['T']
+    
+    record_str = f"{wins}-{losses}-{ties}" if ties > 0 else f"{wins}-{losses}"
     
     leader = div_teams[0]
     leader_name = leader['team']
     leader_prob = probabilities.get(leader_name, {}).get('division_win_probability', 0)
+    leader_record_str = f"{leader['W']}-{leader['L']}-{leader['T']}" if leader['T'] > 0 else f"{leader['W']}-{leader['L']}"
     
     if position == 1:
         return f'''<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: {div_prob:.0f}%</strong><br><br>
             Рассчитано методом Монте-Карло (1000 симуляций):<br>
-            • Текущий счёт: {wins}-{losses}<br>
+            • Текущий счёт: {record_str}<br>
             • Лидер дивизиона<br>
             • В {div_prob:.0f}% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
@@ -156,8 +165,8 @@ def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
         return f'''<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: {div_prob:.0f}%</strong><br><br>
             Рассчитано методом Монте-Карло (1000 симуляций):<br>
-            • Текущий счёт: {wins}-{losses}<br>
-            • Лидер: {leader_name} ({leader['W']}-{leader['L']}, {leader_prob:.0f}%)<br>
+            • Текущий счёт: {record_str}<br>
+            • Лидер: {leader_name} ({leader_record_str}, {leader_prob:.0f}%)<br>
             • В {div_prob:.0f}% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div>'''
@@ -716,10 +725,12 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 bye_tooltip = get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities)
                 sb_tooltip = get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed)
                 
+                record_display = f'{team_data["W"]}-{team_data["L"]}-{team_data["T"]}' if team_data["T"] > 0 else f'{team_data["W"]}-{team_data["L"]}'
+                
                 html.append(f'                    <tr class="{row_class}">')
                 html.append(f'                        <td class="div-cell">{div_short if idx == 0 else ""}</td>')
                 html.append(f'                        <td><div class="team-cell">{logo_html}<span>{team_name}{status}</span></div></td>')
-                html.append(f'                        <td class="record-cell">{team_data["W"]}-{team_data["L"]}</td>')
+                html.append(f'                        <td class="record-cell">{record_display}</td>')
                 html.append(f'                        <td class="record-cell"><span class="{sos_badge_class}">{sos:.3f}{tooltip_html}</span></td>')
                 html.append(f'                        <td class="prob-cell {get_prob_class(playoff_prob)}"><span class="prob-wrapper">{playoff_prob:.0f}%{playoff_tooltip}</span></td>')
                 html.append(f'                        <td class="prob-cell {get_prob_class(div_prob)}"><span class="prob-wrapper">{div_prob:.0f}%{div_tooltip}</span></td>')

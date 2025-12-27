@@ -47,6 +47,7 @@ def read_standings():
         conf = row['conference']
         w = int(row['W'])
         l = int(row['L'])
+        t = int(row.get('T', 0))
         
         if team in teams_div:
             div = teams_div[team]['division']
@@ -67,7 +68,8 @@ def read_standings():
                 'team': team,
                 'W': w,
                 'L': l,
-                'win_pct': w / (w + l) if (w + l) > 0 else 0,
+                'T': t,
+                'win_pct': (w + 0.5 * t) / (w + l + t) if (w + l + t) > 0 else 0,
                 'remaining_sos': float(row['ranked_sos_avg']),
                 'past_sos': float(row['past_ranked_sos_avg']),
                 'total_sos': float(row['total_ranked_sos']),
@@ -401,12 +403,14 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
             playoff_chance = team.get('playoff_chance', 50)
             
             html.append(f'                <div class="playoff-team {seed_class}">')
+            record_display = f'{team["W"]}-{team["L"]}-{team["T"]}' if team["T"] > 0 else f'{team["W"]}-{team["L"]}'
+            
             html.append(f'                    <div class="team-header">')
             html.append(f'                        <div>')
             html.append(f'                            <span class="seed-badge {badge_class}">{badge_text}</span>')
             html.append(f'                            <span class="team-name">{team["team"]}</span>')
             html.append(f'                        </div>')
-            html.append(f'                        <span class="team-record">{team["W"]}-{team["L"]}</span>')
+            html.append(f'                        <span class="team-record">{record_display}</span>')
             html.append(f'                    </div>')
             html.append(f'                    <div class="team-details">')
             html.append(f'                        <span>Playoff Chance: {playoff_chance}%</span>')
@@ -483,13 +487,15 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         
         expected_final_losses = team['L'] + (team['remaining_games'] * team['remaining_sos'])
         
+        record_display = f'{team["W"]}-{team["L"]}-{team["T"]}' if team["T"] > 0 else f'{team["W"]}-{team["L"]}'
+        
         html.append(f'                <div class="playoff-team {pick_class}">')
         html.append(f'                    <div class="team-header">')
         html.append(f'                        <div>')
         html.append(f'                            <span class="seed-badge {badge_class}">Пик {i}</span>')
         html.append(f'                            <span class="team-name">{team["team"]}</span>')
         html.append(f'                        </div>')
-        html.append(f'                        <span class="team-record">{team["W"]}-{team["L"]}</span>')
+        html.append(f'                        <span class="team-record">{record_display}</span>')
         html.append(f'                    </div>')
         html.append(f'                    <div class="team-details">')
         html.append(f'                        <span>{team["conf"]}</span>')
@@ -675,19 +681,22 @@ def create_markdown_report(afc_leaders, afc_wc, nfc_leaders, nfc_wc):
     report.append("**Division Leaders:**")
     for i, team in enumerate(afc_leaders[:4], 1):
         div_short = team['division'].replace('AFC ', '')
-        report.append(f"- **Seed {i}:** {team['team']} ({team['W']}-{team['L']}) - {div_short} | Playoff: 99.5% | SOS: {team['remaining_sos']:.3f}")
+        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
+        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) - {div_short} | Playoff: 99.5% | SOS: {team['remaining_sos']:.3f}")
     
     report.append("")
     report.append("**Wild Card Race:**")
     for i, team in enumerate(afc_wc[:5], 5):
         chance = team.get('playoff_chance', 50)
-        report.append(f"- **Seed {i}:** {team['team']} ({team['W']}-{team['L']}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
+        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
+        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
     
     report.append("")
     report.append("**On the Bubble:**")
     for i, team in enumerate(afc_wc[5:8], 10):
         chance = team.get('playoff_chance', 50)
-        report.append(f"- **{i}.** {team['team']} ({team['W']}-{team['L']}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
+        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
+        report.append(f"- **{i}.** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
     
     report.append("")
     report.append("### NFC Playoff Standings")
@@ -695,19 +704,22 @@ def create_markdown_report(afc_leaders, afc_wc, nfc_leaders, nfc_wc):
     report.append("**Division Leaders:**")
     for i, team in enumerate(nfc_leaders[:4], 1):
         div_short = team['division'].replace('NFC ', '')
-        report.append(f"- **Seed {i}:** {team['team']} ({team['W']}-{team['L']}) - {div_short} | Playoff: 99.5% | SOS: {team['remaining_sos']:.3f}")
+        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
+        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) - {div_short} | Playoff: 99.5% | SOS: {team['remaining_sos']:.3f}")
     
     report.append("")
     report.append("**Wild Card Race:**")
     for i, team in enumerate(nfc_wc[:5], 5):
         chance = team.get('playoff_chance', 50)
-        report.append(f"- **Seed {i}:** {team['team']} ({team['W']}-{team['L']}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
+        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
+        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
     
     report.append("")
     report.append("**On the Bubble:**")
     for i, team in enumerate(nfc_wc[5:8], 10):
         chance = team.get('playoff_chance', 50)
-        report.append(f"- **{i}.** {team['team']} ({team['W']}-{team['L']}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
+        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
+        report.append(f"- **{i}.** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
     
     report.append("")
     report.append("---")
