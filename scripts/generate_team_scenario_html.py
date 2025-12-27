@@ -5,11 +5,15 @@ import json
 def main():
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
-    from calc_playoff_probabilities import load_data
-    teams_info, _, _ = load_data()
+    with open('output/team_scenarios.json', 'r', encoding='utf-8') as f:
+        team_data = json.load(f)
     
-    afc_teams = sorted([t for t in teams_info if teams_info[t]['conference'] == 'AFC'])
-    nfc_teams = sorted([t for t in teams_info if teams_info[t]['conference'] == 'NFC'])
+    teams_by_conference = {'AFC': [], 'NFC': []}
+    for team_name, info in team_data['teams'].items():
+        teams_by_conference[info['conference']].append(team_name)
+    
+    afc_teams = sorted(teams_by_conference['AFC'])
+    nfc_teams = sorted(teams_by_conference['NFC'])
     
     team_colors = {
         '49ers': '#AA0000', 'Bears': '#0B162A', 'Bengals': '#FB4F14', 'Bills': '#00338D',
@@ -33,498 +37,298 @@ def main():
         'Steelers': 'PIT', 'Texans': 'HOU', 'Titans': 'TEN', 'Vikings': 'MIN'
     }
     
-    html = '''<!DOCTYPE html>
+    num_simulations = team_data.get('num_simulations', 10000)
+    generated_at = team_data.get('generated_at', '')
+    
+    html = f'''<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NFL Playoff Scenarios - Monte Carlo Analysis</title>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
-        * {
+        * {{
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
+        }}
         
-        :root {
+        :root {{
             --primary: #2563eb;
-            --secondary: #7c3aed;
             --success: #10b981;
             --warning: #f59e0b;
             --danger: #ef4444;
-            --dark: #1e293b;
             --gray-50: #f8fafc;
             --gray-100: #f1f5f9;
             --gray-200: #e2e8f0;
-            --gray-300: #cbd5e1;
             --gray-600: #475569;
-            --gray-700: #334155;
             --gray-800: #1e293b;
             --gray-900: #0f172a;
-        }
+        }}
         
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f1f5f9;
             min-height: 100vh;
             padding: 20px;
             line-height: 1.6;
-        }
+        }}
         
-        .container {
-            max-width: 1400px;
+        .container {{
+            max-width: 1200px;
             margin: 0 auto;
-        }
+        }}
         
-        .header {
-            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-            border-radius: 16px;
-            padding: 40px;
-            margin-bottom: 24px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            color: white;
-        }
-        
-        .header h1 {
-            font-size: 3em;
-            font-weight: 800;
-            margin-bottom: 12px;
-            background: linear-gradient(135deg, #60a5fa 0%, #a78bfa 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        
-        .header p {
-            font-size: 1.2em;
-            opacity: 0.9;
-        }
-        
-        .team-logo-header {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 24px;
-            padding: 20px;
-            background: white;
+        .header {{
+            background: var(--gray-800);
             border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-        }
-        
-        .team-logo {
-            width: 80px;
-            height: 80px;
-            object-fit: contain;
-            background: white;
-            border-radius: 50%;
-            padding: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        .team-logo-info {
-            flex: 1;
-        }
-        
-        .team-logo-info h2 {
-            font-size: 2em;
-            font-weight: 800;
-            color: var(--gray-900);
-            margin-bottom: 8px;
-        }
-        
-        .team-logo-info .team-subtitle {
-            font-size: 1.1em;
-            color: var(--gray-600);
-            font-weight: 500;
-        }
-        
-        .selector-container {
-            background: white;
-            border-radius: 16px;
             padding: 32px;
-            margin-bottom: 24px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-        }
+            margin-bottom: 20px;
+            color: white;
+        }}
         
-        .selector-label {
-            display: block;
-            color: var(--gray-800);
+        .header h1 {{
+            font-size: 2em;
             font-weight: 700;
-            font-size: 1.2em;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
+            margin-bottom: 8px;
+        }}
         
-        .team-select {
-            width: 100%;
-            padding: 16px 20px;
-            font-size: 1.2em;
-            font-weight: 600;
-            border: 3px solid var(--gray-200);
-            border-radius: 12px;
-            background: var(--gray-50);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            color: var(--gray-800);
-        }
+        .header p {{
+            opacity: 0.8;
+        }}
         
-        .team-select:hover {
-            border-color: var(--primary);
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
-        }
-        
-        .team-select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
-        }
-        
-        .stats-overview {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 24px;
-        }
-        
-        .stat-card {
+        .selector-container {{
             background: white;
             border-radius: 12px;
             padding: 24px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-left: 5px solid var(--primary);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
         
-        .stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
-        }
-        
-        .stat-label {
-            font-size: 0.9em;
-            color: var(--gray-600);
+        .selector-label {{
+            display: block;
             font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--gray-800);
+        }}
+        
+        .team-select {{
+            width: 100%;
+            padding: 12px 16px;
+            font-size: 1.1em;
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            background: var(--gray-50);
+            cursor: pointer;
+        }}
+        
+        .team-select:focus {{
+            outline: none;
+            border-color: var(--primary);
+        }}
+        
+        .team-header {{
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
+        
+        .team-logo {{
+            width: 64px;
+            height: 64px;
+            object-fit: contain;
+        }}
+        
+        .team-info h2 {{
+            font-size: 1.5em;
+            color: var(--gray-900);
+        }}
+        
+        .team-info .subtitle {{
+            color: var(--gray-600);
+        }}
+        
+        .stats-grid {{
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 20px;
+        }}
+        
+        .stat-card {{
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid var(--primary);
+        }}
+        
+        .stat-label {{
+            font-size: 0.85em;
+            color: var(--gray-600);
+            font-weight: 500;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            margin-bottom: 8px;
-        }
+        }}
         
-        .stat-value {
-            font-size: 2.5em;
-            font-weight: 800;
-            color: var(--gray-900);
-            line-height: 1;
-        }
-        
-        .stat-sublabel {
-            font-size: 0.85em;
-            color: var(--gray-500);
-            margin-top: 4px;
-        }
-        
-        .content-grid {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 24px;
-        }
-        
-        .content-card {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-        }
-        
-        .chart-container {
-            background: white;
-            border-radius: 16px;
-            padding: 32px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            margin-bottom: 24px;
-        }
-        
-        .chart-title {
-            font-size: 1.5em;
+        .stat-value {{
+            font-size: 2em;
             font-weight: 700;
-            color: var(--gray-800);
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 3px solid var(--gray-200);
-        }
+            color: var(--gray-900);
+        }}
         
-        canvas {
-            max-height: 400px;
-        }
+        .chart-container {{
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
         
-        .loading {
-            text-align: center;
-            padding: 100px 20px;
-            color: var(--gray-600);
-            font-size: 1.3em;
-        }
-        
-        .loading::after {
-            content: '...';
-            animation: dots 1.5s steps(4, end) infinite;
-        }
-        
-        @keyframes dots {
-            0%, 20% { content: '.'; }
-            40% { content: '..'; }
-            60%, 100% { content: '...'; }
-        }
-        
-        .error {
-            text-align: center;
-            padding: 100px 20px;
-            color: var(--danger);
+        .chart-title {{
             font-size: 1.2em;
             font-weight: 600;
-        }
-        
-        #report-content h1 {
-            color: var(--gray-900);
-            font-size: 2.5em;
-            font-weight: 800;
-            border-bottom: 4px solid var(--primary);
-            padding-bottom: 20px;
-            margin-bottom: 32px;
-        }
-        
-        #report-content h2 {
             color: var(--gray-800);
-            font-size: 1.8em;
-            font-weight: 700;
-            margin-top: 48px;
-            margin-bottom: 24px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--gray-200);
-        }
-        
-        #report-content h3 {
-            color: var(--primary);
-            font-size: 1.4em;
-            font-weight: 600;
-            margin-top: 28px;
             margin-bottom: 16px;
-        }
+        }}
         
-        #report-content table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            margin: 24px 0;
-            font-size: 0.95em;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-            border-radius: 12px;
-            overflow: hidden;
-        }
+        canvas {{
+            max-height: 350px;
+        }}
         
-        #report-content table th {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            color: white;
-            padding: 16px;
-            text-align: left;
-            font-weight: 700;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        #report-content table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--gray-200);
+        .content-card {{
             background: white;
-        }
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }}
         
-        #report-content table tr:last-child td {
-            border-bottom: none;
-        }
+        .section-title {{
+            font-size: 1.3em;
+            font-weight: 600;
+            color: var(--gray-800);
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--gray-200);
+        }}
         
-        #report-content table tr:hover td {
+        .games-table, .outcomes-table {{
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 24px;
+        }}
+        
+        .games-table th, .outcomes-table th {{
+            background: var(--gray-100);
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            color: var(--gray-700);
+        }}
+        
+        .games-table td, .outcomes-table td {{
+            padding: 12px;
+            border-bottom: 1px solid var(--gray-200);
+        }}
+        
+        .games-table tr:hover td, .outcomes-table tr:hover td {{
             background: var(--gray-50);
-        }
+        }}
         
-        #report-content ul {
-            margin: 20px 0;
-            padding-left: 28px;
-        }
+        .prob-high {{ color: #059669; font-weight: 600; }}
+        .prob-medium {{ color: #d97706; font-weight: 600; }}
+        .prob-low {{ color: #dc2626; font-weight: 600; }}
         
-        #report-content li {
-            margin: 12px 0;
-            color: var(--gray-700);
-            line-height: 1.8;
-        }
-        
-        #report-content strong {
-            color: var(--gray-900);
-            font-weight: 700;
-        }
-        
-        #report-content hr {
-            border: none;
-            border-top: 2px solid var(--gray-200);
-            margin: 40px 0;
-        }
-        
-        #report-content p {
-            line-height: 1.9;
-            color: var(--gray-700);
-            margin: 16px 0;
-        }
-        
-        .probability-badge {
+        .outcome-badge {{
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 0.9em;
-        }
-        
-        #report-content .prob-high {
-            background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%);
-            color: #166534;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(22, 101, 52, 0.1);
-        }
-        
-        #report-content .prob-medium {
-            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-            color: #92400e;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(146, 64, 14, 0.1);
-        }
-        
-        #report-content .prob-low {
-            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
-            color: #991b1b;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 700;
-            display: inline-block;
-            box-shadow: 0 2px 4px rgba(153, 27, 27, 0.1);
-        }
-        
-        #report-content .prob-verylow {
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
-            color: #64748b;
-            padding: 4px 10px;
-            border-radius: 6px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
             font-weight: 600;
-            display: inline-block;
-            font-size: 0.9em;
-            opacity: 0.8;
-        }
+        }}
         
-        #report-content .prob-tie {
-            background: #f8fafc;
-            color: #64748b;
-            padding: 4px 10px;
-            border-radius: 6px;
-            font-weight: 600;
-            display: inline-block;
-            border: 1px solid #e2e8f0;
-        }
+        .outcome-W {{ background: #dcfce7; color: #166534; }}
+        .outcome-L {{ background: #fee2e2; color: #991b1b; }}
+        .outcome-T {{ background: #fef3c7; color: #92400e; }}
         
-        @media (max-width: 768px) {
-            body {
-                padding: 12px;
-            }
-            
-            .header h1 {
-                font-size: 2em;
-            }
-            
-            .content-card, .chart-container {
-                padding: 20px;
-            }
-            
-            #report-content table {
-                font-size: 0.8em;
-            }
-            
-            .stat-card {
-                padding: 16px;
-            }
-            
-            .stat-value {
-                font-size: 2em;
-            }
-        }
+        .placeholder {{
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-600);
+        }}
+        
+        .hidden {{ display: none !important; }}
+        
+        @media (max-width: 768px) {{
+            .header h1 {{ font-size: 1.5em; }}
+            .stat-value {{ font-size: 1.5em; }}
+            .team-header {{ flex-direction: column; text-align: center; }}
+        }}
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>🏈 NFL Playoff Scenarios</h1>
-            <p>Monte Carlo simulation analysis • 10,000 iterations per team • Real-time probability modeling</p>
+            <h1>NFL Playoff Scenarios</h1>
+            <p>Monte Carlo simulation analysis - {num_simulations:,} iterations - Generated {generated_at[:10] if generated_at else 'recently'}</p>
         </div>
         
         <div class="selector-container">
-            <label class="selector-label" for="team-select">🎯 Select Your Team</label>
+            <label class="selector-label" for="team-select">Select Your Team</label>
             <select id="team-select" class="team-select">
                 <option value="">-- Choose a team to analyze --</option>
                 <optgroup label="AFC">
 '''
     
     for team in afc_teams:
-        safe_filename = team.replace(' ', '_').replace('/', '_')
-        html += f'                    <option value="{safe_filename}">{team}</option>\n'
+        html += f'                    <option value="{team}">{team}</option>\n'
     
     html += '''                </optgroup>
                 <optgroup label="NFC">
 '''
     
     for team in nfc_teams:
-        safe_filename = team.replace(' ', '_').replace('/', '_')
-        html += f'                    <option value="{safe_filename}">{team}</option>\n'
+        html += f'                    <option value="{team}">{team}</option>\n'
     
     html += '''                </optgroup>
             </select>
         </div>
         
-        <div id="team-logo-header" style="display: none;"></div>
+        <div id="team-header" class="team-header hidden"></div>
         
-        <div id="stats-overview" class="stats-overview" style="display: none;"></div>
+        <div id="stats-grid" class="stats-grid hidden"></div>
         
-        <div id="charts-container" style="display: none;">
+        <div id="charts-section" class="hidden">
             <div class="chart-container">
-                <h2 class="chart-title">📊 Record Distribution</h2>
+                <h3 class="chart-title">Record Distribution</h3>
                 <canvas id="recordChart"></canvas>
             </div>
             <div class="chart-container">
-                <h2 class="chart-title">🎯 Playoff Probabilities</h2>
+                <h3 class="chart-title">Playoff Probability by Record</h3>
                 <canvas id="probChart"></canvas>
             </div>
         </div>
         
         <div class="content-card">
-            <div id="report-content" class="loading">
+            <div id="content-placeholder" class="placeholder">
                 Select a team above to view their playoff scenario analysis
             </div>
+            <div id="team-content" class="hidden"></div>
         </div>
     </div>
     
     <script>
+        const TEAM_DATA = ''' + json.dumps(team_data['teams'], indent=None) + ''';
         const TEAM_COLORS = ''' + json.dumps(team_colors) + ''';
         const TEAM_LOGOS = ''' + json.dumps(team_logos) + ''';
         
-        const teamSelect = document.getElementById('team-select');
-        const reportContent = document.getElementById('report-content');
-        const statsOverview = document.getElementById('stats-overview');
-        const chartsContainer = document.getElementById('charts-container');
-        const teamLogoHeader = document.getElementById('team-logo-header');
         let recordChart = null;
         let probChart = null;
         
@@ -534,271 +338,225 @@ def main():
         
         function getTeamLogoUrl(teamName) {
             const abbr = TEAM_LOGOS[teamName];
-            if (!abbr) return '';
-            return `https://a.espncdn.com/i/teamlogos/nfl/500/${abbr}.png`;
+            return abbr ? `https://a.espncdn.com/i/teamlogos/nfl/500/${abbr}.png` : '';
         }
         
-        function createTeamLogoHeader(data) {
-            const lines = data.split('\\n');
-            const teamName = teamSelect.options[teamSelect.selectedIndex].text;
+        function getProbClass(prob) {
+            if (prob >= 50) return 'prob-high';
+            if (prob >= 20) return 'prob-medium';
+            return 'prob-low';
+        }
+        
+        function renderTeamHeader(teamName, data) {
+            const header = document.getElementById('team-header');
             const logoUrl = getTeamLogoUrl(teamName);
-            let conference = '', division = '';
             
-            lines.forEach(line => {
-                if (line.includes('Conference:**')) {
-                    const match = line.match(/Conference:\\*\\*\\s+(\\w+)/);
-                    conference = match ? match[1] : '';
-                }
-                if (line.includes('Division:**')) {
-                    const match = line.match(/Division:\\*\\*\\s+([^<\\s]+(?:\\s+[^<\\s]+)*)/);
-                    division = match ? match[1].trim() : '';
-                }
-            });
-            
-            teamLogoHeader.innerHTML = `
-                <div class="team-logo-header">
-                    <img src="${logoUrl}" alt="${teamName} logo" class="team-logo" onerror="this.style.display='none'">
-                    <div class="team-logo-info">
-                        <h2>${teamName}</h2>
-                        <div class="team-subtitle">${division} • ${conference}</div>
-                    </div>
+            header.innerHTML = `
+                <img src="${logoUrl}" alt="${teamName}" class="team-logo" onerror="this.style.display='none'">
+                <div class="team-info">
+                    <h2>${teamName}</h2>
+                    <div class="subtitle">${data.division} - ${data.current_record}</div>
                 </div>
             `;
-            teamLogoHeader.style.display = 'block';
+            header.classList.remove('hidden');
         }
         
-        function createStatsCards(data) {
-            const lines = data.split('\\n');
-            let playoffProb = '0%', divisionProb = '0%', byeProb = '0%';
-            let currentRecord = '0-0-0';
-            
-            lines.forEach(line => {
-                if (line.includes('**Make Playoffs:**')) {
-                    const match = line.match(/([\\d.]+)%<\\/span>/);
-                    playoffProb = match ? match[1] + '%' : '0%';
-                }
-                if (line.includes('**Win Division:**')) {
-                    const match = line.match(/([\\d.]+)%<\\/span>/);
-                    divisionProb = match ? match[1] + '%' : '0%';
-                }
-                if (line.includes('**Earn Bye:**')) {
-                    const match = line.match(/([\\d.]+)%<\\/span>/);
-                    byeProb = match ? match[1] + '%' : '0%';
-                }
-                if (line.includes('**Current Record:**')) {
-                    currentRecord = line.match(/\\*\\*Current Record:\\*\\* ([\\d-]+)/)?.[1] || '0-0-0';
-                }
-            });
-            
-            const teamName = teamSelect.options[teamSelect.selectedIndex].text;
+        function renderStats(teamName, data) {
+            const grid = document.getElementById('stats-grid');
             const teamColor = getTeamColor(teamName);
+            const probs = data.overall_probabilities;
             
-            statsOverview.innerHTML = `
+            grid.innerHTML = `
                 <div class="stat-card" style="border-left-color: ${teamColor}">
                     <div class="stat-label">Current Record</div>
-                    <div class="stat-value">${currentRecord}</div>
+                    <div class="stat-value">${data.current_record}</div>
                 </div>
                 <div class="stat-card" style="border-left-color: #10b981">
                     <div class="stat-label">Playoff Chances</div>
-                    <div class="stat-value">${playoffProb}</div>
+                    <div class="stat-value">${probs.playoff.toFixed(1)}%</div>
                 </div>
                 <div class="stat-card" style="border-left-color: #8b5cf6">
-                    <div class="stat-label">Division Title</div>
-                    <div class="stat-value">${divisionProb}</div>
+                    <div class="stat-label">Win Division</div>
+                    <div class="stat-value">${probs.division.toFixed(1)}%</div>
                 </div>
                 <div class="stat-card" style="border-left-color: #f59e0b">
                     <div class="stat-label">First Round Bye</div>
-                    <div class="stat-value">${byeProb}</div>
+                    <div class="stat-value">${probs.bye.toFixed(1)}%</div>
                 </div>
             `;
-            statsOverview.style.display = 'grid';
+            grid.classList.remove('hidden');
         }
         
-        function parseTableData(markdown) {
-            const lines = markdown.split('\\n');
-            const records = [];
-            const frequencies = [];
-            const playoffProbs = [];
-            
-            let inTable = false;
-            lines.forEach(line => {
-                if (line.includes('## All Scenario Outcomes')) {
-                    inTable = true;
-                    return;
-                }
-                if (inTable && line.startsWith('|') && !line.includes('Final Record') && !line.includes('---')) {
-                    const parts = line.split('|').map(p => p.trim()).filter(p => p);
-                    if (parts.length >= 4) {
-                        records.push(parts[0]);
-                        const freq = parseInt(parts[1].replace(/,/g, ''));
-                        frequencies.push(freq);
-                        
-                        const probMatch = parts[3].match(/([\\d.]+)%<\\/span>/);
-                        const playoffProb = probMatch ? parseFloat(probMatch[1]) : 0;
-                        playoffProbs.push(playoffProb);
-                    }
-                }
-                if (inTable && line.includes('---') && line.includes('##')) {
-                    inTable = false;
-                }
-            });
-            
-            return { records: records.slice(0, 10), frequencies: frequencies.slice(0, 10), playoffProbs: playoffProbs.slice(0, 10) };
-        }
-        
-        function createCharts(markdown) {
-            const data = parseTableData(markdown);
-            const teamName = teamSelect.options[teamSelect.selectedIndex].text;
+        function renderCharts(teamName, data) {
+            const section = document.getElementById('charts-section');
             const teamColor = getTeamColor(teamName);
+            
+            const outcomes = data.record_outcomes.slice(0, 10);
+            const records = outcomes.map(o => o.record);
+            const frequencies = outcomes.map(o => o.frequency);
+            const playoffProbs = outcomes.map(o => o.playoff_pct);
             
             if (recordChart) recordChart.destroy();
             if (probChart) probChart.destroy();
             
-            const recordCtx = document.getElementById('recordChart').getContext('2d');
-            recordChart = new Chart(recordCtx, {
+            recordChart = new Chart(document.getElementById('recordChart'), {
                 type: 'bar',
                 data: {
-                    labels: data.records,
+                    labels: records,
                     datasets: [{
                         label: 'Frequency',
-                        data: data.frequencies,
+                        data: frequencies,
                         backgroundColor: teamColor + 'CC',
                         borderColor: teamColor,
-                        borderWidth: 2,
-                        borderRadius: 8,
+                        borderWidth: 1,
+                        borderRadius: 4,
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            padding: 12,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 13 }
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#e2e8f0' },
-                            ticks: { font: { size: 12, weight: '600' } }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 12, weight: '600' } }
-                        }
+                        y: { beginAtZero: true },
+                        x: { grid: { display: false } }
                     }
                 }
             });
             
-            const probCtx = document.getElementById('probChart').getContext('2d');
-            probChart = new Chart(probCtx, {
+            probChart = new Chart(document.getElementById('probChart'), {
                 type: 'line',
                 data: {
-                    labels: data.records,
+                    labels: records,
                     datasets: [{
-                        label: 'Playoff Probability %',
-                        data: data.playoffProbs,
+                        label: 'Playoff %',
+                        data: playoffProbs,
                         backgroundColor: 'rgba(16, 185, 129, 0.2)',
                         borderColor: '#10b981',
-                        borderWidth: 3,
+                        borderWidth: 2,
                         fill: true,
-                        tension: 0.4,
-                        pointRadius: 6,
-                        pointHoverRadius: 8,
-                        pointBackgroundColor: '#10b981',
-                        pointBorderColor: '#fff',
-                        pointBorderWidth: 2
+                        tension: 0.3,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: 'rgba(0,0,0,0.8)',
-                            padding: 12,
-                            titleFont: { size: 14, weight: 'bold' },
-                            bodyFont: { size: 13 },
-                            callbacks: {
-                                label: (context) => `Playoff Chance: ${context.parsed.y.toFixed(1)}%`
-                            }
-                        }
-                    },
+                    plugins: { legend: { display: false } },
                     scales: {
-                        y: {
-                            beginAtZero: true,
-                            max: 100,
-                            grid: { color: '#e2e8f0' },
-                            ticks: {
-                                callback: (value) => value + '%',
-                                font: { size: 12, weight: '600' }
-                            }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 12, weight: '600' } }
-                        }
+                        y: { beginAtZero: true, max: 100, ticks: { callback: v => v + '%' } },
+                        x: { grid: { display: false } }
                     }
                 }
             });
             
-            chartsContainer.style.display = 'block';
+            section.classList.remove('hidden');
         }
         
-        teamSelect.addEventListener('change', async function() {
-            const teamFile = this.value;
+        function renderContent(teamName, data) {
+            const content = document.getElementById('team-content');
+            const placeholder = document.getElementById('content-placeholder');
             
-            if (!teamFile) {
-                reportContent.innerHTML = '<div class="loading">Select a team above to view their playoff scenario analysis</div>';
-                statsOverview.style.display = 'none';
-                chartsContainer.style.display = 'none';
-                teamLogoHeader.style.display = 'none';
+            let gamesHtml = '';
+            data.remaining_games.forEach(g => {
+                const location = g.is_home ? 'vs' : '@';
+                gamesHtml += `
+                    <tr>
+                        <td>Week ${g.week}</td>
+                        <td>${location} ${g.opponent}</td>
+                        <td class="${getProbClass(g.win_prob)}">${g.win_prob.toFixed(1)}%</td>
+                        <td class="${getProbClass(g.loss_prob)}">${g.loss_prob.toFixed(1)}%</td>
+                    </tr>
+                `;
+            });
+            
+            let outcomesHtml = '';
+            data.record_outcomes.forEach(o => {
+                const exampleStr = o.example_outcomes.map(e => 
+                    `<span class="outcome-badge outcome-${e.outcome}">${e.outcome}</span> ${e.is_home ? 'vs' : '@'} ${e.opponent}`
+                ).join(', ');
+                
+                outcomesHtml += `
+                    <tr>
+                        <td><strong>${o.record}</strong></td>
+                        <td>${o.frequency} (${o.percentage.toFixed(1)}%)</td>
+                        <td class="${getProbClass(o.playoff_pct)}">${o.playoff_pct.toFixed(1)}%</td>
+                        <td class="${getProbClass(o.division_pct)}">${o.division_pct.toFixed(1)}%</td>
+                        <td class="${getProbClass(o.bye_pct)}">${o.bye_pct.toFixed(1)}%</td>
+                    </tr>
+                `;
+            });
+            
+            content.innerHTML = `
+                <h3 class="section-title">Remaining Games (${data.game_count} games)</h3>
+                <table class="games-table">
+                    <thead>
+                        <tr>
+                            <th>Week</th>
+                            <th>Opponent</th>
+                            <th>Win %</th>
+                            <th>Loss %</th>
+                        </tr>
+                    </thead>
+                    <tbody>${gamesHtml}</tbody>
+                </table>
+                
+                <h3 class="section-title">All Scenario Outcomes</h3>
+                <table class="outcomes-table">
+                    <thead>
+                        <tr>
+                            <th>Final Record</th>
+                            <th>Frequency</th>
+                            <th>Playoff %</th>
+                            <th>Division %</th>
+                            <th>Bye %</th>
+                        </tr>
+                    </thead>
+                    <tbody>${outcomesHtml}</tbody>
+                </table>
+                
+                <h3 class="section-title">Most Likely Outcome</h3>
+                <p><strong>${data.most_likely.record}</strong> - Occurs in ${data.most_likely.percentage.toFixed(1)}% of simulations (${data.most_likely.frequency} times)</p>
+            `;
+            
+            content.classList.remove('hidden');
+            placeholder.classList.add('hidden');
+        }
+        
+        function hideAll() {
+            document.getElementById('team-header').classList.add('hidden');
+            document.getElementById('stats-grid').classList.add('hidden');
+            document.getElementById('charts-section').classList.add('hidden');
+            document.getElementById('team-content').classList.add('hidden');
+            document.getElementById('content-placeholder').classList.remove('hidden');
+        }
+        
+        document.getElementById('team-select').addEventListener('change', function() {
+            const teamName = this.value;
+            
+            if (!teamName || !TEAM_DATA[teamName]) {
+                hideAll();
                 return;
             }
             
-            reportContent.innerHTML = '<div class="loading">Loading scenario analysis</div>';
-            statsOverview.style.display = 'none';
-            chartsContainer.style.display = 'none';
-            teamLogoHeader.style.display = 'none';
+            const data = TEAM_DATA[teamName];
+            renderTeamHeader(teamName, data);
+            renderStats(teamName, data);
+            renderCharts(teamName, data);
+            renderContent(teamName, data);
             
-            try {
-                const cacheBuster = new Date().getTime();
-                const response = await fetch(`team_scenarios/${teamFile}.md?v=${cacheBuster}`, {
-                    cache: 'no-store'
-                });
-                
-                if (!response.ok) {
-                    throw new Error('Report not found');
-                }
-                
-                const markdown = await response.text();
-                createTeamLogoHeader(markdown);
-                createStatsCards(markdown);
-                createCharts(markdown);
-                
-                const html = marked.parse(markdown);
-                reportContent.innerHTML = html;
-                
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            } catch (error) {
-                reportContent.innerHTML = '<div class="error">⚠️ Error loading team report. Please try again.</div>';
-                console.error('Error loading report:', error);
-            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     </script>
 </body>
 </html>
 '''
     
+    os.makedirs('docs', exist_ok=True)
     with open('docs/team_scenarios.html', 'w', encoding='utf-8') as f:
         f.write(html)
     
-    print("✓ Generated docs/team_scenarios.html with enhanced design and charts")
+    print(f"Generated docs/team_scenarios.html with embedded data for {len(team_data['teams'])} teams")
 
 if __name__ == "__main__":
     main()

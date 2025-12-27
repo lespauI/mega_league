@@ -1,0 +1,88 @@
+# Spec and build
+
+## Configuration
+- **Artifacts Path**: {@artifacts_path} → `.zenflow/tasks/{task_id}`
+
+---
+
+## Agent Instructions
+
+Ask the user questions when anything is unclear or needs their input. This includes:
+- Ambiguous or incomplete requirements
+- Technical decisions that affect architecture or user experience
+- Trade-offs that require business context
+
+Do not make assumptions on important decisions — get clarification first.
+
+---
+
+## Workflow Steps
+
+### [x] Step: Technical Specification
+
+**Difficulty**: Medium
+
+**Problem Summary**:
+- Two separate simulation runs causing data inconsistency
+- HTML parses markdown via fragile regex (missing data)
+- Heavy CSS causing lag
+- No single source of truth for scenario data
+
+**Solution**: Consolidate simulations into JSON output, embed in HTML directly, simplify CSS.
+
+See `spec.md` for full details.
+
+---
+
+### [x] Step 1: Rework generate_all_team_scenarios.py
+<!-- chat-id: 6dba8a8b-8576-448c-addc-2c9f09bfdc84 -->
+
+Modify to run simulations once for all teams and output consolidated JSON:
+- Reuse simulation logic from `calc_playoff_probabilities.py`
+- Track per-team scenario outcomes in a single simulation run
+- Output to `output/team_scenarios.json`
+- Include: remaining games, probabilities, record distributions
+
+**Verification**: Run script, check JSON output contains all 32 teams with correct structure.
+
+---
+
+### [x] Step 2: Rework generate_team_scenario_html.py
+<!-- chat-id: c44e44f8-86ea-41b1-8437-253bd4926583 -->
+
+Update HTML generation to:
+- Read from `output/team_scenarios.json`
+- Embed JSON data directly in HTML
+- Simplify JavaScript (no fetch/markdown parsing)
+- Streamline CSS (remove heavy gradients, reduce shadows)
+
+**Verification**: Open HTML in browser, verify all teams display correctly with matching data.
+
+---
+
+### [x] Step 3: Integration & Verification
+<!-- chat-id: f2fbb704-a60d-499e-b427-0ccbc1e56522 -->
+
+1. Run full pipeline: `python scripts/run_all_playoff_analysis.py`
+2. Verify data consistency between `playoff_probabilities.json` and `team_scenarios.json`
+3. Test HTML in browser (multiple teams, mobile viewport)
+4. Write completion report to `report.md`
+
+**Results**: All 7 pipeline scripts passed. 32 teams verified. Data consistent within expected Monte Carlo variance. Report written to `report.md`.
+
+---
+
+### [x] Step: Add playwright tests
+<!-- chat-id: 56852695-e5a8-424e-8372-03a873950564 -->
+
+Verify with playwright, select random teams (3) and check everything is working and present
+
+**Results**: Created `tests/e2e/team_scenarios.spec.ts` with 5 tests:
+- Page loads with header and team selector
+- Selecting a team displays all sections correctly (3 random teams)
+- Stats show valid probability values (3 random teams)
+- Games table shows valid win/loss probabilities (3 random teams)
+- Resetting selection hides content
+
+All 5 tests passed.
+
