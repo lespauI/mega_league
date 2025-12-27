@@ -767,7 +767,10 @@ def main():
             teamLogoHeader.style.display = 'none';
             
             try {
-                const response = await fetch(`team_scenarios/${teamFile}.md`);
+                const cacheBuster = new Date().getTime();
+                const response = await fetch(`team_scenarios/${teamFile}.md?v=${cacheBuster}`, {
+                    cache: 'no-store'
+                });
                 
                 if (!response.ok) {
                     throw new Error('Report not found');
