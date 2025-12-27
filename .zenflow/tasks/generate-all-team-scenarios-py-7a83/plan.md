@@ -18,47 +18,49 @@ Do not make assumptions on important decisions — get clarification first.
 
 ## Workflow Steps
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
 
-Assess the task's difficulty, as underestimating it leads to poor outcomes.
-- easy: Straightforward implementation, trivial bug fix or feature
-- medium: Moderate complexity, some edge cases or caveats to consider
-- hard: Complex logic, many caveats, architectural considerations, or high-risk changes
+**Difficulty**: Medium
 
-Create a technical specification for the task that is appropriate for the complexity level:
-- Review the existing codebase architecture and identify reusable components.
-- Define the implementation approach based on established patterns in the project.
-- Identify all source code files that will be created or modified.
-- Define any necessary data model, API, or interface changes.
-- Describe verification steps using the project's test and lint commands.
+**Problem Summary**:
+- Two separate simulation runs causing data inconsistency
+- HTML parses markdown via fragile regex (missing data)
+- Heavy CSS causing lag
+- No single source of truth for scenario data
 
-Save the output to `{@artifacts_path}/spec.md` with:
-- Technical context (language, dependencies)
-- Implementation approach
-- Source code structure changes
-- Data model / API / interface changes
-- Verification approach
+**Solution**: Consolidate simulations into JSON output, embed in HTML directly, simplify CSS.
 
-If the task is complex enough, create a detailed implementation plan based on `{@artifacts_path}/spec.md`:
-- Break down the work into concrete tasks (incrementable, testable milestones)
-- Each task should reference relevant contracts and include verification steps
-- Replace the Implementation step below with the planned tasks
-
-Rule of thumb for step size: each step should represent a coherent unit of work (e.g., implement a component, add an API endpoint, write tests for a module). Avoid steps that are too granular (single function).
-
-Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warrant this breakdown, keep the Implementation step below as is.
+See `spec.md` for full details.
 
 ---
 
-### [ ] Step: Implementation
+### [ ] Step 1: Rework generate_all_team_scenarios.py
 
-Implement the task according to the technical specification and general engineering best practices.
+Modify to run simulations once for all teams and output consolidated JSON:
+- Reuse simulation logic from `calc_playoff_probabilities.py`
+- Track per-team scenario outcomes in a single simulation run
+- Output to `output/team_scenarios.json`
+- Include: remaining games, probabilities, record distributions
 
-1. Break the task into steps where possible.
-2. Implement the required changes in the codebase.
-3. Add and run relevant tests and linters.
-4. Perform basic manual verification if applicable.
-5. After completion, write a report to `{@artifacts_path}/report.md` describing:
-   - What was implemented
-   - How the solution was tested
-   - The biggest issues or challenges encountered
+**Verification**: Run script, check JSON output contains all 32 teams with correct structure.
+
+---
+
+### [ ] Step 2: Rework generate_team_scenario_html.py
+
+Update HTML generation to:
+- Read from `output/team_scenarios.json`
+- Embed JSON data directly in HTML
+- Simplify JavaScript (no fetch/markdown parsing)
+- Streamline CSS (remove heavy gradients, reduce shadows)
+
+**Verification**: Open HTML in browser, verify all teams display correctly with matching data.
+
+---
+
+### [ ] Step 3: Integration & Verification
+
+1. Run full pipeline: `python scripts/run_all_playoff_analysis.py`
+2. Verify data consistency between `playoff_probabilities.json` and `team_scenarios.json`
+3. Test HTML in browser (multiple teams, mobile viewport)
+4. Write completion report to `report.md`
