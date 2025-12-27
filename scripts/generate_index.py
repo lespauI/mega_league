@@ -108,6 +108,7 @@ def get_file_description(filename):
     descriptions = {
         'playoff_race.html': 'Playoff race visualization and analysis',
         'playoff_race_table.html': 'Detailed playoff race table',
+        'team_scenarios.html': '🎲 Monte Carlo Playoff Scenarios - Interactive team-by-team simulation analysis with probability distributions',
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
         'sos_season2.html': 'Season 2 SoS — combined sortable table and bar charts',
         'sos_season2_table.html': 'Season 2 SoS — sortable table with conference/division filters',
