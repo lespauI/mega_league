@@ -65,8 +65,9 @@ Implement the task according to the technical specification and general engineer
    - How the solution was tested
    - The biggest issues or challenges encountered
 
-### [ ] Step: Review Monte Carlo & Implement Probability Capping
-<!-- chat-id: a5c75caf-90de-4a93-8695-e3d27dc97bbd -->
+### [x] Step: Review Monte Carlo & Implement Probability Capping
+<!-- chat-id: 25a750a6-d691-4f1a-afbd-cf26c54ffe7e -->
+
 
 Implement probability capping with mathematical certainty detection in `scripts/calc_playoff_probabilities.py`:
 

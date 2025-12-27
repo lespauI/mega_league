@@ -444,10 +444,56 @@ def calculate_playoff_probability_simulation(team_name, teams_info, stats, sos_d
         'bye_probability': bye_probability
     }
 
-def cap_probability(raw_probability, remaining_games):
-    """Cap simulation probabilities to avoid false 100%/0% unless season is complete."""
-    if remaining_games == 0:
-        return raw_probability
+def check_mathematical_certainty(team_name, teams_info, stats, games):
+    """
+    Check if team is mathematically clinched or eliminated.
+    Returns: 'clinched', 'eliminated', or None
+    """
+    remaining_games = [g for g in games if not g['completed']]
+    if not remaining_games:
+        return None
+    
+    conf = teams_info[team_name]['conference']
+    
+    worst_case_games = []
+    for game in remaining_games:
+        home, away = game['home'], game['away']
+        if team_name in (home, away):
+            winner = away if home == team_name else home
+            loser = team_name
+        else:
+            winner = home
+            loser = away
+        worst_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
+    
+    playoff_teams, _, _ = determine_playoff_teams(teams_info, stats, worst_case_games)
+    if team_name in playoff_teams[conf]:
+        return 'clinched'
+    
+    best_case_games = []
+    for game in remaining_games:
+        home, away = game['home'], game['away']
+        if team_name in (home, away):
+            winner = team_name
+            loser = away if home == team_name else home
+        else:
+            winner = home
+            loser = away
+        best_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
+    
+    playoff_teams, _, _ = determine_playoff_teams(teams_info, stats, best_case_games)
+    if team_name not in playoff_teams[conf]:
+        return 'eliminated'
+    
+    return None
+
+
+def cap_probability(raw_probability, certainty_status):
+    """Cap simulation probabilities unless mathematically certain."""
+    if certainty_status == 'clinched':
+        return 100.0
+    if certainty_status == 'eliminated':
+        return 0.0
     if raw_probability >= 100:
         return 99.9
     if raw_probability <= 0:
@@ -472,6 +518,7 @@ def main():
         
         for i, team in enumerate(conf_teams, 1):
             print(f"  [{i}/{len(conf_teams)}] Simulating {team}...")
+            certainty = check_mathematical_certainty(team, teams_info, stats, games)
             prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=1000)
             remaining_games = int(sos_data[team]['remaining_games']) if team in sos_data else 4
             results[team] = {
@@ -484,12 +531,14 @@ def main():
                 'division_pct': stats[team]['division_pct'],
                 'strength_of_victory': stats[team]['strength_of_victory'],
                 'strength_of_schedule': stats[team]['strength_of_schedule'],
-                'playoff_probability': round(cap_probability(prob_results['playoff_probability'], remaining_games), 1),
-                'division_win_probability': round(cap_probability(prob_results['division_probability'], remaining_games), 1),
-                'bye_probability': round(cap_probability(prob_results['bye_probability'], remaining_games), 1),
+                'playoff_probability': round(cap_probability(prob_results['playoff_probability'], certainty), 1),
+                'division_win_probability': round(cap_probability(prob_results['division_probability'], certainty), 1),
+                'bye_probability': round(cap_probability(prob_results['bye_probability'], certainty), 1),
                 'remaining_sos': float(sos_data[team]['ranked_sos_avg']) if team in sos_data else 0.5,
                 'remaining_games': remaining_games,
-                'past_sos': teams_info[team]['past_sos']
+                'past_sos': teams_info[team]['past_sos'],
+                'clinched': certainty == 'clinched',
+                'eliminated': certainty == 'eliminated'
             }
     
     with open('output/playoff_probabilities.json', 'w', encoding='utf-8') as f:
@@ -504,6 +553,8 @@ def main():
     print("  ✓ Removed home field advantage (Madden game)")
     print("  ✓ Win probability capped at 25-75% (realistic variance)")
     print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")
+    print("  ✓ Mathematical certainty detection (clinched/eliminated)")
+    print("  ✓ Probability capping: 100% only if clinched, 0% only if eliminated")
     print("\nOutput saved to: output/playoff_probabilities.json")
     print("\nTop AFC Contenders:")
     afc_teams = [(t, r['playoff_probability']) for t, r in results.items() if r['conference'] == 'AFC']
