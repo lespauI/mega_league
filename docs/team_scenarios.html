@@ -67,6 +67,31 @@
             opacity: 0.9;
         }
         
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-size: 1em;
+            font-weight: 600;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .back-link:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateX(-4px);
+        }
+        
+        .back-link::before {
+            content: '←';
+            font-size: 1.2em;
+        }
+        
         .team-logo-header {
             display: flex;
             align-items: center;
@@ -432,6 +457,7 @@
 <body>
     <div class="container">
         <div class="header">
+            <a href="playoff_race_table.html" class="back-link">Back to Playoff Race</a>
             <h1>🏈 NFL Playoff Scenarios</h1>
             <p>Monte Carlo simulation analysis • 10,000 iterations per team • Real-time probability modeling</p>
         </div>
@@ -775,6 +801,14 @@
                 console.error('Error loading report:', error);
             }
         });
+        
+        // Check URL parameters and auto-select team if specified
+        const urlParams = new URLSearchParams(window.location.search);
+        const teamParam = urlParams.get('team');
+        if (teamParam) {
+            teamSelect.value = teamParam;
+            teamSelect.dispatchEvent(new Event('change'));
+        }
     </script>
 </body>
 </html>
