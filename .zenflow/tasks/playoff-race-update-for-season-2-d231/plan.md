@@ -18,47 +18,46 @@ Do not make assumptions on important decisions — get clarification first.
 
 ## Workflow Steps
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
+<!-- chat-id: 1e4477fd-e9b4-433a-8a2d-41cdf583f774 -->
 
-Assess the task's difficulty, as underestimating it leads to poor outcomes.
-- easy: Straightforward implementation, trivial bug fix or feature
-- medium: Moderate complexity, some edge cases or caveats to consider
-- hard: Complex logic, many caveats, architectural considerations, or high-risk changes
+**Difficulty**: Medium
 
-Create a technical specification for the task that is appropriate for the complexity level:
-- Review the existing codebase architecture and identify reusable components.
-- Define the implementation approach based on established patterns in the project.
-- Identify all source code files that will be created or modified.
-- Define any necessary data model, API, or interface changes.
-- Describe verification steps using the project's test and lint commands.
+See `spec.md` for full specification.
 
-Save the output to `{@artifacts_path}/spec.md` with:
-- Technical context (language, dependencies)
-- Implementation approach
-- Source code structure changes
-- Data model / API / interface changes
-- Verification approach
-
-If the task is complex enough, create a detailed implementation plan based on `{@artifacts_path}/spec.md`:
-- Break down the work into concrete tasks (incrementable, testable milestones)
-- Each task should reference relevant contracts and include verification steps
-- Replace the Implementation step below with the planned tasks
-
-Rule of thumb for step size: each step should represent a coherent unit of work (e.g., implement a component, add an API endpoint, write tests for a module). Avoid steps that are too granular (single function).
-
-Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warrant this breakdown, keep the Implementation step below as is.
+**Summary**: Scripts need to filter by `seasonIndex=1` (Season 2) to use correct data. Currently they load all games from all seasons.
 
 ---
 
-### [ ] Step: Implementation
+### [ ] Step: Update calc_playoff_probabilities.py
 
-Implement the task according to the technical specification and general engineering best practices.
+Modify `load_data()` function to filter games by:
+- `seasonIndex=1` (Season 2)
+- `stageIndex=1` (Regular season only)
 
-1. Break the task into steps where possible.
-2. Implement the required changes in the codebase.
-3. Add and run relevant tests and linters.
-4. Perform basic manual verification if applicable.
-5. After completion, write a report to `{@artifacts_path}/report.md` describing:
-   - What was implemented
-   - How the solution was tested
-   - The biggest issues or challenges encountered
+**Verification**: Run script and confirm team records match Season 2 data.
+
+---
+
+### [ ] Step: Update calc_sos_by_rankings.py
+
+Modify data loading functions:
+1. `read_games_split()` - filter by seasonIndex=1 and stageIndex=1
+2. `read_latest_rankings()` - filter rankings by seasonIndex=1
+
+**Verification**: Run script and confirm SoS data is for Season 2.
+
+---
+
+### [ ] Step: Run Full Analysis & Verify
+
+1. Run `python scripts/run_all_playoff_analysis.py`
+2. Verify output files are generated correctly
+3. Manually validate team records against Season 2 standings
+4. Confirm remaining games count is correct (weeks 12-17)
+
+---
+
+### [ ] Step: Write Report
+
+Document what was implemented, how it was tested, and any issues encountered in `report.md`.
