@@ -1724,7 +1724,7 @@
             const teamCells = document.querySelectorAll('.team-cell');
             teamCells.forEach(cell => {
                 cell.addEventListener('click', function() {
-                    const teamName = this.querySelector('span').textContent;
+                    const teamName = this.querySelector('img').alt;
                     window.location.href = 'team_scenarios.html?team=' + encodeURIComponent(teamName);
                 });
             });
