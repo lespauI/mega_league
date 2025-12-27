@@ -226,7 +226,7 @@ def print_team_report(team_name, teams_info, stats, sos_data, games, num_simulat
         division_pct = (results['division_by_record'][record] / count * 100) if count > 0 else 0
         bye_pct = (results['bye_by_record'][record] / count * 100) if count > 0 else 0
         
-        print(f"{record:<15} {count:>6}/{num_simulations:<4} {freq_pct:>6.2f}% {playoff_pct:>10.1f}% {division_pct:>10.1f}% {bye_pct:>10.1f}%")
+        print(f"{record:<15} {count:>6,} {freq_pct:>10.2f}% {playoff_pct:>10.1f}% {division_pct:>10.1f}% {bye_pct:>10.1f}%")
     
     print("\n" + "="*80)
     print("OVERALL PROBABILITIES")
