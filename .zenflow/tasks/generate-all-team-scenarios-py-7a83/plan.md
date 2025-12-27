@@ -34,7 +34,8 @@ See `spec.md` for full details.
 
 ---
 
-### [ ] Step 1: Rework generate_all_team_scenarios.py
+### [x] Step 1: Rework generate_all_team_scenarios.py
+<!-- chat-id: 6dba8a8b-8576-448c-addc-2c9f09bfdc84 -->
 
 Modify to run simulations once for all teams and output consolidated JSON:
 - Reuse simulation logic from `calc_playoff_probabilities.py`
@@ -64,3 +65,7 @@ Update HTML generation to:
 2. Verify data consistency between `playoff_probabilities.json` and `team_scenarios.json`
 3. Test HTML in browser (multiple teams, mobile viewport)
 4. Write completion report to `report.md`
+
+### [ ] Step: Add playwright tests
+
+Verify with playwright, select random teams (3) and check everething is working and present
