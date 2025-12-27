@@ -65,4 +65,23 @@ Implement the task according to the technical specification and general engineer
    - How the solution was tested
    - The biggest issues or challenges encountered
 
-### [ ] Step: Made a review of montecarlo, suggest improvements
+### [ ] Step: Review Monte Carlo & Implement Probability Capping
+<!-- chat-id: a5c75caf-90de-4a93-8695-e3d27dc97bbd -->
+
+Implement probability capping with mathematical certainty detection in `scripts/calc_playoff_probabilities.py`:
+
+1. Add `check_mathematical_certainty()` function
+   - Worst-case scenario: team loses all, check if still in playoffs → clinched
+   - Best-case scenario: team wins all, check if still misses playoffs → eliminated
+
+2. Add `cap_probability()` function
+   - Clinched → 100.0%
+   - Eliminated → 0.0%
+   - Simulation 100% but not clinched → 99.9%
+   - Simulation 0% but not eliminated → 0.1%
+
+3. Update `main()` to use certainty detection and capping
+
+4. Run script and verify output:
+   - No false 100%/0% for non-certain teams
+   - Mathematically certain teams show true 100%/0%
