@@ -272,11 +272,16 @@ def simulate_remaining_games(teams_info, stats, sos_data, games):
             winner = away
             loser = home
         
+        winner_score = random.randint(17, 35)
+        loser_score = random.randint(7, winner_score - 1)
+        
         simulated_games.append({
             'home': home,
             'away': away,
             'winner': winner,
-            'loser': loser
+            'loser': loser,
+            'winner_score': winner_score,
+            'loser_score': loser_score
         })
     
     return simulated_games
@@ -335,6 +340,8 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
             'head_to_head': defaultdict(lambda: {'W': 0, 'L': 0, 'T': 0}),
             'points_for': stats[team]['points_for'],
             'points_against': stats[team]['points_against'],
+            'conference_points_for': stats[team]['conference_points_for'],
+            'conference_points_against': stats[team]['conference_points_against'],
             'defeated_opponents': list(stats[team]['defeated_opponents']),
             'opponents': list(stats[team]['opponents'])
         }
@@ -363,6 +370,12 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
         if home_conf == away_conf:
             sim_stats[winner]['conference_W'] += 1
             sim_stats[loser]['conference_L'] += 1
+            winner_score = game.get('winner_score', 0)
+            loser_score = game.get('loser_score', 0)
+            sim_stats[winner]['conference_points_for'] += winner_score
+            sim_stats[winner]['conference_points_against'] += loser_score
+            sim_stats[loser]['conference_points_for'] += loser_score
+            sim_stats[loser]['conference_points_against'] += winner_score
         
         if home_div == away_div:
             sim_stats[winner]['division_W'] += 1

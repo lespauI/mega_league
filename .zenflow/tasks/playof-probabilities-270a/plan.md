@@ -124,10 +124,13 @@ Add optional `random.seed()` parameter for debugging and reproducible results.
 
 **Completed**: Added `-s`/`--seed` command-line argument. When provided, sets `random.seed()` before running simulations for reproducible results. Usage: `python3 scripts/calc_playoff_probabilities.py -s 42`
 
-### [ ] Step: Track conference points in simulation
+### [x] Step: Track conference points in simulation
+<!-- chat-id: b8d37814-7d44-4da4-a903-f877b1549f9d -->
 <!-- Priority: Low -->
 
 Lines 360-366 update conference wins but don't update `conference_points_for/against`. Add point tracking if needed for tiebreakers.
+
+**Completed**: Added simulated scores to `simulate_remaining_games()` (winner_score: 17-35, loser_score: 7 to winner_score-1). Updated `determine_playoff_teams()` to copy `conference_points_for/against` from base stats and update them for conference games in simulation. This enables future tiebreaker enhancements that use net conference points.
 
 ### [ ] Step: Consider tie games in simulation
 <!-- Priority: Low -->
