@@ -106,7 +106,6 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 def get_file_description(filename):
     descriptions = {
-        'playoff_race_w15.html': 'Current playoff standings, seeding, and race analysis',
         'playoff_race.html': 'Playoff race visualization and analysis',
         'playoff_race_table.html': 'Detailed playoff race table',
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
