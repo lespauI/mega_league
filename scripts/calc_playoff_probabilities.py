@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import itertools
 from collections import defaultdict
 import json
 import random
+
+DEFAULT_NUM_SIMULATIONS = 10000
+TIE_PROBABILITY = 0.003  # ~0.3% of NFL games end in ties
 
 def load_data():
     teams_info = {}
@@ -262,19 +266,43 @@ def simulate_remaining_games(teams_info, stats, sos_data, games):
         home_prob = max(0.25, min(0.75, home_prob))
         
         rand_val = random.random()
-        if rand_val < home_prob:
+        if rand_val < TIE_PROBABILITY:
+            tie_score = random.randint(10, 27)
+            simulated_games.append({
+                'home': home,
+                'away': away,
+                'is_tie': True,
+                'home_score': tie_score,
+                'away_score': tie_score
+            })
+        elif rand_val < TIE_PROBABILITY + home_prob * (1 - TIE_PROBABILITY):
             winner = home
             loser = away
+            winner_score = random.randint(17, 35)
+            loser_score = random.randint(7, winner_score - 1)
+            simulated_games.append({
+                'home': home,
+                'away': away,
+                'is_tie': False,
+                'winner': winner,
+                'loser': loser,
+                'winner_score': winner_score,
+                'loser_score': loser_score
+            })
         else:
             winner = away
             loser = home
-        
-        simulated_games.append({
-            'home': home,
-            'away': away,
-            'winner': winner,
-            'loser': loser
-        })
+            winner_score = random.randint(17, 35)
+            loser_score = random.randint(7, winner_score - 1)
+            simulated_games.append({
+                'home': home,
+                'away': away,
+                'is_tie': False,
+                'winner': winner,
+                'loser': loser,
+                'winner_score': winner_score,
+                'loser_score': loser_score
+            })
     
     return simulated_games
 
@@ -332,6 +360,8 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
             'head_to_head': defaultdict(lambda: {'W': 0, 'L': 0, 'T': 0}),
             'points_for': stats[team]['points_for'],
             'points_against': stats[team]['points_against'],
+            'conference_points_for': stats[team]['conference_points_for'],
+            'conference_points_against': stats[team]['conference_points_against'],
             'defeated_opponents': list(stats[team]['defeated_opponents']),
             'opponents': list(stats[team]['opponents'])
         }
@@ -341,29 +371,57 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
     for game in simulated_games:
         home = game['home']
         away = game['away']
-        winner = game['winner']
-        loser = game['loser']
-        
-        sim_stats[winner]['W'] += 1
-        sim_stats[loser]['L'] += 1
-        sim_stats[winner]['head_to_head'][loser]['W'] += 1
-        sim_stats[loser]['head_to_head'][winner]['L'] += 1
-        sim_stats[winner]['defeated_opponents'].append(loser)
-        sim_stats[winner]['opponents'].append(loser)
-        sim_stats[loser]['opponents'].append(winner)
         
         home_conf = teams_info[home]['conference']
         away_conf = teams_info[away]['conference']
         home_div = teams_info[home]['division']
         away_div = teams_info[away]['division']
         
-        if home_conf == away_conf:
-            sim_stats[winner]['conference_W'] += 1
-            sim_stats[loser]['conference_L'] += 1
-        
-        if home_div == away_div:
-            sim_stats[winner]['division_W'] += 1
-            sim_stats[loser]['division_L'] += 1
+        if game.get('is_tie', False):
+            sim_stats[home]['T'] += 1
+            sim_stats[away]['T'] += 1
+            sim_stats[home]['head_to_head'][away]['T'] += 1
+            sim_stats[away]['head_to_head'][home]['T'] += 1
+            sim_stats[home]['opponents'].append(away)
+            sim_stats[away]['opponents'].append(home)
+            
+            if home_conf == away_conf:
+                sim_stats[home]['conference_T'] += 1
+                sim_stats[away]['conference_T'] += 1
+                tie_score = game.get('home_score', 0)
+                sim_stats[home]['conference_points_for'] += tie_score
+                sim_stats[home]['conference_points_against'] += tie_score
+                sim_stats[away]['conference_points_for'] += tie_score
+                sim_stats[away]['conference_points_against'] += tie_score
+            
+            if home_div == away_div:
+                sim_stats[home]['division_T'] += 1
+                sim_stats[away]['division_T'] += 1
+        else:
+            winner = game['winner']
+            loser = game['loser']
+            
+            sim_stats[winner]['W'] += 1
+            sim_stats[loser]['L'] += 1
+            sim_stats[winner]['head_to_head'][loser]['W'] += 1
+            sim_stats[loser]['head_to_head'][winner]['L'] += 1
+            sim_stats[winner]['defeated_opponents'].append(loser)
+            sim_stats[winner]['opponents'].append(loser)
+            sim_stats[loser]['opponents'].append(winner)
+            
+            if home_conf == away_conf:
+                sim_stats[winner]['conference_W'] += 1
+                sim_stats[loser]['conference_L'] += 1
+                winner_score = game.get('winner_score', 0)
+                loser_score = game.get('loser_score', 0)
+                sim_stats[winner]['conference_points_for'] += winner_score
+                sim_stats[winner]['conference_points_against'] += loser_score
+                sim_stats[loser]['conference_points_for'] += loser_score
+                sim_stats[loser]['conference_points_against'] += winner_score
+            
+            if home_div == away_div:
+                sim_stats[winner]['division_W'] += 1
+                sim_stats[loser]['division_L'] += 1
     
     for team in sim_stats:
         total = sim_stats[team]['W'] + sim_stats[team]['L'] + sim_stats[team]['T']
@@ -444,14 +502,117 @@ def calculate_playoff_probability_simulation(team_name, teams_info, stats, sos_d
         'bye_probability': bye_probability
     }
 
-def main():
+def check_mathematical_certainty(team_name, teams_info, stats, games):
+    """
+    Check if team is mathematically clinched or eliminated.
+    Returns: 'clinched', 'eliminated', or None
+    
+    Uses conference-aware logic for games not involving target team:
+    - Worst-case: Same-conference rivals win their games
+    - Best-case: Same-conference rivals lose their games
+    """
+    remaining_games = [g for g in games if not g['completed']]
+    if not remaining_games:
+        return None
+    
+    conf = teams_info[team_name]['conference']
+    
+    worst_case_games = []
+    for game in remaining_games:
+        home, away = game['home'], game['away']
+        if team_name in (home, away):
+            winner = away if home == team_name else home
+            loser = team_name
+        else:
+            home_conf = teams_info.get(home, {}).get('conference', '')
+            away_conf = teams_info.get(away, {}).get('conference', '')
+            home_is_rival = (home_conf == conf)
+            away_is_rival = (away_conf == conf)
+            if home_is_rival and not away_is_rival:
+                winner, loser = home, away
+            elif away_is_rival and not home_is_rival:
+                winner, loser = away, home
+            elif home_is_rival and away_is_rival:
+                home_wins = stats.get(home, {}).get('W', 0)
+                away_wins = stats.get(away, {}).get('W', 0)
+                if home_wins >= away_wins:
+                    winner, loser = home, away
+                else:
+                    winner, loser = away, home
+            else:
+                winner, loser = home, away
+        worst_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
+    
+    playoff_teams, _, _ = determine_playoff_teams(teams_info, stats, worst_case_games)
+    if team_name in playoff_teams[conf]:
+        return 'clinched'
+    
+    best_case_games = []
+    for game in remaining_games:
+        home, away = game['home'], game['away']
+        if team_name in (home, away):
+            winner = team_name
+            loser = away if home == team_name else home
+        else:
+            home_conf = teams_info.get(home, {}).get('conference', '')
+            away_conf = teams_info.get(away, {}).get('conference', '')
+            home_is_rival = (home_conf == conf)
+            away_is_rival = (away_conf == conf)
+            if home_is_rival and not away_is_rival:
+                winner, loser = away, home
+            elif away_is_rival and not home_is_rival:
+                winner, loser = home, away
+            elif home_is_rival and away_is_rival:
+                home_wins = stats.get(home, {}).get('W', 0)
+                away_wins = stats.get(away, {}).get('W', 0)
+                if home_wins >= away_wins:
+                    winner, loser = away, home
+                else:
+                    winner, loser = home, away
+            else:
+                winner, loser = home, away
+        best_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
+    
+    playoff_teams, _, _ = determine_playoff_teams(teams_info, stats, best_case_games)
+    if team_name not in playoff_teams[conf]:
+        return 'eliminated'
+    
+    return None
+
+
+def cap_probability(raw_probability, certainty_status):
+    """Cap simulation probabilities unless mathematically certain."""
+    if certainty_status == 'clinched':
+        return 100.0
+    if certainty_status == 'eliminated':
+        return 0.0
+    if raw_probability >= 100:
+        return 99.9
+    if raw_probability <= 0:
+        return 0.1
+    return raw_probability
+
+
+def cap_simulation_probability(raw_probability):
+    """Cap simulation probabilities without certainty check (for division/bye).
+    
+    Since mathematical certainty for division/bye is complex to calculate,
+    we simply prevent false 100%/0% from simulations.
+    """
+    if raw_probability >= 100:
+        return 99.9
+    if raw_probability <= 0:
+        return 0.1
+    return raw_probability
+
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
     
     print("\n" + "="*80)
     print("SIMULATING PLAYOFF SCENARIOS")
     print("="*80)
-    print("Running 1,000 simulations for each team's playoff chances...")
+    print(f"Running {num_simulations:,} simulations for each team's playoff chances...")
     print("Using 70/30 weighted rating (Win% + Past SoS)")
     print("No home field advantage (Madden game)\n")
     
@@ -462,7 +623,9 @@ def main():
         
         for i, team in enumerate(conf_teams, 1):
             print(f"  [{i}/{len(conf_teams)}] Simulating {team}...")
-            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=1000)
+            certainty = check_mathematical_certainty(team, teams_info, stats, games)
+            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=num_simulations)
+            remaining_games = int(sos_data[team]['remaining_games']) if team in sos_data else 4
             results[team] = {
                 'conference': conf,
                 'division': teams_info[team]['division'],
@@ -473,12 +636,14 @@ def main():
                 'division_pct': stats[team]['division_pct'],
                 'strength_of_victory': stats[team]['strength_of_victory'],
                 'strength_of_schedule': stats[team]['strength_of_schedule'],
-                'playoff_probability': round(prob_results['playoff_probability'], 1),
-                'division_win_probability': round(prob_results['division_probability'], 1),
-                'bye_probability': round(prob_results['bye_probability'], 1),
+                'playoff_probability': round(cap_probability(prob_results['playoff_probability'], certainty), 1),
+                'division_win_probability': round(cap_simulation_probability(prob_results['division_probability']), 1),
+                'bye_probability': round(cap_simulation_probability(prob_results['bye_probability']), 1),
                 'remaining_sos': float(sos_data[team]['ranked_sos_avg']) if team in sos_data else 0.5,
-                'remaining_games': int(sos_data[team]['remaining_games']) if team in sos_data else 4,
-                'past_sos': teams_info[team]['past_sos']
+                'remaining_games': remaining_games,
+                'past_sos': teams_info[team]['past_sos'],
+                'clinched': certainty == 'clinched',
+                'eliminated': certainty == 'eliminated'
             }
     
     with open('output/playoff_probabilities.json', 'w', encoding='utf-8') as f:
@@ -487,12 +652,14 @@ def main():
     print("\n" + "="*80)
     print("PLAYOFF PROBABILITY CALCULATION COMPLETE!")
     print("="*80)
-    print("\nUsing Monte Carlo simulation (1,000 iterations per team)")
+    print(f"\nUsing Monte Carlo simulation ({num_simulations:,} iterations per team)")
     print("Features:")
     print("  ✓ 70% weight on Win Percentage + 30% weight on Past SoS")
     print("  ✓ Removed home field advantage (Madden game)")
     print("  ✓ Win probability capped at 25-75% (realistic variance)")
     print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")
+    print("  ✓ Mathematical certainty detection (clinched/eliminated)")
+    print("  ✓ Probability capping: 100% only if clinched, 0% only if eliminated")
     print("\nOutput saved to: output/playoff_probabilities.json")
     print("\nTop AFC Contenders:")
     afc_teams = [(t, r['playoff_probability']) for t, r in results.items() if r['conference'] == 'AFC']
@@ -509,4 +676,16 @@ def main():
 if __name__ == "__main__":
     import os
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-    main()
+    
+    parser = argparse.ArgumentParser(description='Calculate NFL playoff probabilities using Monte Carlo simulation')
+    parser.add_argument('-n', '--num-simulations', type=int, default=DEFAULT_NUM_SIMULATIONS,
+                        help=f'Number of simulations to run (default: {DEFAULT_NUM_SIMULATIONS})')
+    parser.add_argument('-s', '--seed', type=int, default=None,
+                        help='Random seed for reproducible results (default: None)')
+    args = parser.parse_args()
+    
+    if args.seed is not None:
+        random.seed(args.seed)
+        print(f"Using random seed: {args.seed}")
+    
+    main(num_simulations=args.num_simulations)
