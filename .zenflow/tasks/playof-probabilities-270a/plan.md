@@ -100,10 +100,13 @@ Fix `check_mathematical_certainty()` - currently uses arbitrary home team as win
 - **Worst-case**: Same-conference rivals should win their games
 - **Best-case**: Same-conference rivals should lose their games
 
-### [ ] Step: Fix division/bye probability capping
+### [x] Step: Fix division/bye probability capping
+<!-- chat-id: 671a1cdf-cada-4f30-83e8-36bb2d58dd96 -->
 <!-- Priority: Medium -->
 
 Division and bye probabilities shouldn't use same `certainty` status as playoff probability. A team can be clinched for playoffs but not for division winner. Add separate certainty checks for division/bye or only apply capping to playoff probability.
+
+**Completed**: Added `cap_simulation_probability()` function that caps division/bye probabilities at 99.9%/0.1% without using playoff certainty status. Division and bye probabilities now only get simulation-based capping (preventing false 100%/0%) while playoff probability continues to use mathematical certainty detection.
 
 ### [ ] Step: Add configurable simulation count
 <!-- Priority: Medium -->

@@ -534,6 +534,19 @@ def cap_probability(raw_probability, certainty_status):
         return 0.1
     return raw_probability
 
+
+def cap_simulation_probability(raw_probability):
+    """Cap simulation probabilities without certainty check (for division/bye).
+    
+    Since mathematical certainty for division/bye is complex to calculate,
+    we simply prevent false 100%/0% from simulations.
+    """
+    if raw_probability >= 100:
+        return 99.9
+    if raw_probability <= 0:
+        return 0.1
+    return raw_probability
+
 def main():
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
@@ -566,8 +579,8 @@ def main():
                 'strength_of_victory': stats[team]['strength_of_victory'],
                 'strength_of_schedule': stats[team]['strength_of_schedule'],
                 'playoff_probability': round(cap_probability(prob_results['playoff_probability'], certainty), 1),
-                'division_win_probability': round(cap_probability(prob_results['division_probability'], certainty), 1),
-                'bye_probability': round(cap_probability(prob_results['bye_probability'], certainty), 1),
+                'division_win_probability': round(cap_simulation_probability(prob_results['division_probability']), 1),
+                'bye_probability': round(cap_simulation_probability(prob_results['bye_probability']), 1),
                 'remaining_sos': float(sos_data[team]['ranked_sos_avg']) if team in sos_data else 0.5,
                 'remaining_games': remaining_games,
                 'past_sos': teams_info[team]['past_sos'],
