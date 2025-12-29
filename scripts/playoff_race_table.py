@@ -370,6 +370,13 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
             font-weight: 600;
             font-size: 1em;
             color: #1a1a1a;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .team-cell:hover {
+            color: #2563eb;
+            text-decoration: underline;
         }
         
         .team-logo {
@@ -795,6 +802,16 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
         
         window.addEventListener('load', resizeIframe);
         window.addEventListener('resize', resizeIframe);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const teamCells = document.querySelectorAll('.team-cell');
+            teamCells.forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const teamName = this.querySelector('img').alt;
+                    window.location.href = 'team_scenarios.html?team=' + encodeURIComponent(teamName);
+                });
+            });
+        });
     </script>
 </body>
 </html>''')

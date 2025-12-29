@@ -122,6 +122,13 @@
             font-weight: 600;
             font-size: 1em;
             color: #1a1a1a;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        
+        .team-cell:hover {
+            color: #2563eb;
+            text-decoration: underline;
         }
         
         .team-logo {
@@ -372,7 +379,7 @@
         <div class="header">
             <h1>🏈 MEGA League Playoff Race</h1>
             <div class="subtitle">Week 15 Standings & Playoff Probabilities</div>
-            <div class="updated">Updated Dec 29, 2025 at 05:41 PM ET</div>
+            <div class="updated">Updated Dec 29, 2025 at 06:07 PM ET</div>
         </div>
 
         <div class="conferences-wrapper">
@@ -1705,6 +1712,16 @@
         
         window.addEventListener('load', resizeIframe);
         window.addEventListener('resize', resizeIframe);
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const teamCells = document.querySelectorAll('.team-cell');
+            teamCells.forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const teamName = this.querySelector('img').alt;
+                    window.location.href = 'team_scenarios.html?team=' + encodeURIComponent(teamName);
+                });
+            });
+        });
     </script>
 </body>
 </html>
