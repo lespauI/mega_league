@@ -86,6 +86,7 @@ def main():
             padding: 32px;
             margin-bottom: 20px;
             color: white;
+            position: relative;
         }}
         
         .header h1 {{
@@ -96,6 +97,24 @@ def main():
         
         .header p {{
             opacity: 0.8;
+        }}
+        
+        .back-button {{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: background 0.2s;
+            margin-bottom: 16px;
+        }}
+        
+        .back-button:hover {{
+            background: rgba(255, 255, 255, 0.2);
         }}
         
         .selector-container {{
@@ -276,6 +295,9 @@ def main():
 <body>
     <div class="container">
         <div class="header">
+            <a href="playoff_race_table.html" class="back-button">
+                ← Back to Playoff Race
+            </a>
             <h1>NFL Playoff Scenarios</h1>
             <p>Monte Carlo simulation analysis - {num_simulations:,} iterations - Generated {generated_at[:10] if generated_at else 'recently'}</p>
         </div>
@@ -547,6 +569,14 @@ def main():
             
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        const teamFromUrl = urlParams.get('team');
+        if (teamFromUrl && TEAM_DATA[teamFromUrl]) {
+            const selectElement = document.getElementById('team-select');
+            selectElement.value = teamFromUrl;
+            selectElement.dispatchEvent(new Event('change'));
+        }
     </script>
 </body>
 </html>
