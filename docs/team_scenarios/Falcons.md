@@ -2,9 +2,9 @@
 
 **📍 Conference:** NFC  
 **🏆 Division:** NFC South  
-**📊 Current Record:** 6-5-0  
-**📈 Win %:** 0.545  
-**🎲 Simulations:** 10,000
+**📊 Current Record:** 6-6-0  
+**📈 Win %:** 0.500  
+**🎲 Simulations:** 1,000
 
 ---
 
@@ -12,41 +12,39 @@
 
 | Week | Opponent | Location | Win % | Tie % | Loss % |
 |------|----------|----------|-------|-------|--------|
-| 12 | Chargers | ✈️ AWAY | <span class='prob-medium'>58.5%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>41.2%</span> |
-| 13 | Vikings | ✈️ AWAY | <span class='prob-medium'>56.7%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>43.0%</span> |
-| 14 | Saints | 🏠 HOME | <span class='prob-medium'>47.8%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>51.9%</span> |
-| 15 | Browns | ✈️ AWAY | <span class='prob-medium'>41.6%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>58.1%</span> |
-| 16 | Bengals | 🏠 HOME | <span class='prob-medium'>43.2%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>56.5%</span> |
-| 17 | Rams | ✈️ AWAY | <span class='prob-medium'>44.2%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>55.5%</span> |
+| 13 | Vikings | ✈️ AWAY | <span class='prob-medium'>55.2%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>44.5%</span> |
+| 14 | Saints | 🏠 HOME | <span class='prob-medium'>46.3%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>53.4%</span> |
+| 15 | Browns | ✈️ AWAY | <span class='prob-medium'>40.1%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>59.6%</span> |
+| 16 | Bengals | 🏠 HOME | <span class='prob-medium'>41.7%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>58.0%</span> |
+| 17 | Rams | ✈️ AWAY | <span class='prob-medium'>44.1%</span> | <span class='prob-tie'>0.3%</span> | <span class='prob-medium'>55.6%</span> |
 
 ---
 
 ## 🎯 Most Probable Outcome
 
-**📌 Final Record:** 9-8-0  
-**🎲 Probability:** 🔴 <span class='prob-low'>29.8%</span> (2,975/10,000 simulations)
+**📌 Final Record:** 8-9-0  
+**🎲 Probability:** 🔴 <span class='prob-low'>30.2%</span> (302/1,000 simulations)
 
 ### 🎬 Example of how this happens:
 
-- ❌ @ Chargers **(LOSS)**
 - ❌ @ Vikings **(LOSS)**
 - ✅ vs Saints **(WIN)**
-- ✅ @ Browns **(WIN)**
-- ✅ vs Bengals **(WIN)**
-- ❌ @ Rams **(LOSS)**
+- ❌ @ Browns **(LOSS)**
+- ❌ vs Bengals **(LOSS)**
+- ✅ @ Rams **(WIN)**
 
-**🎲 With this 9-8-0 record:**
-- 🏆 Make Playoffs: 🔴 <span class='prob-low'>22.6%</span>
-- 👑 Win Division: 🔴 <span class='prob-low'>20.3%</span>
+**🎲 With this 8-9-0 record:**
+- 🏆 Make Playoffs: 🔴 <span class='prob-low'>3.0%</span>
+- 👑 Win Division: 🔴 <span class='prob-low'>3.0%</span>
 - 🎫 Earn Bye: 🔴 <span class='prob-low'>0.0%</span>
 
 ---
 
 ## 📊 Overall Probabilities
 
-- **🏆 Make Playoffs:** 🔴 <span class='prob-low'>33.6%</span> (3,360/10,000 simulations)
-- **👑 Win Division:** 🔴 <span class='prob-low'>29.0%</span> (2,903/10,000 simulations)
-- **🎫 Earn Bye:** 🔴 <span class='prob-low'>0.0%</span> (3/10,000 simulations)
+- **🏆 Make Playoffs:** 🔴 <span class='prob-low'>21.2%</span> (212/1,000 simulations)
+- **👑 Win Division:** 🔴 <span class='prob-low'>17.4%</span> (174/1,000 simulations)
+- **🎫 Earn Bye:** 🔴 <span class='prob-low'>0.0%</span> (0/1,000 simulations)
 
 ---
 
@@ -54,29 +52,24 @@
 
 | Final Record | Frequency | % | Playoff % | Division % | Bye % |
 |--------------|-----------|---|-----------|------------|-------|
-| 12-5-0 | 145 | <span class='prob-verylow'>1.45%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>2.1%</span> |
-| 11-5-1 | 3 | <span class='prob-verylow'>0.03%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>0.0%</span> |
-| 11-6-0 | 801 | <span class='prob-low'>8.0%</span> | <span class='prob-high'>99.6%</span> | <span class='prob-high'>90.9%</span> | <span class='prob-low'>0.0%</span> |
-| 10-5-2 | 1 | <span class='prob-verylow'>0.01%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-low'>0.0%</span> |
-| 10-6-1 | 27 | <span class='prob-verylow'>0.27%</span> | <span class='prob-high'>85.2%</span> | <span class='prob-high'>70.4%</span> | <span class='prob-low'>0.0%</span> |
-| 10-7-0 | 2,231 | <span class='prob-low'>22.3%</span> | <span class='prob-high'>73.6%</span> | <span class='prob-medium'>59.7%</span> | <span class='prob-low'>0.0%</span> |
-| 9-7-1 | 51 | <span class='prob-verylow'>0.51%</span> | <span class='prob-low'>31.4%</span> | <span class='prob-low'>27.5%</span> | <span class='prob-low'>0.0%</span> |
-| 9-8-0 | 2,975 | <span class='prob-low'>29.8%</span> | <span class='prob-low'>22.6%</span> | <span class='prob-low'>20.3%</span> | <span class='prob-low'>0.0%</span> |
-| 8-8-1 | 57 | <span class='prob-verylow'>0.57%</span> | <span class='prob-low'>5.3%</span> | <span class='prob-low'>5.3%</span> | <span class='prob-low'>0.0%</span> |
-| 8-9-0 | 2,484 | <span class='prob-low'>24.8%</span> | <span class='prob-low'>2.2%</span> | <span class='prob-low'>2.2%</span> | <span class='prob-low'>0.0%</span> |
-| 7-9-1 | 32 | <span class='prob-verylow'>0.32%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
-| 7-10-0 | 1,031 | <span class='prob-low'>10.3%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
-| 6-10-1 | 4 | <span class='prob-verylow'>0.04%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
-| 6-11-0 | 158 | <span class='prob-verylow'>1.58%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 11-6-0 | 26 | <span class='prob-verylow'>2.60%</span> | <span class='prob-high'>100.0%</span> | <span class='prob-high'>96.2%</span> | <span class='prob-low'>0.0%</span> |
+| 10-7-0 | 121 | <span class='prob-low'>12.1%</span> | <span class='prob-high'>81.0%</span> | <span class='prob-high'>63.6%</span> | <span class='prob-low'>0.0%</span> |
+| 9-7-1 | 9 | <span class='prob-verylow'>0.90%</span> | <span class='prob-high'>66.7%</span> | <span class='prob-low'>33.3%</span> | <span class='prob-low'>0.0%</span> |
+| 9-8-0 | 265 | <span class='prob-low'>26.5%</span> | <span class='prob-low'>27.2%</span> | <span class='prob-low'>22.3%</span> | <span class='prob-low'>0.0%</span> |
+| 8-8-1 | 3 | <span class='prob-verylow'>0.30%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 8-9-0 | 302 | <span class='prob-low'>30.2%</span> | <span class='prob-low'>3.0%</span> | <span class='prob-low'>3.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-9-1 | 4 | <span class='prob-verylow'>0.40%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 7-10-0 | 223 | <span class='prob-low'>22.3%</span> | <span class='prob-low'>0.4%</span> | <span class='prob-low'>0.4%</span> | <span class='prob-low'>0.0%</span> |
+| 6-10-1 | 2 | <span class='prob-verylow'>0.20%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
+| 6-11-0 | 45 | <span class='prob-verylow'>4.50%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> | <span class='prob-low'>0.0%</span> |
 
 ---
 
 ## 🔥 Top 5 Most Common Scenarios
 
-### 🥇 #1: 12-5-0 (145 times, 🔴 <span class='prob-low'>1.5%</span>)
+### 🥇 #1: 11-6-0 (26 times, 🔴 <span class='prob-low'>2.6%</span>)
 
 **🎬 Example game outcomes:**
-- ✅ @ Chargers
 - ✅ @ Vikings
 - ✅ vs Saints
 - ✅ @ Browns
@@ -85,50 +78,46 @@
 
 **🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
 
-### 🥈 #2: 11-5-1 (3 times, 🔴 <span class='prob-low'>0.0%</span>)
+### 🥈 #2: 10-7-0 (121 times, 🔴 <span class='prob-low'>12.1%</span>)
 
 **🎬 Example game outcomes:**
-- ✅ @ Chargers
-- 🟡 @ Vikings
+- ❌ @ Vikings
 - ✅ vs Saints
 - ✅ @ Browns
 - ✅ vs Bengals
 - ✅ @ Rams
 
-**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>81.0%</span>
 
-### 🥉 #3: 11-6-0 (801 times, 🔴 <span class='prob-low'>8.0%</span>)
+### 🥉 #3: 9-7-1 (9 times, 🔴 <span class='prob-low'>0.9%</span>)
 
 **🎬 Example game outcomes:**
-- ✅ @ Chargers
 - ✅ @ Vikings
 - ❌ vs Saints
 - ✅ @ Browns
 - ✅ vs Bengals
-- ✅ @ Rams
+- 🟡 @ Rams
 
-**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>99.6%</span>
+**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>66.7%</span>
 
-### 4️⃣ #4: 10-5-2 (1 times, 🔴 <span class='prob-low'>0.0%</span>)
-
-**🎬 Example game outcomes:**
-- ✅ @ Chargers
-- ✅ @ Vikings
-- 🟡 vs Saints
-- 🟡 @ Browns
-- ✅ vs Bengals
-- ✅ @ Rams
-
-**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>100.0%</span>
-
-### 5️⃣ #5: 10-6-1 (27 times, 🔴 <span class='prob-low'>0.3%</span>)
+### 4️⃣ #4: 9-8-0 (265 times, 🔴 <span class='prob-low'>26.5%</span>)
 
 **🎬 Example game outcomes:**
-- ✅ @ Chargers
-- ✅ @ Vikings
+- ❌ @ Vikings
+- ✅ vs Saints
+- ✅ @ Browns
+- ❌ vs Bengals
+- ✅ @ Rams
+
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>27.2%</span>
+
+### 5️⃣ #5: 8-8-1 (3 times, 🔴 <span class='prob-low'>0.3%</span>)
+
+**🎬 Example game outcomes:**
+- 🟡 @ Vikings
 - ✅ vs Saints
 - ❌ @ Browns
 - ✅ vs Bengals
-- 🟡 @ Rams
+- ❌ @ Rams
 
-**🏆 Playoff chances with this record:** 🟢 <span class='prob-high'>85.2%</span>
+**🏆 Playoff chances with this record:** 🔴 <span class='prob-low'>0.0%</span>

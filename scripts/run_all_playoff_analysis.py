@@ -205,7 +205,7 @@ def write_output(results, output_path):
 import sys
 import subprocess
 
-def run_script(script_name, description, optional=False):
+def run_script(script_name, description, optional=False, extra_args=None):
     """Run a Python script and print its status"""
     print("\n" + "="*80)
     print(f"Running: {description}")
@@ -214,8 +214,11 @@ def run_script(script_name, description, optional=False):
     print("="*80)
     
     try:
+        cmd = [sys.executable, script_name]
+        if extra_args:
+            cmd.extend(extra_args)
         result = subprocess.run(
-            [sys.executable, script_name],
+            cmd,
             cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             capture_output=False,
             text=True
@@ -248,18 +251,18 @@ def main():
     print("="*80)
     
     scripts = [
-        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False),
-        ('scripts/calc_playoff_probabilities.py', 'Playoff Probability Calculation', False),
-        ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False),
-        ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False),
-        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis', False),
-        ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False),
-        ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True),
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, None),
+        ('scripts/calc_playoff_probabilities.py', 'Playoff Probability Calculation', False, None),
+        ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),
+        ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, None),
+        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis', False, ['--markdown']),
+        ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False, None),
+        ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True, None),
     ]
     
     results = []
-    for script, description, optional in scripts:
-        success = run_script(script, description, optional)
+    for script, description, optional, extra_args in scripts:
+        success = run_script(script, description, optional, extra_args)
         results.append((description, success))
     
     print("\n" + "="*80)
