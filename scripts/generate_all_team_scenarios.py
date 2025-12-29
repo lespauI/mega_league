@@ -10,7 +10,10 @@ from calc_playoff_probabilities import (
     calculate_team_stats,
     simulate_remaining_games,
     determine_playoff_teams,
-    TIE_PROBABILITY
+    TIE_PROBABILITY,
+    check_mathematical_certainty,
+    cap_probability,
+    cap_simulation_probability,
 )
 from team_scenario_report import (
     get_remaining_games_for_team,
@@ -185,6 +188,48 @@ def build_team_scenarios_json(teams_info, stats, sos_data, games, team_data, num
     return result
 
 
+def build_playoff_probabilities_json(teams_info, stats, sos_data, games, team_data, num_simulations):
+    results = {}
+    
+    for team in teams_info:
+        conf = teams_info[team]['conference']
+        division = teams_info[team]['division']
+        
+        certainty = check_mathematical_certainty(team, teams_info, stats, games)
+        
+        total_playoffs = team_data[team]['total_playoffs']
+        total_division = team_data[team]['total_division']
+        total_bye = team_data[team]['total_bye']
+        
+        playoff_probability = (total_playoffs / num_simulations) * 100 if num_simulations > 0 else 0.0
+        division_probability = (total_division / num_simulations) * 100 if num_simulations > 0 else 0.0
+        bye_probability = (total_bye / num_simulations) * 100 if num_simulations > 0 else 0.0
+        
+        remaining_games = int(sos_data[team]['remaining_games']) if team in sos_data else 4
+        
+        results[team] = {
+            'conference': conf,
+            'division': division,
+            'W': stats[team]['W'],
+            'L': stats[team]['L'],
+            'win_pct': stats[team]['win_pct'],
+            'conference_pct': stats[team]['conference_pct'],
+            'division_pct': stats[team]['division_pct'],
+            'strength_of_victory': stats[team]['strength_of_victory'],
+            'strength_of_schedule': stats[team]['strength_of_schedule'],
+            'playoff_probability': round(cap_probability(playoff_probability, certainty), 1),
+            'division_win_probability': round(cap_simulation_probability(division_probability), 1),
+            'bye_probability': round(cap_simulation_probability(bye_probability), 1),
+            'remaining_sos': float(sos_data[team]['ranked_sos_avg']) if team in sos_data else 0.5,
+            'remaining_games': remaining_games,
+            'past_sos': teams_info[team]['past_sos'],
+            'clinched': certainty == 'clinched',
+            'eliminated': certainty == 'eliminated',
+        }
+    
+    return results
+
+
 def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=False):
     if seed is not None:
         random.seed(seed)
@@ -205,12 +250,19 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=F
     
     print("\nBuilding JSON output...")
     scenarios_json = build_team_scenarios_json(teams_info, stats, sos_data, games, team_data, num_simulations)
+    playoff_probabilities = build_playoff_probabilities_json(teams_info, stats, sos_data, games, team_data, num_simulations)
     
-    json_path = 'output/team_scenarios.json'
-    with open(json_path, 'w', encoding='utf-8') as f:
+    scenarios_path = 'output/team_scenarios.json'
+    with open(scenarios_path, 'w', encoding='utf-8') as f:
         json.dump(scenarios_json, f, indent=2)
     
-    print(f"  Saved: {json_path}")
+    print(f"  Saved: {scenarios_path}")
+    
+    probabilities_path = 'output/playoff_probabilities.json'
+    with open(probabilities_path, 'w', encoding='utf-8') as f:
+        json.dump(playoff_probabilities, f, indent=2)
+    
+    print(f"  Saved: {probabilities_path}")
     
     if generate_markdown:
         os.makedirs('docs/team_scenarios', exist_ok=True)
@@ -232,7 +284,9 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=F
     print("="*80)
     print(f"\nTeams processed: {len(teams_info)}")
     print(f"Total simulations: {num_simulations:,}")
-    print(f"Primary output: output/team_scenarios.json")
+    print("Primary outputs:")
+    print("  - output/team_scenarios.json")
+    print("  - output/playoff_probabilities.json")
     if generate_markdown:
         print(f"Markdown reports: docs/team_scenarios/")
     print()

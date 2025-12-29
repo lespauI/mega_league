@@ -252,10 +252,9 @@ def main():
     
     scripts = [
         ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, None),
-        ('scripts/calc_playoff_probabilities.py', 'Playoff Probability Calculation', False, None),
+        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, ['--markdown']),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),
         ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, None),
-        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis', False, ['--markdown']),
         ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False, None),
         ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True, None),
     ]

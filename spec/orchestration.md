@@ -12,19 +12,25 @@ Sequences
 - run_all.py
   1) stats_scripts/aggregate_team_stats.py
   2) stats_scripts/aggregate_player_usage.py
-  3) scripts/calc_sos_by_rankings.py
-  4) scripts/calc_playoff_probabilities.py
-  5) scripts/playoff_race_table.py
-  6) scripts/playoff_race_html.py
-  7) scripts/top_pick_race_analysis.py (optional)
-  8) scripts/generate_index.py
+  3) stats_scripts/aggregate_rankings_stats.py
+  4) stats_scripts/build_player_team_stints.py
+  5) scripts/calc_sos_season2_elo.py
+  6) scripts/calc_sos_by_rankings.py
+  7) scripts/generate_all_team_scenarios.py
+  8) scripts/playoff_race_table.py
+  9) scripts/playoff_race_html.py
+ 10) scripts/generate_team_scenario_html.py
+ 11) scripts/top_pick_race_analysis.py (optional, matplotlib required for visuals)
+ 12) scripts/generate_index.py
+ 13) scripts/verify_trade_stats.py
 
 - run_all_playoff_analysis.py
   1) scripts/calc_sos_by_rankings.py
-  2) scripts/calc_playoff_probabilities.py
+  2) scripts/generate_all_team_scenarios.py
   3) scripts/playoff_race_table.py
   4) scripts/playoff_race_html.py
-  5) scripts/top_pick_race_analysis.py (optional, matplotlib required for visuals)
+  5) scripts/generate_team_scenario_html.py
+  6) scripts/top_pick_race_analysis.py (optional, matplotlib required for visuals)
 
 - run_all_stats.py
   1) stats_scripts/aggregate_team_stats.py

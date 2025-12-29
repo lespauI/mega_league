@@ -19,7 +19,8 @@ Domain‑specific scripts that can be run directly or via the entry points:
 
 - **Playoff / draft / SoS (rankings‑based)**  
   `calc_sos_by_rankings.py`, `calc_remaining_sos.py`, `calc_playoff_probabilities.py`,  
-  `playoff_race_table.py`, `playoff_race_html.py`, `top_pick_race_analysis.py`, `generate_index.py`.
+  `generate_all_team_scenarios.py`, `playoff_race_table.py`, `playoff_race_html.py`,  
+  `generate_team_scenario_html.py`, `top_pick_race_analysis.py`, `generate_index.py`.
 - **Season 2 SoS (ELO)**  
   `calc_sos_season2_elo.py` (+ verifier `verify_sos_season2_elo.py`).
 - **Draft & rookies**  
@@ -83,4 +84,3 @@ If your new script generates or updates an HTML page under `docs/`, document it 
 
 - The relevant section of `README.md` (Architecture / Quick Start / Workflow), and
 - `docs/README.md` under the appropriate domain table (Playoff & SoS, Stats Dashboards, Roster / Cap, Misc & Utilities).
-
