@@ -118,7 +118,7 @@ def read_games_split(games_csv_path):
     return remaining, past
 
 
-def read_teams_info(teams_csv_path):
+def read_teams_info(teams_csv_path, games_csv_path):
     info = {}
     with open(teams_csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -129,18 +129,47 @@ def read_teams_info(teams_csv_path):
             if not key:
                 continue
 
-            def to_int0(v):
-                try:
-                    return int(v)
-                except Exception:
-                    return 0
-
             info[key] = {
                 "conference": (row.get("conferenceName") or "").strip(),
-                "W": to_int0(row.get("totalWins")),
-                "L": to_int0(row.get("totalLosses")),
-                "T": to_int0(row.get("totalTies")),
+                "W": 0,
+                "L": 0,
+                "T": 0,
             }
+    
+    with open(games_csv_path, newline="", encoding="utf-8") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            si = to_int(row.get("seasonIndex"), -1)
+            sti = to_int(row.get("stageIndex"), -1)
+            if si != 1 or sti != 1:
+                continue
+            
+            status = (row.get("status") or "").strip()
+            if status not in {"2", "3"}:
+                continue
+            
+            home = (row.get("homeTeam") or "").strip()
+            away = (row.get("awayTeam") or "").strip()
+            
+            if not home or not away:
+                continue
+            
+            if home not in info or away not in info:
+                continue
+            
+            home_score = to_int(row.get("homeScore"), 0)
+            away_score = to_int(row.get("awayScore"), 0)
+            
+            if home_score > away_score:
+                info[home]["W"] += 1
+                info[away]["L"] += 1
+            elif away_score > home_score:
+                info[away]["W"] += 1
+                info[home]["L"] += 1
+            else:
+                info[home]["T"] += 1
+                info[away]["T"] += 1
+    
     return info
 
 
@@ -230,7 +259,7 @@ def main():
 
     strength_scores = read_latest_rankings(rankings_csv)
     remaining, past = read_games_split(games_csv)
-    teams_info = read_teams_info(teams_csv)
+    teams_info = read_teams_info(teams_csv, games_csv)
     results = compute_ranked_sos(teams_info, strength_scores, remaining, past)
     write_output(results, output_csv)
 
