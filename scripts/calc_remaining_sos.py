@@ -65,7 +65,7 @@ def read_games_split(games_csv_path):
                 continue
             if status == "1":
                 remaining.append((home, away))
-            elif status in {"2", "3"}:  # treat these as completed games
+            elif status in {"2", "3", "4"}:  # treat these as completed games
                 past.append((home, away))
             else:
                 # ignore blanks or unknown statuses

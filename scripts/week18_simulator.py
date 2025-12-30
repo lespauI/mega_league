@@ -35,7 +35,7 @@ def load_games():
                 'away_score': away_score,
                 'week': week,
                 'status': status,
-                'completed': status in [2, 3]
+                'completed': status in [2, 3, 4]
             })
     return games
 

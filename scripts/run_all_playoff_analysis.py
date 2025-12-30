@@ -97,7 +97,7 @@ def read_games_split(games_csv_path):
                 continue
             if status == "1":
                 remaining.append((home, away))
-            elif status in {"2", "3"}:
+            elif status in {"2", "3", "4"}:
                 past.append((home, away))
             else:
                 pass

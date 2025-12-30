@@ -36,7 +36,7 @@ def load_data():
                 'away_score': int(row['awayScore']) if row['awayScore'] else 0,
                 'week': int(row['weekIndex']) if row['weekIndex'] else 0,
                 'status': status,
-                'completed': status in [2, 3]
+                'completed': status in [2, 3, 4]
             })
     
     with open('output/ranked_sos_by_conference.csv', 'r', encoding='utf-8') as f:
