@@ -110,7 +110,7 @@ def read_games_split(games_csv_path):
                 continue
             if status == "1":
                 remaining.append((home, away))
-            elif status in {"2", "3"}:  # completed
+            elif status in {"2", "3", "4"}:  # completed
                 past.append((home, away))
             else:
                 # ignore other/blank
@@ -145,7 +145,7 @@ def read_teams_info(teams_csv_path, games_csv_path):
                 continue
             
             status = (row.get("status") or "").strip()
-            if status not in {"2", "3"}:
+            if status not in {"2", "3", "4"}:
                 continue
             
             home = (row.get("homeTeam") or "").strip()
