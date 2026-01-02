@@ -7,6 +7,7 @@ from datetime import datetime, timezone
 
 from calc_playoff_probabilities import (
     load_data,
+    load_rankings_data,
     calculate_team_stats,
     simulate_remaining_games,
     determine_playoff_teams,
@@ -24,7 +25,7 @@ from team_scenario_report import (
 DEFAULT_NUM_SIMULATIONS = 10000
 
 
-def run_consolidated_simulations(teams_info, stats, sos_data, games, num_simulations):
+def run_consolidated_simulations(teams_info, stats, sos_data, games, rankings, num_simulations):
     all_teams = list(teams_info.keys())
     
     team_data = {team: {
@@ -42,7 +43,7 @@ def run_consolidated_simulations(teams_info, stats, sos_data, games, num_simulat
         if (sim + 1) % 1000 == 0:
             print(f"  Simulation {sim + 1:,}/{num_simulations:,}...")
         
-        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games)
+        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games, rankings)
         playoff_teams, division_winners, bye_teams = determine_playoff_teams(teams_info, stats, simulated_games)
         
         for team in all_teams:
@@ -238,6 +239,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=F
     
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
+    rankings = load_rankings_data()
     
     os.makedirs('output', exist_ok=True)
     
@@ -246,7 +248,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=F
     print("="*80)
     print(f"Running {num_simulations:,} simulations (all teams tracked simultaneously)...\n")
     
-    team_data = run_consolidated_simulations(teams_info, stats, sos_data, games, num_simulations)
+    team_data = run_consolidated_simulations(teams_info, stats, sos_data, games, rankings, num_simulations)
     
     print("\nBuilding JSON output...")
     scenarios_json = build_team_scenarios_json(teams_info, stats, sos_data, games, team_data, num_simulations)
@@ -269,7 +271,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=F
         print("\nGenerating markdown reports (optional)...")
         
         for i, team in enumerate(sorted(teams_info.keys()), 1):
-            md_content = generate_markdown_report(team, teams_info, stats, sos_data, games, num_simulations)
+            md_content = generate_markdown_report(team, teams_info, stats, sos_data, games, rankings, num_simulations)
             safe_filename = team.replace(' ', '_').replace('/', '_')
             output_path = f'docs/team_scenarios/{safe_filename}.md'
             
