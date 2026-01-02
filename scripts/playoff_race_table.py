@@ -5,7 +5,48 @@ import json
 from collections import defaultdict
 from datetime import datetime
 
+NUM_TEAMS = 32
+
+SB_WEIGHT_WIN_PCT = 0.50
+SB_WEIGHT_POWER_RANK = 0.25
+SB_WEIGHT_PAST_SOS = 0.15
+SB_WEIGHT_QUALITY_WINS = 0.10
+
+STREAK_THRESHOLD_HIGH = 4
+STREAK_THRESHOLD_LOW = 3
+STREAK_BONUS_HIGH = 0.04
+STREAK_BONUS_LOW = 0.03
+STREAK_PENALTY = -0.03
+
+HOME_BONUS_TOP_SEED = 0.06
+HOME_BONUS_BYE_CONTENDER = 0.05
+HOME_BONUS_DIV_LEADER = 0.03
+
+GAME_WIN_PROB_MIN = 0.30
+GAME_WIN_PROB_MAX = 0.75
+
+SB_PROB_MAX = 45.0
+
+
+def load_power_rankings():
+    rankings = {}
+    max_week = {}
+    with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if int(row.get('seasonIndex', 0)) != 1:
+                continue
+            team = row['team'].strip()
+            week = int(row.get('weekIndex', 0))
+            rank = int(row.get('rank', 16))
+            if team not in max_week or week > max_week[team]:
+                max_week[team] = week
+                rankings[team] = rank
+    return rankings
+
 def read_standings():
+    power_rankings = load_power_rankings()
+    
     teams_div = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -22,8 +63,17 @@ def read_standings():
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()
+            streak_val = row.get('winLossStreak', '0')
+            try:
+                streak = int(streak_val)
+                if streak > 127:
+                    streak = streak - 256
+            except (ValueError, TypeError):
+                streak = 0
             team_rankings[team] = {
-                'rank': int(row['rank']) if row.get('rank') else 99
+                'rank': int(row['rank']) if row.get('rank') else 99,
+                'ovrRating': int(row['ovrRating']) if row.get('ovrRating') else 85,
+                'winLossStreak': streak
             }
     
     remaining_opponents = defaultdict(list)
@@ -67,6 +117,9 @@ def read_standings():
                         'week': opp_week
                     })
             
+            win_streak = team_rankings[team]['winLossStreak'] if team in team_rankings else 0
+            power_rank = power_rankings.get(team, 16)
+            
             team_data = {
                 'team': team,
                 'W': w,
@@ -77,7 +130,9 @@ def read_standings():
                 'remaining_games': int(row['remaining_games']),
                 'logo_url': teams_div[team]['logo_url'],
                 'remaining_opponents': opponent_details,
-                'past_ranked_sos_avg': float(row['past_ranked_sos_avg'])
+                'past_ranked_sos_avg': float(row['past_ranked_sos_avg']),
+                'win_streak': win_streak,
+                'power_rank': power_rank
             }
             
             if conf == 'AFC':
@@ -99,26 +154,73 @@ def get_division_leader_prob(team_name, div_teams, probabilities):
 def get_round1_bye_prob(team_name, all_div_leaders, probabilities):
     return probabilities.get(team_name, {}).get('bye_probability', 0)
 
-def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed):
+def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed, 
+                             win_pct=0.5, past_sos=0.5, win_streak=0, power_rank=16):
+    """
+    Calculate Super Bowl probability using playoff tournament simulation.
+    
+    Formula weights (differ from regular season to emphasize proven quality):
+    - 50% win_pct: Current record is strongest predictor
+    - 25% power_rank: Rankings capture strength beyond W-L (point diff, eye test)
+    - 15% past_sos: Teams that faced tough schedules are battle-tested
+    - 10% quality_of_wins: Beating good teams matters more in playoffs
+    
+    Playoff advantages:
+    - Top seed: bye (3 games instead of 4) + home field (+6%)
+    - Division winner: home field in early rounds (+3%)
+    
+    Returns probability of winning Super Bowl (0-45%).
+    """
     if playoff_prob == 0:
         return 0.0
     
-    if playoff_prob < 50:
-        base_multiplier = 3.0
-    elif playoff_prob < 90:
-        base_multiplier = 5.0
-    elif playoff_prob < 95:
-        base_multiplier = 7.0
+    sov_normalized = max(0.0, min(1.0, (quality_of_wins - 0.3) / 0.4))
+    
+    rank_factor = 1.0 - (power_rank - 1) / (NUM_TEAMS - 1)
+    
+    team_rating = (
+        win_pct * SB_WEIGHT_WIN_PCT +
+        rank_factor * SB_WEIGHT_POWER_RANK +
+        past_sos * SB_WEIGHT_PAST_SOS +
+        sov_normalized * SB_WEIGHT_QUALITY_WINS
+    )
+    
+    streak_bonus = 0.0
+    if win_streak >= STREAK_THRESHOLD_HIGH:
+        streak_bonus = STREAK_BONUS_HIGH
+    elif win_streak >= STREAK_THRESHOLD_LOW:
+        streak_bonus = STREAK_BONUS_LOW
+    elif win_streak <= -STREAK_THRESHOLD_LOW:
+        streak_bonus = STREAK_PENALTY
+    
+    game_win_prob = team_rating + streak_bonus
+    game_win_prob = max(GAME_WIN_PROB_MIN, min(GAME_WIN_PROB_MAX, game_win_prob))
+    
+    if is_top_seed:
+        home_bonus = HOME_BONUS_TOP_SEED
+        games_needed = 3
+    elif bye_prob > 30:
+        home_bonus = HOME_BONUS_BYE_CONTENDER
+        games_needed = 3
+    elif div_prob > 50:
+        home_bonus = HOME_BONUS_DIV_LEADER
+        games_needed = 4
     else:
-        base_multiplier = 9.0
+        home_bonus = 0.0
+        games_needed = 4
     
-    quality_bonus = max(0, min(10.0, ((quality_of_wins - 0.45) / (0.58 - 0.45)) * 10.0))
+    adjusted_game_win = game_win_prob + home_bonus
+    adjusted_game_win = min(GAME_WIN_PROB_MAX, adjusted_game_win)
     
-    seed_bonus = 5.0 if is_top_seed else 0.0
+    conf_champ_prob = (adjusted_game_win ** games_needed)
     
-    total_multiplier = base_multiplier + quality_bonus + seed_bonus
+    sb_game_prob = game_win_prob
     
-    return round(playoff_prob * total_multiplier / 100, 1)
+    sb_win_prob = conf_champ_prob * sb_game_prob
+    
+    final_prob = (playoff_prob / 100) * sb_win_prob * 100
+    
+    return round(max(0.1, min(final_prob, SB_PROB_MAX)), 1)
 
 def get_playoff_tooltip(playoff_prob, team_name, team_data):
     wins = team_data['W']
@@ -192,46 +294,50 @@ def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div>'''
 
-def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed):
+def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed,
+                          win_pct=0.5, past_sos=0.5, win_streak=0, power_rank=16):
     if playoff_prob == 0:
         return f'''<div class="prob-tooltip">
             <strong>Вероятность Суперкубка: 0%</strong><br><br>
             Команда не попадает в плей-офф.
         </div>'''
     
-    if playoff_prob < 50:
-        base_mult = 3.0
-        tier_desc = "Низкая вероятность - аутсайдер плей-офф"
-    elif playoff_prob < 90:
-        base_mult = 5.0
-        tier_desc = "Средняя вероятность - претендент на плей-офф"
-    elif playoff_prob < 95:
-        base_mult = 7.0
-        tier_desc = "Высокая вероятность - сильный претендент"
+    if power_rank <= 5:
+        tier_desc = "Элитная команда"
+    elif power_rank <= 10:
+        tier_desc = "Сильный претендент"
+    elif power_rank <= 16:
+        tier_desc = "Претендент на плей-офф"
     else:
-        base_mult = 9.0
-        tier_desc = "Очень высокая вероятность - элитная команда"
+        tier_desc = "Аутсайдер"
     
-    quality_bonus = max(0, min(10.0, ((quality_of_wins - 0.45) / (0.58 - 0.45)) * 10.0))
-    seed_bonus = 5.0 if is_top_seed else 0.0
-    total_mult = base_mult + quality_bonus + seed_bonus
+    streak_text = ""
+    if win_streak >= 3:
+        streak_text = f"<br>• Серия побед: {win_streak} (+бонус)"
+    elif win_streak <= -3:
+        streak_text = f"<br>• Серия поражений: {abs(win_streak)} (-штраф)"
     
-    formula_parts = [f"{playoff_prob:.0f}% × {base_mult:.1f}% = {playoff_prob * base_mult / 100:.1f}%"]
-    if quality_bonus > 0:
-        formula_parts.append(f"+ бонус за качество побед: {quality_bonus:.1f}%")
-    if seed_bonus > 0:
-        formula_parts.append(f"+ бонус за фаворита #1 сид: {seed_bonus:.1f}%")
+    seed_text = ""
+    if is_top_seed:
+        seed_text = "Топ-сид (бай + домашние игры)"
+    elif bye_prob > 30:
+        seed_text = "Претендент на бай (3 игры до SB)"
+    elif div_prob > 50:
+        seed_text = "Лидер дивизиона (домашние игры)"
     
     return f'''<div class="prob-tooltip">
         <strong>Вероятность Суперкубка: {sb_prob:.1f}%</strong><br><br>
-        {tier_desc}.<br><br>
+        {tier_desc} (рейтинг #{power_rank})<br><br>
+        <b>Факторы:</b><br>
+        • Процент побед: {win_pct*100:.0f}% (50%)<br>
+        • Power Ranking: #{power_rank} (25%)<br>
+        • Сила расписания: {past_sos:.3f} (15%)<br>
+        • Качество побед: {quality_of_wins:.3f} (10%){streak_text}<br><br>
         • Плей-офф: {playoff_prob:.0f}%<br>
-        • Побед. в див.: {div_prob:.0f}%<br>
+        • Победа в див.: {div_prob:.0f}%<br>
         • Бай 1-го раунда: {bye_prob:.0f}%<br>
-        • Качество побед: {quality_of_wins:.3f}<br><br>
-        Формула:<br>
-        {"<br>".join(formula_parts)}<br>
-        = {sb_prob:.1f}%
+        {f'<br>{seed_text}' if seed_text else ''}<br>
+        <i>= вероятность выиграть 3-4 матча плей-офф</i>
     </div>'''
 
 def get_rank_class(rank):
@@ -682,7 +788,14 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 bye_prob = get_round1_bye_prob(team_name, all_div_leaders, probabilities)
                 quality_of_wins = team_data.get('past_ranked_sos_avg', 0.5)
                 is_top_seed = (team_name == top_bye_team)
-                sb_prob = calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed)
+                win_pct = team_data.get('win_pct', 0.5)
+                past_sos = quality_of_wins
+                win_streak = team_data.get('win_streak', 0)
+                power_rank = team_data.get('power_rank', 16)
+                sb_prob = calculate_superbowl_prob(
+                    playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed,
+                    win_pct=win_pct, past_sos=past_sos, win_streak=win_streak, power_rank=power_rank
+                )
                 
                 sos = team_data['remaining_sos']
                 logo_url = team_data.get('logo_url', '')
@@ -730,7 +843,10 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 playoff_tooltip = get_playoff_tooltip(playoff_prob, team_name, team_data)
                 div_tooltip = get_division_tooltip(div_prob, team_name, teams, probabilities)
                 bye_tooltip = get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities)
-                sb_tooltip = get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed)
+                sb_tooltip = get_superbowl_tooltip(
+                    sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed,
+                    win_pct=win_pct, past_sos=past_sos, win_streak=win_streak, power_rank=power_rank
+                )
                 
                 record_display = f'{team_data["W"]}-{team_data["L"]}-{team_data["T"]}' if team_data["T"] > 0 else f'{team_data["W"]}-{team_data["L"]}'
                 

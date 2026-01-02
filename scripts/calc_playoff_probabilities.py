@@ -9,15 +9,74 @@ import random
 DEFAULT_NUM_SIMULATIONS = 10000
 TIE_PROBABILITY = 0.003  # ~0.3% of NFL games end in ties
 
+HOME_FIELD_ADVANTAGE = 0.02
+WIN_STREAK_THRESHOLD = 3
+WIN_STREAK_BONUS = 0.03
+DIVISIONAL_REGRESSION = 0.15
+SOV_WEIGHT = 0.10
+
+
+def load_rankings_data():
+    rankings = {}
+    max_week = {}
+    with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            if int(row.get('seasonIndex', 0)) != 1:
+                continue
+            team = row['team'].strip()
+            week = int(row.get('weekIndex', 0))
+            rank = int(row.get('rank', 16))
+            if team not in max_week or week > max_week[team]:
+                max_week[team] = week
+                rankings[team] = rank
+    return rankings
+
+
+def get_streak_modifier(streak):
+    if streak >= WIN_STREAK_THRESHOLD:
+        return WIN_STREAK_BONUS
+    elif streak <= -WIN_STREAK_THRESHOLD:
+        return -WIN_STREAK_BONUS
+    return 0.0
+
+
+def calculate_sov_rating(defeated_opponents, rankings):
+    if not defeated_opponents:
+        return 0.5
+    ranks = []
+    for opp in defeated_opponents:
+        if opp in rankings:
+            ranks.append(rankings[opp])
+        else:
+            ranks.append(16)
+    avg_rank = sum(ranks) / len(ranks)
+    return 1.0 - (avg_rank - 1) / 31
+
+
+def is_divisional_game(home, away, teams_info):
+    home_div = teams_info.get(home, {}).get('division', '')
+    away_div = teams_info.get(away, {}).get('division', '')
+    return home_div == away_div and home_div != ''
+
+
 def load_data():
     teams_info = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()
+            streak_val = row.get('winLossStreak', '0')
+            try:
+                streak = int(streak_val)
+                if streak > 127:
+                    streak = streak - 256
+            except (ValueError, TypeError):
+                streak = 0
             teams_info[team] = {
                 'division': row.get('divisionName', '').strip(),
-                'conference': row.get('conferenceName', '').strip()
+                'conference': row.get('conferenceName', '').strip(),
+                'win_streak': streak
             }
     
     games = []
@@ -238,8 +297,7 @@ def apply_tiebreakers(teams, stats, teams_info, is_division=False):
     
     return remaining[0] if remaining else teams[0]
 
-def simulate_remaining_games(teams_info, stats, sos_data, games):
-    completed_games = [g for g in games if g['completed']]
+def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
     remaining_games = [g for g in games if not g['completed']]
     
     simulated_games = []
@@ -255,13 +313,34 @@ def simulate_remaining_games(teams_info, stats, sos_data, games):
         home_past_sos = teams_info[home]['past_sos']
         away_past_sos = teams_info[away]['past_sos']
         
-        home_rating = (home_win_pct * 0.7) + (home_past_sos * 0.3)
-        away_rating = (away_win_pct * 0.7) + (away_past_sos * 0.3)
+        home_sov = calculate_sov_rating(stats[home]['defeated_opponents'], rankings)
+        away_sov = calculate_sov_rating(stats[away]['defeated_opponents'], rankings)
+        
+        home_rating = (
+            home_win_pct * 0.70 +
+            home_past_sos * 0.20 +
+            home_sov * SOV_WEIGHT
+        )
+        away_rating = (
+            away_win_pct * 0.70 +
+            away_past_sos * 0.20 +
+            away_sov * SOV_WEIGHT
+        )
         
         if home_rating + away_rating > 0:
             home_prob = home_rating / (home_rating + away_rating)
         else:
             home_prob = 0.5
+        
+        home_prob += HOME_FIELD_ADVANTAGE
+        
+        home_streak = teams_info[home].get('win_streak', 0)
+        away_streak = teams_info[away].get('win_streak', 0)
+        home_prob += get_streak_modifier(home_streak)
+        home_prob -= get_streak_modifier(away_streak)
+        
+        if is_divisional_game(home, away, teams_info):
+            home_prob = home_prob + (0.5 - home_prob) * DIVISIONAL_REGRESSION
         
         home_prob = max(0.25, min(0.75, home_prob))
         
@@ -473,14 +552,14 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
     
     return playoff_teams, division_winners, bye_teams
 
-def calculate_playoff_probability_simulation(team_name, teams_info, stats, sos_data, games, num_simulations=1000):
+def calculate_playoff_probability_simulation(team_name, teams_info, stats, sos_data, games, rankings, num_simulations=1000):
     playoff_count = 0
     division_count = 0
     bye_count = 0
     conf = teams_info[team_name]['conference']
     
     for sim in range(num_simulations):
-        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games)
+        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games, rankings)
         playoff_teams, division_winners, bye_teams = determine_playoff_teams(teams_info, stats, simulated_games)
         
         if team_name in playoff_teams[conf]:
@@ -608,13 +687,16 @@ def cap_simulation_probability(raw_probability):
 def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
+    rankings = load_rankings_data()
     
     print("\n" + "="*80)
     print("SIMULATING PLAYOFF SCENARIOS")
     print("="*80)
     print(f"Running {num_simulations:,} simulations for each team's playoff chances...")
-    print("Using 70/30 weighted rating (Win% + Past SoS)")
-    print("No home field advantage (Madden game)\n")
+    print("Enhanced model: 70% Win% + 20% SoS + 10% SoV + streak bonus")
+    print(f"Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}%")
+    print(f"Win streak bonus (>={WIN_STREAK_THRESHOLD}): +{WIN_STREAK_BONUS*100:.0f}%")
+    print(f"Divisional regression: {DIVISIONAL_REGRESSION*100:.0f}% toward 50-50\n")
     
     results = {}
     
@@ -624,7 +706,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
         for i, team in enumerate(conf_teams, 1):
             print(f"  [{i}/{len(conf_teams)}] Simulating {team}...")
             certainty = check_mathematical_certainty(team, teams_info, stats, games)
-            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, num_simulations=num_simulations)
+            prob_results = calculate_playoff_probability_simulation(team, teams_info, stats, sos_data, games, rankings, num_simulations=num_simulations)
             remaining_games = int(sos_data[team]['remaining_games']) if team in sos_data else 4
             results[team] = {
                 'conference': conf,
@@ -654,12 +736,14 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     print("="*80)
     print(f"\nUsing Monte Carlo simulation ({num_simulations:,} iterations per team)")
     print("Features:")
-    print("  ✓ 70% weight on Win Percentage + 30% weight on Past SoS")
-    print("  ✓ Removed home field advantage (Madden game)")
+    print("  ✓ Enhanced rating: 70% Win% + 20% SoS + 10% SoV")
+    print(f"  ✓ Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}% (slight Madden boost)")
+    print(f"  ✓ Win streak bonus (>={WIN_STREAK_THRESHOLD} wins): +{WIN_STREAK_BONUS*100:.0f}%")
+    print(f"  ✓ Divisional games: {DIVISIONAL_REGRESSION*100:.0f}% regression toward 50-50")
+    print("  ✓ Strength of victories from opponent power rankings")
     print("  ✓ Win probability capped at 25-75% (realistic variance)")
     print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")
     print("  ✓ Mathematical certainty detection (clinched/eliminated)")
-    print("  ✓ Probability capping: 100% only if clinched, 0% only if eliminated")
     print("\nOutput saved to: output/playoff_probabilities.json")
     print("\nTop AFC Contenders:")
     afc_teams = [(t, r['playoff_probability']) for t, r in results.items() if r['conference'] == 'AFC']

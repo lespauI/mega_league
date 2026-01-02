@@ -7,6 +7,7 @@ import json
 
 from calc_playoff_probabilities import (
     load_data,
+    load_rankings_data,
     calculate_team_stats,
     simulate_remaining_games,
     determine_playoff_teams,
@@ -63,7 +64,7 @@ def calculate_game_probabilities(team_name, teams_info, stats, remaining_games):
     
     return game_probs
 
-def run_team_scenarios(team_name, teams_info, stats, sos_data, games, num_simulations=10000):
+def run_team_scenarios(team_name, teams_info, stats, sos_data, games, rankings, num_simulations=10000):
     conf = teams_info[team_name]['conference']
     
     scenario_outcomes = []
@@ -75,7 +76,7 @@ def run_team_scenarios(team_name, teams_info, stats, sos_data, games, num_simula
     remaining_for_team = get_remaining_games_for_team(team_name, games)
     
     for sim in range(num_simulations):
-        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games)
+        simulated_games = simulate_remaining_games(teams_info, stats, sos_data, games, rankings)
         playoff_teams, division_winners, bye_teams = determine_playoff_teams(teams_info, stats, simulated_games)
         
         team_results = {
@@ -151,7 +152,7 @@ def format_prob(value, include_emoji=False):
         emoji = "🟡 " if include_emoji else ""
         return f"{emoji}<span class='prob-medium'>{value:.1f}%</span>"
 
-def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_simulations=10000):
+def generate_markdown_report(team_name, teams_info, stats, sos_data, games, rankings, num_simulations=10000):
     conf = teams_info[team_name]['conference']
     div = teams_info[team_name]['division']
     current_record = f"{stats[team_name]['W']}-{stats[team_name]['L']}-{stats[team_name]['T']}"
@@ -159,7 +160,7 @@ def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_
     remaining_games = get_remaining_games_for_team(team_name, games)
     game_probs = calculate_game_probabilities(team_name, teams_info, stats, remaining_games)
     
-    results = run_team_scenarios(team_name, teams_info, stats, sos_data, games, num_simulations)
+    results = run_team_scenarios(team_name, teams_info, stats, sos_data, games, rankings, num_simulations)
     
     sorted_by_frequency = sorted(results['final_records'].items(), key=lambda x: -x[1])
     most_likely_record, most_likely_count = sorted_by_frequency[0]
@@ -290,7 +291,7 @@ def generate_markdown_report(team_name, teams_info, stats, sos_data, games, num_
     
     return "\n".join(md)
 
-def print_team_report(team_name, teams_info, stats, sos_data, games, num_simulations=10000):
+def print_team_report(team_name, teams_info, stats, sos_data, games, rankings, num_simulations=10000):
     print("\n" + "="*80)
     print(f"MONTE CARLO SCENARIO REPORT: {team_name}")
     print("="*80)
@@ -325,7 +326,7 @@ def print_team_report(team_name, teams_info, stats, sos_data, games, num_simulat
     print("RUNNING SIMULATIONS...")
     print("-" * 80)
     
-    results = run_team_scenarios(team_name, teams_info, stats, sos_data, games, num_simulations)
+    results = run_team_scenarios(team_name, teams_info, stats, sos_data, games, rankings, num_simulations)
     
     sorted_by_frequency = sorted(results['final_records'].items(), key=lambda x: -x[1])
     most_likely_record, most_likely_count = sorted_by_frequency[0]
@@ -450,6 +451,7 @@ Examples:
     
     teams_info, games, sos_data = load_data()
     stats = calculate_team_stats(teams_info, games)
+    rankings = load_rankings_data()
     
     team_name = args.team.strip()
     
@@ -463,7 +465,7 @@ Examples:
                 print(f"  - {team}")
         return
     
-    print_team_report(team_name, teams_info, stats, sos_data, games, num_simulations=args.simulations)
+    print_team_report(team_name, teams_info, stats, sos_data, games, rankings, num_simulations=args.simulations)
 
 if __name__ == "__main__":
     main()
