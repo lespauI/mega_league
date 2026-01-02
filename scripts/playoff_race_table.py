@@ -5,6 +5,29 @@ import json
 from collections import defaultdict
 from datetime import datetime
 
+NUM_TEAMS = 32
+
+SB_WEIGHT_WIN_PCT = 0.50
+SB_WEIGHT_POWER_RANK = 0.25
+SB_WEIGHT_PAST_SOS = 0.15
+SB_WEIGHT_QUALITY_WINS = 0.10
+
+STREAK_THRESHOLD_HIGH = 4
+STREAK_THRESHOLD_LOW = 3
+STREAK_BONUS_HIGH = 0.04
+STREAK_BONUS_LOW = 0.03
+STREAK_PENALTY = -0.03
+
+HOME_BONUS_TOP_SEED = 0.06
+HOME_BONUS_BYE_CONTENDER = 0.05
+HOME_BONUS_DIV_LEADER = 0.03
+
+GAME_WIN_PROB_MIN = 0.30
+GAME_WIN_PROB_MAX = 0.75
+
+SB_PROB_MAX = 45.0
+
+
 def load_power_rankings():
     rankings = {}
     max_week = {}
@@ -133,46 +156,61 @@ def get_round1_bye_prob(team_name, all_div_leaders, probabilities):
 
 def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed, 
                              win_pct=0.5, past_sos=0.5, win_streak=0, power_rank=16):
+    """
+    Calculate Super Bowl probability using playoff tournament simulation.
+    
+    Formula weights (differ from regular season to emphasize proven quality):
+    - 50% win_pct: Current record is strongest predictor
+    - 25% power_rank: Rankings capture strength beyond W-L (point diff, eye test)
+    - 15% past_sos: Teams that faced tough schedules are battle-tested
+    - 10% quality_of_wins: Beating good teams matters more in playoffs
+    
+    Playoff advantages:
+    - Top seed: bye (3 games instead of 4) + home field (+6%)
+    - Division winner: home field in early rounds (+3%)
+    
+    Returns probability of winning Super Bowl (0-45%).
+    """
     if playoff_prob == 0:
         return 0.0
     
     sov_normalized = max(0.0, min(1.0, (quality_of_wins - 0.3) / 0.4))
     
-    rank_factor = 1.0 - (power_rank - 1) / 31.0
+    rank_factor = 1.0 - (power_rank - 1) / (NUM_TEAMS - 1)
     
     team_rating = (
-        win_pct * 0.50 +
-        rank_factor * 0.25 +
-        past_sos * 0.15 +
-        sov_normalized * 0.10
+        win_pct * SB_WEIGHT_WIN_PCT +
+        rank_factor * SB_WEIGHT_POWER_RANK +
+        past_sos * SB_WEIGHT_PAST_SOS +
+        sov_normalized * SB_WEIGHT_QUALITY_WINS
     )
     
     streak_bonus = 0.0
-    if win_streak >= 4:
-        streak_bonus = 0.04
-    elif win_streak >= 3:
-        streak_bonus = 0.03
-    elif win_streak <= -3:
-        streak_bonus = -0.03
+    if win_streak >= STREAK_THRESHOLD_HIGH:
+        streak_bonus = STREAK_BONUS_HIGH
+    elif win_streak >= STREAK_THRESHOLD_LOW:
+        streak_bonus = STREAK_BONUS_LOW
+    elif win_streak <= -STREAK_THRESHOLD_LOW:
+        streak_bonus = STREAK_PENALTY
     
     game_win_prob = team_rating + streak_bonus
-    game_win_prob = max(0.30, min(0.70, game_win_prob))
+    game_win_prob = max(GAME_WIN_PROB_MIN, min(GAME_WIN_PROB_MAX, game_win_prob))
     
     if is_top_seed:
-        home_bonus = 0.06
+        home_bonus = HOME_BONUS_TOP_SEED
         games_needed = 3
     elif bye_prob > 30:
-        home_bonus = 0.05
+        home_bonus = HOME_BONUS_BYE_CONTENDER
         games_needed = 3
     elif div_prob > 50:
-        home_bonus = 0.03
+        home_bonus = HOME_BONUS_DIV_LEADER
         games_needed = 4
     else:
         home_bonus = 0.0
         games_needed = 4
     
     adjusted_game_win = game_win_prob + home_bonus
-    adjusted_game_win = min(0.75, adjusted_game_win)
+    adjusted_game_win = min(GAME_WIN_PROB_MAX, adjusted_game_win)
     
     conf_champ_prob = (adjusted_game_win ** games_needed)
     
@@ -182,7 +220,7 @@ def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, 
     
     final_prob = (playoff_prob / 100) * sb_win_prob * 100
     
-    return round(max(0.1, min(final_prob, 35.0)), 1)
+    return round(max(0.1, min(final_prob, SB_PROB_MAX)), 1)
 
 def get_playoff_tooltip(playoff_prob, team_name, team_data):
     wins = team_data['W']
