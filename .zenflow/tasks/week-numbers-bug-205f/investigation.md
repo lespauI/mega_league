@@ -67,3 +67,11 @@
        - Playoff race tooltips list remaining games with weeks 1–18 (no zero week; final week shown as 18 for `weekIndex == 17`).
      - Run existing Playwright E2E tests (`npm install` if necessary, then `npx playwright test`) to ensure that UI and probability formats remain valid.
 
+
+
+## Implementation notes
+- Updated `calculate_game_probabilities` in `scripts/team_scenario_report.py` to emit `weekIndex + 1` as the `week` field so team scenario markdown, JSON, and HTML now show human weeks 1–18.
+- Updated `read_standings` in `scripts/playoff_race_table.py` and `scripts/playoff_race_html.py` to store remaining opponent weeks as `weekIndex + 1`, fixing Remaining Schedule tooltips in both playoff race views.
+- Added regression test `scripts/tests/test_week_numbers.py` verifying that a remaining game with internal `week = 14` is surfaced as display week 15 for the team scenario reports.
+- Ran `python3 scripts/tests/test_week_numbers.py` (passes) and `python3 scripts/run_all_playoff_analysis.py` (completes successfully, regenerating `output/team_scenarios.json`, `docs/playoff_race_table.html`, `docs/playoff_race.html`, and `docs/team_scenarios.html`).
+- Attempted to run Playwright E2E test `npx playwright test tests/e2e/team_scenarios.spec.ts`, but it failed to install Playwright due to lack of network access to npm registry in this environment.
