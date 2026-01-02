@@ -31,7 +31,8 @@ def read_standings():
             if status == '1':
                 home = row['homeTeam'].strip()
                 away = row['awayTeam'].strip()
-                week = int(row.get('weekIndex', 0))
+                week_index = int(row.get('weekIndex', 0))
+                week = week_index + 1
                 remaining_opponents[home].append({'opponent': away, 'week': week})
                 remaining_opponents[away].append({'opponent': home, 'week': week})
 

@@ -29,6 +29,7 @@ def calculate_game_probabilities(team_name, teams_info, stats, remaining_games):
     for game in remaining_games:
         home = game['home']
         away = game['away']
+        display_week = game['week'] + 1
         
         is_home = (home == team_name)
         opponent = away if is_home else home
@@ -54,7 +55,7 @@ def calculate_game_probabilities(team_name, teams_info, stats, remaining_games):
         team_loss_prob = (1 - team_win_prob - tie_prob)
         
         game_probs.append({
-            'week': game['week'],
+            'week': display_week,
             'opponent': opponent,
             'is_home': is_home,
             'win_prob': team_win_prob * 100,
