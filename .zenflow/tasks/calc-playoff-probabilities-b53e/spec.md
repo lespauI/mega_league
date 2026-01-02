@@ -112,14 +112,14 @@ def calculate_sov_rating(team, stats, rankings_data):
 
 **New Rating Formula**:
 ```python
-# Old: 70% win_pct + 30% past_sos
-# New: 60% win_pct + 20% past_sos + 10% sov_rating + 10% form (streak/momentum)
+# Base rating: 70% win_pct + 20% past_sos + 10% sov_rating
 home_rating = (
-    home_win_pct * 0.60 +
+    home_win_pct * 0.70 +
     home_past_sos * 0.20 +
-    home_sov_rating * 0.10 +
-    home_form_rating * 0.10
+    home_sov_rating * 0.10
 )
+# Then apply adjustments directly to probability:
+# +2% home field, +/-3% streak bonus, 15% divisional regression
 ```
 
 ---

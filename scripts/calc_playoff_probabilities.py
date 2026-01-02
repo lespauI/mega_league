@@ -14,7 +14,6 @@ WIN_STREAK_THRESHOLD = 3
 WIN_STREAK_BONUS = 0.03
 DIVISIONAL_REGRESSION = 0.15
 SOV_WEIGHT = 0.10
-FORM_WEIGHT = 0.10
 
 
 def load_rankings_data():
@@ -70,6 +69,8 @@ def load_data():
             streak_val = row.get('winLossStreak', '0')
             try:
                 streak = int(streak_val)
+                if streak > 127:
+                    streak = streak - 256
             except (ValueError, TypeError):
                 streak = 0
             teams_info[team] = {
@@ -315,22 +316,15 @@ def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
         home_sov = calculate_sov_rating(stats[home]['defeated_opponents'], rankings)
         away_sov = calculate_sov_rating(stats[away]['defeated_opponents'], rankings)
         
-        home_streak = teams_info[home].get('win_streak', 0)
-        away_streak = teams_info[away].get('win_streak', 0)
-        home_form = 0.5 + get_streak_modifier(home_streak)
-        away_form = 0.5 + get_streak_modifier(away_streak)
-        
         home_rating = (
-            home_win_pct * 0.60 +
+            home_win_pct * 0.70 +
             home_past_sos * 0.20 +
-            home_sov * SOV_WEIGHT +
-            home_form * FORM_WEIGHT
+            home_sov * SOV_WEIGHT
         )
         away_rating = (
-            away_win_pct * 0.60 +
+            away_win_pct * 0.70 +
             away_past_sos * 0.20 +
-            away_sov * SOV_WEIGHT +
-            away_form * FORM_WEIGHT
+            away_sov * SOV_WEIGHT
         )
         
         if home_rating + away_rating > 0:
@@ -339,6 +333,11 @@ def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
             home_prob = 0.5
         
         home_prob += HOME_FIELD_ADVANTAGE
+        
+        home_streak = teams_info[home].get('win_streak', 0)
+        away_streak = teams_info[away].get('win_streak', 0)
+        home_prob += get_streak_modifier(home_streak)
+        home_prob -= get_streak_modifier(away_streak)
         
         if is_divisional_game(home, away, teams_info):
             home_prob = home_prob + (0.5 - home_prob) * DIVISIONAL_REGRESSION
@@ -694,7 +693,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     print("SIMULATING PLAYOFF SCENARIOS")
     print("="*80)
     print(f"Running {num_simulations:,} simulations for each team's playoff chances...")
-    print("Enhanced model: 60% Win% + 20% SoS + 10% SoV + 10% Form")
+    print("Enhanced model: 70% Win% + 20% SoS + 10% SoV + streak bonus")
     print(f"Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}%")
     print(f"Win streak bonus (>={WIN_STREAK_THRESHOLD}): +{WIN_STREAK_BONUS*100:.0f}%")
     print(f"Divisional regression: {DIVISIONAL_REGRESSION*100:.0f}% toward 50-50\n")
@@ -737,7 +736,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     print("="*80)
     print(f"\nUsing Monte Carlo simulation ({num_simulations:,} iterations per team)")
     print("Features:")
-    print("  ✓ Enhanced rating: 60% Win% + 20% SoS + 10% SoV + 10% Form")
+    print("  ✓ Enhanced rating: 70% Win% + 20% SoS + 10% SoV")
     print(f"  ✓ Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}% (slight Madden boost)")
     print(f"  ✓ Win streak bonus (>={WIN_STREAK_THRESHOLD} wins): +{WIN_STREAK_BONUS*100:.0f}%")
     print(f"  ✓ Divisional games: {DIVISIONAL_REGRESSION*100:.0f}% regression toward 50-50")
