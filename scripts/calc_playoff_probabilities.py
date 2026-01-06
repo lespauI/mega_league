@@ -13,7 +13,27 @@ HOME_FIELD_ADVANTAGE = 0.02
 WIN_STREAK_THRESHOLD = 3
 WIN_STREAK_BONUS = 0.03
 DIVISIONAL_REGRESSION = 0.15
+ELO_WEIGHT = 0.50
+WIN_PCT_WEIGHT = 0.25
+SOS_WEIGHT = 0.15
 SOV_WEIGHT = 0.10
+DEFAULT_ELO = 1200.0
+
+
+def load_elo_data():
+    """Load team ELO ratings from mega_elo.csv."""
+    elo_map = {}
+    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            team = row.get('Team', '').strip()
+            elo_str = row.get('Week 14+', '')
+            if team and elo_str:
+                try:
+                    elo_map[team] = float(elo_str)
+                except ValueError:
+                    continue
+    return elo_map
 
 
 def load_rankings_data():
@@ -107,6 +127,10 @@ def load_data():
             teams_info[team]['past_sos'] = float(sos_data[team]['past_ranked_sos_avg'])
         else:
             teams_info[team]['past_sos'] = 0.5
+    
+    elo_data = load_elo_data()
+    for team in teams_info:
+        teams_info[team]['elo'] = elo_data.get(team, DEFAULT_ELO)
     
     return teams_info, games, sos_data
 
@@ -313,17 +337,24 @@ def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
         home_past_sos = teams_info[home]['past_sos']
         away_past_sos = teams_info[away]['past_sos']
         
+        home_elo = teams_info[home].get('elo', DEFAULT_ELO)
+        away_elo = teams_info[away].get('elo', DEFAULT_ELO)
+        home_elo_norm = max(0, min(1, (home_elo - 1000) / 400))
+        away_elo_norm = max(0, min(1, (away_elo - 1000) / 400))
+        
         home_sov = calculate_sov_rating(stats[home]['defeated_opponents'], rankings)
         away_sov = calculate_sov_rating(stats[away]['defeated_opponents'], rankings)
         
         home_rating = (
-            home_win_pct * 0.70 +
-            home_past_sos * 0.20 +
+            home_elo_norm * ELO_WEIGHT +
+            home_win_pct * WIN_PCT_WEIGHT +
+            home_past_sos * SOS_WEIGHT +
             home_sov * SOV_WEIGHT
         )
         away_rating = (
-            away_win_pct * 0.70 +
-            away_past_sos * 0.20 +
+            away_elo_norm * ELO_WEIGHT +
+            away_win_pct * WIN_PCT_WEIGHT +
+            away_past_sos * SOS_WEIGHT +
             away_sov * SOV_WEIGHT
         )
         
@@ -693,7 +724,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     print("SIMULATING PLAYOFF SCENARIOS")
     print("="*80)
     print(f"Running {num_simulations:,} simulations for each team's playoff chances...")
-    print("Enhanced model: 70% Win% + 20% SoS + 10% SoV + streak bonus")
+    print("Enhanced model: 50% ELO + 25% Win% + 15% SoS + 10% SoV + streak bonus")
     print(f"Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}%")
     print(f"Win streak bonus (>={WIN_STREAK_THRESHOLD}): +{WIN_STREAK_BONUS*100:.0f}%")
     print(f"Divisional regression: {DIVISIONAL_REGRESSION*100:.0f}% toward 50-50\n")
@@ -718,6 +749,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
                 'division_pct': stats[team]['division_pct'],
                 'strength_of_victory': stats[team]['strength_of_victory'],
                 'strength_of_schedule': stats[team]['strength_of_schedule'],
+                'elo': teams_info[team]['elo'],
                 'playoff_probability': round(cap_probability(prob_results['playoff_probability'], certainty), 1),
                 'division_win_probability': round(cap_simulation_probability(prob_results['division_probability']), 1),
                 'bye_probability': round(cap_simulation_probability(prob_results['bye_probability']), 1),
@@ -736,10 +768,11 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     print("="*80)
     print(f"\nUsing Monte Carlo simulation ({num_simulations:,} iterations per team)")
     print("Features:")
-    print("  ✓ Enhanced rating: 70% Win% + 20% SoS + 10% SoV")
+    print("  ✓ Enhanced rating: 50% ELO + 25% Win% + 15% SoS + 10% SoV")
     print(f"  ✓ Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}% (slight Madden boost)")
     print(f"  ✓ Win streak bonus (>={WIN_STREAK_THRESHOLD} wins): +{WIN_STREAK_BONUS*100:.0f}%")
     print(f"  ✓ Divisional games: {DIVISIONAL_REGRESSION*100:.0f}% regression toward 50-50")
+    print("  ✓ ELO ratings for true team skill (from mega_elo.csv)")
     print("  ✓ Strength of victories from opponent power rankings")
     print("  ✓ Win probability capped at 25-75% (realistic variance)")
     print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")
