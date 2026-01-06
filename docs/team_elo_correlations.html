@@ -211,10 +211,10 @@
             else if (!qx && !qy) quadrant = '<em>' + cfg.quadrantHelp.bottomLeft + '</em>';
             else quadrant = '<em>' + cfg.quadrantHelp.bottomRight + '</em>';
           } else {
-            if (qx && qy) quadrant = '<em>High ELO, High Y metric</em>';
-            else if (!qx && qy) quadrant = '<em>Low ELO, High Y metric</em>';
-            else if (!qx && !qy) quadrant = '<em>Low ELO, Low Y metric</em>';
-            else quadrant = '<em>High ELO, Low Y metric</em>';
+            if (qx && qy) quadrant = '<em>High X + High Y</em>';
+            else if (!qx && qy) quadrant = '<em>Low X + High Y</em>';
+            else if (!qx && !qy) quadrant = '<em>Low X + Low Y</em>';
+            else quadrant = '<em>High X + Low Y</em>';
           }
           html += quadrant;
           
@@ -267,229 +267,230 @@
       loadData().then(allRows => {
         const charts = [
           {
-            xKey: 'elo',
-            yKey: 'win_pct',
-            xLabel: 'ELO Rating',
-            yLabel: 'Win Percentage',
-            yFormat: toPct,
-            title: 'ELO vs Win Percentage',
+            xKey: 'win_pct',
+            yKey: 'elo',
+            xLabel: 'Win Percentage',
+            yLabel: 'ELO Rating',
+            xFormat: toPct,
+            title: 'Win Percentage vs ELO',
             insight: 'Most fundamental correlation - validates ELO system effectiveness',
-            metricHelp: '<strong>ELO vs Wins:</strong> ELO rating should strongly correlate with win percentage. Teams above the line are outperforming their rating.',
+            metricHelp: '<strong>Wins vs ELO:</strong> Win percentage should strongly correlate with ELO rating. Teams above the line have higher ELO than their win% suggests.',
             quadrantHelp: {
-              topRight: 'High ELO + high wins: Elite teams performing as expected',
-              topLeft: 'Low ELO + high wins: Teams overperforming their rating through clutch play or favorable schedule',
-              bottomLeft: 'Low ELO + low wins: Struggling teams performing as expected',
-              bottomRight: 'High ELO + low wins: Underperforming teams - may have lost close games or faced tough schedule'
+              topRight: 'High wins + high ELO: Elite teams performing as expected',
+              topLeft: 'Low wins + high ELO: Underperforming teams - may have lost close games or faced tough schedule',
+              bottomLeft: 'Low wins + low ELO: Struggling teams performing as expected',
+              bottomRight: 'High wins + low ELO: Teams overperforming their rating through clutch play or favorable schedule'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'yds_per_play',
-            xLabel: 'ELO Rating',
-            yLabel: 'Yards per Play',
-            title: 'ELO vs Offensive Efficiency',
+            xKey: 'yds_per_play',
+            yKey: 'elo',
+            xLabel: 'Yards per Play',
+            yLabel: 'ELO Rating',
+            title: 'Offensive Efficiency vs ELO',
             insight: 'Better teams generate more yards per play through superior execution',
-            metricHelp: '<strong>ELO vs Efficiency:</strong> Tests if higher-rated teams have more efficient offenses.',
+            metricHelp: '<strong>Efficiency vs ELO:</strong> Tests if more efficient offenses translate to higher ELO ratings.',
             quadrantHelp: {
-              topRight: 'High ELO + high efficiency: Dominant offensive teams',
-              topLeft: 'Low ELO + high efficiency: High-powered offense held back by defense or turnovers',
-              bottomLeft: 'Low ELO + low efficiency: Struggling offenses',
-              bottomRight: 'High ELO + low efficiency: Defense-first teams or ball control offenses'
+              topRight: 'High efficiency + high ELO: Dominant offensive teams',
+              topLeft: 'Low efficiency + high ELO: Defense-first teams or ball control offenses',
+              bottomLeft: 'Low efficiency + low ELO: Struggling offenses',
+              bottomRight: 'High efficiency + low ELO: High-powered offense held back by defense or turnovers'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'turnover_diff',
-            xLabel: 'ELO Rating',
-            yLabel: 'Turnover Differential',
-            title: 'ELO vs Turnover Margin',
+            xKey: 'turnover_diff',
+            yKey: 'elo',
+            xLabel: 'Turnover Differential',
+            yLabel: 'ELO Rating',
+            title: 'Turnover Margin vs ELO',
             insight: 'Ball security and takeaways strongly correlate with team strength',
-            metricHelp: '<strong>ELO vs Turnovers:</strong> Measures how turnover margin relates to team rating.',
+            metricHelp: '<strong>Turnovers vs ELO:</strong> Measures how turnover margin relates to team rating.',
             quadrantHelp: {
-              topRight: 'High ELO + positive turnover margin: Complete teams winning the turnover battle',
-              topLeft: 'Low ELO + positive turnover margin: Creating turnovers but unable to capitalize',
-              bottomLeft: 'Low ELO + negative turnover margin: Losing games through giveaways',
-              bottomRight: 'High ELO + negative turnover margin: Winning despite turnover disadvantage through other strengths'
+              topRight: 'Positive turnover margin + high ELO: Complete teams winning the turnover battle',
+              topLeft: 'Negative turnover margin + high ELO: Winning despite turnover disadvantage through other strengths',
+              bottomLeft: 'Negative turnover margin + low ELO: Losing games through giveaways',
+              bottomRight: 'Positive turnover margin + low ELO: Creating turnovers but unable to capitalize'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'qb_rating',
-            xLabel: 'ELO Rating',
-            yLabel: 'QB Rating',
-            title: 'ELO vs QB Performance',
+            xKey: 'qb_rating',
+            yKey: 'elo',
+            xLabel: 'QB Rating',
+            yLabel: 'ELO Rating',
+            title: 'QB Performance vs ELO',
             insight: 'Quarterback play is a key driver of team strength',
-            metricHelp: '<strong>ELO vs QB Rating:</strong> Tests quarterback performance impact on overall team rating.',
+            metricHelp: '<strong>QB Rating vs ELO:</strong> Tests quarterback performance impact on overall team rating.',
             quadrantHelp: {
-              topRight: 'High ELO + high QB rating: QB-led teams dominating',
-              topLeft: 'Low ELO + high QB rating: Great QB play without team success',
-              bottomLeft: 'Low ELO + low QB rating: QB struggles contributing to losses',
-              bottomRight: 'High ELO + low QB rating: Teams winning with defense and running game'
+              topRight: 'High QB rating + high ELO: QB-led teams dominating',
+              topLeft: 'Low QB rating + high ELO: Teams winning with defense and running game',
+              bottomLeft: 'Low QB rating + low ELO: QB struggles contributing to losses',
+              bottomRight: 'High QB rating + low ELO: Great QB play without team success'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'def_sacks_per_game',
-            xLabel: 'ELO Rating',
-            yLabel: 'Defensive Sacks per Game',
-            title: 'ELO vs Pass Rush Effectiveness',
+            xKey: 'def_sacks_per_game',
+            yKey: 'elo',
+            xLabel: 'Defensive Sacks per Game',
+            yLabel: 'ELO Rating',
+            title: 'Pass Rush Effectiveness vs ELO',
             insight: 'Elite pass rush is a hallmark of strong defenses',
-            metricHelp: '<strong>ELO vs Sacks:</strong> Measures pass rush effectiveness correlation with team strength.',
+            metricHelp: '<strong>Sacks vs ELO:</strong> Measures pass rush effectiveness correlation with team strength.',
             quadrantHelp: {
-              topRight: 'High ELO + high sacks: Dominant pass rush disrupting opponents',
-              topLeft: 'Low ELO + high sacks: Strong pass rush but weak in other areas',
-              bottomLeft: 'Low ELO + low sacks: Defensive struggles across the board',
-              bottomRight: 'High ELO + low sacks: Coverage-oriented defense or strong offense compensating'
+              topRight: 'High sacks + high ELO: Dominant pass rush disrupting opponents',
+              topLeft: 'Low sacks + high ELO: Coverage-oriented defense or strong offense compensating',
+              bottomLeft: 'Low sacks + low ELO: Defensive struggles across the board',
+              bottomRight: 'High sacks + low ELO: Strong pass rush but weak in other areas'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'pass_yds_per_att',
-            xLabel: 'ELO Rating',
-            yLabel: 'Pass Yards per Attempt',
-            title: 'ELO vs Passing Efficiency',
+            xKey: 'pass_yds_per_att',
+            yKey: 'elo',
+            xLabel: 'Pass Yards per Attempt',
+            yLabel: 'ELO Rating',
+            title: 'Passing Efficiency vs ELO',
             insight: 'Efficient passing attacks drive team success',
-            metricHelp: '<strong>ELO vs Pass Efficiency:</strong> Yards per attempt is a key passing efficiency metric.',
+            metricHelp: '<strong>Pass Efficiency vs ELO:</strong> Yards per attempt is a key passing efficiency metric.',
             quadrantHelp: {
-              topRight: 'High ELO + high Y/A: Explosive passing game',
-              topLeft: 'Low ELO + high Y/A: Efficient passing but poor overall record',
-              bottomLeft: 'Low ELO + low Y/A: Ineffective passing attack',
-              bottomRight: 'High ELO + low Y/A: Conservative passing or run-first philosophy'
+              topRight: 'High Y/A + high ELO: Explosive passing game',
+              topLeft: 'Low Y/A + high ELO: Conservative passing or run-first philosophy',
+              bottomLeft: 'Low Y/A + low ELO: Ineffective passing attack',
+              bottomRight: 'High Y/A + low ELO: Efficient passing but poor overall record'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'rush_yds_per_att',
-            xLabel: 'ELO Rating',
-            yLabel: 'Rush Yards per Attempt',
-            title: 'ELO vs Running Game Effectiveness',
+            xKey: 'rush_yds_per_att',
+            yKey: 'elo',
+            xLabel: 'Rush Yards per Attempt',
+            yLabel: 'ELO Rating',
+            title: 'Running Game Effectiveness vs ELO',
             insight: 'Strong running games help control clock and wear down defenses',
-            metricHelp: '<strong>ELO vs Rush Efficiency:</strong> Measures running game effectiveness.',
+            metricHelp: '<strong>Rush Efficiency vs ELO:</strong> Measures running game effectiveness.',
             quadrantHelp: {
-              topRight: 'High ELO + high rush Y/A: Dominant ground game',
-              topLeft: 'Low ELO + high rush Y/A: Good running game but losing anyway',
-              bottomLeft: 'Low ELO + low rush Y/A: Unable to establish the run',
-              bottomRight: 'High ELO + low rush Y/A: Pass-first teams or playing from behind'
+              topRight: 'High rush Y/A + high ELO: Dominant ground game',
+              topLeft: 'Low rush Y/A + high ELO: Pass-first teams or playing from behind',
+              bottomLeft: 'Low rush Y/A + low ELO: Unable to establish the run',
+              bottomRight: 'High rush Y/A + low ELO: Good running game but losing anyway'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'td_per_play',
-            xLabel: 'ELO Rating',
-            yLabel: 'Touchdowns per Play',
-            title: 'ELO vs Red Zone Efficiency',
+            xKey: 'td_per_play',
+            yKey: 'elo',
+            xLabel: 'Touchdowns per Play',
+            yLabel: 'ELO Rating',
+            title: 'Red Zone Efficiency vs ELO',
             insight: 'Scoring touchdowns instead of field goals separates great teams',
-            metricHelp: '<strong>ELO vs TD Rate:</strong> Measures scoring efficiency in high-leverage situations.',
+            metricHelp: '<strong>TD Rate vs ELO:</strong> Measures scoring efficiency in high-leverage situations.',
             quadrantHelp: {
-              topRight: 'High ELO + high TD rate: Elite red zone execution',
-              topLeft: 'Low ELO + high TD rate: Scoring efficiently but not often enough',
-              bottomLeft: 'Low ELO + low TD rate: Struggling to score touchdowns',
-              bottomRight: 'High ELO + low TD rate: Winning with field position and defense'
+              topRight: 'High TD rate + high ELO: Elite red zone execution',
+              topLeft: 'Low TD rate + high ELO: Winning with field position and defense',
+              bottomLeft: 'Low TD rate + low ELO: Struggling to score touchdowns',
+              bottomRight: 'High TD rate + low ELO: Scoring efficiently but not often enough'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'off_yds_per_game',
-            xLabel: 'ELO Rating',
-            yLabel: 'Offensive Yards per Game',
-            title: 'ELO vs Total Offensive Production',
+            xKey: 'off_yds_per_game',
+            yKey: 'elo',
+            xLabel: 'Offensive Yards per Game',
+            yLabel: 'ELO Rating',
+            title: 'Total Offensive Production vs ELO',
             insight: 'Volume matters - more yards typically mean more wins',
-            metricHelp: '<strong>ELO vs Total Offense:</strong> Overall yardage production.',
+            metricHelp: '<strong>Total Offense vs ELO:</strong> Overall yardage production.',
             quadrantHelp: {
-              topRight: 'High ELO + high yards: High-powered offenses',
-              topLeft: 'Low ELO + high yards: Moving the ball but not winning',
-              bottomLeft: 'Low ELO + low yards: Offensive struggles',
-              bottomRight: 'High ELO + low yards: Efficient or defense-oriented teams'
+              topRight: 'High yards + high ELO: High-powered offenses',
+              topLeft: 'Low yards + high ELO: Efficient or defense-oriented teams',
+              bottomLeft: 'Low yards + low ELO: Offensive struggles',
+              bottomRight: 'High yards + low ELO: Moving the ball but not winning'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'def_ints_per_game',
-            xLabel: 'ELO Rating',
-            yLabel: 'Defensive Interceptions per Game',
-            title: 'ELO vs Takeaway Generation',
+            xKey: 'def_ints_per_game',
+            yKey: 'elo',
+            xLabel: 'Defensive Interceptions per Game',
+            yLabel: 'ELO Rating',
+            title: 'Takeaway Generation vs ELO',
             insight: 'Creating turnovers is a game-changing skill',
-            metricHelp: '<strong>ELO vs INTs:</strong> Defensive playmaking through interceptions.',
+            metricHelp: '<strong>INTs vs ELO:</strong> Defensive playmaking through interceptions.',
             quadrantHelp: {
-              topRight: 'High ELO + high INTs: Ball-hawking defense',
-              topLeft: 'Low ELO + high INTs: Creating turnovers but not capitalizing',
-              bottomLeft: 'Low ELO + low INTs: Passive defense unable to create takeaways',
-              bottomRight: 'High ELO + low INTs: Rush-oriented defense or strong offense'
+              topRight: 'High INTs + high ELO: Ball-hawking defense',
+              topLeft: 'Low INTs + high ELO: Rush-oriented defense or strong offense',
+              bottomLeft: 'Low INTs + low ELO: Passive defense unable to create takeaways',
+              bottomRight: 'High INTs + low ELO: Creating turnovers but not capitalizing'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'pass_comp_pct',
-            xLabel: 'ELO Rating',
-            yLabel: 'Pass Completion Percentage',
-            title: 'ELO vs Passing Accuracy',
+            xKey: 'pass_comp_pct',
+            yKey: 'elo',
+            xLabel: 'Pass Completion Percentage',
+            yLabel: 'ELO Rating',
+            xFormat: toPct,
+            title: 'Passing Accuracy vs ELO',
             insight: 'Completion percentage reflects QB accuracy and offensive scheme',
-            metricHelp: '<strong>ELO vs Completion%:</strong> Accuracy and scheme fit indicator.',
+            metricHelp: '<strong>Completion% vs ELO:</strong> Accuracy and scheme fit indicator.',
             quadrantHelp: {
-              topRight: 'High ELO + high completion%: Accurate short passing game',
-              topLeft: 'Low ELO + high completion%: Conservative passing without results',
-              bottomLeft: 'Low ELO + low completion%: Inaccurate or deep passing approach',
-              bottomRight: 'High ELO + low completion%: Vertical passing or QB under pressure'
+              topRight: 'High completion% + high ELO: Accurate short passing game',
+              topLeft: 'Low completion% + high ELO: Vertical passing or QB under pressure',
+              bottomLeft: 'Low completion% + low ELO: Inaccurate or deep passing approach',
+              bottomRight: 'High completion% + low ELO: Conservative passing without results'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'explosive_plays_per_game',
-            xLabel: 'ELO Rating',
-            yLabel: '20+ Yard Plays per Game',
-            title: 'ELO vs Big Play Capability',
+            xKey: 'explosive_plays_per_game',
+            yKey: 'elo',
+            xLabel: '20+ Yard Plays per Game',
+            yLabel: 'ELO Rating',
+            title: 'Big Play Capability vs ELO',
             insight: 'Explosive plays change games and drive scoring',
-            metricHelp: '<strong>ELO vs Explosives:</strong> 20+ yard plays indicate big play threat.',
+            metricHelp: '<strong>Explosives vs ELO:</strong> 20+ yard plays indicate big play threat.',
             quadrantHelp: {
-              topRight: 'High ELO + high explosives: Dynamic offense with big play threat',
-              topLeft: 'Low ELO + high explosives: Boom-or-bust offense',
-              bottomLeft: 'Low ELO + low explosives: Methodical offense without big plays',
-              bottomRight: 'High ELO + low explosives: Consistent short-yardage offense'
+              topRight: 'High explosives + high ELO: Dynamic offense with big play threat',
+              topLeft: 'Low explosives + high ELO: Consistent short-yardage offense',
+              bottomLeft: 'Low explosives + low ELO: Methodical offense without big plays',
+              bottomRight: 'High explosives + low ELO: Boom-or-bust offense'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'punts_per_game',
-            xLabel: 'ELO Rating',
-            yLabel: 'Punts per Game',
-            title: 'ELO vs Drive Sustainability',
+            xKey: 'punts_per_game',
+            yKey: 'elo',
+            xLabel: 'Punts per Game',
+            yLabel: 'ELO Rating',
+            title: 'Drive Sustainability vs ELO',
             insight: 'Fewer punts means better drive conversion',
-            metricHelp: '<strong>ELO vs Punts:</strong> Lower punts indicate better offensive efficiency.',
+            metricHelp: '<strong>Punts vs ELO:</strong> Lower punts indicate better offensive efficiency.',
             quadrantHelp: {
-              topRight: 'High ELO + high punts: Defensive-minded or field position battle',
-              topLeft: 'Low ELO + high punts: Three-and-out problems',
-              bottomLeft: 'Low ELO + low punts: Sustaining drives but not winning',
-              bottomRight: 'High ELO + low punts: Efficient offense sustaining drives'
+              topRight: 'High punts + high ELO: Defensive-minded or field position battle',
+              topLeft: 'Low punts + high ELO: Efficient offense sustaining drives',
+              bottomLeft: 'Low punts + low ELO: Sustaining drives but not winning',
+              bottomRight: 'High punts + low ELO: Three-and-out problems'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'pass_rush_ratio',
-            xLabel: 'ELO Rating',
-            yLabel: 'Pass/Rush Attempt Ratio',
-            title: 'ELO vs Offensive Philosophy',
+            xKey: 'pass_rush_ratio',
+            yKey: 'elo',
+            xLabel: 'Pass/Rush Attempt Ratio',
+            yLabel: 'ELO Rating',
+            title: 'Offensive Philosophy vs ELO',
             insight: 'Game script and team strength affect play calling',
-            metricHelp: '<strong>ELO vs Pass/Rush:</strong> Higher ratio means more pass-heavy approach.',
+            metricHelp: '<strong>Pass/Rush vs ELO:</strong> Higher ratio means more pass-heavy approach.',
             quadrantHelp: {
-              topRight: 'High ELO + high ratio: Pass-first offense or playing with lead',
-              topLeft: 'Low ELO + high ratio: Passing out of necessity while trailing',
-              bottomLeft: 'Low ELO + low ratio: Run-heavy approach not working',
-              bottomRight: 'High ELO + low ratio: Balanced or run-dominant offense'
+              topRight: 'High ratio + high ELO: Pass-first offense or playing with lead',
+              topLeft: 'Low ratio + high ELO: Balanced or run-dominant offense',
+              bottomLeft: 'Low ratio + low ELO: Run-heavy approach not working',
+              bottomRight: 'High ratio + low ELO: Passing out of necessity while trailing'
             }
           },
           {
-            xKey: 'elo',
-            yKey: 'sacks_allowed_per_game',
-            xLabel: 'ELO Rating',
-            yLabel: 'Sacks Allowed per Game',
-            title: 'ELO vs Pass Protection',
+            xKey: 'sacks_allowed_per_game',
+            yKey: 'elo',
+            xLabel: 'Sacks Allowed per Game',
+            yLabel: 'ELO Rating',
+            title: 'Pass Protection vs ELO',
             insight: 'Better teams typically protect their QB better (note: inverse relationship)',
-            metricHelp: '<strong>ELO vs Sacks Allowed:</strong> Lower is better - fewer sacks allowed.',
+            metricHelp: '<strong>Sacks Allowed vs ELO:</strong> Lower is better - fewer sacks allowed.',
             quadrantHelp: {
-              topRight: 'High ELO + high sacks allowed: Winning despite poor protection',
-              topLeft: 'Low ELO + high sacks allowed: Pass protection breakdown',
-              bottomLeft: 'Low ELO + low sacks allowed: Good protection but losing anyway',
-              bottomRight: 'High ELO + low sacks allowed: Strong offensive line protection'
+              topRight: 'High sacks allowed + high ELO: Winning despite poor protection',
+              topLeft: 'Low sacks allowed + high ELO: Strong offensive line protection',
+              bottomLeft: 'Low sacks allowed + low ELO: Good protection but losing anyway',
+              bottomRight: 'High sacks allowed + low ELO: Pass protection breakdown'
             }
           }
         ];
