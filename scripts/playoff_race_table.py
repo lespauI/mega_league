@@ -2,6 +2,7 @@
 import csv
 import os
 import json
+import random
 from collections import defaultdict
 from datetime import datetime
 
@@ -44,8 +45,27 @@ def load_power_rankings():
                 rankings[team] = rank
     return rankings
 
+def load_elo_data():
+    """Load team ELO ratings from mega_elo.csv."""
+    elo_map = {}
+    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            team = row.get('Team', '').strip()
+            elo_str = row.get('Week 14+', '')
+            if team and elo_str:
+                try:
+                    elo_map[team] = float(elo_str)
+                except ValueError:
+                    elo_map[team] = 1200.0
+    for team in elo_map:
+        if elo_map[team] == 0:
+            elo_map[team] = 1200.0
+    return elo_map
+
 def read_standings():
     power_rankings = load_power_rankings()
+    elo_ratings = load_elo_data()
     
     teams_div = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
@@ -120,6 +140,7 @@ def read_standings():
             
             win_streak = team_rankings[team]['winLossStreak'] if team in team_rankings else 0
             power_rank = power_rankings.get(team, 16)
+            team_elo = elo_ratings.get(team, 1200.0)
             
             team_data = {
                 'team': team,
@@ -133,7 +154,8 @@ def read_standings():
                 'remaining_opponents': opponent_details,
                 'past_ranked_sos_avg': float(row['past_ranked_sos_avg']),
                 'win_streak': win_streak,
-                'power_rank': power_rank
+                'power_rank': power_rank,
+                'elo': team_elo
             }
             
             if conf == 'AFC':
@@ -155,71 +177,87 @@ def get_division_leader_prob(team_name, div_teams, probabilities):
 def get_round1_bye_prob(team_name, all_div_leaders, probabilities):
     return probabilities.get(team_name, {}).get('bye_probability', 0)
 
-def calculate_superbowl_prob(playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed, 
-                             win_pct=0.5, past_sos=0.5, win_streak=0, power_rank=16):
+def calculate_superbowl_prob_elo(playoff_prob, team_elo, conf_playoff_elos, is_top_seed, 
+                                  bye_prob, div_prob):
     """
-    Calculate Super Bowl probability using playoff tournament simulation.
+    Calculate Super Bowl probability using ELO-based Monte Carlo tournament simulation.
     
-    Formula weights (differ from regular season to emphasize proven quality):
-    - 50% win_pct: Current record is strongest predictor
-    - 25% power_rank: Rankings capture strength beyond W-L (point diff, eye test)
-    - 15% past_sos: Teams that faced tough schedules are battle-tested
-    - 10% quality_of_wins: Beating good teams matters more in playoffs
+    Uses standard ELO win probability formula:
+    P(win) = 1 / (1 + 10^((opponent_elo - team_elo) / 400))
     
-    Playoff advantages:
-    - Top seed: bye (3 games instead of 4) + home field (+6%)
-    - Division winner: home field in early rounds (+3%)
+    Monte Carlo simulation:
+    - Simulates 1000 playoff tournaments
+    - Each round uses ELO-based win probabilities
+    - Higher seeds face weaker opponents (seeding advantage)
+    - Home field advantage applied as ELO boost
+    - Tracks how often team wins Super Bowl
     
     Returns probability of winning Super Bowl (0-45%).
     """
     if playoff_prob == 0:
         return 0.0
     
-    sov_normalized = max(0.0, min(1.0, (quality_of_wins - 0.3) / 0.4))
+    if not conf_playoff_elos or team_elo == 0:
+        return 0.1
     
-    rank_factor = 1.0 - (power_rank - 1) / (NUM_TEAMS - 1)
+    num_simulations = 1000
+    sb_wins = 0
     
-    team_rating = (
-        win_pct * SB_WEIGHT_WIN_PCT +
-        rank_factor * SB_WEIGHT_POWER_RANK +
-        past_sos * SB_WEIGHT_PAST_SOS +
-        sov_normalized * SB_WEIGHT_QUALITY_WINS
-    )
+    conf_playoff_elos_sorted = sorted(conf_playoff_elos, reverse=True)
+    n_playoff_teams = len(conf_playoff_elos_sorted)
     
-    streak_bonus = 0.0
-    if win_streak >= STREAK_THRESHOLD_HIGH:
-        streak_bonus = STREAK_BONUS_HIGH
-    elif win_streak >= STREAK_THRESHOLD_LOW:
-        streak_bonus = STREAK_BONUS_LOW
-    elif win_streak <= -STREAK_THRESHOLD_LOW:
-        streak_bonus = STREAK_PENALTY
-    
-    game_win_prob = team_rating + streak_bonus
-    game_win_prob = max(GAME_WIN_PROB_MIN, min(GAME_WIN_PROB_MAX, game_win_prob))
-    
+    home_field_elo_boost = 0
     if is_top_seed:
-        home_bonus = HOME_BONUS_TOP_SEED
-        games_needed = 3
+        home_field_elo_boost = 75
+        has_bye = True
     elif bye_prob > 30:
-        home_bonus = HOME_BONUS_BYE_CONTENDER
-        games_needed = 3
+        home_field_elo_boost = 75
+        has_bye = True
     elif div_prob > 50:
-        home_bonus = HOME_BONUS_DIV_LEADER
-        games_needed = 4
+        home_field_elo_boost = 40
+        has_bye = False
     else:
-        home_bonus = 0.0
-        games_needed = 4
+        home_field_elo_boost = 0
+        has_bye = False
     
-    adjusted_game_win = game_win_prob + home_bonus
-    adjusted_game_win = min(GAME_WIN_PROB_MAX, adjusted_game_win)
+    for _ in range(num_simulations):
+        team_alive = True
+        current_round = 1 if not has_bye else 2
+        
+        while team_alive and current_round <= 4:
+            if current_round == 1:
+                lower_half_start = min(3, n_playoff_teams - 1)
+                lower_half_end = min(6, n_playoff_teams - 1)
+                opponent_elo = conf_playoff_elos_sorted[random.randint(lower_half_start, lower_half_end)]
+                team_boost = home_field_elo_boost if div_prob > 50 else 0
+            elif current_round == 2:
+                mid_start = min(2, n_playoff_teams - 1)
+                mid_end = min(5, n_playoff_teams - 1)
+                opponent_elo = conf_playoff_elos_sorted[random.randint(mid_start, mid_end)]
+                team_boost = home_field_elo_boost
+            elif current_round == 3:
+                top_teams = min(4, n_playoff_teams)
+                opponent_elo = sum(conf_playoff_elos_sorted[:top_teams]) / top_teams
+                team_boost = home_field_elo_boost
+            else:
+                opponent_elo = sum(conf_playoff_elos) / len(conf_playoff_elos)
+                team_boost = 0
+            
+            adjusted_team_elo = team_elo + team_boost
+            elo_diff = opponent_elo - adjusted_team_elo
+            win_prob = 1.0 / (1.0 + 10 ** (elo_diff / 400.0))
+            
+            if random.random() < win_prob:
+                current_round += 1
+            else:
+                team_alive = False
+        
+        if team_alive:
+            sb_wins += 1
     
-    conf_champ_prob = (adjusted_game_win ** games_needed)
+    sb_prob_raw = (sb_wins / num_simulations) * 100
     
-    sb_game_prob = game_win_prob
-    
-    sb_win_prob = conf_champ_prob * sb_game_prob
-    
-    final_prob = (playoff_prob / 100) * sb_win_prob * 100
+    final_prob = (playoff_prob / 100) * sb_prob_raw
     
     return round(max(0.1, min(final_prob, SB_PROB_MAX)), 1)
 
@@ -295,50 +333,47 @@ def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div>'''
 
-def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed,
-                          win_pct=0.5, past_sos=0.5, win_streak=0, power_rank=16):
+def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, team_elo, 
+                          playoff_field_size, is_top_seed):
     if playoff_prob == 0:
         return f'''<div class="prob-tooltip">
             <strong>Вероятность Суперкубка: 0%</strong><br><br>
             Команда не попадает в плей-офф.
         </div>'''
     
-    if power_rank <= 5:
+    if team_elo >= 1280:
         tier_desc = "Элитная команда"
-    elif power_rank <= 10:
+    elif team_elo >= 1240:
         tier_desc = "Сильный претендент"
-    elif power_rank <= 16:
+    elif team_elo >= 1200:
         tier_desc = "Претендент на плей-офф"
     else:
         tier_desc = "Аутсайдер"
-    
-    streak_text = ""
-    if win_streak >= 3:
-        streak_text = f"<br>• Серия побед: {win_streak} (+бонус)"
-    elif win_streak <= -3:
-        streak_text = f"<br>• Серия поражений: {abs(win_streak)} (-штраф)"
     
     seed_text = ""
     if is_top_seed:
         seed_text = "Топ-сид (бай + домашние игры)"
     elif bye_prob > 30:
-        seed_text = "Претендент на бай (3 игры до SB)"
+        seed_text = "Претендент на бай"
     elif div_prob > 50:
-        seed_text = "Лидер дивизиона (домашние игры)"
+        seed_text = "Лидер дивизиона"
     
     return f'''<div class="prob-tooltip">
         <strong>Вероятность Суперкубка: {sb_prob:.1f}%</strong><br><br>
-        {tier_desc} (рейтинг #{power_rank})<br><br>
-        <b>Факторы:</b><br>
-        • Процент побед: {win_pct*100:.0f}% (50%)<br>
-        • Power Ranking: #{power_rank} (25%)<br>
-        • Сила расписания: {past_sos:.3f} (15%)<br>
-        • Качество побед: {quality_of_wins:.3f} (10%){streak_text}<br><br>
+        {tier_desc}<br>
+        ELO рейтинг: {team_elo:.0f}<br><br>
+        <b>Метод Монте-Карло (1000 симуляций):</b><br>
+        • Рейтинг команды: {team_elo:.0f}<br>
+        • Соперники в плей-офф: {playoff_field_size} команд<br>
+        • Каждый раунд симулируется по ELO<br>
+        • Учитываются преимущества посева<br>
+        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <b>Статус:</b><br>
         • Плей-офф: {playoff_prob:.0f}%<br>
         • Победа в див.: {div_prob:.0f}%<br>
         • Бай 1-го раунда: {bye_prob:.0f}%<br>
-        {f'<br>{seed_text}' if seed_text else ''}<br>
-        <i>= вероятность выиграть 3-4 матча плей-офф</i>
+        {f'• {seed_text}<br>' if seed_text else ''}<br>
+        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
     </div>'''
 
 def get_rank_class(rank):
@@ -750,6 +785,13 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
         for div_name in divs:
             all_conf_teams.extend(divs[div_name])
         
+        conf_playoff_elos = []
+        for team_data in all_conf_teams:
+            team_name = team_data['team']
+            playoff_prob = probabilities.get(team_name, {}).get('playoff_probability', 0)
+            if playoff_prob > 0:
+                conf_playoff_elos.append(team_data.get('elo', 1200.0))
+        
         top_bye_team = None
         max_bye_prob = 0
         for team_data in all_conf_teams:
@@ -793,9 +835,11 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 past_sos = quality_of_wins
                 win_streak = team_data.get('win_streak', 0)
                 power_rank = team_data.get('power_rank', 16)
-                sb_prob = calculate_superbowl_prob(
-                    playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed,
-                    win_pct=win_pct, past_sos=past_sos, win_streak=win_streak, power_rank=power_rank
+                team_elo = team_data.get('elo', 1200.0)
+                
+                sb_prob = calculate_superbowl_prob_elo(
+                    playoff_prob, team_elo, conf_playoff_elos, is_top_seed,
+                    bye_prob, div_prob
                 )
                 
                 sos = team_data['remaining_sos']
@@ -845,8 +889,8 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
                 div_tooltip = get_division_tooltip(div_prob, team_name, teams, probabilities)
                 bye_tooltip = get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities)
                 sb_tooltip = get_superbowl_tooltip(
-                    sb_prob, playoff_prob, div_prob, bye_prob, quality_of_wins, is_top_seed,
-                    win_pct=win_pct, past_sos=past_sos, win_streak=win_streak, power_rank=power_rank
+                    sb_prob, playoff_prob, div_prob, bye_prob, team_elo, 
+                    len(conf_playoff_elos), is_top_seed
                 )
                 
                 record_display = f'{team_data["W"]}-{team_data["L"]}-{team_data["T"]}' if team_data["T"] > 0 else f'{team_data["W"]}-{team_data["L"]}'
