@@ -126,7 +126,7 @@
       const sos = await tryCsv(['../output/sos/season2_elo.csv', 'output/sos/season2_elo.csv', '/output/sos/season2_elo.csv']);
       const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
       const schedules = await tryJson(['../output/schedules/season2/all_schedules.json','output/schedules/season2/all_schedules.json','/output/schedules/season2/all_schedules.json']);
-      // Parse mega_elo.csv (semicolon separated, decimal comma)
+      // Parse mega_elo.csv (comma separated, dot decimal)
       let megaEloText = '';
       try {
         megaEloText = await tryText(['../mega_elo.csv','mega_elo.csv','/mega_elo.csv']);
@@ -135,10 +135,10 @@
       if (megaEloText) {
         megaEloText.split(/\r?\n/).forEach(line => {
           if (!line || line.startsWith('#')) return;
-          const parts = line.split(';');
-          if (parts.length < 3) return;
-          const team = parts[1] && parts[1].trim();
-          let ratingStr = parts[2] ? parts[2].replace(/,/g, '.').trim() : '';
+          const parts = line.split(',');
+          if (parts.length < 5) return;
+          const team = parts[2] && parts[2].trim();
+          let ratingStr = parts[4] ? parts[4].trim() : '';
           const rating = parseFloat(ratingStr);
           if (team && !isNaN(rating)) megaEloMap.set(team, rating);
         });

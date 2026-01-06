@@ -193,20 +193,20 @@ def normalize_team_name(name: str) -> str:
 
 
 def read_elo_map(elo_csv: str) -> Dict[str, float]:
-    """Read team -> ELO map from mega_elo.csv (semicolon delimiter, decimal commas)."""
+    """Read team -> ELO map from mega_elo.csv (comma delimiter, dot decimal)."""
     elo_map: Dict[str, float] = {}
     with open(elo_csv, "r", newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter=";")
+        reader = csv.DictReader(f, delimiter=",")
         for row in reader:
             team_raw = row.get("Team")
-            start_raw = row.get("START")
+            start_raw = row.get("Week 14+")
             if not team_raw or not start_raw:
                 continue
             key = normalize_team_name(team_raw)
             try:
-                elo = _parse_decimal_comma(start_raw)
+                elo = float(start_raw)
             except ValueError:
-                logging.warning("Skipping ELO row with invalid START: team=%r START=%r", team_raw, start_raw)
+                logging.warning("Skipping ELO row with invalid Week 14+: team=%r Week 14+=%r", team_raw, start_raw)
                 continue
             elo_map[key] = elo
     logging.info("Loaded ELO map: %d teams from %s", len(elo_map), elo_csv)

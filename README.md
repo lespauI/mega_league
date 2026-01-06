@@ -272,7 +272,7 @@ This pipeline computes Season 2 Strength of Schedule (SoS) using opponent ELO ra
 ### Inputs
 - `MEGA_games.csv` — full schedule; Season 2 starts at row 287 (data rows, header excluded)
 - `MEGA_teams.csv` — team metadata (conference, division, logoId)
-- `mega_elo.csv` — team ELO snapshot (semicolon `;` delimited; decimal commas)
+- `mega_elo.csv` — team ELO snapshot (comma ',' delimited; columns: #, Δ, Team, Coach, Week 14+)
 
 ### Run SoS (ELO) Calculation
 

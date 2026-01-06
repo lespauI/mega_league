@@ -33,16 +33,16 @@ def aggregate_rankings_stats(base_path):
     elo_path = base_path / 'mega_elo.csv'
     try:
         with elo_path.open('r', encoding='utf-8') as f:
-            reader = csv.reader(f, delimiter=';')
+            reader = csv.reader(f, delimiter=',')
             header = next(reader, None)
             for row in reader:
-                if not row or len(row) < 3:
+                if not row or len(row) < 5:
                     continue
-                team_name = normalize_team_display(row[1])
+                team_name = normalize_team_display(row[2])
                 if not team_name or team_name.lower() == 'team':
                     continue
-                start_raw = row[2].strip()
-                elo_start = safe_float(start_raw.replace(',', '.'), 0.0) if start_raw else 0.0
+                start_raw = row[4].strip()
+                elo_start = safe_float(start_raw, 0.0) if start_raw else 0.0
                 elo_index = safe_int(row[0])
                 elo_map[team_name] = {
                     'eloIndex': elo_index,

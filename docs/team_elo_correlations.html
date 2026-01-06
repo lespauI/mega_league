@@ -51,11 +51,11 @@
       for (const p of paths) {
         try {
           const text = await fetch(p).then(r => r.text());
-          const rows = d3.dsvFormat(';').parse(text);
+          const rows = d3.dsvFormat(',').parse(text);
           return rows.map(row => ({
             rank: +row['#'],
             team: row.Team,
-            elo: parseFloat(row.START.replace(',', '.'))
+            elo: parseFloat(row['Week 14+'])
           }));
         } catch (e) { lastErr = e; }
       }
