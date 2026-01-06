@@ -422,7 +422,6 @@
             yKey: 'elo',
             xLabel: 'Pass Completion Percentage',
             yLabel: 'ELO Rating',
-            xFormat: toPct,
             title: 'Passing Accuracy vs ELO',
             insight: 'Completion percentage reflects QB accuracy and offensive scheme',
             metricHelp: '<strong>Completion% vs ELO:</strong> Accuracy and scheme fit indicator.',
@@ -492,8 +491,35 @@
               bottomLeft: 'Low sacks allowed + low ELO: Good protection but losing anyway',
               bottomRight: 'High sacks allowed + low ELO: Pass protection breakdown'
             }
+          },
+          {
+            xKey: 'def_tackles',
+            yKey: 'elo',
+            xLabel: 'Defensive Tackles',
+            yLabel: 'ELO Rating',
+            title: 'Total Defensive Production vs ELO',
+            insight: 'High tackle counts indicate active, engaged defenses',
+            metricHelp: '<strong>Tackles vs ELO:</strong> Total defensive tackles as a measure of defensive activity and production.',
+            quadrantHelp: {
+              topRight: 'High tackles + high ELO: Dominant defense making plays',
+              topLeft: 'Low tackles + high ELO: Efficient defense or strong offense limiting opponent possessions',
+              bottomLeft: 'Low tackles + low ELO: Defense not getting opportunities or passive play',
+              bottomRight: 'High tackles + low ELO: Defense on field often, allowing long drives'
+            }
           }
         ];
+
+        function addRanks(rows, key, rankKey) {
+          const sorted = [...rows].sort((a, b) => (b[key] || 0) - (a[key] || 0));
+          sorted.forEach((row, idx) => { row[rankKey] = idx + 1; });
+        }
+
+        addRanks(allRows, 'elo', 'elo_rank');
+        addRanks(allRows, 'win_pct', 'win_rank');
+        addRanks(allRows, 'off_yds_per_game', 'off_yds_rank');
+        addRanks(allRows, 'yds_per_play', 'yds_per_play_rank');
+        addRanks(allRows, 'qb_rating', 'qb_rating_rank');
+        addRanks(allRows, 'turnover_diff', 'turnover_diff_rank');
 
         const container = d3.select('body').append('div').attr('class', 'container');
         container.append('h1').text('Team ELO Correlations');
@@ -501,6 +527,90 @@
           .text(`Analyzing how team statistics correlate with ELO rating across ${allRows.length} teams`);
 
         charts.forEach(cfg => drawScatter(container, allRows, cfg));
+
+        const rankCharts = [
+          {
+            xKey: 'win_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Win % Rank',
+            yLabel: 'ELO Rank',
+            title: 'Win Rank vs ELO Rank',
+            insight: 'How well does win ranking align with ELO ranking?',
+            metricHelp: '<strong>Win Rank vs ELO Rank:</strong> Perfect correlation would show teams with the same rank in both metrics. Lower rank number = better.',
+            quadrantHelp: {
+              topRight: 'Low win rank + low ELO rank: Bottom teams by both metrics',
+              topLeft: 'High win rank + low ELO rank: Teams winning more than ELO suggests',
+              bottomLeft: 'High win rank + high ELO rank: Elite teams by both metrics',
+              bottomRight: 'Low win rank + high ELO rank: High ELO teams underperforming in wins'
+            }
+          },
+          {
+            xKey: 'off_yds_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Offensive Yards Rank',
+            yLabel: 'ELO Rank',
+            title: 'Offensive Production Rank vs ELO Rank',
+            insight: 'Does offensive production ranking match team strength ranking?',
+            metricHelp: '<strong>Offensive Rank vs ELO Rank:</strong> Compares offensive yardage ranking to overall team rating. Lower rank = better.',
+            quadrantHelp: {
+              topRight: 'Low offense rank + low ELO rank: Weak offense and weak team',
+              topLeft: 'High offense rank + low ELO rank: Strong offense but weak overall team',
+              bottomLeft: 'High offense rank + high ELO rank: Dominant offense on elite team',
+              bottomRight: 'Low offense rank + high ELO rank: Elite team with weaker offense (defense-led)'
+            }
+          },
+          {
+            xKey: 'yds_per_play_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Efficiency Rank',
+            yLabel: 'ELO Rank',
+            title: 'Offensive Efficiency Rank vs ELO Rank',
+            insight: 'Efficiency ranking compared to overall team strength',
+            metricHelp: '<strong>Efficiency Rank vs ELO Rank:</strong> Yards per play efficiency ranking vs team rating. Lower rank = better.',
+            quadrantHelp: {
+              topRight: 'Low efficiency rank + low ELO rank: Inefficient offense on weak team',
+              topLeft: 'High efficiency rank + low ELO rank: Efficient offense but weak team',
+              bottomLeft: 'High efficiency rank + high ELO rank: Elite efficiency on elite team',
+              bottomRight: 'Low efficiency rank + high ELO rank: Elite team with less efficient offense'
+            }
+          },
+          {
+            xKey: 'qb_rating_rank',
+            yKey: 'elo_rank',
+            xLabel: 'QB Rating Rank',
+            yLabel: 'ELO Rank',
+            title: 'QB Performance Rank vs ELO Rank',
+            insight: 'How quarterback ranking correlates with team ranking',
+            metricHelp: '<strong>QB Rank vs ELO Rank:</strong> Quarterback performance ranking vs team strength. Lower rank = better.',
+            quadrantHelp: {
+              topRight: 'Low QB rank + low ELO rank: Poor QB play on weak team',
+              topLeft: 'High QB rank + low ELO rank: Elite QB on weak team',
+              bottomLeft: 'High QB rank + high ELO rank: Elite QB leading elite team',
+              bottomRight: 'Low QB rank + high ELO rank: Elite team with weaker QB (defense-led)'
+            }
+          },
+          {
+            xKey: 'turnover_diff_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Turnover Margin Rank',
+            yLabel: 'ELO Rank',
+            title: 'Turnover Differential Rank vs ELO Rank',
+            insight: 'Turnover margin ranking impact on team ranking',
+            metricHelp: '<strong>Turnover Rank vs ELO Rank:</strong> Turnover differential ranking vs team strength. Lower rank = better margin.',
+            quadrantHelp: {
+              topRight: 'Low TO margin rank + low ELO rank: Poor turnover margin on weak team',
+              topLeft: 'High TO margin rank + low ELO rank: Good turnover margin but weak team',
+              bottomLeft: 'High TO margin rank + high ELO rank: Elite turnover margin on elite team',
+              bottomRight: 'Low TO margin rank + high ELO rank: Elite team with poor turnover margin'
+            }
+          }
+        ];
+
+        container.append('h2').style('margin-top', '40px').style('font-size', '20px').text('📊 Rankings Comparison');
+        container.append('div').attr('class', 'subtitle').style('margin-bottom', '16px')
+          .text('How do statistical rankings compare to ELO rankings?');
+        
+        rankCharts.forEach(cfg => drawScatter(container, allRows, cfg));
       }).catch(err => {
         console.error('Failed to load data:', err);
         d3.select('body').append('div').style('padding', '20px').style('color', 'red')
