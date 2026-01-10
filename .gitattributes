@@ -1,0 +1,38 @@
+# Set default behavior to automatically normalize line endings
+* text=auto
+
+# CSV files should have LF endings
+*.csv text eol=lf
+
+# Python files should have LF endings
+*.py text eol=lf
+
+# Markdown and documentation
+*.md text eol=lf
+
+# Explicitly declare text files you want to always be normalized and converted to native line endings on checkout
+*.txt text
+
+# Denote all files that are truly binary and should not be modified
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.mov binary
+*.mp4 binary
+*.mp3 binary
+*.flv binary
+*.fla binary
+*.swf binary
+*.gz binary
+*.zip binary
+*.7z binary
+*.ttf binary
+*.eot binary
+*.woff binary
+*.pyc binary
+*.pdf binary
+*.ez binary
+*.bz2 binary
+*.swp binary
