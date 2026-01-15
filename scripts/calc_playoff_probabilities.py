@@ -319,7 +319,7 @@ def apply_tiebreakers(teams, stats, teams_info, is_division=False):
     if len(remaining) == 1:
         return remaining[0]
     
-    return remaining[0] if remaining else teams[0]
+    return random.choice(remaining) if remaining else random.choice(teams)
 
 def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
     remaining_games = [g for g in games if not g['completed']]
@@ -620,12 +620,40 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
     Uses conference-aware logic for games not involving target team:
     - Worst-case: Same-conference rivals win their games
     - Best-case: Same-conference rivals lose their games
+    
+    Special handling when team has 0 games remaining:
+    - If other teams could finish with same record, don't mark as certain
+    - This allows Monte Carlo to properly handle tiebreaker probabilities
     """
     remaining_games = [g for g in games if not g['completed']]
+    conf = teams_info[team_name]['conference']
+    
+    team_remaining_games = [g for g in remaining_games if team_name in (g['home'], g['away'])]
+    
+    if not team_remaining_games and remaining_games:
+        team_record = stats[team_name]['W'] + 0.5 * stats[team_name]['T']
+        
+        for other_team, other_stats in stats.items():
+            if other_team == team_name:
+                continue
+            if teams_info.get(other_team, {}).get('conference') != conf:
+                continue
+            
+            other_remaining = [g for g in remaining_games if other_team in (g['home'], g['away'])]
+            if not other_remaining:
+                continue
+            
+            other_current = other_stats['W'] + 0.5 * other_stats['T']
+            other_max = other_current + len(other_remaining)
+            other_min = other_current
+            
+            if abs(other_max - team_record) < 0.01 or abs(other_min - team_record) < 0.01:
+                return None
+            if other_min < team_record < other_max:
+                return None
+    
     if not remaining_games:
         return None
-    
-    conf = teams_info[team_name]['conference']
     
     worst_case_games = []
     for game in remaining_games:
