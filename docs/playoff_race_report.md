@@ -14,10 +14,10 @@
 
 **Wild Card Race:**
 - **Seed 5:** Browns (12-4) | Playoff: 100.0% | SOS: 0.434
-- **Seed 6:** Bills (10-6) | Playoff: 76.4% | SOS: 0.703
-- **Seed 7:** Titans (10-7) | Playoff: 100.0% | SOS: 0.000
+- **Seed 6:** Bills (10-6) | Playoff: 76.0% | SOS: 0.703
+- **Seed 7:** Titans (10-7) | Playoff: 99.9% | SOS: 0.000
 - **Seed 8:** Raiders (9-7) | Playoff: 0.0% | SOS: 0.725
-- **Seed 9:** Chiefs (9-8) | Playoff: 0.0% | SOS: 0.000
+- **Seed 9:** Chiefs (9-8) | Playoff: 0.1% | SOS: 0.000
 
 **On the Bubble:**
 - **10.** Colts (7-9) | Playoff: 0.0% | SOS: 0.287
@@ -35,8 +35,8 @@
 **Wild Card Race:**
 - **Seed 5:** Cowboys (11-5) | Playoff: 100.0% | SOS: 0.747
 - **Seed 6:** 49ers (10-6) | Playoff: 100.0% | SOS: 0.812
-- **Seed 7:** Panthers (10-7) | Playoff: 100.0% | SOS: 0.000
-- **Seed 8:** Lions (9-7) | Playoff: 32.6% | SOS: 0.347
+- **Seed 7:** Panthers (10-7) | Playoff: 67.3% | SOS: 0.000
+- **Seed 8:** Lions (9-7) | Playoff: 32.7% | SOS: 0.347
 - **Seed 9:** Rams (9-7) | Playoff: 0.0% | SOS: 0.412
 
 **On the Bubble:**
@@ -60,7 +60,7 @@
 Three teams at 8-5, one at 7-6. Anyone can win this division:
 
 - **Saints** (11-5): Playoff 100.0% | SOS 0.584
-- **Panthers** (10-7): Playoff 100.0% | SOS 0.000
+- **Panthers** (10-7): Playoff 67.3% | SOS 0.000
 - **Falcons** (7-9): Playoff 0.0% | SOS 0.566
 - **Buccaneers** (0-17): Playoff 0.0% | SOS 0.000
 
