@@ -673,112 +673,6 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     
     return '\n'.join(html)
 
-def create_markdown_report(afc_leaders, afc_wc, nfc_leaders, nfc_wc):
-    report = []
-    report.append("# 🏈 NFL MEGA League Playoff Race Analysis - Week 14")
-    report.append("")
-    report.append("## Current Playoff Picture")
-    report.append("")
-    report.append("*Playoff chances calculated based on current record, remaining schedule strength, and competition*")
-    report.append("")
-    
-    report.append("### AFC Playoff Standings")
-    report.append("")
-    report.append("**Division Leaders:**")
-    for i, team in enumerate(afc_leaders[:4], 1):
-        div_short = team['division'].replace('AFC ', '')
-        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
-        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) - {div_short} | Playoff: 99.5% | SOS: {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("**Wild Card Race:**")
-    for i, team in enumerate(afc_wc[:5], 5):
-        chance = team.get('playoff_chance', 50)
-        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
-        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("**On the Bubble:**")
-    for i, team in enumerate(afc_wc[5:8], 10):
-        chance = team.get('playoff_chance', 50)
-        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
-        report.append(f"- **{i}.** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("### NFC Playoff Standings")
-    report.append("")
-    report.append("**Division Leaders:**")
-    for i, team in enumerate(nfc_leaders[:4], 1):
-        div_short = team['division'].replace('NFC ', '')
-        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
-        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) - {div_short} | Playoff: 99.5% | SOS: {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("**Wild Card Race:**")
-    for i, team in enumerate(nfc_wc[:5], 5):
-        chance = team.get('playoff_chance', 50)
-        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
-        report.append(f"- **Seed {i}:** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("**On the Bubble:**")
-    for i, team in enumerate(nfc_wc[5:8], 10):
-        chance = team.get('playoff_chance', 50)
-        record_str = f"{team['W']}-{team['L']}-{team['T']}" if team['T'] > 0 else f"{team['W']}-{team['L']}"
-        report.append(f"- **{i}.** {team['team']} ({record_str}) | Playoff: {chance}% | SOS: {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("---")
-    report.append("")
-    report.append("## Key Races to Watch")
-    report.append("")
-    
-    report.append("### AFC Wild Card Battle")
-    report.append("")
-    report.append("**INTENSE 6-7 LOGJAM!** Five teams at 6-7 fighting for the last playoff spots:")
-    report.append("")
-    afc_67_teams = [t for t in afc_wc[:10] if t['W'] == 6 and t['L'] == 7]
-    for team in afc_67_teams:
-        chance = team.get('playoff_chance', 50)
-        advantage = "🟢 Best path" if team['remaining_sos'] < 0.45 else "🔴 Brutal" if team['remaining_sos'] > 0.55 else "🟡 Balanced"
-        report.append(f"- **{team['team']}**: Playoff {chance}% | SOS {team['remaining_sos']:.3f} {advantage}")
-    
-    report.append("")
-    report.append("**Analysis:** Bengals and Texans have easiest schedules - they're positioned to surge!")
-    report.append("")
-    
-    report.append("### NFC South: Four-Way Chaos")
-    report.append("")
-    report.append("Three teams at 8-5, one at 7-6. Anyone can win this division:")
-    report.append("")
-    nfc_south_teams = []
-    for team in nfc_leaders + nfc_wc:
-        if team['team'] in ['Saints', 'Buccaneers', 'Falcons', 'Panthers']:
-            nfc_south_teams.append(team)
-    
-    for team in sorted(nfc_south_teams, key=lambda x: x['win_pct'], reverse=True):
-        chance = team.get('playoff_chance', 99.5)
-        report.append(f"- **{team['team']}** ({team['W']}-{team['L']}): Playoff {chance}% | SOS {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("**Analysis:** Falcons (0.433) vs Saints (0.612) - massive 0.179 SOS gap could flip the division!")
-    report.append("")
-    
-    report.append("### NFC Wild Card: Tight Battle")
-    report.append("")
-    report.append("Four teams at 7-6 fighting for final spots:")
-    report.append("")
-    nfc_76_teams = [t for t in nfc_wc[:10] if t['W'] == 7 and t['L'] == 6]
-    for team in nfc_76_teams:
-        chance = team.get('playoff_chance', 50)
-        report.append(f"- **{team['team']}**: Playoff {chance}% | SOS {team['remaining_sos']:.3f}")
-    
-    report.append("")
-    report.append("**Analysis:** Commanders have easiest remaining schedule - prime position to sneak in!")
-    report.append("")
-    
-    return '\n'.join(report)
-
 def main():
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
@@ -796,16 +690,11 @@ def main():
     with open('docs/playoff_race.html', 'w', encoding='utf-8') as f:
         f.write(html_report)
     
-    markdown_report = create_markdown_report(afc_leaders, afc_wc, nfc_leaders, nfc_wc)
-    with open('docs/playoff_race_report.md', 'w', encoding='utf-8') as f:
-        f.write(markdown_report)
-    
     print("\n" + "="*80)
     print("PLAYOFF RACE ANALYSIS COMPLETE!")
     print("="*80)
     print("\nGenerated files:")
     print("  ✓ docs/playoff_race.html")
-    print("  ✓ docs/playoff_race_report.md")
     print("\nKey findings:")
     print("  • AFC: Five teams at 6-7 battling for Wild Card spots")
     print("  • NFC South: Four teams within one game - complete chaos!")
