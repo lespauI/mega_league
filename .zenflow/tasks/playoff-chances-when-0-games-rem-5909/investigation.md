@@ -186,3 +186,35 @@ Probabilities now correctly reflect:
 1. `scripts/calc_playoff_probabilities.py` - Fixed certainty check
 2. `output/playoff_probabilities.json` - Regenerated with correct probabilities
 3. `docs/playoff_race_table.html` - Regenerated table shows correct 67.5%
+
+---
+
+## Bug #2: Raiders incorrectly showing 0% (should be ~23%)
+
+### Root Cause
+In `check_mathematical_certainty()` best-case logic (lines 703-709), when two conference rivals play each other, the code incorrectly made the team with **fewer** wins win. This was backwards.
+
+For Bills (10-6) vs Patriots (11-5):
+- The code made Bills win (fewer wins), but Bills is a direct competitor with Raiders
+- For Raiders' best case, Bills should LOSE
+
+### Fix Applied (line 706-709)
+Changed the logic to make the team with **more** wins win when both teams are conference rivals:
+```python
+# Before (wrong):
+if home_wins >= away_wins:
+    winner, loser = away, home  # Fewer wins won
+else:
+    winner, loser = home, away
+
+# After (correct):
+if home_wins >= away_wins:
+    winner, loser = home, away  # More wins wins
+else:
+    winner, loser = away, home
+```
+
+### Result
+- Raiders: **24.5%** (was 0%)
+- Bills: **76.3%** (unchanged)
+- Probabilities now correctly reflect competition for 7th AFC playoff spot

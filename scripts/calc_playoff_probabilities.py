@@ -704,9 +704,9 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
                 home_wins = stats.get(home, {}).get('W', 0)
                 away_wins = stats.get(away, {}).get('W', 0)
                 if home_wins >= away_wins:
-                    winner, loser = away, home
-                else:
                     winner, loser = home, away
+                else:
+                    winner, loser = away, home
             else:
                 winner, loser = home, away
         best_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
