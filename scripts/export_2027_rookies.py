@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Export only 2026 rookies from MEGA_players.csv to a separate CSV file.
+Export only 2027 rookies from MEGA_players.csv to a separate CSV file.
 
 Usage:
-    python3 scripts/export_2026_rookies.py
-    python3 scripts/export_2026_rookies.py --year 2026 --input MEGA_players.csv --output output/rookies_2026.csv
+    python3 scripts/export_2027_rookies.py
+    python3 scripts/export_2027_rookies.py --year 2027 --input MEGA_players.csv --output output/rookies_2027.csv
 """
 import argparse
 import csv
@@ -69,8 +69,8 @@ def main():
     parser.add_argument(
         '--year',
         type=int,
-        default=2026,
-        help='Rookie year to filter (default: 2026)'
+        default=2027,
+        help='Rookie year to filter (default: 2027)'
     )
     parser.add_argument(
         '--input',
@@ -79,8 +79,8 @@ def main():
     )
     parser.add_argument(
         '--output',
-        default='output/rookies_2026.csv',
-        help='Output CSV file (default: output/rookies_2026.csv)'
+        default='output/rookies_2027.csv',
+        help='Output CSV file (default: output/rookies_2027.csv)'
     )
     
     args = parser.parse_args()

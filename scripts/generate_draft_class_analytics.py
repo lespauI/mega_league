@@ -618,7 +618,14 @@ def build_round1_entries(players_rows: list[dict], team_logo_map: dict, *, year:
             continue
         rd = safe_int(r.get('draftRound'), None)
         pk = safe_int(r.get('draftPick'), None)
-        if rd != 1 or pk is None:
+        # Include Round 1 + Round 2 Pick 1 (hack for 2.1)
+        if pk is None:
+            continue
+        if rd == 1:
+            pass  # include all R1
+        elif rd == 2 and pk == 1:
+            pass  # include R2 pick 1 only
+        else:
             continue
 
         # Name derivation mirrors gather_rookies
@@ -661,8 +668,11 @@ def build_round1_entries(players_rows: list[dict], team_logo_map: dict, *, year:
         if portrait_id.isdigit():
             photo_url = f"https://ratings-images-prod.pulse.ea.com/madden-nfl-26/portraits/{portrait_id}.png"
 
+        # Calculate overall pick number (32 picks per round)
+        overall_pick = ((rd - 1) * 32) + pk if rd and pk else pk
+
         entries.append({
-            'pick': pk,
+            'pick': overall_pick,
             'team': team,
             'team_logo': logo_url,
             'name': name,
@@ -811,6 +821,11 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
 
     def esc(s: str) -> str:
         return html.escape(str(s))
+    def md_to_html(s: str) -> str:
+        """Convert markdown bold **text** to HTML <b>text</b> after escaping."""
+        import re
+        escaped = html.escape(str(s))
+        return re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', escaped)
     def _attr_label(key: str) -> str:
         k = str(key or '')
         # Strip a single trailing 'Rating' (6 chars)
@@ -914,7 +929,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
                     parts.append(proj_html)
                 if notes_list:
                     joined = '\n\n'.join(notes_list)
-                    parts.append(f"<div class=\"mock-notes\">{esc(joined)}</div>")
+                    parts.append(f"<div class=\"mock-notes\">{md_to_html(joined)}</div>")
                 notes_html = (
                     "<div class=\"mock-notes-block\">"
                     "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
