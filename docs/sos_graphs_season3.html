@@ -61,8 +61,20 @@
     }
 
     async function loadData() {
-      const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
-      const sos = await tryCsv(['../output/ranked_sos_by_conference_season3.csv', 'output/ranked_sos_by_conference_season3.csv', '/output/ranked_sos_by_conference_season3.csv']);
+      const teams = await tryCsv([
+        '../MEGA_teams.csv',
+        'MEGA_teams.csv',
+        '/MEGA_teams.csv',
+        'data/MEGA_teams.csv',
+        '../docs/data/MEGA_teams.csv'
+      ]);
+      const sos = await tryCsv([
+        '../output/ranked_sos_by_conference_season3.csv',
+        'output/ranked_sos_by_conference_season3.csv',
+        '/output/ranked_sos_by_conference_season3.csv',
+        'data/ranked_sos_by_conference_season3.csv',
+        '../docs/data/ranked_sos_by_conference_season3.csv'
+      ]);
 
       const teamMap = new Map();
       for (const t of teams) {
@@ -78,8 +90,11 @@
 
       for (const row of sos) {
         const meta = teamMap.get(String(row.team).trim());
-        const W = +row.W, L = +row.L; const g = (Number.isFinite(W)?W:0) + (Number.isFinite(L)?L:0);
-        row.winPct = g>0 ? (W/g) : (meta? meta.winPct : null);
+        const W = +row.W || 0;
+        const L = +row.L || 0;
+        const T = +row.T || 0;
+        const g = W + L + T;
+        row.winPct = g > 0 ? ((W + 0.5 * T) / g) : (meta ? (meta.winPct ?? 0) : 0);
         row.conference = row.conference || (meta? meta.conf : null);
         row.logoUrl = meta && meta.logoId!=='' && meta.logoId!=null ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null;
       }
@@ -87,7 +102,13 @@
     }
 
     async function loadPlayoffData(teamMap) {
-      const paths = ['../output/playoff_probabilities.json', 'output/playoff_probabilities.json', '/output/playoff_probabilities.json'];
+      const paths = [
+        '../output/playoff_probabilities.json',
+        'output/playoff_probabilities.json',
+        '/output/playoff_probabilities.json',
+        'data/playoff_probabilities.json',
+        '../docs/data/playoff_probabilities.json'
+      ];
       let data;
       for (const p of paths) {
         try { data = await d3.json(p); break; } catch (e) { }
@@ -120,7 +141,8 @@
       if (xKey === 'playoff_probability') {
         data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] > 5 && +d[xKey] < 99.5);
       } else {
-        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] >= 0.005 && +d[xKey] <= 0.995);
+        // Allow 0.000..1.000 for pre-season (all teams can be 0.000 win%)
+        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] >= 0 && +d[xKey] <= 1);
       }
 
       const margin = { top: 20, right: 24, bottom: 46, left: 60 };
@@ -132,6 +154,11 @@
       const panel = holder.append('details').attr('class', 'panel').attr('open', true);
       panel.append('summary').text(cfg.title);
       const wrap = panel.append('div').attr('class', 'chart-wrap');
+      if (!data.length) {
+        wrap.append('div').style('padding', '12px').style('color', '#666')
+          .text('No data available for this filter.');
+        return;
+      }
       const svg = wrap.append('svg').attr('width', width).attr('height', height);
       const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
 
