@@ -10,6 +10,7 @@ Run these from the repo root:
 - `python3 scripts/run_all_playoff_analysis.py` – playoff + draft pick race only.
 - `python3 scripts/run_all_stats.py` – stats‑only pipeline (team aggregation, player usage, rankings joins).
 - `python3 scripts/calc_sos_season2_elo.py --season2-start-row ...` – Season 2 SoS (ELO) only.
+- `python3 scripts/calc_sos_season3_elo.py --season3-start-row ...` – Season 3 SoS (ELO) only.
 
 See the “Architecture at a Glance”, “Quick Start”, and “Typical Workflow” sections in `README.md` for details on when to use each.
 
@@ -23,6 +24,8 @@ Domain‑specific scripts that can be run directly or via the entry points:
   `generate_team_scenario_html.py`, `top_pick_race_analysis.py`, `generate_index.py`.
 - **Season 2 SoS (ELO)**  
   `calc_sos_season2_elo.py` (+ verifier `verify_sos_season2_elo.py`).
+- **Season 3 SoS (ELO)**  
+  `calc_sos_season3_elo.py` (+ verifier `verify_sos_season3_elo.py`).
 - **Draft & rookies**  
   `generate_draft_class.py`, `generate_draft_class_analytics.py`,  
   `verify_draft_class_analytics.py`, `verify_draft_round1_recap.py`, `export_2026_rookies.py`.

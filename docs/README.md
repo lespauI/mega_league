@@ -10,7 +10,9 @@ The `docs/` folder is the static site for the MEGA League project. All HTML page
 | `playoff_race_table.html`    | AFC/NFC side‑by‑side playoff probabilities + remaining SoS  | `python3 scripts/playoff_race_table.py` (also run by `run_all.py` / `run_all_playoff_analysis.py`) |
 | `playoff_race_report.md`     | Markdown summary of the playoff race                        | Generated alongside `playoff_race.html` by `scripts/playoff_race_html.py`        |
 | `sos_season2.html`           | Season 2 SoS (ELO) combined table + bar charts              | `python3 scripts/calc_sos_season2_elo.py ...` or `python3 scripts/run_all.py`    |
+| `sos_season3.html`           | Season 3 SoS (ELO) combined table + bar charts              | `python3 scripts/calc_sos_season3_elo.py ...`                                   |
 | `sos_graphs.html`            | Season 2 SoS visualizations (graphs)                        | Backs onto `output/sos/season2_elo.csv/json` from `calc_sos_season2_elo.py`      |
+| `sos_graphs_season3.html`    | Season 3 SoS visualizations (graphs)                        | Backs onto `output/ranked_sos_by_conference_season3.csv` from `calc_sos_by_rankings.py` |
 | `week18_simulator.html`      | Week 18 matchup simulator tool                              | `python3 scripts/week18_simulator.py`                                            |
 
 

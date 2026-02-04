@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import os
 from collections import defaultdict
+
+DEFAULT_SEASON_INDEX = 2
 
 
 def to_int(val, default=None):
@@ -61,8 +64,8 @@ def compute_strength_score(row, w_off=0.4, w_def=0.4, w_rank=0.2):
     return sum(s * w for s, w in parts) / total_w
 
 
-def read_latest_rankings(rankings_csv_path):
-    # Keep latest by (seasonIndex, stageIndex, weekIndex) for Season 2 only
+def read_latest_rankings(rankings_csv_path, season_index):
+    # Keep latest by (seasonIndex, stageIndex, weekIndex) for target season only
     latest = {}
     with open(rankings_csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -72,7 +75,7 @@ def read_latest_rankings(rankings_csv_path):
                 continue
             si = to_int(row.get("seasonIndex"), -1)
             sti = to_int(row.get("stageIndex"), -1)
-            if si != 1:
+            if si != season_index:
                 continue
             key = team
             wi = to_int(row.get("weekIndex"), -1)
@@ -93,7 +96,7 @@ def read_latest_rankings(rankings_csv_path):
     return scores
 
 
-def read_games_split(games_csv_path):
+def read_games_split(games_csv_path, season_index):
     remaining = []
     past = []
     with open(games_csv_path, newline="", encoding="utf-8") as f:
@@ -101,7 +104,7 @@ def read_games_split(games_csv_path):
         for row in reader:
             si = to_int(row.get("seasonIndex"), -1)
             sti = to_int(row.get("stageIndex"), -1)
-            if si != 1 or sti != 1:
+            if si != season_index or sti != 1:
                 continue
             status = (row.get("status") or "").strip()
             home = (row.get("homeTeam") or "").strip()
@@ -118,7 +121,7 @@ def read_games_split(games_csv_path):
     return remaining, past
 
 
-def read_teams_info(teams_csv_path, games_csv_path):
+def read_teams_info(teams_csv_path, games_csv_path, season_index):
     info = {}
     with open(teams_csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -141,7 +144,7 @@ def read_teams_info(teams_csv_path, games_csv_path):
         for row in reader:
             si = to_int(row.get("seasonIndex"), -1)
             sti = to_int(row.get("stageIndex"), -1)
-            if si != 1 or sti != 1:
+            if si != season_index or sti != 1:
                 continue
             
             status = (row.get("status") or "").strip()
@@ -250,16 +253,32 @@ def write_output(results, output_path):
             writer.writerow(row)
 
 
-def main():
-    base_dir = os.getcwd()
-    rankings_csv = os.path.join(base_dir, "MEGA_rankings.csv")
-    games_csv = os.path.join(base_dir, "MEGA_games.csv")
-    teams_csv = os.path.join(base_dir, "MEGA_teams.csv")
-    output_csv = os.path.join(base_dir, "output", "ranked_sos_by_conference.csv")
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="Compute strength of schedule using rankings-based power scores")
+    parser.add_argument("--season-index", type=int, default=DEFAULT_SEASON_INDEX, help="Season index to analyze")
+    parser.add_argument("--rankings-csv", default="MEGA_rankings.csv", help="Path to rankings CSV")
+    parser.add_argument("--games-csv", default="MEGA_games.csv", help="Path to games CSV")
+    parser.add_argument("--teams-csv", default="MEGA_teams.csv", help="Path to teams CSV")
+    parser.add_argument("--out-csv", default=None, help="Output CSV path (default: output/ranked_sos_by_conference_season{N}.csv, where N = seasonIndex + 1)")
+    args = parser.parse_args(argv)
 
-    strength_scores = read_latest_rankings(rankings_csv)
-    remaining, past = read_games_split(games_csv)
-    teams_info = read_teams_info(teams_csv, games_csv)
+    base_dir = os.getcwd()
+    rankings_csv = os.path.join(base_dir, args.rankings_csv)
+    games_csv = os.path.join(base_dir, args.games_csv)
+    teams_csv = os.path.join(base_dir, args.teams_csv)
+    season_label = args.season_index + 1
+    if args.out_csv:
+        output_csv = os.path.join(base_dir, args.out_csv)
+    else:
+        output_csv = os.path.join(
+            base_dir,
+            "output",
+            f"ranked_sos_by_conference_season{season_label}.csv",
+        )
+
+    strength_scores = read_latest_rankings(rankings_csv, args.season_index)
+    remaining, past = read_games_split(games_csv, args.season_index)
+    teams_info = read_teams_info(teams_csv, games_csv, args.season_index)
     results = compute_ranked_sos(teams_info, strength_scores, remaining, past)
     write_output(results, output_csv)
 
@@ -269,7 +288,7 @@ def main():
         by_conf[r.get("conference", "")].append(r)
 
     for conf in sorted(by_conf.keys()):
-        print(f"\n{conf} — top 5 by ranked SoS avg:")
+        print(f"\n{conf} — top 5 by ranked SoS avg (seasonIndex={args.season_index}):")
         top5 = sorted(by_conf[conf], key=lambda x: -x["ranked_sos_avg"])[:5]
         for row in top5:
             print(
@@ -281,4 +300,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-

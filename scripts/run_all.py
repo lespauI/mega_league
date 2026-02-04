@@ -53,6 +53,7 @@ def main():
         ('stats_scripts/aggregate_rankings_stats.py', 'Team Rankings & Stats Aggregation', False),
         ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)', False),
         ('scripts/calc_sos_season2_elo.py', 'Season 2 SoS (ELO) Calculation', False),
+        ('scripts/calc_sos_season3_elo.py', 'Season 3 SoS (ELO) Calculation', False),
         ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False),
         ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False),
@@ -91,9 +92,11 @@ def main():
         print("  • output/traded_players_report.csv - Multi-team player summary")
         print("  • scripts/verify_trade_stats.py - Trade stats invariants verified via console")
         print("\n🏈 Playoff Analysis:")
-        print("  • output/ranked_sos_by_conference.csv - Strength of schedule data")
+        print("  • output/ranked_sos_by_conference_season3.csv - Strength of schedule data (Season 3)")
         print("  • output/sos/season2_elo.csv - Season 2 SoS (ELO) table")
         print("  • output/sos/season2_elo.json - Season 2 SoS (ELO) JSON")
+        print("  • output/sos/season3_elo.csv - Season 3 SoS (ELO) table")
+        print("  • output/sos/season3_elo.json - Season 3 SoS (ELO) JSON")
         print("  • output/playoff_probabilities.json - Playoff probabilities data")
         print("  • docs/playoff_race_table.html - Interactive playoff race table")
         print("  • docs/playoff_race.html - Full playoff analysis report (with embedded table)")
