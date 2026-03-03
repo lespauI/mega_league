@@ -28,7 +28,9 @@ def read_standings():
         reader = csv.DictReader(f)
         for row in reader:
             status = row.get('status', '').strip()
-            if status == '1':
+            season_index = int(row.get('seasonIndex', -1))
+            stage_index = int(row.get('stageIndex', -1))
+            if status == '1' and season_index == 2 and stage_index == 1:
                 home = row['homeTeam'].strip()
                 away = row['awayTeam'].strip()
                 week_index = int(row.get('weekIndex', 0))
