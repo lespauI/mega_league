@@ -42,7 +42,7 @@ def load_rankings_data():
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if int(row.get('seasonIndex', 0)) != 1:
+            if int(row.get('seasonIndex', 0)) != 2:
                 continue
             team = row['team'].strip()
             week = int(row.get('weekIndex', 0))
@@ -103,7 +103,7 @@ def load_data():
     with open('MEGA_games.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if int(row.get('seasonIndex', 0)) != 1:
+            if int(row.get('seasonIndex', 0)) != 2:
                 continue
             if int(row.get('stageIndex', 0)) != 1:
                 continue
