@@ -35,7 +35,7 @@ def load_power_rankings():
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if int(row.get('seasonIndex', 0)) != 1:
+            if int(row.get('seasonIndex', 0)) != 2:
                 continue
             team = row['team'].strip()
             week = int(row.get('weekIndex', 0))

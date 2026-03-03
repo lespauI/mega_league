@@ -55,7 +55,8 @@ Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warra
 
 ---
 
-### [ ] Step: Fix hardcoded seasonIndex filters
+### [x] Step: Fix hardcoded seasonIndex filters
+<!-- chat-id: a683bd1a-4cc2-4676-b5c0-fa61a730397e -->
 
 Update the two scripts that hardcode `seasonIndex != 1` so they target Season 3 (`!= 2`):
 - `scripts/calc_playoff_probabilities.py` lines 45 and 106: change `!= 1` to `!= 2`
