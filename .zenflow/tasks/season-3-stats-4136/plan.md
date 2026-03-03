@@ -62,7 +62,8 @@ Update the two scripts that hardcode `seasonIndex != 1` so they target Season 3 
 - `scripts/calc_playoff_probabilities.py` lines 45 and 106: change `!= 1` to `!= 2`
 - `scripts/playoff_race_table.py` lines 38 and 106: change `!= 1` to `!= 2`
 
-### [ ] Step: Run the full stats pipeline
+### [x] Step: Run the full stats pipeline
+<!-- chat-id: 958bb311-d876-48a2-899a-91b5a00683f7 -->
 
 Execute `python3 scripts/run_all.py` from the project root to regenerate all Season 3 outputs:
 - `output/player_team_stints.csv` (seasonIndex should be 2)
