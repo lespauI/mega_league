@@ -20,7 +20,8 @@ If you are blocked and need user clarification, mark the current step with `[!]`
 
 ## Workflow Steps
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
+<!-- chat-id: c3589f0a-7853-4278-bc9d-9903905ac5ff -->
 
 Assess the task's difficulty, as underestimating it leads to poor outcomes.
 - easy: Straightforward implementation, trivial bug fix or feature
@@ -56,14 +57,11 @@ Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warra
 
 ### [ ] Step: Implementation
 
-Implement the task according to the technical specification and general engineering best practices.
+Implement the Season 3 playoff changes per `.zenflow/tasks/season-3-playoff-chances-be7f/spec.md`.
 
-1. Break the task into steps where possible.
-2. Implement the required changes in the codebase
-3. If relevant, write unit tests alongside each change.
-4. Run relevant tests and linters in the end of each step.
-5. Perform basic manual verification if applicable.
-6. After completion, write a report to `{@artifacts_path}/report.md` describing:
-   - What was implemented
-   - How the solution was tested
-   - The biggest issues or challenges encountered
+1. In `scripts/calc_playoff_probabilities.py`: change `seasonIndex != 1` → `seasonIndex != 2` (lines 45 and 106, in `load_rankings_data()` and `load_data()`)
+2. In `scripts/playoff_race_table.py`: change `seasonIndex != 1` → `seasonIndex != 2` (line 38, in `load_power_rankings()`)
+3. In `scripts/run_all_playoff_analysis.py`: update the `calc_sos_by_rankings.py` entry in the `scripts` list to pass `extra_args=['--season-index', '2', '--out-csv', 'output/ranked_sos_by_conference.csv']`
+4. Run `python3 scripts/run_all_playoff_analysis.py` from the project root and confirm all steps succeed
+5. Spot-check `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `docs/playoff_race.html`, `docs/playoff_race_table.html` contain Season 3 data
+6. Write a report to `.zenflow/tasks/season-3-playoff-chances-be7f/report.md`
