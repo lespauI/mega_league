@@ -65,9 +65,19 @@ def aggregate_rankings_stats(base_path):
         if name:
             team_stats_map[name] = s
     
-    # Get latest rankings (highest week)
+    # Determine the current season: use the max seasonIndex present in the rankings.
+    current_season = max(
+        (safe_int(r.get('seasonIndex', 0)) for r in rankings),
+        default=0,
+    )
+    current_season_rankings = [
+        r for r in rankings if safe_int(r.get('seasonIndex', 0)) == current_season
+    ]
+    print(f"Using seasonIndex={current_season} for rankings ({len(current_season_rankings)} rows)")
+
+    # Get latest rankings within the current season only (highest week)
     latest_rankings = {}
-    for r in rankings:
+    for r in current_season_rankings:
         team = normalize_team_display(r.get('team', ''))
         week = safe_int(r.get('weekIndex', 0))
         if team:
@@ -85,9 +95,9 @@ def aggregate_rankings_stats(base_path):
                     'ptsAgainstRank': safe_int(r.get('ptsAgainstRank')),
                 }
     
-    # Track week-to-week changes
+    # Track week-to-week changes within the current season only
     rank_changes = defaultdict(list)
-    for r in rankings:
+    for r in current_season_rankings:
         team = normalize_team_display(r.get('team', ''))
         if team:
             rank_changes[team].append({
