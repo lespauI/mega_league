@@ -20,7 +20,8 @@ If you are blocked and need user clarification, mark the current step with `[!]`
 
 ## Workflow Steps
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
+<!-- chat-id: 1db25747-db4e-47ca-90cf-1629a4ed0d5c -->
 
 Assess the task's difficulty, as underestimating it leads to poor outcomes.
 - easy: Straightforward implementation, trivial bug fix or feature
@@ -54,16 +55,21 @@ Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warra
 
 ---
 
-### [ ] Step: Implementation
+### [ ] Step: Fix hardcoded seasonIndex filters
 
-Implement the task according to the technical specification and general engineering best practices.
+Update the two scripts that hardcode `seasonIndex != 1` so they target Season 3 (`!= 2`):
+- `scripts/calc_playoff_probabilities.py` lines 45 and 106: change `!= 1` to `!= 2`
+- `scripts/playoff_race_table.py` lines 38 and 106: change `!= 1` to `!= 2`
 
-1. Break the task into steps where possible.
-2. Implement the required changes in the codebase
-3. If relevant, write unit tests alongside each change.
-4. Run relevant tests and linters in the end of each step.
-5. Perform basic manual verification if applicable.
-6. After completion, write a report to `{@artifacts_path}/report.md` describing:
-   - What was implemented
-   - How the solution was tested
-   - The biggest issues or challenges encountered
+### [ ] Step: Run the full stats pipeline
+
+Execute `python3 scripts/run_all.py` from the project root to regenerate all Season 3 outputs:
+- `output/player_team_stints.csv` (seasonIndex should be 2)
+- `output/team_aggregated_stats.csv`
+- `output/team_player_usage.csv`
+- `output/team_rankings_stats.csv`
+- `output/playoff_probabilities.json`
+- `docs/playoff_race_table.html` and other HTML dashboards
+- Verify `scripts/verify_trade_stats.py` passes
+
+Write a report to `.zenflow/tasks/season-3-stats-4136/report.md` describing what was done and any issues encountered.
