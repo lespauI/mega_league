@@ -55,7 +55,8 @@ Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warra
 
 ---
 
-### [ ] Step: Implementation
+### [x] Step: Implementation
+<!-- chat-id: 9dd8a6e1-27a8-46e2-9a61-b107cae72b24 -->
 
 Implement the Season 3 playoff changes per `.zenflow/tasks/season-3-playoff-chances-be7f/spec.md`.
 

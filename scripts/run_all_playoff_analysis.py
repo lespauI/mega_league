@@ -251,7 +251,7 @@ def main():
     print("="*80)
     
     scripts = [
-        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, None),
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, ['--season-index', '2', '--out-csv', 'output/ranked_sos_by_conference.csv']),
         ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, ['--markdown']),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),
         ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, None),
