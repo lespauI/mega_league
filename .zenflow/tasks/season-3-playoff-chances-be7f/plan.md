@@ -66,3 +66,8 @@ Implement the Season 3 playoff changes per `.zenflow/tasks/season-3-playoff-chan
 4. Run `python3 scripts/run_all_playoff_analysis.py` from the project root and confirm all steps succeed
 5. Spot-check `output/ranked_sos_by_conference.csv`, `output/playoff_probabilities.json`, `docs/playoff_race.html`, `docs/playoff_race_table.html` contain Season 3 data
 6. Write a report to `.zenflow/tasks/season-3-playoff-chances-be7f/report.md`
+
+### [x] Step: SoS week 3
+<!-- chat-id: 8072405f-ddc3-4d44-bfa3-9d2a9c3e3ff6 -->
+
+currently is week 10, but in sos we have week 3, looks like a bug
