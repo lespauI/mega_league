@@ -121,8 +121,7 @@
 
       const data = rows.filter(d => 
         Number.isFinite(+d.win_pct) && 
-        Number.isFinite(+d[metricKey]) &&
-        +d.win_pct >= 0.005 && +d.win_pct <= 0.995
+        Number.isFinite(+d[metricKey])
       );
 
       if (data.length < 2) return;

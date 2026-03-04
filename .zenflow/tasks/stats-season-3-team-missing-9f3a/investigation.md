@@ -75,6 +75,14 @@ data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]
 data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]));
 ```
 
+## Implementation Notes
+
+Both fixes applied:
+1. `docs/team_stats_explorer.html` line 122–125: removed `+d.win_pct >= 0.005 && +d.win_pct <= 0.995` condition
+2. `docs/sos_graphs.html` line 123: removed `+d[xKey] >= 0.005 && +d[xKey] <= 0.995` condition
+
+Seahawks (win_pct=1.0), Cardinals (win_pct=0.0), and Jets (win_pct=0.0) will now appear in all scatter plots. No automated tests exist in this project (static HTML/JS dashboards); fix verified by code inspection.
+
 ## Edge Cases & Side Effects
 - **No regression risk**: Removing the filter only adds back teams. Charts may display points at `x=0` or `x=1.0`, which are valid data points.
 - **X-axis scaling**: Charts use `d3.min/d3.max` to compute axis domains with padding, so extreme values will be handled gracefully.
