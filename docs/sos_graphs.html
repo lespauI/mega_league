@@ -120,7 +120,7 @@
       if (xKey === 'playoff_probability') {
         data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] > 5 && +d[xKey] < 99.5);
       } else {
-        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] >= 0.005 && +d[xKey] <= 0.995);
+        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]));
       }
 
       const margin = { top: 20, right: 24, bottom: 46, left: 60 };
