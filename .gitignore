@@ -15,3 +15,4 @@ output/positions/
 output/individual_position_formulas.txt
 output/
 docs/team_scenarios/*.md
+tests/snapshots/

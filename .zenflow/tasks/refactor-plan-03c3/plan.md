@@ -26,7 +26,8 @@ Do not make assumptions on important decisions — get clarification first.
 - To reflect actual purpose of the first step, you can update step Implementation, renaming it to something more relevant, like Planning. Do NOT remove meta information, like comments for any step.
 - Update `{@artifacts_path}/plan.md`.
 
-### [ ] Step: Create snapshot tests (Phase 0)
+### [x] Step: Create snapshot tests (Phase 0)
+<!-- chat-id: 651eb250-fb20-4b9f-8518-8db3bd624b4f -->
 - Copy golden outputs from master worktree (`/Users/lespaul/workspace/MEGA_neonsportz_stats`) into `tests/snapshots/` (SoS CSVs/JSONs, schedules, stats pipeline outputs)
 - Add `tests/snapshots/` to `.gitignore`
 - Create `tests/test_snapshots.py` as specified in `refactor_safety_guide.md` Phase 0.3
