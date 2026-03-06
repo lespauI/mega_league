@@ -64,7 +64,8 @@ Do not make assumptions on important decisions — get clarification first.
 - Confirm they are not referenced anywhere: `grep -r "plan\.md\|plan2\.md\|plan3\.md" --include="*.py" --include="*.md" .`
 - Commit: `chore: remove stale working-note plan files from project root`
 
-### [ ] Step: Add --season-index CLI arg to hard-coded scripts
+### [x] Step: Add --season-index CLI arg to hard-coded scripts
+<!-- chat-id: 79c1473f-54a9-47e6-bc28-d4b9c81c2c2a -->
 - Add `argparse` with `--season-index` (default: 2) to `playoff_race_html.py`, `playoff_race_table.py`, `calc_playoff_probabilities.py`
 - Replace all hard-coded `seasonIndex == 2` filters with the CLI arg value
 - Verify: run each script with default arg and confirm HTML output is identical to the golden snapshot

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import os
 import json
 from collections import defaultdict
 
-def read_standings():
+def read_standings(season_index=2):
     teams_div = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -28,9 +29,9 @@ def read_standings():
         reader = csv.DictReader(f)
         for row in reader:
             status = row.get('status', '').strip()
-            season_index = int(row.get('seasonIndex', -1))
+            row_season_index = int(row.get('seasonIndex', -1))
             stage_index = int(row.get('stageIndex', -1))
-            if status == '1' and season_index == 2 and stage_index == 1:
+            if status == '1' and row_season_index == season_index and stage_index == 1:
                 home = row['homeTeam'].strip()
                 away = row['awayTeam'].strip()
                 week_index = int(row.get('weekIndex', 0))
@@ -675,14 +676,14 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     
     return '\n'.join(html)
 
-def main():
+def main(season_index=2):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
     with open('output/playoff_probabilities.json', 'r', encoding='utf-8') as f:
         probabilities = json.load(f)
     
-    afc_divs, nfc_divs = read_standings()
+    afc_divs, nfc_divs = read_standings(season_index=season_index)
     afc_leaders, afc_wc = get_playoff_picture(afc_divs, probabilities)
     nfc_leaders, nfc_wc = get_playoff_picture(nfc_divs, probabilities)
     
@@ -704,4 +705,8 @@ def main():
     print("\nOpen playoff_race.html in your browser to view the full analysis!")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Generate playoff race HTML report')
+    parser.add_argument('--season-index', type=int, default=2,
+                        help='Season index to filter games (default: 2)')
+    args = parser.parse_args()
+    main(season_index=args.season_index)
