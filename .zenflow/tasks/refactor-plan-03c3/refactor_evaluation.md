@@ -62,7 +62,13 @@ The top ~200 lines of this orchestrator define:
 
 These are **never called** — `main()` (line 246) runs everything via `subprocess` by calling `calc_sos_by_rankings.py`. These functions are a copy of code that lives in `calc_sos_by_rankings.py`.
 
-**Suggestion**: Delete lines 1–203 of `run_all_playoff_analysis.py` (everything before `import sys / import subprocess`).
+**Suggestion**: Delete lines 1–203 of `run_all_playoff_analysis.py` (the unused SoS utility functions), then ensure the file starts with these three imports:
+```python
+import os
+import sys
+import subprocess
+```
+Note: `import os` was at line 4 in the dead-code block and must be retained — it is still used by `main()` via `os.chdir()` and `os.path.*`.
 
 ---
 
@@ -215,9 +221,9 @@ Tests are spread across:
 
 **Files**: `scripts/players_ovr/{analyze_team.py,calculate_advanced_formulas.py,export_individual_positions.py,optimize_positions.py}`
 
-This sub-folder appears to be an experimental/analysis tool with its own `README.md` and `requirements.txt` (imports `numpy`, `scipy`), making it the only part of the project with external Python dependencies.
+This sub-folder appears to be an experimental/analysis tool with its own `README.md` and `requirements.txt` (`scikit-learn>=1.8.0`, `numpy>=2.4.0`), making it the only part of the project with external Python dependencies.
 
-**Suggestion**: Ensure these scripts are clearly documented as optional/experimental, or isolate them more explicitly (e.g., `tools/players_ovr/`). Their `requirements.txt` uses numpy/scipy which contradicts the "no external dependencies required" claim in the root README.
+**Suggestion**: Ensure these scripts are clearly documented as optional/experimental, or isolate them more explicitly (e.g., `tools/players_ovr/`). Their `requirements.txt` (`scikit-learn`, `numpy`) contradicts the "no external dependencies required" claim in the root README.
 
 ### 5.4 Stale Comment "scaffold" in SoS ELO Scripts
 
@@ -243,7 +249,13 @@ Listed in priority order. Each step is self-contained and safe (existing functio
 
 ### Step 1: Eliminate Dead Code in `run_all_playoff_analysis.py` ⭐⭐⭐
 **Risk**: None — the functions are not called.
-**Action**: Delete lines 1–204 of [`scripts/run_all_playoff_analysis.py`](../../scripts/run_all_playoff_analysis.py) (the unused SoS utility functions). Add missing `import sys; import subprocess` at the top.
+**Action**: Delete lines 1–204 of [`scripts/run_all_playoff_analysis.py`](../../scripts/run_all_playoff_analysis.py) (the unused SoS utility functions), then ensure the file starts with:
+```python
+import os
+import sys
+import subprocess
+```
+`import os` was part of the deleted block (line 4) but is still used by `main()` via `os.chdir()` and `os.path.*` — it must be retained.
 
 ### Step 2: Extract Shared `run_script()` to `scripts/run_utils.py` ⭐⭐⭐
 **Risk**: Low — just moving a function.
