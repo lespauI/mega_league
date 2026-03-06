@@ -1,8 +1,183 @@
 # Refactoring Safety Guide
 
-## Test Baseline (Run Before Touching Anything)
+---
 
-Establish a green baseline first. These are the commands to run:
+## Phase 0: Create Snapshot Tests BEFORE Touching Any Code
+
+> **This is mandatory. Do not skip it. Write the tests first, confirm they pass against master, then refactor.**
+
+We are on a Git worktree branched from `master`. The main worktree at `/Users/lespaul/workspace/MEGA_neonsportz_stats` has all real, production-generated output files on `master`. We use these as **golden snapshots** — the ground truth that our refactored code must reproduce exactly.
+
+### 0.1 — Understand the worktree layout
+
+```
+/Users/lespaul/workspace/MEGA_neonsportz_stats   ← master (golden source)
+/Users/lespaul/.zenflow/worktrees/refactor-plan-03c3  ← THIS branch (where we work)
+```
+
+The master worktree has:
+- `output/sos/season2_elo.csv` / `season3_elo.csv` — golden SoS outputs
+- `output/sos/season2_elo.json` / `season3_elo.json`
+- `output/schedules/season2/all_schedules.json` / `season3/...`
+- `output/playoff_probabilities.json`
+- `output/ranked_sos_by_conference.csv`
+- `output/team_aggregated_stats.csv`
+- `output/team_player_usage.csv`
+- `output/team_rankings_stats.csv`
+- `output/player_team_stints.csv`
+- `docs/playoff_race_table.html`
+- `docs/playoff_race.html`
+- `docs/power_rankings_roster.html`
+
+### 0.2 — Copy golden snapshots into the worktree
+
+Run this once from the worktree root to copy the master outputs as reference snapshots:
+
+```bash
+MASTER=/Users/lespaul/workspace/MEGA_neonsportz_stats
+mkdir -p tests/snapshots/sos tests/snapshots/output tests/snapshots/docs
+
+# SoS ELO outputs (most critical — these are what the merged script must reproduce)
+cp $MASTER/output/sos/season2_elo.csv   tests/snapshots/sos/season2_elo.csv
+cp $MASTER/output/sos/season2_elo.json  tests/snapshots/sos/season2_elo.json
+cp $MASTER/output/sos/season3_elo.csv   tests/snapshots/sos/season3_elo.csv
+cp $MASTER/output/sos/season3_elo.json  tests/snapshots/sos/season3_elo.json
+
+# Schedules
+cp $MASTER/output/schedules/season2/all_schedules.json  tests/snapshots/sos/season2_schedules.json
+cp $MASTER/output/schedules/season3/all_schedules.json  tests/snapshots/sos/season3_schedules.json
+
+# Stats pipeline outputs
+cp $MASTER/output/ranked_sos_by_conference.csv     tests/snapshots/output/ranked_sos_by_conference.csv
+cp $MASTER/output/playoff_probabilities.json       tests/snapshots/output/playoff_probabilities.json
+cp $MASTER/output/team_aggregated_stats.csv        tests/snapshots/output/team_aggregated_stats.csv
+cp $MASTER/output/team_player_usage.csv            tests/snapshots/output/team_player_usage.csv
+cp $MASTER/output/team_rankings_stats.csv          tests/snapshots/output/team_rankings_stats.csv
+cp $MASTER/output/player_team_stints.csv           tests/snapshots/output/player_team_stints.csv
+```
+
+Add `tests/snapshots/` to `.gitignore` so these large files are not committed, but keep them locally for the duration of the refactor.
+
+### 0.3 — Write a snapshot test runner
+
+Create `tests/test_snapshots.py`:
+
+```python
+#!/usr/bin/env python3
+"""
+Snapshot tests: run each pipeline script and verify output matches
+the golden snapshots captured from master.
+
+Run from project root:
+    PYTHONPATH=. python3 tests/test_snapshots.py
+"""
+import csv
+import json
+import subprocess
+import sys
+import os
+from pathlib import Path
+
+SNAPSHOTS = Path("tests/snapshots")
+MASTER = Path("/Users/lespaul/workspace/MEGA_neonsportz_stats")
+
+PASS = []
+FAIL = []
+
+
+def run(cmd, desc):
+    result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+    if result.returncode != 0:
+        FAIL.append(f"SCRIPT FAILED [{desc}]: {result.stderr.strip()}")
+        return False
+    return True
+
+
+def diff_csv(actual_path, snapshot_path, label):
+    """Compare two CSV files row-by-row (order matters)."""
+    try:
+        with open(actual_path, newline="", encoding="utf-8") as f:
+            actual = list(csv.DictReader(f))
+        with open(snapshot_path, newline="", encoding="utf-8") as f:
+            expected = list(csv.DictReader(f))
+    except FileNotFoundError as e:
+        FAIL.append(f"MISSING FILE [{label}]: {e}")
+        return
+    if actual == expected:
+        PASS.append(label)
+    else:
+        FAIL.append(f"CSV MISMATCH [{label}]: {len(actual)} rows actual vs {len(expected)} expected")
+
+
+def diff_json(actual_path, snapshot_path, label):
+    """Compare two JSON files by value (not byte-for-byte to tolerate whitespace)."""
+    try:
+        with open(actual_path, encoding="utf-8") as f:
+            actual = json.load(f)
+        with open(snapshot_path, encoding="utf-8") as f:
+            expected = json.load(f)
+    except FileNotFoundError as e:
+        FAIL.append(f"MISSING FILE [{label}]: {e}")
+        return
+    if actual == expected:
+        PASS.append(label)
+    else:
+        FAIL.append(f"JSON MISMATCH [{label}]")
+
+
+# ── SoS ELO (Season 2) ────────────────────────────────────────────────────────
+if run("python3 scripts/calc_sos_season2_elo.py --season2-start-row 287", "calc_sos_season2_elo"):
+    diff_csv("output/sos/season2_elo.csv",  SNAPSHOTS / "sos/season2_elo.csv",  "sos/season2_elo.csv")
+    diff_json("output/sos/season2_elo.json", SNAPSHOTS / "sos/season2_elo.json", "sos/season2_elo.json")
+
+# ── SoS ELO (Season 3) ────────────────────────────────────────────────────────
+if run("python3 scripts/calc_sos_season3_elo.py --season3-start-row 571", "calc_sos_season3_elo"):
+    diff_csv("output/sos/season3_elo.csv",  SNAPSHOTS / "sos/season3_elo.csv",  "sos/season3_elo.csv")
+    diff_json("output/sos/season3_elo.json", SNAPSHOTS / "sos/season3_elo.json", "sos/season3_elo.json")
+
+# ── Stats pipeline ────────────────────────────────────────────────────────────
+if run("python3 stats_scripts/aggregate_team_stats.py", "aggregate_team_stats"):
+    diff_csv("output/team_aggregated_stats.csv", SNAPSHOTS / "output/team_aggregated_stats.csv", "team_aggregated_stats.csv")
+
+if run("python3 stats_scripts/aggregate_player_usage.py", "aggregate_player_usage"):
+    diff_csv("output/team_player_usage.csv", SNAPSHOTS / "output/team_player_usage.csv", "team_player_usage.csv")
+
+if run("python3 stats_scripts/aggregate_rankings_stats.py", "aggregate_rankings_stats"):
+    diff_csv("output/team_rankings_stats.csv", SNAPSHOTS / "output/team_rankings_stats.csv", "team_rankings_stats.csv")
+
+if run("python3 stats_scripts/build_player_team_stints.py", "build_player_team_stints"):
+    diff_csv("output/player_team_stints.csv", SNAPSHOTS / "output/player_team_stints.csv", "player_team_stints.csv")
+
+# ── SoS by Rankings ───────────────────────────────────────────────────────────
+if run("python3 scripts/calc_sos_by_rankings.py --season-index 2 --out-csv output/ranked_sos_by_conference.csv", "calc_sos_by_rankings"):
+    diff_csv("output/ranked_sos_by_conference.csv", SNAPSHOTS / "output/ranked_sos_by_conference.csv", "ranked_sos_by_conference.csv")
+
+
+# ── Report ────────────────────────────────────────────────────────────────────
+print(f"\n{'='*60}")
+print(f"SNAPSHOT TESTS: {len(PASS)} passed, {len(FAIL)} failed")
+print(f"{'='*60}")
+for p in PASS:
+    print(f"  ✅ {p}")
+for f in FAIL:
+    print(f"  ❌ {f}")
+
+sys.exit(1 if FAIL else 0)
+```
+
+### 0.4 — Confirm snapshot tests pass BEFORE any refactoring
+
+```bash
+PYTHONPATH=. python3 tests/test_snapshots.py
+```
+
+All checks must pass. If any fail on the unmodified worktree, investigate before proceeding — it means the worktree diverged from master in a way that affects output.
+
+**The snapshot test is your safety harness. After every refactoring step, run it again. If it stays green, you have not broken anything.**
+
+---
+
+## Phase 1: Run Existing Unit Tests Baseline
 
 ```bash
 # Python unit tests
@@ -205,10 +380,17 @@ Only tackle after all previous steps are committed and verified. Each script dec
 
 ## Quick Reference: Verify Everything Still Works
 
-Run this after every step to confirm nothing regressed:
+Run this after **every single step** to confirm nothing regressed:
 
 ```bash
-PYTHONPATH=. python3 tests/test_power_rankings_roster.py  && \
+# Snapshot tests (output must match master exactly)
+PYTHONPATH=. python3 tests/test_snapshots.py && \
+
+# Unit tests
+PYTHONPATH=. python3 tests/test_power_rankings_roster.py && \
 node scripts/tests/test_year_context.mjs && \
-echo "ALL BASELINE TESTS PASSED"
+
+echo "ALL TESTS PASSED — safe to commit"
 ```
+
+If any of these fail after a change: **do not commit**. Investigate immediately, or `git checkout .` to revert and try again.
