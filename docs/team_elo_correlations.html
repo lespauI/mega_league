@@ -97,9 +97,9 @@
       ]);
 
       const eloData = await loadEloCsv([
-        '../mega_elo.csv',
-        'mega_elo.csv',
-        '/mega_elo.csv'
+        '../MEGA_elo.csv',
+        'MEGA_elo.csv',
+        '/MEGA_elo.csv'
       ]);
 
       const eloMap = new Map(eloData.map(d => [d.team, d.elo]));

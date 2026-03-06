@@ -86,10 +86,12 @@ stats_scripts/
 ├── aggregate_player_usage.py      # Usage distributions
 ├── aggregate_rankings_stats.py    # Rankings + stats join
 ├── build_player_team_stints.py    # Trade-aware stints builder
+└── README.md                      # This file
+
+spec/
 ├── STATS_VISUALIZATION_PLAN.md    # Full plan and ideas
 ├── RANKINGS_VISUALIZATION_PLAN.md # Rankings-focused visualization ideas
-├── CORRELATION_IDEAS.md           # Extra correlation concepts
-└── README.md                      # This file
+└── CORRELATION_IDEAS.md           # Extra correlation concepts
 
 ../output/
 ├── team_aggregated_stats.csv      # Team stats (input to most dashboards)
@@ -128,7 +130,7 @@ output/team_aggregated_stats.csv ──> docs/team_stats_explorer.html, docs/tea
 
 ## Key Insights
 
-Based on the plan in `STATS_VISUALIZATION_PLAN.md`:
+Based on the plan in `../spec/STATS_VISUALIZATION_PLAN.md`:
 
 ### Strong Correlations (R² > 0.5)
 - Turnover Differential vs Win%
@@ -147,7 +149,7 @@ Based on the plan in `STATS_VISUALIZATION_PLAN.md`:
 
 ## Future Enhancements
 
-See `STATS_VISUALIZATION_PLAN.md` for:
+See `../spec/STATS_VISUALIZATION_PLAN.md` for:
 - Ultimate Graph Builder (both X and Y as dropdowns)
 - Player-level drill-downs
 - Time-based filtering (last 5 games, trends)
@@ -182,9 +184,9 @@ See `STATS_VISUALIZATION_PLAN.md` for:
 ## Further Reading & Design Docs
 
 For deeper background and future ideas, see:
-- `STATS_VISUALIZATION_PLAN.md` – full plan for team stats visualizations.
-- `RANKINGS_VISUALIZATION_PLAN.md` – concepts for rankings-focused charts and dashboards.
-- `CORRELATION_IDEAS.md` – additional cross-metric correlation ideas.
+- `../spec/STATS_VISUALIZATION_PLAN.md` – full plan for team stats visualizations.
+- `../spec/RANKINGS_VISUALIZATION_PLAN.md` – concepts for rankings-focused charts and dashboards.
+- `../spec/CORRELATION_IDEAS.md` – additional cross-metric correlation ideas.
 
 ## Dependencies
 

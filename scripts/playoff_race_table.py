@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import argparse
 import csv
 import os
 import json
@@ -29,13 +30,13 @@ GAME_WIN_PROB_MAX = 0.75
 SB_PROB_MAX = 45.0
 
 
-def load_power_rankings():
+def load_power_rankings(season_index=2):
     rankings = {}
     max_week = {}
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if int(row.get('seasonIndex', 0)) != 2:
+            if int(row.get('seasonIndex', 0)) != season_index:
                 continue
             team = row['team'].strip()
             week = int(row.get('weekIndex', 0))
@@ -46,9 +47,9 @@ def load_power_rankings():
     return rankings
 
 def load_elo_data():
-    """Load team ELO ratings from mega_elo.csv."""
+    """Load team ELO ratings from MEGA_elo.csv."""
     elo_map = {}
-    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
+    with open('MEGA_elo.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row.get('Team', '').strip()
@@ -63,8 +64,8 @@ def load_elo_data():
             elo_map[team] = 1200.0
     return elo_map
 
-def read_standings():
-    power_rankings = load_power_rankings()
+def read_standings(season_index=2):
+    power_rankings = load_power_rankings(season_index=season_index)
     elo_ratings = load_elo_data()
     
     teams_div = {}
@@ -101,9 +102,9 @@ def read_standings():
         reader = csv.DictReader(f)
         for row in reader:
             status = row.get('status', '').strip()
-            season_index = int(row.get('seasonIndex', -1))
+            row_season_index = int(row.get('seasonIndex', -1))
             stage_index = int(row.get('stageIndex', -1))
-            if status == '1' and season_index == 2 and stage_index == 1:
+            if status == '1' and row_season_index == season_index and stage_index == 1:
                 home = row['homeTeam'].strip()
                 away = row['awayTeam'].strip()
                 week_index = int(row.get('weekIndex', 0))
@@ -981,7 +982,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
     
     return '\n'.join(html)
 
-def main():
+def main(season_index=2):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
@@ -989,7 +990,7 @@ def main():
         probabilities = json.load(f)
     
     print("Reading standings data...")
-    afc_divs, nfc_divs, teams_div = read_standings()
+    afc_divs, nfc_divs, teams_div = read_standings(season_index=season_index)
     
     print("Generating NYT-style table...")
     html_output = create_html_table(afc_divs, nfc_divs, probabilities)
@@ -1007,4 +1008,8 @@ def main():
     print("\nOpen this file in your browser to view the NYT-style playoff race table!")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Generate playoff race table HTML')
+    parser.add_argument('--season-index', type=int, default=2,
+                        help='Season index to filter games and rankings (default: 2)')
+    args = parser.parse_args()
+    main(season_index=args.season_index)

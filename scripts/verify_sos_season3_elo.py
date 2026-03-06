@@ -1,55 +1,11 @@
 #!/usr/bin/env python3
-"""
-Verification helper for Season 3 SoS via ELO — scaffolding.
-
-Interface:
-  python3 scripts/verify_sos_season3_elo.py --check schedules|sos
-
-This file currently wires CLI and logging. The actual checks will be
-implemented in subsequent steps alongside the calculation script.
-"""
+"""Thin wrapper — delegates to verify_sos_elo.py with --season-index 3."""
 
 from __future__ import annotations
 
-import argparse
-import logging
-from typing import List
+import sys
 
-
-def check_schedules() -> int:
-    logging.info("[stub] verify schedules: will validate per-team schedule counts and schema")
-    return 0
-
-
-def check_sos() -> int:
-    logging.info("[stub] verify sos: will validate ranking, league averages, and schema")
-    return 0
-
-
-def build_arg_parser() -> argparse.ArgumentParser:
-    ap = argparse.ArgumentParser(description="Verify Season 3 SoS via ELO artifacts (scaffold)")
-    ap.add_argument(
-        "--check",
-        choices=["schedules", "sos"],
-        required=True,
-        help="Which verification to run",
-    )
-    return ap
-
-
-def main(argv: List[str] | None = None) -> int:
-    logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
-    ap = build_arg_parser()
-    args = ap.parse_args(argv)
-
-    if args.check == "schedules":
-        return check_schedules()
-    elif args.check == "sos":
-        return check_sos()
-    else:
-        logging.error("Unknown check: %s", args.check)
-        return 2
-
+from verify_sos_elo import main
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(["--season-index", "3"] + sys.argv[1:]))

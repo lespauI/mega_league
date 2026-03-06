@@ -21,9 +21,9 @@ DEFAULT_ELO = 1200.0
 
 
 def load_elo_data():
-    """Load team ELO ratings from mega_elo.csv."""
+    """Load team ELO ratings from MEGA_elo.csv."""
     elo_map = {}
-    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
+    with open('MEGA_elo.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row.get('Team', '').strip()
@@ -36,13 +36,13 @@ def load_elo_data():
     return elo_map
 
 
-def load_rankings_data():
+def load_rankings_data(season_index=2):
     rankings = {}
     max_week = {}
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if int(row.get('seasonIndex', 0)) != 2:
+            if int(row.get('seasonIndex', 0)) != season_index:
                 continue
             team = row['team'].strip()
             week = int(row.get('weekIndex', 0))
@@ -80,7 +80,7 @@ def is_divisional_game(home, away, teams_info):
     return home_div == away_div and home_div != ''
 
 
-def load_data():
+def load_data(season_index=2):
     teams_info = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -103,7 +103,7 @@ def load_data():
     with open('MEGA_games.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
-            if int(row.get('seasonIndex', 0)) != 2:
+            if int(row.get('seasonIndex', 0)) != season_index:
                 continue
             if int(row.get('stageIndex', 0)) != 1:
                 continue
@@ -743,10 +743,10 @@ def cap_simulation_probability(raw_probability):
         return 0.1
     return raw_probability
 
-def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
-    teams_info, games, sos_data = load_data()
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=2):
+    teams_info, games, sos_data = load_data(season_index=season_index)
     stats = calculate_team_stats(teams_info, games)
-    rankings = load_rankings_data()
+    rankings = load_rankings_data(season_index=season_index)
     
     print("\n" + "="*80)
     print("SIMULATING PLAYOFF SCENARIOS")
@@ -800,7 +800,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS):
     print(f"  ✓ Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}% (slight Madden boost)")
     print(f"  ✓ Win streak bonus (>={WIN_STREAK_THRESHOLD} wins): +{WIN_STREAK_BONUS*100:.0f}%")
     print(f"  ✓ Divisional games: {DIVISIONAL_REGRESSION*100:.0f}% regression toward 50-50")
-    print("  ✓ ELO ratings for true team skill (from mega_elo.csv)")
+    print("  ✓ ELO ratings for true team skill (from MEGA_elo.csv)")
     print("  ✓ Strength of victories from opponent power rankings")
     print("  ✓ Win probability capped at 25-75% (realistic variance)")
     print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")
@@ -827,10 +827,12 @@ if __name__ == "__main__":
                         help=f'Number of simulations to run (default: {DEFAULT_NUM_SIMULATIONS})')
     parser.add_argument('-s', '--seed', type=int, default=None,
                         help='Random seed for reproducible results (default: None)')
+    parser.add_argument('--season-index', type=int, default=2,
+                        help='Season index to filter games and rankings (default: 2)')
     args = parser.parse_args()
     
     if args.seed is not None:
         random.seed(args.seed)
         print(f"Using random seed: {args.seed}")
     
-    main(num_simulations=args.num_simulations)
+    main(num_simulations=args.num_simulations, season_index=args.season_index)

@@ -4,29 +4,9 @@ import csv
 import os
 from collections import defaultdict
 
+from common import to_int, norm_rank, mean_safe
+
 DEFAULT_SEASON_INDEX = 2
-
-
-def to_int(val, default=None):
-    try:
-        v = int(val)
-        return v
-    except Exception:
-        return default
-
-
-def norm_rank(rank):
-    # Normalize a rank 1..32 to 1..~0.03125 (higher is better)
-    if rank is None or rank <= 0:
-        return None
-    return (33 - rank) / 32.0
-
-
-def mean_safe(values):
-    vals = [v for v in values if v is not None]
-    if not vals:
-        return None
-    return sum(vals) / len(vals)
 
 
 def compute_strength_score(row, w_off=0.4, w_def=0.4, w_rank=0.2):

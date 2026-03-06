@@ -1,33 +1,8 @@
 #!/usr/bin/env python3
-import sys
-import subprocess
 import os
+import sys
 
-
-def run_script(script_name, description):
-    """Run a Python script and print its status"""
-    print("\n" + "="*80)
-    print(f"Running: {description}")
-    print("="*80)
-    
-    try:
-        result = subprocess.run(
-            [sys.executable, script_name],
-            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            capture_output=False,
-            text=True
-        )
-        
-        if result.returncode == 0:
-            print(f"✓ {description} completed successfully")
-            return True
-        else:
-            print(f"✗ {description} failed with exit code {result.returncode}")
-            return False
-            
-    except Exception as e:
-        print(f"✗ Error running {description}: {str(e)}")
-        return False
+from run_utils import run_script
 
 
 def main():

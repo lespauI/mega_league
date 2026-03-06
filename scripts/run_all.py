@@ -1,46 +1,8 @@
 #!/usr/bin/env python3
-import sys
-import subprocess
 import os
+import sys
 
-
-def run_script(script_name, description, optional=False, extra_args=None):
-    """Run a Python script and print its status"""
-    print("\n" + "="*80)
-    print(f"Running: {description}")
-    if optional:
-        print("(Optional)")
-    print("="*80)
-    
-    try:
-        cmd = [sys.executable, script_name]
-        if extra_args:
-            cmd.extend(extra_args)
-        result = subprocess.run(
-            cmd,
-            cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            capture_output=False,
-            text=True
-        )
-        
-        if result.returncode == 0:
-            print(f"✓ {description} completed successfully")
-            return True
-        else:
-            if optional:
-                print(f"⚠ {description} skipped (missing dependencies)")
-                return True
-            else:
-                print(f"✗ {description} failed with exit code {result.returncode}")
-                return False
-            
-    except Exception as e:
-        if optional:
-            print(f"⚠ {description} skipped: {str(e)}")
-            return True
-        else:
-            print(f"✗ Error running {description}: {str(e)}")
-            return False
+from run_utils import run_script
 
 
 def main():
@@ -55,8 +17,8 @@ def main():
         ('stats_scripts/aggregate_player_usage.py', 'Player Usage Distribution Analysis', False, None),
         ('stats_scripts/aggregate_rankings_stats.py', 'Team Rankings & Stats Aggregation', False, None),
         ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)', False, None),
-        ('scripts/calc_sos_season2_elo.py', 'Season 2 SoS (ELO) Calculation', False, None),
-        ('scripts/calc_sos_season3_elo.py', 'Season 3 SoS (ELO) Calculation', False, None),
+        ('scripts/calc_sos_elo.py', 'Season 2 SoS (ELO) Calculation', False, ['--season-index', '2', '--start-row', '287']),
+        ('scripts/calc_sos_elo.py', 'Season 3 SoS (ELO) Calculation', False, ['--season-index', '3', '--start-row', '571']),
         ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, ['--season-index', '2', '--out-csv', 'output/ranked_sos_by_conference.csv']),
         ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, None),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),

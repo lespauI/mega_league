@@ -126,10 +126,10 @@
       const sos = await tryCsv(['../output/sos/season2_elo.csv', 'output/sos/season2_elo.csv', '/output/sos/season2_elo.csv']);
       const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
       const schedules = await tryJson(['../output/schedules/season2/all_schedules.json','output/schedules/season2/all_schedules.json','/output/schedules/season2/all_schedules.json']);
-      // Parse mega_elo.csv (comma separated, dot decimal)
+      // Parse MEGA_elo.csv (comma separated, dot decimal)
       let megaEloText = '';
       try {
-        megaEloText = await tryText(['../mega_elo.csv','mega_elo.csv','/mega_elo.csv']);
+        megaEloText = await tryText(['../MEGA_elo.csv','MEGA_elo.csv','/MEGA_elo.csv']);
       } catch (_) {}
       const megaEloMap = new Map();
       if (megaEloText) {
@@ -164,7 +164,7 @@
             r.logoUrl = `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`;
           }
         }
-        // Attach own ELO from mega_elo.csv if available
+        // Attach own ELO from MEGA_elo.csv if available
         if (megaEloMap.has(name)) {
           r.own_elo = +megaEloMap.get(name);
         }
