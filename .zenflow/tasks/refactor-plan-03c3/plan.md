@@ -49,7 +49,8 @@ Do not make assumptions on important decisions — get clarification first.
 - Run snapshot tests + unit tests to verify nothing regressed
 - Commit: `refactor: extract run_script() to shared run_utils.py`
 
-### [ ] Step: Merge Season 2/3 SoS ELO scripts into one
+### [x] Step: Merge Season 2/3 SoS ELO scripts into one
+<!-- chat-id: f6359347-eed0-44c8-ae9a-5816190468e4 -->
 - Create `scripts/calc_sos_elo.py` — parameterized version of both season scripts, accepting `--season-index N` and `--start-row N`; output paths derived from season index automatically
 - Create `scripts/verify_sos_elo.py` — merged version of both stub verifiers, accepting `--season-index N`
 - Update `scripts/run_all.py` to call the new script twice (season-index 2 start-row 287, season-index 3 start-row 571)
