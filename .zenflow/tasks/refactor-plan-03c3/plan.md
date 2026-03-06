@@ -41,7 +41,8 @@ Do not make assumptions on important decisions — get clarification first.
 - Run snapshot tests + unit tests to verify nothing regressed
 - Commit: `refactor: remove dead SoS utility code from run_all_playoff_analysis`
 
-### [ ] Step: Extract shared run_script() to scripts/run_utils.py
+### [x] Step: Extract shared run_script() to scripts/run_utils.py
+<!-- chat-id: 7729a598-0b2c-4922-8a7b-7d65f8ec739d -->
 - Create `scripts/run_utils.py` with the full-featured `run_script()` from `run_all.py` (supports `optional` and `extra_args`)
 - Remove the local `run_script` definition from `run_all.py`, `run_all_playoff_analysis.py`, `run_all_stats.py`
 - Add `from run_utils import run_script` to each of those three files
