@@ -71,7 +71,8 @@ Do not make assumptions on important decisions — get clarification first.
 - Verify: run each script with default arg and confirm HTML output is identical to the golden snapshot
 - Commit: `refactor: add --season-index arg to playoff scripts`
 
-### [ ] Step: Create scripts/common.py for shared utilities
+### [x] Step: Create scripts/common.py for shared utilities
+<!-- chat-id: 8d95153c-21b1-45e3-822b-3b6acc5be5ed -->
 - Create `scripts/common.py` with: `normalize_team_name()`, `to_int()`, `norm_rank()`, `mean_safe()`, `read_elo_map()`, `read_team_meta()`
 - Update all callers in `calc_sos_elo.py`, `calc_sos_by_rankings.py` to import from `scripts.common`
 - Run snapshot tests to verify all outputs unchanged

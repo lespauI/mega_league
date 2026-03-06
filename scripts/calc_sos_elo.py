@@ -28,6 +28,8 @@ import logging
 import os
 from typing import Any, Dict, List, Tuple
 
+from common import normalize_team_name, read_elo_map, read_team_meta
+
 _DEFAULT_START_ROWS: Dict[int, int] = {
     2: 287,
     3: 571,
@@ -174,58 +176,6 @@ def _parse_decimal_comma(val: str) -> float:
     s = str(val).strip().replace(" ", "")
     s = s.replace(",", ".")
     return float(s)
-
-
-def normalize_team_name(name: str) -> str:
-    """Normalize team names for consistent joins across files."""
-    if name is None:
-        return ""
-    s = name.strip().lower()
-    for ch in ["'", "\"", ".", ",", "-", "_", "(", ")", "/", "\\", "&", "  "]:
-        s = s.replace(ch, " ")
-    s = "".join(ch for ch in s if ch.isalnum())
-    return s
-
-
-def read_elo_map(elo_csv: str) -> Dict[str, float]:
-    """Read team -> ELO map from mega_elo.csv (comma delimiter, dot decimal)."""
-    elo_map: Dict[str, float] = {}
-    with open(elo_csv, "r", newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f, delimiter=",")
-        for row in reader:
-            team_raw = row.get("Team")
-            start_raw = row.get("Week 14+")
-            if not team_raw or not start_raw:
-                continue
-            key = normalize_team_name(team_raw)
-            try:
-                elo = float(start_raw)
-            except ValueError:
-                logging.warning("Skipping ELO row with invalid Week 14+: team=%r Week 14+=%r", team_raw, start_raw)
-                continue
-            elo_map[key] = elo
-    logging.info("Loaded ELO map: %d teams from %s", len(elo_map), elo_csv)
-    return elo_map
-
-
-def read_team_meta(teams_csv: str) -> Dict[str, Dict[str, Any]]:
-    """Read team metadata (conference, division, logoId) from MEGA_teams.csv."""
-    meta: Dict[str, Dict[str, Any]] = {}
-    with open(teams_csv, "r", newline="", encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            name = (row.get("teamName") or row.get("displayName") or "").strip()
-            if not name:
-                continue
-            key = normalize_team_name(name)
-            meta[key] = {
-                "teamName": name,
-                "conference": (row.get("conferenceName") or "").strip() or None,
-                "division": (row.get("divName") or "").strip() or None,
-                "logoId": (row.get("logoId") or "").strip() or None,
-            }
-    logging.info("Loaded team metadata: %d teams from %s", len(meta), teams_csv)
-    return meta
 
 
 def compute_sos_elo(
