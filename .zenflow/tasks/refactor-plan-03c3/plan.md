@@ -34,7 +34,8 @@ Do not make assumptions on important decisions — get clarification first.
 - Run `PYTHONPATH=. python3 tests/test_snapshots.py` and confirm all checks pass on the unmodified worktree before any code is changed
 - This is the safety harness — all subsequent steps must keep this test green
 
-### [ ] Step: Delete dead code in run_all_playoff_analysis.py
+### [x] Step: Delete dead code in run_all_playoff_analysis.py
+<!-- chat-id: 203b70cd-0e68-46ef-adf8-08883cfdd274 -->
 - Delete lines 1–204 of `scripts/run_all_playoff_analysis.py` (the unused SoS utility functions that are never called)
 - Ensure the file starts with `import os`, `import sys`, `import subprocess` (os was in the deleted block but is still required by main())
 - Run snapshot tests + unit tests to verify nothing regressed
