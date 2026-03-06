@@ -21,9 +21,9 @@ DEFAULT_ELO = 1200.0
 
 
 def load_elo_data():
-    """Load team ELO ratings from mega_elo.csv."""
+    """Load team ELO ratings from MEGA_elo.csv."""
     elo_map = {}
-    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
+    with open('MEGA_elo.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row.get('Team', '').strip()
@@ -800,7 +800,7 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=2):
     print(f"  ✓ Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}% (slight Madden boost)")
     print(f"  ✓ Win streak bonus (>={WIN_STREAK_THRESHOLD} wins): +{WIN_STREAK_BONUS*100:.0f}%")
     print(f"  ✓ Divisional games: {DIVISIONAL_REGRESSION*100:.0f}% regression toward 50-50")
-    print("  ✓ ELO ratings for true team skill (from mega_elo.csv)")
+    print("  ✓ ELO ratings for true team skill (from MEGA_elo.csv)")
     print("  ✓ Strength of victories from opponent power rankings")
     print("  ✓ Win probability capped at 25-75% (realistic variance)")
     print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")

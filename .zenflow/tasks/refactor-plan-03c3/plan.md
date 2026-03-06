@@ -79,6 +79,7 @@ Do not make assumptions on important decisions — get clarification first.
 - Commit: `refactor: extract shared utilities into scripts/common.py`
 
 ### [ ] Step: Low-priority cosmetic cleanup
+<!-- chat-id: 8820fdb5-f2f2-4fe1-9467-f37c9370c3be -->
 - Move `stats_scripts/STATS_VISUALIZATION_PLAN.md`, `RANKINGS_VISUALIZATION_PLAN.md`, `CORRELATION_IDEAS.md` to `spec/` and update links in `stats_scripts/README.md`
 - Rename `mega_elo.csv` → `MEGA_elo.csv`; update all `--elo-csv` defaults and hard-coded opens in `week18_simulator.py`, `calc_playoff_probabilities.py`, `playoff_race_table.py`, `playoff_race_html.py`
 - Rename `export_2027_rookies.py` → `export_rookies.py` and add `--year` arg; update README reference

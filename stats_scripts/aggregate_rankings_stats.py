@@ -30,7 +30,7 @@ def aggregate_rankings_stats(base_path):
     team_stats_rows = load_csv(base_path / 'output' / 'team_aggregated_stats.csv')
     
     elo_map = {}
-    elo_path = base_path / 'mega_elo.csv'
+    elo_path = base_path / 'MEGA_elo.csv'
     try:
         with elo_path.open('r', encoding='utf-8') as f:
             reader = csv.reader(f, delimiter=',')

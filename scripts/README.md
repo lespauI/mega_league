@@ -28,7 +28,7 @@ Domain‑specific scripts that can be run directly or via the entry points:
   `calc_sos_season3_elo.py` (+ verifier `verify_sos_season3_elo.py`).
 - **Draft & rookies**  
   `generate_draft_class.py`, `generate_draft_class_analytics.py`,  
-  `verify_draft_class_analytics.py`, `verify_draft_round1_recap.py`, `export_2026_rookies.py`.
+  `verify_draft_class_analytics.py`, `verify_draft_round1_recap.py`, `export_rookies.py`.
 - **Roster / cap**  
   `power_rankings_roster.py`, `calc_team_y1_cap.py`, `verify_cap_math.py`,  
   `verify_power_rankings_roster_csv.py`, `verify_power_rankings_roster_html.py`,  

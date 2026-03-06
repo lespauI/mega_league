@@ -148,15 +148,15 @@
         'data/schedules_season3.json',
         '../docs/data/schedules_season3.json'
       ]);
-      // Parse mega_elo.csv (comma separated, dot decimal)
+      // Parse MEGA_elo.csv (comma separated, dot decimal)
       let megaEloText = '';
       try {
         megaEloText = await tryText([
-          '../mega_elo.csv',
-          'mega_elo.csv',
-          '/mega_elo.csv',
-          'data/mega_elo.csv',
-          '../docs/data/mega_elo.csv'
+          '../MEGA_elo.csv',
+          'MEGA_elo.csv',
+          '/MEGA_elo.csv',
+          'data/MEGA_elo.csv',
+          '../docs/data/MEGA_elo.csv'
         ]);
       } catch (_) {}
       const megaEloMap = new Map();
@@ -192,7 +192,7 @@
             r.logoUrl = `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`;
           }
         }
-        // Attach own ELO from mega_elo.csv if available
+        // Attach own ELO from MEGA_elo.csv if available
         if (megaEloMap.has(name)) {
           r.own_elo = +megaEloMap.get(name);
         }

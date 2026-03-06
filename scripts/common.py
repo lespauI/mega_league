@@ -44,7 +44,7 @@ def normalize_team_name(name: str) -> str:
 
 
 def read_elo_map(elo_csv: str) -> Dict[str, float]:
-    """Read team -> ELO map from mega_elo.csv (comma delimiter, dot decimal)."""
+    """Read team -> ELO map from MEGA_elo.csv (comma delimiter, dot decimal)."""
     elo_map: Dict[str, float] = {}
     with open(elo_csv, "r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter=",")

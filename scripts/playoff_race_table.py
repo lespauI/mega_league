@@ -47,9 +47,9 @@ def load_power_rankings(season_index=2):
     return rankings
 
 def load_elo_data():
-    """Load team ELO ratings from mega_elo.csv."""
+    """Load team ELO ratings from MEGA_elo.csv."""
     elo_map = {}
-    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
+    with open('MEGA_elo.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row.get('Team', '').strip()

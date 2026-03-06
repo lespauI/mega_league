@@ -317,7 +317,7 @@ def build_arg_parser() -> argparse.ArgumentParser:
     ap.add_argument("--start-row", type=int, default=None, help="Row index to start season slice (1-based data row; defaults: season 2=287, season 3=571)")
     ap.add_argument("--games-csv", default="MEGA_games.csv", help="Path to games CSV (default: MEGA_games.csv)")
     ap.add_argument("--teams-csv", default="MEGA_teams.csv", help="Path to teams CSV (default: MEGA_teams.csv)")
-    ap.add_argument("--elo-csv", default="mega_elo.csv", help="Path to ELO CSV (default: mega_elo.csv)")
+    ap.add_argument("--elo-csv", default="MEGA_elo.csv", help="Path to ELO CSV (default: MEGA_elo.csv)")
     ap.add_argument(
         "--include-home-advantage",
         type=_bool_choice,

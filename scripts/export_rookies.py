@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Export only 2027 rookies from MEGA_players.csv to a separate CSV file.
+Export rookies from MEGA_players.csv to a separate CSV file, filtered by draft year.
 
 Usage:
-    python3 scripts/export_2027_rookies.py
-    python3 scripts/export_2027_rookies.py --year 2027 --input MEGA_players.csv --output output/rookies_2027.csv
+    python3 scripts/export_rookies.py
+    python3 scripts/export_rookies.py --year 2027 --input MEGA_players.csv --output output/rookies_2027.csv
 """
 import argparse
 import csv
