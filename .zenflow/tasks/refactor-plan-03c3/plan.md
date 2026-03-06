@@ -58,7 +58,7 @@ Do not make assumptions on important decisions — get clarification first.
 - Run snapshot tests: output for both seasons must be byte-identical to golden snapshots
 - Commit: `refactor: merge calc_sos_season2/3_elo.py into single calc_sos_elo.py`
 
-### [ ] Step: Delete stale root plan files
+### [x] Step: Delete stale root plan files
 <!-- chat-id: 5f0b041e-efbc-45cc-a754-9ce8ba349dbc -->
 - Delete `plan.md`, `plan2.md`, `plan3.md` from the project root
 - Confirm they are not referenced anywhere: `grep -r "plan\.md\|plan2\.md\|plan3\.md" --include="*.py" --include="*.md" .`
