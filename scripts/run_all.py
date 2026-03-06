@@ -4,7 +4,7 @@ import subprocess
 import os
 
 
-def run_script(script_name, description, optional=False):
+def run_script(script_name, description, optional=False, extra_args=None):
     """Run a Python script and print its status"""
     print("\n" + "="*80)
     print(f"Running: {description}")
@@ -13,8 +13,11 @@ def run_script(script_name, description, optional=False):
     print("="*80)
     
     try:
+        cmd = [sys.executable, script_name]
+        if extra_args:
+            cmd.extend(extra_args)
         result = subprocess.run(
-            [sys.executable, script_name],
+            cmd,
             cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
             capture_output=False,
             text=True
@@ -48,25 +51,25 @@ def main():
     print("="*80)
     
     scripts = [
-        ('stats_scripts/aggregate_team_stats.py', 'Team Statistics Aggregation', False),
-        ('stats_scripts/aggregate_player_usage.py', 'Player Usage Distribution Analysis', False),
-        ('stats_scripts/aggregate_rankings_stats.py', 'Team Rankings & Stats Aggregation', False),
-        ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)', False),
-        ('scripts/calc_sos_season2_elo.py', 'Season 2 SoS (ELO) Calculation', False),
-        ('scripts/calc_sos_season3_elo.py', 'Season 3 SoS (ELO) Calculation', False),
-        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False),
-        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False),
-        ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False),
-        ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False),
-        ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False),
-        ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True),
-        ('scripts/generate_index.py', 'Index Page Generation', False),
-        ('scripts/verify_trade_stats.py', 'Trade Stats Verification (Multi-Team Invariants)', False),
+        ('stats_scripts/aggregate_team_stats.py', 'Team Statistics Aggregation', False, None),
+        ('stats_scripts/aggregate_player_usage.py', 'Player Usage Distribution Analysis', False, None),
+        ('stats_scripts/aggregate_rankings_stats.py', 'Team Rankings & Stats Aggregation', False, None),
+        ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)', False, None),
+        ('scripts/calc_sos_season2_elo.py', 'Season 2 SoS (ELO) Calculation', False, None),
+        ('scripts/calc_sos_season3_elo.py', 'Season 3 SoS (ELO) Calculation', False, None),
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, ['--season-index', '2', '--out-csv', 'output/ranked_sos_by_conference.csv']),
+        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, None),
+        ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),
+        ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, None),
+        ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False, None),
+        ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True, None),
+        ('scripts/generate_index.py', 'Index Page Generation', False, None),
+        ('scripts/verify_trade_stats.py', 'Trade Stats Verification (Multi-Team Invariants)', False, None),
     ]
     
     results = []
-    for script, description, optional in scripts:
-        success = run_script(script, description, optional)
+    for script, description, optional, extra_args in scripts:
+        success = run_script(script, description, optional, extra_args)
         results.append((description, success))
     
     print("\n" + "="*80)
