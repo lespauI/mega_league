@@ -4,28 +4,28 @@
 
 ### Top 3 Picks - QB Territory
 
-- **Pick 1:** Cardinals (NFC) - 0-11 | Remaining SOS: 0.514 🟡 Balanced
-- **Pick 2:** Jets (AFC) - 0-11 | Remaining SOS: 0.450 🟢 Easy (might win games!)
-- **Pick 3:** Packers (NFC) - 1-11 | Remaining SOS: 0.343 🟢 Easy (might win games!)
+- **Pick 1:** Cardinals (NFC) - 0-12 | Remaining SOS: 0.574 🔴 Brutal (tank secure)
+- **Pick 2:** Jets (AFC) - 0-13 | Remaining SOS: 0.465 🟡 Balanced
+- **Pick 3:** Browns (AFC) - 2-11 | Remaining SOS: 0.501 🟡 Balanced
 
 ### Top 10 Picks - Premium Talent
 
-- **Pick 4:** Browns (AFC) - 2-10 | Remaining SOS: 0.537 🟡 Balanced
-- **Pick 5:** Falcons (NFC) - 2-10 | Remaining SOS: 0.509 🟡 Balanced
-- **Pick 6:** Texans (AFC) - 3-9 | Remaining SOS: 0.397 🟢 Easy (risk of winning)
-- **Pick 7:** Buccaneers (NFC) - 3-8 | Remaining SOS: 0.586 🔴 Brutal (stay bottom)
-- **Pick 8:** Vikings (NFC) - 4-8 | Remaining SOS: 0.572 🔴 Brutal (stay bottom)
-- **Pick 9:** Chiefs (AFC) - 4-8 | Remaining SOS: 0.428 🟢 Easy (risk of winning)
-- **Pick 10:** Chargers (AFC) - 4-7 | Remaining SOS: 0.504 🟡 Balanced
+- **Pick 4:** Packers (NFC) - 2-11 | Remaining SOS: 0.412 🟢 Easy (risk of winning)
+- **Pick 5:** Buccaneers (NFC) - 3-10 | Remaining SOS: 0.595 🔴 Brutal (stay bottom)
+- **Pick 6:** Falcons (NFC) - 3-10 | Remaining SOS: 0.524 🟡 Balanced
+- **Pick 7:** Chargers (AFC) - 4-9 | Remaining SOS: 0.469 🟡 Balanced
+- **Pick 8:** Texans (AFC) - 4-9 | Remaining SOS: 0.439 🟢 Easy (risk of winning)
+- **Pick 9:** Vikings (NFC) - 4-8 | Remaining SOS: 0.562 🔴 Brutal (stay bottom)
+- **Pick 10:** Chiefs (AFC) - 5-8 | Remaining SOS: 0.483 🟡 Balanced
 
 ### Picks 11-16 - Still Solid Value
 
-- **Pick 11:** Dolphins (AFC) - 5-7 | Remaining SOS: 0.517 🟡 Balanced
-- **Pick 12:** Bears (NFC) - 5-7 | Remaining SOS: 0.509 🟡 Balanced
-- **Pick 13:** Panthers (NFC) - 6-6 | Remaining SOS: 0.656 🔴 Brutal
-- **Pick 14:** Jaguars (AFC) - 6-6 | Remaining SOS: 0.507 🟡 Balanced
-- **Pick 15:** 49ers (NFC) - 6-6 | Remaining SOS: 0.468 🟡 Balanced
-- **Pick 16:** Bills (AFC) - 6-6 | Remaining SOS: 0.466 🟡 Balanced
+- **Pick 11:** Bears (NFC) - 5-7 | Remaining SOS: 0.522 🟡 Balanced
+- **Pick 12:** Dolphins (AFC) - 6-7 | Remaining SOS: 0.501 🟡 Balanced
+- **Pick 13:** Jaguars (AFC) - 6-7 | Remaining SOS: 0.461 🟡 Balanced
+- **Pick 14:** Steelers (AFC) - 6-7 | Remaining SOS: 0.431 🟢 Easy
+- **Pick 15:** 49ers (NFC) - 6-6 | Remaining SOS: 0.477 🟡 Balanced
+- **Pick 16:** Panthers (NFC) - 7-6 | Remaining SOS: 0.623 🔴 Brutal
 
 ---
 
@@ -35,24 +35,24 @@
 
 **3 teams fighting for the top spot:**
 
-- **Cardinals** (0-11): Projected final record ~2.9-14.1
-- **Jets** (0-11): Projected final record ~3.3-13.7
-- **Packers** (1-11): Projected final record ~4.3-12.7
+- **Cardinals** (0-12): Projected final record ~2.1-14.9
+- **Jets** (0-13): Projected final record ~2.1-14.9
+- **Browns** (2-11): Projected final record ~4.0-13.0
 
 ### SOS Impact on Draft Position
 
 **Teams with EASY remaining schedule (danger of winning):**
 
-- **Packers**: SOS 0.343 - Currently 1-11 → Risk of sliding down draft board!
-- **Texans**: SOS 0.397 - Currently 3-9 → Risk of sliding down draft board!
-- **Chiefs**: SOS 0.428 - Currently 4-8 → Risk of sliding down draft board!
-- **Jets**: SOS 0.450 - Currently 0-11 → Risk of sliding down draft board!
+- **Packers**: SOS 0.412 - Currently 2-11 → Risk of sliding down draft board!
+- **Steelers**: SOS 0.431 - Currently 6-7 → Risk of sliding down draft board!
+- **Texans**: SOS 0.439 - Currently 4-9 → Risk of sliding down draft board!
 
 **Teams with BRUTAL remaining schedule (tank secure):**
 
-- **Panthers**: SOS 0.656 - Currently 6-6 → Draft position locked in!
-- **Buccaneers**: SOS 0.586 - Currently 3-8 → Draft position locked in!
-- **Vikings**: SOS 0.572 - Currently 4-8 → Draft position locked in!
+- **Panthers**: SOS 0.623 - Currently 7-6 → Draft position locked in!
+- **Buccaneers**: SOS 0.595 - Currently 3-10 → Draft position locked in!
+- **Cardinals**: SOS 0.574 - Currently 0-12 → Draft position locked in!
+- **Vikings**: SOS 0.562 - Currently 4-8 → Draft position locked in!
 
 ---
 
