@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-22T11:07:36.097688Z",
+  "generated_at": "2026-03-22T20:45:19.886561Z",
   "num_simulations": 10000,
   "teams": {
     "49ers": {
@@ -12,39 +12,39 @@
           "week": 16,
           "opponent": "Steelers",
           "is_home": false,
-          "win_prob": 49.7,
+          "win_prob": 49.8,
           "tie_prob": 0.3,
-          "loss_prob": 50.0
+          "loss_prob": 49.9
         },
         {
           "week": 17,
           "opponent": "Seahawks",
           "is_home": true,
-          "win_prob": 40.5,
+          "win_prob": 41.6,
           "tie_prob": 0.3,
-          "loss_prob": 59.2
+          "loss_prob": 58.1
         },
         {
           "week": 18,
           "opponent": "Browns",
           "is_home": true,
-          "win_prob": 63.3,
+          "win_prob": 63.4,
           "tie_prob": 0.3,
-          "loss_prob": 36.4
+          "loss_prob": 36.3
         }
       ],
       "game_count": 3,
       "overall_probabilities": {
-        "playoff": 1.5,
+        "playoff": 0.0,
         "division": 0.0,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "10-7-0",
-          "frequency": 1380,
-          "percentage": 13.8,
-          "playoff_pct": 10.9,
+          "frequency": 1400,
+          "percentage": 14.0,
+          "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
@@ -67,20 +67,20 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 17,
-          "percentage": 0.17,
+          "frequency": 27,
+          "percentage": 0.27,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Steelers",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Seahawks",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": true
             },
             {
@@ -92,15 +92,15 @@
         },
         {
           "record": "9-8-0",
-          "frequency": 3824,
-          "percentage": 38.24,
+          "frequency": 3910,
+          "percentage": 39.1,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Steelers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -110,15 +110,15 @@
             },
             {
               "opponent": "Browns",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             }
           ]
         },
         {
           "record": "8-8-1",
-          "frequency": 44,
-          "percentage": 0.44,
+          "frequency": 49,
+          "percentage": 0.49,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -130,20 +130,20 @@
             },
             {
               "opponent": "Seahawks",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Browns",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "8-9-0",
-          "frequency": 3598,
-          "percentage": 35.98,
+          "frequency": 3535,
+          "percentage": 35.35,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -155,12 +155,12 @@
             },
             {
               "opponent": "Seahawks",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Browns",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             }
           ]
@@ -192,8 +192,8 @@
         },
         {
           "record": "7-10-0",
-          "frequency": 1123,
-          "percentage": 11.23,
+          "frequency": 1065,
+          "percentage": 10.65,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -218,12 +218,12 @@
       ],
       "most_likely": {
         "record": "9-8-0",
-        "frequency": 3824,
-        "percentage": 38.24,
+        "frequency": 3910,
+        "percentage": 39.1,
         "example_outcomes": [
           {
             "opponent": "Steelers",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           },
           {
@@ -233,7 +233,7 @@
           },
           {
             "opponent": "Browns",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           }
         ]
@@ -257,17 +257,17 @@
           "week": 17,
           "opponent": "Packers",
           "is_home": false,
-          "win_prob": 60.9,
+          "win_prob": 61.1,
           "tie_prob": 0.3,
-          "loss_prob": 38.8
+          "loss_prob": 38.6
         },
         {
           "week": 18,
           "opponent": "Seahawks",
           "is_home": false,
-          "win_prob": 35.6,
+          "win_prob": 36.6,
           "tie_prob": 0.3,
-          "loss_prob": 64.1
+          "loss_prob": 63.1
         }
       ],
       "game_count": 3,
@@ -279,8 +279,8 @@
       "record_outcomes": [
         {
           "record": "8-9-0",
-          "frequency": 1100,
-          "percentage": 11.0,
+          "frequency": 1114,
+          "percentage": 11.14,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -304,15 +304,15 @@
         },
         {
           "record": "7-9-1",
-          "frequency": 27,
-          "percentage": 0.27,
+          "frequency": 24,
+          "percentage": 0.24,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Vikings",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": false
             },
             {
@@ -322,22 +322,22 @@
             },
             {
               "opponent": "Seahawks",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "7-10-0",
-          "frequency": 3707,
-          "percentage": 37.07,
+          "frequency": 3789,
+          "percentage": 37.89,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Vikings",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -347,40 +347,40 @@
             },
             {
               "opponent": "Seahawks",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "6-10-1",
-          "frequency": 38,
-          "percentage": 0.38,
+          "frequency": 41,
+          "percentage": 0.41,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Vikings",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Packers",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Seahawks",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "6-11-0",
-          "frequency": 3850,
-          "percentage": 38.5,
+          "frequency": 3792,
+          "percentage": 37.92,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -404,8 +404,8 @@
         },
         {
           "record": "5-11-1",
-          "frequency": 26,
-          "percentage": 0.26,
+          "frequency": 24,
+          "percentage": 0.24,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -417,20 +417,20 @@
             },
             {
               "opponent": "Packers",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Seahawks",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "5-12-0",
-          "frequency": 1252,
-          "percentage": 12.52,
+          "frequency": 1216,
+          "percentage": 12.16,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -455,8 +455,8 @@
       ],
       "most_likely": {
         "record": "6-11-0",
-        "frequency": 3850,
-        "percentage": 38.5,
+        "frequency": 3792,
+        "percentage": 37.92,
         "example_outcomes": [
           {
             "opponent": "Vikings",
@@ -479,54 +479,41 @@
     "Bengals": {
       "conference": "AFC",
       "division": "AFC North",
-      "current_record": "11-3-0",
-      "win_pct": 0.786,
+      "current_record": "12-3-0",
+      "win_pct": 0.8,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Chiefs",
-          "is_home": false,
-          "win_prob": 60.2,
-          "tie_prob": 0.3,
-          "loss_prob": 39.5
-        },
         {
           "week": 17,
           "opponent": "Raiders",
           "is_home": true,
-          "win_prob": 48.2,
+          "win_prob": 49.9,
           "tie_prob": 0.3,
-          "loss_prob": 51.5
+          "loss_prob": 49.8
         },
         {
           "week": 18,
           "opponent": "Ravens",
           "is_home": false,
-          "win_prob": 51.6,
+          "win_prob": 51.3,
           "tie_prob": 0.3,
-          "loss_prob": 48.1
+          "loss_prob": 48.4
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 80.4,
-        "bye": 21.5
+        "division": 77.8,
+        "bye": 46.1
       },
       "record_outcomes": [
         {
           "record": "14-3-0",
-          "frequency": 1529,
-          "percentage": 15.29,
+          "frequency": 2948,
+          "percentage": 29.48,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 81.7,
+          "bye_pct": 100.0,
           "example_outcomes": [
-            {
-              "opponent": "Chiefs",
-              "outcome": "W",
-              "is_home": false
-            },
             {
               "opponent": "Raiders",
               "outcome": "W",
@@ -541,45 +528,35 @@
         },
         {
           "record": "13-3-1",
-          "frequency": 22,
-          "percentage": 0.22,
+          "frequency": 36,
+          "percentage": 0.36,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 45.5,
+          "bye_pct": 94.4,
           "example_outcomes": [
             {
-              "opponent": "Chiefs",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Raiders",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Ravens",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "13-4-0",
-          "frequency": 4044,
-          "percentage": 40.44,
+          "frequency": 4965,
+          "percentage": 49.65,
           "playoff_pct": 100.0,
-          "division_pct": 98.9,
-          "bye_pct": 21.9,
+          "division_pct": 96.4,
+          "bye_pct": 32.8,
           "example_outcomes": [
             {
-              "opponent": "Chiefs",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Raiders",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
@@ -591,92 +568,32 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 52,
-          "percentage": 0.52,
+          "frequency": 19,
+          "percentage": 0.19,
           "playoff_pct": 100.0,
-          "division_pct": 94.2,
-          "bye_pct": 3.8,
+          "division_pct": 68.4,
+          "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Chiefs",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
               "opponent": "Raiders",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Ravens",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "12-5-0",
-          "frequency": 3397,
-          "percentage": 33.97,
-          "playoff_pct": 100.0,
-          "division_pct": 71.5,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Chiefs",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Raiders",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Ravens",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "11-5-1",
-          "frequency": 16,
-          "percentage": 0.16,
-          "playoff_pct": 100.0,
-          "division_pct": 56.2,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Chiefs",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Raiders",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Ravens",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "11-6-0",
-          "frequency": 940,
-          "percentage": 9.4,
+          "frequency": 2032,
+          "percentage": 20.32,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Chiefs",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Raiders",
               "outcome": "L",
@@ -692,17 +609,12 @@
       ],
       "most_likely": {
         "record": "13-4-0",
-        "frequency": 4044,
-        "percentage": 40.44,
+        "frequency": 4965,
+        "percentage": 49.65,
         "example_outcomes": [
           {
-            "opponent": "Chiefs",
-            "outcome": "L",
-            "is_home": false
-          },
-          {
             "opponent": "Raiders",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           },
           {
@@ -716,107 +628,44 @@
     "Bills": {
       "conference": "AFC",
       "division": "AFC East",
-      "current_record": "7-7-0",
-      "win_pct": 0.5,
+      "current_record": "7-8-0",
+      "win_pct": 0.467,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Jaguars",
-          "is_home": false,
-          "win_prob": 48.7,
-          "tie_prob": 0.3,
-          "loss_prob": 51.0
-        },
         {
           "week": 17,
           "opponent": "Browns",
           "is_home": false,
-          "win_prob": 63.2,
+          "win_prob": 61.9,
           "tie_prob": 0.3,
-          "loss_prob": 36.5
+          "loss_prob": 37.8
         },
         {
           "week": 18,
           "opponent": "Dolphins",
           "is_home": true,
-          "win_prob": 52.9,
+          "win_prob": 51.6,
           "tie_prob": 0.3,
-          "loss_prob": 46.8
+          "loss_prob": 48.1
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 41.1,
-        "division": 41.0,
+        "playoff": 28.3,
+        "division": 28.2,
         "bye": 0.0
       },
       "record_outcomes": [
         {
-          "record": "10-7-0",
-          "frequency": 1199,
-          "percentage": 11.99,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Jaguars",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Browns",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Dolphins",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "9-7-1",
-          "frequency": 25,
-          "percentage": 0.25,
-          "playoff_pct": 84.0,
-          "division_pct": 84.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Jaguars",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
-              "opponent": "Browns",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Dolphins",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
           "record": "9-8-0",
-          "frequency": 3832,
-          "percentage": 38.32,
-          "playoff_pct": 61.1,
-          "division_pct": 60.8,
+          "frequency": 2954,
+          "percentage": 29.54,
+          "playoff_pct": 71.0,
+          "division_pct": 70.5,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Jaguars",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Browns",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -828,42 +677,32 @@
         },
         {
           "record": "8-8-1",
-          "frequency": 42,
-          "percentage": 0.42,
-          "playoff_pct": 21.4,
-          "division_pct": 21.4,
+          "frequency": 23,
+          "percentage": 0.23,
+          "playoff_pct": 17.4,
+          "division_pct": 17.4,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Jaguars",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Browns",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             },
             {
               "opponent": "Dolphins",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "8-9-0",
-          "frequency": 3640,
-          "percentage": 36.4,
+          "frequency": 4929,
+          "percentage": 49.29,
           "playoff_pct": 14.9,
           "division_pct": 14.9,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Jaguars",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Browns",
               "outcome": "L",
@@ -878,17 +717,12 @@
         },
         {
           "record": "7-9-1",
-          "frequency": 16,
-          "percentage": 0.16,
+          "frequency": 25,
+          "percentage": 0.25,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Jaguars",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Browns",
               "outcome": "L",
@@ -903,17 +737,12 @@
         },
         {
           "record": "7-10-0",
-          "frequency": 1246,
-          "percentage": 12.46,
+          "frequency": 2069,
+          "percentage": 20.69,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Jaguars",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Browns",
               "outcome": "L",
@@ -928,15 +757,10 @@
         }
       ],
       "most_likely": {
-        "record": "9-8-0",
-        "frequency": 3832,
-        "percentage": 38.32,
+        "record": "8-9-0",
+        "frequency": 4929,
+        "percentage": 49.29,
         "example_outcomes": [
-          {
-            "opponent": "Jaguars",
-            "outcome": "W",
-            "is_home": false
-          },
           {
             "opponent": "Browns",
             "outcome": "L",
@@ -953,24 +777,16 @@
     "Broncos": {
       "conference": "AFC",
       "division": "AFC West",
-      "current_record": "11-3-0",
-      "win_pct": 0.786,
+      "current_record": "11-4-0",
+      "win_pct": 0.733,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Giants",
-          "is_home": false,
-          "win_prob": 54.1,
-          "tie_prob": 0.3,
-          "loss_prob": 45.6
-        },
         {
           "week": 17,
           "opponent": "Chargers",
           "is_home": false,
-          "win_prob": 64.9,
+          "win_prob": 63.8,
           "tie_prob": 0.3,
-          "loss_prob": 34.8
+          "loss_prob": 35.9
         },
         {
           "week": 18,
@@ -981,76 +797,21 @@
           "loss_prob": 51.6
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 31.3,
-        "bye": 28.4
+        "division": 31.9,
+        "bye": 22.2
       },
       "record_outcomes": [
         {
-          "record": "14-3-0",
-          "frequency": 1901,
-          "percentage": 19.01,
-          "playoff_pct": 100.0,
-          "division_pct": 96.6,
-          "bye_pct": 96.6,
-          "example_outcomes": [
-            {
-              "opponent": "Giants",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Chargers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Raiders",
-              "outcome": "W",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "13-3-1",
-          "frequency": 40,
-          "percentage": 0.4,
-          "playoff_pct": 100.0,
-          "division_pct": 60.0,
-          "bye_pct": 52.5,
-          "example_outcomes": [
-            {
-              "opponent": "Giants",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Chargers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Raiders",
-              "outcome": "T",
-              "is_home": false
-            }
-          ]
-        },
-        {
           "record": "13-4-0",
-          "frequency": 4127,
-          "percentage": 41.27,
+          "frequency": 3190,
+          "percentage": 31.9,
           "playoff_pct": 100.0,
-          "division_pct": 30.8,
-          "bye_pct": 23.8,
+          "division_pct": 100.0,
+          "bye_pct": 69.6,
           "example_outcomes": [
-            {
-              "opponent": "Giants",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Chargers",
               "outcome": "W",
@@ -1065,20 +826,15 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 46,
-          "percentage": 0.46,
+          "frequency": 27,
+          "percentage": 0.27,
           "playoff_pct": 100.0,
-          "division_pct": 2.2,
+          "division_pct": 7.4,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Giants",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Chargers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -1090,17 +846,12 @@
         },
         {
           "record": "12-5-0",
-          "frequency": 3110,
-          "percentage": 31.1,
+          "frequency": 4954,
+          "percentage": 49.54,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Giants",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Chargers",
               "outcome": "L",
@@ -1115,17 +866,12 @@
         },
         {
           "record": "11-5-1",
-          "frequency": 20,
-          "percentage": 0.2,
+          "frequency": 32,
+          "percentage": 0.32,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Giants",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Chargers",
               "outcome": "L",
@@ -1140,17 +886,12 @@
         },
         {
           "record": "11-6-0",
-          "frequency": 756,
-          "percentage": 7.56,
+          "frequency": 1797,
+          "percentage": 17.97,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Giants",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Chargers",
               "outcome": "L",
@@ -1165,18 +906,13 @@
         }
       ],
       "most_likely": {
-        "record": "13-4-0",
-        "frequency": 4127,
-        "percentage": 41.27,
+        "record": "12-5-0",
+        "frequency": 4954,
+        "percentage": 49.54,
         "example_outcomes": [
           {
-            "opponent": "Giants",
-            "outcome": "L",
-            "is_home": false
-          },
-          {
             "opponent": "Chargers",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
@@ -1197,25 +933,25 @@
           "week": 16,
           "opponent": "Cardinals",
           "is_home": false,
-          "win_prob": 62.7,
+          "win_prob": 62.5,
           "tie_prob": 0.3,
-          "loss_prob": 37.0
+          "loss_prob": 37.2
         },
         {
           "week": 17,
           "opponent": "Bills",
           "is_home": true,
-          "win_prob": 36.5,
+          "win_prob": 37.8,
           "tie_prob": 0.3,
-          "loss_prob": 63.2
+          "loss_prob": 61.9
         },
         {
           "week": 18,
           "opponent": "49ers",
           "is_home": false,
-          "win_prob": 36.4,
+          "win_prob": 36.3,
           "tie_prob": 0.3,
-          "loss_prob": 63.3
+          "loss_prob": 63.4
         }
       ],
       "game_count": 3,
@@ -1227,8 +963,8 @@
       "record_outcomes": [
         {
           "record": "5-12-0",
-          "frequency": 1350,
-          "percentage": 13.5,
+          "frequency": 1349,
+          "percentage": 13.49,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1252,8 +988,8 @@
         },
         {
           "record": "4-12-1",
-          "frequency": 18,
-          "percentage": 0.18,
+          "frequency": 28,
+          "percentage": 0.28,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1277,15 +1013,15 @@
         },
         {
           "record": "4-13-0",
-          "frequency": 3963,
-          "percentage": 39.63,
+          "frequency": 4048,
+          "percentage": 40.48,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Cardinals",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -1295,15 +1031,15 @@
             },
             {
               "opponent": "49ers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "3-13-1",
-          "frequency": 46,
-          "percentage": 0.46,
+          "frequency": 28,
+          "percentage": 0.28,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1315,20 +1051,20 @@
             },
             {
               "opponent": "Bills",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "49ers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "3-14-0",
-          "frequency": 3633,
-          "percentage": 36.33,
+          "frequency": 3536,
+          "percentage": 35.36,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1352,20 +1088,20 @@
         },
         {
           "record": "2-14-1",
-          "frequency": 16,
-          "percentage": 0.16,
+          "frequency": 14,
+          "percentage": 0.14,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Cardinals",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Bills",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -1377,8 +1113,8 @@
         },
         {
           "record": "2-15-0",
-          "frequency": 974,
-          "percentage": 9.74,
+          "frequency": 997,
+          "percentage": 9.97,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1403,12 +1139,12 @@
       ],
       "most_likely": {
         "record": "4-13-0",
-        "frequency": 3963,
-        "percentage": 39.63,
+        "frequency": 4048,
+        "percentage": 40.48,
         "example_outcomes": [
           {
             "opponent": "Cardinals",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
@@ -1418,7 +1154,7 @@
           },
           {
             "opponent": "49ers",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           }
         ]
@@ -1434,25 +1170,25 @@
           "week": 16,
           "opponent": "Saints",
           "is_home": false,
-          "win_prob": 31.2,
+          "win_prob": 31.3,
           "tie_prob": 0.3,
-          "loss_prob": 68.5
+          "loss_prob": 68.4
         },
         {
           "week": 17,
           "opponent": "Eagles",
           "is_home": false,
-          "win_prob": 35.7,
+          "win_prob": 36.7,
           "tie_prob": 0.3,
-          "loss_prob": 64.0
+          "loss_prob": 63.0
         },
         {
           "week": 18,
           "opponent": "Falcons",
           "is_home": false,
-          "win_prob": 45.7,
+          "win_prob": 46.4,
           "tie_prob": 0.3,
-          "loss_prob": 54.0
+          "loss_prob": 53.3
         }
       ],
       "game_count": 3,
@@ -1464,8 +1200,8 @@
       "record_outcomes": [
         {
           "record": "6-11-0",
-          "frequency": 451,
-          "percentage": 4.51,
+          "frequency": 498,
+          "percentage": 4.98,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1489,8 +1225,8 @@
         },
         {
           "record": "5-11-1",
-          "frequency": 14,
-          "percentage": 0.14,
+          "frequency": 11,
+          "percentage": 0.11,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1514,20 +1250,20 @@
         },
         {
           "record": "5-12-0",
-          "frequency": 2534,
-          "percentage": 25.34,
+          "frequency": 2561,
+          "percentage": 25.61,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Saints",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
               "opponent": "Eagles",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -1539,90 +1275,65 @@
         },
         {
           "record": "4-12-1",
-          "frequency": 43,
-          "percentage": 0.43,
+          "frequency": 38,
+          "percentage": 0.38,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Saints",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Eagles",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Falcons",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "4-13-0",
-          "frequency": 4455,
-          "percentage": 44.55,
+          "frequency": 4423,
+          "percentage": 44.23,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Saints",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Falcons",
               "outcome": "W",
               "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "3-12-2",
-          "frequency": 1,
-          "percentage": 0.01,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
+            },
             {
-              "opponent": "Saints",
+              "opponent": "Eagles",
               "outcome": "L",
               "is_home": false
             },
             {
-              "opponent": "Eagles",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
               "opponent": "Falcons",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "3-13-1",
-          "frequency": 23,
-          "percentage": 0.23,
+          "frequency": 36,
+          "percentage": 0.36,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Saints",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             },
             {
@@ -1632,15 +1343,15 @@
             },
             {
               "opponent": "Falcons",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "3-14-0",
-          "frequency": 2479,
-          "percentage": 24.79,
+          "frequency": 2433,
+          "percentage": 24.33,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1665,12 +1376,12 @@
       ],
       "most_likely": {
         "record": "4-13-0",
-        "frequency": 4455,
-        "percentage": 44.55,
+        "frequency": 4423,
+        "percentage": 44.23,
         "example_outcomes": [
           {
             "opponent": "Saints",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           },
           {
@@ -1680,7 +1391,7 @@
           },
           {
             "opponent": "Falcons",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           }
         ]
@@ -1696,17 +1407,17 @@
           "week": 16,
           "opponent": "Browns",
           "is_home": true,
-          "win_prob": 37.0,
+          "win_prob": 37.2,
           "tie_prob": 0.3,
-          "loss_prob": 62.7
+          "loss_prob": 62.5
         },
         {
           "week": 17,
           "opponent": "Steelers",
           "is_home": false,
-          "win_prob": 25.1,
+          "win_prob": 25.3,
           "tie_prob": 0.3,
-          "loss_prob": 74.6
+          "loss_prob": 74.4
         },
         {
           "week": 18,
@@ -1726,8 +1437,8 @@
       "record_outcomes": [
         {
           "record": "3-14-0",
-          "frequency": 231,
-          "percentage": 2.31,
+          "frequency": 228,
+          "percentage": 2.28,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1751,15 +1462,15 @@
         },
         {
           "record": "2-14-1",
-          "frequency": 10,
-          "percentage": 0.1,
+          "frequency": 3,
+          "percentage": 0.03,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Browns",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": true
             },
             {
@@ -1769,27 +1480,27 @@
             },
             {
               "opponent": "Lions",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "2-15-0",
-          "frequency": 1787,
-          "percentage": 17.87,
+          "frequency": 1714,
+          "percentage": 17.14,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Browns",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             },
             {
               "opponent": "Steelers",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -1801,8 +1512,8 @@
         },
         {
           "record": "1-15-1",
-          "frequency": 40,
-          "percentage": 0.4,
+          "frequency": 30,
+          "percentage": 0.3,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1826,45 +1537,20 @@
         },
         {
           "record": "1-16-0",
-          "frequency": 4274,
-          "percentage": 42.74,
+          "frequency": 4371,
+          "percentage": 43.71,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Browns",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Steelers",
               "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Lions",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "0-15-2",
-          "frequency": 1,
-          "percentage": 0.01,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Browns",
-              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Steelers",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -1876,8 +1562,8 @@
         },
         {
           "record": "0-16-1",
-          "frequency": 52,
-          "percentage": 0.52,
+          "frequency": 42,
+          "percentage": 0.42,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1901,8 +1587,8 @@
         },
         {
           "record": "0-17-0",
-          "frequency": 3605,
-          "percentage": 36.05,
+          "frequency": 3612,
+          "percentage": 36.12,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -1927,17 +1613,17 @@
       ],
       "most_likely": {
         "record": "1-16-0",
-        "frequency": 4274,
-        "percentage": 42.74,
+        "frequency": 4371,
+        "percentage": 43.71,
         "example_outcomes": [
           {
             "opponent": "Browns",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           },
           {
             "opponent": "Steelers",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
@@ -1958,25 +1644,25 @@
           "week": 16,
           "opponent": "Packers",
           "is_home": false,
-          "win_prob": 58.5,
+          "win_prob": 58.6,
           "tie_prob": 0.3,
-          "loss_prob": 41.2
+          "loss_prob": 41.1
         },
         {
           "week": 17,
           "opponent": "Broncos",
           "is_home": true,
-          "win_prob": 34.8,
+          "win_prob": 35.9,
           "tie_prob": 0.3,
-          "loss_prob": 64.9
+          "loss_prob": 63.8
         },
         {
           "week": 18,
           "opponent": "Chiefs",
           "is_home": false,
-          "win_prob": 44.8,
+          "win_prob": 45.5,
           "tie_prob": 0.3,
-          "loss_prob": 54.9
+          "loss_prob": 54.2
         }
       ],
       "game_count": 3,
@@ -1988,8 +1674,8 @@
       "record_outcomes": [
         {
           "record": "7-10-0",
-          "frequency": 776,
-          "percentage": 7.76,
+          "frequency": 881,
+          "percentage": 8.81,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -2013,15 +1699,15 @@
         },
         {
           "record": "6-10-1",
-          "frequency": 22,
-          "percentage": 0.22,
+          "frequency": 19,
+          "percentage": 0.19,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Packers",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": false
             },
             {
@@ -2031,15 +1717,15 @@
             },
             {
               "opponent": "Chiefs",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "6-11-0",
-          "frequency": 3172,
-          "percentage": 31.72,
+          "frequency": 3341,
+          "percentage": 33.41,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -2063,40 +1749,40 @@
         },
         {
           "record": "5-11-1",
-          "frequency": 57,
-          "percentage": 0.57,
+          "frequency": 47,
+          "percentage": 0.47,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Packers",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Broncos",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             },
             {
               "opponent": "Chiefs",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "5-12-0",
-          "frequency": 4208,
-          "percentage": 42.08,
+          "frequency": 4094,
+          "percentage": 40.94,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Packers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -2106,22 +1792,22 @@
             },
             {
               "opponent": "Chiefs",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "4-12-1",
-          "frequency": 40,
-          "percentage": 0.4,
+          "frequency": 24,
+          "percentage": 0.24,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Packers",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             },
             {
@@ -2131,15 +1817,15 @@
             },
             {
               "opponent": "Chiefs",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "4-13-0",
-          "frequency": 1725,
-          "percentage": 17.25,
+          "frequency": 1594,
+          "percentage": 15.94,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -2164,12 +1850,12 @@
       ],
       "most_likely": {
         "record": "5-12-0",
-        "frequency": 4208,
-        "percentage": 42.08,
+        "frequency": 4094,
+        "percentage": 40.94,
         "example_outcomes": [
           {
             "opponent": "Packers",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           },
           {
@@ -2179,7 +1865,7 @@
           },
           {
             "opponent": "Chiefs",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           }
         ]
@@ -2188,104 +1874,41 @@
     "Chiefs": {
       "conference": "AFC",
       "division": "AFC West",
-      "current_record": "6-8-0",
-      "win_pct": 0.429,
+      "current_record": "6-9-0",
+      "win_pct": 0.4,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Bengals",
-          "is_home": true,
-          "win_prob": 39.5,
-          "tie_prob": 0.3,
-          "loss_prob": 60.2
-        },
         {
           "week": 17,
           "opponent": "Texans",
           "is_home": true,
-          "win_prob": 55.4,
+          "win_prob": 54.5,
           "tie_prob": 0.3,
-          "loss_prob": 44.3
+          "loss_prob": 45.2
         },
         {
           "week": 18,
           "opponent": "Chargers",
           "is_home": true,
-          "win_prob": 54.9,
+          "win_prob": 54.2,
           "tie_prob": 0.3,
-          "loss_prob": 44.8
+          "loss_prob": 45.5
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 0.9,
+        "playoff": 0.0,
         "division": 0.0,
         "bye": 0.0
       },
       "record_outcomes": [
         {
-          "record": "9-8-0",
-          "frequency": 1602,
-          "percentage": 16.02,
-          "playoff_pct": 5.4,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Bengals",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Texans",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Chargers",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "8-8-1",
-          "frequency": 22,
-          "percentage": 0.22,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Bengals",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Texans",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Chargers",
-              "outcome": "T",
-              "is_home": true
-            }
-          ]
-        },
-        {
           "record": "8-9-0",
-          "frequency": 4123,
-          "percentage": 41.23,
+          "frequency": 3157,
+          "percentage": 31.57,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bengals",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Texans",
               "outcome": "W",
@@ -2293,49 +1916,39 @@
             },
             {
               "opponent": "Chargers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "7-9-1",
-          "frequency": 47,
-          "percentage": 0.47,
+          "frequency": 35,
+          "percentage": 0.35,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Bengals",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
               "opponent": "Texans",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": true
             },
             {
               "opponent": "Chargers",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "7-10-0",
-          "frequency": 3328,
-          "percentage": 33.28,
+          "frequency": 4904,
+          "percentage": 49.04,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bengals",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Texans",
               "outcome": "W",
@@ -2350,20 +1963,15 @@
         },
         {
           "record": "6-10-1",
-          "frequency": 18,
-          "percentage": 0.18,
+          "frequency": 24,
+          "percentage": 0.24,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Bengals",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
               "opponent": "Texans",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -2375,17 +1983,12 @@
         },
         {
           "record": "6-11-0",
-          "frequency": 860,
-          "percentage": 8.6,
+          "frequency": 1880,
+          "percentage": 18.8,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bengals",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Texans",
               "outcome": "L",
@@ -2400,15 +2003,10 @@
         }
       ],
       "most_likely": {
-        "record": "8-9-0",
-        "frequency": 4123,
-        "percentage": 41.23,
+        "record": "7-10-0",
+        "frequency": 4904,
+        "percentage": 49.04,
         "example_outcomes": [
-          {
-            "opponent": "Bengals",
-            "outcome": "W",
-            "is_home": true
-          },
           {
             "opponent": "Texans",
             "outcome": "W",
@@ -2425,54 +2023,41 @@
     "Colts": {
       "conference": "AFC",
       "division": "AFC South",
-      "current_record": "10-4-0",
-      "win_pct": 0.714,
+      "current_record": "11-4-0",
+      "win_pct": 0.733,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Falcons",
-          "is_home": true,
-          "win_prob": 63.7,
-          "tie_prob": 0.3,
-          "loss_prob": 36.0
-        },
         {
           "week": 17,
           "opponent": "Titans",
           "is_home": true,
-          "win_prob": 52.9,
+          "win_prob": 53.4,
           "tie_prob": 0.3,
-          "loss_prob": 46.8
+          "loss_prob": 46.3
         },
         {
           "week": 18,
           "opponent": "Panthers",
           "is_home": false,
-          "win_prob": 52.9,
+          "win_prob": 52.5,
           "tie_prob": 0.3,
-          "loss_prob": 46.8
+          "loss_prob": 47.2
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 98.2,
-        "division": 77.9,
+        "playoff": 100.0,
+        "division": 87.6,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "13-4-0",
-          "frequency": 1393,
-          "percentage": 13.93,
+          "frequency": 2205,
+          "percentage": 22.05,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 0.2,
+          "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Falcons",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Titans",
               "outcome": "W",
@@ -2487,20 +2072,15 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 20,
-          "percentage": 0.2,
+          "frequency": 41,
+          "percentage": 0.41,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Falcons",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
               "opponent": "Titans",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -2512,17 +2092,12 @@
         },
         {
           "record": "12-5-0",
-          "frequency": 3859,
-          "percentage": 38.59,
+          "frequency": 4985,
+          "percentage": 49.85,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Falcons",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Titans",
               "outcome": "W",
@@ -2537,20 +2112,15 @@
         },
         {
           "record": "11-5-1",
-          "frequency": 48,
-          "percentage": 0.48,
+          "frequency": 25,
+          "percentage": 0.25,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Falcons",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
               "opponent": "Titans",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -2562,67 +2132,12 @@
         },
         {
           "record": "11-6-0",
-          "frequency": 3570,
-          "percentage": 35.7,
+          "frequency": 2744,
+          "percentage": 27.44,
           "playoff_pct": 100.0,
-          "division_pct": 68.9,
+          "division_pct": 55.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Falcons",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Titans",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Panthers",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "10-6-1",
-          "frequency": 25,
-          "percentage": 0.25,
-          "playoff_pct": 100.0,
-          "division_pct": 36.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Falcons",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Titans",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Panthers",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "10-7-0",
-          "frequency": 1085,
-          "percentage": 10.85,
-          "playoff_pct": 83.3,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Falcons",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Titans",
               "outcome": "L",
@@ -2638,14 +2153,9 @@
       ],
       "most_likely": {
         "record": "12-5-0",
-        "frequency": 3859,
-        "percentage": 38.59,
+        "frequency": 4985,
+        "percentage": 49.85,
         "example_outcomes": [
-          {
-            "opponent": "Falcons",
-            "outcome": "W",
-            "is_home": true
-          },
           {
             "opponent": "Titans",
             "outcome": "W",
@@ -2662,54 +2172,41 @@
     "Commanders": {
       "conference": "NFC",
       "division": "NFC East",
-      "current_record": "10-3-1",
-      "win_pct": 0.75,
+      "current_record": "11-3-1",
+      "win_pct": 0.767,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Eagles",
-          "is_home": false,
-          "win_prob": 55.5,
-          "tie_prob": 0.3,
-          "loss_prob": 44.2
-        },
         {
           "week": 17,
           "opponent": "Falcons",
           "is_home": true,
-          "win_prob": 65.4,
+          "win_prob": 66.4,
           "tie_prob": 0.3,
-          "loss_prob": 34.3
+          "loss_prob": 33.3
         },
         {
           "week": 18,
           "opponent": "Cowboys",
           "is_home": false,
-          "win_prob": 51.7,
+          "win_prob": 52.2,
           "tie_prob": 0.3,
-          "loss_prob": 48.0
+          "loss_prob": 47.5
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 98.9,
-        "division": 70.8,
-        "bye": 5.1
+        "playoff": 100.0,
+        "division": 84.4,
+        "bye": 15.1
       },
       "record_outcomes": [
         {
           "record": "13-3-1",
-          "frequency": 1529,
-          "percentage": 15.29,
+          "frequency": 2914,
+          "percentage": 29.14,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 29.7,
+          "bye_pct": 46.5,
           "example_outcomes": [
-            {
-              "opponent": "Eagles",
-              "outcome": "W",
-              "is_home": false
-            },
             {
               "opponent": "Falcons",
               "outcome": "W",
@@ -2724,20 +2221,15 @@
         },
         {
           "record": "12-3-2",
-          "frequency": 26,
-          "percentage": 0.26,
+          "frequency": 25,
+          "percentage": 0.25,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 19.2,
+          "bye_pct": 44.0,
           "example_outcomes": [
             {
-              "opponent": "Eagles",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
               "opponent": "Falcons",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -2749,142 +2241,52 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 3959,
-          "percentage": 39.59,
+          "frequency": 4940,
+          "percentage": 49.4,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 1.2,
+          "bye_pct": 2.9,
           "example_outcomes": [
             {
-              "opponent": "Eagles",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Falcons",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Cowboys",
               "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "11-3-3",
-          "frequency": 1,
-          "percentage": 0.01,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Eagles",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Falcons",
-              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Cowboys",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "11-4-2",
-          "frequency": 45,
-          "percentage": 0.45,
+          "frequency": 32,
+          "percentage": 0.32,
           "playoff_pct": 100.0,
-          "division_pct": 73.3,
+          "division_pct": 59.4,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Falcons",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Cowboys",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "11-5-1",
-          "frequency": 3461,
-          "percentage": 34.61,
+          "frequency": 2089,
+          "percentage": 20.89,
           "playoff_pct": 100.0,
-          "division_pct": 44.2,
+          "division_pct": 25.9,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Falcons",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Cowboys",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "10-5-2",
-          "frequency": 18,
-          "percentage": 0.18,
-          "playoff_pct": 100.0,
-          "division_pct": 11.1,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Falcons",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Cowboys",
-              "outcome": "T",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "10-6-1",
-          "frequency": 961,
-          "percentage": 9.61,
-          "playoff_pct": 88.7,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Falcons",
               "outcome": "L",
@@ -2900,22 +2302,17 @@
       ],
       "most_likely": {
         "record": "12-4-1",
-        "frequency": 3959,
-        "percentage": 39.59,
+        "frequency": 4940,
+        "percentage": 49.4,
         "example_outcomes": [
           {
-            "opponent": "Eagles",
-            "outcome": "W",
-            "is_home": false
-          },
-          {
             "opponent": "Falcons",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           },
           {
             "opponent": "Cowboys",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           }
         ]
@@ -2939,24 +2336,24 @@
           "week": 18,
           "opponent": "Commanders",
           "is_home": true,
-          "win_prob": 48.0,
+          "win_prob": 47.5,
           "tie_prob": 0.3,
-          "loss_prob": 51.7
+          "loss_prob": 52.2
         }
       ],
       "game_count": 2,
       "overall_probabilities": {
-        "playoff": 95.2,
-        "division": 26.6,
+        "playoff": 91.0,
+        "division": 13.5,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "12-5-0",
-          "frequency": 3408,
-          "percentage": 34.08,
+          "frequency": 3320,
+          "percentage": 33.2,
           "playoff_pct": 100.0,
-          "division_pct": 68.0,
+          "division_pct": 40.5,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -2973,10 +2370,10 @@
         },
         {
           "record": "11-5-1",
-          "frequency": 34,
-          "percentage": 0.34,
+          "frequency": 25,
+          "percentage": 0.25,
           "playoff_pct": 100.0,
-          "division_pct": 41.2,
+          "division_pct": 16.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -2993,28 +2390,8 @@
         },
         {
           "record": "11-6-0",
-          "frequency": 4924,
-          "percentage": 49.24,
-          "playoff_pct": 100.0,
-          "division_pct": 6.6,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Dolphins",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Commanders",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "10-6-1",
-          "frequency": 18,
-          "percentage": 0.18,
+          "frequency": 5015,
+          "percentage": 50.15,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -3026,16 +2403,36 @@
             },
             {
               "opponent": "Commanders",
+              "outcome": "W",
+              "is_home": true
+            }
+          ]
+        },
+        {
+          "record": "10-6-1",
+          "frequency": 29,
+          "percentage": 0.29,
+          "playoff_pct": 100.0,
+          "division_pct": 0.0,
+          "bye_pct": 0.0,
+          "example_outcomes": [
+            {
+              "opponent": "Dolphins",
               "outcome": "T",
+              "is_home": true
+            },
+            {
+              "opponent": "Commanders",
+              "outcome": "L",
               "is_home": true
             }
           ]
         },
         {
           "record": "10-7-0",
-          "frequency": 1616,
-          "percentage": 16.16,
-          "playoff_pct": 70.5,
+          "frequency": 1611,
+          "percentage": 16.11,
+          "playoff_pct": 44.4,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
@@ -3054,17 +2451,17 @@
       ],
       "most_likely": {
         "record": "11-6-0",
-        "frequency": 4924,
-        "percentage": 49.24,
+        "frequency": 5015,
+        "percentage": 50.15,
         "example_outcomes": [
           {
             "opponent": "Dolphins",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           },
           {
             "opponent": "Commanders",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           }
         ]
@@ -3080,9 +2477,9 @@
           "week": 16,
           "opponent": "Texans",
           "is_home": false,
-          "win_prob": 54.9,
+          "win_prob": 54.7,
           "tie_prob": 0.3,
-          "loss_prob": 44.8
+          "loss_prob": 45.0
         },
         {
           "week": 17,
@@ -3096,24 +2493,24 @@
           "week": 18,
           "opponent": "Bills",
           "is_home": false,
-          "win_prob": 46.8,
+          "win_prob": 48.1,
           "tie_prob": 0.3,
-          "loss_prob": 52.9
+          "loss_prob": 51.6
         }
       ],
       "game_count": 3,
       "overall_probabilities": {
-        "playoff": 3.7,
-        "division": 3.4,
+        "playoff": 4.8,
+        "division": 4.7,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "9-8-0",
-          "frequency": 664,
-          "percentage": 6.64,
-          "playoff_pct": 32.2,
-          "division_pct": 27.6,
+          "frequency": 640,
+          "percentage": 6.4,
+          "playoff_pct": 36.6,
+          "division_pct": 33.8,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -3135,8 +2532,58 @@
         },
         {
           "record": "8-8-1",
-          "frequency": 9,
-          "percentage": 0.09,
+          "frequency": 13,
+          "percentage": 0.13,
+          "playoff_pct": 15.4,
+          "division_pct": 15.4,
+          "bye_pct": 0.0,
+          "example_outcomes": [
+            {
+              "opponent": "Texans",
+              "outcome": "T",
+              "is_home": false
+            },
+            {
+              "opponent": "Cowboys",
+              "outcome": "W",
+              "is_home": false
+            },
+            {
+              "opponent": "Bills",
+              "outcome": "W",
+              "is_home": false
+            }
+          ]
+        },
+        {
+          "record": "8-9-0",
+          "frequency": 2910,
+          "percentage": 29.1,
+          "playoff_pct": 8.5,
+          "division_pct": 8.5,
+          "bye_pct": 0.0,
+          "example_outcomes": [
+            {
+              "opponent": "Texans",
+              "outcome": "L",
+              "is_home": false
+            },
+            {
+              "opponent": "Cowboys",
+              "outcome": "W",
+              "is_home": false
+            },
+            {
+              "opponent": "Bills",
+              "outcome": "W",
+              "is_home": false
+            }
+          ]
+        },
+        {
+          "record": "7-9-1",
+          "frequency": 33,
+          "percentage": 0.33,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -3148,7 +2595,7 @@
             },
             {
               "opponent": "Cowboys",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -3159,16 +2606,16 @@
           ]
         },
         {
-          "record": "8-9-0",
-          "frequency": 2903,
-          "percentage": 29.03,
-          "playoff_pct": 5.3,
-          "division_pct": 5.3,
+          "record": "7-10-0",
+          "frequency": 4319,
+          "percentage": 43.19,
+          "playoff_pct": 0.0,
+          "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Texans",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -3184,7 +2631,7 @@
           ]
         },
         {
-          "record": "7-9-1",
+          "record": "6-10-1",
           "frequency": 35,
           "percentage": 0.35,
           "playoff_pct": 0.0,
@@ -3198,70 +2645,20 @@
             },
             {
               "opponent": "Cowboys",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Bills",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "7-10-0",
-          "frequency": 4301,
-          "percentage": 43.01,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Texans",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Cowboys",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Bills",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "6-10-1",
-          "frequency": 32,
-          "percentage": 0.32,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Texans",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Cowboys",
               "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Bills",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "6-11-0",
-          "frequency": 2056,
-          "percentage": 20.56,
+          "frequency": 2050,
+          "percentage": 20.5,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -3286,8 +2683,8 @@
       ],
       "most_likely": {
         "record": "7-10-0",
-        "frequency": 4301,
-        "percentage": 43.01,
+        "frequency": 4319,
+        "percentage": 43.19,
         "example_outcomes": [
           {
             "opponent": "Texans",
@@ -3296,12 +2693,12 @@
           },
           {
             "opponent": "Cowboys",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
             "opponent": "Bills",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           }
         ]
@@ -3310,104 +2707,41 @@
     "Eagles": {
       "conference": "NFC",
       "division": "NFC East",
-      "current_record": "8-6-0",
-      "win_pct": 0.571,
+      "current_record": "8-7-0",
+      "win_pct": 0.533,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Commanders",
-          "is_home": true,
-          "win_prob": 44.2,
-          "tie_prob": 0.3,
-          "loss_prob": 55.5
-        },
         {
           "week": 17,
           "opponent": "Buccaneers",
           "is_home": true,
-          "win_prob": 64.0,
+          "win_prob": 63.0,
           "tie_prob": 0.3,
-          "loss_prob": 35.7
+          "loss_prob": 36.7
         },
         {
           "week": 18,
           "opponent": "Giants",
           "is_home": false,
-          "win_prob": 47.8,
+          "win_prob": 45.9,
           "tie_prob": 0.3,
-          "loss_prob": 51.9
+          "loss_prob": 53.8
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 17.0,
+        "playoff": 0.0,
         "division": 0.0,
         "bye": 0.0
       },
       "record_outcomes": [
         {
-          "record": "11-6-0",
-          "frequency": 1171,
-          "percentage": 11.71,
-          "playoff_pct": 91.5,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Commanders",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Buccaneers",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Giants",
-              "outcome": "W",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "10-6-1",
-          "frequency": 18,
-          "percentage": 0.18,
-          "playoff_pct": 83.3,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Commanders",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Buccaneers",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Giants",
-              "outcome": "T",
-              "is_home": false
-            }
-          ]
-        },
-        {
           "record": "10-7-0",
-          "frequency": 3693,
-          "percentage": 36.93,
-          "playoff_pct": 16.5,
+          "frequency": 2555,
+          "percentage": 25.55,
+          "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Commanders",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Buccaneers",
               "outcome": "W",
@@ -3422,17 +2756,12 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 43,
-          "percentage": 0.43,
+          "frequency": 29,
+          "percentage": 0.29,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Commanders",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Buccaneers",
               "outcome": "W",
@@ -3447,17 +2776,12 @@
         },
         {
           "record": "9-8-0",
-          "frequency": 3824,
-          "percentage": 38.24,
+          "frequency": 5144,
+          "percentage": 51.44,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Commanders",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Buccaneers",
               "outcome": "W",
@@ -3472,42 +2796,32 @@
         },
         {
           "record": "8-8-1",
-          "frequency": 18,
-          "percentage": 0.18,
+          "frequency": 25,
+          "percentage": 0.25,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Commanders",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
               "opponent": "Buccaneers",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Giants",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             }
           ]
         },
         {
           "record": "8-9-0",
-          "frequency": 1233,
-          "percentage": 12.33,
+          "frequency": 2247,
+          "percentage": 22.47,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Commanders",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Buccaneers",
               "outcome": "L",
@@ -3523,14 +2837,9 @@
       ],
       "most_likely": {
         "record": "9-8-0",
-        "frequency": 3824,
-        "percentage": 38.24,
+        "frequency": 5144,
+        "percentage": 51.44,
         "example_outcomes": [
-          {
-            "opponent": "Commanders",
-            "outcome": "L",
-            "is_home": true
-          },
           {
             "opponent": "Buccaneers",
             "outcome": "W",
@@ -3547,35 +2856,27 @@
     "Falcons": {
       "conference": "NFC",
       "division": "NFC South",
-      "current_record": "4-10-0",
-      "win_pct": 0.286,
+      "current_record": "4-11-0",
+      "win_pct": 0.267,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Colts",
-          "is_home": false,
-          "win_prob": 36.0,
-          "tie_prob": 0.3,
-          "loss_prob": 63.7
-        },
         {
           "week": 17,
           "opponent": "Commanders",
           "is_home": false,
-          "win_prob": 34.3,
+          "win_prob": 33.3,
           "tie_prob": 0.3,
-          "loss_prob": 65.4
+          "loss_prob": 66.4
         },
         {
           "week": 18,
           "opponent": "Buccaneers",
           "is_home": true,
-          "win_prob": 54.0,
+          "win_prob": 53.3,
           "tie_prob": 0.3,
-          "loss_prob": 45.7
+          "loss_prob": 46.4
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 0.0,
         "division": 0.0,
@@ -3583,71 +2884,16 @@
       },
       "record_outcomes": [
         {
-          "record": "7-10-0",
-          "frequency": 964,
-          "percentage": 9.64,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Colts",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Commanders",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Buccaneers",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "6-10-1",
-          "frequency": 18,
-          "percentage": 0.18,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Colts",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Commanders",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Buccaneers",
-              "outcome": "T",
-              "is_home": true
-            }
-          ]
-        },
-        {
           "record": "6-11-0",
-          "frequency": 3498,
-          "percentage": 34.98,
+          "frequency": 2307,
+          "percentage": 23.07,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Colts",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Commanders",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -3659,67 +2905,52 @@
         },
         {
           "record": "5-11-1",
-          "frequency": 45,
-          "percentage": 0.45,
+          "frequency": 26,
+          "percentage": 0.26,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Colts",
+              "opponent": "Commanders",
               "outcome": "T",
               "is_home": false
             },
             {
-              "opponent": "Commanders",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Buccaneers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "5-12-0",
-          "frequency": 3983,
-          "percentage": 39.83,
+          "frequency": 5075,
+          "percentage": 50.75,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Colts",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Commanders",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
               "opponent": "Buccaneers",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             }
           ]
         },
         {
           "record": "4-12-1",
-          "frequency": 21,
-          "percentage": 0.21,
+          "frequency": 39,
+          "percentage": 0.39,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Colts",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Commanders",
               "outcome": "L",
@@ -3734,17 +2965,12 @@
         },
         {
           "record": "4-13-0",
-          "frequency": 1471,
-          "percentage": 14.71,
+          "frequency": 2553,
+          "percentage": 25.53,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Colts",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Commanders",
               "outcome": "L",
@@ -3760,22 +2986,17 @@
       ],
       "most_likely": {
         "record": "5-12-0",
-        "frequency": 3983,
-        "percentage": 39.83,
+        "frequency": 5075,
+        "percentage": 50.75,
         "example_outcomes": [
           {
-            "opponent": "Colts",
-            "outcome": "L",
-            "is_home": false
-          },
-          {
             "opponent": "Commanders",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           },
           {
             "opponent": "Buccaneers",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           }
         ]
@@ -3784,54 +3005,41 @@
     "Giants": {
       "conference": "NFC",
       "division": "NFC East",
-      "current_record": "8-5-1",
-      "win_pct": 0.607,
+      "current_record": "9-5-1",
+      "win_pct": 0.633,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Broncos",
-          "is_home": true,
-          "win_prob": 45.6,
-          "tie_prob": 0.3,
-          "loss_prob": 54.1
-        },
         {
           "week": 17,
           "opponent": "Panthers",
           "is_home": false,
-          "win_prob": 51.1,
+          "win_prob": 51.0,
           "tie_prob": 0.3,
-          "loss_prob": 48.6
+          "loss_prob": 48.7
         },
         {
           "week": 18,
           "opponent": "Eagles",
           "is_home": true,
-          "win_prob": 51.9,
+          "win_prob": 53.8,
           "tie_prob": 0.3,
-          "loss_prob": 47.8
+          "loss_prob": 45.9
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 49.8,
-        "division": 2.6,
+        "playoff": 64.8,
+        "division": 2.1,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "11-5-1",
-          "frequency": 1219,
-          "percentage": 12.19,
+          "frequency": 2770,
+          "percentage": 27.7,
           "playoff_pct": 100.0,
-          "division_pct": 21.6,
+          "division_pct": 7.7,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Panthers",
               "outcome": "W",
@@ -3846,17 +3054,12 @@
         },
         {
           "record": "10-5-2",
-          "frequency": 25,
-          "percentage": 0.25,
+          "frequency": 41,
+          "percentage": 0.41,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Panthers",
               "outcome": "W",
@@ -3871,17 +3074,12 @@
         },
         {
           "record": "10-6-1",
-          "frequency": 3709,
-          "percentage": 37.09,
-          "playoff_pct": 88.8,
+          "frequency": 4965,
+          "percentage": 49.65,
+          "playoff_pct": 73.8,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Panthers",
               "outcome": "L",
@@ -3895,43 +3093,13 @@
           ]
         },
         {
-          "record": "9-5-3",
-          "frequency": 1,
-          "percentage": 0.01,
-          "playoff_pct": 100.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Panthers",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
-              "opponent": "Eagles",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
           "record": "9-6-2",
-          "frequency": 52,
-          "percentage": 0.52,
-          "playoff_pct": 59.6,
+          "frequency": 22,
+          "percentage": 0.22,
+          "playoff_pct": 18.2,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Panthers",
               "outcome": "T",
@@ -3946,67 +3114,12 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 3776,
-          "percentage": 37.76,
-          "playoff_pct": 10.8,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Panthers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "8-7-2",
-          "frequency": 18,
-          "percentage": 0.18,
+          "frequency": 2202,
+          "percentage": 22.02,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Panthers",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
-              "opponent": "Eagles",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "8-8-1",
-          "frequency": 1200,
-          "percentage": 12.0,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Broncos",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Panthers",
               "outcome": "L",
@@ -4021,23 +3134,18 @@
         }
       ],
       "most_likely": {
-        "record": "9-7-1",
-        "frequency": 3776,
-        "percentage": 37.76,
+        "record": "10-6-1",
+        "frequency": 4965,
+        "percentage": 49.65,
         "example_outcomes": [
           {
-            "opponent": "Broncos",
-            "outcome": "L",
-            "is_home": true
-          },
-          {
             "opponent": "Panthers",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
             "opponent": "Eagles",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           }
         ]
@@ -4046,17 +3154,9 @@
     "Jaguars": {
       "conference": "AFC",
       "division": "AFC South",
-      "current_record": "7-7-0",
-      "win_pct": 0.5,
+      "current_record": "8-7-0",
+      "win_pct": 0.533,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Bills",
-          "is_home": true,
-          "win_prob": 51.0,
-          "tie_prob": 0.3,
-          "loss_prob": 48.7
-        },
         {
           "week": 17,
           "opponent": "Jets",
@@ -4069,31 +3169,26 @@
           "week": 18,
           "opponent": "Texans",
           "is_home": false,
-          "win_prob": 59.0,
+          "win_prob": 60.0,
           "tie_prob": 0.3,
-          "loss_prob": 40.7
+          "loss_prob": 39.7
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 5.4,
+        "playoff": 9.1,
         "division": 0.0,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "10-7-0",
-          "frequency": 2209,
-          "percentage": 22.09,
-          "playoff_pct": 22.8,
+          "frequency": 3738,
+          "percentage": 37.38,
+          "playoff_pct": 23.1,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Jets",
               "outcome": "W",
@@ -4108,17 +3203,12 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 30,
-          "percentage": 0.3,
-          "playoff_pct": 26.7,
+          "frequency": 27,
+          "percentage": 0.27,
+          "playoff_pct": 25.9,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Jets",
               "outcome": "T",
@@ -4133,17 +3223,12 @@
         },
         {
           "record": "9-8-0",
-          "frequency": 4221,
-          "percentage": 42.21,
-          "playoff_pct": 0.7,
+          "frequency": 4763,
+          "percentage": 47.63,
+          "playoff_pct": 0.9,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Jets",
               "outcome": "W",
@@ -4158,17 +3243,12 @@
         },
         {
           "record": "8-8-1",
-          "frequency": 45,
-          "percentage": 0.45,
+          "frequency": 24,
+          "percentage": 0.24,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Jets",
               "outcome": "T",
@@ -4176,74 +3256,19 @@
             },
             {
               "opponent": "Texans",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "8-9-0",
-          "frequency": 2834,
-          "percentage": 28.34,
+          "frequency": 1448,
+          "percentage": 14.48,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Jets",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Texans",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "7-9-1",
-          "frequency": 21,
-          "percentage": 0.21,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Jets",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Texans",
-              "outcome": "L",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "7-10-0",
-          "frequency": 640,
-          "percentage": 6.4,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Bills",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Jets",
               "outcome": "L",
@@ -4259,14 +3284,9 @@
       ],
       "most_likely": {
         "record": "9-8-0",
-        "frequency": 4221,
-        "percentage": 42.21,
+        "frequency": 4763,
+        "percentage": 47.63,
         "example_outcomes": [
-          {
-            "opponent": "Bills",
-            "outcome": "W",
-            "is_home": true
-          },
           {
             "opponent": "Jets",
             "outcome": "W",
@@ -4312,8 +3332,8 @@
       "record_outcomes": [
         {
           "record": "2-15-0",
-          "frequency": 1071,
-          "percentage": 10.71,
+          "frequency": 1053,
+          "percentage": 10.53,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4332,28 +3352,28 @@
         },
         {
           "record": "1-15-1",
-          "frequency": 15,
-          "percentage": 0.15,
+          "frequency": 18,
+          "percentage": 0.18,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Jaguars",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Patriots",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "1-16-0",
-          "frequency": 4397,
-          "percentage": 43.97,
+          "frequency": 4518,
+          "percentage": 45.18,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4372,8 +3392,8 @@
         },
         {
           "record": "0-16-1",
-          "frequency": 49,
-          "percentage": 0.49,
+          "frequency": 32,
+          "percentage": 0.32,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4392,8 +3412,8 @@
         },
         {
           "record": "0-17-0",
-          "frequency": 4468,
-          "percentage": 44.68,
+          "frequency": 4379,
+          "percentage": 43.79,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4412,13 +3432,13 @@
         }
       ],
       "most_likely": {
-        "record": "0-17-0",
-        "frequency": 4468,
-        "percentage": 44.68,
+        "record": "1-16-0",
+        "frequency": 4518,
+        "percentage": 45.18,
         "example_outcomes": [
           {
             "opponent": "Jaguars",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           },
           {
@@ -4432,24 +3452,16 @@
     "Lions": {
       "conference": "NFC",
       "division": "NFC North",
-      "current_record": "9-5-0",
-      "win_pct": 0.643,
+      "current_record": "9-6-0",
+      "win_pct": 0.6,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Panthers",
-          "is_home": false,
-          "win_prob": 51.6,
-          "tie_prob": 0.3,
-          "loss_prob": 48.1
-        },
         {
           "week": 17,
           "opponent": "Vikings",
           "is_home": true,
-          "win_prob": 62.4,
+          "win_prob": 61.2,
           "tie_prob": 0.3,
-          "loss_prob": 37.3
+          "loss_prob": 38.5
         },
         {
           "week": 18,
@@ -4460,7 +3472,7 @@
           "loss_prob": 24.9
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 100.0,
         "division": 100.0,
@@ -4468,71 +3480,16 @@
       },
       "record_outcomes": [
         {
-          "record": "12-5-0",
-          "frequency": 2019,
-          "percentage": 20.19,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Panthers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Vikings",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Cardinals",
-              "outcome": "W",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "11-5-1",
-          "frequency": 31,
-          "percentage": 0.31,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Panthers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Vikings",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Cardinals",
-              "outcome": "T",
-              "is_home": false
-            }
-          ]
-        },
-        {
           "record": "11-6-0",
-          "frequency": 4433,
-          "percentage": 44.33,
+          "frequency": 4342,
+          "percentage": 43.42,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Panthers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "Vikings",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             },
             {
@@ -4544,67 +3501,52 @@
         },
         {
           "record": "10-6-1",
-          "frequency": 47,
-          "percentage": 0.47,
+          "frequency": 41,
+          "percentage": 0.41,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Panthers",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Vikings",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
               "opponent": "Cardinals",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "10-7-0",
-          "frequency": 2875,
-          "percentage": 28.75,
+          "frequency": 4559,
+          "percentage": 45.59,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Panthers",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Vikings",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Cardinals",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             }
           ]
         },
         {
           "record": "9-7-1",
-          "frequency": 12,
-          "percentage": 0.12,
+          "frequency": 22,
+          "percentage": 0.22,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Panthers",
-              "outcome": "T",
-              "is_home": false
-            },
             {
               "opponent": "Vikings",
               "outcome": "L",
@@ -4612,24 +3554,19 @@
             },
             {
               "opponent": "Cardinals",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             }
           ]
         },
         {
           "record": "9-8-0",
-          "frequency": 583,
-          "percentage": 5.83,
+          "frequency": 1036,
+          "percentage": 10.36,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Panthers",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Vikings",
               "outcome": "L",
@@ -4644,15 +3581,10 @@
         }
       ],
       "most_likely": {
-        "record": "11-6-0",
-        "frequency": 4433,
-        "percentage": 44.33,
+        "record": "10-7-0",
+        "frequency": 4559,
+        "percentage": 45.59,
         "example_outcomes": [
-          {
-            "opponent": "Panthers",
-            "outcome": "W",
-            "is_home": false
-          },
           {
             "opponent": "Vikings",
             "outcome": "L",
@@ -4676,25 +3608,25 @@
           "week": 16,
           "opponent": "Chargers",
           "is_home": true,
-          "win_prob": 41.2,
+          "win_prob": 41.1,
           "tie_prob": 0.3,
-          "loss_prob": 58.5
+          "loss_prob": 58.6
         },
         {
           "week": 17,
           "opponent": "Bears",
           "is_home": true,
-          "win_prob": 38.8,
+          "win_prob": 38.6,
           "tie_prob": 0.3,
-          "loss_prob": 60.9
+          "loss_prob": 61.1
         },
         {
           "week": 18,
           "opponent": "Vikings",
           "is_home": false,
-          "win_prob": 42.2,
+          "win_prob": 41.9,
           "tie_prob": 0.3,
-          "loss_prob": 57.5
+          "loss_prob": 57.8
         }
       ],
       "game_count": 3,
@@ -4706,8 +3638,8 @@
       "record_outcomes": [
         {
           "record": "5-12-0",
-          "frequency": 741,
-          "percentage": 7.41,
+          "frequency": 752,
+          "percentage": 7.52,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4731,8 +3663,8 @@
         },
         {
           "record": "4-12-1",
-          "frequency": 20,
-          "percentage": 0.2,
+          "frequency": 13,
+          "percentage": 0.13,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4756,8 +3688,8 @@
         },
         {
           "record": "4-13-0",
-          "frequency": 3085,
-          "percentage": 30.85,
+          "frequency": 3064,
+          "percentage": 30.64,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4806,8 +3738,8 @@
         },
         {
           "record": "3-14-0",
-          "frequency": 4188,
-          "percentage": 41.88,
+          "frequency": 4142,
+          "percentage": 41.42,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4831,15 +3763,15 @@
         },
         {
           "record": "2-14-1",
-          "frequency": 36,
-          "percentage": 0.36,
+          "frequency": 31,
+          "percentage": 0.31,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Chargers",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -4849,15 +3781,15 @@
             },
             {
               "opponent": "Vikings",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "2-15-0",
-          "frequency": 1880,
-          "percentage": 18.8,
+          "frequency": 1948,
+          "percentage": 19.48,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -4882,8 +3814,8 @@
       ],
       "most_likely": {
         "record": "3-14-0",
-        "frequency": 4188,
-        "percentage": 41.88,
+        "frequency": 4142,
+        "percentage": 41.42,
         "example_outcomes": [
           {
             "opponent": "Chargers",
@@ -4906,54 +3838,41 @@
     "Panthers": {
       "conference": "NFC",
       "division": "NFC South",
-      "current_record": "8-6-0",
-      "win_pct": 0.571,
+      "current_record": "9-6-0",
+      "win_pct": 0.6,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Lions",
-          "is_home": true,
-          "win_prob": 48.1,
-          "tie_prob": 0.3,
-          "loss_prob": 51.6
-        },
         {
           "week": 17,
           "opponent": "Giants",
           "is_home": true,
-          "win_prob": 48.6,
+          "win_prob": 48.7,
           "tie_prob": 0.3,
-          "loss_prob": 51.1
+          "loss_prob": 51.0
         },
         {
           "week": 18,
           "opponent": "Colts",
           "is_home": true,
-          "win_prob": 46.8,
+          "win_prob": 47.2,
           "tie_prob": 0.3,
-          "loss_prob": 52.9
+          "loss_prob": 52.5
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 38.0,
-        "division": 1.1,
+        "playoff": 45.0,
+        "division": 1.7,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "11-6-0",
-          "frequency": 1513,
-          "percentage": 15.13,
+          "frequency": 2873,
+          "percentage": 28.73,
           "playoff_pct": 100.0,
-          "division_pct": 7.4,
+          "division_pct": 5.8,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Lions",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Giants",
               "outcome": "W",
@@ -4968,42 +3887,32 @@
         },
         {
           "record": "10-6-1",
-          "frequency": 24,
-          "percentage": 0.24,
-          "playoff_pct": 70.8,
-          "division_pct": 4.2,
+          "frequency": 35,
+          "percentage": 0.35,
+          "playoff_pct": 80.0,
+          "division_pct": 5.7,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Lions",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
               "opponent": "Giants",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": true
             },
             {
               "opponent": "Colts",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "10-7-0",
-          "frequency": 4012,
-          "percentage": 40.12,
-          "playoff_pct": 55.2,
+          "frequency": 4903,
+          "percentage": 49.03,
+          "playoff_pct": 32.6,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Lions",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Giants",
               "outcome": "L",
@@ -5018,17 +3927,12 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 46,
-          "percentage": 0.46,
-          "playoff_pct": 13.0,
+          "frequency": 26,
+          "percentage": 0.26,
+          "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Lions",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Giants",
               "outcome": "L",
@@ -5043,67 +3947,12 @@
         },
         {
           "record": "9-8-0",
-          "frequency": 3424,
-          "percentage": 34.24,
-          "playoff_pct": 1.4,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Lions",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Giants",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Colts",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "8-8-1",
-          "frequency": 17,
-          "percentage": 0.17,
+          "frequency": 2163,
+          "percentage": 21.63,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Lions",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Giants",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Colts",
-              "outcome": "T",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "8-9-0",
-          "frequency": 964,
-          "percentage": 9.64,
-          "playoff_pct": 0.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Lions",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Giants",
               "outcome": "L",
@@ -5119,14 +3968,9 @@
       ],
       "most_likely": {
         "record": "10-7-0",
-        "frequency": 4012,
-        "percentage": 40.12,
+        "frequency": 4903,
+        "percentage": 49.03,
         "example_outcomes": [
-          {
-            "opponent": "Lions",
-            "outcome": "W",
-            "is_home": true
-          },
           {
             "opponent": "Giants",
             "outcome": "L",
@@ -5150,9 +3994,9 @@
           "week": 17,
           "opponent": "Saints",
           "is_home": false,
-          "win_prob": 44.9,
+          "win_prob": 45.0,
           "tie_prob": 0.3,
-          "loss_prob": 54.8
+          "loss_prob": 54.7
         },
         {
           "week": 18,
@@ -5165,17 +4009,17 @@
       ],
       "game_count": 2,
       "overall_probabilities": {
-        "playoff": 62.8,
-        "division": 55.6,
+        "playoff": 69.5,
+        "division": 67.2,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "10-7-0",
-          "frequency": 2986,
-          "percentage": 29.86,
-          "playoff_pct": 98.4,
-          "division_pct": 88.7,
+          "frequency": 3024,
+          "percentage": 30.24,
+          "playoff_pct": 100.0,
+          "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -5192,10 +4036,10 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 38,
-          "percentage": 0.38,
-          "playoff_pct": 92.1,
-          "division_pct": 84.2,
+          "frequency": 33,
+          "percentage": 0.33,
+          "playoff_pct": 100.0,
+          "division_pct": 100.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -5212,10 +4056,10 @@
         },
         {
           "record": "9-8-0",
-          "frequency": 5139,
-          "percentage": 51.39,
-          "playoff_pct": 62.8,
-          "division_pct": 54.5,
+          "frequency": 5103,
+          "percentage": 51.03,
+          "playoff_pct": 73.1,
+          "division_pct": 68.5,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -5232,30 +4076,30 @@
         },
         {
           "record": "8-8-1",
-          "frequency": 26,
-          "percentage": 0.26,
-          "playoff_pct": 46.2,
-          "division_pct": 46.2,
+          "frequency": 22,
+          "percentage": 0.22,
+          "playoff_pct": 63.6,
+          "division_pct": 63.6,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Saints",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Jets",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": true
             }
           ]
         },
         {
           "record": "8-9-0",
-          "frequency": 1811,
-          "percentage": 18.11,
-          "playoff_pct": 3.8,
-          "division_pct": 3.8,
+          "frequency": 1818,
+          "percentage": 18.18,
+          "playoff_pct": 8.3,
+          "division_pct": 8.3,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -5273,8 +4117,8 @@
       ],
       "most_likely": {
         "record": "9-8-0",
-        "frequency": 5139,
-        "percentage": 51.39,
+        "frequency": 5103,
+        "percentage": 51.03,
         "example_outcomes": [
           {
             "opponent": "Saints",
@@ -5292,24 +4136,16 @@
     "Raiders": {
       "conference": "AFC",
       "division": "AFC West",
-      "current_record": "12-2-0",
-      "win_pct": 0.857,
+      "current_record": "12-3-0",
+      "win_pct": 0.8,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Ravens",
-          "is_home": true,
-          "win_prob": 53.3,
-          "tie_prob": 0.3,
-          "loss_prob": 46.4
-        },
         {
           "week": 17,
           "opponent": "Bengals",
           "is_home": false,
-          "win_prob": 51.5,
+          "win_prob": 49.8,
           "tie_prob": 0.3,
-          "loss_prob": 48.2
+          "loss_prob": 49.9
         },
         {
           "week": 18,
@@ -5320,79 +4156,24 @@
           "loss_prob": 48.1
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 68.7,
-        "bye": 47.7
+        "division": 68.1,
+        "bye": 28.5
       },
       "record_outcomes": [
         {
-          "record": "15-2-0",
-          "frequency": 1309,
-          "percentage": 13.09,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 100.0,
-          "example_outcomes": [
-            {
-              "opponent": "Ravens",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Bengals",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Broncos",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "14-2-1",
-          "frequency": 21,
-          "percentage": 0.21,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 100.0,
-          "example_outcomes": [
-            {
-              "opponent": "Ravens",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Bengals",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Broncos",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
           "record": "14-3-0",
-          "frequency": 3853,
-          "percentage": 38.53,
+          "frequency": 2207,
+          "percentage": 22.07,
           "playoff_pct": 100.0,
-          "division_pct": 87.7,
-          "bye_pct": 76.4,
+          "division_pct": 100.0,
+          "bye_pct": 100.0,
           "example_outcomes": [
             {
-              "opponent": "Ravens",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
               "opponent": "Bengals",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -5404,17 +4185,12 @@
         },
         {
           "record": "13-3-1",
-          "frequency": 46,
-          "percentage": 0.46,
+          "frequency": 23,
+          "percentage": 0.23,
           "playoff_pct": 100.0,
-          "division_pct": 78.3,
-          "bye_pct": 67.4,
+          "division_pct": 100.0,
+          "bye_pct": 65.2,
           "example_outcomes": [
-            {
-              "opponent": "Ravens",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Bengals",
               "outcome": "T",
@@ -5429,17 +4205,12 @@
         },
         {
           "record": "13-4-0",
-          "frequency": 3634,
-          "percentage": 36.34,
+          "frequency": 4860,
+          "percentage": 48.6,
           "playoff_pct": 100.0,
-          "division_pct": 53.8,
-          "bye_pct": 12.9,
+          "division_pct": 71.8,
+          "bye_pct": 13.0,
           "example_outcomes": [
-            {
-              "opponent": "Ravens",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Bengals",
               "outcome": "W",
@@ -5454,17 +4225,12 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 28,
-          "percentage": 0.28,
+          "frequency": 32,
+          "percentage": 0.32,
           "playoff_pct": 100.0,
-          "division_pct": 32.1,
-          "bye_pct": 3.6,
+          "division_pct": 78.1,
+          "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Ravens",
-              "outcome": "T",
-              "is_home": true
-            },
             {
               "opponent": "Bengals",
               "outcome": "L",
@@ -5472,24 +4238,19 @@
             },
             {
               "opponent": "Broncos",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "12-5-0",
-          "frequency": 1109,
-          "percentage": 11.09,
+          "frequency": 2878,
+          "percentage": 28.78,
           "playoff_pct": 100.0,
-          "division_pct": 14.1,
+          "division_pct": 37.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Ravens",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Bengals",
               "outcome": "L",
@@ -5504,23 +4265,18 @@
         }
       ],
       "most_likely": {
-        "record": "14-3-0",
-        "frequency": 3853,
-        "percentage": 38.53,
+        "record": "13-4-0",
+        "frequency": 4860,
+        "percentage": 48.6,
         "example_outcomes": [
           {
-            "opponent": "Ravens",
-            "outcome": "W",
-            "is_home": true
-          },
-          {
             "opponent": "Bengals",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": false
           },
           {
             "opponent": "Broncos",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           }
         ]
@@ -5529,54 +4285,41 @@
     "Rams": {
       "conference": "NFC",
       "division": "NFC West",
-      "current_record": "11-3-0",
-      "win_pct": 0.786,
+      "current_record": "12-3-0",
+      "win_pct": 0.8,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Seahawks",
-          "is_home": true,
-          "win_prob": 47.9,
-          "tie_prob": 0.3,
-          "loss_prob": 51.8
-        },
         {
           "week": 17,
           "opponent": "Ravens",
           "is_home": false,
-          "win_prob": 51.2,
+          "win_prob": 51.1,
           "tie_prob": 0.3,
-          "loss_prob": 48.5
+          "loss_prob": 48.6
         },
         {
           "week": 18,
           "opponent": "Steelers",
           "is_home": true,
-          "win_prob": 57.1,
+          "win_prob": 57.8,
           "tie_prob": 0.3,
-          "loss_prob": 42.6
+          "loss_prob": 41.9
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 29.1,
-        "bye": 22.8
+        "division": 66.2,
+        "bye": 48.9
       },
       "record_outcomes": [
         {
           "record": "14-3-0",
-          "frequency": 1239,
-          "percentage": 12.39,
+          "frequency": 2951,
+          "percentage": 29.51,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 100.0,
           "example_outcomes": [
-            {
-              "opponent": "Seahawks",
-              "outcome": "W",
-              "is_home": true
-            },
             {
               "opponent": "Ravens",
               "outcome": "W",
@@ -5591,92 +4334,52 @@
         },
         {
           "record": "13-3-1",
-          "frequency": 20,
-          "percentage": 0.2,
+          "frequency": 40,
+          "percentage": 0.4,
           "playoff_pct": 100.0,
-          "division_pct": 60.0,
-          "bye_pct": 55.0,
+          "division_pct": 65.0,
+          "bye_pct": 52.5,
           "example_outcomes": [
             {
-              "opponent": "Seahawks",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
               "opponent": "Ravens",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": false
             },
             {
               "opponent": "Steelers",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "13-4-0",
-          "frequency": 3654,
-          "percentage": 36.54,
+          "frequency": 4963,
+          "percentage": 49.63,
           "playoff_pct": 100.0,
-          "division_pct": 40.5,
-          "bye_pct": 27.0,
+          "division_pct": 66.6,
+          "bye_pct": 38.0,
           "example_outcomes": [
             {
-              "opponent": "Seahawks",
+              "opponent": "Ravens",
               "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Ravens",
-              "outcome": "W",
               "is_home": false
             },
             {
               "opponent": "Steelers",
               "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "12-3-2",
-          "frequency": 1,
-          "percentage": 0.01,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 100.0,
-          "example_outcomes": [
-            {
-              "opponent": "Seahawks",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Ravens",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Steelers",
-              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "12-4-1",
-          "frequency": 39,
-          "percentage": 0.39,
+          "frequency": 26,
+          "percentage": 0.26,
           "playoff_pct": 100.0,
-          "division_pct": 5.1,
-          "bye_pct": 0.0,
+          "division_pct": 7.7,
+          "bye_pct": 3.8,
           "example_outcomes": [
-            {
-              "opponent": "Seahawks",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Ravens",
               "outcome": "T",
@@ -5684,74 +4387,19 @@
             },
             {
               "opponent": "Steelers",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             }
           ]
         },
         {
           "record": "12-5-0",
-          "frequency": 3753,
-          "percentage": 37.53,
+          "frequency": 2020,
+          "percentage": 20.2,
           "playoff_pct": 100.0,
-          "division_pct": 4.7,
-          "bye_pct": 1.2,
+          "division_pct": 16.8,
+          "bye_pct": 1.6,
           "example_outcomes": [
-            {
-              "opponent": "Seahawks",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Ravens",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Steelers",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "11-5-1",
-          "frequency": 22,
-          "percentage": 0.22,
-          "playoff_pct": 100.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Seahawks",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Ravens",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
-              "opponent": "Steelers",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "11-6-0",
-          "frequency": 1272,
-          "percentage": 12.72,
-          "playoff_pct": 100.0,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Seahawks",
-              "outcome": "L",
-              "is_home": true
-            },
             {
               "opponent": "Ravens",
               "outcome": "L",
@@ -5766,15 +4414,10 @@
         }
       ],
       "most_likely": {
-        "record": "12-5-0",
-        "frequency": 3753,
-        "percentage": 37.53,
+        "record": "13-4-0",
+        "frequency": 4963,
+        "percentage": 49.63,
         "example_outcomes": [
-          {
-            "opponent": "Seahawks",
-            "outcome": "W",
-            "is_home": true
-          },
           {
             "opponent": "Ravens",
             "outcome": "L",
@@ -5782,7 +4425,7 @@
           },
           {
             "opponent": "Steelers",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           }
         ]
@@ -5791,54 +4434,41 @@
     "Ravens": {
       "conference": "AFC",
       "division": "AFC North",
-      "current_record": "10-4-0",
-      "win_pct": 0.714,
+      "current_record": "11-4-0",
+      "win_pct": 0.733,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Raiders",
-          "is_home": false,
-          "win_prob": 46.4,
-          "tie_prob": 0.3,
-          "loss_prob": 53.3
-        },
         {
           "week": 17,
           "opponent": "Rams",
           "is_home": true,
-          "win_prob": 48.5,
+          "win_prob": 48.6,
           "tie_prob": 0.3,
-          "loss_prob": 51.2
+          "loss_prob": 51.1
         },
         {
           "week": 18,
           "opponent": "Bengals",
           "is_home": true,
-          "win_prob": 48.1,
+          "win_prob": 48.4,
           "tie_prob": 0.3,
-          "loss_prob": 51.6
+          "loss_prob": 51.3
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
-        "playoff": 98.5,
-        "division": 19.6,
-        "bye": 2.4
+        "playoff": 100.0,
+        "division": 22.2,
+        "bye": 3.2
       },
       "record_outcomes": [
         {
           "record": "13-4-0",
-          "frequency": 987,
-          "percentage": 9.87,
+          "frequency": 2335,
+          "percentage": 23.35,
           "playoff_pct": 100.0,
-          "division_pct": 73.2,
-          "bye_pct": 23.4,
+          "division_pct": 51.8,
+          "bye_pct": 13.5,
           "example_outcomes": [
-            {
-              "opponent": "Raiders",
-              "outcome": "W",
-              "is_home": false
-            },
             {
               "opponent": "Rams",
               "outcome": "W",
@@ -5853,17 +4483,12 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 19,
-          "percentage": 0.19,
+          "frequency": 27,
+          "percentage": 0.27,
           "playoff_pct": 100.0,
-          "division_pct": 52.6,
+          "division_pct": 25.9,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Raiders",
-              "outcome": "W",
-              "is_home": false
-            },
             {
               "opponent": "Rams",
               "outcome": "T",
@@ -5878,20 +4503,15 @@
         },
         {
           "record": "12-5-0",
-          "frequency": 3474,
-          "percentage": 34.74,
+          "frequency": 4971,
+          "percentage": 49.71,
           "playoff_pct": 100.0,
-          "division_pct": 27.7,
-          "bye_pct": 0.1,
+          "division_pct": 20.1,
+          "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Raiders",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
               "opponent": "Rams",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
@@ -5903,20 +4523,15 @@
         },
         {
           "record": "11-5-1",
-          "frequency": 50,
-          "percentage": 0.5,
+          "frequency": 37,
+          "percentage": 0.37,
           "playoff_pct": 100.0,
-          "division_pct": 6.0,
+          "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
-              "opponent": "Raiders",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
               "opponent": "Rams",
-              "outcome": "W",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -5928,67 +4543,12 @@
         },
         {
           "record": "11-6-0",
-          "frequency": 3979,
-          "percentage": 39.79,
-          "playoff_pct": 100.0,
-          "division_pct": 6.6,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Raiders",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Bengals",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "10-6-1",
-          "frequency": 23,
-          "percentage": 0.23,
+          "frequency": 2630,
+          "percentage": 26.3,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Raiders",
-              "outcome": "L",
-              "is_home": false
-            },
-            {
-              "opponent": "Rams",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Bengals",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "10-7-0",
-          "frequency": 1468,
-          "percentage": 14.68,
-          "playoff_pct": 89.6,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Raiders",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "Rams",
               "outcome": "L",
@@ -6003,23 +4563,18 @@
         }
       ],
       "most_likely": {
-        "record": "11-6-0",
-        "frequency": 3979,
-        "percentage": 39.79,
+        "record": "12-5-0",
+        "frequency": 4971,
+        "percentage": 49.71,
         "example_outcomes": [
           {
-            "opponent": "Raiders",
-            "outcome": "L",
-            "is_home": false
-          },
-          {
             "opponent": "Rams",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           },
           {
             "opponent": "Bengals",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           }
         ]
@@ -6035,41 +4590,41 @@
           "week": 16,
           "opponent": "Buccaneers",
           "is_home": true,
-          "win_prob": 68.5,
+          "win_prob": 68.4,
           "tie_prob": 0.3,
-          "loss_prob": 31.2
+          "loss_prob": 31.3
         },
         {
           "week": 17,
           "opponent": "Patriots",
           "is_home": true,
-          "win_prob": 54.8,
+          "win_prob": 54.7,
           "tie_prob": 0.3,
-          "loss_prob": 44.9
+          "loss_prob": 45.0
         },
         {
           "week": 18,
           "opponent": "Titans",
           "is_home": false,
-          "win_prob": 54.1,
+          "win_prob": 54.0,
           "tie_prob": 0.3,
-          "loss_prob": 45.6
+          "loss_prob": 45.7
         }
       ],
       "game_count": 3,
       "overall_probabilities": {
-        "playoff": 99.6,
-        "division": 98.9,
-        "bye": 3.3
+        "playoff": 99.2,
+        "division": 98.3,
+        "bye": 5.4
       },
       "record_outcomes": [
         {
           "record": "13-4-0",
-          "frequency": 2163,
-          "percentage": 21.63,
+          "frequency": 2015,
+          "percentage": 20.15,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 14.0,
+          "bye_pct": 25.6,
           "example_outcomes": [
             {
               "opponent": "Buccaneers",
@@ -6090,11 +4645,11 @@
         },
         {
           "record": "12-4-1",
-          "frequency": 42,
-          "percentage": 0.42,
+          "frequency": 32,
+          "percentage": 0.32,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 0.0,
+          "bye_pct": 9.4,
           "example_outcomes": [
             {
               "opponent": "Buccaneers",
@@ -6115,11 +4670,11 @@
         },
         {
           "record": "12-5-0",
-          "frequency": 4231,
-          "percentage": 42.31,
+          "frequency": 4345,
+          "percentage": 43.45,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
-          "bye_pct": 0.7,
+          "bye_pct": 0.5,
           "example_outcomes": [
             {
               "opponent": "Buccaneers",
@@ -6128,12 +4683,12 @@
             },
             {
               "opponent": "Patriots",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             },
             {
               "opponent": "Titans",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             }
           ]
@@ -6165,8 +4720,8 @@
         },
         {
           "record": "11-6-0",
-          "frequency": 2893,
-          "percentage": 28.93,
+          "frequency": 2935,
+          "percentage": 29.35,
           "playoff_pct": 100.0,
           "division_pct": 100.0,
           "bye_pct": 0.0,
@@ -6190,10 +4745,10 @@
         },
         {
           "record": "10-6-1",
-          "frequency": 10,
-          "percentage": 0.1,
-          "playoff_pct": 100.0,
-          "division_pct": 90.0,
+          "frequency": 18,
+          "percentage": 0.18,
+          "playoff_pct": 66.7,
+          "division_pct": 50.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -6203,22 +4758,22 @@
             },
             {
               "opponent": "Patriots",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Titans",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             }
           ]
         },
         {
           "record": "10-7-0",
-          "frequency": 618,
-          "percentage": 6.18,
-          "playoff_pct": 94.2,
-          "division_pct": 81.9,
+          "frequency": 612,
+          "percentage": 6.12,
+          "playoff_pct": 88.1,
+          "division_pct": 73.7,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -6241,8 +4796,8 @@
       ],
       "most_likely": {
         "record": "12-5-0",
-        "frequency": 4231,
-        "percentage": 42.31,
+        "frequency": 4345,
+        "percentage": 43.45,
         "example_outcomes": [
           {
             "opponent": "Buccaneers",
@@ -6251,12 +4806,12 @@
           },
           {
             "opponent": "Patriots",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           },
           {
             "opponent": "Titans",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           }
         ]
@@ -6265,107 +4820,44 @@
     "Seahawks": {
       "conference": "NFC",
       "division": "NFC West",
-      "current_record": "12-2-0",
-      "win_pct": 0.857,
+      "current_record": "12-3-0",
+      "win_pct": 0.8,
       "remaining_games": [
-        {
-          "week": 16,
-          "opponent": "Rams",
-          "is_home": false,
-          "win_prob": 51.8,
-          "tie_prob": 0.3,
-          "loss_prob": 47.9
-        },
         {
           "week": 17,
           "opponent": "49ers",
           "is_home": false,
-          "win_prob": 59.2,
+          "win_prob": 58.1,
           "tie_prob": 0.3,
-          "loss_prob": 40.5
+          "loss_prob": 41.6
         },
         {
           "week": 18,
           "opponent": "Bears",
           "is_home": true,
-          "win_prob": 64.1,
+          "win_prob": 63.1,
           "tie_prob": 0.3,
-          "loss_prob": 35.6
+          "loss_prob": 36.6
         }
       ],
-      "game_count": 3,
+      "game_count": 2,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 70.9,
-        "bye": 68.8
+        "division": 33.8,
+        "bye": 30.6
       },
       "record_outcomes": [
         {
-          "record": "15-2-0",
-          "frequency": 1896,
-          "percentage": 18.96,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 100.0,
-          "example_outcomes": [
-            {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "49ers",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Bears",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "14-2-1",
-          "frequency": 23,
-          "percentage": 0.23,
-          "playoff_pct": 100.0,
-          "division_pct": 100.0,
-          "bye_pct": 100.0,
-          "example_outcomes": [
-            {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "49ers",
-              "outcome": "T",
-              "is_home": false
-            },
-            {
-              "opponent": "Bears",
-              "outcome": "W",
-              "is_home": true
-            }
-          ]
-        },
-        {
           "record": "14-3-0",
-          "frequency": 4239,
-          "percentage": 42.39,
+          "frequency": 3316,
+          "percentage": 33.16,
           "playoff_pct": 100.0,
-          "division_pct": 89.5,
-          "bye_pct": 89.5,
+          "division_pct": 70.4,
+          "bye_pct": 70.4,
           "example_outcomes": [
             {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
               "opponent": "49ers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": false
             },
             {
@@ -6380,14 +4872,9 @@
           "frequency": 41,
           "percentage": 0.41,
           "playoff_pct": 100.0,
-          "division_pct": 85.4,
-          "bye_pct": 70.7,
+          "division_pct": 75.6,
+          "bye_pct": 58.5,
           "example_outcomes": [
-            {
-              "opponent": "Rams",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "49ers",
               "outcome": "W",
@@ -6402,17 +4889,12 @@
         },
         {
           "record": "13-4-0",
-          "frequency": 3019,
-          "percentage": 30.19,
+          "frequency": 4983,
+          "percentage": 49.83,
           "playoff_pct": 100.0,
-          "division_pct": 44.0,
-          "bye_pct": 37.4,
+          "division_pct": 20.2,
+          "bye_pct": 14.0,
           "example_outcomes": [
-            {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": false
-            },
             {
               "opponent": "49ers",
               "outcome": "L",
@@ -6420,24 +4902,19 @@
             },
             {
               "opponent": "Bears",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "12-4-1",
-          "frequency": 25,
-          "percentage": 0.25,
+          "frequency": 14,
+          "percentage": 0.14,
           "playoff_pct": 100.0,
-          "division_pct": 44.0,
-          "bye_pct": 24.0,
+          "division_pct": 7.1,
+          "bye_pct": 7.1,
           "example_outcomes": [
-            {
-              "opponent": "Rams",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "49ers",
               "outcome": "L",
@@ -6452,17 +4929,12 @@
         },
         {
           "record": "12-5-0",
-          "frequency": 757,
-          "percentage": 7.57,
+          "frequency": 1646,
+          "percentage": 16.46,
           "playoff_pct": 100.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
-            {
-              "opponent": "Rams",
-              "outcome": "L",
-              "is_home": false
-            },
             {
               "opponent": "49ers",
               "outcome": "L",
@@ -6477,15 +4949,10 @@
         }
       ],
       "most_likely": {
-        "record": "14-3-0",
-        "frequency": 4239,
-        "percentage": 42.39,
+        "record": "13-4-0",
+        "frequency": 4983,
+        "percentage": 49.83,
         "example_outcomes": [
-          {
-            "opponent": "Rams",
-            "outcome": "W",
-            "is_home": false
-          },
           {
             "opponent": "49ers",
             "outcome": "L",
@@ -6509,39 +4976,39 @@
           "week": 16,
           "opponent": "49ers",
           "is_home": true,
-          "win_prob": 50.0,
+          "win_prob": 49.9,
           "tie_prob": 0.3,
-          "loss_prob": 49.7
+          "loss_prob": 49.8
         },
         {
           "week": 17,
           "opponent": "Cardinals",
           "is_home": true,
-          "win_prob": 74.6,
+          "win_prob": 74.4,
           "tie_prob": 0.3,
-          "loss_prob": 25.1
+          "loss_prob": 25.3
         },
         {
           "week": 18,
           "opponent": "Rams",
           "is_home": false,
-          "win_prob": 42.6,
+          "win_prob": 41.9,
           "tie_prob": 0.3,
-          "loss_prob": 57.1
+          "loss_prob": 57.8
         }
       ],
       "game_count": 3,
       "overall_probabilities": {
-        "playoff": 14.4,
+        "playoff": 11.6,
         "division": 0.0,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "10-7-0",
-          "frequency": 1561,
-          "percentage": 15.61,
-          "playoff_pct": 61.2,
+          "frequency": 1408,
+          "percentage": 14.08,
+          "playoff_pct": 47.5,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
@@ -6564,65 +5031,15 @@
         },
         {
           "record": "9-7-1",
-          "frequency": 34,
-          "percentage": 0.34,
-          "playoff_pct": 23.5,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "49ers",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Cardinals",
-              "outcome": "T",
-              "is_home": true
-            },
-            {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "9-8-0",
-          "frequency": 4209,
-          "percentage": 42.09,
-          "playoff_pct": 11.2,
-          "division_pct": 0.0,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "49ers",
-              "outcome": "W",
-              "is_home": true
-            },
-            {
-              "opponent": "Cardinals",
-              "outcome": "L",
-              "is_home": true
-            },
-            {
-              "opponent": "Rams",
-              "outcome": "W",
-              "is_home": false
-            }
-          ]
-        },
-        {
-          "record": "8-8-1",
-          "frequency": 42,
-          "percentage": 0.42,
+          "frequency": 22,
+          "percentage": 0.22,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "49ers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             },
             {
@@ -6638,9 +5055,59 @@
           ]
         },
         {
+          "record": "9-8-0",
+          "frequency": 4107,
+          "percentage": 41.07,
+          "playoff_pct": 12.0,
+          "division_pct": 0.0,
+          "bye_pct": 0.0,
+          "example_outcomes": [
+            {
+              "opponent": "49ers",
+              "outcome": "W",
+              "is_home": true
+            },
+            {
+              "opponent": "Cardinals",
+              "outcome": "W",
+              "is_home": true
+            },
+            {
+              "opponent": "Rams",
+              "outcome": "L",
+              "is_home": false
+            }
+          ]
+        },
+        {
+          "record": "8-8-1",
+          "frequency": 58,
+          "percentage": 0.58,
+          "playoff_pct": 0.0,
+          "division_pct": 0.0,
+          "bye_pct": 0.0,
+          "example_outcomes": [
+            {
+              "opponent": "49ers",
+              "outcome": "T",
+              "is_home": true
+            },
+            {
+              "opponent": "Cardinals",
+              "outcome": "W",
+              "is_home": true
+            },
+            {
+              "opponent": "Rams",
+              "outcome": "L",
+              "is_home": false
+            }
+          ]
+        },
+        {
           "record": "8-9-0",
-          "frequency": 3393,
-          "percentage": 33.93,
+          "frequency": 3573,
+          "percentage": 35.73,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6664,15 +5131,15 @@
         },
         {
           "record": "7-9-1",
-          "frequency": 15,
-          "percentage": 0.15,
+          "frequency": 16,
+          "percentage": 0.16,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "49ers",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             },
             {
@@ -6682,15 +5149,15 @@
             },
             {
               "opponent": "Rams",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             }
           ]
         },
         {
           "record": "7-10-0",
-          "frequency": 746,
-          "percentage": 7.46,
+          "frequency": 816,
+          "percentage": 8.16,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6715,8 +5182,8 @@
       ],
       "most_likely": {
         "record": "9-8-0",
-        "frequency": 4209,
-        "percentage": 42.09,
+        "frequency": 4107,
+        "percentage": 41.07,
         "example_outcomes": [
           {
             "opponent": "49ers",
@@ -6725,12 +5192,12 @@
           },
           {
             "opponent": "Cardinals",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           },
           {
             "opponent": "Rams",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           }
         ]
@@ -6746,25 +5213,25 @@
           "week": 16,
           "opponent": "Dolphins",
           "is_home": true,
-          "win_prob": 44.8,
+          "win_prob": 45.0,
           "tie_prob": 0.3,
-          "loss_prob": 54.9
+          "loss_prob": 54.7
         },
         {
           "week": 17,
           "opponent": "Chiefs",
           "is_home": false,
-          "win_prob": 44.3,
+          "win_prob": 45.2,
           "tie_prob": 0.3,
-          "loss_prob": 55.4
+          "loss_prob": 54.5
         },
         {
           "week": 18,
           "opponent": "Jaguars",
           "is_home": true,
-          "win_prob": 40.7,
+          "win_prob": 39.7,
           "tie_prob": 0.3,
-          "loss_prob": 59.0
+          "loss_prob": 60.0
         }
       ],
       "game_count": 3,
@@ -6776,8 +5243,8 @@
       "record_outcomes": [
         {
           "record": "7-10-0",
-          "frequency": 979,
-          "percentage": 9.79,
+          "frequency": 1057,
+          "percentage": 10.57,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6801,8 +5268,8 @@
         },
         {
           "record": "6-10-1",
-          "frequency": 14,
-          "percentage": 0.14,
+          "frequency": 15,
+          "percentage": 0.15,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6826,8 +5293,8 @@
         },
         {
           "record": "6-11-0",
-          "frequency": 3578,
-          "percentage": 35.78,
+          "frequency": 3663,
+          "percentage": 36.63,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6851,8 +5318,8 @@
         },
         {
           "record": "5-11-1",
-          "frequency": 47,
-          "percentage": 0.47,
+          "frequency": 44,
+          "percentage": 0.44,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6864,32 +5331,32 @@
             },
             {
               "opponent": "Chiefs",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Jaguars",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "5-12-0",
-          "frequency": 3938,
-          "percentage": 39.38,
+          "frequency": 3852,
+          "percentage": 38.52,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Dolphins",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             },
             {
               "opponent": "Chiefs",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": false
             },
             {
@@ -6901,8 +5368,8 @@
         },
         {
           "record": "4-12-1",
-          "frequency": 26,
-          "percentage": 0.26,
+          "frequency": 21,
+          "percentage": 0.21,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6914,20 +5381,20 @@
             },
             {
               "opponent": "Chiefs",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Jaguars",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "4-13-0",
-          "frequency": 1418,
-          "percentage": 14.18,
+          "frequency": 1348,
+          "percentage": 13.48,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -6952,17 +5419,17 @@
       ],
       "most_likely": {
         "record": "5-12-0",
-        "frequency": 3938,
-        "percentage": 39.38,
+        "frequency": 3852,
+        "percentage": 38.52,
         "example_outcomes": [
           {
             "opponent": "Dolphins",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           },
           {
             "opponent": "Chiefs",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
@@ -6983,32 +5450,32 @@
           "week": 17,
           "opponent": "Colts",
           "is_home": false,
-          "win_prob": 46.8,
+          "win_prob": 46.3,
           "tie_prob": 0.3,
-          "loss_prob": 52.9
+          "loss_prob": 53.4
         },
         {
           "week": 18,
           "opponent": "Saints",
           "is_home": true,
-          "win_prob": 45.6,
+          "win_prob": 45.7,
           "tie_prob": 0.3,
-          "loss_prob": 54.1
+          "loss_prob": 54.0
         }
       ],
       "game_count": 2,
       "overall_probabilities": {
-        "playoff": 75.1,
-        "division": 22.1,
+        "playoff": 76.5,
+        "division": 12.4,
         "bye": 0.0
       },
       "record_outcomes": [
         {
           "record": "11-6-0",
-          "frequency": 2253,
-          "percentage": 22.53,
+          "frequency": 2308,
+          "percentage": 23.08,
           "playoff_pct": 100.0,
-          "division_pct": 73.1,
+          "division_pct": 53.6,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -7025,10 +5492,10 @@
         },
         {
           "record": "10-6-1",
-          "frequency": 40,
-          "percentage": 0.4,
+          "frequency": 38,
+          "percentage": 0.38,
           "playoff_pct": 100.0,
-          "division_pct": 27.5,
+          "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
@@ -7045,49 +5512,29 @@
         },
         {
           "record": "10-7-0",
-          "frequency": 4950,
-          "percentage": 49.5,
-          "playoff_pct": 92.1,
-          "division_pct": 11.2,
-          "bye_pct": 0.0,
-          "example_outcomes": [
-            {
-              "opponent": "Colts",
-              "outcome": "W",
-              "is_home": false
-            },
-            {
-              "opponent": "Saints",
-              "outcome": "L",
-              "is_home": true
-            }
-          ]
-        },
-        {
-          "record": "9-6-2",
-          "frequency": 1,
-          "percentage": 0.01,
-          "playoff_pct": 100.0,
+          "frequency": 5007,
+          "percentage": 50.07,
+          "playoff_pct": 93.8,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Colts",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": false
             },
             {
               "opponent": "Saints",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "9-7-1",
-          "frequency": 28,
-          "percentage": 0.28,
-          "playoff_pct": 57.1,
+          "frequency": 33,
+          "percentage": 0.33,
+          "playoff_pct": 48.5,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
@@ -7105,9 +5552,9 @@
         },
         {
           "record": "9-8-0",
-          "frequency": 2728,
-          "percentage": 27.28,
-          "playoff_pct": 23.4,
+          "frequency": 2614,
+          "percentage": 26.14,
+          "playoff_pct": 22.8,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
@@ -7126,17 +5573,17 @@
       ],
       "most_likely": {
         "record": "10-7-0",
-        "frequency": 4950,
-        "percentage": 49.5,
+        "frequency": 5007,
+        "percentage": 50.07,
         "example_outcomes": [
           {
             "opponent": "Colts",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": false
           },
           {
             "opponent": "Saints",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           }
         ]
@@ -7160,17 +5607,17 @@
           "week": 17,
           "opponent": "Lions",
           "is_home": false,
-          "win_prob": 37.3,
+          "win_prob": 38.5,
           "tie_prob": 0.3,
-          "loss_prob": 62.4
+          "loss_prob": 61.2
         },
         {
           "week": 18,
           "opponent": "Packers",
           "is_home": true,
-          "win_prob": 57.5,
+          "win_prob": 57.8,
           "tie_prob": 0.3,
-          "loss_prob": 42.2
+          "loss_prob": 41.9
         }
       ],
       "game_count": 3,
@@ -7182,8 +5629,8 @@
       "record_outcomes": [
         {
           "record": "7-10-0",
-          "frequency": 1072,
-          "percentage": 10.72,
+          "frequency": 1082,
+          "percentage": 10.82,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -7207,8 +5654,8 @@
         },
         {
           "record": "6-10-1",
-          "frequency": 22,
-          "percentage": 0.22,
+          "frequency": 12,
+          "percentage": 0.12,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -7232,8 +5679,8 @@
         },
         {
           "record": "6-11-0",
-          "frequency": 3456,
-          "percentage": 34.56,
+          "frequency": 3608,
+          "percentage": 36.08,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -7257,40 +5704,40 @@
         },
         {
           "record": "5-11-1",
-          "frequency": 52,
-          "percentage": 0.52,
+          "frequency": 50,
+          "percentage": 0.5,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Bears",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Lions",
-              "outcome": "T",
+              "outcome": "W",
               "is_home": false
             },
             {
               "opponent": "Packers",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": true
             }
           ]
         },
         {
           "record": "5-12-0",
-          "frequency": 3955,
-          "percentage": 39.55,
+          "frequency": 3915,
+          "percentage": 39.15,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Bears",
-              "outcome": "W",
+              "outcome": "L",
               "is_home": true
             },
             {
@@ -7300,27 +5747,27 @@
             },
             {
               "opponent": "Packers",
-              "outcome": "L",
+              "outcome": "W",
               "is_home": true
             }
           ]
         },
         {
           "record": "4-12-1",
-          "frequency": 18,
-          "percentage": 0.18,
+          "frequency": 26,
+          "percentage": 0.26,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
           "example_outcomes": [
             {
               "opponent": "Bears",
-              "outcome": "T",
+              "outcome": "L",
               "is_home": true
             },
             {
               "opponent": "Lions",
-              "outcome": "L",
+              "outcome": "T",
               "is_home": false
             },
             {
@@ -7332,8 +5779,8 @@
         },
         {
           "record": "4-13-0",
-          "frequency": 1425,
-          "percentage": 14.25,
+          "frequency": 1307,
+          "percentage": 13.07,
           "playoff_pct": 0.0,
           "division_pct": 0.0,
           "bye_pct": 0.0,
@@ -7358,12 +5805,12 @@
       ],
       "most_likely": {
         "record": "5-12-0",
-        "frequency": 3955,
-        "percentage": 39.55,
+        "frequency": 3915,
+        "percentage": 39.15,
         "example_outcomes": [
           {
             "opponent": "Bears",
-            "outcome": "W",
+            "outcome": "L",
             "is_home": true
           },
           {
@@ -7373,7 +5820,7 @@
           },
           {
             "opponent": "Packers",
-            "outcome": "L",
+            "outcome": "W",
             "is_home": true
           }
         ]
