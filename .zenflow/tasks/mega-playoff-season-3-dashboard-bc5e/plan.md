@@ -18,50 +18,82 @@ Do not make assumptions on important decisions — get clarification first.
 
 ## Workflow Steps
 
-### [ ] Step: Technical Specification
+### [x] Step: Technical Specification
 
-Assess the task's difficulty, as underestimating it leads to poor outcomes.
-- easy: Straightforward implementation, trivial bug fix or feature
-- medium: Moderate complexity, some edge cases or caveats to consider
-- hard: Complex logic, many caveats, architectural considerations, or high-risk changes
+Spec saved to `.zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/spec.md`.
 
-Create a technical specification for the task that is appropriate for the complexity level:
-- Review the existing codebase architecture and identify reusable components.
-- Define the implementation approach based on established patterns in the project.
-- Identify all source code files that will be created or modified.
-- Define any necessary data model, API, or interface changes.
-- Describe verification steps using the project's test and lint commands.
-
-Save the output to `{@artifacts_path}/spec.md` with:
-- Technical context (language, dependencies)
-- Implementation approach
-- Source code structure changes
-- Data model / API / interface changes
-- Verification approach
-
-If the task is complex enough, create a detailed implementation plan based on `{@artifacts_path}/spec.md`:
-- Break down the work into concrete tasks (incrementable, testable milestones)
-- Each task should reference relevant contracts and include verification steps
-- Replace the Implementation step below with the planned tasks
-
-Rule of thumb for step size: each step should represent a coherent unit of work (e.g., implement a component, add an API endpoint, write tests for a module). Avoid steps that are too granular (single function).
-
-Important: unit tests must be part of each implementation task, not separate tasks. Each task should implement the code and its tests together, if relevant.
-
-Save to `{@artifacts_path}/plan.md`. If the feature is trivial and doesn't warrant this breakdown, keep the Implementation step below as is.
+Difficulty: **Hard** — multi-section interactive dashboard with bracket visualization, predictions/voting, player stats aggregation, head-to-head history, all from CSV data sources.
 
 ---
 
-### [ ] Step: Implementation
+### [ ] Step 1: Data Pre-computation Script
 
-Implement the task according to the technical specification and general engineering best practices.
+Build `scripts/generate_playoff_dashboard.py` that reads all CSV/JSON sources and outputs `docs/data/playoff_dashboard.json` with:
+- Bracket structure (AFC/NFC wild card, divisional, conference championship, super bowl) from `MEGA_games.csv` stageIndex=0
+- Team cards for all 14 playoff teams (record, seed, division, OVR, ELO, offensive/defensive stats) from `MEGA_teams.csv`
+- Top players per team (QB, RB, WR, DEF) from passing/rushing/receiving/defense CSVs + OVR from `MEGA_players.csv`
+- Head-to-head history between each playoff matchup pair across all 3 seasons from `MEGA_games.csv`
+- Conference standings from `MEGA_teams.csv` + `playoff_probabilities.json`
 
-1. Break the task into steps where possible.
-2. Implement the required changes in the codebase
-3. If relevant, write unit tests alongside each change.
-4. Run relevant tests and linters in the end of each step.
-5. Perform basic manual verification if applicable.
-6. After completion, write a report to `{@artifacts_path}/report.md` describing:
-   - What was implemented
-   - How the solution was tested
-   - The biggest issues or challenges encountered
+Verify: run the script, validate JSON output structure, ensure all 14 teams present, bracket has correct matchup count.
+
+---
+
+### [ ] Step 2: Dashboard HTML Shell and Bracket Section
+
+Create `docs/playoff_dashboard.html` with:
+- Page structure matching existing project style (gradient bg, white container, system fonts)
+- Sticky tab navigation: Bracket | Teams | Predictions | Stats | Head-to-Head
+- Bracket section: visual AFC and NFC brackets (Wild Card → Divisional → Conference → Super Bowl)
+- Team logos via Neon CDN, seed badges, scores for completed games
+- CSS grid bracket layout with connector lines
+- Load data from `docs/data/playoff_dashboard.json` via fetch()
+
+Verify: open in browser, confirm bracket renders with correct matchups and team logos.
+
+---
+
+### [ ] Step 3: Team Cards and Conference Standings
+
+Add to the dashboard:
+- Team Cards tab: grid of 14 playoff team cards with logo, name, record, seed, division, OVR, ELO, pts scored/allowed
+- Click-to-expand detail panel showing offensive/defensive stats breakdown
+- Conference Standings tab content: AFC and NFC tables with W-L, win%, seed, SoS, ELO, clinch/eliminate badges
+- Division winner badges, wild card indicators, color-coded by seed
+
+Verify: all 14 teams display correctly, stats match CSV data.
+
+---
+
+### [ ] Step 4: Best Players and Team Stats Sections
+
+Add to the dashboard:
+- Stats tab: per-team offensive/defensive comparison bars for playoff teams (pass yds, rush yds, pts for/against)
+- Best Players section: for each playoff team show top QB, RB, WR, DEF player with name, key stat, OVR rating
+- Player mini-cards with position badge and stats
+
+Verify: top players match expected leaders from CSV data.
+
+---
+
+### [ ] Step 5: Head-to-Head History and Predictions
+
+Add to the dashboard:
+- Head-to-Head tab: for each current playoff matchup, show all historical games between the two teams (all 3 seasons)
+- Game cards with season, week, home/away, score, winner highlight
+- Predictions section: for each unplayed matchup, clickable team logos to predict winner
+- Predictions stored in localStorage, visual feedback on selection
+- Prediction summary panel showing user's bracket picks
+
+Verify: head-to-head shows correct game history, predictions persist across page reload.
+
+---
+
+### [ ] Step 6: Integration, Polish, and Index Update
+
+- Add playoff dashboard link to `index.html` Reports section
+- Add entry to `docs/README.md` Playoff & SoS table
+- Responsive design pass: mobile layout (single column), tablet, desktop
+- Add Playwright E2E test in `tests/e2e/` verifying: page loads, bracket renders, team cards present, prediction click works, head-to-head displays
+- Run E2E tests
+- Write completion report to `.zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/report.md`
