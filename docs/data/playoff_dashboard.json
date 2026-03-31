@@ -1192,7 +1192,8 @@
           "awayScore": null,
           "homeWinPct": 0.572,
           "status": "scheduled",
-          "winner": null
+          "winner": null,
+          "gameTime": "Thu/Fri 17:00"
         },
         {
           "matchupId": "afc_wc_2",
@@ -1204,7 +1205,8 @@
           "awayScore": null,
           "homeWinPct": 0.4885,
           "status": "scheduled",
-          "winner": null
+          "winner": null,
+          "gameTime": "TBD"
         },
         {
           "matchupId": "afc_wc_3",
@@ -1216,7 +1218,8 @@
           "awayScore": null,
           "homeWinPct": 0.5078,
           "status": "scheduled",
-          "winner": null
+          "winner": null,
+          "gameTime": "Tue 17:00"
         }
       ],
       "divisional": [
@@ -1273,7 +1276,8 @@
           "awayScore": null,
           "homeWinPct": 0.5562,
           "status": "scheduled",
-          "winner": null
+          "winner": null,
+          "gameTime": "Wed ~18:00"
         },
         {
           "matchupId": "nfc_wc_2",
@@ -1285,7 +1289,8 @@
           "awayScore": null,
           "homeWinPct": 0.5149,
           "status": "scheduled",
-          "winner": null
+          "winner": null,
+          "gameTime": "Tue 22:15 / Thu 21:30"
         },
         {
           "matchupId": "nfc_wc_3",
@@ -1297,7 +1302,8 @@
           "awayScore": null,
           "homeWinPct": 0.4854,
           "status": "scheduled",
-          "winner": null
+          "winner": null,
+          "gameTime": "Sat after 20:00"
         }
       ],
       "divisional": [

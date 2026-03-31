@@ -270,6 +270,15 @@ body::after{
   margin-bottom:8px;
 }
 
+.game-time{
+  text-align:center;
+  font-size:10px;
+  font-weight:600;
+  color:var(--muted);
+  padding:4px 10px 6px;
+  border-top:1px solid #1e3a6e;
+  letter-spacing:0.5px;
+}
 .spacer{height:40px}
 .spacer-sm{height:20px}
 
@@ -716,6 +725,9 @@ body::after{
     const awayWinner = isCompleted && m.winner===m.away;
     html += renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf);
     html += renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf);
+    if(m.gameTime){
+      html += '<div class="game-time">\u{1F551} '+m.gameTime+'</div>';
+    }
     html += '</div>';
     return html;
   }
