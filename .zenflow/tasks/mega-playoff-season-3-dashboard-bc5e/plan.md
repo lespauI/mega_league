@@ -112,3 +112,8 @@ This infografic looks odd, lets redesign it
 Lets add analytics review on matchap details. It would be in russian, need to use Season 3 stats, past matchaps, best players etc. 
 
 The style of generated analytics we follow is:
+
+### [x] Step: Flames bug fix
+<!-- chat-id: 08aa3efe-16c6-4e26-b88b-7137ee95e3f7 -->
+
+When i update my page im loosing flames what i put, and its update DB, so flames are changed all the time. Need to be fixed

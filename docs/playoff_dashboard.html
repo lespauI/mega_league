@@ -551,51 +551,80 @@ body::after{
     })
     .then(function(r){ return r.json(); })
     .then(function(d){
-      votesData = (d && d.record) ? d.record : { predictions: {}, votes: {} };
+      votesData = (d && d.record) ? d.record : { votes: {} };
+      if(!votesData.votes) votesData.votes = {};
       return votesData;
     })
     .catch(function(){
-      votesData = { predictions: {}, votes: {} };
+      votesData = { votes: {} };
       return votesData;
     });
   }
 
+  function reconcileLocalVotes(){
+    var localVotes = getLocalVotes();
+    var userId = getUserId();
+    var needsUpdate = false;
+    if(!votesData) votesData = { votes: {} };
+    if(!votesData.votes) votesData.votes = {};
+    Object.keys(localVotes).forEach(function(matchupId){
+      if(!votesData.votes[matchupId]) votesData.votes[matchupId] = {};
+      if(votesData.votes[matchupId][userId] !== localVotes[matchupId]){
+        votesData.votes[matchupId][userId] = localVotes[matchupId];
+        needsUpdate = true;
+      }
+    });
+    if(needsUpdate){
+      var payload = { votes: votesData.votes };
+      fetch(JSONBIN_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Key': JSONBIN_KEY },
+        body: JSON.stringify(payload)
+      }).catch(function(e){ console.error('Reconcile save failed', e); });
+    }
+  }
+
   function submitVote(matchupId, team){
     var userId = getUserId();
-    if(!votesData) votesData = { predictions: {}, votes: {} };
-    if(!votesData.predictions) votesData.predictions = {};
+    if(!votesData) votesData = { votes: {} };
     if(!votesData.votes) votesData.votes = {};
     if(!votesData.votes[matchupId]) votesData.votes[matchupId] = {};
-
-    var prev = votesData.votes[matchupId][userId];
-    if(prev){
-      if(!votesData.predictions[matchupId]) votesData.predictions[matchupId] = {};
-      var prevCount = votesData.predictions[matchupId][prev] || 0;
-      votesData.predictions[matchupId][prev] = Math.max(0, prevCount - 1);
-    }
-
     votesData.votes[matchupId][userId] = team;
-    if(!votesData.predictions[matchupId]) votesData.predictions[matchupId] = {};
-    votesData.predictions[matchupId][team] = (votesData.predictions[matchupId][team] || 0) + 1;
 
     setLocalVote(matchupId, team);
     updateVoteUI(matchupId);
     updateBracketVotes();
     updateMobileBracketVotes();
 
-    fetch(JSONBIN_URL, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'X-Access-Key': JSONBIN_KEY
-      },
-      body: JSON.stringify(votesData)
-    }).catch(function(e){ console.error('Vote save failed', e); });
+    fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Access-Key': JSONBIN_KEY }
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      var serverData = (d && d.record) ? d.record : { votes: {} };
+      if(!serverData.votes) serverData.votes = {};
+      if(!serverData.votes[matchupId]) serverData.votes[matchupId] = {};
+      serverData.votes[matchupId][userId] = team;
+      votesData = serverData;
+      var payload = { votes: serverData.votes };
+      return fetch(JSONBIN_URL, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json', 'X-Access-Key': JSONBIN_KEY },
+        body: JSON.stringify(payload)
+      });
+    })
+    .catch(function(e){ console.error('Vote save failed', e); });
   }
 
   function getVoteCounts(matchupId, homeTeam, awayTeam){
-    var preds = (votesData && votesData.predictions && votesData.predictions[matchupId]) || {};
-    return { home: preds[homeTeam] || 0, away: preds[awayTeam] || 0 };
+    if(!votesData || !votesData.votes || !votesData.votes[matchupId]) return { home: 0, away: 0 };
+    var mv = votesData.votes[matchupId];
+    var home = 0, away = 0;
+    Object.keys(mv).forEach(function(uid){
+      if(mv[uid] === homeTeam) home++;
+      else if(mv[uid] === awayTeam) away++;
+    });
+    return { home: home, away: away };
   }
 
   function getUserVote(matchupId){
@@ -1211,7 +1240,7 @@ body::after{
       DATA = d;
       buildBracket();
       buildMobileBracket();
-      return fetchVotes().then(function(){ updateBracketVotes(); updateMobileBracketVotes(); });
+      return fetchVotes().then(function(){ reconcileLocalVotes(); updateBracketVotes(); updateMobileBracketVotes(); });
     })
     .catch(function(err){
       document.getElementById('bracket').innerHTML =
