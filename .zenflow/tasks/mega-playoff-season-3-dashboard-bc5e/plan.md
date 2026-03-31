@@ -67,7 +67,7 @@ Implement the click-to-open modal when user clicks any matchup in the bracket:
 - **Team Stats Comparison**: side-by-side comparison bars for both teams — W-L, OVR, ELO, Pts For/Against, Off Pass Yds, Off Rush Yds, Def Pass Yds, Def Rush Yds
 - **Best Players**: top QB, RB, WR, DEF for each team with name, key stat line, OVR badge
 - **Head-to-Head History**: list of all past games between these two teams (all seasons) with season, week, home/away, score, winner highlight
-- **Prediction Vote**: click a team logo to predict winner, stored in `localStorage`, visual highlight on selected team
+- **Community Prediction Vote**: click a team logo to predict winner. User gets anonymous UUID in `localStorage`. Votes read/written to JSONBin.io (bin `69cbb01436566621a8663829`, X-Access-Key in code). Aggregate vote counts shown as split bar. One vote per user per matchup.
 - Close button (X) and click-outside-to-close
 
 Verify: click matchup → modal opens with correct data for both teams, prediction click persists after page reload.
@@ -81,6 +81,6 @@ Verify: click matchup → modal opens with correct data for both teams, predicti
 - **Empty state handling**: divisional/conference/super bowl slots show "TBD" placeholder until wild card results known
 - Add playoff dashboard link to `index.html` Reports section
 - Add entry to `docs/README.md` Playoff & SoS table
-- Add Playwright E2E test in `tests/e2e/` verifying: page loads, bracket renders 6 WC matchups + 2 BYE badges, click matchup opens modal, modal shows stats/H2H/predictions, prediction persists in localStorage
+- Add Playwright E2E test in `tests/e2e/` verifying: page loads, bracket renders 6 WC matchups + 2 BYE badges, click matchup opens modal, modal shows win probability + stats + H2H + community vote UI
 - Run E2E tests
 - Write completion report to `.zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/report.md`

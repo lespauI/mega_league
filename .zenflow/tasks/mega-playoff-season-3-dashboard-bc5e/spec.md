@@ -13,6 +13,10 @@ Interactive playoff bracket dashboard with Madden-style dark-blue aesthetic. Bra
 - **Hosting**: Static site via `python3 -m http.server` or GitHub Pages
 - **Dependencies**: None required beyond vanilla JS. No D3 needed — bracket is CSS grid.
 - **Team logos**: Neon Sports CDN — `https://neonsportz.com/logos/{logoId}.png`
+- **Community Voting Backend**: JSONBin.io (free tier, 10K requests/month)
+  - Bin ID: `69cbb01436566621a8663829`
+  - X-Access-Key (client-side): `$2a$10$NHFv3H4QqdDeWEQ9p.P8QONEGTGZ/fJjP1zMkLmZAfUdzd.Q9118K`
+  - Initial bin payload: `{"predictions": {}, "votes": {}}`
 - **Testing**: Playwright E2E tests (`package.json` already configured)
 
 ---
@@ -93,7 +97,12 @@ Clicking any matchup card in the bracket opens a full detail modal containing:
 2. **Team Stats Comparison** — side-by-side bars: W-L, OVR, ELO, Pts For/Against, Off Pass/Rush Yds, Def Pass/Rush Yds
 3. **Best Players** — top QB, RB, WR, DEF for each team with name, key stat, OVR
 4. **Head-to-Head History** — all past games between these two teams across all 3 seasons with scores
-5. **Prediction Vote** — click a team logo to predict the winner, stored in localStorage
+5. **Community Prediction Vote** — click a team logo to predict the winner:
+   - User gets a random UUID in `localStorage` on first visit (anonymous identity)
+   - Vote is sent to JSONBin.io (`PUT` to bin `69cbb01436566621a8663829`)
+   - Aggregate votes shown as a split bar (e.g. "18 voted Raiders — 12 voted Titans")
+   - One vote per user per matchup (can change pick, can't double-vote)
+   - On page load, `GET` fetches current aggregate from JSONBin
 
 ### Visual Design
 - **Dark blue background** with football field grass texture at bottom (like Madden screenshot)
