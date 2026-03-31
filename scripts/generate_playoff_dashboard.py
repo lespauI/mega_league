@@ -394,6 +394,44 @@ def build_bracket(teams, elo_map, sos_map, rankings, all_info, team_stats, playo
     return bracket, super_bowl
 
 
+def load_team_aggregated_stats(playoff_team_names):
+    agg = {t: {
+        'passTDs': 0, 'passINTs': 0,
+        'rushTDs': 0, 'rushFumbles': 0,
+        'defTDs': 0, 'defINTs': 0, 'defSacks': 0.0,
+        'defForcedFum': 0, 'defFumRec': 0,
+    } for t in playoff_team_names}
+
+    for row in read_csv('MEGA_passing.csv'):
+        team = row['team__displayName'].strip()
+        if team not in agg:
+            continue
+        agg[team]['passTDs'] += int(row.get('passTotalTDs', 0) or 0)
+        agg[team]['passINTs'] += int(row.get('passTotalInts', 0) or 0)
+
+    for row in read_csv('MEGA_rushing.csv'):
+        team = row['team__displayName'].strip()
+        if team not in agg:
+            continue
+        agg[team]['rushTDs'] += int(row.get('rushTotalTDs', 0) or 0)
+        agg[team]['rushFumbles'] += int(row.get('rushTotalFum', 0) or 0)
+
+    for row in read_csv('MEGA_defense.csv'):
+        team = row['team__displayName'].strip()
+        if team not in agg:
+            continue
+        agg[team]['defTDs'] += int(row.get('defTotalTDs', 0) or 0)
+        agg[team]['defINTs'] += int(row.get('defTotalInts', 0) or 0)
+        agg[team]['defSacks'] += float(row.get('defTotalSacks', 0) or 0)
+        agg[team]['defForcedFum'] += int(row.get('defTotalForcedFum', 0) or 0)
+        agg[team]['defFumRec'] += int(row.get('defTotalFumRec', 0) or 0)
+
+    for t in agg:
+        agg[t]['defSacks'] = round(agg[t]['defSacks'], 1)
+
+    return agg
+
+
 def load_top_players(playoff_team_names):
     ovr_map = {}
     for row in read_csv('MEGA_players.csv'):
@@ -604,8 +642,21 @@ def main():
         teams[name]['elo'] = round(elo_map.get(name, DEFAULT_ELO), 1)
 
     top_players = load_top_players(set(teams.keys()))
+    agg_stats = load_team_aggregated_stats(set(teams.keys()))
     for name in teams:
         teams[name]['topPlayers'] = top_players.get(name, {})
+        if name in agg_stats:
+            teams[name].update(agg_stats[name])
+        teams[name]['tODiff'] = 0
+    for row in read_csv('MEGA_teams.csv'):
+        if int(row.get('seasonIndex', -1)) != SEASON_INDEX:
+            continue
+        tname = row['displayName'].strip()
+        if tname in teams:
+            try:
+                teams[tname]['tODiff'] = int(row.get('tODiff', 0) or 0)
+            except (ValueError, TypeError):
+                pass
 
     bracket, super_bowl = build_bracket(
         teams, elo_map, sos_map, rankings, all_info, team_stats, playoff_games
