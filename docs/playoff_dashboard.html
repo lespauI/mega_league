@@ -266,6 +266,18 @@ body::after{
 .spacer{height:40px}
 .spacer-sm{height:20px}
 
+.win-pct-mini-wrap{
+  display:flex;
+  justify-content:space-between;
+  padding:4px 10px 0;
+}
+.win-pct-label{
+  font-size:9px;
+  font-weight:700;
+  color:var(--muted);
+}
+.win-pct-label.left{color:var(--gold)}
+.win-pct-label.right{color:var(--gold)}
 .win-pct-mini{
   display:flex;
   height:3px;
@@ -287,6 +299,42 @@ body::after{
   color:var(--muted);
   font-size:18px;
 }
+
+#modal-overlay{
+  opacity:0;
+  transition:opacity 0.25s ease;
+}
+#modal-overlay.visible{opacity:1}
+#modal-content{
+  transform:translateY(30px);
+  opacity:0;
+  transition:transform 0.3s ease,opacity 0.3s ease;
+}
+#modal-overlay.visible #modal-content{
+  transform:translateY(0);
+  opacity:1;
+}
+
+.vote-section{margin:20px 0}
+.vote-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center}
+.vote-row{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:12px}
+.vote-btn{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  background:#0d1a30;border:2px solid transparent;border-radius:10px;
+  padding:12px 18px;cursor:pointer;transition:all 0.2s ease;min-width:120px;
+}
+.vote-btn:hover{border-color:var(--gold);background:#132042}
+.vote-btn.voted{border-color:var(--gold);background:rgba(240,185,49,0.1)}
+.vote-btn img{width:48px;height:48px;border-radius:6px}
+.vote-btn .vote-team-name{font-size:13px;font-weight:700;color:var(--white)}
+.vote-btn .vote-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+.vote-bar-wrap{margin:0 auto;max-width:400px}
+.vote-bar{display:flex;height:10px;border-radius:5px;overflow:hidden;background:#1e3a6e}
+.vote-bar .bar-home{background:var(--afc-color);transition:width 0.4s ease}
+.vote-bar .bar-away{background:var(--nfc-color);transition:width 0.4s ease}
+.vote-counts{display:flex;justify-content:space-between;font-size:12px;margin-top:4px}
+.vote-counts span{color:var(--muted)}
+.vote-counts .count-bold{font-weight:700;color:var(--white)}
 
 @media(max-width:960px){
   .bracket{
@@ -320,7 +368,7 @@ body::after{
   </div>
 </div>
 
-<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;padding:20px">
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;padding:20px" role="dialog" aria-modal="true">
   <div id="modal-content" style="max-width:700px;margin:40px auto;background:var(--bg-card);border:1px solid #1e3a6e;border-radius:14px;padding:24px;position:relative">
     <button id="modal-close" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1">&times;</button>
     <div id="modal-body"></div>
@@ -374,9 +422,18 @@ body::after{
 
     if(winPct!==null && !isPending){
       const homePct = Math.round(winPct*100);
-      html+='<div class="win-pct-mini">'
+      const awayPct = 100 - homePct;
+      const diff = Math.abs(homePct - awayPct);
+      const homeSign = homePct >= awayPct ? '+' : '-';
+      const awaySign = awayPct >= homePct ? '+' : '-';
+      var homeFav = homePct >= awayPct;
+      html+='<div class="win-pct-mini-wrap">'
+        +'<span class="win-pct-label left" style="color:'+(homeFav?'var(--gold)':'var(--muted)')+'">'+homePct+'% ('+homeSign+diff+')</span>'
+        +'<span class="win-pct-label right" style="color:'+(!homeFav?'var(--gold)':'var(--muted)')+'">'+awayPct+'% ('+awaySign+diff+')</span>'
+        +'</div>'
+        +'<div class="win-pct-mini">'
         +'<div class="bar-home" style="width:'+homePct+'%"></div>'
-        +'<div class="bar-away" style="width:'+(100-homePct)+'%"></div>'
+        +'<div class="bar-away" style="width:'+awayPct+'%"></div>'
         +'</div>';
     }
 
