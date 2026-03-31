@@ -976,13 +976,18 @@ body::after{
       h2h.forEach(function(g){
         var seasonLabel = 'S'+(g.season+1);
         var weekLabel = 'Wk '+(g.week+1);
-        var isHomeWin = g.winner===g.home;
+        var leftTeam = m.home, rightTeam = m.away;
+        var leftScore, rightScore;
+        if(g.home===m.home){ leftScore=g.homeScore; rightScore=g.awayScore; }
+        else { leftScore=g.awayScore; rightScore=g.homeScore; }
+        var leftWon = g.winner===leftTeam;
+        var rightWon = g.winner===rightTeam;
         var winColor = '#4caf50';
         html += '<div class="h2h-game" style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#0d1a30;border-radius:6px;margin-bottom:4px;font-size:12px">';
         html += '<span class="h2h-week" style="color:var(--muted);min-width:55px">'+seasonLabel+' '+weekLabel+'</span>';
-        html += '<span style="flex:1;font-weight:'+(isHomeWin?'700':'400')+';color:'+(isHomeWin?winColor:'inherit')+'">'+g.home+(isHomeWin?' \u2705':'')+'</span>';
-        html += '<span class="h2h-score" style="font-weight:800;color:var(--gold);min-width:50px;text-align:center">'+g.homeScore+' - '+g.awayScore+'</span>';
-        html += '<span style="flex:1;text-align:right;font-weight:'+(!isHomeWin?'700':'400')+';color:'+(!isHomeWin?winColor:'inherit')+'">'+g.away+(!isHomeWin?' \u2705':'')+'</span>';
+        html += '<span style="flex:1;font-weight:'+(leftWon?'700':'400')+';color:'+(leftWon?winColor:'inherit')+'">'+leftTeam+(leftWon?' \u2705':'')+'</span>';
+        html += '<span class="h2h-score" style="font-weight:800;color:var(--gold);min-width:50px;text-align:center">'+leftScore+' - '+rightScore+'</span>';
+        html += '<span style="flex:1;text-align:right;font-weight:'+(rightWon?'700':'400')+';color:'+(rightWon?winColor:'inherit')+'">'+rightTeam+(rightWon?' \u2705':'')+'</span>';
         html += '</div>';
       });
       html += '</div>';

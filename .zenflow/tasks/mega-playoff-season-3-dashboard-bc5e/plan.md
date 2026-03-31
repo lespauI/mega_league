@@ -100,3 +100,8 @@ Most probably this page would be open on mobile phone we need to take responsive
 <!-- chat-id: 3dfe282e-3bb6-433a-a19e-6d02137b816c -->
 
 We need to cleanup before release
+
+### [ ] Step: Redesign team comparation
+<!-- chat-id: 36892c03-418b-4436-aee4-330252a754f7 -->
+
+This infografic looks odd, lets redesign it
