@@ -1010,13 +1010,18 @@ body::after{
       var card = '<div class="stat-card" style="background:#0d1a30;border-radius:8px;padding:10px 12px">';
       card += '<div class="stat-card-header" style="text-align:center;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:6px">'+s.label+'</div>';
       card += '<div class="stat-card-values" style="display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:800;margin-bottom:6px">';
-      card += '<span style="color:'+(hBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">'+formatStat(s.h)+'</span>';
+      card += '<span style="display:flex;align-items:center;gap:4px;color:'+(hBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">';
+      card += '<img src="'+logoUrl(homeTeam)+'" style="width:18px;height:18px;border-radius:3px;flex-shrink:0" onerror="this.style.display=\'none\'">';
+      card += formatStat(s.h)+'</span>';
       if (!tied) {
-        card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:'+(hBetter?'rgba(240,185,49,0.15)':'rgba(240,185,49,0.15)')+';color:var(--gold)">+'+ diffStr +'</span>';
+        card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(240,185,49,0.15);color:var(--gold)">+'+ diffStr +'</span>';
       } else {
         card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(123,143,176,0.15);color:var(--muted)">EVEN</span>';
       }
-      card += '<span style="color:'+(aBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">'+formatStat(s.a)+'</span>';
+      card += '<span style="display:flex;align-items:center;gap:4px;color:'+(aBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">';
+      card += formatStat(s.a);
+      card += '<img src="'+logoUrl(awayTeam)+'" style="width:18px;height:18px;border-radius:3px;flex-shrink:0" onerror="this.style.display=\'none\'">';
+      card += '</span>';
       card += '</div>';
       card += '<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;gap:2px">';
       card += '<div style="width:'+hPct+'%;background:'+(hBetter?'var(--gold)':tied?'#3a5280':'#3a5280')+';border-radius:2px;transition:width 0.3s"></div>';
