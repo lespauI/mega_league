@@ -284,16 +284,14 @@ body::after{
 
 .win-pct-mini-wrap{
   display:flex;
-  justify-content:space-between;
+  justify-content:center;
   padding:4px 10px 0;
 }
 .win-pct-label{
   font-size:9px;
   font-weight:700;
-  color:var(--muted);
+  color:var(--gold);
 }
-.win-pct-label.left{color:var(--gold)}
-.win-pct-label.right{color:var(--gold)}
 .win-pct-mini{
   display:flex;
   height:3px;
@@ -708,12 +706,10 @@ body::after{
       const homePct = Math.round(winPct*100);
       const awayPct = 100 - homePct;
       const diff = Math.abs(homePct - awayPct);
-      const homeSign = homePct >= awayPct ? '+' : '-';
-      const awaySign = awayPct >= homePct ? '+' : '-';
       var homeFav = homePct >= awayPct;
+      var favLabel = (homeFav ? m.home : m.away) + ' +' + diff + '%';
       html+='<div class="win-pct-mini-wrap">'
-        +'<span class="win-pct-label left" style="color:'+(homeFav?'var(--gold)':'var(--muted)')+'">'+homePct+'% ('+homeSign+diff+')</span>'
-        +'<span class="win-pct-label right" style="color:'+(!homeFav?'var(--gold)':'var(--muted)')+'">'+awayPct+'% ('+awaySign+diff+')</span>'
+        +'<span class="win-pct-label" style="color:var(--gold)">'+favLabel+'</span>'
         +'</div>'
         +'<div class="win-pct-mini">'
         +'<div class="bar-home" style="width:'+homePct+'%"></div>'
