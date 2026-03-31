@@ -16,3 +16,10 @@ output/individual_position_formulas.txt
 output/
 docs/team_scenarios/*.md
 tests/snapshots/
+.playwright-mcp/
+.zenflow-attachments/
+bracket-*.png
+desktop-*.png
+mobile-*.png
+modal-*.png
+tablet-*.png

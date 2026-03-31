@@ -95,3 +95,8 @@ Verify: click matchup → modal opens with correct data for both teams, predicti
 <!-- chat-id: 5ef67dc1-4d12-48d3-865e-be6b3fb203d2 -->
 
 Most probably this page would be open on mobile phone we need to take responsive design into account for every page
+
+### [x] Step: Cleanup the repo
+<!-- chat-id: 3dfe282e-3bb6-433a-a19e-6d02137b816c -->
+
+We need to cleanup before release
