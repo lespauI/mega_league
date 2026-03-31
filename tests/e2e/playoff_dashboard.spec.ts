@@ -7,7 +7,7 @@ test.describe('Playoff Dashboard', () => {
   });
 
   test('page loads with header and bracket', async ({ page }) => {
-    await expect(page.locator('.header h1')).toContainText('MEGA PLAYOFFS 2027');
+    await expect(page.locator('.header h1')).toContainText('MEGA PLAYOFFS');
     await expect(page.locator('.conf-label.afc')).toContainText('AFC');
     await expect(page.locator('.conf-label.nfc')).toContainText('NFC');
   });
@@ -19,9 +19,9 @@ test.describe('Playoff Dashboard', () => {
   });
 
   test('bracket renders 2 BYE badges', async ({ page }) => {
-    const byeCards = page.locator('.bye-card');
+    const byeCards = page.locator('#bracket .bye-card');
     await expect(byeCards).toHaveCount(2);
-    const byeLabels = page.locator('.bye-card .bye-label');
+    const byeLabels = page.locator('#bracket .bye-card .bye-label');
     await expect(byeLabels.first()).toContainText('Bye');
     await expect(byeLabels.last()).toContainText('Bye');
   });

@@ -91,7 +91,7 @@ Verify: click matchup → modal opens with correct data for both teams, predicti
 
 
 
-### [ ] Step: Responsive design
+### [x] Step: Responsive design
 <!-- chat-id: 5ef67dc1-4d12-48d3-865e-be6b3fb203d2 -->
 
 Most probably this page would be open on mobile phone we need to take responsive design into account for every page
