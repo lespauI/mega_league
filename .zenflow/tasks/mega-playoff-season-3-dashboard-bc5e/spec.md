@@ -85,10 +85,15 @@ The page is dominated by the bracket visualization — Madden NFL Playoffs style
 ### Click-to-Open Matchup Modal
 Clicking any matchup card in the bracket opens a full detail modal containing:
 
-1. **Team Stats Comparison** — side-by-side bars: W-L, OVR, ELO, Pts For/Against, Off Pass/Rush Yds, Def Pass/Rush Yds
-2. **Best Players** — top QB, RB, WR, DEF for each team with name, key stat, OVR
-3. **Head-to-Head History** — all past games between these two teams across all 3 seasons with scores
-4. **Prediction Vote** — click a team logo to predict the winner, stored in localStorage
+1. **Win Probability** — horizontal probability bar (e.g. "Raiders 62% — 38% Titans") using the same formula from `calc_playoff_probabilities.py`:
+   - `rating = ELO_WEIGHT(0.50) * elo_norm + WIN_PCT_WEIGHT(0.25) * win_pct + SOS_WEIGHT(0.15) * past_sos + SOV_WEIGHT(0.10) * sov`
+   - `home_prob = home_rating / (home_rating + away_rating) + HOME_FIELD_ADVANTAGE + streak_modifiers`
+   - Clamped to [0.25, 0.75]
+   - Pre-computed by the Python script for each matchup and stored in `playoff_dashboard.json`
+2. **Team Stats Comparison** — side-by-side bars: W-L, OVR, ELO, Pts For/Against, Off Pass/Rush Yds, Def Pass/Rush Yds
+3. **Best Players** — top QB, RB, WR, DEF for each team with name, key stat, OVR
+4. **Head-to-Head History** — all past games between these two teams across all 3 seasons with scores
+5. **Prediction Vote** — click a team logo to predict the winner, stored in localStorage
 
 ### Visual Design
 - **Dark blue background** with football field grass texture at bottom (like Madden screenshot)
@@ -165,6 +170,7 @@ Clicking any matchup card in the bracket opens a full detail modal containing:
           "homeSeed": 2, "home": "Raiders",
           "awaySeed": 7, "away": "Titans",
           "homeScore": null, "awayScore": null,
+          "homeWinPct": 0.62,
           "status": "scheduled", "winner": null
         },
         { "matchupId": "afc_wc_2", "homeSeed": 3, "home": "Colts", "awaySeed": 6, "away": "Ravens", ... },

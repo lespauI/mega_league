@@ -31,6 +31,7 @@ Difficulty: **Hard** — multi-section interactive dashboard with bracket visual
 Build `scripts/generate_playoff_dashboard.py` (Python, stdlib only) that reads CSV/JSON and outputs `docs/data/playoff_dashboard.json`:
 - **Teams**: 14 playoff teams from `MEGA_teams.csv` (seasonIndex=2, seed 1-7) with record, seed, division, OVR, ELO, off/def stats
 - **Bracket**: Standard NFL 14-team bracket derived from seeds (2v7, 3v6, 4v5 per conference; 1-seed bye). Cross-reference `MEGA_games.csv` stageIndex=0 to fill in scores for any completed playoff games
+- **Win probabilities**: For each matchup, compute `homeWinPct` using the same formula from `calc_playoff_probabilities.py` (ELO 50%, win% 25%, SOS 15%, SOV 10% + home field advantage + streak modifiers, clamped [0.25, 0.75]). Reuse the logic, not the module — keep it self-contained.
 - **Top players**: Per team — best QB, RB, WR, DEF from passing/rushing/receiving/defense CSVs, enriched with OVR from `MEGA_players.csv`
 - **Head-to-head**: For each bracket matchup pair, all historical games across all 3 seasons from `MEGA_games.csv`
 - **ELO**: From `mega_elo.csv`
@@ -62,6 +63,7 @@ Verify: open in browser, bracket renders with all 14 teams in correct positions,
 
 Implement the click-to-open modal when user clicks any matchup in the bracket:
 - **Modal overlay** with dark backdrop, slides in or fades in
+- **Win Probability Bar**: horizontal split bar showing each team's win % (e.g. "Raiders 62% — 38% Titans"), color-coded by team
 - **Team Stats Comparison**: side-by-side comparison bars for both teams — W-L, OVR, ELO, Pts For/Against, Off Pass Yds, Off Rush Yds, Def Pass Yds, Def Rush Yds
 - **Best Players**: top QB, RB, WR, DEF for each team with name, key stat line, OVR badge
 - **Head-to-Head History**: list of all past games between these two teams (all seasons) with season, week, home/away, score, winner highlight
