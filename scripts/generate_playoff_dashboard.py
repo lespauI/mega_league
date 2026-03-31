@@ -77,7 +77,8 @@ def load_elo():
     elo = {}
     for row in read_csv('mega_elo.csv'):
         team = row.get('Team', '').strip()
-        val = row.get('Week 14+', '')
+        elo_col = [c for c in row if c and c.startswith('Week')]
+        val = row.get(elo_col[0], '') if elo_col else ''
         if team and val:
             try:
                 elo[team] = float(val)

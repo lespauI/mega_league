@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T11:34:27.296199+00:00",
+  "generated_at": "2026-03-31T11:39:23.681402+00:00",
   "season_index": 2,
   "teams": {
     "Bengals": {
@@ -22,7 +22,7 @@
       "defRushYds": 1358,
       "defTotalYds": 4179,
       "winStreak": 7,
-      "elo": 1270.0,
+      "elo": 1303.9,
       "topPlayers": {
         "QB": {
           "name": "Joe Burrow",
@@ -75,7 +75,7 @@
       "defRushYds": 1305,
       "defTotalYds": 5277,
       "winStreak": -1,
-      "elo": 1310.1,
+      "elo": 1309.7,
       "topPlayers": {
         "QB": {
           "name": "Jordan Love",
@@ -128,7 +128,7 @@
       "defRushYds": 1345,
       "defTotalYds": 4418,
       "winStreak": -2,
-      "elo": 1164.3,
+      "elo": 1231.6,
       "topPlayers": {
         "QB": {
           "name": "Anthony Richardson Sr",
@@ -181,7 +181,7 @@
       "defRushYds": 1383,
       "defTotalYds": 4779,
       "winStreak": 3,
-      "elo": 1213.7,
+      "elo": 1269.1,
       "topPlayers": {
         "QB": {
           "name": "Jayden Daniels",
@@ -234,7 +234,7 @@
       "defRushYds": 2000,
       "defTotalYds": 5375,
       "winStreak": -1,
-      "elo": 1243.4,
+      "elo": 1258.7,
       "topPlayers": {
         "QB": {
           "name": "Dave Burrell",
@@ -287,7 +287,7 @@
       "defRushYds": 1574,
       "defTotalYds": 4763,
       "winStreak": 2,
-      "elo": 1212.2,
+      "elo": 1221.6,
       "topPlayers": {
         "QB": {
           "name": "Jared Goff",
@@ -340,7 +340,7 @@
       "defRushYds": 1708,
       "defTotalYds": 5056,
       "winStreak": 6,
-      "elo": 1205.8,
+      "elo": 1235.8,
       "topPlayers": {
         "QB": {
           "name": "J.J. Washington",
@@ -393,7 +393,7 @@
       "defRushYds": 2164,
       "defTotalYds": 5560,
       "winStreak": 3,
-      "elo": 1272.0,
+      "elo": 1242.7,
       "topPlayers": {
         "QB": {
           "name": "Drake Maye",
@@ -446,7 +446,7 @@
       "defRushYds": 1623,
       "defTotalYds": 5340,
       "winStreak": 1,
-      "elo": 1236.5,
+      "elo": 1292.1,
       "topPlayers": {
         "QB": {
           "name": "Joe Milton III",
@@ -499,7 +499,7 @@
       "defRushYds": 1418,
       "defTotalYds": 4786,
       "winStreak": 1,
-      "elo": 1185.1,
+      "elo": 1250.6,
       "topPlayers": {
         "QB": {
           "name": "Dillon Overton",
@@ -552,7 +552,7 @@
       "defRushYds": 1864,
       "defTotalYds": 5183,
       "winStreak": -1,
-      "elo": 1159.2,
+      "elo": 1259.9,
       "topPlayers": {
         "QB": {
           "name": "Lance Strong",
@@ -605,7 +605,7 @@
       "defRushYds": 1642,
       "defTotalYds": 5127,
       "winStreak": 1,
-      "elo": 1254.0,
+      "elo": 1282.2,
       "topPlayers": {
         "QB": {
           "name": "Emmett Newby",
@@ -658,7 +658,7 @@
       "defRushYds": 1210,
       "defTotalYds": 5336,
       "winStreak": 2,
-      "elo": 1285.6,
+      "elo": 1284.4,
       "topPlayers": {
         "QB": {
           "name": "Mac Thompson",
@@ -711,7 +711,7 @@
       "defRushYds": 1327,
       "defTotalYds": 4940,
       "winStreak": -1,
-      "elo": 1261.2,
+      "elo": 1237.4,
       "topPlayers": {
         "QB": {
           "name": "Cam Ward",
@@ -756,7 +756,7 @@
           "away": "Titans",
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": 0.5317,
+          "homeWinPct": 0.572,
           "status": "scheduled",
           "winner": null
         },
@@ -768,7 +768,7 @@
           "away": "Ravens",
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": 0.5034,
+          "homeWinPct": 0.4885,
           "status": "scheduled",
           "winner": null
         },
@@ -780,7 +780,7 @@
           "away": "Broncos",
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": 0.523,
+          "homeWinPct": 0.5078,
           "status": "scheduled",
           "winner": null
         }
@@ -837,7 +837,7 @@
           "away": "Cowboys",
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": 0.539,
+          "homeWinPct": 0.5562,
           "status": "scheduled",
           "winner": null
         },
@@ -849,7 +849,7 @@
           "away": "Panthers",
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": 0.5172,
+          "homeWinPct": 0.5149,
           "status": "scheduled",
           "winner": null
         },
@@ -861,7 +861,7 @@
           "away": "Rams",
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": 0.5158,
+          "homeWinPct": 0.4854,
           "status": "scheduled",
           "winner": null
         }
@@ -920,44 +920,24 @@
     "winner": null
   },
   "head_to_head": {
-    "Colts_vs_Ravens": [
+    "Lions_vs_Rams": [
       {
-        "season": 1,
-        "week": 16,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 31,
-        "awayScore": 17,
-        "winner": "Colts"
+        "season": 0,
+        "week": 14,
+        "home": "Rams",
+        "away": "Lions",
+        "homeScore": 27,
+        "awayScore": 34,
+        "winner": "Lions"
       },
       {
         "season": 2,
-        "week": 9,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 3,
-        "awayScore": 6,
-        "winner": "Ravens"
-      }
-    ],
-    "Broncos_vs_Patriots": [
-      {
-        "season": 1,
-        "week": 15,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 14,
-        "awayScore": 17,
-        "winner": "Broncos"
-      },
-      {
-        "season": 2,
-        "week": 2,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 24,
-        "awayScore": 32,
-        "winner": "Broncos"
+        "week": 10,
+        "home": "Lions",
+        "away": "Rams",
+        "homeScore": 20,
+        "awayScore": 27,
+        "winner": "Rams"
       }
     ],
     "Commanders_vs_Cowboys": [
@@ -1016,6 +996,46 @@
         "winner": "Commanders"
       }
     ],
+    "Colts_vs_Ravens": [
+      {
+        "season": 1,
+        "week": 16,
+        "home": "Colts",
+        "away": "Ravens",
+        "homeScore": 31,
+        "awayScore": 17,
+        "winner": "Colts"
+      },
+      {
+        "season": 2,
+        "week": 9,
+        "home": "Colts",
+        "away": "Ravens",
+        "homeScore": 3,
+        "awayScore": 6,
+        "winner": "Ravens"
+      }
+    ],
+    "Broncos_vs_Patriots": [
+      {
+        "season": 1,
+        "week": 15,
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 14,
+        "awayScore": 17,
+        "winner": "Broncos"
+      },
+      {
+        "season": 2,
+        "week": 2,
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 24,
+        "awayScore": 32,
+        "winner": "Broncos"
+      }
+    ],
     "Panthers_vs_Saints": [
       {
         "season": 0,
@@ -1070,26 +1090,6 @@
         "homeScore": 38,
         "awayScore": 31,
         "winner": "Saints"
-      }
-    ],
-    "Lions_vs_Rams": [
-      {
-        "season": 0,
-        "week": 14,
-        "home": "Rams",
-        "away": "Lions",
-        "homeScore": 27,
-        "awayScore": 34,
-        "winner": "Lions"
-      },
-      {
-        "season": 2,
-        "week": 10,
-        "home": "Lions",
-        "away": "Rams",
-        "homeScore": 20,
-        "awayScore": 27,
-        "winner": "Rams"
       }
     ],
     "Raiders_vs_Titans": [
