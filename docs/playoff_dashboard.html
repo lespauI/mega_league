@@ -329,6 +329,11 @@ body::after{
   opacity:1;
 }
 
+.analytics-collapsed{max-height:calc(1.7em * 5);transition:max-height 0.4s ease}
+.analytics-expanded{max-height:5000px;transition:max-height 0.6s ease}
+#analytics-toggle{transition:opacity 0.2s}
+#analytics-toggle:hover{background:rgba(240,185,49,0.1)}
+
 .vote-section{margin:20px 0}
 .vote-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center}
 .vote-row{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:12px}
@@ -943,9 +948,13 @@ body::after{
     if(analyticsText){
       html += '<div class="analytics-section" style="margin:20px 0">';
       html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">\u{1F4CA} Аналитика матча</div>';
-      html += '<div class="analytics-text" style="background:#0d1a30;border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.7;color:var(--white);white-space:pre-wrap;word-wrap:break-word;border-left:3px solid var(--gold)">';
+      html += '<div class="analytics-wrap" style="position:relative">';
+      html += '<div id="analytics-body" class="analytics-text analytics-collapsed" style="background:#0d1a30;border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.7;color:var(--white);white-space:pre-wrap;word-wrap:break-word;border-left:3px solid var(--gold);overflow:hidden">';
       html += analyticsText;
       html += '</div>';
+      html += '<div id="analytics-fade" class="analytics-fade" style="position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(to bottom,transparent,#0d1a30);border-radius:0 0 10px 10px;pointer-events:none"></div>';
+      html += '</div>';
+      html += '<button id="analytics-toggle" style="display:block;margin:8px auto 0;background:none;border:1px solid var(--gold);color:var(--gold);padding:5px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px">ЧИТАТЬ ДАЛЕЕ ▼</button>';
       html += '</div>';
     }
 
@@ -1134,6 +1143,26 @@ body::after{
     document.getElementById('vote-btn-away').addEventListener('click', function(){
       submitVote(matchupId, m.away);
     });
+
+    var toggleBtn = document.getElementById('analytics-toggle');
+    if(toggleBtn){
+      toggleBtn.addEventListener('click', function(){
+        var body = document.getElementById('analytics-body');
+        var fade = document.getElementById('analytics-fade');
+        var expanded = body.classList.contains('analytics-expanded');
+        if(expanded){
+          body.classList.remove('analytics-expanded');
+          body.classList.add('analytics-collapsed');
+          fade.style.display = '';
+          toggleBtn.textContent = 'ЧИТАТЬ ДАЛЕЕ \u25BC';
+        } else {
+          body.classList.remove('analytics-collapsed');
+          body.classList.add('analytics-expanded');
+          fade.style.display = 'none';
+          toggleBtn.textContent = 'СВЕРНУТЬ \u25B2';
+        }
+      });
+    }
 
     var overlay = document.getElementById('modal-overlay');
     overlay.style.display = 'block';
