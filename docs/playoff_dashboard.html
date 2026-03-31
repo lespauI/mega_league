@@ -415,13 +415,18 @@ body::after{
     max-width:100%;
     border-radius:12px;
   }
-  .modal-stats-grid{
-    grid-template-columns:45px 1fr auto 1fr 45px!important;
-    gap:4px!important;
+  .stat-card{
+    padding:8px 10px!important;
   }
-  .modal-stats-label{
-    font-size:9px!important;
-    min-width:60px!important;
+  .stat-card-header{
+    font-size:10px!important;
+  }
+  .stat-card-values{
+    font-size:16px!important;
+  }
+  .stat-delta{
+    font-size:8px!important;
+    padding:1px 5px!important;
   }
 }
 
@@ -437,12 +442,17 @@ body::after{
     width:44px!important;
     height:44px!important;
   }
-  .modal-stats-grid{
-    grid-template-columns:38px 1fr auto 1fr 38px!important;
+  .stat-card{
+    padding:6px 8px!important;
   }
-  .modal-stats-label{
-    font-size:8px!important;
-    min-width:50px!important;
+  .stat-card-values{
+    font-size:14px!important;
+  }
+  .stat-category-title{
+    font-size:10px!important;
+  }
+  .stats-category-grid{
+    grid-template-columns:1fr!important;
   }
   .modal-players-grid{
     grid-template-columns:1fr!important;
@@ -916,31 +926,93 @@ body::after{
     html += '</div>';
     html += '</div>';
 
-    var stats = [
-      {label:'OVR Rating',h:home.ovrRating,a:away.ovrRating},
-      {label:'ELO',h:home.elo,a:away.elo},
-      {label:'Pts For',h:home.ptsFor,a:away.ptsFor},
-      {label:'Pts Against',h:home.ptsAgainst,a:away.ptsAgainst,invert:true},
-      {label:'Off Pass Yds',h:home.offPassYds,a:away.offPassYds},
-      {label:'Off Rush Yds',h:home.offRushYds,a:away.offRushYds},
-      {label:'Def Pass Yds',h:home.defPassYds,a:away.defPassYds,invert:true},
-      {label:'Def Rush Yds',h:home.defRushYds,a:away.defRushYds,invert:true}
+    var statCategories = [
+      {
+        title: 'OVERALL',
+        stats: [
+          {label:'OVR',h:home.ovrRating,a:away.ovrRating},
+          {label:'ELO',h:home.elo,a:away.elo},
+          {label:'TO Diff',h:home.tODiff||0,a:away.tODiff||0},
+        ]
+      },
+      {
+        title: 'SCORING',
+        stats: [
+          {label:'Pts/G',h:home.ptsFor,a:away.ptsFor},
+          {label:'Pts Allowed',h:home.ptsAgainst,a:away.ptsAgainst,invert:true},
+          {label:'Pass TDs',h:home.passTDs||0,a:away.passTDs||0},
+          {label:'Rush TDs',h:home.rushTDs||0,a:away.rushTDs||0},
+        ]
+      },
+      {
+        title: 'OFFENSE',
+        stats: [
+          {label:'Pass Yds',h:home.offPassYds,a:away.offPassYds},
+          {label:'Rush Yds',h:home.offRushYds,a:away.offRushYds},
+          {label:'Total Yds',h:home.offTotalYds,a:away.offTotalYds},
+        ]
+      },
+      {
+        title: 'DEFENSE',
+        stats: [
+          {label:'Def Pass Yds',h:home.defPassYds,a:away.defPassYds,invert:true},
+          {label:'Def Rush Yds',h:home.defRushYds,a:away.defRushYds,invert:true},
+          {label:'Def TDs',h:home.defTDs||0,a:away.defTDs||0},
+          {label:'Sacks',h:home.defSacks||0,a:away.defSacks||0},
+          {label:'INTs',h:home.defINTs||0,a:away.defINTs||0},
+        ]
+      },
+      {
+        title: 'TURNOVERS',
+        stats: [
+          {label:'Forced Fum',h:home.defForcedFum||0,a:away.defForcedFum||0},
+          {label:'Rec Fum',h:home.defFumRec||0,a:away.defFumRec||0},
+          {label:'Pass INTs',h:home.passINTs||0,a:away.passINTs||0,invert:true},
+          {label:'Rush Fum',h:home.rushFumbles||0,a:away.rushFumbles||0,invert:true},
+        ]
+      }
     ];
 
-    html += '<div style="margin:20px 0">';
-    html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">Team Stats Comparison</div>';
-    stats.forEach(function(s){
-      var maxVal = Math.max(s.h,s.a)||1;
-      var hPct = Math.round(s.h/maxVal*100);
-      var aPct = Math.round(s.a/maxVal*100);
+    function renderStatCard(s, homeTeam, awayTeam) {
+      var total = (Math.abs(s.h) + Math.abs(s.a)) || 1;
+      var hPct, aPct;
+      if (s.h === 0 && s.a === 0) { hPct = 50; aPct = 50; }
+      else { hPct = Math.max(8, Math.min(92, Math.round(s.h / total * 100))); aPct = 100 - hPct; }
       var hBetter = s.invert ? s.h < s.a : s.h > s.a;
-      var aBetter = !hBetter && s.h !== s.a;
-      html += '<div class="modal-stats-grid" style="display:grid;grid-template-columns:60px 1fr auto 1fr 60px;gap:6px;align-items:center;margin-bottom:6px;font-size:12px">';
-      html += '<span style="text-align:right;font-weight:'+(hBetter?'800':'400')+';color:'+(hBetter?'var(--gold)':'var(--muted)')+'">'+formatStat(s.h)+'</span>';
-      html += '<div style="height:6px;border-radius:3px;background:#1e3a6e;overflow:hidden;direction:rtl"><div style="height:100%;width:'+hPct+'%;background:'+(hBetter?'var(--gold)':'#3a5280')+';border-radius:3px"></div></div>';
-      html += '<span class="modal-stats-label" style="font-size:10px;color:var(--muted);text-align:center;white-space:nowrap;min-width:80px">'+s.label+'</span>';
-      html += '<div style="height:6px;border-radius:3px;background:#1e3a6e;overflow:hidden"><div style="height:100%;width:'+aPct+'%;background:'+(aBetter?'var(--gold)':'#3a5280')+';border-radius:3px"></div></div>';
-      html += '<span style="font-weight:'+(aBetter?'800':'400')+';color:'+(aBetter?'var(--gold)':'var(--muted)')+'">'+formatStat(s.a)+'</span>';
+      var aBetter = s.invert ? s.a < s.h : s.a > s.h;
+      var tied = s.h === s.a;
+      var diff = Math.abs(s.h - s.a);
+      var diffStr = s.label === 'ELO' ? diff.toFixed(1) : (Number.isInteger(diff) ? diff : diff.toFixed(1));
+
+      var card = '<div class="stat-card" style="background:#0d1a30;border-radius:8px;padding:10px 12px">';
+      card += '<div class="stat-card-header" style="text-align:center;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:6px">'+s.label+'</div>';
+      card += '<div class="stat-card-values" style="display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:800;margin-bottom:6px">';
+      card += '<span style="color:'+(hBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">'+formatStat(s.h)+'</span>';
+      if (!tied) {
+        card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:'+(hBetter?'rgba(240,185,49,0.15)':'rgba(240,185,49,0.15)')+';color:var(--gold)">+'+ diffStr +'</span>';
+      } else {
+        card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(123,143,176,0.15);color:var(--muted)">EVEN</span>';
+      }
+      card += '<span style="color:'+(aBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">'+formatStat(s.a)+'</span>';
+      card += '</div>';
+      card += '<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;gap:2px">';
+      card += '<div style="width:'+hPct+'%;background:'+(hBetter?'var(--gold)':tied?'#3a5280':'#3a5280')+';border-radius:2px;transition:width 0.3s"></div>';
+      card += '<div style="width:'+aPct+'%;background:'+(aBetter?'var(--gold)':tied?'#3a5280':'#3a5280')+';border-radius:2px;transition:width 0.3s"></div>';
+      card += '</div>';
+      card += '</div>';
+      return card;
+    }
+
+    html += '<div style="margin:20px 0">';
+    html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;text-align:center">Team Stats Comparison</div>';
+    statCategories.forEach(function(cat){
+      html += '<div style="margin-bottom:14px">';
+      html += '<div class="stat-category-title" style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;padding-left:4px;border-left:3px solid var(--gold)">'+cat.title+'</div>';
+      html += '<div class="stats-category-grid" style="display:grid;grid-template-columns:repeat('+Math.min(cat.stats.length, 3)+',1fr);gap:6px">';
+      cat.stats.forEach(function(s){
+        html += renderStatCard(s, m.home, m.away);
+      });
+      html += '</div>';
       html += '</div>';
     });
     html += '</div>';

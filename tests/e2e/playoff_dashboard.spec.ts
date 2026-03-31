@@ -50,9 +50,9 @@ test.describe('Playoff Dashboard', () => {
 
     const modalBody = page.locator('#modal-body');
     await expect(modalBody).toContainText('Team Stats Comparison');
-    await expect(modalBody).toContainText('OVR Rating');
+    await expect(modalBody).toContainText('OVR');
     await expect(modalBody).toContainText('ELO');
-    await expect(modalBody).toContainText('Pts For');
+    await expect(modalBody).toContainText('Pts/G');
   });
 
   test('modal shows best players section', async ({ page }) => {
