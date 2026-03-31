@@ -86,7 +86,7 @@ body::after{
 }
 .bracket{
   display:grid;
-  grid-template-columns:minmax(150px,1fr) minmax(150px,1fr) minmax(130px,1fr) minmax(140px,1fr) minmax(130px,1fr) minmax(150px,1fr) minmax(150px,1fr);
+  grid-template-columns:minmax(170px,1.2fr) minmax(160px,1fr) minmax(120px,0.8fr) minmax(150px,1fr) minmax(120px,0.8fr) minmax(160px,1fr) minmax(170px,1.2fr);
   grid-template-rows:auto repeat(6,auto);
   gap:0;
   min-width:900px;
@@ -108,16 +108,7 @@ body::after{
   flex-direction:column;
   justify-content:center;
 }
-.round-header{
-  text-align:center;
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color:var(--muted);
-  margin-bottom:8px;
-  white-space:nowrap;
-}
+.round-header{display:none}
 
 .matchup-card{
   background:var(--bg-card);
@@ -137,6 +128,20 @@ body::after{
 }
 .matchup-card.completed{border-color:var(--gold)}
 .matchup-card.pending{opacity:0.5;cursor:default}
+.card-votes{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:2px 10px 5px;
+  font-size:11px;
+  color:var(--muted);
+  min-height:0;
+  transition:opacity 0.3s;
+}
+.card-votes:empty{display:none}
+.card-votes .cv-team{display:flex;align-items:center;gap:3px}
+.card-votes .cv-team.leading{color:var(--gold);font-weight:700}
+.card-votes .cv-total{font-size:9px;color:var(--muted);letter-spacing:1px}
 .matchup-card.pending:hover{transform:none;border-color:#1e3a6e;background:var(--bg-card);box-shadow:none}
 
 .team-row{
@@ -194,6 +199,11 @@ body::after{
   border-radius:10px;
   padding:12px 10px;
   text-align:center;
+  transition:transform 0.2s ease,box-shadow 0.2s ease;
+}
+.bye-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 4px 16px rgba(240,185,49,0.12);
 }
 .bye-card .bye-label{
   font-size:10px;
@@ -248,6 +258,11 @@ body::after{
   border-radius:14px;
   padding:16px 12px;
   text-align:center;
+  transition:transform 0.2s ease,box-shadow 0.2s ease;
+}
+.sb-card:hover{
+  transform:translateY(-2px);
+  box-shadow:0 6px 24px rgba(240,185,49,0.2);
 }
 .sb-card .sb-logo{
   font-size:28px;
@@ -261,14 +276,6 @@ body::after{
   text-transform:uppercase;
   margin-bottom:8px;
 }
-
-.round.col-afc-wc{grid-column:1}
-.round.col-afc-div{grid-column:2}
-.round.col-afc-champ{grid-column:3}
-.round.col-sb{grid-column:4}
-.round.col-nfc-champ{grid-column:5}
-.round.col-nfc-div{grid-column:6}
-.round.col-nfc-wc{grid-column:7}
 
 .spacer{height:40px}
 .spacer-sm{height:20px}
@@ -348,13 +355,56 @@ body::after{
     display:flex;
     flex-direction:column;
     min-width:unset;
-    gap:24px;
+    gap:0;
+    padding:0 4px;
   }
-  .round{min-height:unset}
+  .cell{padding:4px 6px}
   .conf-labels{flex-direction:column;align-items:center;gap:8px}
   .connector-right .team-row::after,
   .connector-left .team-row::after{display:none}
-  .spacer,.spacer-sm{display:none}
+  .spacer{height:12px}
+  .spacer-sm{height:8px}
+  .round-header{
+    display:block!important;
+    text-align:center;
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    color:var(--muted);
+    padding:16px 0 8px;
+    border-top:1px solid #1e3a6e;
+    margin-top:8px;
+  }
+  .round:first-child .round-header{border-top:none;margin-top:0}
+  .round-header-cell{display:none}
+  .bracket-wrapper{overflow-x:visible}
+  .round{margin-bottom:0}
+  .matchup-card{margin:0 auto;max-width:360px}
+  .bye-card{margin:0 auto;max-width:360px}
+  .tbd-card{margin:0 auto;max-width:360px}
+  .sb-card{margin:0 auto;max-width:380px}
+}
+
+@media(max-width:480px){
+  .page{padding:12px 8px 80px}
+  .header h1{letter-spacing:2px}
+  .header .sub{letter-spacing:3px}
+  .team-logo{width:24px;height:24px}
+  .team-name{font-size:12px}
+  .team-record{font-size:10px}
+  .seed-badge{width:18px;height:18px;font-size:9px}
+  .matchup-card{max-width:100%}
+  .bye-card{max-width:100%}
+  .tbd-card{max-width:100%}
+  .sb-card{max-width:100%}
+}
+
+@media(max-width:960px){
+  #modal-content{
+    margin:20px 10px;
+    padding:16px;
+  }
 }
 </style>
 </head>
@@ -446,6 +496,7 @@ body::after{
 
     setLocalVote(matchupId, team);
     updateVoteUI(matchupId);
+    updateBracketVotes();
 
     fetch(JSONBIN_URL, {
       method: 'PUT',
@@ -468,6 +519,29 @@ body::after{
       if(v) return v;
     }
     return getLocalVotes()[matchupId] || null;
+  }
+
+  function voteEmoji(count){
+    if(count<=0) return '';
+    if(count===1) return '\u{1F525}';
+    if(count<=3) return '\u{1F525}'.repeat(Math.min(count,3));
+    return '\u{1F525}'.repeat(3)+' '+count;
+  }
+
+  function updateBracketVotes(){
+    document.querySelectorAll('.card-votes[data-votes-for]').forEach(function(el){
+      var mid = el.getAttribute('data-votes-for');
+      var m = findMatchup(mid);
+      if(!m||!m.home) return;
+      var counts = getVoteCounts(mid, m.home, m.away);
+      var total = counts.home + counts.away;
+      if(total===0){ el.innerHTML=''; return; }
+      var homeLead = counts.home >= counts.away && counts.home>0;
+      var awayLead = counts.away >= counts.home && counts.away>0;
+      el.innerHTML = '<span class="cv-team'+(homeLead?' leading':'')+'">'+voteEmoji(counts.home)+'</span>'
+        +'<span class="cv-total">\u{1F5F3}\uFE0F '+total+'</span>'
+        +'<span class="cv-team'+(awayLead?' leading':'')+'">'+voteEmoji(counts.away)+'</span>';
+    });
   }
 
   function updateVoteUI(matchupId){
@@ -563,6 +637,7 @@ body::after{
     const awayWinner = isCompleted && m.winner===m.away;
     html += renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf);
     html += renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf);
+    html += '<div class="card-votes" data-votes-for="'+m.matchupId+'"></div>';
     html += '</div>';
     return html;
   }
@@ -602,6 +677,12 @@ body::after{
       +'</div>';
   }
 
+  function gc(col,row,rspan){
+    var s='grid-column:'+col+';grid-row:'+row;
+    if(rspan) s+='/span '+rspan;
+    return s;
+  }
+
   function buildBracket(){
     const b = DATA.bracket;
     const el = document.getElementById('bracket');
@@ -616,67 +697,36 @@ body::after{
 
     let html = '';
 
-    html += '<div class="round col-afc-wc">';
-    html += '<div class="round-header">Wild Card</div>';
-    html += renderMatchupCard(afcWC[0], 'AFC');
-    html += '<div class="spacer-sm"></div>';
-    html += renderMatchupCard(afcWC[1], 'AFC');
-    html += '<div class="spacer-sm"></div>';
-    html += renderMatchupCard(afcWC[2], 'AFC');
-    html += '<div class="spacer"></div>';
-    html += renderByeCard(b.AFC.byeTeam, 'AFC');
-    html += '</div>';
+    html += '<div class="round-header-cell" style="'+gc(1,1)+'">Wild Card</div>';
+    html += '<div class="round-header-cell" style="'+gc(2,1)+'">Divisional</div>';
+    html += '<div class="round-header-cell" style="'+gc(3,1)+'">Conference</div>';
+    html += '<div class="round-header-cell" style="'+gc(4,1)+'">&nbsp;</div>';
+    html += '<div class="round-header-cell" style="'+gc(5,1)+'">Conference</div>';
+    html += '<div class="round-header-cell" style="'+gc(6,1)+'">Divisional</div>';
+    html += '<div class="round-header-cell" style="'+gc(7,1)+'">Wild Card</div>';
 
-    html += '<div class="round col-afc-div">';
-    html += '<div class="round-header">Divisional</div>';
-    html += '<div class="spacer-sm"></div>';
-    afcDiv.forEach(function(m){
-      if(m.byeTeam){
-        html += renderChampOrSBCard(m, 'AFC');
-      } else {
-        html += renderChampOrSBCard(m, 'AFC');
-      }
-      html += '<div class="spacer"></div>';
-    });
-    html += '</div>';
+    html += '<div class="cell" style="'+gc(1,2)+'">'+renderMatchupCard(afcWC[0],'AFC')+'</div>';
+    html += '<div class="cell" style="'+gc(2,2)+'">'+renderByeCard(b.AFC.byeTeam,'AFC')+'</div>';
 
-    html += '<div class="round col-afc-champ">';
-    html += '<div class="round-header">Conference</div>';
-    html += '<div class="spacer"></div>';
-    html += renderChampOrSBCard(afcChamp, 'AFC');
-    html += '</div>';
+    html += '<div class="cell" style="'+gc(1,3)+'">'+renderMatchupCard(afcWC[1],'AFC')+'</div>';
+    html += '<div class="cell" style="'+gc(2,3)+'">'+renderChampOrSBCard(afcDiv[0],'AFC')+'</div>';
+    html += '<div class="cell" style="grid-column:3;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(afcChamp,'AFC')+'</div>';
 
-    html += '<div class="round col-sb">';
-    html += '<div class="round-header">&nbsp;</div>';
-    html += '<div class="spacer-sm"></div>';
-    html += renderSuperBowl(sb);
-    html += '</div>';
+    html += '<div class="cell" style="'+gc(1,4)+'">'+renderMatchupCard(afcWC[2],'AFC')+'</div>';
+    html += '<div class="cell" style="'+gc(2,4)+'">'+renderChampOrSBCard(afcDiv[1],'AFC')+'</div>';
 
-    html += '<div class="round col-nfc-champ">';
-    html += '<div class="round-header">Conference</div>';
-    html += '<div class="spacer"></div>';
-    html += renderChampOrSBCard(nfcChamp, 'NFC');
-    html += '</div>';
+    html += '<div class="cell" style="grid-column:4;grid-row:2/6;display:flex;align-items:center;justify-content:center;padding:6px">'+renderSuperBowl(sb)+'</div>';
 
-    html += '<div class="round col-nfc-div">';
-    html += '<div class="round-header">Divisional</div>';
-    html += '<div class="spacer-sm"></div>';
-    nfcDiv.forEach(function(m){
-      html += renderChampOrSBCard(m, 'NFC');
-      html += '<div class="spacer"></div>';
-    });
-    html += '</div>';
+    html += '<div class="cell" style="grid-column:5;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(nfcChamp,'NFC')+'</div>';
 
-    html += '<div class="round col-nfc-wc">';
-    html += '<div class="round-header">Wild Card</div>';
-    html += renderMatchupCard(nfcWC[0], 'NFC');
-    html += '<div class="spacer-sm"></div>';
-    html += renderMatchupCard(nfcWC[1], 'NFC');
-    html += '<div class="spacer-sm"></div>';
-    html += renderMatchupCard(nfcWC[2], 'NFC');
-    html += '<div class="spacer"></div>';
-    html += renderByeCard(b.NFC.byeTeam, 'NFC');
-    html += '</div>';
+    html += '<div class="cell" style="'+gc(7,2)+'">'+renderMatchupCard(nfcWC[0],'NFC')+'</div>';
+    html += '<div class="cell" style="'+gc(6,2)+'">'+renderByeCard(b.NFC.byeTeam,'NFC')+'</div>';
+
+    html += '<div class="cell" style="'+gc(7,3)+'">'+renderMatchupCard(nfcWC[1],'NFC')+'</div>';
+    html += '<div class="cell" style="'+gc(6,3)+'">'+renderChampOrSBCard(nfcDiv[0],'NFC')+'</div>';
+
+    html += '<div class="cell" style="'+gc(7,4)+'">'+renderMatchupCard(nfcWC[2],'NFC')+'</div>';
+    html += '<div class="cell" style="'+gc(6,4)+'">'+renderChampOrSBCard(nfcDiv[1],'NFC')+'</div>';
 
     el.innerHTML = html;
 

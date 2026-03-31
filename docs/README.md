@@ -14,6 +14,7 @@ The `docs/` folder is the static site for the MEGA League project. All HTML page
 | `sos_graphs.html`            | Season 2 SoS visualizations (graphs)                        | Backs onto `output/sos/season2_elo.csv/json` from `calc_sos_season2_elo.py`      |
 | `sos_graphs_season3.html`    | Season 3 SoS visualizations (graphs)                        | Backs onto `output/ranked_sos_by_conference_season3.csv` from `calc_sos_by_rankings.py` |
 | `week18_simulator.html`      | Week 18 matchup simulator tool                              | `python3 scripts/week18_simulator.py`                                            |
+| `playoff_dashboard.html`     | Interactive playoff bracket with matchup modals, win probabilities, team stats, best players, H2H history, community predictions | `python3 scripts/generate_playoff_dashboard.py` (outputs `docs/data/playoff_dashboard.json`) |
 
 
 ## Stats Dashboards

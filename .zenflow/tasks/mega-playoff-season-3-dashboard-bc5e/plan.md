@@ -78,6 +78,7 @@ Verify: click matchup → modal opens with correct data for both teams, predicti
 ---
 
 ### [ ] Step 4: Polish, Responsive Design, and Integration
+<!-- chat-id: 66faf696-daf6-4717-8890-94916affaa70 -->
 
 - **Responsive pass**: tablet/mobile layout (stack AFC above NFC on narrow screens)
 - **Animations**: subtle hover effects on matchup cards, modal transitions
@@ -87,3 +88,9 @@ Verify: click matchup → modal opens with correct data for both teams, predicti
 - Add Playwright E2E test in `tests/e2e/` verifying: page loads, bracket renders 6 WC matchups + 2 BYE badges, click matchup opens modal, modal shows win probability + stats + H2H + community vote UI
 - Run E2E tests
 - Write completion report to `.zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/report.md`
+
+
+
+### [ ] Step: Responsive design
+
+Most probably this page would be open on mobile phone we need to take responsive design into account for every page
