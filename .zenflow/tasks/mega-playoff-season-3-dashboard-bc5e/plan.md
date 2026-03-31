@@ -106,7 +106,7 @@ We need to cleanup before release
 
 This infografic looks odd, lets redesign it
 
-### [ ] Step: matchup details analytics text
+### [x] Step: matchup details analytics text
 <!-- chat-id: 6748a82b-71bc-4d8a-9aba-fc8a8121ed72 -->
 
 Lets add analytics review on matchap details. It would be in russian, need to use Season 3 stats, past matchaps, best players etc. 

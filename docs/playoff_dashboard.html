@@ -442,6 +442,11 @@ body::after{
     margin:6px 4px;
     padding:12px 8px;
   }
+  .analytics-text{
+    font-size:12px!important;
+    padding:12px 14px!important;
+    line-height:1.6!important;
+  }
   .modal-matchup-header{
     gap:10px!important;
   }
@@ -933,6 +938,16 @@ body::after{
     html += '</div>';
     html += '</div>';
     html += '</div>';
+
+    var analyticsText = DATA.analytics && DATA.analytics[matchupId];
+    if(analyticsText){
+      html += '<div class="analytics-section" style="margin:20px 0">';
+      html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">\u{1F4CA} Аналитика матча</div>';
+      html += '<div class="analytics-text" style="background:#0d1a30;border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.7;color:var(--white);white-space:pre-wrap;word-wrap:break-word;border-left:3px solid var(--gold)">';
+      html += analyticsText;
+      html += '</div>';
+      html += '</div>';
+    }
 
     var statCategories = [
       {
