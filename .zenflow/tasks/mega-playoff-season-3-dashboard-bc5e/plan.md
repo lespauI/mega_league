@@ -26,7 +26,8 @@ Difficulty: **Hard** — multi-section interactive dashboard with bracket visual
 
 ---
 
-### [ ] Step 1: Data Pre-computation Script
+### [x] Step 1: Data Pre-computation Script
+<!-- chat-id: 99e61999-192c-4410-91fa-45655ecf4c75 -->
 
 Build `scripts/generate_playoff_dashboard.py` (Python, stdlib only) that reads CSV/JSON and outputs `docs/data/playoff_dashboard.json`:
 - **Teams**: 14 playoff teams from `MEGA_teams.csv` (seasonIndex=2, seed 1-7) with record, seed, division, OVR, ELO, off/def stats
