@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-03-31T11:39:23.681402+00:00",
+  "generated_at": "2026-03-31T11:56:23.280822+00:00",
   "season_index": 2,
   "teams": {
     "Bengals": {
@@ -47,6 +47,27 @@
           "ovr": 99
         },
         "DEF": {
+          "name": "Roquan Smith",
+          "sacks": 2.0,
+          "ints": 9,
+          "tackles": 46.0,
+          "ovr": 95
+        },
+        "DB": {
+          "name": "Dax Hill",
+          "sacks": 0.0,
+          "ints": 5,
+          "tackles": 32.0,
+          "ovr": 83
+        },
+        "DL": {
+          "name": "Trey Hendrickson",
+          "sacks": 14.5,
+          "ints": 0,
+          "tackles": 33.0,
+          "ovr": 93
+        },
+        "LB": {
           "name": "Roquan Smith",
           "sacks": 2.0,
           "ints": 9,
@@ -105,6 +126,27 @@
           "ints": 8,
           "tackles": 29.0,
           "ovr": 86
+        },
+        "LB": {
+          "name": "Dre Greenlaw",
+          "sacks": 1.5,
+          "ints": 8,
+          "tackles": 29.0,
+          "ovr": 86
+        },
+        "DL": {
+          "name": "Lukas Van Ness",
+          "sacks": 4.0,
+          "ints": 0,
+          "tackles": 30.0,
+          "ovr": 79
+        },
+        "DB": {
+          "name": "Ar'Darius Washington",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 39.0,
+          "ovr": 83
         }
       }
     },
@@ -158,6 +200,27 @@
           "ints": 6,
           "tackles": 46.0,
           "ovr": 88
+        },
+        "DB": {
+          "name": "Charvarius Ward",
+          "sacks": 0.0,
+          "ints": 2,
+          "tackles": 25.0,
+          "ovr": 87
+        },
+        "LB": {
+          "name": "Jaylon Carlies",
+          "sacks": 1.0,
+          "ints": 6,
+          "tackles": 46.0,
+          "ovr": 88
+        },
+        "DL": {
+          "name": "Laiatu Latu",
+          "sacks": 9.5,
+          "ints": 1,
+          "tackles": 37.0,
+          "ovr": 84
         }
       }
     },
@@ -211,6 +274,27 @@
           "ints": 4,
           "tackles": 50.0,
           "ovr": 83
+        },
+        "LB": {
+          "name": "Terrel Bernard",
+          "sacks": 0.0,
+          "ints": 4,
+          "tackles": 50.0,
+          "ovr": 83
+        },
+        "DB": {
+          "name": "Quan Martin",
+          "sacks": 2.0,
+          "ints": 4,
+          "tackles": 41.0,
+          "ovr": 81
+        },
+        "DL": {
+          "name": "Jonathon Cooper",
+          "sacks": 14.5,
+          "ints": 0,
+          "tackles": 26.0,
+          "ovr": 82
         }
       }
     },
@@ -259,6 +343,27 @@
           "ovr": 87
         },
         "DEF": {
+          "name": "Damone Clark",
+          "sacks": 3.0,
+          "ints": 7,
+          "tackles": 46.0,
+          "ovr": 82
+        },
+        "DB": {
+          "name": "Trevon Diggs",
+          "sacks": 0.0,
+          "ints": 5,
+          "tackles": 32.0,
+          "ovr": 86
+        },
+        "DL": {
+          "name": "Deionte Galloway",
+          "sacks": 5.5,
+          "ints": 0,
+          "tackles": 19.0,
+          "ovr": 83
+        },
+        "LB": {
           "name": "Damone Clark",
           "sacks": 3.0,
           "ints": 7,
@@ -317,6 +422,27 @@
           "ints": 4,
           "tackles": 50.0,
           "ovr": 97
+        },
+        "DB": {
+          "name": "Brian Branch",
+          "sacks": 0.0,
+          "ints": 4,
+          "tackles": 50.0,
+          "ovr": 97
+        },
+        "DL": {
+          "name": "Aidan Hutchinson",
+          "sacks": 11.5,
+          "ints": 0,
+          "tackles": 30.0,
+          "ovr": 98
+        },
+        "LB": {
+          "name": "Jack Campbell",
+          "sacks": 0.0,
+          "ints": 2,
+          "tackles": 50.0,
+          "ovr": 87
         }
       }
     },
@@ -370,6 +496,27 @@
           "ints": 7,
           "tackles": 48.0,
           "ovr": 89
+        },
+        "DL": {
+          "name": "Nic Scourton",
+          "sacks": 9.0,
+          "ints": 0,
+          "tackles": 30.0,
+          "ovr": 92
+        },
+        "LB": {
+          "name": "Ben Morales",
+          "sacks": 1.0,
+          "ints": 7,
+          "tackles": 48.0,
+          "ovr": 89
+        },
+        "DB": {
+          "name": "Tre'von Moehrig",
+          "sacks": 0.0,
+          "ints": 6,
+          "tackles": 44.0,
+          "ovr": 87
         }
       }
     },
@@ -418,6 +565,27 @@
           "ovr": 96
         },
         "DEF": {
+          "name": "Robert Spillane",
+          "sacks": 1.0,
+          "ints": 10,
+          "tackles": 49.0,
+          "ovr": 83
+        },
+        "DL": {
+          "name": "Kahlil Johnson",
+          "sacks": 12.0,
+          "ints": 0,
+          "tackles": 30.0,
+          "ovr": 89
+        },
+        "DB": {
+          "name": "Marcus Jones",
+          "sacks": 0.0,
+          "ints": 5,
+          "tackles": 43.0,
+          "ovr": 84
+        },
+        "LB": {
           "name": "Robert Spillane",
           "sacks": 1.0,
           "ints": 10,
@@ -476,6 +644,27 @@
           "ints": 9,
           "tackles": 47.0,
           "ovr": 86
+        },
+        "DB": {
+          "name": "Darien Porter",
+          "sacks": 0.0,
+          "ints": 9,
+          "tackles": 47.0,
+          "ovr": 86
+        },
+        "DL": {
+          "name": "Calijah Kancey",
+          "sacks": 15.5,
+          "ints": 1,
+          "tackles": 36.0,
+          "ovr": 90
+        },
+        "LB": {
+          "name": "Mack Wilson Sr",
+          "sacks": 1.0,
+          "ints": 9,
+          "tackles": 40.0,
+          "ovr": 80
         }
       }
     },
@@ -529,6 +718,27 @@
           "ints": 7,
           "tackles": 39.0,
           "ovr": 89
+        },
+        "DB": {
+          "name": "Terrence Nixon",
+          "sacks": 0.0,
+          "ints": 7,
+          "tackles": 39.0,
+          "ovr": 89
+        },
+        "DL": {
+          "name": "Josaiah Stewart",
+          "sacks": 7.5,
+          "ints": 0,
+          "tackles": 18.0,
+          "ovr": 86
+        },
+        "LB": {
+          "name": "Trenton Simpson",
+          "sacks": 1.5,
+          "ints": 3,
+          "tackles": 35.0,
+          "ovr": 83
         }
       }
     },
@@ -582,6 +792,27 @@
           "ints": 7,
           "tackles": 36.0,
           "ovr": 79
+        },
+        "LB": {
+          "name": "Dillon Bradford",
+          "sacks": 1.0,
+          "ints": 7,
+          "tackles": 36.0,
+          "ovr": 79
+        },
+        "DL": {
+          "name": "Mike Green",
+          "sacks": 10.5,
+          "ints": 3,
+          "tackles": 23.0,
+          "ovr": 95
+        },
+        "DB": {
+          "name": "Kyle Hamilton",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 35.0,
+          "ovr": 97
         }
       }
     },
@@ -635,6 +866,27 @@
           "ints": 4,
           "tackles": 63.0,
           "ovr": 81
+        },
+        "DB": {
+          "name": "Jonas Sanker",
+          "sacks": 0.0,
+          "ints": 4,
+          "tackles": 63.0,
+          "ovr": 81
+        },
+        "DL": {
+          "name": "Byron Young",
+          "sacks": 11.0,
+          "ints": 0,
+          "tackles": 32.0,
+          "ovr": 80
+        },
+        "LB": {
+          "name": "Nakobe Dean",
+          "sacks": 0.0,
+          "ints": 5,
+          "tackles": 40.0,
+          "ovr": 82
         }
       }
     },
@@ -688,6 +940,27 @@
           "ints": 6,
           "tackles": 51.0,
           "ovr": 91
+        },
+        "DL": {
+          "name": "Tre Morgan",
+          "sacks": 9.0,
+          "ints": 0,
+          "tackles": 17.0,
+          "ovr": 85
+        },
+        "DB": {
+          "name": "Nick Emmanwori",
+          "sacks": 2.0,
+          "ints": 6,
+          "tackles": 51.0,
+          "ovr": 91
+        },
+        "LB": {
+          "name": "Ernest Jones IV",
+          "sacks": 1.0,
+          "ints": 2,
+          "tackles": 40.0,
+          "ovr": 90
         }
       }
     },
@@ -741,6 +1014,27 @@
           "ints": 7,
           "tackles": 46.0,
           "ovr": 80
+        },
+        "LB": {
+          "name": "Cody Barton",
+          "sacks": 4.5,
+          "ints": 7,
+          "tackles": 46.0,
+          "ovr": 80
+        },
+        "DL": {
+          "name": "Oluwafemi Oladejo",
+          "sacks": 7.5,
+          "ints": 1,
+          "tackles": 24.0,
+          "ovr": 90
+        },
+        "DB": {
+          "name": "Kevin Winston Jr.",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 38.0,
+          "ovr": 89
         }
       }
     }
@@ -920,26 +1214,6 @@
     "winner": null
   },
   "head_to_head": {
-    "Lions_vs_Rams": [
-      {
-        "season": 0,
-        "week": 14,
-        "home": "Rams",
-        "away": "Lions",
-        "homeScore": 27,
-        "awayScore": 34,
-        "winner": "Lions"
-      },
-      {
-        "season": 2,
-        "week": 10,
-        "home": "Lions",
-        "away": "Rams",
-        "homeScore": 20,
-        "awayScore": 27,
-        "winner": "Rams"
-      }
-    ],
     "Commanders_vs_Cowboys": [
       {
         "season": 0,
@@ -1014,6 +1288,26 @@
         "homeScore": 3,
         "awayScore": 6,
         "winner": "Ravens"
+      }
+    ],
+    "Raiders_vs_Titans": [
+      {
+        "season": 0,
+        "week": 5,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 23,
+        "awayScore": 35,
+        "winner": "Titans"
+      },
+      {
+        "season": 2,
+        "week": 4,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 42,
+        "awayScore": 35,
+        "winner": "Raiders"
       }
     ],
     "Broncos_vs_Patriots": [
@@ -1092,24 +1386,24 @@
         "winner": "Saints"
       }
     ],
-    "Raiders_vs_Titans": [
+    "Lions_vs_Rams": [
       {
         "season": 0,
-        "week": 5,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 23,
-        "awayScore": 35,
-        "winner": "Titans"
+        "week": 14,
+        "home": "Rams",
+        "away": "Lions",
+        "homeScore": 27,
+        "awayScore": 34,
+        "winner": "Lions"
       },
       {
         "season": 2,
-        "week": 4,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 42,
-        "awayScore": 35,
-        "winner": "Raiders"
+        "week": 10,
+        "home": "Lions",
+        "away": "Rams",
+        "homeScore": 20,
+        "awayScore": 27,
+        "winner": "Rams"
       }
     ]
   }

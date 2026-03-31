@@ -468,10 +468,15 @@ def load_top_players(playoff_team_names):
                 'ovr': get_ovr(team, name),
             }
 
+    DB_POS = {'CB', 'FS', 'SS'}
+    LB_POS = {'MIKE', 'SAM', 'WILL'}
+    DL_POS = {'DT', 'LEDGE', 'REDGE'}
+
     for row in read_csv('MEGA_defense.csv'):
         team = row['team__displayName'].strip()
         if team not in playoff_team_names:
             continue
+        pos = row.get('player__position', '').strip()
         tackles = float(row.get('defTotalTackles', 0) or 0)
         sacks = float(row.get('defTotalSacks', 0) or 0)
         ints_ = int(row.get('defTotalInts', 0) or 0)
@@ -488,9 +493,52 @@ def load_top_players(playoff_team_names):
                 '_score': score,
             }
 
+        if pos in DB_POS:
+            db_score = ints_ * 4 + tackles + float(row.get('defTotalDeflections', 0) or 0) * 2
+            cur_db = best[team].get('DB')
+            if not cur_db or db_score > cur_db.get('_score', 0):
+                name = row['player__fullName'].strip()
+                best[team]['DB'] = {
+                    'name': name,
+                    'sacks': sacks,
+                    'ints': ints_,
+                    'tackles': tackles,
+                    'ovr': get_ovr(team, name),
+                    '_score': db_score,
+                }
+
+        if pos in LB_POS:
+            lb_score = tackles * 1.5 + sacks * 3 + ints_ * 3
+            cur_lb = best[team].get('LB')
+            if not cur_lb or lb_score > cur_lb.get('_score', 0):
+                name = row['player__fullName'].strip()
+                best[team]['LB'] = {
+                    'name': name,
+                    'sacks': sacks,
+                    'ints': ints_,
+                    'tackles': tackles,
+                    'ovr': get_ovr(team, name),
+                    '_score': lb_score,
+                }
+
+        if pos in DL_POS:
+            dl_score = sacks * 4 + tackles + float(row.get('defTotalForcedFum', 0) or 0) * 3
+            cur_dl = best[team].get('DL')
+            if not cur_dl or dl_score > cur_dl.get('_score', 0):
+                name = row['player__fullName'].strip()
+                best[team]['DL'] = {
+                    'name': name,
+                    'sacks': sacks,
+                    'ints': ints_,
+                    'tackles': tackles,
+                    'ovr': get_ovr(team, name),
+                    '_score': dl_score,
+                }
+
     for team in best:
-        if 'DEF' in best[team] and '_score' in best[team]['DEF']:
-            del best[team]['DEF']['_score']
+        for k in ['DEF', 'DB', 'LB', 'DL']:
+            if k in best[team] and '_score' in best[team][k]:
+                del best[team][k]['_score']
 
     return best
 
