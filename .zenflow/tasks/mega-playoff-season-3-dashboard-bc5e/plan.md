@@ -77,7 +77,7 @@ Verify: click matchup → modal opens with correct data for both teams, predicti
 
 ---
 
-### [ ] Step 4: Polish, Responsive Design, and Integration
+### [x] Step 4: Polish, Responsive Design, and Integration
 <!-- chat-id: 66faf696-daf6-4717-8890-94916affaa70 -->
 
 - **Responsive pass**: tablet/mobile layout (stack AFC above NFC on narrow screens)

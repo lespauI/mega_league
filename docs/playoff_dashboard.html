@@ -961,7 +961,7 @@ body::after{
     .then(function(d){
       DATA = d;
       buildBracket();
-      return fetchVotes();
+      return fetchVotes().then(function(){ updateBracketVotes(); });
     })
     .catch(function(err){
       document.getElementById('bracket').innerHTML =
