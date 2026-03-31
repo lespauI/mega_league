@@ -28,72 +28,57 @@ Difficulty: **Hard** — multi-section interactive dashboard with bracket visual
 
 ### [ ] Step 1: Data Pre-computation Script
 
-Build `scripts/generate_playoff_dashboard.py` that reads all CSV/JSON sources and outputs `docs/data/playoff_dashboard.json` with:
-- Bracket structure (AFC/NFC wild card, divisional, conference championship, super bowl) from `MEGA_games.csv` stageIndex=0
-- Team cards for all 14 playoff teams (record, seed, division, OVR, ELO, offensive/defensive stats) from `MEGA_teams.csv`
-- Top players per team (QB, RB, WR, DEF) from passing/rushing/receiving/defense CSVs + OVR from `MEGA_players.csv`
-- Head-to-head history between each playoff matchup pair across all 3 seasons from `MEGA_games.csv`
-- Conference standings from `MEGA_teams.csv` + `playoff_probabilities.json`
+Build `scripts/generate_playoff_dashboard.py` (Python, stdlib only) that reads CSV/JSON and outputs `docs/data/playoff_dashboard.json`:
+- **Teams**: 14 playoff teams from `MEGA_teams.csv` (seasonIndex=2, seed 1-7) with record, seed, division, OVR, ELO, off/def stats
+- **Bracket**: Standard NFL 14-team bracket derived from seeds (2v7, 3v6, 4v5 per conference; 1-seed bye). Cross-reference `MEGA_games.csv` stageIndex=0 to fill in scores for any completed playoff games
+- **Top players**: Per team — best QB, RB, WR, DEF from passing/rushing/receiving/defense CSVs, enriched with OVR from `MEGA_players.csv`
+- **Head-to-head**: For each bracket matchup pair, all historical games across all 3 seasons from `MEGA_games.csv`
+- **ELO**: From `mega_elo.csv`
 
-Verify: run the script, validate JSON output structure, ensure all 14 teams present, bracket has correct matchup count.
+Verify: run the script, check JSON has 14 teams, 6 WC matchups, correct H2H game counts.
 
 ---
 
-### [ ] Step 2: Dashboard HTML Shell and Bracket Section
+### [ ] Step 2: Bracket Dashboard — HTML Structure and Full-Screen Bracket
 
-Create `docs/playoff_dashboard.html` with:
-- Page structure matching existing project style (gradient bg, white container, system fonts)
-- Sticky tab navigation: Bracket | Teams | Predictions | Stats | Head-to-Head
-- Bracket section: visual AFC and NFC brackets (Wild Card → Divisional → Conference → Super Bowl)
-- Team logos via Neon CDN, seed badges, scores for completed games
-- CSS grid bracket layout with connector lines
+Create `docs/playoff_dashboard.html` — single self-contained HTML file:
+- **Dark blue football field aesthetic** (Madden-style): dark gradient background, grass texture at bottom, white/gold text
+- **"MEGA PLAYOFFS 2027" header**
+- **Full-screen bracket layout** using CSS grid:
+  - AFC on left: Wild Card → Divisional → Conference Championship
+  - NFC on right (mirrored): Wild Card → Divisional → Conference Championship
+  - Super Bowl in center
+  - 1-seed BYE badges with conference logos
+- **Matchup cards**: team logo (Neon CDN), seed badge, team name; scores shown for completed games
+- **Connector lines** between rounds (CSS borders)
 - Load data from `docs/data/playoff_dashboard.json` via fetch()
+- Bracket cards are clickable (wired up in next step)
 
-Verify: open in browser, confirm bracket renders with correct matchups and team logos.
-
----
-
-### [ ] Step 3: Team Cards and Conference Standings
-
-Add to the dashboard:
-- Team Cards tab: grid of 14 playoff team cards with logo, name, record, seed, division, OVR, ELO, pts scored/allowed
-- Click-to-expand detail panel showing offensive/defensive stats breakdown
-- Conference Standings tab content: AFC and NFC tables with W-L, win%, seed, SoS, ELO, clinch/eliminate badges
-- Division winner badges, wild card indicators, color-coded by seed
-
-Verify: all 14 teams display correctly, stats match CSV data.
+Verify: open in browser, bracket renders with all 14 teams in correct positions, dark theme looks good.
 
 ---
 
-### [ ] Step 4: Best Players and Team Stats Sections
+### [ ] Step 3: Matchup Detail Modal
 
-Add to the dashboard:
-- Stats tab: per-team offensive/defensive comparison bars for playoff teams (pass yds, rush yds, pts for/against)
-- Best Players section: for each playoff team show top QB, RB, WR, DEF player with name, key stat, OVR rating
-- Player mini-cards with position badge and stats
+Implement the click-to-open modal when user clicks any matchup in the bracket:
+- **Modal overlay** with dark backdrop, slides in or fades in
+- **Team Stats Comparison**: side-by-side comparison bars for both teams — W-L, OVR, ELO, Pts For/Against, Off Pass Yds, Off Rush Yds, Def Pass Yds, Def Rush Yds
+- **Best Players**: top QB, RB, WR, DEF for each team with name, key stat line, OVR badge
+- **Head-to-Head History**: list of all past games between these two teams (all seasons) with season, week, home/away, score, winner highlight
+- **Prediction Vote**: click a team logo to predict winner, stored in `localStorage`, visual highlight on selected team
+- Close button (X) and click-outside-to-close
 
-Verify: top players match expected leaders from CSV data.
-
----
-
-### [ ] Step 5: Head-to-Head History and Predictions
-
-Add to the dashboard:
-- Head-to-Head tab: for each current playoff matchup, show all historical games between the two teams (all 3 seasons)
-- Game cards with season, week, home/away, score, winner highlight
-- Predictions section: for each unplayed matchup, clickable team logos to predict winner
-- Predictions stored in localStorage, visual feedback on selection
-- Prediction summary panel showing user's bracket picks
-
-Verify: head-to-head shows correct game history, predictions persist across page reload.
+Verify: click matchup → modal opens with correct data for both teams, prediction click persists after page reload.
 
 ---
 
-### [ ] Step 6: Integration, Polish, and Index Update
+### [ ] Step 4: Polish, Responsive Design, and Integration
 
+- **Responsive pass**: tablet/mobile layout (stack AFC above NFC on narrow screens)
+- **Animations**: subtle hover effects on matchup cards, modal transitions
+- **Empty state handling**: divisional/conference/super bowl slots show "TBD" placeholder until wild card results known
 - Add playoff dashboard link to `index.html` Reports section
 - Add entry to `docs/README.md` Playoff & SoS table
-- Responsive design pass: mobile layout (single column), tablet, desktop
-- Add Playwright E2E test in `tests/e2e/` verifying: page loads, bracket renders, team cards present, prediction click works, head-to-head displays
+- Add Playwright E2E test in `tests/e2e/` verifying: page loads, bracket renders 6 WC matchups + 2 BYE badges, click matchup opens modal, modal shows stats/H2H/predictions, prediction persists in localStorage
 - Run E2E tests
 - Write completion report to `.zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/report.md`
