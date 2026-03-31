@@ -561,7 +561,10 @@ body::after{
     });
   }
 
+  var reconciled = false;
   function reconcileLocalVotes(){
+    if(reconciled) return;
+    reconciled = true;
     var localVotes = getLocalVotes();
     var userId = getUserId();
     var needsUpdate = false;
