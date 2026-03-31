@@ -7,7 +7,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg-dark:#0a1628;
+  --bg-dark:#0c1430;
   --bg-card:#132042;
   --bg-card-hover:#1a2d5a;
   --gold:#f0b931;
@@ -377,8 +377,123 @@ body::after{
 
 <script>
 (function(){
-  const LOGO_CDN = 'https://cdn.neonsportz.com/teamlogos/256/';
-  let DATA = null;
+  var LOGO_CDN = 'https://cdn.neonsportz.com/teamlogos/256/';
+  var JSONBIN_ID = '69cbb01436566621a8663829';
+  var JSONBIN_KEY = '$2a$10$NHFv3H4QqdDeWEQ9p.P8QONEGTGZ/fJjP1zMkLmZAfUdzd.Q9118K';
+  var JSONBIN_URL = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
+  var DATA = null;
+  var votesData = null;
+  var currentMatchupId = null;
+
+  function getUserId(){
+    var id = localStorage.getItem('playoff_user_id');
+    if(!id){
+      id = crypto.randomUUID ? crypto.randomUUID() : 'u-'+Math.random().toString(36).slice(2)+Date.now().toString(36);
+      localStorage.setItem('playoff_user_id', id);
+    }
+    return id;
+  }
+
+  function getLocalVotes(){
+    try{ return JSON.parse(localStorage.getItem('playoff_votes')||'{}'); }catch(e){ return {}; }
+  }
+
+  function setLocalVote(matchupId, team){
+    var v = getLocalVotes();
+    v[matchupId] = team;
+    localStorage.setItem('playoff_votes', JSON.stringify(v));
+  }
+
+  function fetchVotes(){
+    return fetch(JSONBIN_URL + '/latest', {
+      headers: { 'X-Access-Key': JSONBIN_KEY }
+    })
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      votesData = (d && d.record) ? d.record : { predictions: {}, votes: {} };
+      return votesData;
+    })
+    .catch(function(){
+      votesData = { predictions: {}, votes: {} };
+      return votesData;
+    });
+  }
+
+  function submitVote(matchupId, team){
+    var userId = getUserId();
+    if(!votesData) votesData = { predictions: {}, votes: {} };
+    if(!votesData.predictions) votesData.predictions = {};
+    if(!votesData.votes) votesData.votes = {};
+    if(!votesData.votes[matchupId]) votesData.votes[matchupId] = {};
+
+    var prev = votesData.votes[matchupId][userId];
+    if(prev){
+      if(!votesData.predictions[matchupId]) votesData.predictions[matchupId] = {};
+      var prevCount = votesData.predictions[matchupId][prev] || 0;
+      votesData.predictions[matchupId][prev] = Math.max(0, prevCount - 1);
+    }
+
+    votesData.votes[matchupId][userId] = team;
+    if(!votesData.predictions[matchupId]) votesData.predictions[matchupId] = {};
+    votesData.predictions[matchupId][team] = (votesData.predictions[matchupId][team] || 0) + 1;
+
+    setLocalVote(matchupId, team);
+    updateVoteUI(matchupId);
+
+    fetch(JSONBIN_URL, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Access-Key': JSONBIN_KEY
+      },
+      body: JSON.stringify(votesData)
+    }).catch(function(e){ console.error('Vote save failed', e); });
+  }
+
+  function getVoteCounts(matchupId, homeTeam, awayTeam){
+    var preds = (votesData && votesData.predictions && votesData.predictions[matchupId]) || {};
+    return { home: preds[homeTeam] || 0, away: preds[awayTeam] || 0 };
+  }
+
+  function getUserVote(matchupId){
+    if(votesData && votesData.votes && votesData.votes[matchupId]){
+      var v = votesData.votes[matchupId][getUserId()];
+      if(v) return v;
+    }
+    return getLocalVotes()[matchupId] || null;
+  }
+
+  function updateVoteUI(matchupId){
+    var m = findMatchup(matchupId);
+    if(!m||!m.home) return;
+    var counts = getVoteCounts(matchupId, m.home, m.away);
+    var total = counts.home + counts.away;
+    var homePct = total > 0 ? Math.round(counts.home / total * 100) : 0;
+    var awayPct = total > 0 ? 100 - homePct : 0;
+    var userVote = getUserVote(matchupId);
+
+    var barHome = document.getElementById('vote-bar-home');
+    var barAway = document.getElementById('vote-bar-away');
+    if(barHome) barHome.style.width = (total > 0 ? homePct : 0) + '%';
+    if(barAway) barAway.style.width = (total > 0 ? awayPct : 0) + '%';
+
+    var countEl = document.getElementById('vote-counts');
+    if(countEl){
+      countEl.innerHTML = '<span><span class="count-bold">' + counts.home + '</span> voted ' + m.home + '</span>'
+        + '<span><span class="count-bold">' + counts.away + '</span> voted ' + m.away + '</span>';
+    }
+
+    var btnHome = document.getElementById('vote-btn-home');
+    var btnAway = document.getElementById('vote-btn-away');
+    if(btnHome){
+      btnHome.className = 'vote-btn' + (userVote === m.home ? ' voted' : '');
+      btnHome.querySelector('.vote-label').textContent = userVote === m.home ? 'YOUR PICK' : 'PREDICT';
+    }
+    if(btnAway){
+      btnAway.className = 'vote-btn' + (userVote === m.away ? ' voted' : '');
+      btnAway.querySelector('.vote-label').textContent = userVote === m.away ? 'YOUR PICK' : 'PREDICT';
+    }
+  }
 
   function logoUrl(team){
     if(!DATA||!DATA.teams[team]) return '';
@@ -597,6 +712,7 @@ body::after{
     var home = DATA.teams[m.home];
     var away = DATA.teams[m.away];
     if(!home||!away) return;
+    currentMatchupId = matchupId;
 
     var homePct = m.homeWinPct!==null ? Math.round(m.homeWinPct*100) : 50;
     var awayPct = 100 - homePct;
