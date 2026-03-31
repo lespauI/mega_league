@@ -86,20 +86,27 @@ body::after{
 }
 .bracket{
   display:grid;
-  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows:auto;
+  grid-template-columns:minmax(150px,1fr) minmax(150px,1fr) minmax(130px,1fr) minmax(140px,1fr) minmax(130px,1fr) minmax(150px,1fr) minmax(150px,1fr);
+  grid-template-rows:auto repeat(6,auto);
   gap:0;
   min-width:900px;
-  align-items:start;
   padding:0 12px;
 }
-.round{
+.round-header-cell{
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  padding:0 6px 12px;
+  white-space:nowrap;
+}
+.cell{
+  padding:6px;
   display:flex;
   flex-direction:column;
   justify-content:center;
-  gap:16px;
-  padding:8px 6px;
-  min-height:100%;
 }
 .round-header{
   text-align:center;
@@ -816,8 +823,52 @@ body::after{
       html += '</div>';
     }
 
+    var userVote = getUserVote(matchupId);
+    var counts = getVoteCounts(matchupId, m.home, m.away);
+    var totalVotes = counts.home + counts.away;
+    var vHomePct = totalVotes > 0 ? Math.round(counts.home / totalVotes * 100) : 0;
+    var vAwayPct = totalVotes > 0 ? 100 - vHomePct : 0;
+
+    html += '<div class="vote-section">';
+    html += '<div class="vote-title">Community Prediction</div>';
+    html += '<div class="vote-row">';
+    html += '<div class="vote-btn'+(userVote===m.home?' voted':'')+'" id="vote-btn-home">';
+    html += '<img src="'+logoUrl(m.home)+'" alt="'+m.home+'" onerror="this.style.display=\'none\'">';
+    html += '<span class="vote-team-name">'+m.home+'</span>';
+    html += '<span class="vote-label">'+(userVote===m.home?'YOUR PICK':'PREDICT')+'</span>';
+    html += '</div>';
+    html += '<div style="font-size:16px;font-weight:800;color:var(--muted)">OR</div>';
+    html += '<div class="vote-btn'+(userVote===m.away?' voted':'')+'" id="vote-btn-away">';
+    html += '<img src="'+logoUrl(m.away)+'" alt="'+m.away+'" onerror="this.style.display=\'none\'">';
+    html += '<span class="vote-team-name">'+m.away+'</span>';
+    html += '<span class="vote-label">'+(userVote===m.away?'YOUR PICK':'PREDICT')+'</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '<div class="vote-bar-wrap">';
+    html += '<div class="vote-bar">';
+    html += '<div class="bar-home" id="vote-bar-home" style="width:'+(totalVotes>0?vHomePct:0)+'%"></div>';
+    html += '<div class="bar-away" id="vote-bar-away" style="width:'+(totalVotes>0?vAwayPct:0)+'%"></div>';
+    html += '</div>';
+    html += '<div class="vote-counts" id="vote-counts">';
+    html += '<span><span class="count-bold">'+counts.home+'</span> voted '+m.home+'</span>';
+    html += '<span><span class="count-bold">'+counts.away+'</span> voted '+m.away+'</span>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
     document.getElementById('modal-body').innerHTML = html;
-    document.getElementById('modal-overlay').style.display = 'block';
+
+    document.getElementById('vote-btn-home').addEventListener('click', function(){
+      submitVote(matchupId, m.home);
+    });
+    document.getElementById('vote-btn-away').addEventListener('click', function(){
+      submitVote(matchupId, m.away);
+    });
+
+    var overlay = document.getElementById('modal-overlay');
+    overlay.style.display = 'block';
+    overlay.offsetHeight;
+    overlay.classList.add('visible');
     document.body.style.overflow = 'hidden';
   }
 
@@ -838,8 +889,13 @@ body::after{
   }
 
   function closeModal(){
-    document.getElementById('modal-overlay').style.display = 'none';
-    document.body.style.overflow = '';
+    var overlay = document.getElementById('modal-overlay');
+    overlay.classList.remove('visible');
+    setTimeout(function(){
+      overlay.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+    currentMatchupId = null;
   }
 
   document.getElementById('modal-close').addEventListener('click', closeModal);
@@ -855,6 +911,7 @@ body::after{
     .then(function(d){
       DATA = d;
       buildBracket();
+      return fetchVotes();
     })
     .catch(function(err){
       document.getElementById('bracket').innerHTML =

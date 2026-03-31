@@ -61,7 +61,7 @@ Verify: open in browser, bracket renders with all 14 teams in correct positions,
 
 ---
 
-### [ ] Step 3: Matchup Detail Modal
+### [x] Step 3: Matchup Detail Modal
 <!-- chat-id: 6ab497e3-0add-4941-a3c5-273096e98c86 -->
 
 Implement the click-to-open modal when user clicks any matchup in the bracket:
