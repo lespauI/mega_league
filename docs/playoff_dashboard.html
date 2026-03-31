@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>MEGA PLAYOFFS 2027</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg-dark:#0a1628;
+  --bg-card:#132042;
+  --bg-card-hover:#1a2d5a;
+  --gold:#f0b931;
+  --silver:#c0c0c0;
+  --white:#f0f4ff;
+  --muted:#7b8fb0;
+  --afc-color:#d32f2f;
+  --nfc-color:#1565c0;
+  --connector:#3a5280;
+  --field-green:#1a3a1a;
+  --font:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+}
+html,body{height:100%;overflow-x:hidden}
+body{
+  font-family:var(--font);
+  background:var(--bg-dark);
+  color:var(--white);
+  min-height:100vh;
+  position:relative;
+}
+body::after{
+  content:'';
+  position:fixed;
+  bottom:0;left:0;right:0;
+  height:60px;
+  background:linear-gradient(to top,var(--field-green) 0%,transparent 100%);
+  pointer-events:none;
+  z-index:0;
+}
+.page{position:relative;z-index:1;padding:20px 16px 80px}
+
+.header{
+  text-align:center;
+  padding:24px 0 12px;
+}
+.header h1{
+  font-size:clamp(1.8rem,4vw,3rem);
+  font-weight:900;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  background:linear-gradient(135deg,var(--gold) 0%,#fff 50%,var(--gold) 100%);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  text-shadow:none;
+}
+.header .sub{
+  font-size:clamp(0.8rem,1.5vw,1rem);
+  color:var(--muted);
+  letter-spacing:6px;
+  text-transform:uppercase;
+  margin-top:4px;
+}
+.conf-labels{
+  display:flex;
+  justify-content:space-between;
+  max-width:1400px;
+  margin:18px auto 0;
+  padding:0 30px;
+}
+.conf-label{
+  font-size:clamp(1rem,2vw,1.4rem);
+  font-weight:800;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  padding:6px 24px;
+  border-radius:6px;
+}
+.conf-label.afc{background:var(--afc-color);color:#fff}
+.conf-label.nfc{background:var(--nfc-color);color:#fff}
+
+.bracket-wrapper{
+  max-width:1400px;
+  margin:24px auto 0;
+  overflow-x:auto;
+}
+.bracket{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows:auto;
+  gap:0;
+  min-width:900px;
+  align-items:start;
+  padding:0 12px;
+}
+.round{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:16px;
+  padding:8px 6px;
+  min-height:100%;
+}
+.round-header{
+  text-align:center;
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:8px;
+  white-space:nowrap;
+}
+
+.matchup-card{
+  background:var(--bg-card);
+  border:1px solid #1e3a6e;
+  border-radius:10px;
+  padding:0;
+  cursor:pointer;
+  transition:all 0.2s ease;
+  overflow:hidden;
+  position:relative;
+}
+.matchup-card:hover{
+  background:var(--bg-card-hover);
+  border-color:var(--gold);
+  transform:translateY(-2px);
+  box-shadow:0 6px 24px rgba(240,185,49,0.15);
+}
+.matchup-card.completed{border-color:var(--gold)}
+.matchup-card.pending{opacity:0.5;cursor:default}
+.matchup-card.pending:hover{transform:none;border-color:#1e3a6e;background:var(--bg-card);box-shadow:none}
+
+.team-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:8px 10px;
+  position:relative;
+}
+.team-row+.team-row{border-top:1px solid #1e3a6e}
+.team-row.winner{background:rgba(240,185,49,0.08)}
+
+.seed-badge{
+  width:22px;height:22px;
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;
+  flex-shrink:0;
+}
+.seed-badge.afc{background:var(--afc-color);color:#fff}
+.seed-badge.nfc{background:var(--nfc-color);color:#fff}
+
+.team-logo{
+  width:32px;height:32px;
+  border-radius:4px;
+  background:#0d1a30;
+  flex-shrink:0;
+  object-fit:contain;
+}
+.team-name{
+  font-size:13px;
+  font-weight:700;
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.team-record{
+  font-size:11px;
+  color:var(--muted);
+  flex-shrink:0;
+}
+.team-score{
+  font-size:15px;
+  font-weight:800;
+  color:var(--gold);
+  min-width:24px;
+  text-align:right;
+  flex-shrink:0;
+}
+
+.bye-card{
+  background:linear-gradient(135deg,var(--bg-card) 0%,#1a2d5a 100%);
+  border:2px dashed var(--gold);
+  border-radius:10px;
+  padding:12px 10px;
+  text-align:center;
+}
+.bye-card .bye-label{
+  font-size:10px;
+  font-weight:700;
+  letter-spacing:2px;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:6px;
+}
+.bye-team{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+}
+.bye-team .team-logo{width:36px;height:36px}
+.bye-team .team-name{font-size:14px;flex:none}
+
+.tbd-card{
+  background:var(--bg-card);
+  border:1px solid #1e3a6e;
+  border-radius:10px;
+  padding:20px 10px;
+  text-align:center;
+  opacity:0.4;
+}
+.tbd-card .tbd-text{
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:3px;
+  color:var(--muted);
+}
+
+.connector-right .team-row::after{
+  content:'';
+  position:absolute;
+  right:-7px;top:50%;
+  width:7px;height:2px;
+  background:var(--connector);
+}
+.connector-left .team-row::after{
+  content:'';
+  position:absolute;
+  left:-7px;top:50%;
+  width:7px;height:2px;
+  background:var(--connector);
+}
+
+.sb-card{
+  background:linear-gradient(135deg,#1a2040 0%,#2a1a40 100%);
+  border:2px solid var(--gold);
+  border-radius:14px;
+  padding:16px 12px;
+  text-align:center;
+}
+.sb-card .sb-logo{
+  font-size:28px;
+  margin-bottom:4px;
+}
+.sb-card .sb-title{
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:3px;
+  color:var(--gold);
+  text-transform:uppercase;
+  margin-bottom:8px;
+}
+
+.round.col-afc-wc{grid-column:1}
+.round.col-afc-div{grid-column:2}
+.round.col-afc-champ{grid-column:3}
+.round.col-sb{grid-column:4}
+.round.col-nfc-champ{grid-column:5}
+.round.col-nfc-div{grid-column:6}
+.round.col-nfc-wc{grid-column:7}
+
+.spacer{height:40px}
+.spacer-sm{height:20px}
+
+.win-pct-mini{
+  display:flex;
+  height:3px;
+  border-radius:2px;
+  overflow:hidden;
+  margin:0 10px 6px;
+}
+.win-pct-mini .bar-home{background:var(--afc-color);transition:width 0.3s}
+.win-pct-mini .bar-away{background:var(--nfc-color);transition:width 0.3s}
+
+.matchup-card[data-conf="AFC"] .win-pct-mini .bar-home{background:var(--afc-color)}
+.matchup-card[data-conf="AFC"] .win-pct-mini .bar-away{background:#e57373}
+.matchup-card[data-conf="NFC"] .win-pct-mini .bar-home{background:var(--nfc-color)}
+.matchup-card[data-conf="NFC"] .win-pct-mini .bar-away{background:#64b5f6}
+
+.loading{
+  text-align:center;
+  padding:100px 20px;
+  color:var(--muted);
+  font-size:18px;
+}
+
+@media(max-width:960px){
+  .bracket{
+    display:flex;
+    flex-direction:column;
+    min-width:unset;
+    gap:24px;
+  }
+  .round{min-height:unset}
+  .conf-labels{flex-direction:column;align-items:center;gap:8px}
+  .connector-right .team-row::after,
+  .connector-left .team-row::after{display:none}
+  .spacer,.spacer-sm{display:none}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="header">
+    <h1>MEGA PLAYOFFS 2027</h1>
+    <div class="sub">Season 3 &mdash; NFL Playoff Bracket</div>
+  </div>
+  <div class="conf-labels">
+    <span class="conf-label afc">AFC</span>
+    <span class="conf-label nfc">NFC</span>
+  </div>
+  <div class="bracket-wrapper">
+    <div class="bracket" id="bracket">
+      <div class="loading" style="grid-column:1/-1">Loading bracket data&hellip;</div>
+    </div>
+  </div>
+</div>
+
+<div id="modal-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;overflow-y:auto;padding:20px">
+  <div id="modal-content" style="max-width:700px;margin:40px auto;background:var(--bg-card);border:1px solid #1e3a6e;border-radius:14px;padding:24px;position:relative">
+    <button id="modal-close" style="position:absolute;top:12px;right:16px;background:none;border:none;color:var(--muted);font-size:24px;cursor:pointer;line-height:1">&times;</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const LOGO_CDN = 'https://cdn.neonsportz.com/teamlogos/256/';
+  let DATA = null;
+
+  function logoUrl(team){
+    if(!DATA||!DATA.teams[team]) return '';
+    return LOGO_CDN + DATA.teams[team].logoId + '.png';
+  }
+
+  function teamConf(team){
+    if(!DATA||!DATA.teams[team]) return 'AFC';
+    return DATA.teams[team].conference;
+  }
+
+  function renderTeamRow(teamName, seed, score, isWinner, conf){
+    const t = DATA.teams[teamName];
+    const confClass = (conf||'AFC').toLowerCase();
+    return '<div class="team-row'+(isWinner?' winner':'')+'">'
+      +'<span class="seed-badge '+confClass+'">'+seed+'</span>'
+      +'<img class="team-logo" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
+      +'<span class="team-name">'+teamName+'</span>'
+      +'<span class="team-record">'+(t?t.wins+'-'+t.losses:'')+'</span>'
+      +(score!==null?'<span class="team-score">'+score+'</span>':'')
+      +'</div>';
+  }
+
+  function renderMatchupCard(m, conf){
+    if(!m.home&&!m.away&&!m.byeTeam){
+      return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
+    }
+    if(m.byeTeam&&!m.home&&!m.away){
+      return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
+    }
+    const status = m.status||'scheduled';
+    const isCompleted = status==='completed';
+    const isPending = status==='pending';
+    const winPct = m.homeWinPct;
+
+    let html = '<div class="matchup-card'
+      +(isCompleted?' completed':'')
+      +(isPending?' pending':'')+'" '
+      +'data-matchup-id="'+m.matchupId+'" '
+      +'data-conf="'+conf+'">';
+
+    if(winPct!==null && !isPending){
+      const homePct = Math.round(winPct*100);
+      html+='<div class="win-pct-mini">'
+        +'<div class="bar-home" style="width:'+homePct+'%"></div>'
+        +'<div class="bar-away" style="width:'+(100-homePct)+'%"></div>'
+        +'</div>';
+    }
+
+    const homeWinner = isCompleted && m.winner===m.home;
+    const awayWinner = isCompleted && m.winner===m.away;
+    html += renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf);
+    html += renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf);
+    html += '</div>';
+    return html;
+  }
+
+  function renderByeCard(teamName, conf){
+    const t = DATA.teams[teamName];
+    const confClass = conf.toLowerCase();
+    return '<div class="bye-card">'
+      +'<div class="bye-label">\u{1F3C6} 1st Round Bye</div>'
+      +'<div class="bye-team">'
+      +'<span class="seed-badge '+confClass+'">1</span>'
+      +'<img class="team-logo" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
+      +'<span class="team-name">'+teamName+'</span>'
+      +'<span class="team-record">'+(t?t.wins+'-'+t.losses:'')+'</span>'
+      +'</div>'
+      +'</div>';
+  }
+
+  function renderChampOrSBCard(m, conf){
+    if(!m.home){
+      return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
+    }
+    return renderMatchupCard(m, conf);
+  }
+
+  function renderSuperBowl(sb){
+    let inner = '';
+    if(sb.home){
+      inner = renderMatchupCard(sb, 'SB');
+    } else {
+      inner = '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
+    }
+    return '<div class="sb-card">'
+      +'<div class="sb-logo">\u{1F3C8}</div>'
+      +'<div class="sb-title">Super Bowl</div>'
+      +inner
+      +'</div>';
+  }
+
+  function buildBracket(){
+    const b = DATA.bracket;
+    const el = document.getElementById('bracket');
+
+    const afcWC = b.AFC.wildcard;
+    const nfcWC = b.NFC.wildcard;
+    const afcDiv = b.AFC.divisional;
+    const nfcDiv = b.NFC.divisional;
+    const afcChamp = b.AFC.championship;
+    const nfcChamp = b.NFC.championship;
+    const sb = DATA.super_bowl;
+
+    let html = '';
+
+    html += '<div class="round col-afc-wc">';
+    html += '<div class="round-header">Wild Card</div>';
+    html += renderMatchupCard(afcWC[0], 'AFC');
+    html += '<div class="spacer-sm"></div>';
+    html += renderMatchupCard(afcWC[1], 'AFC');
+    html += '<div class="spacer-sm"></div>';
+    html += renderMatchupCard(afcWC[2], 'AFC');
+    html += '<div class="spacer"></div>';
+    html += renderByeCard(b.AFC.byeTeam, 'AFC');
+    html += '</div>';
+
+    html += '<div class="round col-afc-div">';
+    html += '<div class="round-header">Divisional</div>';
+    html += '<div class="spacer-sm"></div>';
+    afcDiv.forEach(function(m){
+      if(m.byeTeam){
+        html += renderChampOrSBCard(m, 'AFC');
+      } else {
+        html += renderChampOrSBCard(m, 'AFC');
+      }
+      html += '<div class="spacer"></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="round col-afc-champ">';
+    html += '<div class="round-header">Conference</div>';
+    html += '<div class="spacer"></div>';
+    html += renderChampOrSBCard(afcChamp, 'AFC');
+    html += '</div>';
+
+    html += '<div class="round col-sb">';
+    html += '<div class="round-header">&nbsp;</div>';
+    html += '<div class="spacer-sm"></div>';
+    html += renderSuperBowl(sb);
+    html += '</div>';
+
+    html += '<div class="round col-nfc-champ">';
+    html += '<div class="round-header">Conference</div>';
+    html += '<div class="spacer"></div>';
+    html += renderChampOrSBCard(nfcChamp, 'NFC');
+    html += '</div>';
+
+    html += '<div class="round col-nfc-div">';
+    html += '<div class="round-header">Divisional</div>';
+    html += '<div class="spacer-sm"></div>';
+    nfcDiv.forEach(function(m){
+      html += renderChampOrSBCard(m, 'NFC');
+      html += '<div class="spacer"></div>';
+    });
+    html += '</div>';
+
+    html += '<div class="round col-nfc-wc">';
+    html += '<div class="round-header">Wild Card</div>';
+    html += renderMatchupCard(nfcWC[0], 'NFC');
+    html += '<div class="spacer-sm"></div>';
+    html += renderMatchupCard(nfcWC[1], 'NFC');
+    html += '<div class="spacer-sm"></div>';
+    html += renderMatchupCard(nfcWC[2], 'NFC');
+    html += '<div class="spacer"></div>';
+    html += renderByeCard(b.NFC.byeTeam, 'NFC');
+    html += '</div>';
+
+    el.innerHTML = html;
+
+    el.querySelectorAll('.matchup-card:not(.pending)').forEach(function(card){
+      card.addEventListener('click', function(){
+        openModal(card.getAttribute('data-matchup-id'));
+      });
+    });
+  }
+
+  function findMatchup(id){
+    var all = [];
+    ['AFC','NFC'].forEach(function(c){
+      var br = DATA.bracket[c];
+      all = all.concat(br.wildcard);
+      all = all.concat(br.divisional);
+      all.push(br.championship);
+    });
+    all.push(DATA.super_bowl);
+    for(var i=0;i<all.length;i++){
+      if(all[i].matchupId===id) return all[i];
+    }
+    return null;
+  }
+
+  function findH2H(teamA, teamB){
+    var keys = Object.keys(DATA.head_to_head);
+    for(var i=0;i<keys.length;i++){
+      var k = keys[i];
+      if((k.indexOf(teamA)>=0 && k.indexOf(teamB)>=0)){
+        return DATA.head_to_head[k];
+      }
+    }
+    return [];
+  }
+
+  function openModal(matchupId){
+    var m = findMatchup(matchupId);
+    if(!m||!m.home) return;
+    var home = DATA.teams[m.home];
+    var away = DATA.teams[m.away];
+    if(!home||!away) return;
+
+    var homePct = m.homeWinPct!==null ? Math.round(m.homeWinPct*100) : 50;
+    var awayPct = 100 - homePct;
+
+    var html = '';
+    html += '<div style="text-align:center;margin-bottom:16px">';
+    html += '<div style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px">';
+    html += '<div style="text-align:center">';
+    html += '<img src="'+logoUrl(m.home)+'" style="width:56px;height:56px;border-radius:6px" onerror="this.style.display=\'none\'">';
+    html += '<div style="font-weight:800;margin-top:4px">'+m.home+'</div>';
+    html += '<div style="font-size:12px;color:var(--muted)">#'+m.homeSeed+' seed &bull; '+home.wins+'-'+home.losses+'</div>';
+    html += '</div>';
+    html += '<div style="font-size:20px;font-weight:800;color:var(--gold)">VS</div>';
+    html += '<div style="text-align:center">';
+    html += '<img src="'+logoUrl(m.away)+'" style="width:56px;height:56px;border-radius:6px" onerror="this.style.display=\'none\'">';
+    html += '<div style="font-weight:800;margin-top:4px">'+m.away+'</div>';
+    html += '<div style="font-size:12px;color:var(--muted)">#'+m.awaySeed+' seed &bull; '+away.wins+'-'+away.losses+'</div>';
+    html += '</div>';
+    html += '</div>';
+
+    html += '<div style="margin:12px 0">';
+    html += '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px">';
+    html += '<span>'+m.home+' '+homePct+'%</span>';
+    html += '<span style="color:var(--muted)">Win Probability</span>';
+    html += '<span>'+awayPct+'% '+m.away+'</span>';
+    html += '</div>';
+    html += '<div style="display:flex;height:8px;border-radius:4px;overflow:hidden">';
+    html += '<div style="width:'+homePct+'%;background:var(--afc-color)"></div>';
+    html += '<div style="width:'+awayPct+'%;background:var(--nfc-color)"></div>';
+    html += '</div>';
+    html += '</div>';
+    html += '</div>';
+
+    var stats = [
+      {label:'OVR Rating',h:home.ovrRating,a:away.ovrRating},
+      {label:'ELO',h:home.elo,a:away.elo},
+      {label:'Pts For',h:home.ptsFor,a:away.ptsFor},
+      {label:'Pts Against',h:home.ptsAgainst,a:away.ptsAgainst,invert:true},
+      {label:'Off Pass Yds',h:home.offPassYds,a:away.offPassYds},
+      {label:'Off Rush Yds',h:home.offRushYds,a:away.offRushYds},
+      {label:'Def Pass Yds',h:home.defPassYds,a:away.defPassYds,invert:true},
+      {label:'Def Rush Yds',h:home.defRushYds,a:away.defRushYds,invert:true}
+    ];
+
+    html += '<div style="margin:20px 0">';
+    html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">Team Stats Comparison</div>';
+    stats.forEach(function(s){
+      var maxVal = Math.max(s.h,s.a)||1;
+      var hPct = Math.round(s.h/maxVal*100);
+      var aPct = Math.round(s.a/maxVal*100);
+      var hBetter = s.invert ? s.h < s.a : s.h > s.a;
+      var aBetter = !hBetter && s.h !== s.a;
+      html += '<div style="display:grid;grid-template-columns:60px 1fr auto 1fr 60px;gap:6px;align-items:center;margin-bottom:6px;font-size:12px">';
+      html += '<span style="text-align:right;font-weight:'+(hBetter?'800':'400')+';color:'+(hBetter?'var(--gold)':'var(--muted)')+'">'+formatStat(s.h)+'</span>';
+      html += '<div style="height:6px;border-radius:3px;background:#1e3a6e;overflow:hidden;direction:rtl"><div style="height:100%;width:'+hPct+'%;background:'+(hBetter?'var(--gold)':'#3a5280')+';border-radius:3px"></div></div>';
+      html += '<span style="font-size:10px;color:var(--muted);text-align:center;white-space:nowrap;min-width:80px">'+s.label+'</span>';
+      html += '<div style="height:6px;border-radius:3px;background:#1e3a6e;overflow:hidden"><div style="height:100%;width:'+aPct+'%;background:'+(aBetter?'var(--gold)':'#3a5280')+';border-radius:3px"></div></div>';
+      html += '<span style="font-weight:'+(aBetter?'800':'400')+';color:'+(aBetter?'var(--gold)':'var(--muted)')+'">'+formatStat(s.a)+'</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+
+    html += '<div style="margin:20px 0">';
+    html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">Best Players</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
+    ['QB','RB','WR','DEF'].forEach(function(pos){
+      var hp = home.topPlayers[pos];
+      var ap = away.topPlayers[pos];
+      html += '<div style="background:#0d1a30;border-radius:8px;padding:10px">';
+      html += '<div style="font-size:10px;color:var(--muted);margin-bottom:4px">'+m.home+' '+pos+'</div>';
+      html += '<div style="font-size:13px;font-weight:700">'+hp.name+'</div>';
+      html += '<div style="font-size:11px;color:var(--muted)">'+playerStatLine(pos,hp)+' &bull; <span style="color:var(--gold)">'+hp.ovr+' OVR</span></div>';
+      html += '</div>';
+      html += '<div style="background:#0d1a30;border-radius:8px;padding:10px">';
+      html += '<div style="font-size:10px;color:var(--muted);margin-bottom:4px">'+m.away+' '+pos+'</div>';
+      html += '<div style="font-size:13px;font-weight:700">'+ap.name+'</div>';
+      html += '<div style="font-size:11px;color:var(--muted)">'+playerStatLine(pos,ap)+' &bull; <span style="color:var(--gold)">'+ap.ovr+' OVR</span></div>';
+      html += '</div>';
+    });
+    html += '</div>';
+    html += '</div>';
+
+    var h2h = findH2H(m.home, m.away);
+    if(h2h.length>0){
+      var homeWins=0, awayWins=0;
+      h2h.forEach(function(g){ if(g.winner===m.home) homeWins++; else awayWins++; });
+      html += '<div style="margin:20px 0">';
+      html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;text-align:center">Head-to-Head History</div>';
+      html += '<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">'+m.home+' '+homeWins+' &mdash; '+awayWins+' '+m.away+' ('+h2h.length+' games)</div>';
+      h2h.forEach(function(g){
+        var seasonLabel = 'S'+(g.season+1);
+        var weekLabel = 'Wk '+(g.week+1);
+        var isHomeWin = g.winner===g.home;
+        html += '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#0d1a30;border-radius:6px;margin-bottom:4px;font-size:12px">';
+        html += '<span style="color:var(--muted);min-width:55px">'+seasonLabel+' '+weekLabel+'</span>';
+        html += '<span style="flex:1;font-weight:'+(isHomeWin?'700':'400')+'">'+g.home+'</span>';
+        html += '<span style="font-weight:800;color:var(--gold);min-width:50px;text-align:center">'+g.homeScore+' - '+g.awayScore+'</span>';
+        html += '<span style="flex:1;text-align:right;font-weight:'+(!isHomeWin?'700':'400')+'">'+g.away+'</span>';
+        html += '</div>';
+      });
+      html += '</div>';
+    }
+
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal-overlay').style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function formatStat(v){
+    if(typeof v==='number'){
+      if(v>=1000) return v.toLocaleString();
+      if(v%1!==0) return v.toFixed(1);
+    }
+    return v;
+  }
+
+  function playerStatLine(pos, p){
+    if(pos==='QB') return p.yards+' yds, '+p.tds+' TD, '+p.ints+' INT';
+    if(pos==='RB') return p.yards+' yds, '+p.tds+' TD, '+p.avgYpc+' YPC';
+    if(pos==='WR') return p.yards+' yds, '+p.tds+' TD, '+p.catches+' rec';
+    if(pos==='DEF') return p.sacks+' sck, '+p.ints+' INT, '+p.tackles+' tkl';
+    return '';
+  }
+
+  function closeModal(){
+    document.getElementById('modal-overlay').style.display = 'none';
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+  document.getElementById('modal-overlay').addEventListener('click', function(e){
+    if(e.target===this) closeModal();
+  });
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape') closeModal();
+  });
+
+  fetch('data/playoff_dashboard.json')
+    .then(function(r){ return r.json(); })
+    .then(function(d){
+      DATA = d;
+      buildBracket();
+    })
+    .catch(function(err){
+      document.getElementById('bracket').innerHTML =
+        '<div class="loading" style="grid-column:1/-1;color:#e57373">Failed to load data. Make sure to serve via HTTP (python3 -m http.server).</div>';
+      console.error(err);
+    });
+})();
+</script>
+</body>
+</html>

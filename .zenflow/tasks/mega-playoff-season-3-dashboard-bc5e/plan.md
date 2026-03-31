@@ -41,7 +41,7 @@ Verify: run the script, check JSON has 14 teams, 6 WC matchups, correct H2H game
 
 ---
 
-### [ ] Step 2: Bracket Dashboard — HTML Structure and Full-Screen Bracket
+### [x] Step 2: Bracket Dashboard — HTML Structure and Full-Screen Bracket
 <!-- chat-id: d6e8bc40-c590-4dde-bf36-e3944be80fcd -->
 
 Create `docs/playoff_dashboard.html` — single self-contained HTML file:
