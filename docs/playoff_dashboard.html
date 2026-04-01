@@ -334,6 +334,40 @@ body::after{
 #analytics-toggle{transition:opacity 0.2s}
 #analytics-toggle:hover{background:rgba(240,185,49,0.1)}
 
+.modal-matchup-header{display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;flex-wrap:wrap}
+.modal-team-box{text-align:center}
+.modal-team-logo{width:56px;height:56px;border-radius:6px}
+.modal-team-name{font-weight:800;margin-top:4px}
+.modal-team-info{font-size:12px;color:var(--muted)}
+.modal-vs{font-size:20px;font-weight:800;color:var(--gold)}
+.win-prob-section{margin:12px 0;text-align:center}
+.win-prob-row{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px}
+.win-prob-bar{display:flex;height:8px;border-radius:4px;overflow:hidden}
+.analytics-section{margin:20px 0}
+.analytics-header{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center}
+.analytics-wrap{position:relative}
+.analytics-text{background:#0d1a30;border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.7;color:var(--white);white-space:pre-wrap;word-wrap:break-word;border-left:3px solid var(--gold);overflow:hidden}
+.analytics-fade{position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(to bottom,transparent,#0d1a30);border-radius:0 0 10px 10px;pointer-events:none}
+.analytics-toggle-btn{display:block;margin:8px auto 0;background:none;border:1px solid var(--gold);color:var(--gold);padding:5px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px}
+.stat-category-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;padding-left:4px;border-left:3px solid var(--gold)}
+.stats-category-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stat-card{background:#0d1a30;border-radius:8px;padding:10px 12px}
+.stat-card-header{text-align:center;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:6px}
+.stat-card-values{display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:800;margin-bottom:6px}
+.stat-delta{font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(240,185,49,0.15);color:var(--gold)}
+.stat-bar-wrap{display:flex;height:4px;border-radius:2px;overflow:hidden;gap:2px}
+.modal-players-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.player-card{background:#0d1a30;border-radius:8px;padding:10px}
+.player-pos-label{font-size:10px;color:var(--muted);margin-bottom:4px}
+.player-name{font-size:13px;font-weight:700}
+.player-stats{font-size:11px;color:var(--muted)}
+.h2h-section{margin:20px 0}
+.h2h-header{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;text-align:center}
+.h2h-summary{font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px}
+.h2h-game{display:flex;align-items:center;gap:8px;padding:6px 8px;background:#0d1a30;border-radius:6px;margin-bottom:4px;font-size:12px}
+.h2h-week{color:var(--muted);min-width:55px}
+.h2h-score{font-weight:800;color:var(--gold);min-width:50px;text-align:center}
+
 .vote-section{margin:20px 0}
 .vote-title{font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center}
 .vote-row{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:12px}
@@ -402,6 +436,12 @@ body::after{
   #bracket-mobile{display:block;max-width:500px;margin:16px auto 0;padding:0 8px}
   .connector-right .team-row::after,
   .connector-left .team-row::after{display:none}
+
+  #modal-content{ margin:10px 8px; padding:16px 12px; max-width:100%; border-radius:12px; }
+  .stat-card{ padding:8px 10px; }
+  .stat-card-header{ font-size:10px; }
+  .stat-card-values{ font-size:16px; }
+  .stat-delta{ font-size:8px; padding:1px 5px; }
 }
 
 @media(max-width:480px){
@@ -418,76 +458,20 @@ body::after{
   .mobile-card-slot{max-width:100%}
   .vote-btn{min-width:100px;padding:10px 12px}
   .vote-btn img{width:40px;height:40px}
-}
 
-@media(max-width:960px){
-  #modal-content{
-    margin:10px 8px;
-    padding:16px 12px;
-    max-width:100%;
-    border-radius:12px;
-  }
-  .stat-card{
-    padding:8px 10px!important;
-  }
-  .stat-card-header{
-    font-size:10px!important;
-  }
-  .stat-card-values{
-    font-size:16px!important;
-  }
-  .stat-delta{
-    font-size:8px!important;
-    padding:1px 5px!important;
-  }
-}
-
-@media(max-width:480px){
-  #modal-content{
-    margin:6px 4px;
-    padding:12px 8px;
-  }
-  .analytics-text{
-    font-size:12px!important;
-    padding:12px 14px!important;
-    line-height:1.6!important;
-  }
-  .modal-matchup-header{
-    gap:10px!important;
-  }
-  .modal-matchup-header img{
-    width:44px!important;
-    height:44px!important;
-  }
-  .stat-card{
-    padding:6px 8px!important;
-  }
-  .stat-card-values{
-    font-size:14px!important;
-  }
-  .stat-category-title{
-    font-size:10px!important;
-  }
-  .stats-category-grid{
-    grid-template-columns:1fr!important;
-  }
-  .modal-players-grid{
-    grid-template-columns:1fr!important;
-  }
-  .vote-row{
-    gap:8px!important;
-  }
-  .h2h-game{
-    font-size:11px!important;
-  }
-  .h2h-game .h2h-week{
-    min-width:45px!important;
-    font-size:10px!important;
-  }
-  .h2h-game .h2h-score{
-    min-width:44px!important;
-    font-size:12px!important;
-  }
+  #modal-content{ margin:6px 4px; padding:12px 8px; }
+  .analytics-text{ font-size:12px; padding:12px 14px; line-height:1.6; }
+  .modal-matchup-header{ gap:10px; }
+  .modal-team-logo{ width:44px; height:44px; }
+  .stat-card{ padding:6px 8px; }
+  .stat-card-values{ font-size:14px; }
+  .stat-category-title{ font-size:10px; }
+  .stats-category-grid{ grid-template-columns:1fr; }
+  .modal-players-grid{ grid-template-columns:1fr; }
+  .vote-row{ gap:8px; }
+  .h2h-game{ font-size:11px; }
+  .h2h-week{ min-width:45px; font-size:10px; }
+  .h2h-score{ min-width:44px; font-size:12px; }
 }
 </style>
 </head>
@@ -526,51 +510,51 @@ body::after{
   var votesData = null;
   var currentMatchupId = null;
 
-  function getUserId(){
-    var id = localStorage.getItem('playoff_user_id');
+  const getUserId = () => {
+    let id = localStorage.getItem('playoff_user_id');
     if(!id){
       id = crypto.randomUUID ? crypto.randomUUID() : 'u-'+Math.random().toString(36).slice(2)+Date.now().toString(36);
       localStorage.setItem('playoff_user_id', id);
     }
     return id;
-  }
+  };
 
-  function getLocalVotes(){
+  const getLocalVotes = () => {
     try{ return JSON.parse(localStorage.getItem('playoff_votes')||'{}'); }catch(e){ return {}; }
-  }
+  };
 
-  function setLocalVote(matchupId, team){
-    var v = getLocalVotes();
+  const setLocalVote = (matchupId, team) => {
+    const v = getLocalVotes();
     v[matchupId] = team;
     localStorage.setItem('playoff_votes', JSON.stringify(v));
-  }
+  };
 
-  function fetchVotes(){
+  const fetchVotes = () => {
     return fetch(JSONBIN_URL + '/latest', {
       headers: { 'X-Access-Key': JSONBIN_KEY }
     })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
+    .then(r => r.json())
+    .then(d => {
       votesData = (d && d.record) ? d.record : { votes: {} };
       if(!votesData.votes) votesData.votes = {};
       return votesData;
     })
-    .catch(function(){
+    .catch(() => {
       votesData = { votes: {} };
       return votesData;
     });
-  }
+  };
 
-  var reconciled = false;
-  function reconcileLocalVotes(){
+  let reconciled = false;
+  const reconcileLocalVotes = () => {
     if(reconciled) return;
     reconciled = true;
-    var localVotes = getLocalVotes();
-    var userId = getUserId();
-    var needsUpdate = false;
+    const localVotes = getLocalVotes();
+    const userId = getUserId();
+    let needsUpdate = false;
     if(!votesData) votesData = { votes: {} };
     if(!votesData.votes) votesData.votes = {};
-    Object.keys(localVotes).forEach(function(matchupId){
+    Object.keys(localVotes).forEach(matchupId => {
       if(!votesData.votes[matchupId]) votesData.votes[matchupId] = {};
       if(votesData.votes[matchupId][userId] !== localVotes[matchupId]){
         votesData.votes[matchupId][userId] = localVotes[matchupId];
@@ -578,17 +562,17 @@ body::after{
       }
     });
     if(needsUpdate){
-      var payload = { votes: votesData.votes };
+      const payload = { votes: votesData.votes };
       fetch(JSONBIN_URL, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'X-Access-Key': JSONBIN_KEY },
         body: JSON.stringify(payload)
-      }).catch(function(e){ console.error('Reconcile save failed', e); });
+      }).catch(e => console.error('Reconcile save failed', e));
     }
-  }
+  };
 
-  function submitVote(matchupId, team){
-    var userId = getUserId();
+  const submitVote = (matchupId, team) => {
+    const userId = getUserId();
     if(!votesData) votesData = { votes: {} };
     if(!votesData.votes) votesData.votes = {};
     if(!votesData.votes[matchupId]) votesData.votes[matchupId] = {};
@@ -602,98 +586,98 @@ body::after{
     fetch(JSONBIN_URL + '/latest', {
       headers: { 'X-Access-Key': JSONBIN_KEY }
     })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      var serverData = (d && d.record) ? d.record : { votes: {} };
+    .then(r => r.json())
+    .then(d => {
+      const serverData = (d && d.record) ? d.record : { votes: {} };
       if(!serverData.votes) serverData.votes = {};
       if(!serverData.votes[matchupId]) serverData.votes[matchupId] = {};
       serverData.votes[matchupId][userId] = team;
       votesData = serverData;
-      var payload = { votes: serverData.votes };
+      const payload = { votes: serverData.votes };
       return fetch(JSONBIN_URL, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json', 'X-Access-Key': JSONBIN_KEY },
         body: JSON.stringify(payload)
       });
     })
-    .catch(function(e){ console.error('Vote save failed', e); });
-  }
+    .catch(e => console.error('Vote save failed', e));
+  };
 
-  function getVoteCounts(matchupId, homeTeam, awayTeam){
+  const getVoteCounts = (matchupId, homeTeam, awayTeam) => {
     if(!votesData || !votesData.votes || !votesData.votes[matchupId]) return { home: 0, away: 0 };
-    var mv = votesData.votes[matchupId];
-    var home = 0, away = 0;
-    Object.keys(mv).forEach(function(uid){
+    const mv = votesData.votes[matchupId];
+    let home = 0, away = 0;
+    Object.keys(mv).forEach(uid => {
       if(mv[uid] === homeTeam) home++;
       else if(mv[uid] === awayTeam) away++;
     });
-    return { home: home, away: away };
-  }
+    return { home, away };
+  };
 
-  function getUserVote(matchupId){
+  const getUserVote = matchupId => {
     if(votesData && votesData.votes && votesData.votes[matchupId]){
-      var v = votesData.votes[matchupId][getUserId()];
+      const v = votesData.votes[matchupId][getUserId()];
       if(v) return v;
     }
     return getLocalVotes()[matchupId] || null;
-  }
+  };
 
-  function voteEmoji(count){
+  const voteEmoji = count => {
     if(count<=0) return '';
     if(count===1) return '\u{1F525}';
     if(count<=3) return '\u{1F525}'.repeat(Math.min(count,3));
     return '\u{1F525}'.repeat(3)+' '+count;
-  }
+  };
 
-  function updateBracketVotes(){
-    document.querySelectorAll('.matchup-card[data-matchup-id]').forEach(function(card){
-      card.querySelectorAll('.vote-fire').forEach(function(f){ f.remove(); });
-      var mid = card.getAttribute('data-matchup-id');
-      var m = findMatchup(mid);
+  const updateBracketVotes = () => {
+    document.querySelectorAll('.matchup-card[data-matchup-id]').forEach(card => {
+      card.querySelectorAll('.vote-fire').forEach(f => f.remove());
+      const mid = card.getAttribute('data-matchup-id');
+      const m = findMatchup(mid);
       if(!m||!m.home) return;
-      var counts = getVoteCounts(mid, m.home, m.away);
+      const counts = getVoteCounts(mid, m.home, m.away);
       if(counts.home+counts.away===0) return;
-      var rows = card.querySelectorAll('.team-row');
+      const rows = card.querySelectorAll('.team-row');
       if(rows.length<2) return;
       if(counts.home>0){
-        var s = document.createElement('span');
+        const s = document.createElement('span');
         s.className = 'vote-fire';
         s.textContent = voteEmoji(counts.home);
         rows[0].appendChild(s);
       }
       if(counts.away>0){
-        var s2 = document.createElement('span');
+        const s2 = document.createElement('span');
         s2.className = 'vote-fire';
         s2.textContent = voteEmoji(counts.away);
         rows[1].appendChild(s2);
       }
     });
-  }
+  };
 
-  var updateMobileBracketVotes = updateBracketVotes;
+  const updateMobileBracketVotes = updateBracketVotes;
 
-  function updateVoteUI(matchupId){
-    var m = findMatchup(matchupId);
+  const updateVoteUI = matchupId => {
+    const m = findMatchup(matchupId);
     if(!m||!m.home) return;
-    var counts = getVoteCounts(matchupId, m.home, m.away);
-    var total = counts.home + counts.away;
-    var homePct = total > 0 ? Math.round(counts.home / total * 100) : 0;
-    var awayPct = total > 0 ? 100 - homePct : 0;
-    var userVote = getUserVote(matchupId);
+    const counts = getVoteCounts(matchupId, m.home, m.away);
+    const total = counts.home + counts.away;
+    const homePct = total > 0 ? Math.round(counts.home / total * 100) : 0;
+    const awayPct = total > 0 ? 100 - homePct : 0;
+    const userVote = getUserVote(matchupId);
 
-    var barHome = document.getElementById('vote-bar-home');
-    var barAway = document.getElementById('vote-bar-away');
+    const barHome = document.getElementById('vote-bar-home');
+    const barAway = document.getElementById('vote-bar-away');
     if(barHome) barHome.style.width = (total > 0 ? homePct : 0) + '%';
     if(barAway) barAway.style.width = (total > 0 ? awayPct : 0) + '%';
 
-    var countEl = document.getElementById('vote-counts');
+    const countEl = document.getElementById('vote-counts');
     if(countEl){
-      countEl.innerHTML = '<span><span class="count-bold">' + counts.home + '</span> voted ' + m.home + '</span>'
-        + '<span><span class="count-bold">' + counts.away + '</span> voted ' + m.away + '</span>';
+      countEl.innerHTML = `<span><span class="count-bold">${counts.home}</span> voted ${m.home}</span>`
+        + `<span><span class="count-bold">${counts.away}</span> voted ${m.away}</span>`;
     }
 
-    var btnHome = document.getElementById('vote-btn-home');
-    var btnAway = document.getElementById('vote-btn-away');
+    const btnHome = document.getElementById('vote-btn-home');
+    const btnAway = document.getElementById('vote-btn-away');
     if(btnHome){
       btnHome.className = 'vote-btn' + (userVote === m.home ? ' voted' : '');
       btnHome.querySelector('.vote-label').textContent = userVote === m.home ? 'YOUR PICK' : 'PREDICT';
@@ -702,70 +686,75 @@ body::after{
       btnAway.className = 'vote-btn' + (userVote === m.away ? ' voted' : '');
       btnAway.querySelector('.vote-label').textContent = userVote === m.away ? 'YOUR PICK' : 'PREDICT';
     }
-  }
+  };
 
-  function logoUrl(team){
+  const logoUrl = team => {
     if(!DATA||!DATA.teams[team]) return '';
     return LOGO_CDN + DATA.teams[team].logoId + '.png';
-  }
+  };
 
-  function teamConf(team){
+  const teamConf = team => {
     if(!DATA||!DATA.teams[team]) return 'AFC';
     return DATA.teams[team].conference;
-  }
+  };
 
   function renderTeamRow(teamName, seed, score, isWinner, conf){
     const t = DATA.teams[teamName];
     const confClass = (conf||'AFC').toLowerCase();
-    return '<div class="team-row'+(isWinner?' winner':'')+'">'
-      +'<span class="seed-badge '+confClass+'">'+seed+'</span>'
-      +'<img class="team-logo" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
-      +'<span class="team-name">'+teamName+'</span>'
-      +'<span class="team-record">'+(t?t.wins+'-'+t.losses:'')+'</span>'
-      +(score!==null?'<span class="team-score">'+score+'</span>':'')
-      +'</div>';
+    return `
+      <div class="team-row${isWinner ? ' winner' : ''}">
+        <span class="seed-badge ${confClass}">${seed}</span>
+        <img class="team-logo" src="${logoUrl(teamName)}" alt="${teamName}" onerror="this.style.display='none'">
+        <span class="team-name">${teamName}</span>
+        <span class="team-record">${t ? t.wins + '-' + t.losses : ''}</span>
+        ${score !== null ? `<span class="team-score">${score}</span>` : ''}
+      </div>
+    `;
   }
 
   function renderMatchupCard(m, conf){
-    if(!m.home&&!m.away&&!m.byeTeam){
+    if(!m.home && !m.away && !m.byeTeam){
       return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
     }
-    if(m.byeTeam&&!m.home&&!m.away){
+    if(m.byeTeam && !m.home && !m.away){
       return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
     }
-    const status = m.status||'scheduled';
-    const isCompleted = status==='completed';
-    const isPending = status==='pending';
+    const status = m.status || 'scheduled';
+    const isCompleted = status === 'completed';
+    const isPending = status === 'pending';
     const winPct = m.homeWinPct;
 
-    let html = '<div class="matchup-card'
-      +(isCompleted?' completed':'')
-      +(isPending?' pending':'')+'" '
-      +'data-matchup-id="'+m.matchupId+'" '
-      +'data-conf="'+conf+'">';
+    let html = `
+      <div class="matchup-card${isCompleted ? ' completed' : ''}${isPending ? ' pending' : ''}" 
+           data-matchup-id="${m.matchupId}" 
+           data-conf="${conf}">
+    `;
 
-    if(winPct!==null && !isPending){
-      const homePct = Math.round(winPct*100);
+    if(winPct !== null && !isPending){
+      const homePct = Math.round(winPct * 100);
       const awayPct = 100 - homePct;
       const diff = Math.abs(homePct - awayPct);
-      var homeFav = homePct >= awayPct;
-      var favLabel = (homeFav ? m.home : m.away) + ' +' + diff + '%';
-      html+='<div class="win-pct-mini-wrap">'
-        +'<span class="win-pct-label" style="color:var(--gold)">'+favLabel+'</span>'
-        +'</div>'
-        +'<div class="win-pct-mini">'
-        +'<div class="bar-home" style="width:'+homePct+'%"></div>'
-        +'<div class="bar-away" style="width:'+awayPct+'%"></div>'
-        +'</div>';
+      const favLabel = (homePct >= awayPct ? m.home : m.away) + ' +' + diff + '%';
+      html += `
+        <div class="win-pct-mini-wrap">
+          <span class="win-pct-label" style="color:var(--gold)">${favLabel}</span>
+        </div>
+        <div class="win-pct-mini">
+          <div class="bar-home" style="width:${homePct}%"></div>
+          <div class="bar-away" style="width:${awayPct}%"></div>
+        </div>
+      `;
     }
 
-    const homeWinner = isCompleted && m.winner===m.home;
-    const awayWinner = isCompleted && m.winner===m.away;
+    const homeWinner = isCompleted && m.winner === m.home;
+    const awayWinner = isCompleted && m.winner === m.away;
     html += renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf);
     html += renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf);
+    
     if(m.gameTime){
-      html += '<div class="game-time">\u{1F551} '+m.gameTime+'</div>';
+      html += `<div class="game-time">\u{1F551} ${m.gameTime}</div>`;
     }
+    
     html += '</div>';
     return html;
   }
@@ -773,15 +762,17 @@ body::after{
   function renderByeCard(teamName, conf){
     const t = DATA.teams[teamName];
     const confClass = conf.toLowerCase();
-    return '<div class="bye-card">'
-      +'<div class="bye-label">\u{1F3C6} 1st Round Bye</div>'
-      +'<div class="bye-team">'
-      +'<span class="seed-badge '+confClass+'">1</span>'
-      +'<img class="team-logo" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
-      +'<span class="team-name">'+teamName+'</span>'
-      +'<span class="team-record">'+(t?t.wins+'-'+t.losses:'')+'</span>'
-      +'</div>'
-      +'</div>';
+    return `
+      <div class="bye-card">
+        <div class="bye-label">\u{1F3C6} 1st Round Bye</div>
+        <div class="bye-team">
+          <span class="seed-badge ${confClass}">1</span>
+          <img class="team-logo" src="${logoUrl(teamName)}" alt="${teamName}" onerror="this.style.display='none'">
+          <span class="team-name">${teamName}</span>
+          <span class="team-record">${t ? t.wins + '-' + t.losses : ''}</span>
+        </div>
+      </div>
+    `;
   }
 
   function renderChampOrSBCard(m, conf){
@@ -792,29 +783,29 @@ body::after{
   }
 
   function renderSuperBowl(sb){
-    let inner = '';
     if(sb.home){
-      inner = renderMatchupCard(sb, 'SB');
-    } else {
-      inner = '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
+      return `
+        <div class="sb-card">
+          <div class="sb-logo">\u{1F3C8}</div>
+          <div class="sb-title">Super Bowl</div>
+          ${renderMatchupCard(sb, 'SB')}
+        </div>
+      `;
     }
-    return '<div class="sb-card">'
-      +'<div class="sb-logo">\u{1F3C8}</div>'
-      +'<div class="sb-title">Super Bowl</div>'
-      +inner
-      +'</div>';
+    return `
+      <div class="sb-card">
+        <div class="sb-logo">\u{1F3C8}</div>
+        <div class="sb-title">Super Bowl</div>
+        <div class="tbd-card"><div class="tbd-text">TBD</div></div>
+      </div>
+    `;
   }
 
-  function gc(col,row,rspan){
-    var s='grid-column:'+col+';grid-row:'+row;
-    if(rspan) s+='/span '+rspan;
-    return s;
-  }
+  const gc = (col, row, rspan) => `grid-column:${col};grid-row:${row}${rspan ? `/span ${rspan}` : ''}`;
 
   function buildBracket(){
     const b = DATA.bracket;
     const el = document.getElementById('bracket');
-
     const afcWC = b.AFC.wildcard;
     const nfcWC = b.NFC.wildcard;
     const afcDiv = b.AFC.divisional;
@@ -823,174 +814,149 @@ body::after{
     const nfcChamp = b.NFC.championship;
     const sb = DATA.super_bowl;
 
-    let html = '';
+    el.innerHTML = `
+      <div class="round-header-cell" style="${gc(1,1)}">Wild Card</div>
+      <div class="round-header-cell" style="${gc(2,1)}">Divisional</div>
+      <div class="round-header-cell" style="${gc(3,1)}">Conference</div>
+      <div class="round-header-cell" style="${gc(4,1)}">&nbsp;</div>
+      <div class="round-header-cell" style="${gc(5,1)}">Conference</div>
+      <div class="round-header-cell" style="${gc(6,1)}">Divisional</div>
+      <div class="round-header-cell" style="${gc(7,1)}">Wild Card</div>
 
-    html += '<div class="round-header-cell" style="'+gc(1,1)+'">Wild Card</div>';
-    html += '<div class="round-header-cell" style="'+gc(2,1)+'">Divisional</div>';
-    html += '<div class="round-header-cell" style="'+gc(3,1)+'">Conference</div>';
-    html += '<div class="round-header-cell" style="'+gc(4,1)+'">&nbsp;</div>';
-    html += '<div class="round-header-cell" style="'+gc(5,1)+'">Conference</div>';
-    html += '<div class="round-header-cell" style="'+gc(6,1)+'">Divisional</div>';
-    html += '<div class="round-header-cell" style="'+gc(7,1)+'">Wild Card</div>';
+      <div class="cell" style="${gc(1,2)}">${renderMatchupCard(afcWC[0],'AFC')}</div>
+      <div class="cell" style="${gc(2,2)}">${renderByeCard(b.AFC.byeTeam,'AFC')}</div>
+      <div class="cell" style="${gc(1,3)}">${renderMatchupCard(afcWC[1],'AFC')}</div>
+      <div class="cell" style="${gc(2,3)}">${renderChampOrSBCard(afcDiv[0],'AFC')}</div>
+      <div class="cell" style="grid-column:3;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">${renderChampOrSBCard(afcChamp,'AFC')}</div>
+      <div class="cell" style="${gc(1,4)}">${renderMatchupCard(afcWC[2],'AFC')}</div>
+      <div class="cell" style="${gc(2,4)}">${renderChampOrSBCard(afcDiv[1],'AFC')}</div>
+      
+      <div class="cell" style="grid-column:4;grid-row:2/6;display:flex;align-items:center;justify-content:center;padding:6px">${renderSuperBowl(sb)}</div>
+      
+      <div class="cell" style="grid-column:5;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">${renderChampOrSBCard(nfcChamp,'NFC')}</div>
+      <div class="cell" style="${gc(7,2)}">${renderMatchupCard(nfcWC[0],'NFC')}</div>
+      <div class="cell" style="${gc(6,2)}">${renderByeCard(b.NFC.byeTeam,'NFC')}</div>
+      <div class="cell" style="${gc(7,3)}">${renderMatchupCard(nfcWC[1],'NFC')}</div>
+      <div class="cell" style="${gc(6,3)}">${renderChampOrSBCard(nfcDiv[0],'NFC')}</div>
+      <div class="cell" style="${gc(7,4)}">${renderMatchupCard(nfcWC[2],'NFC')}</div>
+      <div class="cell" style="${gc(6,4)}">${renderChampOrSBCard(nfcDiv[1],'NFC')}</div>
+    `;
 
-    html += '<div class="cell" style="'+gc(1,2)+'">'+renderMatchupCard(afcWC[0],'AFC')+'</div>';
-    html += '<div class="cell" style="'+gc(2,2)+'">'+renderByeCard(b.AFC.byeTeam,'AFC')+'</div>';
-
-    html += '<div class="cell" style="'+gc(1,3)+'">'+renderMatchupCard(afcWC[1],'AFC')+'</div>';
-    html += '<div class="cell" style="'+gc(2,3)+'">'+renderChampOrSBCard(afcDiv[0],'AFC')+'</div>';
-    html += '<div class="cell" style="grid-column:3;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(afcChamp,'AFC')+'</div>';
-
-    html += '<div class="cell" style="'+gc(1,4)+'">'+renderMatchupCard(afcWC[2],'AFC')+'</div>';
-    html += '<div class="cell" style="'+gc(2,4)+'">'+renderChampOrSBCard(afcDiv[1],'AFC')+'</div>';
-
-    html += '<div class="cell" style="grid-column:4;grid-row:2/6;display:flex;align-items:center;justify-content:center;padding:6px">'+renderSuperBowl(sb)+'</div>';
-
-    html += '<div class="cell" style="grid-column:5;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(nfcChamp,'NFC')+'</div>';
-
-    html += '<div class="cell" style="'+gc(7,2)+'">'+renderMatchupCard(nfcWC[0],'NFC')+'</div>';
-    html += '<div class="cell" style="'+gc(6,2)+'">'+renderByeCard(b.NFC.byeTeam,'NFC')+'</div>';
-
-    html += '<div class="cell" style="'+gc(7,3)+'">'+renderMatchupCard(nfcWC[1],'NFC')+'</div>';
-    html += '<div class="cell" style="'+gc(6,3)+'">'+renderChampOrSBCard(nfcDiv[0],'NFC')+'</div>';
-
-    html += '<div class="cell" style="'+gc(7,4)+'">'+renderMatchupCard(nfcWC[2],'NFC')+'</div>';
-    html += '<div class="cell" style="'+gc(6,4)+'">'+renderChampOrSBCard(nfcDiv[1],'NFC')+'</div>';
-
-    el.innerHTML = html;
-
-    el.querySelectorAll('.matchup-card:not(.pending)').forEach(function(card){
-      card.addEventListener('click', function(){
-        openModal(card.getAttribute('data-matchup-id'));
-      });
+    el.querySelectorAll('.matchup-card:not(.pending)').forEach(card => {
+      card.addEventListener('click', () => openModal(card.getAttribute('data-matchup-id')));
     });
   }
 
   function buildMobileBracket(){
-    var b = DATA.bracket;
-    var el = document.getElementById('bracket-mobile');
-    var html = '';
+    const b = DATA.bracket;
+    const el = document.getElementById('bracket-mobile');
 
-    function mobileRoundCards(conf, roundName, matchups, byeTeam){
-      var h = '<div class="mobile-round-header">'+roundName+'</div>';
-      if(byeTeam){
-        h += '<div class="mobile-card-slot">'+renderByeCard(byeTeam, conf)+'</div>';
-      }
-      matchups.forEach(function(m){
-        h += '<div class="mobile-card-slot">'+renderChampOrSBCard(m, conf)+'</div>';
-      });
+    const mobileRoundCards = (conf, roundName, matchups, byeTeam) => {
+      let h = `<div class="mobile-round-header">${roundName}</div>`;
+      if(byeTeam) h += `<div class="mobile-card-slot">${renderByeCard(byeTeam, conf)}</div>`;
+      matchups.forEach(m => h += `<div class="mobile-card-slot">${renderChampOrSBCard(m, conf)}</div>`);
       return h;
-    }
+    };
 
-    html += '<div class="mobile-conf-section">';
-    html += '<div class="mobile-conf-header afc">AFC Conference</div>';
-    html += mobileRoundCards('AFC','Wild Card', b.AFC.wildcard, null);
-    html += mobileRoundCards('AFC','Divisional', b.AFC.divisional, b.AFC.byeTeam);
-    html += mobileRoundCards('AFC','Conference Championship', [b.AFC.championship], null);
-    html += '</div>';
+    el.innerHTML = `
+      <div class="mobile-conf-section">
+        <div class="mobile-conf-header afc">AFC Conference</div>
+        ${mobileRoundCards('AFC','Wild Card', b.AFC.wildcard, null)}
+        ${mobileRoundCards('AFC','Divisional', b.AFC.divisional, b.AFC.byeTeam)}
+        ${mobileRoundCards('AFC','Conference Championship', [b.AFC.championship], null)}
+      </div>
+      <div class="mobile-sb-divider"></div>
+      <div class="mobile-sb-section">
+        <div class="mobile-card-slot">${renderSuperBowl(DATA.super_bowl)}</div>
+      </div>
+      <div class="mobile-sb-divider"></div>
+      <div class="mobile-conf-section">
+        <div class="mobile-conf-header nfc">NFC Conference</div>
+        ${mobileRoundCards('NFC','Wild Card', b.NFC.wildcard, null)}
+        ${mobileRoundCards('NFC','Divisional', b.NFC.divisional, b.NFC.byeTeam)}
+        ${mobileRoundCards('NFC','Conference Championship', [b.NFC.championship], null)}
+      </div>
+    `;
 
-    html += '<div class="mobile-sb-divider"></div>';
-    html += '<div class="mobile-sb-section">';
-    html += '<div class="mobile-card-slot">'+renderSuperBowl(DATA.super_bowl)+'</div>';
-    html += '</div>';
-    html += '<div class="mobile-sb-divider"></div>';
-
-    html += '<div class="mobile-conf-section">';
-    html += '<div class="mobile-conf-header nfc">NFC Conference</div>';
-    html += mobileRoundCards('NFC','Wild Card', b.NFC.wildcard, null);
-    html += mobileRoundCards('NFC','Divisional', b.NFC.divisional, b.NFC.byeTeam);
-    html += mobileRoundCards('NFC','Conference Championship', [b.NFC.championship], null);
-    html += '</div>';
-
-    el.innerHTML = html;
-
-    el.querySelectorAll('.matchup-card:not(.pending)').forEach(function(card){
-      card.addEventListener('click', function(){
-        openModal(card.getAttribute('data-matchup-id'));
-      });
+    el.querySelectorAll('.matchup-card:not(.pending)').forEach(card => {
+      card.addEventListener('click', () => openModal(card.getAttribute('data-matchup-id')));
     });
   }
 
-  function findMatchup(id){
-    var all = [];
-    ['AFC','NFC'].forEach(function(c){
-      var br = DATA.bracket[c];
+  const findMatchup = id => {
+    let all = [];
+    ['AFC','NFC'].forEach(c => {
+      const br = DATA.bracket[c];
       all = all.concat(br.wildcard);
       all = all.concat(br.divisional);
       all.push(br.championship);
     });
     all.push(DATA.super_bowl);
-    for(var i=0;i<all.length;i++){
-      if(all[i].matchupId===id) return all[i];
-    }
-    return null;
-  }
+    return all.find(m => m.matchupId === id) || null;
+  };
 
-  function findH2H(teamA, teamB){
-    var keys = Object.keys(DATA.head_to_head);
-    for(var i=0;i<keys.length;i++){
-      var k = keys[i];
-      if((k.indexOf(teamA)>=0 && k.indexOf(teamB)>=0)){
-        return DATA.head_to_head[k];
-      }
-    }
-    return [];
-  }
+  const findH2H = (teamA, teamB) => {
+    const keys = Object.keys(DATA.head_to_head);
+    const matchKey = keys.find(k => k.indexOf(teamA) >= 0 && k.indexOf(teamB) >= 0);
+    return matchKey ? DATA.head_to_head[matchKey] : [];
+  };
 
   function openModal(matchupId){
-    var m = findMatchup(matchupId);
+    const m = findMatchup(matchupId);
     if(!m||!m.home) return;
-    var home = DATA.teams[m.home];
-    var away = DATA.teams[m.away];
+    const home = DATA.teams[m.home];
+    const away = DATA.teams[m.away];
     if(!home||!away) return;
     currentMatchupId = matchupId;
 
-    var homePct = m.homeWinPct!==null ? Math.round(m.homeWinPct*100) : 50;
-    var awayPct = 100 - homePct;
+    const homePct = m.homeWinPct!==null ? Math.round(m.homeWinPct*100) : 50;
+    const awayPct = 100 - homePct;
 
-    var html = '';
-    html += '<div style="text-align:center;margin-bottom:16px">';
-    html += '<div class="modal-matchup-header" style="display:flex;align-items:center;justify-content:center;gap:16px;margin-bottom:12px;flex-wrap:wrap">';
-    html += '<div style="text-align:center">';
-    html += '<img src="'+logoUrl(m.home)+'" style="width:56px;height:56px;border-radius:6px" onerror="this.style.display=\'none\'">';
-    html += '<div style="font-weight:800;margin-top:4px">'+m.home+'</div>';
-    html += '<div style="font-size:12px;color:var(--muted)">#'+m.homeSeed+' seed &bull; '+home.wins+'-'+home.losses+'</div>';
-    html += '</div>';
-    html += '<div style="font-size:20px;font-weight:800;color:var(--gold)">VS</div>';
-    html += '<div style="text-align:center">';
-    html += '<img src="'+logoUrl(m.away)+'" style="width:56px;height:56px;border-radius:6px" onerror="this.style.display=\'none\'">';
-    html += '<div style="font-weight:800;margin-top:4px">'+m.away+'</div>';
-    html += '<div style="font-size:12px;color:var(--muted)">#'+m.awaySeed+' seed &bull; '+away.wins+'-'+away.losses+'</div>';
-    html += '</div>';
-    html += '</div>';
+    let html = `
+      <div style="text-align:center;margin-bottom:16px">
+        <div class="modal-matchup-header">
+          <div class="modal-team-box">
+            <img src="${logoUrl(m.home)}" class="modal-team-logo" onerror="this.style.display='none'">
+            <div class="modal-team-name">${m.home}</div>
+            <div class="modal-team-info">#${m.homeSeed} seed &bull; ${home.wins}-${home.losses}</div>
+          </div>
+          <div class="modal-vs">VS</div>
+          <div class="modal-team-box">
+            <img src="${logoUrl(m.away)}" class="modal-team-logo" onerror="this.style.display='none'">
+            <div class="modal-team-name">${m.away}</div>
+            <div class="modal-team-info">#${m.awaySeed} seed &bull; ${away.wins}-${away.losses}</div>
+          </div>
+        </div>
 
-    html += '<div style="margin:12px 0">';
-    html += '<div style="display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:4px">';
-    html += '<span>'+m.home+' '+homePct+'%</span>';
-    html += '<span style="color:var(--muted)">Win Probability</span>';
-    html += '<span>'+awayPct+'% '+m.away+'</span>';
-    html += '</div>';
-    html += '<div style="display:flex;height:8px;border-radius:4px;overflow:hidden">';
-    html += '<div style="width:'+homePct+'%;background:var(--afc-color)"></div>';
-    html += '<div style="width:'+awayPct+'%;background:var(--nfc-color)"></div>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
+        <div class="win-prob-section">
+          <div class="win-prob-row">
+            <span>${m.home} ${homePct}%</span>
+            <span style="color:var(--muted)">Win Probability</span>
+            <span>${awayPct}% ${m.away}</span>
+          </div>
+          <div class="win-prob-bar">
+            <div style="width:${homePct}%;background:var(--afc-color)"></div>
+            <div style="width:${awayPct}%;background:var(--nfc-color)"></div>
+          </div>
+        </div>
+      </div>
+    `;
 
-    var analyticsText = DATA.analytics && DATA.analytics[matchupId];
+    const analyticsText = DATA.analytics && DATA.analytics[matchupId];
     if(analyticsText){
-      html += '<div class="analytics-section" style="margin:20px 0">';
-      html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">\u{1F4CA} Аналитика матча</div>';
-      html += '<div class="analytics-wrap" style="position:relative">';
-      html += '<div id="analytics-body" class="analytics-text analytics-collapsed" style="background:#0d1a30;border-radius:10px;padding:16px 18px;font-size:13px;line-height:1.7;color:var(--white);white-space:pre-wrap;word-wrap:break-word;border-left:3px solid var(--gold);overflow:hidden">';
-      html += analyticsText;
-      html += '</div>';
-      html += '<div id="analytics-fade" class="analytics-fade" style="position:absolute;bottom:0;left:0;right:0;height:48px;background:linear-gradient(to bottom,transparent,#0d1a30);border-radius:0 0 10px 10px;pointer-events:none"></div>';
-      html += '</div>';
-      html += '<button id="analytics-toggle" style="display:block;margin:8px auto 0;background:none;border:1px solid var(--gold);color:var(--gold);padding:5px 18px;border-radius:6px;font-size:12px;font-weight:700;cursor:pointer;letter-spacing:1px">ЧИТАТЬ ДАЛЕЕ ▼</button>';
-      html += '</div>';
+      html += `
+        <div class="analytics-section">
+          <div class="analytics-header">\u{1F4CA} Аналитика матча</div>
+          <div class="analytics-wrap">
+            <div id="analytics-body" class="analytics-text analytics-collapsed">${analyticsText}</div>
+            <div id="analytics-fade" class="analytics-fade"></div>
+          </div>
+          <button id="analytics-toggle" class="analytics-toggle-btn">ЧИТАТЬ ДАЛЕЕ ▼</button>
+        </div>
+      `;
     }
 
-    var statCategories = [
+    const statCategories = [
       {
         title: 'OVERALL',
         stats: [
@@ -1038,150 +1004,153 @@ body::after{
     ];
 
     function renderStatCard(s, homeTeam, awayTeam) {
-      var total = (Math.abs(s.h) + Math.abs(s.a)) || 1;
-      var hPct, aPct;
+      const total = (Math.abs(s.h) + Math.abs(s.a)) || 1;
+      let hPct, aPct;
       if (s.h === 0 && s.a === 0) { hPct = 50; aPct = 50; }
       else { hPct = Math.max(8, Math.min(92, Math.round(s.h / total * 100))); aPct = 100 - hPct; }
-      var hBetter = s.invert ? s.h < s.a : s.h > s.a;
-      var aBetter = s.invert ? s.a < s.h : s.a > s.h;
-      var tied = s.h === s.a;
-      var diff = Math.abs(s.h - s.a);
-      var diffStr = s.label === 'ELO' ? diff.toFixed(1) : (Number.isInteger(diff) ? diff : diff.toFixed(1));
+      const hBetter = s.invert ? s.h < s.a : s.h > s.a;
+      const aBetter = s.invert ? s.a < s.h : s.a > s.h;
+      const tied = s.h === s.a;
+      const diff = Math.abs(s.h - s.a);
+      const diffStr = s.label === 'ELO' ? diff.toFixed(1) : (Number.isInteger(diff) ? diff : diff.toFixed(1));
 
-      var card = '<div class="stat-card" style="background:#0d1a30;border-radius:8px;padding:10px 12px">';
-      card += '<div class="stat-card-header" style="text-align:center;font-size:11px;color:var(--muted);letter-spacing:1px;margin-bottom:6px">'+s.label+'</div>';
-      card += '<div class="stat-card-values" style="display:flex;justify-content:space-between;align-items:center;font-size:18px;font-weight:800;margin-bottom:6px">';
-      card += '<span style="display:flex;align-items:center;gap:4px;color:'+(hBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">';
-      card += '<img src="'+logoUrl(homeTeam)+'" style="width:18px;height:18px;border-radius:3px;flex-shrink:0" onerror="this.style.display=\'none\'">';
-      card += formatStat(s.h)+'</span>';
-      if (!tied) {
-        card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(240,185,49,0.15);color:var(--gold)">+'+ diffStr +'</span>';
-      } else {
-        card += '<span class="stat-delta" style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:10px;background:rgba(123,143,176,0.15);color:var(--muted)">EVEN</span>';
-      }
-      card += '<span style="display:flex;align-items:center;gap:4px;color:'+(aBetter?'var(--gold)':tied?'var(--white)':'var(--muted)')+'">';
-      card += formatStat(s.a);
-      card += '<img src="'+logoUrl(awayTeam)+'" style="width:18px;height:18px;border-radius:3px;flex-shrink:0" onerror="this.style.display=\'none\'">';
-      card += '</span>';
-      card += '</div>';
-      card += '<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;gap:2px">';
-      card += '<div style="width:'+hPct+'%;background:'+(hBetter?'var(--gold)':tied?'#3a5280':'#3a5280')+';border-radius:2px;transition:width 0.3s"></div>';
-      card += '<div style="width:'+aPct+'%;background:'+(aBetter?'var(--gold)':tied?'#3a5280':'#3a5280')+';border-radius:2px;transition:width 0.3s"></div>';
-      card += '</div>';
-      card += '</div>';
-      return card;
+      return `
+        <div class="stat-card">
+          <div class="stat-card-header">${s.label}</div>
+          <div class="stat-card-values">
+            <span style="display:flex;align-items:center;gap:4px;color:${hBetter?'var(--gold)':tied?'var(--white)':'var(--muted)'}">
+              <img src="${logoUrl(homeTeam)}" style="width:18px;height:18px;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">
+              ${formatStat(s.h)}
+            </span>
+            ${!tied ? `<span class="stat-delta">+${diffStr}</span>` : `<span class="stat-delta" style="background:rgba(123,143,176,0.15);color:var(--muted)">EVEN</span>`}
+            <span style="display:flex;align-items:center;gap:4px;color:${aBetter?'var(--gold)':tied?'var(--white)':'var(--muted)'}">
+              ${formatStat(s.a)}
+              <img src="${logoUrl(awayTeam)}" style="width:18px;height:18px;border-radius:3px;flex-shrink:0" onerror="this.style.display='none'">
+            </span>
+          </div>
+          <div class="stat-bar-wrap">
+            <div style="width:${hPct}%;background:${hBetter?'var(--gold)':'#3a5280'};border-radius:2px;transition:width 0.3s"></div>
+            <div style="width:${aPct}%;background:${aBetter?'var(--gold)':'#3a5280'};border-radius:2px;transition:width 0.3s"></div>
+          </div>
+        </div>
+      `;
     }
 
-    html += '<div style="margin:20px 0">';
-    html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;text-align:center">Team Stats Comparison</div>';
-    statCategories.forEach(function(cat){
-      html += '<div style="margin-bottom:14px">';
-      html += '<div class="stat-category-title" style="font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;margin-bottom:6px;padding-left:4px;border-left:3px solid var(--gold)">'+cat.title+'</div>';
-      html += '<div class="stats-category-grid" style="display:grid;grid-template-columns:repeat('+Math.min(cat.stats.length, 3)+',1fr);gap:6px">';
-      cat.stats.forEach(function(s){
-        html += renderStatCard(s, m.home, m.away);
-      });
-      html += '</div>';
-      html += '</div>';
-    });
-    html += '</div>';
+    html += `
+      <div style="margin:20px 0">
+        <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:12px;text-align:center">Team Stats Comparison</div>
+        ${statCategories.map(cat => `
+          <div style="margin-bottom:14px">
+            <div class="stat-category-title">${cat.title}</div>
+            <div class="stats-category-grid">
+              ${cat.stats.map(s => renderStatCard(s, m.home, m.away)).join('')}
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    `;
 
-    html += '<div style="margin:20px 0">';
-    html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">Best Players</div>';
-    html += '<div class="modal-players-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:12px">';
-    ['QB','RB','WR','DEF','DB','LB','DL'].forEach(function(pos){
-      var hp = home.topPlayers[pos];
-      var ap = away.topPlayers[pos];
-      if(!hp||!ap) return;
-      html += '<div style="background:#0d1a30;border-radius:8px;padding:10px">';
-      html += '<div style="font-size:10px;color:var(--muted);margin-bottom:4px">'+m.home+' '+pos+'</div>';
-      html += '<div style="font-size:13px;font-weight:700">'+hp.name+'</div>';
-      html += '<div style="font-size:11px;color:var(--muted)">'+playerStatLine(pos,hp)+' &bull; <span style="color:var(--gold)">'+hp.ovr+' OVR</span></div>';
-      html += '</div>';
-      html += '<div style="background:#0d1a30;border-radius:8px;padding:10px">';
-      html += '<div style="font-size:10px;color:var(--muted);margin-bottom:4px">'+m.away+' '+pos+'</div>';
-      html += '<div style="font-size:13px;font-weight:700">'+ap.name+'</div>';
-      html += '<div style="font-size:11px;color:var(--muted)">'+playerStatLine(pos,ap)+' &bull; <span style="color:var(--gold)">'+ap.ovr+' OVR</span></div>';
-      html += '</div>';
-    });
-    html += '</div>';
-    html += '</div>';
+    html += `
+      <div style="margin:20px 0">
+        <div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">Best Players</div>
+        <div class="modal-players-grid">
+          ${['QB','RB','WR','DEF','DB','LB','DL'].map(pos => {
+            const hp = home.topPlayers[pos];
+            const ap = away.topPlayers[pos];
+            if(!hp||!ap) return '';
+            return `
+              <div class="player-card">
+                <div class="player-pos-label">${m.home} ${pos}</div>
+                <div class="player-name">${hp.name}</div>
+                <div class="player-stats">${playerStatLine(pos,hp)} &bull; <span style="color:var(--gold)">${hp.ovr} OVR</span></div>
+              </div>
+              <div class="player-card">
+                <div class="player-pos-label">${m.away} ${pos}</div>
+                <div class="player-name">${ap.name}</div>
+                <div class="player-stats">${playerStatLine(pos,ap)} &bull; <span style="color:var(--gold)">${ap.ovr} OVR</span></div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      </div>
+    `;
 
-    var h2h = findH2H(m.home, m.away);
+    const h2h = findH2H(m.home, m.away);
     if(h2h.length>0){
-      var homeWins=0, awayWins=0;
-      h2h.forEach(function(g){ if(g.winner===m.home) homeWins++; else awayWins++; });
-      html += '<div style="margin:20px 0">';
-      html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:4px;text-align:center">Head-to-Head History</div>';
-      html += '<div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:10px">'+m.home+' '+homeWins+' &mdash; '+awayWins+' '+m.away+' ('+h2h.length+' games)</div>';
-      h2h.forEach(function(g){
-        var seasonLabel = 'S'+(g.season+1);
-        var weekLabel = 'Wk '+(g.week+1);
-        var leftTeam = m.home, rightTeam = m.away;
-        var leftScore, rightScore;
-        if(g.home===m.home){ leftScore=g.homeScore; rightScore=g.awayScore; }
-        else { leftScore=g.awayScore; rightScore=g.homeScore; }
-        var leftWon = g.winner===leftTeam;
-        var rightWon = g.winner===rightTeam;
-        var winColor = '#4caf50';
-        html += '<div class="h2h-game" style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#0d1a30;border-radius:6px;margin-bottom:4px;font-size:12px">';
-        html += '<span class="h2h-week" style="color:var(--muted);min-width:55px">'+seasonLabel+' '+weekLabel+'</span>';
-        html += '<span style="flex:1;font-weight:'+(leftWon?'700':'400')+';color:'+(leftWon?winColor:'inherit')+'">'+leftTeam+(leftWon?' \u2705':'')+'</span>';
-        html += '<span class="h2h-score" style="font-weight:800;color:var(--gold);min-width:50px;text-align:center">'+leftScore+' - '+rightScore+'</span>';
-        html += '<span style="flex:1;text-align:right;font-weight:'+(rightWon?'700':'400')+';color:'+(rightWon?winColor:'inherit')+'">'+rightTeam+(rightWon?' \u2705':'')+'</span>';
-        html += '</div>';
-      });
-      html += '</div>';
+      let homeWins=0, awayWins=0;
+      h2h.forEach(g => { if(g.winner===m.home) homeWins++; else awayWins++; });
+      html += `
+        <div class="h2h-section">
+          <div class="h2h-header">Head-to-Head History</div>
+          <div class="h2h-summary">${m.home} ${homeWins} &mdash; ${awayWins} ${m.away} (${h2h.length} games)</div>
+          ${h2h.map(g => {
+            const seasonLabel = 'S'+(g.season+1);
+            const weekLabel = 'Wk '+(g.week+1);
+            let leftScore, rightScore;
+            if(g.home===m.home){ leftScore=g.homeScore; rightScore=g.awayScore; }
+            else { leftScore=g.awayScore; rightScore=g.homeScore; }
+            const leftWon = g.winner===m.home;
+            const rightWon = g.winner===m.away;
+            const winColor = '#4caf50';
+            return `
+              <div class="h2h-game">
+                <span class="h2h-week">${seasonLabel} ${weekLabel}</span>
+                <span style="flex:1;font-weight:${leftWon?'700':'400'};color:${leftWon?winColor:'inherit'}">${m.home}${leftWon?' \u2705':''}</span>
+                <span class="h2h-score">${leftScore} - ${rightScore}</span>
+                <span style="flex:1;text-align:right;font-weight:${rightWon?'700':'400'};color:${rightWon?winColor:'inherit'}">${m.away}${rightWon?' \u2705':''}</span>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
     }
 
-    var userVote = getUserVote(matchupId);
-    var counts = getVoteCounts(matchupId, m.home, m.away);
-    var totalVotes = counts.home + counts.away;
-    var vHomePct = totalVotes > 0 ? Math.round(counts.home / totalVotes * 100) : 0;
-    var vAwayPct = totalVotes > 0 ? 100 - vHomePct : 0;
+    const userVote = getUserVote(matchupId);
+    const counts = getVoteCounts(matchupId, m.home, m.away);
+    const totalVotes = counts.home + counts.away;
+    const vHomePct = totalVotes > 0 ? Math.round(counts.home / totalVotes * 100) : 0;
+    const vAwayPct = totalVotes > 0 ? 100 - vHomePct : 0;
 
-    html += '<div class="vote-section">';
-    html += '<div class="vote-title">Community Prediction</div>';
-    html += '<div class="vote-row">';
-    html += '<div class="vote-btn'+(userVote===m.home?' voted':'')+'" id="vote-btn-home">';
-    html += '<img src="'+logoUrl(m.home)+'" alt="'+m.home+'" onerror="this.style.display=\'none\'">';
-    html += '<span class="vote-team-name">'+m.home+'</span>';
-    html += '<span class="vote-label">'+(userVote===m.home?'YOUR PICK':'PREDICT')+'</span>';
-    html += '</div>';
-    html += '<div style="font-size:16px;font-weight:800;color:var(--muted)">OR</div>';
-    html += '<div class="vote-btn'+(userVote===m.away?' voted':'')+'" id="vote-btn-away">';
-    html += '<img src="'+logoUrl(m.away)+'" alt="'+m.away+'" onerror="this.style.display=\'none\'">';
-    html += '<span class="vote-team-name">'+m.away+'</span>';
-    html += '<span class="vote-label">'+(userVote===m.away?'YOUR PICK':'PREDICT')+'</span>';
-    html += '</div>';
-    html += '</div>';
-    html += '<div class="vote-bar-wrap">';
-    html += '<div class="vote-bar">';
-    html += '<div class="bar-home" id="vote-bar-home" style="width:'+(totalVotes>0?vHomePct:0)+'%"></div>';
-    html += '<div class="bar-away" id="vote-bar-away" style="width:'+(totalVotes>0?vAwayPct:0)+'%"></div>';
-    html += '</div>';
-    html += '<div class="vote-counts" id="vote-counts">';
-    html += '<span><span class="count-bold">'+counts.home+'</span> voted '+m.home+'</span>';
-    html += '<span><span class="count-bold">'+counts.away+'</span> voted '+m.away+'</span>';
-    html += '</div>';
-    html += '</div>';
-    html += '</div>';
+    html += `
+      <div class="vote-section">
+        <div class="vote-title">Community Prediction</div>
+        <div class="vote-row">
+          <div class="vote-btn${userVote===m.home?' voted':''}" id="vote-btn-home">
+            <img src="${logoUrl(m.home)}" alt="${m.home}" onerror="this.style.display='none'">
+            <span class="vote-team-name">${m.home}</span>
+            <span class="vote-label">${userVote===m.home?'YOUR PICK':'PREDICT'}</span>
+          </div>
+          <div style="font-size:16px;font-weight:800;color:var(--muted)">OR</div>
+          <div class="vote-btn${userVote===m.away?' voted':''}" id="vote-btn-away">
+            <img src="${logoUrl(m.away)}" alt="${m.away}" onerror="this.style.display='none'">
+            <span class="vote-team-name">${m.away}</span>
+            <span class="vote-label">${userVote===m.away?'YOUR PICK':'PREDICT'}</span>
+          </div>
+        </div>
+        <div class="vote-bar-wrap">
+          <div class="vote-bar">
+            <div class="bar-home" id="vote-bar-home" style="width:${totalVotes>0?vHomePct:0}%"></div>
+            <div class="bar-away" id="vote-bar-away" style="width:${totalVotes>0?vAwayPct:0}%"></div>
+          </div>
+          <div class="vote-counts" id="vote-counts">
+            <span><span class="count-bold">${counts.home}</span> voted ${m.home}</span>
+            <span><span class="count-bold">${counts.away}</span> voted ${m.away}</span>
+          </div>
+        </div>
+      </div>
+    `;
 
     document.getElementById('modal-body').innerHTML = html;
 
-    document.getElementById('vote-btn-home').addEventListener('click', function(){
-      submitVote(matchupId, m.home);
-    });
-    document.getElementById('vote-btn-away').addEventListener('click', function(){
-      submitVote(matchupId, m.away);
-    });
+    document.getElementById('vote-btn-home').addEventListener('click', () => submitVote(matchupId, m.home));
+    document.getElementById('vote-btn-away').addEventListener('click', () => submitVote(matchupId, m.away));
 
-    var toggleBtn = document.getElementById('analytics-toggle');
+    const toggleBtn = document.getElementById('analytics-toggle');
     if(toggleBtn){
-      toggleBtn.addEventListener('click', function(){
-        var body = document.getElementById('analytics-body');
-        var fade = document.getElementById('analytics-fade');
-        var expanded = body.classList.contains('analytics-expanded');
+      toggleBtn.addEventListener('click', () => {
+        const body = document.getElementById('analytics-body');
+        const fade = document.getElementById('analytics-fade');
+        const expanded = body.classList.contains('analytics-expanded');
         if(expanded){
           body.classList.remove('analytics-expanded');
           body.classList.add('analytics-collapsed');
@@ -1196,58 +1165,58 @@ body::after{
       });
     }
 
-    var overlay = document.getElementById('modal-overlay');
+    const overlay = document.getElementById('modal-overlay');
     overlay.style.display = 'block';
     overlay.offsetHeight;
     overlay.classList.add('visible');
     document.body.style.overflow = 'hidden';
   }
 
-  function formatStat(v){
+  const formatStat = v => {
     if(typeof v==='number'){
       if(v>=1000) return v.toLocaleString();
       if(v%1!==0) return v.toFixed(1);
     }
     return v;
-  }
+  };
 
-  function playerStatLine(pos, p){
-    if(pos==='QB') return p.yards+' yds, '+p.tds+' TD, '+p.ints+' INT';
-    if(pos==='RB') return p.yards+' yds, '+p.tds+' TD, '+p.avgYpc+' YPC';
-    if(pos==='WR') return p.yards+' yds, '+p.tds+' TD, '+p.catches+' rec';
-    if(pos==='DEF'||pos==='DB'||pos==='LB'||pos==='DL') return p.sacks+' sck, '+p.ints+' INT, '+p.tackles+' tkl';
+  const playerStatLine = (pos, p) => {
+    if(pos==='QB') return `${p.yards} yds, ${p.tds} TD, ${p.ints} INT`;
+    if(pos==='RB') return `${p.yards} yds, ${p.tds} TD, ${p.avgYpc} YPC`;
+    if(pos==='WR') return `${p.yards} yds, ${p.tds} TD, ${p.catches} rec`;
+    if(['DEF','DB','LB','DL'].includes(pos)) return `${p.sacks} sck, ${p.ints} INT, ${p.tackles} tkl`;
     return '';
-  }
+  };
 
-  function closeModal(){
-    var overlay = document.getElementById('modal-overlay');
+  const closeModal = () => {
+    const overlay = document.getElementById('modal-overlay');
     overlay.classList.remove('visible');
-    setTimeout(function(){
+    setTimeout(() => {
       overlay.style.display = 'none';
       document.body.style.overflow = '';
     }, 300);
     currentMatchupId = null;
-  }
+  };
 
   document.getElementById('modal-close').addEventListener('click', closeModal);
-  document.getElementById('modal-overlay').addEventListener('click', function(e){
-    if(e.target===this) closeModal();
+  document.getElementById('modal-overlay').addEventListener('click', e => {
+    if(e.target === e.currentTarget) closeModal();
   });
-  document.addEventListener('keydown', function(e){
-    if(e.key==='Escape') closeModal();
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') closeModal();
   });
 
   fetch('data/playoff_dashboard.json')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
+    .then(r => r.json())
+    .then(d => {
       DATA = d;
       buildBracket();
       buildMobileBracket();
-      return fetchVotes().then(function(){ reconcileLocalVotes(); updateBracketVotes(); updateMobileBracketVotes(); });
+      return fetchVotes().then(() => { reconcileLocalVotes(); updateBracketVotes(); updateMobileBracketVotes(); });
     })
-    .catch(function(err){
+    .catch(err => {
       document.getElementById('bracket').innerHTML =
-        '<div class="loading" style="grid-column:1/-1;color:#e57373">Failed to load data. Make sure to serve via HTTP (python3 -m http.server).</div>';
+        `<div class="loading" style="grid-column:1/-1;color:#e57373">Failed to load data. Make sure to serve via HTTP (python3 -m http.server).</div>`;
       console.error(err);
     });
 })();
