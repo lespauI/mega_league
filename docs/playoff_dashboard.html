@@ -523,6 +523,7 @@ body::after{
   var JSONBIN_KEY = '$2a$10$NHFv3H4QqdDeWEQ9p.P8QONEGTGZ/fJjP1zMkLmZAfUdzd.Q9118K';
   var JSONBIN_URL = 'https://api.jsonbin.io/v3/b/' + JSONBIN_ID;
   var DATA = null;
+  var ANALYTICS = null;
   var votesData = null;
   var currentMatchupId = null;
 
@@ -983,7 +984,7 @@ body::after{
     html += '</div>';
     html += '</div>';
 
-    var analyticsText = DATA.analytics && DATA.analytics[matchupId];
+    var analyticsText = ANALYTICS && ANALYTICS[matchupId];
     if(analyticsText){
       html += '<div class="analytics-section" style="margin:20px 0">';
       html += '<div style="font-size:14px;font-weight:700;color:var(--gold);margin-bottom:10px;text-align:center">\u{1F4CA} Аналитика матча</div>';
@@ -1244,10 +1245,13 @@ body::after{
     if(e.key==='Escape') closeModal();
   });
 
-  fetch('data/playoff_dashboard.json')
-    .then(function(r){ return r.json(); })
-    .then(function(d){
-      DATA = d;
+  Promise.all([
+    fetch('data/playoff_dashboard.json').then(function(r){ return r.json(); }),
+    fetch('data/analytics.json').then(function(r){ return r.json(); }).catch(function(){ return {}; })
+  ])
+    .then(function(results){
+      DATA = results[0];
+      ANALYTICS = results[1];
       buildBracket();
       buildMobileBracket();
       return fetchVotes().then(function(){ reconcileLocalVotes(); updateBracketVotes(); updateMobileBracketVotes(); });

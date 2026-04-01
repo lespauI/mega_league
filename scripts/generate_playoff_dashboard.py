@@ -760,12 +760,6 @@ def main():
 
     h2h = load_head_to_head(matchup_pairs)
 
-    analytics = {}
-    analytics_path = os.path.join(ROOT, 'docs', 'data', 'analytics_backup.json')
-    if os.path.exists(analytics_path):
-        with open(analytics_path, 'r', encoding='utf-8') as f:
-            analytics = json.load(f)
-
     output = {
         'generated_at': datetime.now(timezone.utc).isoformat(),
         'season_index': SEASON_INDEX,
@@ -773,7 +767,6 @@ def main():
         'bracket': bracket,
         'super_bowl': super_bowl,
         'head_to_head': h2h,
-        'analytics': analytics,
     }
 
     out_dir = os.path.join(ROOT, 'docs', 'data')
