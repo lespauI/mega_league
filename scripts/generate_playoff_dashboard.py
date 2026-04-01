@@ -258,7 +258,10 @@ def load_playoff_games():
     for row in read_csv('MEGA_games.csv'):
         if int(row.get('seasonIndex', -1)) != SEASON_INDEX:
             continue
-        if int(row.get('stageIndex', 0)) != 0:
+        stage = int(row.get('stageIndex', 0))
+        week = int(row.get('weekIndex', 0))
+        is_playoff = stage == 0 or (stage == 1 and week >= 18)
+        if not is_playoff:
             continue
         status = int(row['status']) if row['status'] else 1
         completed = status in [2, 3, 4]
@@ -267,7 +270,7 @@ def load_playoff_games():
             'away': row['awayTeam'].strip(),
             'homeScore': int(row['homeScore']) if row['homeScore'] and completed else None,
             'awayScore': int(row['awayScore']) if row['awayScore'] and completed else None,
-            'weekIndex': int(row.get('weekIndex', 0)),
+            'weekIndex': week,
             'completed': completed,
         })
     return results
@@ -336,47 +339,124 @@ def build_bracket(teams, elo_map, sos_map, rankings, all_info, team_stats, playo
 
         bye_team = conf_teams.get(1)
 
+        wc_winners = {}
+        for m in wildcard:
+            if m['winner']:
+                wc_winners[m['matchupId']] = m['winner']
+
+        wc1_id = f'{conf.lower()}_wc_1'
+        wc2_id = f'{conf.lower()}_wc_2'
+        wc3_id = f'{conf.lower()}_wc_3'
+
+        div1_home = bye_team
+        div1_away = wc_winners.get(wc1_id)
+        div2_home = None
+        div2_away = None
+        wc2_winner = wc_winners.get(wc2_id)
+        wc3_winner = wc_winners.get(wc3_id)
+        if wc2_winner and wc3_winner:
+            seed_a = teams[wc2_winner]['seed']
+            seed_b = teams[wc3_winner]['seed']
+            if seed_a < seed_b:
+                div2_home = wc2_winner
+                div2_away = wc3_winner
+            else:
+                div2_home = wc3_winner
+                div2_away = wc2_winner
+
+        def _build_div(mid, home, away, feeds, bye=None):
+            d = {
+                'matchupId': mid,
+                'home': home,
+                'homeSeed': teams[home]['seed'] if home and home in teams else None,
+                'away': away,
+                'awaySeed': teams[away]['seed'] if away and away in teams else None,
+                'homeScore': None,
+                'awayScore': None,
+                'homeWinPct': None,
+                'status': 'pending',
+                'winner': None,
+                'feedsFrom': feeds,
+            }
+            if bye:
+                d['byeTeam'] = bye
+            if home and away:
+                d['homeWinPct'] = compute_win_prob(
+                    home, away, teams, elo_map, sos_map, rankings, all_info, team_stats
+                )
+                game = match_playoff_game(playoff_games, home, away)
+                if game and game['completed']:
+                    d['status'] = 'completed'
+                    if game['home'] == home:
+                        d['homeScore'] = game['homeScore']
+                        d['awayScore'] = game['awayScore']
+                    else:
+                        d['homeScore'] = game['awayScore']
+                        d['awayScore'] = game['homeScore']
+                    if d['homeScore'] is not None and d['awayScore'] is not None:
+                        d['winner'] = home if d['homeScore'] > d['awayScore'] else away
+                else:
+                    d['status'] = 'scheduled'
+            return d
+
         divisional = [
-            {
-                'matchupId': f'{conf.lower()}_div_1',
-                'home': None,
-                'away': None,
-                'homeScore': None,
-                'awayScore': None,
-                'homeWinPct': None,
-                'status': 'pending',
-                'winner': None,
-                'feedsFrom': [f'{conf.lower()}_wc_1'],
-                'byeTeam': bye_team,
-            },
-            {
-                'matchupId': f'{conf.lower()}_div_2',
-                'home': None,
-                'away': None,
-                'homeScore': None,
-                'awayScore': None,
-                'homeWinPct': None,
-                'status': 'pending',
-                'winner': None,
-                'feedsFrom': [f'{conf.lower()}_wc_2', f'{conf.lower()}_wc_3'],
-            },
+            _build_div(f'{conf.lower()}_div_1', div1_home, div1_away, [wc1_id], bye=bye_team),
+            _build_div(f'{conf.lower()}_div_2', div2_home, div2_away, [wc2_id, wc3_id]),
         ]
 
-        championship = {
+        div_winners = {}
+        for d in divisional:
+            if d['winner']:
+                div_winners[d['matchupId']] = d['winner']
+
+        champ_home = None
+        champ_away = None
+        div1_winner = div_winners.get(f'{conf.lower()}_div_1')
+        div2_winner = div_winners.get(f'{conf.lower()}_div_2')
+        if div1_winner and div2_winner:
+            seed_a = teams[div1_winner]['seed']
+            seed_b = teams[div2_winner]['seed']
+            if seed_a < seed_b:
+                champ_home = div1_winner
+                champ_away = div2_winner
+            else:
+                champ_home = div2_winner
+                champ_away = div1_winner
+
+        champ = {
             'matchupId': f'{conf.lower()}_champ',
-            'home': None,
-            'away': None,
+            'home': champ_home,
+            'homeSeed': teams[champ_home]['seed'] if champ_home and champ_home in teams else None,
+            'away': champ_away,
+            'awaySeed': teams[champ_away]['seed'] if champ_away and champ_away in teams else None,
             'homeScore': None,
             'awayScore': None,
             'homeWinPct': None,
             'status': 'pending',
             'winner': None,
         }
+        if champ_home and champ_away:
+            champ['homeWinPct'] = compute_win_prob(
+                champ_home, champ_away, teams, elo_map, sos_map, rankings, all_info, team_stats
+            )
+            game = match_playoff_game(playoff_games, champ_home, champ_away)
+            if game and game['completed']:
+                champ['status'] = 'completed'
+                if game['home'] == champ_home:
+                    champ['homeScore'] = game['homeScore']
+                    champ['awayScore'] = game['awayScore']
+                else:
+                    champ['homeScore'] = game['awayScore']
+                    champ['awayScore'] = game['homeScore']
+                if champ['homeScore'] is not None and champ['awayScore'] is not None:
+                    champ['winner'] = champ_home if champ['homeScore'] > champ['awayScore'] else champ_away
+            else:
+                champ['status'] = 'scheduled'
 
         bracket[conf] = {
             'wildcard': wildcard,
             'divisional': divisional,
-            'championship': championship,
+            'championship': champ,
             'byeTeam': bye_team,
         }
 
@@ -671,8 +751,20 @@ def main():
     for conf in bracket:
         for m in bracket[conf]['wildcard']:
             matchup_pairs.append((m['home'], m['away']))
+        for m in bracket[conf]['divisional']:
+            if m['home'] and m['away']:
+                matchup_pairs.append((m['home'], m['away']))
+        champ = bracket[conf]['championship']
+        if champ['home'] and champ['away']:
+            matchup_pairs.append((champ['home'], champ['away']))
 
     h2h = load_head_to_head(matchup_pairs)
+
+    analytics = {}
+    analytics_path = os.path.join(ROOT, 'docs', 'data', 'analytics_backup.json')
+    if os.path.exists(analytics_path):
+        with open(analytics_path, 'r', encoding='utf-8') as f:
+            analytics = json.load(f)
 
     output = {
         'generated_at': datetime.now(timezone.utc).isoformat(),
@@ -681,6 +773,7 @@ def main():
         'bracket': bracket,
         'super_bowl': super_bowl,
         'head_to_head': h2h,
+        'analytics': analytics,
     }
 
     out_dir = os.path.join(ROOT, 'docs', 'data')

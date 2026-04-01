@@ -726,6 +726,13 @@ body::after{
       +'</div>';
   }
 
+  function renderTBDRow(){
+    return '<div class="team-row tbd-row">'
+      +'<span class="seed-badge">?</span>'
+      +'<span class="team-name" style="opacity:0.4;font-style:italic">TBD</span>'
+      +'</div>';
+  }
+
   function renderMatchupCard(m, conf){
     if(!m.home&&!m.away&&!m.byeTeam){
       return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
@@ -761,8 +768,8 @@ body::after{
 
     const homeWinner = isCompleted && m.winner===m.home;
     const awayWinner = isCompleted && m.winner===m.away;
-    html += renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf);
-    html += renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf);
+    html += m.home ? renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf) : renderTBDRow();
+    html += m.away ? renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf) : renderTBDRow();
     if(m.gameTime){
       html += '<div class="game-time">\u{1F551} '+m.gameTime+'</div>';
     }
