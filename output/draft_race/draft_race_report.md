@@ -22,10 +22,10 @@
 
 - **Pick 11:** Bears (NFC) - 6-11 | Remaining SOS: 0.000 🟢 Easy
 - **Pick 12:** Chiefs (AFC) - 8-9 | Remaining SOS: 0.000 🟢 Easy
-- **Pick 13:** Eagles (NFC) - 8-9 | Remaining SOS: 0.000 🟢 Easy
-- **Pick 14:** 49ers (NFC) - 8-9 | Remaining SOS: 0.000 🟢 Easy
-- **Pick 15:** Bills (AFC) - 9-8 | Remaining SOS: 0.000 🟢 Easy
-- **Pick 16:** Steelers (AFC) - 9-8 | Remaining SOS: 0.000 🟢 Easy
+- **Pick 13:** 49ers (NFC) - 8-9 | Remaining SOS: 0.000 🟢 Easy
+- **Pick 14:** Eagles (NFC) - 8-9 | Remaining SOS: 0.000 🟢 Easy
+- **Pick 15:** Steelers (AFC) - 9-8 | Remaining SOS: 0.000 🟢 Easy
+- **Pick 16:** Bills (AFC) - 9-8 | Remaining SOS: 0.000 🟢 Easy
 
 ---
 
