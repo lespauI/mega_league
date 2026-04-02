@@ -87,10 +87,10 @@ body::after{
 }
 .bracket{
   display:grid;
-  grid-template-columns:minmax(200px,1.3fr) minmax(180px,1fr) minmax(140px,0.8fr) minmax(160px,1fr) minmax(140px,0.8fr) minmax(180px,1fr) minmax(200px,1.3fr);
+  grid-template-columns:minmax(160px,1.3fr) minmax(150px,1.1fr) minmax(150px,0.9fr) minmax(160px,1fr) minmax(150px,0.9fr) minmax(150px,1.1fr) minmax(160px,1.3fr);
   grid-template-rows:auto repeat(6,auto);
   gap:0;
-  min-width:1050px;
+  min-width:960px;
   padding:0 12px;
 }
 .round-header-cell{
@@ -131,66 +131,85 @@ body::after{
 .matchup-card.pending{opacity:0.5;cursor:default}
 .matchup-card.pending:hover{transform:none;border-color:#1e3a6e;background:var(--bg-card);box-shadow:none}
 
-.team-row{
-  display:grid;
-  grid-template-columns:22px 28px 1fr auto auto;
+.matchup-logos{
+  display:flex;
   align-items:center;
+  justify-content:center;
   gap:6px;
-  padding:7px 10px;
-  position:relative;
+  padding:10px 8px 6px;
 }
-.team-row+.team-row{border-top:1px solid #1e3a6e}
-.team-row.winner{background:rgba(240,185,49,0.08)}
-
+.logo-side{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:2px;
+  position:relative;
+  flex:1;
+  min-width:0;
+}
+.logo-side.winner .team-logo-big{
+  box-shadow:0 0 0 2px var(--gold),0 0 12px rgba(240,185,49,0.4);
+}
+.logo-side.loser{opacity:0.5}
+.team-logo-big{
+  width:48px;height:48px;
+  border-radius:8px;
+  background:#0d1a30;
+  object-fit:contain;
+  transition:box-shadow 0.2s;
+}
 .seed-badge{
-  width:22px;height:22px;
+  position:absolute;
+  top:-4px;left:50%;
+  transform:translateX(16px);
+  width:18px;height:18px;
   border-radius:50%;
   display:flex;align-items:center;justify-content:center;
-  font-size:11px;font-weight:800;
-  flex-shrink:0;
+  font-size:9px;font-weight:800;
+  border:2px solid var(--bg-card);
+  z-index:1;
 }
 .seed-badge.afc{background:var(--afc-color);color:#fff}
 .seed-badge.nfc{background:var(--nfc-color);color:#fff}
-
-.team-logo{
-  width:28px;height:28px;
-  border-radius:4px;
-  background:#0d1a30;
+.team-score{
+  font-size:16px;
+  font-weight:800;
+  color:var(--gold);
+  line-height:1;
+}
+.team-score-pending{
+  font-size:10px;
+  color:var(--muted);
+  line-height:1;
+}
+.vs-divider{
+  font-size:10px;
+  font-weight:800;
+  color:var(--muted);
+  letter-spacing:1px;
   flex-shrink:0;
-  object-fit:contain;
+}
+.vote-fire-badge{
+  font-size:9px;
+  opacity:0.8;
+  line-height:1;
 }
 .team-name{
   font-size:13px;
   font-weight:700;
   white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  min-width:0;
 }
 .team-record{
   font-size:11px;
   color:var(--muted);
   white-space:nowrap;
 }
-.team-score{
-  font-size:15px;
-  font-weight:800;
-  color:var(--gold);
-  min-width:24px;
-  text-align:right;
-}
-.vote-fire-bar{
-  display:flex;
-  justify-content:space-between;
-  padding:0 10px 6px;
-  font-size:11px;
-  line-height:1;
-}
-.vote-fire-bar .vote-fire-item{
-  display:flex;
-  align-items:center;
-  gap:2px;
-  opacity:0.85;
+.team-logo{
+  width:28px;height:28px;
+  border-radius:4px;
+  background:#0d1a30;
+  flex-shrink:0;
+  object-fit:contain;
 }
 
 .bye-card{
@@ -219,7 +238,7 @@ body::after{
   justify-content:center;
   gap:8px;
 }
-.bye-team .team-logo{width:36px;height:36px}
+.bye-team .team-logo-big{width:44px;height:44px}
 .bye-team .team-name{font-size:14px;flex:none}
 
 .tbd-card{
@@ -237,14 +256,14 @@ body::after{
   color:var(--muted);
 }
 
-.connector-right .team-row::after{
+.connector-right .matchup-logos::after{
   content:'';
   position:absolute;
   right:-7px;top:50%;
   width:7px;height:2px;
   background:var(--connector);
 }
-.connector-left .team-row::after{
+.connector-left .matchup-logos::after{
   content:'';
   position:absolute;
   left:-7px;top:50%;
@@ -407,21 +426,19 @@ body::after{
   .bracket-wrapper{display:none}
   .conf-labels{display:none}
   #bracket-mobile{display:block;max-width:500px;margin:16px auto 0;padding:0 8px}
-  .connector-right .team-row::after,
-  .connector-left .team-row::after{display:none}
+  .connector-right .matchup-logos::after,
+  .connector-left .matchup-logos::after{display:none}
 }
 
 @media(max-width:480px){
   .page{padding:12px 6px 80px}
   .header h1{letter-spacing:2px}
   .header .sub{letter-spacing:3px;font-size:0.7rem}
-  .team-logo{width:24px;height:24px}
-  .team-name{font-size:12px}
-  .team-record{font-size:10px}
-  .seed-badge{width:20px;height:20px;font-size:10px}
-  .team-row{padding:7px 8px;gap:5px;grid-template-columns:20px 24px 1fr auto auto}
+  .team-logo-big{width:40px;height:40px}
+  .seed-badge{width:16px;height:16px;font-size:8px}
+  .matchup-logos{padding:8px 6px 4px;gap:4px}
   .bye-team{gap:10px}
-  .bye-team .team-logo{width:32px;height:32px}
+  .bye-team .team-logo-big{width:36px;height:36px}
   .mobile-card-slot{max-width:100%}
   .vote-btn{min-width:100px;padding:10px 12px}
   .vote-btn img{width:40px;height:40px}
@@ -646,27 +663,29 @@ body::after{
     return getLocalVotes()[matchupId] || null;
   }
 
-  function voteEmoji(count){
-    if(count<=0) return '';
-    if(count===1) return '\u{1F525}';
-    if(count<=3) return '\u{1F525}'.repeat(Math.min(count,3));
-    return '\u{1F525}'.repeat(3)+' '+count;
-  }
-
   function updateBracketVotes(){
     document.querySelectorAll('.matchup-card[data-matchup-id]').forEach(function(card){
-      var old = card.querySelector('.vote-fire-bar');
-      if(old) old.remove();
+      card.querySelectorAll('.vote-fire-badge').forEach(function(b){ b.remove(); });
       var mid = card.getAttribute('data-matchup-id');
       var m = findMatchup(mid);
       if(!m||!m.home) return;
       var counts = getVoteCounts(mid, m.home, m.away);
       if(counts.home+counts.away===0) return;
-      var bar = document.createElement('div');
-      bar.className = 'vote-fire-bar';
-      bar.innerHTML = '<span class="vote-fire-item">'+(counts.home>0?voteEmoji(counts.home)+' '+counts.home:'')+'</span>'
-        +'<span class="vote-fire-item">'+(counts.away>0?voteEmoji(counts.away)+' '+counts.away:'')+'</span>';
-      card.appendChild(bar);
+      var sides = card.querySelectorAll('.logo-side');
+      if(sides.length>=2){
+        if(counts.home>0){
+          var s = document.createElement('span');
+          s.className='vote-fire-badge';
+          s.textContent='\u{1F525}'+counts.home;
+          sides[0].appendChild(s);
+        }
+        if(counts.away>0){
+          var s2 = document.createElement('span');
+          s2.className='vote-fire-badge';
+          s2.textContent='\u{1F525}'+counts.away;
+          sides[1].appendChild(s2);
+        }
+      }
     });
   }
 
@@ -714,22 +733,22 @@ body::after{
     return DATA.teams[team].conference;
   }
 
-  function renderTeamRow(teamName, seed, score, isWinner, conf){
-    const t = DATA.teams[teamName];
+  function renderLogoSide(teamName, seed, score, isWinner, isLoser, conf){
     const confClass = (conf||'AFC').toLowerCase();
-    return '<div class="team-row'+(isWinner?' winner':'')+'">'
-      +'<span class="seed-badge '+confClass+'">'+seed+'</span>'
-      +'<img class="team-logo" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
-      +'<span class="team-name">'+teamName+'</span>'
-      +'<span class="team-record">'+(t?t.wins+'-'+t.losses:'')+'</span>'
-      +(score!==null?'<span class="team-score">'+score+'</span>':'')
-      +'</div>';
+    var cls = 'logo-side';
+    if(isWinner) cls += ' winner';
+    if(isLoser) cls += ' loser';
+    var h = '<div class="'+cls+'">';
+    h += '<span class="seed-badge '+confClass+'">'+seed+'</span>';
+    h += '<img class="team-logo-big" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'" title="'+teamName+'">';
+    if(score!==null) h += '<span class="team-score">'+score+'</span>';
+    h += '</div>';
+    return h;
   }
 
-  function renderTBDRow(){
-    return '<div class="team-row tbd-row">'
-      +'<span class="seed-badge">?</span>'
-      +'<span class="team-name" style="opacity:0.4;font-style:italic">TBD</span>'
+  function renderTBDSide(){
+    return '<div class="logo-side">'
+      +'<div class="team-logo-big" style="display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--muted);border:2px dashed #1e3a6e">?</div>'
       +'</div>';
   }
 
@@ -768,11 +787,13 @@ body::after{
 
     const homeWinner = isCompleted && m.winner===m.home;
     const awayWinner = isCompleted && m.winner===m.away;
-    html += m.home ? renderTeamRow(m.home, m.homeSeed, m.homeScore, homeWinner, conf) : renderTBDRow();
-    html += m.away ? renderTeamRow(m.away, m.awaySeed, m.awayScore, awayWinner, conf) : renderTBDRow();
-    if(m.gameTime){
-      html += '<div class="game-time">\u{1F551} '+m.gameTime+'</div>';
-    }
+
+    html += '<div class="matchup-logos">';
+    html += m.home ? renderLogoSide(m.home, m.homeSeed, m.homeScore, homeWinner, isCompleted&&!homeWinner, conf) : renderTBDSide();
+    html += '<span class="vs-divider">VS</span>';
+    html += m.away ? renderLogoSide(m.away, m.awaySeed, m.awayScore, awayWinner, isCompleted&&!awayWinner, conf) : renderTBDSide();
+    html += '</div>';
+
     html += '</div>';
     return html;
   }
@@ -783,10 +804,9 @@ body::after{
     return '<div class="bye-card">'
       +'<div class="bye-label">\u{1F3C6} 1st Round Bye</div>'
       +'<div class="bye-team">'
-      +'<span class="seed-badge '+confClass+'">1</span>'
-      +'<img class="team-logo" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
+      +'<span class="seed-badge '+confClass+'" style="position:static;transform:none">1</span>'
+      +'<img class="team-logo-big" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'">'
       +'<span class="team-name">'+teamName+'</span>'
-      +'<span class="team-record">'+(t?t.wins+'-'+t.losses:'')+'</span>'
       +'</div>'
       +'</div>';
   }
