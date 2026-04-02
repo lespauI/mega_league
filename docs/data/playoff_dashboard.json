@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-01T17:24:07.854858+00:00",
+  "generated_at": "2026-04-02T21:32:28.607398+00:00",
   "season_index": 2,
   "teams": {
     "Bengals": {
@@ -1188,11 +1188,11 @@
           "home": "Raiders",
           "awaySeed": 7,
           "away": "Titans",
-          "homeScore": null,
-          "awayScore": null,
-          "homeWinPct": 0.572,
-          "status": "scheduled",
-          "winner": null
+          "homeScore": 27,
+          "awayScore": 30,
+          "homeWinPct": 0.5631,
+          "status": "completed",
+          "winner": "Titans"
         },
         {
           "matchupId": "afc_wc_2",
@@ -1200,11 +1200,11 @@
           "home": "Colts",
           "awaySeed": 6,
           "away": "Ravens",
-          "homeScore": null,
-          "awayScore": null,
-          "homeWinPct": 0.4885,
-          "status": "scheduled",
-          "winner": null
+          "homeScore": 14,
+          "awayScore": 24,
+          "homeWinPct": 0.4819,
+          "status": "completed",
+          "winner": "Ravens"
         },
         {
           "matchupId": "afc_wc_3",
@@ -1224,12 +1224,12 @@
           "matchupId": "afc_div_1",
           "home": "Bengals",
           "homeSeed": 1,
-          "away": null,
-          "awaySeed": null,
+          "away": "Titans",
+          "awaySeed": 7,
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": null,
-          "status": "pending",
+          "homeWinPct": 0.6091,
+          "status": "scheduled",
           "winner": null,
           "feedsFrom": [
             "afc_wc_1"
@@ -1238,14 +1238,14 @@
         },
         {
           "matchupId": "afc_div_2",
-          "home": null,
-          "homeSeed": null,
-          "away": null,
-          "awaySeed": null,
+          "home": "Patriots",
+          "homeSeed": 4,
+          "away": "Ravens",
+          "awaySeed": 6,
           "homeScore": null,
           "awayScore": null,
-          "homeWinPct": null,
-          "status": "pending",
+          "homeWinPct": 0.5325,
+          "status": "scheduled",
           "winner": null,
           "feedsFrom": [
             "afc_wc_2",
@@ -1366,33 +1366,53 @@
     "winner": null
   },
   "head_to_head": {
-    "Broncos_vs_Patriots": [
+    "Patriots_vs_Ravens": [
+      {
+        "season": 0,
+        "week": 15,
+        "home": "Ravens",
+        "away": "Patriots",
+        "homeScore": 24,
+        "awayScore": 16,
+        "winner": "Ravens"
+      },
       {
         "season": 1,
-        "week": 15,
+        "week": 10,
         "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 14,
-        "awayScore": 17,
-        "winner": "Broncos"
+        "away": "Ravens",
+        "homeScore": 37,
+        "awayScore": 7,
+        "winner": "Patriots"
+      }
+    ],
+    "Raiders_vs_Titans": [
+      {
+        "season": 0,
+        "week": 5,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 23,
+        "awayScore": 35,
+        "winner": "Titans"
       },
       {
         "season": 2,
-        "week": 2,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 24,
-        "awayScore": 32,
-        "winner": "Broncos"
+        "week": 4,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 42,
+        "awayScore": 35,
+        "winner": "Raiders"
       },
       {
         "season": 2,
         "week": 18,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 39,
-        "awayScore": 26,
-        "winner": "Patriots"
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 27,
+        "awayScore": 30,
+        "winner": "Titans"
       }
     ],
     "Colts_vs_Ravens": [
@@ -1412,6 +1432,15 @@
         "away": "Ravens",
         "homeScore": 3,
         "awayScore": 6,
+        "winner": "Ravens"
+      },
+      {
+        "season": 2,
+        "week": 18,
+        "home": "Colts",
+        "away": "Ravens",
+        "homeScore": 14,
+        "awayScore": 24,
         "winner": "Ravens"
       }
     ],
@@ -1480,24 +1509,44 @@
         "winner": "Cowboys"
       }
     ],
-    "Raiders_vs_Titans": [
+    "Broncos_vs_Patriots": [
       {
-        "season": 0,
-        "week": 5,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 23,
-        "awayScore": 35,
-        "winner": "Titans"
+        "season": 1,
+        "week": 15,
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 14,
+        "awayScore": 17,
+        "winner": "Broncos"
       },
       {
         "season": 2,
-        "week": 4,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 42,
-        "awayScore": 35,
-        "winner": "Raiders"
+        "week": 2,
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 24,
+        "awayScore": 32,
+        "winner": "Broncos"
+      },
+      {
+        "season": 2,
+        "week": 18,
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 39,
+        "awayScore": 26,
+        "winner": "Patriots"
+      }
+    ],
+    "Bengals_vs_Titans": [
+      {
+        "season": 1,
+        "week": 9,
+        "home": "Titans",
+        "away": "Bengals",
+        "homeScore": 24,
+        "awayScore": 14,
+        "winner": "Titans"
       }
     ],
     "Cowboys_vs_Seahawks": [
