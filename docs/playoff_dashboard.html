@@ -132,22 +132,18 @@ body::after{
 .matchup-card.pending:hover{transform:none;border-color:#1e3a6e;background:var(--bg-card);box-shadow:none}
 
 .matchup-main{
-  display:flex;
+  display:grid;
+  grid-template-columns:auto 1fr auto 1fr auto;
   align-items:center;
-  justify-content:center;
-  gap:4px;
   padding:10px 8px 2px;
+  gap:0 6px;
 }
-.mu-team{
-  display:flex;
-  align-items:center;
-  gap:4px;
-  flex:1;
-  min-width:0;
-}
-.mu-team.right{justify-content:flex-end}
-.mu-team.left{justify-content:flex-start}
-.mu-team.loser{opacity:0.45}
+.matchup-main .home-logo{grid-column:1}
+.matchup-main .home-score{grid-column:2;text-align:right}
+.matchup-main .vs-divider{grid-column:3;text-align:center}
+.matchup-main .away-score{grid-column:4;text-align:left}
+.matchup-main .away-logo{grid-column:5}
+.mu-loser{opacity:0.45}
 .logo-wrap{
   position:relative;
   flex-shrink:0;
@@ -179,15 +175,12 @@ body::after{
   font-weight:800;
   color:var(--gold);
   line-height:1;
-  flex-shrink:0;
 }
 .vs-divider{
   font-size:9px;
   font-weight:800;
   color:var(--muted);
   letter-spacing:1px;
-  flex-shrink:0;
-  padding:0 2px;
 }
 .matchup-meta{
   display:flex;
@@ -444,7 +437,7 @@ body::after{
   .header .sub{letter-spacing:3px;font-size:0.7rem}
   .team-logo-big{width:36px;height:36px}
   .seed-badge{width:14px;height:14px;font-size:7px}
-  .matchup-main{padding:8px 6px 2px;gap:3px}
+  .matchup-main{padding:8px 6px 2px;gap:0 4px}
   .team-score{font-size:15px}
   .bye-team{gap:10px}
   .bye-team .team-logo-big{width:32px;height:32px}
@@ -742,35 +735,20 @@ body::after{
     return DATA.teams[team].conference;
   }
 
-  function renderMuTeam(teamName, seed, score, isWinner, isLoser, conf, side){
+  function renderLogoEl(teamName, seed, isWinner, isLoser, conf, cls){
     const confClass = (conf||'AFC').toLowerCase();
-    var muCls = 'mu-team '+side;
-    if(isLoser) muCls += ' loser';
-    var wrapCls = 'logo-wrap';
+    var wrapCls = 'logo-wrap '+cls;
     if(isWinner) wrapCls += ' winner';
-    var h = '<div class="'+muCls+'" data-team="'+teamName+'">';
-    if(side==='left'){
-      h += '<div class="'+wrapCls+'">';
-      h += '<span class="seed-badge '+confClass+'">'+seed+'</span>';
-      h += '<img class="team-logo-big" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'" title="'+teamName+'">';
-      h += '</div>';
-      if(score!==null) h += '<span class="team-score">'+score+'</span>';
-    } else {
-      if(score!==null) h += '<span class="team-score">'+score+'</span>';
-      h += '<div class="'+wrapCls+'">';
-      h += '<span class="seed-badge '+confClass+'">'+seed+'</span>';
-      h += '<img class="team-logo-big" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'" title="'+teamName+'">';
-      h += '</div>';
-    }
-    h += '</div>';
-    return h;
+    if(isLoser) wrapCls += ' mu-loser';
+    return '<div class="'+wrapCls+'">'
+      +'<span class="seed-badge '+confClass+'">'+seed+'</span>'
+      +'<img class="team-logo-big" src="'+logoUrl(teamName)+'" alt="'+teamName+'" onerror="this.style.display=\'none\'" title="'+teamName+'">'
+      +'</div>';
   }
 
-  function renderTBDTeam(side){
-    return '<div class="mu-team '+side+'">'
-      +'<div class="logo-wrap">'
+  function renderTBDLogo(cls){
+    return '<div class="logo-wrap '+cls+'">'
       +'<div class="team-logo-big" style="display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:var(--muted);border:2px dashed #1e3a6e">?</div>'
-      +'</div>'
       +'</div>';
   }
 
@@ -809,11 +787,15 @@ body::after{
 
     const homeWinner = isCompleted && m.winner===m.home;
     const awayWinner = isCompleted && m.winner===m.away;
+    var hLoser = isCompleted && !homeWinner;
+    var aLoser = isCompleted && !awayWinner;
 
     html += '<div class="matchup-main">';
-    html += m.home ? renderMuTeam(m.home, m.homeSeed, m.homeScore, homeWinner, isCompleted&&!homeWinner, conf, 'left') : renderTBDTeam('left');
+    html += m.home ? renderLogoEl(m.home, m.homeSeed, homeWinner, hLoser, conf, 'home-logo') : renderTBDLogo('home-logo');
+    html += '<span class="home-score'+(hLoser?' mu-loser':'')+'">'+(m.homeScore!==null?'<span class="team-score">'+m.homeScore+'</span>':'')+'</span>';
     html += '<span class="vs-divider">VS</span>';
-    html += m.away ? renderMuTeam(m.away, m.awaySeed, m.awayScore, awayWinner, isCompleted&&!awayWinner, conf, 'right') : renderTBDTeam('right');
+    html += '<span class="away-score'+(aLoser?' mu-loser':'')+'">'+(m.awayScore!==null?'<span class="team-score">'+m.awayScore+'</span>':'')+'</span>';
+    html += m.away ? renderLogoEl(m.away, m.awaySeed, awayWinner, aLoser, conf, 'away-logo') : renderTBDLogo('away-logo');
     html += '</div>';
 
     var homeRec = m.home && DATA.teams[m.home] ? DATA.teams[m.home].wins+'-'+DATA.teams[m.home].losses : '';
