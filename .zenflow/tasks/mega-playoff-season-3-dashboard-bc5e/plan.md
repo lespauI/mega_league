@@ -117,3 +117,8 @@ The style of generated analytics we follow is:
 <!-- chat-id: 08aa3efe-16c6-4e26-b88b-7137ee95e3f7 -->
 
 When i update my page im loosing flames what i put, and its update DB, so flames are changed all the time. Need to be fixed
+
+### [x] Step: Update data
+<!-- chat-id: c73f2f43-9f32-4946-8832-6d76cdc225eb -->
+
+Some games were played, we need to update the score, and move teams into brakets, if its already derterminied put them into correct places, like Dal is seed 7 so they go to seed 1 and panters are seed 6 so they go to another spot.
