@@ -3,7 +3,7 @@
     "team": "Patriots",
     "conference": "AFC",
     "division": "AFC East",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Dolphins",
@@ -129,6 +129,13 @@
         "homeAway": "home",
         "date": "",
         "gameId": "544735553",
+        "oppElo": null
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735555",
         "oppElo": null
       }
     ]
@@ -913,7 +920,7 @@
     "team": "Seahawks",
     "conference": "NFC",
     "division": "NFC West",
-    "games": 17,
+    "games": 18,
     "schedule": [
       {
         "opponent": "Cardinals",
@@ -1033,6 +1040,13 @@
         "date": "",
         "gameId": "544735557",
         "oppElo": null
+      },
+      {
+        "opponent": "Cowboys",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735558",
+        "oppElo": null
       }
     ]
   },
@@ -1040,7 +1054,7 @@
     "team": "Titans",
     "conference": "AFC",
     "division": "AFC South",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Texans",
@@ -1166,6 +1180,13 @@
         "homeAway": "away",
         "date": "",
         "gameId": "544735559",
+        "oppElo": null
+      },
+      {
+        "opponent": "Bengals",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735556",
         "oppElo": null
       }
     ]
@@ -1301,7 +1322,7 @@
     "team": "Ravens",
     "conference": "AFC",
     "division": "AFC North",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Broncos",
@@ -1427,6 +1448,13 @@
         "homeAway": "away",
         "date": "",
         "gameId": "544735563",
+        "oppElo": null
+      },
+      {
+        "opponent": "Patriots",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735555",
         "oppElo": null
       }
     ]
@@ -1696,7 +1724,7 @@
     "team": "Panthers",
     "conference": "NFC",
     "division": "NFC South",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Jaguars",
@@ -1822,6 +1850,13 @@
         "homeAway": "away",
         "date": "",
         "gameId": "544735554",
+        "oppElo": null
+      },
+      {
+        "opponent": "Lions",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735560",
         "oppElo": null
       }
     ]
@@ -2084,7 +2119,7 @@
     "team": "Lions",
     "conference": "NFC",
     "division": "NFC North",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Chargers",
@@ -2210,6 +2245,13 @@
         "homeAway": "home",
         "date": "",
         "gameId": "544735562",
+        "oppElo": null
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735560",
         "oppElo": null
       }
     ]
@@ -2345,7 +2387,7 @@
     "team": "Cowboys",
     "conference": "NFC",
     "division": "NFC East",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Bills",
@@ -2471,6 +2513,13 @@
         "homeAway": "away",
         "date": "",
         "gameId": "544735551",
+        "oppElo": null
+      },
+      {
+        "opponent": "Seahawks",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735558",
         "oppElo": null
       }
     ]
@@ -2733,7 +2782,7 @@
     "team": "Bengals",
     "conference": "AFC",
     "division": "AFC North",
-    "games": 17,
+    "games": 18,
     "schedule": [
       {
         "opponent": "Steelers",
@@ -2852,6 +2901,13 @@
         "homeAway": "away",
         "date": "",
         "gameId": "544735534",
+        "oppElo": null
+      },
+      {
+        "opponent": "Titans",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735556",
         "oppElo": null
       }
     ]
