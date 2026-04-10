@@ -920,7 +920,7 @@
     "team": "Seahawks",
     "conference": "NFC",
     "division": "NFC West",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Cardinals",
@@ -1046,6 +1046,13 @@
         "homeAway": "home",
         "date": "",
         "gameId": "544735558",
+        "oppElo": null
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735565",
         "oppElo": null
       }
     ]
@@ -1322,7 +1329,7 @@
     "team": "Ravens",
     "conference": "AFC",
     "division": "AFC North",
-    "games": 19,
+    "games": 20,
     "schedule": [
       {
         "opponent": "Broncos",
@@ -1455,6 +1462,13 @@
         "homeAway": "away",
         "date": "",
         "gameId": "544735555",
+        "oppElo": null
+      },
+      {
+        "opponent": "Bengals",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735570",
         "oppElo": null
       }
     ]
@@ -1724,7 +1738,7 @@
     "team": "Panthers",
     "conference": "NFC",
     "division": "NFC South",
-    "games": 19,
+    "games": 20,
     "schedule": [
       {
         "opponent": "Jaguars",
@@ -1858,259 +1872,12 @@
         "date": "",
         "gameId": "544735560",
         "oppElo": null
-      }
-    ]
-  },
-  "Falcons": {
-    "team": "Falcons",
-    "conference": "NFC",
-    "division": "NFC South",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Eagles",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735282",
-        "oppElo": null
       },
       {
-        "opponent": "Cowboys",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735293",
-        "oppElo": null
-      },
-      {
-        "opponent": "Jaguars",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735318",
-        "oppElo": null
-      },
-      {
-        "opponent": "Saints",
+        "opponent": "Seahawks",
         "homeAway": "away",
         "date": "",
-        "gameId": "544735351",
-        "oppElo": null
-      },
-      {
-        "opponent": "Rams",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735361",
-        "oppElo": null
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735377",
-        "oppElo": null
-      },
-      {
-        "opponent": "Giants",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735370",
-        "oppElo": null
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735407",
-        "oppElo": null
-      },
-      {
-        "opponent": "Texans",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735398",
-        "oppElo": null
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735452",
-        "oppElo": null
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735467",
-        "oppElo": null
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735460",
-        "oppElo": null
-      },
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735492",
-        "oppElo": null
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735490",
-        "oppElo": null
-      },
-      {
-        "opponent": "Colts",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735513",
-        "oppElo": null
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735527",
-        "oppElo": null
-      },
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735543",
-        "oppElo": null
-      }
-    ]
-  },
-  "Eagles": {
-    "team": "Eagles",
-    "conference": "NFC",
-    "division": "NFC East",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Falcons",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735282",
-        "oppElo": null
-      },
-      {
-        "opponent": "Giants",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735298",
-        "oppElo": null
-      },
-      {
-        "opponent": "Cowboys",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735317",
-        "oppElo": null
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735337",
-        "oppElo": null
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735366",
-        "oppElo": null
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735381",
-        "oppElo": null
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735386",
-        "oppElo": null
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735400",
-        "oppElo": null
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735431",
-        "oppElo": null
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735448",
-        "oppElo": null
-      },
-      {
-        "opponent": "Cowboys",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735455",
-        "oppElo": null
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735484",
-        "oppElo": null
-      },
-      {
-        "opponent": "Cardinals",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735473",
-        "oppElo": null
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735498",
-        "oppElo": null
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735504",
-        "oppElo": null
-      },
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "544735537",
-        "oppElo": null
-      },
-      {
-        "opponent": "Giants",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "544735536",
+        "gameId": "544735565",
         "oppElo": null
       }
     ]
@@ -2782,7 +2549,7 @@
     "team": "Bengals",
     "conference": "AFC",
     "division": "AFC North",
-    "games": 18,
+    "games": 19,
     "schedule": [
       {
         "opponent": "Steelers",
@@ -2908,6 +2675,13 @@
         "homeAway": "home",
         "date": "",
         "gameId": "544735556",
+        "oppElo": null
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735570",
         "oppElo": null
       }
     ]
@@ -3169,6 +2943,260 @@
         "homeAway": "home",
         "date": "",
         "gameId": "544735554",
+        "oppElo": null
+      }
+    ]
+  },
+  "Falcons": {
+    "team": "Falcons",
+    "conference": "NFC",
+    "division": "NFC South",
+    "games": 17,
+    "schedule": [
+      {
+        "opponent": "Eagles",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735282",
+        "oppElo": null
+      },
+      {
+        "opponent": "Cowboys",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735293",
+        "oppElo": null
+      },
+      {
+        "opponent": "Jaguars",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735318",
+        "oppElo": null
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735351",
+        "oppElo": null
+      },
+      {
+        "opponent": "Rams",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735361",
+        "oppElo": null
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735377",
+        "oppElo": null
+      },
+      {
+        "opponent": "Giants",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735370",
+        "oppElo": null
+      },
+      {
+        "opponent": "Vikings",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735407",
+        "oppElo": null
+      },
+      {
+        "opponent": "Texans",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735398",
+        "oppElo": null
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735452",
+        "oppElo": null
+      },
+      {
+        "opponent": "Titans",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735467",
+        "oppElo": null
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735460",
+        "oppElo": null
+      },
+      {
+        "opponent": "Buccaneers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735492",
+        "oppElo": null
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735490",
+        "oppElo": null
+      },
+      {
+        "opponent": "Colts",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735513",
+        "oppElo": null
+      },
+      {
+        "opponent": "Commanders",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735527",
+        "oppElo": null
+      },
+      {
+        "opponent": "Buccaneers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735543",
+        "oppElo": null
+      }
+    ]
+  },
+  "Eagles": {
+    "team": "Eagles",
+    "conference": "NFC",
+    "division": "NFC East",
+    "games": 17,
+    "schedule": [
+      {
+        "opponent": "Falcons",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735282",
+        "oppElo": null
+      },
+      {
+        "opponent": "Giants",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735298",
+        "oppElo": null
+      },
+      {
+        "opponent": "Cowboys",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735317",
+        "oppElo": null
+      },
+      {
+        "opponent": "Chargers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735337",
+        "oppElo": null
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735366",
+        "oppElo": null
+      },
+      {
+        "opponent": "Bills",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735381",
+        "oppElo": null
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735386",
+        "oppElo": null
+      },
+      {
+        "opponent": "Commanders",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735400",
+        "oppElo": null
+      },
+      {
+        "opponent": "Patriots",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735431",
+        "oppElo": null
+      },
+      {
+        "opponent": "Dolphins",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735448",
+        "oppElo": null
+      },
+      {
+        "opponent": "Cowboys",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735455",
+        "oppElo": null
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735484",
+        "oppElo": null
+      },
+      {
+        "opponent": "Cardinals",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735473",
+        "oppElo": null
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735498",
+        "oppElo": null
+      },
+      {
+        "opponent": "Commanders",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735504",
+        "oppElo": null
+      },
+      {
+        "opponent": "Buccaneers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "544735537",
+        "oppElo": null
+      },
+      {
+        "opponent": "Giants",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "544735536",
         "oppElo": null
       }
     ]

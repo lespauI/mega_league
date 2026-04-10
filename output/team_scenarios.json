@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-07T15:19:11.412483Z",
+  "generated_at": "2026-04-10T17:30:41.401767Z",
   "num_simulations": 10000,
   "teams": {
     "49ers": {
@@ -61,8 +61,8 @@
     "Bengals": {
       "conference": "AFC",
       "division": "AFC North",
-      "current_record": "15-3-0",
-      "win_pct": 0.833,
+      "current_record": "15-4-0",
+      "win_pct": 0.789,
       "remaining_games": [],
       "game_count": 0,
       "overall_probabilities": {
@@ -72,7 +72,7 @@
       },
       "record_outcomes": [
         {
-          "record": "15-3-0",
+          "record": "15-4-0",
           "frequency": 10000,
           "percentage": 100.0,
           "playoff_pct": 100.0,
@@ -81,7 +81,7 @@
         }
       ],
       "most_likely": {
-        "record": "15-3-0",
+        "record": "15-4-0",
         "frequency": 10000,
         "percentage": 100.0
       }
@@ -593,27 +593,27 @@
     "Panthers": {
       "conference": "NFC",
       "division": "NFC South",
-      "current_record": "13-6-0",
-      "win_pct": 0.684,
+      "current_record": "13-7-0",
+      "win_pct": 0.65,
       "remaining_games": [],
       "game_count": 0,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 100.0,
+        "division": 0.0,
         "bye": 0.0
       },
       "record_outcomes": [
         {
-          "record": "13-6-0",
+          "record": "13-7-0",
           "frequency": 10000,
           "percentage": 100.0,
           "playoff_pct": 100.0,
-          "division_pct": 100.0,
+          "division_pct": 0.0,
           "bye_pct": 0.0
         }
       ],
       "most_likely": {
-        "record": "13-6-0",
+        "record": "13-7-0",
         "frequency": 10000,
         "percentage": 100.0
       }
@@ -705,8 +705,8 @@
     "Ravens": {
       "conference": "AFC",
       "division": "AFC North",
-      "current_record": "14-5-0",
-      "win_pct": 0.737,
+      "current_record": "15-5-0",
+      "win_pct": 0.75,
       "remaining_games": [],
       "game_count": 0,
       "overall_probabilities": {
@@ -716,7 +716,7 @@
       },
       "record_outcomes": [
         {
-          "record": "14-5-0",
+          "record": "15-5-0",
           "frequency": 10000,
           "percentage": 100.0,
           "playoff_pct": 100.0,
@@ -725,7 +725,7 @@
         }
       ],
       "most_likely": {
-        "record": "14-5-0",
+        "record": "15-5-0",
         "frequency": 10000,
         "percentage": 100.0
       }
@@ -739,7 +739,7 @@
       "game_count": 0,
       "overall_probabilities": {
         "playoff": 100.0,
-        "division": 0.0,
+        "division": 100.0,
         "bye": 0.0
       },
       "record_outcomes": [
@@ -748,7 +748,7 @@
           "frequency": 10000,
           "percentage": 100.0,
           "playoff_pct": 100.0,
-          "division_pct": 0.0,
+          "division_pct": 100.0,
           "bye_pct": 0.0
         }
       ],
@@ -761,8 +761,8 @@
     "Seahawks": {
       "conference": "NFC",
       "division": "NFC West",
-      "current_record": "15-3-0",
-      "win_pct": 0.833,
+      "current_record": "16-3-0",
+      "win_pct": 0.842,
       "remaining_games": [],
       "game_count": 0,
       "overall_probabilities": {
@@ -772,7 +772,7 @@
       },
       "record_outcomes": [
         {
-          "record": "15-3-0",
+          "record": "16-3-0",
           "frequency": 10000,
           "percentage": 100.0,
           "playoff_pct": 100.0,
@@ -781,7 +781,7 @@
         }
       ],
       "most_likely": {
-        "record": "15-3-0",
+        "record": "16-3-0",
         "frequency": 10000,
         "percentage": 100.0
       }
