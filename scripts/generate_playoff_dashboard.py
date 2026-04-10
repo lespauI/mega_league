@@ -460,16 +460,41 @@ def build_bracket(teams, elo_map, sos_map, rankings, all_info, team_stats, playo
             'byeTeam': bye_team,
         }
 
+    afc_champ_winner = bracket['AFC']['championship'].get('winner')
+    nfc_champ_winner = bracket['NFC']['championship'].get('winner')
+
+    sb_home = afc_champ_winner
+    sb_away = nfc_champ_winner
+
     super_bowl = {
         'matchupId': 'super_bowl',
-        'home': None,
-        'away': None,
+        'home': sb_home,
+        'homeSeed': teams[sb_home]['seed'] if sb_home and sb_home in teams else None,
+        'away': sb_away,
+        'awaySeed': teams[sb_away]['seed'] if sb_away and sb_away in teams else None,
         'homeScore': None,
         'awayScore': None,
         'homeWinPct': None,
         'status': 'pending',
         'winner': None,
     }
+    if sb_home and sb_away:
+        super_bowl['homeWinPct'] = compute_win_prob(
+            sb_home, sb_away, teams, elo_map, sos_map, rankings, all_info, team_stats
+        )
+        game = match_playoff_game(playoff_games, sb_home, sb_away)
+        if game and game['completed']:
+            super_bowl['status'] = 'completed'
+            if game['home'] == sb_home:
+                super_bowl['homeScore'] = game['homeScore']
+                super_bowl['awayScore'] = game['awayScore']
+            else:
+                super_bowl['homeScore'] = game['awayScore']
+                super_bowl['awayScore'] = game['homeScore']
+            if super_bowl['homeScore'] is not None and super_bowl['awayScore'] is not None:
+                super_bowl['winner'] = sb_home if super_bowl['homeScore'] > super_bowl['awayScore'] else sb_away
+        else:
+            super_bowl['status'] = 'scheduled'
 
     return bracket, super_bowl
 
@@ -757,6 +782,9 @@ def main():
         champ = bracket[conf]['championship']
         if champ['home'] and champ['away']:
             matchup_pairs.append((champ['home'], champ['away']))
+
+    if super_bowl['home'] and super_bowl['away']:
+        matchup_pairs.append((super_bowl['home'], super_bowl['away']))
 
     h2h = load_head_to_head(matchup_pairs)
 

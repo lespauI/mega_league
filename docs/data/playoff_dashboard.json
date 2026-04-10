@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-04-07T15:22:58.583401+00:00",
+  "generated_at": "2026-04-10T17:35:15.389972+00:00",
   "season_index": 2,
   "teams": {
     "Bengals": {
@@ -432,7 +432,7 @@
       "wins": 11,
       "losses": 6,
       "playoffStatus": 3,
-      "ovrRating": 87,
+      "ovrRating": 88,
       "ptsFor": 27,
       "ptsAgainst": 22,
       "offPassYds": 3878,
@@ -1020,7 +1020,7 @@
       "wins": 14,
       "losses": 3,
       "playoffStatus": 4,
-      "ovrRating": 91,
+      "ovrRating": 92,
       "ptsFor": 32,
       "ptsAgainst": 21,
       "offPassYds": 3908,
@@ -1202,7 +1202,7 @@
           "away": "Ravens",
           "homeScore": 14,
           "awayScore": 24,
-          "homeWinPct": 0.4804,
+          "homeWinPct": 0.4767,
           "status": "completed",
           "winner": "Ravens"
         },
@@ -1228,7 +1228,7 @@
           "awaySeed": 7,
           "homeScore": 42,
           "awayScore": 31,
-          "homeWinPct": 0.6125,
+          "homeWinPct": 0.6089,
           "status": "completed",
           "winner": "Bengals",
           "feedsFrom": [
@@ -1244,7 +1244,7 @@
           "awaySeed": 6,
           "homeScore": 7,
           "awayScore": 14,
-          "homeWinPct": 0.5271,
+          "homeWinPct": 0.5234,
           "status": "completed",
           "winner": "Ravens",
           "feedsFrom": [
@@ -1259,11 +1259,11 @@
         "homeSeed": 1,
         "away": "Ravens",
         "awaySeed": 6,
-        "homeScore": null,
-        "awayScore": null,
-        "homeWinPct": 0.5681,
-        "status": "scheduled",
-        "winner": null
+        "homeScore": 39,
+        "awayScore": 42,
+        "homeWinPct": 0.5618,
+        "status": "completed",
+        "winner": "Ravens"
       },
       "byeTeam": "Bengals"
     },
@@ -1289,7 +1289,7 @@
           "away": "Panthers",
           "homeScore": 21,
           "awayScore": 23,
-          "homeWinPct": 0.506,
+          "homeWinPct": 0.5085,
           "status": "completed",
           "winner": "Panthers"
         },
@@ -1315,7 +1315,7 @@
           "awaySeed": 7,
           "homeScore": 31,
           "awayScore": 25,
-          "homeWinPct": 0.5484,
+          "homeWinPct": 0.5499,
           "status": "completed",
           "winner": "Seahawks",
           "feedsFrom": [
@@ -1331,7 +1331,7 @@
           "awaySeed": 6,
           "homeScore": 31,
           "awayScore": 38,
-          "homeWinPct": 0.4617,
+          "homeWinPct": 0.4647,
           "status": "completed",
           "winner": "Panthers",
           "feedsFrom": [
@@ -1346,23 +1346,25 @@
         "homeSeed": 1,
         "away": "Panthers",
         "awaySeed": 6,
-        "homeScore": null,
-        "awayScore": null,
-        "homeWinPct": 0.5235,
-        "status": "scheduled",
-        "winner": null
+        "homeScore": 31,
+        "awayScore": 20,
+        "homeWinPct": 0.5281,
+        "status": "completed",
+        "winner": "Seahawks"
       },
       "byeTeam": "Seahawks"
     }
   },
   "super_bowl": {
     "matchupId": "super_bowl",
-    "home": null,
-    "away": null,
+    "home": "Ravens",
+    "homeSeed": 6,
+    "away": "Seahawks",
+    "awaySeed": 1,
     "homeScore": null,
     "awayScore": null,
-    "homeWinPct": null,
-    "status": "pending",
+    "homeWinPct": 0.5013,
+    "status": "scheduled",
     "winner": null
   },
   "head_to_head": {
@@ -1386,62 +1388,33 @@
         "winner": "Bengals"
       }
     ],
-    "Lions_vs_Panthers": [
-      {
-        "season": 1,
-        "week": 12,
-        "home": "Panthers",
-        "away": "Lions",
-        "homeScore": 38,
-        "awayScore": 21,
-        "winner": "Panthers"
-      },
-      {
-        "season": 2,
-        "week": 15,
-        "home": "Panthers",
-        "away": "Lions",
-        "homeScore": 30,
-        "awayScore": 28,
-        "winner": "Panthers"
-      },
-      {
-        "season": 2,
-        "week": 19,
-        "home": "Lions",
-        "away": "Panthers",
-        "homeScore": 31,
-        "awayScore": 38,
-        "winner": "Panthers"
-      }
-    ],
-    "Lions_vs_Rams": [
+    "Panthers_vs_Seahawks": [
       {
         "season": 0,
-        "week": 14,
-        "home": "Rams",
-        "away": "Lions",
-        "homeScore": 27,
-        "awayScore": 34,
-        "winner": "Lions"
+        "week": 16,
+        "home": "Panthers",
+        "away": "Seahawks",
+        "homeScore": 22,
+        "awayScore": 26,
+        "winner": "Seahawks"
+      },
+      {
+        "season": 1,
+        "week": 19,
+        "home": "Seahawks",
+        "away": "Panthers",
+        "homeScore": 21,
+        "awayScore": 31,
+        "winner": "Panthers"
       },
       {
         "season": 2,
-        "week": 10,
-        "home": "Lions",
-        "away": "Rams",
-        "homeScore": 20,
-        "awayScore": 27,
-        "winner": "Rams"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Lions",
-        "away": "Rams",
+        "week": 20,
+        "home": "Seahawks",
+        "away": "Panthers",
         "homeScore": 31,
-        "awayScore": 16,
-        "winner": "Lions"
+        "awayScore": 20,
+        "winner": "Seahawks"
       }
     ],
     "Patriots_vs_Ravens": [
@@ -1473,33 +1446,127 @@
         "winner": "Ravens"
       }
     ],
-    "Broncos_vs_Patriots": [
+    "Bengals_vs_Ravens": [
+      {
+        "season": 0,
+        "week": 12,
+        "home": "Ravens",
+        "away": "Bengals",
+        "homeScore": 38,
+        "awayScore": 7,
+        "winner": "Ravens"
+      },
+      {
+        "season": 0,
+        "week": 14,
+        "home": "Bengals",
+        "away": "Ravens",
+        "homeScore": 40,
+        "awayScore": 7,
+        "winner": "Bengals"
+      },
+      {
+        "season": 1,
+        "week": 7,
+        "home": "Ravens",
+        "away": "Bengals",
+        "homeScore": 10,
+        "awayScore": 37,
+        "winner": "Bengals"
+      },
       {
         "season": 1,
         "week": 15,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 14,
-        "awayScore": 17,
-        "winner": "Broncos"
+        "home": "Bengals",
+        "away": "Ravens",
+        "homeScore": 31,
+        "awayScore": 13,
+        "winner": "Bengals"
       },
       {
         "season": 2,
-        "week": 2,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 24,
-        "awayScore": 32,
-        "winner": "Broncos"
+        "week": 10,
+        "home": "Bengals",
+        "away": "Ravens",
+        "homeScore": 49,
+        "awayScore": 14,
+        "winner": "Bengals"
+      },
+      {
+        "season": 2,
+        "week": 17,
+        "home": "Ravens",
+        "away": "Bengals",
+        "homeScore": 14,
+        "awayScore": 19,
+        "winner": "Bengals"
+      },
+      {
+        "season": 2,
+        "week": 20,
+        "home": "Bengals",
+        "away": "Ravens",
+        "homeScore": 39,
+        "awayScore": 42,
+        "winner": "Ravens"
+      }
+    ],
+    "Lions_vs_Panthers": [
+      {
+        "season": 1,
+        "week": 12,
+        "home": "Panthers",
+        "away": "Lions",
+        "homeScore": 38,
+        "awayScore": 21,
+        "winner": "Panthers"
+      },
+      {
+        "season": 2,
+        "week": 15,
+        "home": "Panthers",
+        "away": "Lions",
+        "homeScore": 30,
+        "awayScore": 28,
+        "winner": "Panthers"
+      },
+      {
+        "season": 2,
+        "week": 19,
+        "home": "Lions",
+        "away": "Panthers",
+        "homeScore": 31,
+        "awayScore": 38,
+        "winner": "Panthers"
+      }
+    ],
+    "Colts_vs_Ravens": [
+      {
+        "season": 1,
+        "week": 16,
+        "home": "Colts",
+        "away": "Ravens",
+        "homeScore": 31,
+        "awayScore": 17,
+        "winner": "Colts"
+      },
+      {
+        "season": 2,
+        "week": 9,
+        "home": "Colts",
+        "away": "Ravens",
+        "homeScore": 3,
+        "awayScore": 6,
+        "winner": "Ravens"
       },
       {
         "season": 2,
         "week": 18,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 39,
-        "awayScore": 26,
-        "winner": "Patriots"
+        "home": "Colts",
+        "away": "Ravens",
+        "homeScore": 14,
+        "awayScore": 24,
+        "winner": "Ravens"
       }
     ],
     "Commanders_vs_Cowboys": [
@@ -1567,167 +1634,33 @@
         "winner": "Cowboys"
       }
     ],
-    "Panthers_vs_Seahawks": [
-      {
-        "season": 0,
-        "week": 16,
-        "home": "Panthers",
-        "away": "Seahawks",
-        "homeScore": 22,
-        "awayScore": 26,
-        "winner": "Seahawks"
-      },
-      {
-        "season": 1,
-        "week": 19,
-        "home": "Seahawks",
-        "away": "Panthers",
-        "homeScore": 21,
-        "awayScore": 31,
-        "winner": "Panthers"
-      }
-    ],
-    "Bengals_vs_Ravens": [
-      {
-        "season": 0,
-        "week": 12,
-        "home": "Ravens",
-        "away": "Bengals",
-        "homeScore": 38,
-        "awayScore": 7,
-        "winner": "Ravens"
-      },
-      {
-        "season": 0,
-        "week": 14,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 40,
-        "awayScore": 7,
-        "winner": "Bengals"
-      },
-      {
-        "season": 1,
-        "week": 7,
-        "home": "Ravens",
-        "away": "Bengals",
-        "homeScore": 10,
-        "awayScore": 37,
-        "winner": "Bengals"
-      },
+    "Broncos_vs_Patriots": [
       {
         "season": 1,
         "week": 15,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 31,
-        "awayScore": 13,
-        "winner": "Bengals"
-      },
-      {
-        "season": 2,
-        "week": 10,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 49,
-        "awayScore": 14,
-        "winner": "Bengals"
-      },
-      {
-        "season": 2,
-        "week": 17,
-        "home": "Ravens",
-        "away": "Bengals",
+        "home": "Patriots",
+        "away": "Broncos",
         "homeScore": 14,
-        "awayScore": 19,
-        "winner": "Bengals"
-      }
-    ],
-    "Cowboys_vs_Seahawks": [
-      {
-        "season": 0,
-        "week": 18,
-        "home": "Seahawks",
-        "away": "Cowboys",
-        "homeScore": 35,
-        "awayScore": 16,
-        "winner": "Seahawks"
-      },
-      {
-        "season": 1,
-        "week": 16,
-        "home": "Seahawks",
-        "away": "Cowboys",
-        "homeScore": 42,
-        "awayScore": 28,
-        "winner": "Seahawks"
-      },
-      {
-        "season": 2,
-        "week": 19,
-        "home": "Seahawks",
-        "away": "Cowboys",
-        "homeScore": 31,
-        "awayScore": 25,
-        "winner": "Seahawks"
-      }
-    ],
-    "Colts_vs_Ravens": [
-      {
-        "season": 1,
-        "week": 16,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 31,
         "awayScore": 17,
-        "winner": "Colts"
+        "winner": "Broncos"
       },
       {
         "season": 2,
-        "week": 9,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 3,
-        "awayScore": 6,
-        "winner": "Ravens"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 14,
-        "awayScore": 24,
-        "winner": "Ravens"
-      }
-    ],
-    "Raiders_vs_Titans": [
-      {
-        "season": 0,
-        "week": 5,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 23,
-        "awayScore": 35,
-        "winner": "Titans"
-      },
-      {
-        "season": 2,
-        "week": 4,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 42,
-        "awayScore": 35,
-        "winner": "Raiders"
+        "week": 2,
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 24,
+        "awayScore": 32,
+        "winner": "Broncos"
       },
       {
         "season": 2,
         "week": 18,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 27,
-        "awayScore": 30,
-        "winner": "Titans"
+        "home": "Patriots",
+        "away": "Broncos",
+        "homeScore": 39,
+        "awayScore": 26,
+        "winner": "Patriots"
       }
     ],
     "Panthers_vs_Saints": [
@@ -1793,6 +1726,104 @@
         "homeScore": 21,
         "awayScore": 23,
         "winner": "Panthers"
+      }
+    ],
+    "Raiders_vs_Titans": [
+      {
+        "season": 0,
+        "week": 5,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 23,
+        "awayScore": 35,
+        "winner": "Titans"
+      },
+      {
+        "season": 2,
+        "week": 4,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 42,
+        "awayScore": 35,
+        "winner": "Raiders"
+      },
+      {
+        "season": 2,
+        "week": 18,
+        "home": "Raiders",
+        "away": "Titans",
+        "homeScore": 27,
+        "awayScore": 30,
+        "winner": "Titans"
+      }
+    ],
+    "Cowboys_vs_Seahawks": [
+      {
+        "season": 0,
+        "week": 18,
+        "home": "Seahawks",
+        "away": "Cowboys",
+        "homeScore": 35,
+        "awayScore": 16,
+        "winner": "Seahawks"
+      },
+      {
+        "season": 1,
+        "week": 16,
+        "home": "Seahawks",
+        "away": "Cowboys",
+        "homeScore": 42,
+        "awayScore": 28,
+        "winner": "Seahawks"
+      },
+      {
+        "season": 2,
+        "week": 19,
+        "home": "Seahawks",
+        "away": "Cowboys",
+        "homeScore": 31,
+        "awayScore": 25,
+        "winner": "Seahawks"
+      }
+    ],
+    "Ravens_vs_Seahawks": [
+      {
+        "season": 2,
+        "week": 1,
+        "home": "Ravens",
+        "away": "Seahawks",
+        "homeScore": 13,
+        "awayScore": 48,
+        "winner": "Seahawks"
+      }
+    ],
+    "Lions_vs_Rams": [
+      {
+        "season": 0,
+        "week": 14,
+        "home": "Rams",
+        "away": "Lions",
+        "homeScore": 27,
+        "awayScore": 34,
+        "winner": "Lions"
+      },
+      {
+        "season": 2,
+        "week": 10,
+        "home": "Lions",
+        "away": "Rams",
+        "homeScore": 20,
+        "awayScore": 27,
+        "winner": "Rams"
+      },
+      {
+        "season": 2,
+        "week": 18,
+        "home": "Lions",
+        "away": "Rams",
+        "homeScore": 31,
+        "awayScore": 16,
+        "winner": "Lions"
       }
     ]
   }
