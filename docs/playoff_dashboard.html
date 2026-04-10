@@ -65,7 +65,7 @@ body::after{
 .conf-labels{
   display:flex;
   justify-content:space-between;
-  max-width:1400px;
+  max-width:1800px;
   margin:18px auto 0;
   padding:0 30px;
 }
@@ -81,17 +81,17 @@ body::after{
 .conf-label.nfc{background:var(--nfc-color);color:#fff}
 
 .bracket-wrapper{
-  max-width:1400px;
+  max-width:1800px;
   margin:24px auto 0;
   overflow-x:auto;
 }
 .bracket{
   display:grid;
-  grid-template-columns:minmax(160px,1.3fr) minmax(150px,1.1fr) minmax(150px,0.9fr) minmax(160px,1fr) minmax(150px,0.9fr) minmax(150px,1.1fr) minmax(160px,1.3fr);
+  grid-template-columns:minmax(140px,1fr) minmax(150px,1.1fr) minmax(160px,1.2fr) minmax(240px,1.8fr) minmax(160px,1.2fr) minmax(150px,1.1fr) minmax(140px,1fr);
   grid-template-rows:auto repeat(6,auto);
   gap:0;
-  min-width:960px;
-  padding:0 12px;
+  min-width:1100px;
+  padding:0 16px;
 }
 .round-header-cell{
   text-align:center;
@@ -128,6 +128,10 @@ body::after{
   box-shadow:0 6px 24px rgba(240,185,49,0.15);
 }
 .matchup-card.completed{border-color:var(--gold)}
+.matchup-card.completed.round-wc{transform:scale(0.88);transform-origin:center;opacity:0.85}
+.matchup-card.completed.round-wc:hover{transform:scale(0.88) translateY(-2px)}
+.matchup-card.completed.round-div{transform:scale(0.92);transform-origin:center;opacity:0.9}
+.matchup-card.completed.round-div:hover{transform:scale(0.92) translateY(-2px)}
 .matchup-card.pending{opacity:0.5;cursor:default}
 .matchup-card.pending:hover{transform:none;border-color:#1e3a6e;background:var(--bg-card);box-shadow:none}
 
@@ -273,28 +277,45 @@ body::after{
 }
 
 .sb-card{
-  background:linear-gradient(135deg,#1a2040 0%,#2a1a40 100%);
-  border:2px solid var(--gold);
-  border-radius:14px;
-  padding:16px 12px;
+  background:linear-gradient(135deg,#1a2040 0%,#2a1a40 50%,#1a2040 100%);
+  border:3px solid var(--gold);
+  border-radius:18px;
+  padding:24px 20px;
   text-align:center;
   transition:transform 0.2s ease,box-shadow 0.2s ease;
+  box-shadow:0 0 30px rgba(240,185,49,0.12),inset 0 0 40px rgba(240,185,49,0.03);
+  width:100%;
+  max-width:320px;
+  margin:0 auto;
 }
 .sb-card:hover{
-  transform:translateY(-2px);
-  box-shadow:0 6px 24px rgba(240,185,49,0.2);
+  transform:translateY(-3px);
+  box-shadow:0 8px 32px rgba(240,185,49,0.25),0 0 40px rgba(240,185,49,0.1);
 }
 .sb-card .sb-logo{
-  font-size:28px;
-  margin-bottom:4px;
+  font-size:40px;
+  margin-bottom:6px;
 }
 .sb-card .sb-title{
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:3px;
+  font-size:16px;
+  font-weight:900;
+  letter-spacing:4px;
   color:var(--gold);
   text-transform:uppercase;
-  margin-bottom:8px;
+  margin-bottom:12px;
+  text-shadow:0 0 10px rgba(240,185,49,0.3);
+}
+.sb-card .matchup-card{
+  border-color:var(--gold);
+}
+.sb-card .team-logo-big{
+  width:52px;height:52px;
+}
+.sb-card .team-score{
+  font-size:22px;
+}
+.sb-card .matchup-meta{
+  padding:4px 12px 8px;
 }
 
 .game-time{
@@ -429,6 +450,8 @@ body::after{
   #bracket-mobile{display:block;max-width:500px;margin:16px auto 0;padding:0 8px}
   .connector-right .matchup-main::after,
   .connector-left .matchup-main::after{display:none}
+  .matchup-card.completed.round-wc,.matchup-card.completed.round-div{transform:none;opacity:1}
+  .matchup-card.completed.round-wc:hover,.matchup-card.completed.round-div:hover{transform:translateY(-2px)}
 }
 
 @media(max-width:480px){
@@ -752,7 +775,7 @@ body::after{
       +'</div>';
   }
 
-  function renderMatchupCard(m, conf){
+  function renderMatchupCard(m, conf, round){
     if(!m.home&&!m.away&&!m.byeTeam){
       return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
     }
@@ -763,10 +786,12 @@ body::after{
     const isCompleted = status==='completed';
     const isPending = status==='pending';
     const winPct = m.homeWinPct;
+    var roundClass = round ? ' round-'+round : '';
 
     let html = '<div class="matchup-card'
       +(isCompleted?' completed':'')
-      +(isPending?' pending':'')+'" '
+      +(isPending?' pending':'')
+      +roundClass+'" '
       +'data-matchup-id="'+m.matchupId+'" '
       +'data-conf="'+conf+'">';
 
@@ -822,11 +847,11 @@ body::after{
       +'</div>';
   }
 
-  function renderChampOrSBCard(m, conf){
+  function renderChampOrSBCard(m, conf, round){
     if(!m.home){
       return '<div class="tbd-card"><div class="tbd-text">TBD</div></div>';
     }
-    return renderMatchupCard(m, conf);
+    return renderMatchupCard(m, conf, round);
   }
 
   function renderSuperBowl(sb){
@@ -871,28 +896,28 @@ body::after{
     html += '<div class="round-header-cell" style="'+gc(6,1)+'">Divisional</div>';
     html += '<div class="round-header-cell" style="'+gc(7,1)+'">Wild Card</div>';
 
-    html += '<div class="cell" style="'+gc(1,2)+'">'+renderMatchupCard(afcWC[0],'AFC')+'</div>';
+    html += '<div class="cell" style="'+gc(1,2)+'">'+renderMatchupCard(afcWC[0],'AFC','wc')+'</div>';
     html += '<div class="cell" style="'+gc(2,2)+'">'+renderByeCard(b.AFC.byeTeam,'AFC')+'</div>';
 
-    html += '<div class="cell" style="'+gc(1,3)+'">'+renderMatchupCard(afcWC[1],'AFC')+'</div>';
-    html += '<div class="cell" style="'+gc(2,3)+'">'+renderChampOrSBCard(afcDiv[0],'AFC')+'</div>';
-    html += '<div class="cell" style="grid-column:3;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(afcChamp,'AFC')+'</div>';
+    html += '<div class="cell" style="'+gc(1,3)+'">'+renderMatchupCard(afcWC[1],'AFC','wc')+'</div>';
+    html += '<div class="cell" style="'+gc(2,3)+'">'+renderChampOrSBCard(afcDiv[0],'AFC','div')+'</div>';
+    html += '<div class="cell" style="grid-column:3;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(afcChamp,'AFC','conf')+'</div>';
 
-    html += '<div class="cell" style="'+gc(1,4)+'">'+renderMatchupCard(afcWC[2],'AFC')+'</div>';
-    html += '<div class="cell" style="'+gc(2,4)+'">'+renderChampOrSBCard(afcDiv[1],'AFC')+'</div>';
+    html += '<div class="cell" style="'+gc(1,4)+'">'+renderMatchupCard(afcWC[2],'AFC','wc')+'</div>';
+    html += '<div class="cell" style="'+gc(2,4)+'">'+renderChampOrSBCard(afcDiv[1],'AFC','div')+'</div>';
 
     html += '<div class="cell" style="grid-column:4;grid-row:2/6;display:flex;align-items:center;justify-content:center;padding:6px">'+renderSuperBowl(sb)+'</div>';
 
-    html += '<div class="cell" style="grid-column:5;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(nfcChamp,'NFC')+'</div>';
+    html += '<div class="cell" style="grid-column:5;grid-row:3/5;display:flex;align-items:center;justify-content:center;padding:6px">'+renderChampOrSBCard(nfcChamp,'NFC','conf')+'</div>';
 
-    html += '<div class="cell" style="'+gc(7,2)+'">'+renderMatchupCard(nfcWC[0],'NFC')+'</div>';
+    html += '<div class="cell" style="'+gc(7,2)+'">'+renderMatchupCard(nfcWC[0],'NFC','wc')+'</div>';
     html += '<div class="cell" style="'+gc(6,2)+'">'+renderByeCard(b.NFC.byeTeam,'NFC')+'</div>';
 
-    html += '<div class="cell" style="'+gc(7,3)+'">'+renderMatchupCard(nfcWC[1],'NFC')+'</div>';
-    html += '<div class="cell" style="'+gc(6,3)+'">'+renderChampOrSBCard(nfcDiv[0],'NFC')+'</div>';
+    html += '<div class="cell" style="'+gc(7,3)+'">'+renderMatchupCard(nfcWC[1],'NFC','wc')+'</div>';
+    html += '<div class="cell" style="'+gc(6,3)+'">'+renderChampOrSBCard(nfcDiv[0],'NFC','div')+'</div>';
 
-    html += '<div class="cell" style="'+gc(7,4)+'">'+renderMatchupCard(nfcWC[2],'NFC')+'</div>';
-    html += '<div class="cell" style="'+gc(6,4)+'">'+renderChampOrSBCard(nfcDiv[1],'NFC')+'</div>';
+    html += '<div class="cell" style="'+gc(7,4)+'">'+renderMatchupCard(nfcWC[2],'NFC','wc')+'</div>';
+    html += '<div class="cell" style="'+gc(6,4)+'">'+renderChampOrSBCard(nfcDiv[1],'NFC','div')+'</div>';
 
     el.innerHTML = html;
 
@@ -908,22 +933,22 @@ body::after{
     var el = document.getElementById('bracket-mobile');
     var html = '';
 
-    function mobileRoundCards(conf, roundName, matchups, byeTeam){
+    function mobileRoundCards(conf, roundName, matchups, byeTeam, round){
       var h = '<div class="mobile-round-header">'+roundName+'</div>';
       if(byeTeam){
         h += '<div class="mobile-card-slot">'+renderByeCard(byeTeam, conf)+'</div>';
       }
       matchups.forEach(function(m){
-        h += '<div class="mobile-card-slot">'+renderChampOrSBCard(m, conf)+'</div>';
+        h += '<div class="mobile-card-slot">'+renderChampOrSBCard(m, conf, round)+'</div>';
       });
       return h;
     }
 
     html += '<div class="mobile-conf-section">';
     html += '<div class="mobile-conf-header afc">AFC Conference</div>';
-    html += mobileRoundCards('AFC','Wild Card', b.AFC.wildcard, null);
-    html += mobileRoundCards('AFC','Divisional', b.AFC.divisional, b.AFC.byeTeam);
-    html += mobileRoundCards('AFC','Conference Championship', [b.AFC.championship], null);
+    html += mobileRoundCards('AFC','Wild Card', b.AFC.wildcard, null, 'wc');
+    html += mobileRoundCards('AFC','Divisional', b.AFC.divisional, b.AFC.byeTeam, 'div');
+    html += mobileRoundCards('AFC','Conference Championship', [b.AFC.championship], null, 'conf');
     html += '</div>';
 
     html += '<div class="mobile-sb-divider"></div>';
@@ -934,9 +959,9 @@ body::after{
 
     html += '<div class="mobile-conf-section">';
     html += '<div class="mobile-conf-header nfc">NFC Conference</div>';
-    html += mobileRoundCards('NFC','Wild Card', b.NFC.wildcard, null);
-    html += mobileRoundCards('NFC','Divisional', b.NFC.divisional, b.NFC.byeTeam);
-    html += mobileRoundCards('NFC','Conference Championship', [b.NFC.championship], null);
+    html += mobileRoundCards('NFC','Wild Card', b.NFC.wildcard, null, 'wc');
+    html += mobileRoundCards('NFC','Divisional', b.NFC.divisional, b.NFC.byeTeam, 'div');
+    html += mobileRoundCards('NFC','Conference Championship', [b.NFC.championship], null, 'conf');
     html += '</div>';
 
     el.innerHTML = html;
