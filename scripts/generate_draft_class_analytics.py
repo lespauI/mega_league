@@ -688,22 +688,32 @@ def build_round1_entries(players_rows: list[dict], team_logo_map: dict, *, year:
     return entries
 
 
-def _grade_for_ovr(ovr: int) -> tuple[str, str]:
-    """Return (label, css_class) for a simple pick grade derived from OVR.
+def _grade_for_ovr(ovr: int, dev: str = '0') -> tuple[str, str]:
+    """Return (label, css_class) for a pick grade derived from OVR + dev trait.
 
-    - A (grade-on): 78+
-    - B (grade-near): 72–77
-    - C (grade-below): <72
+    Elite day-1 impact requires BOTH high OVR and a Superstar/X-Factor dev tier.
+    Normal/Star dev caps the grade regardless of OVR.
+
+    - A  (grade-on):    OVR >= 80 AND dev in {SS, XF}
+    - B  (grade-near):  (OVR >= 78 AND dev in {SS, XF}) OR OVR >= 82
+    - C  (grade-near):  OVR >= 78 OR (dev in {SS, XF} AND OVR >= 72)
+    - D  (grade-below): OVR >= 72
+    - F  (grade-below): OVR < 72
     """
     try:
         o = int(ovr)
     except Exception:
         o = 0
-    if o >= 78:
+    elite = str(dev) in ('2', '3')  # Superstar or X-Factor
+    if o >= 80 and elite:
         return ('A', 'grade-on')
-    if o >= 72:
+    if (o >= 78 and elite) or o >= 82:
         return ('B', 'grade-near')
-    return ('C', 'grade-below')
+    if o >= 78 or (elite and o >= 72):
+        return ('C', 'grade-near')
+    if o >= 72:
+        return ('D', 'grade-below')
+    return ('F', 'grade-below')
 
 
 def _normalize_player_name_for_match(name: str) -> str:
@@ -864,13 +874,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
     team_by_player = (mock_lookup or {}).get('team_by_player', {})
     player_by_pick = (mock_lookup or {}).get('player_by_pick', {})
     for e in entries:
-        grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
-        # Add '+' to grade for Superstar/X-Factor devs
-        try:
-            if str(e.get('dev')) in ('2','3'):
-                grade_label = f"{grade_label}+"
-        except Exception:
-            pass
+        grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0), e.get('dev', '0'))
         # Team logo shown inline with the Pick number in header row
         logo_img = f"<img class=\"team-logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
         photo = e.get('photo')
