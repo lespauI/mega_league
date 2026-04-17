@@ -551,12 +551,15 @@
           const innerW = width - margin.left - margin.right;
           const innerH = height - margin.top - margin.bottom;
 
-          // X domain auto from data; Y domain fixed to requested SoS range 1185–1215
+          // X and Y domains auto-fit from data with padding
           const xMin = d3.min(data, d => +d.own_elo);
           const xMax = d3.max(data, d => +d.own_elo);
           const xPad = (xMax - xMin) * 0.05;
           const xDomain = [xMin - xPad, xMax + xPad];
-          const yDomain = [1185, 1215];
+          const yMin = d3.min(data, d => +d.avg_opp_elo);
+          const yMax = d3.max(data, d => +d.avg_opp_elo);
+          const yPad = (yMax - yMin) * 0.08;
+          const yDomain = [yMin - yPad, yMax + yPad];
 
           const x = d3.scaleLinear().domain(xDomain).nice().range([0, innerW]);
           const y = d3.scaleLinear().domain(yDomain).nice().range([innerH, 0]);
