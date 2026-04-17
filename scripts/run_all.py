@@ -19,7 +19,9 @@ def main():
         ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)', False, None),
         ('scripts/calc_sos_elo.py', 'Season 2 SoS (ELO) Calculation', False, ['--season-index', '2', '--start-row', '287']),
         ('scripts/calc_sos_elo.py', 'Season 3 SoS (ELO) Calculation', False, ['--season-index', '3', '--start-row', '571']),
-        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, ['--season-index', '2', '--out-csv', 'output/ranked_sos_by_conference.csv']),
+        ('scripts/calc_sos_elo.py', 'Season 4 SoS (ELO) Calculation', False, ['--season-index', '4', '--start-row', '872']),
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation (Season 3)', False, ['--season-index', '2', '--out-csv', 'output/ranked_sos_by_conference.csv']),
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation (Season 4)', False, ['--season-index', '3']),
         ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, None),
         ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),
         ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, None),
@@ -62,6 +64,8 @@ def main():
         print("  • output/sos/season2_elo.json - Season 2 SoS (ELO) JSON")
         print("  • output/sos/season3_elo.csv - Season 3 SoS (ELO) table")
         print("  • output/sos/season3_elo.json - Season 3 SoS (ELO) JSON")
+        print("  • output/sos/season4_elo.csv - Season 4 SoS (ELO) table")
+        print("  • output/sos/season4_elo.json - Season 4 SoS (ELO) JSON")
         print("  • output/playoff_probabilities.json - Playoff probabilities data")
         print("  • docs/playoff_race_table.html - Interactive playoff race table")
         print("  • docs/playoff_race.html - Full playoff analysis report (with embedded table)")

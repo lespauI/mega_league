@@ -115,6 +115,8 @@ def get_file_description(filename):
         'sos_season2_table.html': 'Season 2 SoS — sortable table with conference/division filters',
         'sos_season2_bars.html': 'Season 2 SoS — bar charts by league, conference, division',
         'sos_graphs_season3.html': 'Season 3 SoS visualizations (graphs)',
+        'sos_season4.html': 'Season 4 SoS — combined sortable table and bar charts',
+        'sos_graphs_season4.html': 'Season 4 SoS visualizations (graphs)',
         'stats_dashboard.html': '🏠 Main Stats Hub - Access all team analytics visualizations from one place',
         'team_stats_explorer.html': '📊 Interactive Win% correlation explorer with 20+ team metrics',
         'team_stats_correlations.html': '🔍 35 cross-metric correlation graphs revealing strategic insights',

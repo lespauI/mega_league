@@ -44,13 +44,38 @@ def normalize_team_name(name: str) -> str:
 
 
 def read_elo_map(elo_csv: str) -> Dict[str, float]:
-    """Read team -> ELO map from MEGA_elo.csv (comma delimiter, dot decimal)."""
+    """Read team -> ELO map from MEGA_elo.csv (comma delimiter, dot decimal).
+
+    The ELO column name follows the pattern ``Week N+`` (e.g. ``Week 14+``,
+    ``Week 16+``, ``Week 18+``) and changes as the screenshot cutover is
+    updated. Auto-detect the highest ``Week N+`` column so we don't have
+    to edit code each time the source export rolls forward.
+    """
     elo_map: Dict[str, float] = {}
     with open(elo_csv, "r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f, delimiter=",")
+        fieldnames = reader.fieldnames or []
+        elo_col = None
+        best_week = -1
+        for name in fieldnames:
+            if not name:
+                continue
+            stripped = name.strip()
+            if stripped.lower().startswith("week ") and stripped.endswith("+"):
+                try:
+                    wk = int(stripped[5:-1].strip())
+                except ValueError:
+                    continue
+                if wk > best_week:
+                    best_week = wk
+                    elo_col = name
+        if elo_col is None:
+            logging.error("No 'Week N+' column found in %s (fields=%r)", elo_csv, fieldnames)
+            return elo_map
+
         for row in reader:
             team_raw = row.get("Team")
-            start_raw = row.get("Week 14+")
+            start_raw = row.get(elo_col)
             if not team_raw or not start_raw:
                 continue
             key = normalize_team_name(team_raw)
@@ -58,13 +83,15 @@ def read_elo_map(elo_csv: str) -> Dict[str, float]:
                 elo = float(start_raw)
             except ValueError:
                 logging.warning(
-                    "Skipping ELO row with invalid Week 14+: team=%r Week 14+=%r",
+                    "Skipping ELO row with invalid %s: team=%r %s=%r",
+                    elo_col,
                     team_raw,
+                    elo_col,
                     start_raw,
                 )
                 continue
             elo_map[key] = elo
-    logging.info("Loaded ELO map: %d teams from %s", len(elo_map), elo_csv)
+    logging.info("Loaded ELO map: %d teams from %s (col=%s)", len(elo_map), elo_csv, elo_col)
     return elo_map
 
 
