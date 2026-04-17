@@ -832,10 +832,23 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
     def esc(s: str) -> str:
         return html.escape(str(s))
     def md_to_html(s: str) -> str:
-        """Convert markdown bold **text** to HTML <b>text</b> after escaping."""
+        """Convert markdown bold **text** to HTML <b>text</b> after escaping.
+
+        Also converts literal backslash-n-backslash-n sequences (as they
+        appear inside a single markdown-table cell) and real newlines into
+        paragraph breaks, so multi-paragraph analytics blurbs render
+        correctly.
+        """
         import re
         escaped = html.escape(str(s))
-        return re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', escaped)
+        escaped = re.sub(r'\*\*(.+?)\*\*', r'<b>\1</b>', escaped)
+        # Literal \n\n (backslash-n backslash-n) => paragraph break
+        escaped = escaped.replace('\\n\\n', '</p><p>')
+        escaped = escaped.replace('\\n', '<br/>')
+        # Real newlines (in case they survive)
+        escaped = re.sub(r'\n\s*\n', '</p><p>', escaped)
+        escaped = escaped.replace('\n', '<br/>')
+        return f'<p>{escaped}</p>'
     def _attr_label(key: str) -> str:
         k = str(key or '')
         # Strip a single trailing 'Rating' (6 chars)
