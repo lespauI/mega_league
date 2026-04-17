@@ -181,16 +181,31 @@ def badge_for_dev(dev: str) -> str:
     return f'<span class="dev-badge {cls}">{html.escape(label)}</span>'
 
 
-def _grade_for_ovr(ovr: int) -> tuple[str, str]:
+def _grade_for_ovr(ovr: int, dev: str = '0') -> tuple[str, str]:
+    """Pick grade derived from OVR + dev trait.
+
+    Elite day-1 impact requires BOTH high OVR and a Superstar/X-Factor dev tier.
+
+    - A  (grade-on):    OVR >= 80 AND dev in {SS, XF}
+    - B  (grade-near):  (OVR >= 78 AND dev in {SS, XF}) OR OVR >= 82
+    - C  (grade-near):  OVR >= 78 OR (dev in {SS, XF} AND OVR >= 72)
+    - D  (grade-below): OVR >= 72
+    - F  (grade-below): OVR < 72
+    """
     try:
         o = int(ovr)
     except Exception:
         o = 0
-    if o >= 78:
+    elite = str(dev) in ('2', '3')
+    if o >= 80 and elite:
         return ('A', 'grade-on')
-    if o >= 72:
+    if (o >= 78 and elite) or o >= 82:
         return ('B', 'grade-near')
-    return ('C', 'grade-below')
+    if o >= 78 or (elite and o >= 72):
+        return ('C', 'grade-near')
+    if o >= 72:
+        return ('D', 'grade-below')
+    return ('F', 'grade-below')
 
 
 def _ovr_badge_cls(ovr: int) -> str:
@@ -235,9 +250,7 @@ def render_round_cards(entries: list[dict]) -> str:
 
     cards = []
     for e in entries:
-        grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0))
-        if str(e.get('dev')) in ('2','3'):
-            grade_label = f"{grade_label}+"
+        grade_label, grade_cls = _grade_for_ovr(e.get('ovr', 0), e.get('dev', '0'))
 
         logo_img = f"<img class=\"team-logo\" src=\"{esc(e['team_logo'])}\" alt=\"{esc(e['team'])}\" />" if e.get('team_logo') else ''
         photo = e.get('photo')
