@@ -16,7 +16,7 @@ Output paths are derived from --season-index:
   output/sos/season{N}_elo.json
   output/schedules/season{N}/all_schedules.json
 
-Default --start-row values: season 2 → 287, season 3 → 571.
+Default --start-row values: season 2 → 287, season 3 → 571, season 4 → 872.
 """
 
 from __future__ import annotations
@@ -33,6 +33,7 @@ from common import normalize_team_name, read_elo_map, read_team_meta
 _DEFAULT_START_ROWS: Dict[int, int] = {
     2: 287,
     3: 571,
+    4: 872,
 }
 
 
