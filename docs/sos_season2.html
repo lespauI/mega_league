@@ -453,7 +453,7 @@
               const badge = wrap.append('div').attr('class','opp-badge').style('background', colorForElo(+g.elo)).style('border-color', 'rgba(0,0,0,.12)');
               if (g.logoUrl) badge.append('img').attr('class','opp-logo').attr('src', g.logoUrl).attr('alt', g.opponent);
               badge.append('span').text(g.opponent);
-              badge.append('span').attr('class','opp-elo').text(isFinite(+g.elo) ? fmt1(+g.elo) : '—');
+              badge.append('span').attr('class','opp-elo').text((g.elo != null && isFinite(+g.elo) && +g.elo !== 0) ? fmt1(+g.elo) : '—');
             });
           });
         }

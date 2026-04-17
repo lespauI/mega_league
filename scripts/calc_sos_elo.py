@@ -372,6 +372,18 @@ def main(argv: List[str] | None = None) -> int:
     teams_meta = read_team_meta(args.teams_csv)
     schedules = build_schedules(games_rows, teams_meta)
 
+    elo_map = read_elo_map(args.elo_csv)
+    sos_rows = compute_sos_elo(
+        schedules,
+        elo_map,
+        include_home_advantage=args.include_home_advantage,
+        hfa_elo_points=args.hfa_elo_points,
+        index_scale=args.index_scale,
+    )
+
+    # Schedules are enriched in-place by compute_sos_elo (each game gets
+    # `oppElo`); write the JSON *after* enrichment so downstream dashboards
+    # don't have to rediscover opponent ELO client-side.
     try:
         out_sched_dir = os.path.join(args.out_dir, "schedules", f"season{season_index}")
         os.makedirs(out_sched_dir, exist_ok=True)
@@ -382,15 +394,6 @@ def main(argv: List[str] | None = None) -> int:
     except Exception as e:
         logging.error("Failed writing schedules JSON: %s", e)
         raise
-
-    elo_map = read_elo_map(args.elo_csv)
-    sos_rows = compute_sos_elo(
-        schedules,
-        elo_map,
-        include_home_advantage=args.include_home_advantage,
-        hfa_elo_points=args.hfa_elo_points,
-        index_scale=args.index_scale,
-    )
 
     if not args.dry_run:
         write_outputs(sos_rows, args.out_dir, season_index)
