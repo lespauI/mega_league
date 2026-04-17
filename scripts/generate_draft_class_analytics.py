@@ -932,7 +932,7 @@ def render_round1_recap(entries: list[dict], mock_lookup: dict | None = None) ->
                     parts.append(f"<div class=\"mock-notes\">{md_to_html(joined)}</div>")
                 notes_html = (
                     "<div class=\"mock-notes-block\">"
-                    "  <div class=\"mock-notes-title\">Что говорили аналитики</div>"
+                    "  <div class=\"mock-notes-title\">Аналитика</div>"
                     + ''.join(parts) +
                     "</div>"
                 )
