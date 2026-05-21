@@ -30,7 +30,7 @@ GAME_WIN_PROB_MAX = 0.75
 SB_PROB_MAX = 45.0
 
 
-def load_power_rankings(season_index=2):
+def load_power_rankings(season_index=3):
     rankings = {}
     max_week = {}
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
@@ -51,9 +51,10 @@ def load_elo_data():
     elo_map = {}
     with open('MEGA_elo.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
+        week_col = next((c for c in (reader.fieldnames or []) if c and c.startswith('Week ')), None)
         for row in reader:
             team = row.get('Team', '').strip()
-            elo_str = row.get('Week 14+', '')
+            elo_str = row.get(week_col, '') if week_col else ''
             if team and elo_str:
                 try:
                     elo_map[team] = float(elo_str)
@@ -64,7 +65,7 @@ def load_elo_data():
             elo_map[team] = 1200.0
     return elo_map
 
-def read_standings(season_index=2):
+def read_standings(season_index=3):
     power_rankings = load_power_rankings(season_index=season_index)
     elo_ratings = load_elo_data()
     
@@ -396,7 +397,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGA League Playoff Race - Week 15</title>
+    <title>MEGA League Playoff Race - Week 10</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -771,7 +772,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
     <div class="container">
         <div class="header">
             <h1>🏈 MEGA League Playoff Race</h1>
-            <div class="subtitle">Week 15 Standings & Playoff Probabilities</div>
+            <div class="subtitle">Week 10 Standings & Playoff Probabilities</div>
             <div class="updated">Updated ''' + now.strftime('%b %d, %Y at %I:%M %p ET') + '''</div>
         </div>
 
@@ -982,7 +983,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
     
     return '\n'.join(html)
 
-def main(season_index=2):
+def main(season_index=3):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
@@ -1009,7 +1010,7 @@ def main(season_index=2):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate playoff race table HTML')
-    parser.add_argument('--season-index', type=int, default=2,
-                        help='Season index to filter games and rankings (default: 2)')
+    parser.add_argument('--season-index', type=int, default=3,
+                        help='Season index to filter games and rankings (default: 3)')
     args = parser.parse_args()
     main(season_index=args.season_index)

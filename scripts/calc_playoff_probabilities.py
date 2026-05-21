@@ -36,7 +36,7 @@ def load_elo_data():
     return elo_map
 
 
-def load_rankings_data(season_index=2):
+def load_rankings_data(season_index=3):
     rankings = {}
     max_week = {}
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
@@ -80,7 +80,7 @@ def is_divisional_game(home, away, teams_info):
     return home_div == away_div and home_div != ''
 
 
-def load_data(season_index=2):
+def load_data(season_index=3):
     teams_info = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -743,7 +743,7 @@ def cap_simulation_probability(raw_probability):
         return 0.1
     return raw_probability
 
-def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=2):
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=3):
     teams_info, games, sos_data = load_data(season_index=season_index)
     stats = calculate_team_stats(teams_info, games)
     rankings = load_rankings_data(season_index=season_index)
@@ -827,8 +827,8 @@ if __name__ == "__main__":
                         help=f'Number of simulations to run (default: {DEFAULT_NUM_SIMULATIONS})')
     parser.add_argument('-s', '--seed', type=int, default=None,
                         help='Random seed for reproducible results (default: None)')
-    parser.add_argument('--season-index', type=int, default=2,
-                        help='Season index to filter games and rankings (default: 2)')
+    parser.add_argument('--season-index', type=int, default=3,
+                        help='Season index to filter games and rankings (default: 3)')
     args = parser.parse_args()
     
     if args.seed is not None:

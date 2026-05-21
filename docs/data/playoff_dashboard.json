@@ -1,7 +1,91 @@
 {
-  "generated_at": "2026-04-10T17:35:15.389972+00:00",
-  "season_index": 2,
+  "generated_at": "2026-05-21T10:16:38.356069+00:00",
+  "season_index": 3,
   "teams": {
+    "49ers": {
+      "abbr": "SF",
+      "displayName": "49ers",
+      "logoId": 14,
+      "conference": "NFC",
+      "division": "NFC West",
+      "seed": 5,
+      "wins": 5,
+      "losses": 3,
+      "playoffStatus": 1,
+      "ovrRating": 87,
+      "ptsFor": 25,
+      "ptsAgainst": 21,
+      "offPassYds": 1699,
+      "offRushYds": 744,
+      "offTotalYds": 2443,
+      "defPassYds": 1632,
+      "defRushYds": 708,
+      "defTotalYds": 2340,
+      "winStreak": -1,
+      "elo": 1203.0,
+      "topPlayers": {
+        "QB": {
+          "name": "Brock Purdy",
+          "yards": 1755,
+          "tds": 16,
+          "ints": 10,
+          "rating": 102.1,
+          "ovr": 96
+        },
+        "RB": {
+          "name": "Christian McCaffrey",
+          "yards": 675,
+          "tds": 8,
+          "avgYpc": 5.62,
+          "ovr": 91
+        },
+        "WR": {
+          "name": "Jauan Jennings",
+          "yards": 382,
+          "tds": 5,
+          "catches": 44,
+          "ovr": 82
+        },
+        "DEF": {
+          "name": "Nick Martin",
+          "sacks": 0.0,
+          "ints": 0,
+          "tackles": 37.0,
+          "ovr": 91
+        },
+        "DB": {
+          "name": "Renardo Green",
+          "sacks": 0.0,
+          "ints": 2,
+          "tackles": 23.0,
+          "ovr": 84
+        },
+        "DL": {
+          "name": "Nick Bosa",
+          "sacks": 2.5,
+          "ints": 0,
+          "tackles": 4.0,
+          "ovr": 96
+        },
+        "LB": {
+          "name": "Nick Martin",
+          "sacks": 0.0,
+          "ints": 0,
+          "tackles": 37.0,
+          "ovr": 91
+        }
+      },
+      "passTDs": 16,
+      "passINTs": 10,
+      "rushTDs": 9,
+      "rushFumbles": 2,
+      "defTDs": 0,
+      "defINTs": 8,
+      "defSacks": 3.0,
+      "defForcedFum": 5,
+      "defFumRec": 1,
+      "tODiff": -2
+    },
     "Bengals": {
       "abbr": "CIN",
       "displayName": "Bengals",
@@ -9,82 +93,82 @@
       "conference": "AFC",
       "division": "AFC North",
       "seed": 1,
-      "wins": 14,
-      "losses": 3,
-      "playoffStatus": 4,
+      "wins": 9,
+      "losses": 0,
+      "playoffStatus": 1,
       "ovrRating": 92,
-      "ptsFor": 29,
-      "ptsAgainst": 16,
-      "offPassYds": 4200,
-      "offRushYds": 1298,
-      "offTotalYds": 5498,
-      "defPassYds": 2821,
-      "defRushYds": 1358,
-      "defTotalYds": 4179,
-      "winStreak": 7,
-      "elo": 1303.9,
+      "ptsFor": 30,
+      "ptsAgainst": 18,
+      "offPassYds": 2111,
+      "offRushYds": 919,
+      "offTotalYds": 3030,
+      "defPassYds": 1775,
+      "defRushYds": 592,
+      "defTotalYds": 2367,
+      "winStreak": 9,
+      "elo": 1313.3,
       "topPlayers": {
         "QB": {
           "name": "Joe Burrow",
-          "yards": 4083,
-          "tds": 38,
-          "ints": 15,
-          "rating": 111.49,
+          "yards": 1119,
+          "tds": 13,
+          "ints": 6,
+          "rating": 99.74,
           "ovr": 99
         },
         "RB": {
-          "name": "Chase Brown",
-          "yards": 663,
-          "tds": 11,
-          "avgYpc": 5.72,
+          "name": "Jaden Peterson",
+          "yards": 747,
+          "tds": 5,
+          "avgYpc": 6.02,
           "ovr": 88
         },
         "WR": {
           "name": "Ja'Marr Chase",
-          "yards": 1486,
-          "tds": 14,
-          "catches": 91,
+          "yards": 323,
+          "tds": 3,
+          "catches": 31,
           "ovr": 99
         },
         "DEF": {
-          "name": "Roquan Smith",
-          "sacks": 2.0,
-          "ints": 9,
-          "tackles": 46.0,
-          "ovr": 95
+          "name": "Shon Person",
+          "sacks": 1.5,
+          "ints": 2,
+          "tackles": 23.0,
+          "ovr": 80
+        },
+        "DL": {
+          "name": "Kris Jenkins Jr",
+          "sacks": 3.0,
+          "ints": 0,
+          "tackles": 5.0,
+          "ovr": 83
+        },
+        "LB": {
+          "name": "Shon Person",
+          "sacks": 1.5,
+          "ints": 2,
+          "tackles": 23.0,
+          "ovr": 80
         },
         "DB": {
           "name": "Dax Hill",
           "sacks": 0.0,
-          "ints": 5,
-          "tackles": 32.0,
+          "ints": 2,
+          "tackles": 25.0,
           "ovr": 83
-        },
-        "DL": {
-          "name": "Trey Hendrickson",
-          "sacks": 14.5,
-          "ints": 0,
-          "tackles": 33.0,
-          "ovr": 93
-        },
-        "LB": {
-          "name": "Roquan Smith",
-          "sacks": 2.0,
-          "ints": 9,
-          "tackles": 46.0,
-          "ovr": 95
         }
       },
-      "passTDs": 40,
-      "passINTs": 17,
-      "rushTDs": 15,
-      "rushFumbles": 7,
-      "defTDs": 11,
-      "defINTs": 34,
-      "defSacks": 36.5,
-      "defForcedFum": 25,
-      "defFumRec": 11,
-      "tODiff": 29
+      "passTDs": 22,
+      "passINTs": 12,
+      "rushTDs": 9,
+      "rushFumbles": 2,
+      "defTDs": 2,
+      "defINTs": 17,
+      "defSacks": 18.0,
+      "defForcedFum": 4,
+      "defFumRec": 1,
+      "tODiff": 4
     },
     "Broncos": {
       "abbr": "DEN",
@@ -92,83 +176,167 @@
       "logoId": 3,
       "conference": "AFC",
       "division": "AFC West",
-      "seed": 5,
-      "wins": 12,
-      "losses": 5,
-      "playoffStatus": 2,
-      "ovrRating": 86,
-      "ptsFor": 31,
-      "ptsAgainst": 27,
-      "offPassYds": 3864,
-      "offRushYds": 2508,
-      "offTotalYds": 6372,
-      "defPassYds": 3972,
-      "defRushYds": 1305,
-      "defTotalYds": 5277,
+      "seed": 3,
+      "wins": 7,
+      "losses": 2,
+      "playoffStatus": 1,
+      "ovrRating": 88,
+      "ptsFor": 33,
+      "ptsAgainst": 23,
+      "offPassYds": 1921,
+      "offRushYds": 1043,
+      "offTotalYds": 2964,
+      "defPassYds": 2532,
+      "defRushYds": 506,
+      "defTotalYds": 3038,
       "winStreak": -1,
-      "elo": 1309.7,
+      "elo": 1298.2,
       "topPlayers": {
         "QB": {
           "name": "Jordan Love",
-          "yards": 4107,
-          "tds": 39,
-          "ints": 17,
-          "rating": 114.84,
-          "ovr": 90
+          "yards": 2023,
+          "tds": 19,
+          "ints": 4,
+          "rating": 116.53,
+          "ovr": 91
         },
         "RB": {
           "name": "RJ Harvey",
-          "yards": 2003,
-          "tds": 16,
-          "avgYpc": 7.26,
-          "ovr": 90
+          "yards": 579,
+          "tds": 8,
+          "avgYpc": 5.97,
+          "ovr": 93
         },
         "WR": {
-          "name": "Amon-Ra St. Brown",
-          "yards": 947,
-          "tds": 11,
-          "catches": 58,
-          "ovr": 97
+          "name": "Nate Hurd",
+          "yards": 559,
+          "tds": 7,
+          "catches": 27,
+          "ovr": 83
         },
         "DEF": {
-          "name": "Dre Greenlaw",
-          "sacks": 1.5,
-          "ints": 8,
-          "tackles": 29.0,
-          "ovr": 86
-        },
-        "LB": {
-          "name": "Dre Greenlaw",
-          "sacks": 1.5,
-          "ints": 8,
-          "tackles": 29.0,
-          "ovr": 86
-        },
-        "DL": {
-          "name": "Lukas Van Ness",
-          "sacks": 4.0,
-          "ints": 0,
-          "tackles": 30.0,
-          "ovr": 79
-        },
-        "DB": {
-          "name": "Ar'Darius Washington",
+          "name": "Nick Aikens",
           "sacks": 0.0,
           "ints": 3,
-          "tackles": 39.0,
+          "tackles": 26.0,
+          "ovr": 73
+        },
+        "DL": {
+          "name": "Rashan Gary",
+          "sacks": 4.5,
+          "ints": 1,
+          "tackles": 17.0,
           "ovr": 83
+        },
+        "DB": {
+          "name": "Tremaine Sweet",
+          "sacks": 0.0,
+          "ints": 1,
+          "tackles": 22.0,
+          "ovr": 79
+        },
+        "LB": {
+          "name": "Nick Aikens",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 26.0,
+          "ovr": 73
         }
       },
-      "passTDs": 39,
-      "passINTs": 17,
-      "rushTDs": 22,
-      "rushFumbles": 6,
-      "defTDs": 3,
-      "defINTs": 28,
-      "defSacks": 26.0,
-      "defForcedFum": 7,
+      "passTDs": 20,
+      "passINTs": 4,
+      "rushTDs": 15,
+      "rushFumbles": 3,
+      "defTDs": 2,
+      "defINTs": 21,
+      "defSacks": 16.0,
+      "defForcedFum": 8,
       "defFumRec": 3,
-      "tODiff": 14
+      "tODiff": 17
+    },
+    "Chiefs": {
+      "abbr": "KC",
+      "displayName": "Chiefs",
+      "logoId": 8,
+      "conference": "AFC",
+      "division": "AFC West",
+      "seed": 5,
+      "wins": 7,
+      "losses": 3,
+      "playoffStatus": 1,
+      "ovrRating": 91,
+      "ptsFor": 27,
+      "ptsAgainst": 21,
+      "offPassYds": 2094,
+      "offRushYds": 1190,
+      "offTotalYds": 3284,
+      "defPassYds": 2067,
+      "defRushYds": 911,
+      "defTotalYds": 2978,
+      "winStreak": 4,
+      "elo": 1204.4,
+      "topPlayers": {
+        "QB": {
+          "name": "Patrick Mahomes",
+          "yards": 1901,
+          "tds": 18,
+          "ints": 12,
+          "rating": 97.93,
+          "ovr": 95
+        },
+        "RB": {
+          "name": "Isiah Pacheco",
+          "yards": 1027,
+          "tds": 9,
+          "avgYpc": 6.01,
+          "ovr": 95
+        },
+        "WR": {
+          "name": "Eric Humphries",
+          "yards": 489,
+          "tds": 2,
+          "catches": 40,
+          "ovr": 83
+        },
+        "DEF": {
+          "name": "Nick Bolton",
+          "sacks": 1.0,
+          "ints": 0,
+          "tackles": 44.0,
+          "ovr": 88
+        },
+        "DB": {
+          "name": "Zyon McCollum",
+          "sacks": 0.0,
+          "ints": 4,
+          "tackles": 23.0,
+          "ovr": 87
+        },
+        "DL": {
+          "name": "Ethan Brown",
+          "sacks": 5.0,
+          "ints": 0,
+          "tackles": 13.0,
+          "ovr": 87
+        },
+        "LB": {
+          "name": "Nick Bolton",
+          "sacks": 1.0,
+          "ints": 0,
+          "tackles": 44.0,
+          "ovr": 88
+        }
+      },
+      "passTDs": 20,
+      "passINTs": 14,
+      "rushTDs": 10,
+      "rushFumbles": 4,
+      "defTDs": 2,
+      "defINTs": 15,
+      "defSacks": 16.0,
+      "defForcedFum": 1,
+      "defFumRec": 1,
+      "tODiff": 1
     },
     "Colts": {
       "abbr": "IND",
@@ -176,83 +344,83 @@
       "logoId": 9,
       "conference": "AFC",
       "division": "AFC South",
-      "seed": 3,
-      "wins": 11,
-      "losses": 6,
-      "playoffStatus": 3,
-      "ovrRating": 87,
-      "ptsFor": 23,
-      "ptsAgainst": 17,
-      "offPassYds": 3258,
-      "offRushYds": 1679,
-      "offTotalYds": 4937,
-      "defPassYds": 3073,
-      "defRushYds": 1345,
-      "defTotalYds": 4418,
-      "winStreak": -2,
-      "elo": 1231.6,
+      "seed": 7,
+      "wins": 4,
+      "losses": 5,
+      "playoffStatus": 1,
+      "ovrRating": 88,
+      "ptsFor": 22,
+      "ptsAgainst": 27,
+      "offPassYds": 1531,
+      "offRushYds": 807,
+      "offTotalYds": 2338,
+      "defPassYds": 1728,
+      "defRushYds": 979,
+      "defTotalYds": 2707,
+      "winStreak": -1,
+      "elo": 1213.3,
       "topPlayers": {
         "QB": {
           "name": "Anthony Richardson Sr",
-          "yards": 3316,
-          "tds": 17,
-          "ints": 23,
-          "rating": 95.81,
+          "yards": 1587,
+          "tds": 9,
+          "ints": 16,
+          "rating": 79.07,
           "ovr": 80
         },
         "RB": {
           "name": "Jason Carroll",
-          "yards": 1029,
-          "tds": 12,
-          "avgYpc": 5.12,
-          "ovr": 86
+          "yards": 636,
+          "tds": 8,
+          "avgYpc": 5.58,
+          "ovr": 87
         },
         "WR": {
-          "name": "Alec Pierce",
-          "yards": 885,
-          "tds": 5,
-          "catches": 63,
+          "name": "Mike Adams",
+          "yards": 335,
+          "tds": 2,
+          "catches": 26,
           "ovr": 82
         },
         "DEF": {
           "name": "Jaylon Carlies",
           "sacks": 1.0,
-          "ints": 6,
-          "tackles": 46.0,
+          "ints": 1,
+          "tackles": 28.0,
           "ovr": 88
         },
-        "DB": {
-          "name": "Charvarius Ward",
-          "sacks": 0.0,
-          "ints": 2,
-          "tackles": 25.0,
-          "ovr": 87
+        "DL": {
+          "name": "JT Tuimoloau",
+          "sacks": 4.5,
+          "ints": 0,
+          "tackles": 14.0,
+          "ovr": 89
         },
         "LB": {
           "name": "Jaylon Carlies",
           "sacks": 1.0,
-          "ints": 6,
-          "tackles": 46.0,
+          "ints": 1,
+          "tackles": 28.0,
           "ovr": 88
         },
-        "DL": {
-          "name": "Laiatu Latu",
-          "sacks": 9.5,
-          "ints": 1,
-          "tackles": 37.0,
-          "ovr": 84
+        "DB": {
+          "name": "Kamari Lassiter",
+          "sacks": 0.0,
+          "ints": 0,
+          "tackles": 26.0,
+          "ovr": 88
         }
       },
-      "passTDs": 17,
-      "passINTs": 23,
-      "rushTDs": 24,
-      "rushFumbles": 11,
-      "defTDs": 2,
-      "defINTs": 35,
-      "defSacks": 29.5,
-      "defForcedFum": 3,
-      "defFumRec": 0,
-      "tODiff": 3
+      "passTDs": 9,
+      "passINTs": 16,
+      "rushTDs": 11,
+      "rushFumbles": 9,
+      "defTDs": 0,
+      "defINTs": 8,
+      "defSacks": 13.0,
+      "defForcedFum": 2,
+      "defFumRec": 1,
+      "tODiff": -12
     },
     "Commanders": {
       "abbr": "WAS",
@@ -260,167 +428,251 @@
       "logoId": 25,
       "conference": "NFC",
       "division": "NFC East",
-      "seed": 2,
-      "wins": 13,
+      "seed": 3,
+      "wins": 6,
       "losses": 3,
-      "playoffStatus": 3,
+      "playoffStatus": 1,
       "ovrRating": 91,
-      "ptsFor": 28,
-      "ptsAgainst": 19,
-      "offPassYds": 3360,
-      "offRushYds": 1864,
-      "offTotalYds": 5224,
-      "defPassYds": 3396,
-      "defRushYds": 1383,
-      "defTotalYds": 4779,
-      "winStreak": 3,
-      "elo": 1269.1,
+      "ptsFor": 29,
+      "ptsAgainst": 22,
+      "offPassYds": 2186,
+      "offRushYds": 968,
+      "offTotalYds": 3154,
+      "defPassYds": 2075,
+      "defRushYds": 780,
+      "defTotalYds": 2855,
+      "winStreak": -1,
+      "elo": 1282.8,
       "topPlayers": {
         "QB": {
           "name": "Jayden Daniels",
-          "yards": 3143,
-          "tds": 18,
-          "ints": 13,
-          "rating": 102.82,
-          "ovr": 96
+          "yards": 2044,
+          "tds": 19,
+          "ints": 11,
+          "rating": 114.5,
+          "ovr": 98
         },
         "RB": {
           "name": "Jonathan Taylor",
-          "yards": 1216,
-          "tds": 20,
-          "avgYpc": 6.11,
-          "ovr": 90
+          "yards": 709,
+          "tds": 9,
+          "avgYpc": 5.81,
+          "ovr": 91
         },
         "WR": {
           "name": "Terry McLaurin",
-          "yards": 708,
+          "yards": 589,
           "tds": 5,
-          "catches": 63,
+          "catches": 47,
+          "ovr": 92
+        },
+        "DEF": {
+          "name": "Kain Medrano",
+          "sacks": 0.0,
+          "ints": 1,
+          "tackles": 29.0,
+          "ovr": 84
+        },
+        "DB": {
+          "name": "Julian Blackmon",
+          "sacks": 0.0,
+          "ints": 2,
+          "tackles": 17.0,
+          "ovr": 82
+        },
+        "LB": {
+          "name": "Kain Medrano",
+          "sacks": 0.0,
+          "ints": 1,
+          "tackles": 29.0,
+          "ovr": 84
+        },
+        "DL": {
+          "name": "Nik Bonitto",
+          "sacks": 5.0,
+          "ints": 0,
+          "tackles": 12.0,
+          "ovr": 90
+        }
+      },
+      "passTDs": 20,
+      "passINTs": 11,
+      "rushTDs": 12,
+      "rushFumbles": 5,
+      "defTDs": 0,
+      "defINTs": 14,
+      "defSacks": 12.0,
+      "defForcedFum": 3,
+      "defFumRec": 3,
+      "tODiff": 4
+    },
+    "Dolphins": {
+      "abbr": "MIA",
+      "displayName": "Dolphins",
+      "logoId": 11,
+      "conference": "AFC",
+      "division": "AFC East",
+      "seed": 6,
+      "wins": 5,
+      "losses": 4,
+      "playoffStatus": 1,
+      "ovrRating": 91,
+      "ptsFor": 26,
+      "ptsAgainst": 22,
+      "offPassYds": 2088,
+      "offRushYds": 943,
+      "offTotalYds": 3031,
+      "defPassYds": 1841,
+      "defRushYds": 970,
+      "defTotalYds": 2811,
+      "winStreak": 2,
+      "elo": 1123.5,
+      "topPlayers": {
+        "QB": {
+          "name": "Fredrick McKinley",
+          "yards": 1937,
+          "tds": 14,
+          "ints": 9,
+          "rating": 101.89,
+          "ovr": 91
+        },
+        "RB": {
+          "name": "Clyde Stackhouse",
+          "yards": 832,
+          "tds": 9,
+          "avgYpc": 7.85,
+          "ovr": 95
+        },
+        "WR": {
+          "name": "Marvin Mims Jr",
+          "yards": 889,
+          "tds": 5,
+          "catches": 67,
           "ovr": 95
         },
         "DEF": {
-          "name": "Terrel Bernard",
-          "sacks": 0.0,
-          "ints": 4,
-          "tackles": 50.0,
-          "ovr": 83
-        },
-        "LB": {
-          "name": "Terrel Bernard",
-          "sacks": 0.0,
-          "ints": 4,
-          "tackles": 50.0,
-          "ovr": 83
-        },
-        "DB": {
-          "name": "Quan Martin",
-          "sacks": 2.0,
-          "ints": 4,
-          "tackles": 41.0,
-          "ovr": 81
+          "name": "Sam Richards",
+          "sacks": 1.0,
+          "ints": 2,
+          "tackles": 35.0,
+          "ovr": 87
         },
         "DL": {
-          "name": "Jonathon Cooper",
-          "sacks": 14.5,
-          "ints": 0,
-          "tackles": 26.0,
-          "ovr": 82
-        }
-      },
-      "passTDs": 21,
-      "passINTs": 13,
-      "rushTDs": 38,
-      "rushFumbles": 7,
-      "defTDs": 4,
-      "defINTs": 30,
-      "defSacks": 39.0,
-      "defForcedFum": 5,
-      "defFumRec": 4,
-      "tODiff": 17
-    },
-    "Cowboys": {
-      "abbr": "DAL",
-      "displayName": "Cowboys",
-      "logoId": 10,
-      "conference": "NFC",
-      "division": "NFC East",
-      "seed": 7,
-      "wins": 11,
-      "losses": 6,
-      "playoffStatus": 2,
-      "ovrRating": 89,
-      "ptsFor": 29,
-      "ptsAgainst": 24,
-      "offPassYds": 3251,
-      "offRushYds": 2369,
-      "offTotalYds": 5620,
-      "defPassYds": 3375,
-      "defRushYds": 2000,
-      "defTotalYds": 5375,
-      "winStreak": -1,
-      "elo": 1258.7,
-      "topPlayers": {
-        "QB": {
-          "name": "Dave Burrell",
-          "yards": 3426,
-          "tds": 34,
-          "ints": 32,
-          "rating": 87.26,
-          "ovr": 84
-        },
-        "RB": {
-          "name": "Cameron Yancey",
-          "yards": 1618,
-          "tds": 15,
-          "avgYpc": 7.03,
-          "ovr": 87
-        },
-        "WR": {
-          "name": "Dennis Burnett",
-          "yards": 692,
-          "tds": 6,
-          "catches": 44,
-          "ovr": 87
-        },
-        "DEF": {
-          "name": "Damone Clark",
+          "name": "Alec Dillard",
           "sacks": 3.0,
-          "ints": 7,
-          "tackles": 46.0,
-          "ovr": 82
-        },
-        "DB": {
-          "name": "Trevon Diggs",
-          "sacks": 0.0,
-          "ints": 5,
-          "tackles": 32.0,
+          "ints": 0,
+          "tackles": 8.0,
           "ovr": 86
         },
-        "DL": {
-          "name": "Deionte Galloway",
-          "sacks": 5.5,
-          "ints": 0,
-          "tackles": 19.0,
-          "ovr": 83
+        "DB": {
+          "name": "Kamren Kinchens",
+          "sacks": 0.0,
+          "ints": 5,
+          "tackles": 27.0,
+          "ovr": 88
         },
         "LB": {
-          "name": "Damone Clark",
-          "sacks": 3.0,
-          "ints": 7,
-          "tackles": 46.0,
-          "ovr": 82
+          "name": "Sam Richards",
+          "sacks": 1.0,
+          "ints": 2,
+          "tackles": 35.0,
+          "ovr": 87
         }
       },
-      "passTDs": 34,
-      "passINTs": 32,
-      "rushTDs": 22,
+      "passTDs": 17,
+      "passINTs": 9,
+      "rushTDs": 11,
+      "rushFumbles": 3,
+      "defTDs": 3,
+      "defINTs": 20,
+      "defSacks": 11.0,
+      "defForcedFum": 5,
+      "defFumRec": 4,
+      "tODiff": 13
+    },
+    "Eagles": {
+      "abbr": "PHI",
+      "displayName": "Eagles",
+      "logoId": 12,
+      "conference": "NFC",
+      "division": "NFC East",
+      "seed": 6,
+      "wins": 5,
+      "losses": 3,
+      "playoffStatus": 1,
+      "ovrRating": 90,
+      "ptsFor": 29,
+      "ptsAgainst": 25,
+      "offPassYds": 1572,
+      "offRushYds": 1019,
+      "offTotalYds": 2591,
+      "defPassYds": 1555,
+      "defRushYds": 634,
+      "defTotalYds": 2189,
+      "winStreak": 1,
+      "elo": 1154.0,
+      "topPlayers": {
+        "QB": {
+          "name": "Dakota Sheppard",
+          "yards": 1349,
+          "tds": 15,
+          "ints": 8,
+          "rating": 111.16,
+          "ovr": 85
+        },
+        "RB": {
+          "name": "Saquon Barkley",
+          "yards": 853,
+          "tds": 11,
+          "avgYpc": 6.41,
+          "ovr": 98
+        },
+        "WR": {
+          "name": "DeVonta Smith",
+          "yards": 418,
+          "tds": 3,
+          "catches": 29,
+          "ovr": 93
+        },
+        "DEF": {
+          "name": "Zack Baun",
+          "sacks": 0.5,
+          "ints": 2,
+          "tackles": 26.0,
+          "ovr": 85
+        },
+        "DB": {
+          "name": "Quinyon Mitchell",
+          "sacks": 0.0,
+          "ints": 4,
+          "tackles": 10.0,
+          "ovr": 90
+        },
+        "DL": {
+          "name": "William Boston",
+          "sacks": 5.5,
+          "ints": 0,
+          "tackles": 10.0,
+          "ovr": 86
+        },
+        "LB": {
+          "name": "Zack Baun",
+          "sacks": 0.5,
+          "ints": 2,
+          "tackles": 26.0,
+          "ovr": 85
+        }
+      },
+      "passTDs": 16,
+      "passINTs": 9,
+      "rushTDs": 14,
       "rushFumbles": 5,
-      "defTDs": 4,
-      "defINTs": 33,
-      "defSacks": 25.0,
-      "defForcedFum": 9,
-      "defFumRec": 5,
-      "tODiff": 5
+      "defTDs": 0,
+      "defINTs": 12,
+      "defSacks": 13.0,
+      "defForcedFum": 0,
+      "defFumRec": 0,
+      "tODiff": 1
     },
     "Lions": {
       "abbr": "DET",
@@ -429,166 +681,166 @@
       "conference": "NFC",
       "division": "NFC North",
       "seed": 4,
-      "wins": 11,
-      "losses": 6,
-      "playoffStatus": 3,
-      "ovrRating": 88,
-      "ptsFor": 27,
-      "ptsAgainst": 22,
-      "offPassYds": 3878,
-      "offRushYds": 1463,
-      "offTotalYds": 5341,
-      "defPassYds": 3189,
-      "defRushYds": 1574,
-      "defTotalYds": 4763,
-      "winStreak": 2,
+      "wins": 5,
+      "losses": 3,
+      "playoffStatus": 1,
+      "ovrRating": 87,
+      "ptsFor": 23,
+      "ptsAgainst": 26,
+      "offPassYds": 1798,
+      "offRushYds": 716,
+      "offTotalYds": 2514,
+      "defPassYds": 1630,
+      "defRushYds": 757,
+      "defTotalYds": 2387,
+      "winStreak": -1,
       "elo": 1221.6,
       "topPlayers": {
         "QB": {
-          "name": "Jared Goff",
-          "yards": 4040,
-          "tds": 33,
-          "ints": 23,
-          "rating": 103.56,
-          "ovr": 87
+          "name": "Cedric Lucas",
+          "yards": 1786,
+          "tds": 15,
+          "ints": 11,
+          "rating": 100.96,
+          "ovr": 78
         },
         "RB": {
           "name": "Nick Nava",
-          "yards": 704,
-          "tds": 9,
-          "avgYpc": 4.32,
-          "ovr": 87
+          "yards": 571,
+          "tds": 5,
+          "avgYpc": 5.19,
+          "ovr": 89
         },
         "WR": {
-          "name": "Chris Godwin Jr",
-          "yards": 918,
-          "tds": 8,
-          "catches": 66,
-          "ovr": 88
+          "name": "Isaac TeSlaa",
+          "yards": 368,
+          "tds": 3,
+          "catches": 28,
+          "ovr": 83
         },
         "DEF": {
-          "name": "Brian Branch",
+          "name": "Kerby Joseph",
           "sacks": 0.0,
-          "ints": 4,
-          "tackles": 50.0,
-          "ovr": 97
+          "ints": 2,
+          "tackles": 18.0,
+          "ovr": 93
         },
         "DB": {
-          "name": "Brian Branch",
+          "name": "Terrion Arnold",
           "sacks": 0.0,
-          "ints": 4,
-          "tackles": 50.0,
-          "ovr": 97
-        },
-        "DL": {
-          "name": "Aidan Hutchinson",
-          "sacks": 11.5,
-          "ints": 0,
-          "tackles": 30.0,
-          "ovr": 98
+          "ints": 1,
+          "tackles": 18.0,
+          "ovr": 84
         },
         "LB": {
           "name": "Jack Campbell",
-          "sacks": 0.0,
+          "sacks": 0.5,
           "ints": 2,
-          "tackles": 50.0,
+          "tackles": 15.0,
           "ovr": 87
-        }
-      },
-      "passTDs": 33,
-      "passINTs": 23,
-      "rushTDs": 18,
-      "rushFumbles": 4,
-      "defTDs": 6,
-      "defINTs": 20,
-      "defSacks": 32.0,
-      "defForcedFum": 6,
-      "defFumRec": 4,
-      "tODiff": 0
-    },
-    "Panthers": {
-      "abbr": "CAR",
-      "displayName": "Panthers",
-      "logoId": 20,
-      "conference": "NFC",
-      "division": "NFC South",
-      "seed": 6,
-      "wins": 11,
-      "losses": 6,
-      "playoffStatus": 2,
-      "ovrRating": 87,
-      "ptsFor": 27,
-      "ptsAgainst": 23,
-      "offPassYds": 2855,
-      "offRushYds": 2357,
-      "offTotalYds": 5212,
-      "defPassYds": 3348,
-      "defRushYds": 1708,
-      "defTotalYds": 5056,
-      "winStreak": 6,
-      "elo": 1235.8,
-      "topPlayers": {
-        "QB": {
-          "name": "J.J. Washington",
-          "yards": 3092,
-          "tds": 19,
-          "ints": 18,
-          "rating": 85.95,
-          "ovr": 82
-        },
-        "RB": {
-          "name": "Chuba Hubbard",
-          "yards": 1704,
-          "tds": 22,
-          "avgYpc": 6.76,
-          "ovr": 90
-        },
-        "WR": {
-          "name": "Calvin Ridley",
-          "yards": 559,
-          "tds": 4,
-          "catches": 34,
-          "ovr": 80
-        },
-        "DEF": {
-          "name": "Ben Morales",
-          "sacks": 1.0,
-          "ints": 7,
-          "tackles": 48.0,
-          "ovr": 89
         },
         "DL": {
-          "name": "Nic Scourton",
-          "sacks": 9.0,
+          "name": "Aidan Hutchinson",
+          "sacks": 6.0,
           "ints": 0,
-          "tackles": 30.0,
-          "ovr": 92
-        },
-        "LB": {
-          "name": "Ben Morales",
-          "sacks": 1.0,
-          "ints": 7,
-          "tackles": 48.0,
-          "ovr": 89
-        },
-        "DB": {
-          "name": "Tre'von Moehrig",
-          "sacks": 0.0,
-          "ints": 6,
-          "tackles": 44.0,
-          "ovr": 87
+          "tackles": 7.0,
+          "ovr": 98
         }
       },
-      "passTDs": 19,
-      "passINTs": 18,
-      "rushTDs": 34,
-      "rushFumbles": 10,
-      "defTDs": 5,
-      "defINTs": 38,
-      "defSacks": 28.0,
-      "defForcedFum": 19,
-      "defFumRec": 11,
-      "tODiff": 28
+      "passTDs": 15,
+      "passINTs": 11,
+      "rushTDs": 7,
+      "rushFumbles": 5,
+      "defTDs": 1,
+      "defINTs": 9,
+      "defSacks": 17.5,
+      "defForcedFum": 3,
+      "defFumRec": 1,
+      "tODiff": -7
+    },
+    "Packers": {
+      "abbr": "GB",
+      "displayName": "Packers",
+      "logoId": 19,
+      "conference": "NFC",
+      "division": "NFC North",
+      "seed": 7,
+      "wins": 5,
+      "losses": 4,
+      "playoffStatus": 1,
+      "ovrRating": 88,
+      "ptsFor": 25,
+      "ptsAgainst": 29,
+      "offPassYds": 2074,
+      "offRushYds": 741,
+      "offTotalYds": 2815,
+      "defPassYds": 1842,
+      "defRushYds": 1043,
+      "defTotalYds": 2885,
+      "winStreak": -1,
+      "elo": 1093.8,
+      "topPlayers": {
+        "QB": {
+          "name": "Bo Nix",
+          "yards": 2117,
+          "tds": 16,
+          "ints": 23,
+          "rating": 93.67,
+          "ovr": 92
+        },
+        "RB": {
+          "name": "Bryan Molden",
+          "yards": 399,
+          "tds": 7,
+          "avgYpc": 6.88,
+          "ovr": 81
+        },
+        "WR": {
+          "name": "Chandler Starkey",
+          "yards": 478,
+          "tds": 7,
+          "catches": 29,
+          "ovr": 83
+        },
+        "DEF": {
+          "name": "Nate Hobbs",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 22.0,
+          "ovr": 84
+        },
+        "DB": {
+          "name": "Nate Hobbs",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 22.0,
+          "ovr": 84
+        },
+        "DL": {
+          "name": "Micah Parsons",
+          "sacks": 4.0,
+          "ints": 0,
+          "tackles": 13.0,
+          "ovr": 99
+        },
+        "LB": {
+          "name": "Virgil Sprinkle",
+          "sacks": 0.0,
+          "ints": 2,
+          "tackles": 21.0,
+          "ovr": 78
+        }
+      },
+      "passTDs": 16,
+      "passINTs": 23,
+      "rushTDs": 14,
+      "rushFumbles": 2,
+      "defTDs": 1,
+      "defINTs": 11,
+      "defSacks": 10.0,
+      "defForcedFum": 5,
+      "defFumRec": 5,
+      "tODiff": -8
     },
     "Patriots": {
       "abbr": "NE",
@@ -597,334 +849,82 @@
       "conference": "AFC",
       "division": "AFC East",
       "seed": 4,
-      "wins": 10,
-      "losses": 7,
-      "playoffStatus": 3,
+      "wins": 7,
+      "losses": 3,
+      "playoffStatus": 1,
       "ovrRating": 90,
-      "ptsFor": 23,
-      "ptsAgainst": 20,
-      "offPassYds": 3197,
-      "offRushYds": 1324,
-      "offTotalYds": 4521,
-      "defPassYds": 3396,
-      "defRushYds": 2164,
-      "defTotalYds": 5560,
-      "winStreak": 3,
-      "elo": 1242.7,
+      "ptsFor": 30,
+      "ptsAgainst": 23,
+      "offPassYds": 1870,
+      "offRushYds": 1505,
+      "offTotalYds": 3375,
+      "defPassYds": 2070,
+      "defRushYds": 1096,
+      "defTotalYds": 3166,
+      "winStreak": 4,
+      "elo": 1257.4,
       "topPlayers": {
         "QB": {
           "name": "Drake Maye",
-          "yards": 3418,
-          "tds": 26,
-          "ints": 23,
-          "rating": 94.84,
-          "ovr": 97
+          "yards": 1998,
+          "tds": 17,
+          "ints": 7,
+          "rating": 116.44,
+          "ovr": 98
         },
         "RB": {
           "name": "Jahlil Howard",
-          "yards": 1116,
+          "yards": 1070,
           "tds": 10,
-          "avgYpc": 5.05,
-          "ovr": 93
+          "avgYpc": 8.11,
+          "ovr": 95
         },
         "WR": {
           "name": "Charles Stearn",
-          "yards": 802,
-          "tds": 9,
-          "catches": 36,
-          "ovr": 96
-        },
-        "DEF": {
-          "name": "Robert Spillane",
-          "sacks": 1.0,
-          "ints": 10,
-          "tackles": 49.0,
-          "ovr": 83
-        },
-        "DL": {
-          "name": "Kahlil Johnson",
-          "sacks": 12.0,
-          "ints": 0,
-          "tackles": 30.0,
-          "ovr": 89
-        },
-        "DB": {
-          "name": "Marcus Jones",
-          "sacks": 0.0,
-          "ints": 5,
-          "tackles": 43.0,
-          "ovr": 84
-        },
-        "LB": {
-          "name": "Robert Spillane",
-          "sacks": 1.0,
-          "ints": 10,
-          "tackles": 49.0,
-          "ovr": 83
-        }
-      },
-      "passTDs": 26,
-      "passINTs": 23,
-      "rushTDs": 14,
-      "rushFumbles": 4,
-      "defTDs": 8,
-      "defINTs": 39,
-      "defSacks": 37.0,
-      "defForcedFum": 9,
-      "defFumRec": 3,
-      "tODiff": 14
-    },
-    "Raiders": {
-      "abbr": "LV",
-      "displayName": "Raiders",
-      "logoId": 22,
-      "conference": "AFC",
-      "division": "AFC West",
-      "seed": 2,
-      "wins": 13,
-      "losses": 4,
-      "playoffStatus": 3,
-      "ovrRating": 90,
-      "ptsFor": 35,
-      "ptsAgainst": 23,
-      "offPassYds": 3707,
-      "offRushYds": 1771,
-      "offTotalYds": 5478,
-      "defPassYds": 3717,
-      "defRushYds": 1623,
-      "defTotalYds": 5340,
-      "winStreak": 1,
-      "elo": 1292.1,
-      "topPlayers": {
-        "QB": {
-          "name": "Joe Milton III",
-          "yards": 3883,
-          "tds": 41,
-          "ints": 22,
-          "rating": 106.55,
-          "ovr": 85
-        },
-        "RB": {
-          "name": "Ashton Jeanty",
-          "yards": 1585,
-          "tds": 24,
-          "avgYpc": 6.29,
+          "yards": 683,
+          "tds": 5,
+          "catches": 40,
           "ovr": 98
         },
-        "WR": {
-          "name": "Dont'e Thornton Jr.",
-          "yards": 1204,
-          "tds": 20,
-          "catches": 68,
-          "ovr": 94
-        },
         "DEF": {
-          "name": "Darien Porter",
+          "name": "Christian Gonzalez",
           "sacks": 0.0,
-          "ints": 9,
-          "tackles": 47.0,
-          "ovr": 86
-        },
-        "DB": {
-          "name": "Darien Porter",
-          "sacks": 0.0,
-          "ints": 9,
-          "tackles": 47.0,
-          "ovr": 86
-        },
-        "DL": {
-          "name": "Calijah Kancey",
-          "sacks": 15.5,
-          "ints": 1,
-          "tackles": 36.0,
-          "ovr": 90
-        },
-        "LB": {
-          "name": "Mack Wilson Sr",
-          "sacks": 1.0,
-          "ints": 9,
-          "tackles": 40.0,
-          "ovr": 80
-        }
-      },
-      "passTDs": 41,
-      "passINTs": 22,
-      "rushTDs": 25,
-      "rushFumbles": 12,
-      "defTDs": 10,
-      "defINTs": 42,
-      "defSacks": 31.0,
-      "defForcedFum": 10,
-      "defFumRec": 3,
-      "tODiff": 17
-    },
-    "Rams": {
-      "abbr": "LAR",
-      "displayName": "Rams",
-      "logoId": 23,
-      "conference": "NFC",
-      "division": "NFC West",
-      "seed": 5,
-      "wins": 13,
-      "losses": 4,
-      "playoffStatus": 2,
-      "ovrRating": 86,
-      "ptsFor": 27,
-      "ptsAgainst": 20,
-      "offPassYds": 3971,
-      "offRushYds": 1485,
-      "offTotalYds": 5456,
-      "defPassYds": 3368,
-      "defRushYds": 1418,
-      "defTotalYds": 4786,
-      "winStreak": 1,
-      "elo": 1250.6,
-      "topPlayers": {
-        "QB": {
-          "name": "Dillon Overton",
-          "yards": 3511,
-          "tds": 25,
-          "ints": 14,
-          "rating": 112.64,
-          "ovr": 93
-        },
-        "RB": {
-          "name": "Dylan Sampson",
-          "yards": 1189,
-          "tds": 17,
-          "avgYpc": 5.33,
-          "ovr": 96
-        },
-        "WR": {
-          "name": "Puka Nacua",
-          "yards": 1160,
-          "tds": 12,
-          "catches": 76,
+          "ints": 5,
+          "tackles": 23.0,
           "ovr": 99
         },
-        "DEF": {
-          "name": "Terrence Nixon",
-          "sacks": 0.0,
-          "ints": 7,
-          "tackles": 39.0,
-          "ovr": 89
-        },
         "DB": {
-          "name": "Terrence Nixon",
+          "name": "Christian Gonzalez",
           "sacks": 0.0,
-          "ints": 7,
-          "tackles": 39.0,
-          "ovr": 89
-        },
-        "DL": {
-          "name": "Josaiah Stewart",
-          "sacks": 7.5,
-          "ints": 0,
-          "tackles": 18.0,
-          "ovr": 86
-        },
-        "LB": {
-          "name": "Trenton Simpson",
-          "sacks": 1.5,
-          "ints": 3,
-          "tackles": 35.0,
-          "ovr": 83
-        }
-      },
-      "passTDs": 30,
-      "passINTs": 14,
-      "rushTDs": 23,
-      "rushFumbles": 9,
-      "defTDs": 3,
-      "defINTs": 27,
-      "defSacks": 25.0,
-      "defForcedFum": 7,
-      "defFumRec": 2,
-      "tODiff": 11
-    },
-    "Ravens": {
-      "abbr": "BAL",
-      "displayName": "Ravens",
-      "logoId": 24,
-      "conference": "AFC",
-      "division": "AFC North",
-      "seed": 6,
-      "wins": 12,
-      "losses": 5,
-      "playoffStatus": 2,
-      "ovrRating": 89,
-      "ptsFor": 24,
-      "ptsAgainst": 22,
-      "offPassYds": 3770,
-      "offRushYds": 1541,
-      "offTotalYds": 5311,
-      "defPassYds": 3319,
-      "defRushYds": 1864,
-      "defTotalYds": 5183,
-      "winStreak": -1,
-      "elo": 1259.9,
-      "topPlayers": {
-        "QB": {
-          "name": "Lance Strong",
-          "yards": 3287,
-          "tds": 29,
-          "ints": 20,
-          "rating": 98.19,
-          "ovr": 84
-        },
-        "RB": {
-          "name": "Eddie Talley",
-          "yards": 923,
-          "tds": 10,
-          "avgYpc": 5.04,
-          "ovr": 83
-        },
-        "WR": {
-          "name": "Tyreek Hill",
-          "yards": 762,
-          "tds": 6,
-          "catches": 58,
-          "ovr": 92
-        },
-        "DEF": {
-          "name": "Dillon Bradford",
-          "sacks": 1.0,
-          "ints": 7,
-          "tackles": 36.0,
-          "ovr": 79
-        },
-        "LB": {
-          "name": "Dillon Bradford",
-          "sacks": 1.0,
-          "ints": 7,
-          "tackles": 36.0,
-          "ovr": 79
-        },
-        "DL": {
-          "name": "Mike Green",
-          "sacks": 10.5,
-          "ints": 3,
+          "ints": 5,
           "tackles": 23.0,
-          "ovr": 95
+          "ovr": 99
         },
-        "DB": {
-          "name": "Kyle Hamilton",
-          "sacks": 0.0,
-          "ints": 3,
-          "tackles": 35.0,
-          "ovr": 97
+        "LB": {
+          "name": "Eric Parrish",
+          "sacks": 1.0,
+          "ints": 2,
+          "tackles": 28.0,
+          "ovr": 82
+        },
+        "DL": {
+          "name": "Chase Young",
+          "sacks": 3.5,
+          "ints": 0,
+          "tackles": 9.0,
+          "ovr": 82
         }
       },
-      "passTDs": 35,
-      "passINTs": 24,
+      "passTDs": 17,
+      "passINTs": 7,
       "rushTDs": 17,
-      "rushFumbles": 9,
+      "rushFumbles": 3,
       "defTDs": 3,
-      "defINTs": 28,
-      "defSacks": 30.0,
-      "defForcedFum": 17,
-      "defFumRec": 9,
-      "tODiff": 4
+      "defINTs": 18,
+      "defSacks": 9.0,
+      "defForcedFum": 7,
+      "defFumRec": 5,
+      "tODiff": 16
     },
     "Saints": {
       "abbr": "NO",
@@ -932,83 +932,83 @@
       "logoId": 26,
       "conference": "NFC",
       "division": "NFC South",
-      "seed": 3,
-      "wins": 12,
-      "losses": 5,
-      "playoffStatus": 3,
-      "ovrRating": 86,
+      "seed": 2,
+      "wins": 7,
+      "losses": 1,
+      "playoffStatus": 1,
+      "ovrRating": 89,
       "ptsFor": 30,
-      "ptsAgainst": 25,
-      "offPassYds": 4190,
-      "offRushYds": 2187,
-      "offTotalYds": 6377,
-      "defPassYds": 3485,
-      "defRushYds": 1642,
-      "defTotalYds": 5127,
-      "winStreak": 1,
-      "elo": 1282.2,
+      "ptsAgainst": 22,
+      "offPassYds": 2494,
+      "offRushYds": 605,
+      "offTotalYds": 3099,
+      "defPassYds": 1252,
+      "defRushYds": 750,
+      "defTotalYds": 2002,
+      "winStreak": 5,
+      "elo": 1278.6,
       "topPlayers": {
         "QB": {
           "name": "Emmett Newby",
-          "yards": 4038,
-          "tds": 40,
-          "ints": 17,
-          "rating": 116.23,
-          "ovr": 98
+          "yards": 2541,
+          "tds": 24,
+          "ints": 8,
+          "rating": 118.78,
+          "ovr": 99
         },
         "RB": {
           "name": "James Cook III",
-          "yards": 1711,
-          "tds": 15,
-          "avgYpc": 7.38,
+          "yards": 414,
+          "tds": 1,
+          "avgYpc": 3.91,
           "ovr": 96
         },
         "WR": {
-          "name": "Chris Olave",
-          "yards": 1304,
-          "tds": 14,
-          "catches": 106,
-          "ovr": 88
+          "name": "Jakobi Meyers",
+          "yards": 698,
+          "tds": 5,
+          "catches": 41,
+          "ovr": 83
         },
         "DEF": {
           "name": "Jonas Sanker",
           "sacks": 0.0,
-          "ints": 4,
-          "tackles": 63.0,
-          "ovr": 81
+          "ints": 5,
+          "tackles": 17.0,
+          "ovr": 82
+        },
+        "LB": {
+          "name": "Nakobe Dean",
+          "sacks": 1.0,
+          "ints": 3,
+          "tackles": 21.0,
+          "ovr": 83
+        },
+        "DL": {
+          "name": "Alex Highsmith",
+          "sacks": 6.0,
+          "ints": 0,
+          "tackles": 12.0,
+          "ovr": 90
         },
         "DB": {
           "name": "Jonas Sanker",
           "sacks": 0.0,
-          "ints": 4,
-          "tackles": 63.0,
-          "ovr": 81
-        },
-        "DL": {
-          "name": "Byron Young",
-          "sacks": 11.0,
-          "ints": 0,
-          "tackles": 32.0,
-          "ovr": 80
-        },
-        "LB": {
-          "name": "Nakobe Dean",
-          "sacks": 0.0,
           "ints": 5,
-          "tackles": 40.0,
+          "tackles": 17.0,
           "ovr": 82
         }
       },
-      "passTDs": 40,
-      "passINTs": 17,
-      "rushTDs": 18,
-      "rushFumbles": 5,
+      "passTDs": 24,
+      "passINTs": 8,
+      "rushTDs": 4,
+      "rushFumbles": 3,
       "defTDs": 1,
-      "defINTs": 23,
-      "defSacks": 23.0,
-      "defForcedFum": 7,
-      "defFumRec": 3,
-      "tODiff": 6
+      "defINTs": 16,
+      "defSacks": 14.0,
+      "defForcedFum": 3,
+      "defFumRec": 2,
+      "tODiff": 8
     },
     "Seahawks": {
       "abbr": "SEA",
@@ -1017,82 +1017,82 @@
       "conference": "NFC",
       "division": "NFC West",
       "seed": 1,
-      "wins": 14,
-      "losses": 3,
-      "playoffStatus": 4,
-      "ovrRating": 92,
-      "ptsFor": 32,
-      "ptsAgainst": 21,
-      "offPassYds": 3908,
-      "offRushYds": 1920,
-      "offTotalYds": 5828,
-      "defPassYds": 4126,
-      "defRushYds": 1210,
-      "defTotalYds": 5336,
-      "winStreak": 2,
-      "elo": 1284.4,
+      "wins": 8,
+      "losses": 1,
+      "playoffStatus": 1,
+      "ovrRating": 91,
+      "ptsFor": 33,
+      "ptsAgainst": 16,
+      "offPassYds": 1735,
+      "offRushYds": 1326,
+      "offTotalYds": 3061,
+      "defPassYds": 1853,
+      "defRushYds": 677,
+      "defTotalYds": 2530,
+      "winStreak": 3,
+      "elo": 1293.5,
       "topPlayers": {
         "QB": {
           "name": "Mac Thompson",
-          "yards": 3790,
-          "tds": 43,
-          "ints": 13,
-          "rating": 120.18,
-          "ovr": 97
+          "yards": 1853,
+          "tds": 21,
+          "ints": 6,
+          "rating": 123.48,
+          "ovr": 99
         },
         "RB": {
           "name": "Kenneth Walker III",
-          "yards": 1511,
-          "tds": 16,
-          "avgYpc": 7.06,
-          "ovr": 96
+          "yards": 1164,
+          "tds": 14,
+          "avgYpc": 9.54,
+          "ovr": 97
         },
         "WR": {
           "name": "Jaxon Smith-Njigba",
-          "yards": 988,
-          "tds": 9,
-          "catches": 62,
-          "ovr": 90
+          "yards": 615,
+          "tds": 8,
+          "catches": 37,
+          "ovr": 91
         },
         "DEF": {
-          "name": "Nick Emmanwori",
-          "sacks": 2.0,
-          "ints": 6,
-          "tackles": 51.0,
-          "ovr": 91
+          "name": "Ernest Jones IV",
+          "sacks": 3.0,
+          "ints": 3,
+          "tackles": 29.0,
+          "ovr": 90
         },
         "DL": {
-          "name": "Tre Morgan",
-          "sacks": 9.0,
+          "name": "Derick Hall",
+          "sacks": 3.5,
           "ints": 0,
-          "tackles": 17.0,
-          "ovr": 85
-        },
-        "DB": {
-          "name": "Nick Emmanwori",
-          "sacks": 2.0,
-          "ints": 6,
-          "tackles": 51.0,
-          "ovr": 91
+          "tackles": 7.0,
+          "ovr": 81
         },
         "LB": {
           "name": "Ernest Jones IV",
-          "sacks": 1.0,
-          "ints": 2,
-          "tackles": 40.0,
+          "sacks": 3.0,
+          "ints": 3,
+          "tackles": 29.0,
           "ovr": 90
+        },
+        "DB": {
+          "name": "Ezekiel Brooks",
+          "sacks": 0.0,
+          "ints": 3,
+          "tackles": 20.0,
+          "ovr": 86
         }
       },
-      "passTDs": 46,
-      "passINTs": 13,
-      "rushTDs": 22,
-      "rushFumbles": 4,
-      "defTDs": 2,
-      "defINTs": 25,
-      "defSacks": 31.5,
-      "defForcedFum": 9,
-      "defFumRec": 6,
-      "tODiff": 17
+      "passTDs": 21,
+      "passINTs": 6,
+      "rushTDs": 15,
+      "rushFumbles": 1,
+      "defTDs": 3,
+      "defINTs": 20,
+      "defSacks": 15.0,
+      "defForcedFum": 5,
+      "defFumRec": 4,
+      "tODiff": 19
     },
     "Titans": {
       "abbr": "TEN",
@@ -1100,83 +1100,83 @@
       "logoId": 29,
       "conference": "AFC",
       "division": "AFC South",
-      "seed": 7,
-      "wins": 10,
-      "losses": 7,
-      "playoffStatus": 2,
-      "ovrRating": 87,
-      "ptsFor": 29,
-      "ptsAgainst": 25,
-      "offPassYds": 4221,
-      "offRushYds": 1617,
-      "offTotalYds": 5838,
-      "defPassYds": 3613,
-      "defRushYds": 1327,
-      "defTotalYds": 4940,
-      "winStreak": -1,
-      "elo": 1237.4,
+      "seed": 2,
+      "wins": 7,
+      "losses": 2,
+      "playoffStatus": 1,
+      "ovrRating": 89,
+      "ptsFor": 30,
+      "ptsAgainst": 16,
+      "offPassYds": 2111,
+      "offRushYds": 1010,
+      "offTotalYds": 3121,
+      "defPassYds": 1706,
+      "defRushYds": 529,
+      "defTotalYds": 2235,
+      "winStreak": 5,
+      "elo": 1238.4,
       "topPlayers": {
         "QB": {
           "name": "Cam Ward",
-          "yards": 4263,
-          "tds": 37,
-          "ints": 26,
-          "rating": 107.44,
-          "ovr": 97
+          "yards": 2177,
+          "tds": 18,
+          "ints": 9,
+          "rating": 110.39,
+          "ovr": 99
         },
         "RB": {
           "name": "Kyren Williams",
-          "yards": 1469,
-          "tds": 20,
-          "avgYpc": 5.4,
-          "ovr": 92
+          "yards": 890,
+          "tds": 13,
+          "avgYpc": 6.22,
+          "ovr": 93
         },
         "WR": {
           "name": "Chimere Dike",
-          "yards": 1311,
-          "tds": 14,
-          "catches": 73,
+          "yards": 564,
+          "tds": 6,
+          "catches": 41,
           "ovr": 91
         },
         "DEF": {
-          "name": "Cody Barton",
-          "sacks": 4.5,
-          "ints": 7,
-          "tackles": 46.0,
-          "ovr": 80
+          "name": "Connor Anderson",
+          "sacks": 0.0,
+          "ints": 6,
+          "tackles": 23.0,
+          "ovr": 76
         },
         "LB": {
-          "name": "Cody Barton",
-          "sacks": 4.5,
-          "ints": 7,
-          "tackles": 46.0,
-          "ovr": 80
-        },
-        "DL": {
-          "name": "Oluwafemi Oladejo",
-          "sacks": 7.5,
-          "ints": 1,
-          "tackles": 24.0,
-          "ovr": 90
+          "name": "Connor Anderson",
+          "sacks": 0.0,
+          "ints": 6,
+          "tackles": 23.0,
+          "ovr": 76
         },
         "DB": {
           "name": "Kevin Winston Jr.",
           "sacks": 0.0,
-          "ints": 3,
-          "tackles": 38.0,
-          "ovr": 89
+          "ints": 5,
+          "tackles": 14.0,
+          "ovr": 90
+        },
+        "DL": {
+          "name": "Kayvon Thibodeaux",
+          "sacks": 8.0,
+          "ints": 0,
+          "tackles": 14.0,
+          "ovr": 85
         }
       },
-      "passTDs": 37,
-      "passINTs": 27,
-      "rushTDs": 26,
-      "rushFumbles": 8,
-      "defTDs": 3,
-      "defINTs": 34,
-      "defSacks": 19.0,
-      "defForcedFum": 8,
-      "defFumRec": 5,
-      "tODiff": 8
+      "passTDs": 18,
+      "passINTs": 9,
+      "rushTDs": 14,
+      "rushFumbles": 1,
+      "defTDs": 0,
+      "defINTs": 26,
+      "defSacks": 12.0,
+      "defForcedFum": 7,
+      "defFumRec": 0,
+      "tODiff": 19
     }
   },
   "bracket": {
@@ -1185,38 +1185,38 @@
         {
           "matchupId": "afc_wc_1",
           "homeSeed": 2,
-          "home": "Raiders",
+          "home": "Titans",
           "awaySeed": 7,
-          "away": "Titans",
-          "homeScore": 27,
-          "awayScore": 30,
-          "homeWinPct": 0.5654,
-          "status": "completed",
-          "winner": "Titans"
+          "away": "Colts",
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": 0.5884,
+          "status": "scheduled",
+          "winner": null
         },
         {
           "matchupId": "afc_wc_2",
           "homeSeed": 3,
-          "home": "Colts",
+          "home": "Broncos",
           "awaySeed": 6,
-          "away": "Ravens",
-          "homeScore": 14,
-          "awayScore": 24,
-          "homeWinPct": 0.4767,
-          "status": "completed",
-          "winner": "Ravens"
+          "away": "Dolphins",
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": 0.6507,
+          "status": "scheduled",
+          "winner": null
         },
         {
           "matchupId": "afc_wc_3",
           "homeSeed": 4,
           "home": "Patriots",
           "awaySeed": 5,
-          "away": "Broncos",
-          "homeScore": 39,
-          "awayScore": 26,
-          "homeWinPct": 0.5127,
-          "status": "completed",
-          "winner": "Patriots"
+          "away": "Chiefs",
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": 0.5475,
+          "status": "scheduled",
+          "winner": null
         }
       ],
       "divisional": [
@@ -1224,13 +1224,13 @@
           "matchupId": "afc_div_1",
           "home": "Bengals",
           "homeSeed": 1,
-          "away": "Titans",
-          "awaySeed": 7,
-          "homeScore": 42,
-          "awayScore": 31,
-          "homeWinPct": 0.6089,
-          "status": "completed",
-          "winner": "Bengals",
+          "away": null,
+          "awaySeed": null,
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": null,
+          "status": "pending",
+          "winner": null,
           "feedsFrom": [
             "afc_wc_1"
           ],
@@ -1238,15 +1238,15 @@
         },
         {
           "matchupId": "afc_div_2",
-          "home": "Patriots",
-          "homeSeed": 4,
-          "away": "Ravens",
-          "awaySeed": 6,
-          "homeScore": 7,
-          "awayScore": 14,
-          "homeWinPct": 0.5234,
-          "status": "completed",
-          "winner": "Ravens",
+          "home": null,
+          "homeSeed": null,
+          "away": null,
+          "awaySeed": null,
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": null,
+          "status": "pending",
+          "winner": null,
           "feedsFrom": [
             "afc_wc_2",
             "afc_wc_3"
@@ -1255,15 +1255,15 @@
       ],
       "championship": {
         "matchupId": "afc_champ",
-        "home": "Bengals",
-        "homeSeed": 1,
-        "away": "Ravens",
-        "awaySeed": 6,
-        "homeScore": 39,
-        "awayScore": 42,
-        "homeWinPct": 0.5618,
-        "status": "completed",
-        "winner": "Ravens"
+        "home": null,
+        "homeSeed": null,
+        "away": null,
+        "awaySeed": null,
+        "homeScore": null,
+        "awayScore": null,
+        "homeWinPct": null,
+        "status": "pending",
+        "winner": null
       },
       "byeTeam": "Bengals"
     },
@@ -1272,38 +1272,38 @@
         {
           "matchupId": "nfc_wc_1",
           "homeSeed": 2,
-          "home": "Commanders",
+          "home": "Saints",
           "awaySeed": 7,
-          "away": "Cowboys",
-          "homeScore": 35,
-          "awayScore": 39,
-          "homeWinPct": 0.5516,
-          "status": "completed",
-          "winner": "Cowboys"
+          "away": "Packers",
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": 0.6872,
+          "status": "scheduled",
+          "winner": null
         },
         {
           "matchupId": "nfc_wc_2",
           "homeSeed": 3,
-          "home": "Saints",
+          "home": "Commanders",
           "awaySeed": 6,
-          "away": "Panthers",
-          "homeScore": 21,
-          "awayScore": 23,
-          "homeWinPct": 0.5085,
-          "status": "completed",
-          "winner": "Panthers"
+          "away": "Eagles",
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": 0.5864,
+          "status": "scheduled",
+          "winner": null
         },
         {
           "matchupId": "nfc_wc_3",
           "homeSeed": 4,
           "home": "Lions",
           "awaySeed": 5,
-          "away": "Rams",
-          "homeScore": 31,
-          "awayScore": 16,
-          "homeWinPct": 0.4914,
-          "status": "completed",
-          "winner": "Lions"
+          "away": "49ers",
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": 0.5362,
+          "status": "scheduled",
+          "winner": null
         }
       ],
       "divisional": [
@@ -1311,13 +1311,13 @@
           "matchupId": "nfc_div_1",
           "home": "Seahawks",
           "homeSeed": 1,
-          "away": "Cowboys",
-          "awaySeed": 7,
-          "homeScore": 31,
-          "awayScore": 25,
-          "homeWinPct": 0.5499,
-          "status": "completed",
-          "winner": "Seahawks",
+          "away": null,
+          "awaySeed": null,
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": null,
+          "status": "pending",
+          "winner": null,
           "feedsFrom": [
             "nfc_wc_1"
           ],
@@ -1325,15 +1325,15 @@
         },
         {
           "matchupId": "nfc_div_2",
-          "home": "Lions",
-          "homeSeed": 4,
-          "away": "Panthers",
-          "awaySeed": 6,
-          "homeScore": 31,
-          "awayScore": 38,
-          "homeWinPct": 0.4647,
-          "status": "completed",
-          "winner": "Panthers",
+          "home": null,
+          "homeSeed": null,
+          "away": null,
+          "awaySeed": null,
+          "homeScore": null,
+          "awayScore": null,
+          "homeWinPct": null,
+          "status": "pending",
+          "winner": null,
           "feedsFrom": [
             "nfc_wc_2",
             "nfc_wc_3"
@@ -1342,488 +1342,213 @@
       ],
       "championship": {
         "matchupId": "nfc_champ",
-        "home": "Seahawks",
-        "homeSeed": 1,
-        "away": "Panthers",
-        "awaySeed": 6,
-        "homeScore": 31,
-        "awayScore": 20,
-        "homeWinPct": 0.5281,
-        "status": "completed",
-        "winner": "Seahawks"
+        "home": null,
+        "homeSeed": null,
+        "away": null,
+        "awaySeed": null,
+        "homeScore": null,
+        "awayScore": null,
+        "homeWinPct": null,
+        "status": "pending",
+        "winner": null
       },
       "byeTeam": "Seahawks"
     }
   },
   "super_bowl": {
     "matchupId": "super_bowl",
-    "home": "Ravens",
-    "homeSeed": 6,
-    "away": "Seahawks",
-    "awaySeed": 1,
+    "home": null,
+    "homeSeed": null,
+    "away": null,
+    "awaySeed": null,
     "homeScore": null,
     "awayScore": null,
-    "homeWinPct": 0.5013,
-    "status": "scheduled",
+    "homeWinPct": null,
+    "status": "pending",
     "winner": null
   },
   "head_to_head": {
-    "Bengals_vs_Titans": [
+    "Packers_vs_Saints": [
       {
         "season": 1,
-        "week": 9,
+        "week": 15,
+        "home": "Packers",
+        "away": "Saints",
+        "homeScore": 0,
+        "awayScore": 35,
+        "winner": "Saints"
+      }
+    ],
+    "49ers_vs_Lions": [
+      {
+        "season": 2,
+        "week": 5,
+        "home": "49ers",
+        "away": "Lions",
+        "homeScore": 28,
+        "awayScore": 21,
+        "winner": "49ers"
+      }
+    ],
+    "Broncos_vs_Dolphins": [
+      {
+        "season": 1,
+        "week": 2,
+        "home": "Broncos",
+        "away": "Dolphins",
+        "homeScore": 49,
+        "awayScore": 16,
+        "winner": "Broncos"
+      }
+    ],
+    "Chiefs_vs_Patriots": [
+      {
+        "season": 1,
+        "week": 13,
+        "home": "Chiefs",
+        "away": "Patriots",
+        "homeScore": 16,
+        "awayScore": 34,
+        "winner": "Patriots"
+      }
+    ],
+    "Colts_vs_Titans": [
+      {
+        "season": 0,
+        "week": 2,
         "home": "Titans",
-        "away": "Bengals",
-        "homeScore": 24,
+        "away": "Colts",
+        "homeScore": 26,
         "awayScore": 14,
         "winner": "Titans"
       },
       {
-        "season": 2,
-        "week": 19,
-        "home": "Bengals",
-        "away": "Titans",
-        "homeScore": 42,
-        "awayScore": 31,
-        "winner": "Bengals"
-      }
-    ],
-    "Panthers_vs_Seahawks": [
-      {
         "season": 0,
-        "week": 16,
-        "home": "Panthers",
-        "away": "Seahawks",
-        "homeScore": 22,
-        "awayScore": 26,
-        "winner": "Seahawks"
-      },
-      {
-        "season": 1,
-        "week": 19,
-        "home": "Seahawks",
-        "away": "Panthers",
-        "homeScore": 21,
-        "awayScore": 31,
-        "winner": "Panthers"
-      },
-      {
-        "season": 2,
-        "week": 20,
-        "home": "Seahawks",
-        "away": "Panthers",
-        "homeScore": 31,
-        "awayScore": 20,
-        "winner": "Seahawks"
-      }
-    ],
-    "Patriots_vs_Ravens": [
-      {
-        "season": 0,
-        "week": 15,
-        "home": "Ravens",
-        "away": "Patriots",
-        "homeScore": 24,
-        "awayScore": 16,
-        "winner": "Ravens"
-      },
-      {
-        "season": 1,
-        "week": 10,
-        "home": "Patriots",
-        "away": "Ravens",
-        "homeScore": 37,
-        "awayScore": 7,
-        "winner": "Patriots"
-      },
-      {
-        "season": 2,
-        "week": 19,
-        "home": "Patriots",
-        "away": "Ravens",
-        "homeScore": 7,
-        "awayScore": 14,
-        "winner": "Ravens"
-      }
-    ],
-    "Bengals_vs_Ravens": [
-      {
-        "season": 0,
-        "week": 12,
-        "home": "Ravens",
-        "away": "Bengals",
-        "homeScore": 38,
-        "awayScore": 7,
-        "winner": "Ravens"
-      },
-      {
-        "season": 0,
-        "week": 14,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 40,
-        "awayScore": 7,
-        "winner": "Bengals"
-      },
-      {
-        "season": 1,
         "week": 7,
-        "home": "Ravens",
-        "away": "Bengals",
-        "homeScore": 10,
-        "awayScore": 37,
-        "winner": "Bengals"
-      },
-      {
-        "season": 1,
-        "week": 15,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 31,
-        "awayScore": 13,
-        "winner": "Bengals"
-      },
-      {
-        "season": 2,
-        "week": 10,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 49,
-        "awayScore": 14,
-        "winner": "Bengals"
-      },
-      {
-        "season": 2,
-        "week": 17,
-        "home": "Ravens",
-        "away": "Bengals",
-        "homeScore": 14,
-        "awayScore": 19,
-        "winner": "Bengals"
-      },
-      {
-        "season": 2,
-        "week": 20,
-        "home": "Bengals",
-        "away": "Ravens",
-        "homeScore": 39,
-        "awayScore": 42,
-        "winner": "Ravens"
-      }
-    ],
-    "Lions_vs_Panthers": [
-      {
-        "season": 1,
-        "week": 12,
-        "home": "Panthers",
-        "away": "Lions",
-        "homeScore": 38,
-        "awayScore": 21,
-        "winner": "Panthers"
-      },
-      {
-        "season": 2,
-        "week": 15,
-        "home": "Panthers",
-        "away": "Lions",
-        "homeScore": 30,
-        "awayScore": 28,
-        "winner": "Panthers"
-      },
-      {
-        "season": 2,
-        "week": 19,
-        "home": "Lions",
-        "away": "Panthers",
-        "homeScore": 31,
-        "awayScore": 38,
-        "winner": "Panthers"
-      }
-    ],
-    "Colts_vs_Ravens": [
-      {
-        "season": 1,
-        "week": 16,
         "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 31,
-        "awayScore": 17,
-        "winner": "Colts"
-      },
-      {
-        "season": 2,
-        "week": 9,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 3,
-        "awayScore": 6,
-        "winner": "Ravens"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Colts",
-        "away": "Ravens",
-        "homeScore": 14,
-        "awayScore": 24,
-        "winner": "Ravens"
-      }
-    ],
-    "Commanders_vs_Cowboys": [
-      {
-        "season": 0,
-        "week": 6,
-        "home": "Cowboys",
-        "away": "Commanders",
-        "homeScore": 26,
-        "awayScore": 17,
-        "winner": "Cowboys"
-      },
-      {
-        "season": 0,
-        "week": 16,
-        "home": "Commanders",
-        "away": "Cowboys",
-        "homeScore": 35,
-        "awayScore": 29,
-        "winner": "Commanders"
+        "away": "Titans",
+        "homeScore": 6,
+        "awayScore": 33,
+        "winner": "Titans"
       },
       {
         "season": 1,
         "week": 0,
-        "home": "Cowboys",
-        "away": "Commanders",
-        "homeScore": 38,
-        "awayScore": 14,
-        "winner": "Cowboys"
+        "home": "Colts",
+        "away": "Titans",
+        "homeScore": 45,
+        "awayScore": 21,
+        "winner": "Colts"
       },
       {
         "season": 1,
-        "week": 7,
-        "home": "Commanders",
-        "away": "Cowboys",
-        "homeScore": 37,
-        "awayScore": 28,
-        "winner": "Commanders"
+        "week": 2,
+        "home": "Titans",
+        "away": "Colts",
+        "homeScore": 28,
+        "awayScore": 31,
+        "winner": "Colts"
       },
       {
         "season": 2,
-        "week": 14,
-        "home": "Commanders",
-        "away": "Cowboys",
-        "homeScore": 13,
-        "awayScore": 27,
-        "winner": "Cowboys"
+        "week": 8,
+        "home": "Titans",
+        "away": "Colts",
+        "homeScore": 42,
+        "awayScore": 10,
+        "winner": "Titans"
       },
       {
         "season": 2,
-        "week": 17,
-        "home": "Cowboys",
-        "away": "Commanders",
-        "homeScore": 29,
-        "awayScore": 32,
-        "winner": "Commanders"
+        "week": 16,
+        "home": "Colts",
+        "away": "Titans",
+        "homeScore": 17,
+        "awayScore": 21,
+        "winner": "Titans"
       },
       {
-        "season": 2,
-        "week": 18,
-        "home": "Commanders",
-        "away": "Cowboys",
-        "homeScore": 35,
-        "awayScore": 39,
-        "winner": "Cowboys"
+        "season": 3,
+        "week": 6,
+        "home": "Colts",
+        "away": "Titans",
+        "homeScore": 16,
+        "awayScore": 37,
+        "winner": "Titans"
+      },
+      {
+        "season": 3,
+        "week": 8,
+        "home": "Titans",
+        "away": "Colts",
+        "homeScore": 27,
+        "awayScore": 23,
+        "winner": "Titans"
       }
     ],
-    "Broncos_vs_Patriots": [
+    "Commanders_vs_Eagles": [
+      {
+        "season": 0,
+        "week": 15,
+        "home": "Commanders",
+        "away": "Eagles",
+        "homeScore": 27,
+        "awayScore": 19,
+        "winner": "Commanders"
+      },
+      {
+        "season": 0,
+        "week": 17,
+        "home": "Eagles",
+        "away": "Commanders",
+        "homeScore": 27,
+        "awayScore": 33,
+        "winner": "Commanders"
+      },
       {
         "season": 1,
+        "week": 4,
+        "home": "Eagles",
+        "away": "Commanders",
+        "homeScore": 14,
+        "awayScore": 38,
+        "winner": "Commanders"
+      },
+      {
+        "season": 1,
+        "week": 12,
+        "home": "Commanders",
+        "away": "Eagles",
+        "homeScore": 16,
+        "awayScore": 0,
+        "winner": "Commanders"
+      },
+      {
+        "season": 2,
+        "week": 8,
+        "home": "Commanders",
+        "away": "Eagles",
+        "homeScore": 31,
+        "awayScore": 0,
+        "winner": "Commanders"
+      },
+      {
+        "season": 2,
         "week": 15,
-        "home": "Patriots",
-        "away": "Broncos",
+        "home": "Eagles",
+        "away": "Commanders",
         "homeScore": 14,
         "awayScore": 17,
-        "winner": "Broncos"
+        "winner": "Commanders"
       },
       {
-        "season": 2,
-        "week": 2,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 24,
-        "awayScore": 32,
-        "winner": "Broncos"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Patriots",
-        "away": "Broncos",
-        "homeScore": 39,
-        "awayScore": 26,
-        "winner": "Patriots"
-      }
-    ],
-    "Panthers_vs_Saints": [
-      {
-        "season": 0,
-        "week": 9,
-        "home": "Panthers",
-        "away": "Saints",
-        "homeScore": 10,
-        "awayScore": 25,
-        "winner": "Saints"
-      },
-      {
-        "season": 0,
-        "week": 14,
-        "home": "Saints",
-        "away": "Panthers",
-        "homeScore": 28,
-        "awayScore": 25,
-        "winner": "Saints"
-      },
-      {
-        "season": 1,
-        "week": 4,
-        "home": "Saints",
-        "away": "Panthers",
-        "homeScore": 7,
-        "awayScore": 24,
-        "winner": "Panthers"
-      },
-      {
-        "season": 1,
-        "week": 10,
-        "home": "Panthers",
-        "away": "Saints",
-        "homeScore": 7,
-        "awayScore": 26,
-        "winner": "Saints"
-      },
-      {
-        "season": 2,
-        "week": 9,
-        "home": "Panthers",
-        "away": "Saints",
-        "homeScore": 14,
-        "awayScore": 24,
-        "winner": "Saints"
-      },
-      {
-        "season": 2,
-        "week": 11,
-        "home": "Saints",
-        "away": "Panthers",
+        "season": 3,
+        "week": 1,
+        "home": "Eagles",
+        "away": "Commanders",
         "homeScore": 38,
         "awayScore": 31,
-        "winner": "Saints"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Saints",
-        "away": "Panthers",
-        "homeScore": 21,
-        "awayScore": 23,
-        "winner": "Panthers"
-      }
-    ],
-    "Raiders_vs_Titans": [
-      {
-        "season": 0,
-        "week": 5,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 23,
-        "awayScore": 35,
-        "winner": "Titans"
-      },
-      {
-        "season": 2,
-        "week": 4,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 42,
-        "awayScore": 35,
-        "winner": "Raiders"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Raiders",
-        "away": "Titans",
-        "homeScore": 27,
-        "awayScore": 30,
-        "winner": "Titans"
-      }
-    ],
-    "Cowboys_vs_Seahawks": [
-      {
-        "season": 0,
-        "week": 18,
-        "home": "Seahawks",
-        "away": "Cowboys",
-        "homeScore": 35,
-        "awayScore": 16,
-        "winner": "Seahawks"
-      },
-      {
-        "season": 1,
-        "week": 16,
-        "home": "Seahawks",
-        "away": "Cowboys",
-        "homeScore": 42,
-        "awayScore": 28,
-        "winner": "Seahawks"
-      },
-      {
-        "season": 2,
-        "week": 19,
-        "home": "Seahawks",
-        "away": "Cowboys",
-        "homeScore": 31,
-        "awayScore": 25,
-        "winner": "Seahawks"
-      }
-    ],
-    "Ravens_vs_Seahawks": [
-      {
-        "season": 2,
-        "week": 1,
-        "home": "Ravens",
-        "away": "Seahawks",
-        "homeScore": 13,
-        "awayScore": 48,
-        "winner": "Seahawks"
-      }
-    ],
-    "Lions_vs_Rams": [
-      {
-        "season": 0,
-        "week": 14,
-        "home": "Rams",
-        "away": "Lions",
-        "homeScore": 27,
-        "awayScore": 34,
-        "winner": "Lions"
-      },
-      {
-        "season": 2,
-        "week": 10,
-        "home": "Lions",
-        "away": "Rams",
-        "homeScore": 20,
-        "awayScore": 27,
-        "winner": "Rams"
-      },
-      {
-        "season": 2,
-        "week": 18,
-        "home": "Lions",
-        "away": "Rams",
-        "homeScore": 31,
-        "awayScore": 16,
-        "winner": "Lions"
+        "winner": "Eagles"
       }
     ]
   }
