@@ -5,7 +5,7 @@ import os
 import json
 from collections import defaultdict
 
-def read_standings(season_index=2):
+def read_standings(season_index=3):
     teams_div = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -179,7 +179,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGA League Playoff Race - Week 14</title>
+    <title>MEGA League Playoff Race - Week 10</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
@@ -676,7 +676,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     
     return '\n'.join(html)
 
-def main(season_index=2):
+def main(season_index=3):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
@@ -706,7 +706,7 @@ def main(season_index=2):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate playoff race HTML report')
-    parser.add_argument('--season-index', type=int, default=2,
-                        help='Season index to filter games (default: 2)')
+    parser.add_argument('--season-index', type=int, default=3,
+                        help='Season index to filter games (default: 3)')
     args = parser.parse_args()
     main(season_index=args.season_index)

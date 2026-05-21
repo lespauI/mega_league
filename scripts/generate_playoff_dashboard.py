@@ -8,7 +8,7 @@ import sys
 from collections import defaultdict
 from datetime import datetime, timezone
 
-SEASON_INDEX = 2
+SEASON_INDEX = 3
 
 HOME_FIELD_ADVANTAGE = 0.02
 WIN_STREAK_THRESHOLD = 3
