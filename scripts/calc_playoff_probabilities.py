@@ -721,15 +721,16 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
 
 
 def cap_probability(raw_probability, certainty_status):
-    """Cap simulation probabilities unless mathematically certain."""
-    if certainty_status == 'clinched':
+    """Return simulation probability, snapping to 100/0 only when the
+    simulation itself is unanimous. The certainty heuristic is advisory:
+    snapping based on it caused the per-conference probability sum to
+    exceed the number of playoff spots when the heuristic disagreed with
+    the simulation (e.g. a team flagged 'clinched' that the sim showed at
+    ~97%)."""
+    if raw_probability >= 99.95:
         return 100.0
-    if certainty_status == 'eliminated':
+    if raw_probability <= 0.05:
         return 0.0
-    if raw_probability >= 100:
-        return 99.9
-    if raw_probability <= 0:
-        return 0.1
     return raw_probability
 
 
