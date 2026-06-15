@@ -1,0 +1,933 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NFC Playoff Race — S4 Week 17</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f6f4ef;
+      --paper-deep: #ebe6dc;
+      --ink: #16171a;
+      --ink-soft: #303034;
+      --muted: #6d685f;
+      --rule: #d7d0c4;
+      --white: #fffaf0;
+      --seahawks: #002244;
+      --seahawks-accent: #69be28;
+      --saints: #d3bc8d;
+      --cowboys: #003594;
+      --lions: #0076b6;
+      --lions-silver: #b0b7bc;
+      --commanders: #5a1414;
+      --commanders-gold: #ffb612;
+      --eagles: #004c54;
+      --vikings: #4f2683;
+      --rams: #003594;
+      --rams-gold: #ffa300;
+      --falcons: #a71930;
+      --panthers: #0085ca;
+      --packers: #203731;
+      --packers-gold: #ffb612;
+      --shadow: 0 20px 50px rgba(32, 28, 20, 0.14);
+      --tight: -0.055em;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--paper);
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 18%, rgba(211, 188, 141, 0.24), transparent 26%),
+        radial-gradient(circle at 84% 12%, rgba(0, 118, 182, 0.09), transparent 24%),
+        linear-gradient(135deg, rgba(22, 23, 26, 0.035) 0 1px, transparent 1px 16px),
+        var(--paper);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background-image: radial-gradient(rgba(22, 23, 26, 0.11) 0.55px, transparent 0.55px);
+      background-size: 5px 5px;
+      opacity: 0.23;
+      mix-blend-mode: multiply;
+    }
+
+    main {
+      width: min(1320px, calc(100% - 36px));
+      margin: 0 auto;
+      padding: 26px 0;
+    }
+
+    .poster {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid var(--ink);
+      background: linear-gradient(180deg, rgba(255, 250, 240, 0.78), rgba(246, 244, 239, 0.96));
+      box-shadow: var(--shadow);
+    }
+
+    .poster::before,
+    .poster::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .poster::before {
+      inset: 14px;
+      border: 1px solid rgba(22, 23, 26, 0.14);
+    }
+
+    .poster::after {
+      width: 260px;
+      height: 260px;
+      right: -92px;
+      top: -100px;
+      border: 28px solid rgba(167, 25, 48, 0.12);
+      border-radius: 50%;
+    }
+
+    .inner {
+      position: relative;
+      z-index: 1;
+      padding: 28px;
+    }
+
+    .masthead {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 245px;
+      gap: 18px;
+      align-items: stretch;
+      margin-bottom: 18px;
+    }
+
+    .title-block {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 24px 26px 22px;
+      min-height: 170px;
+      display: grid;
+      align-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .title-block::after {
+      content: "";
+      position: absolute;
+      right: -44px;
+      bottom: -58px;
+      width: 230px;
+      height: 130px;
+      background: repeating-linear-gradient(135deg, rgba(255,255,255,0.16) 0 10px, transparent 10px 20px);
+      transform: rotate(-8deg);
+    }
+
+    .kicker-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+    }
+
+    .red-chip {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 5px 9px;
+      color: #fff;
+      background: #c8102e;
+    }
+
+    h1 {
+      margin: 12px 0 6px;
+      max-width: 840px;
+      font-size: clamp(42px, 7vw, 94px);
+      line-height: 0.83;
+      letter-spacing: var(--tight);
+      text-transform: uppercase;
+    }
+
+    .subtitle {
+      max-width: 760px;
+      margin: 0;
+      color: rgba(246, 244, 239, 0.82);
+      font-size: clamp(14px, 1.6vw, 19px);
+      font-weight: 750;
+      line-height: 1.25;
+    }
+
+    .stamp {
+      border: 2px solid var(--ink);
+      background: var(--white);
+      color: var(--ink);
+      padding: 18px;
+      display: grid;
+      align-content: space-between;
+      min-height: 170px;
+      box-shadow: inset 0 0 0 7px var(--paper-deep);
+    }
+
+    .stamp .label {
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
+
+    .stamp .number {
+      margin: 8px 0 2px;
+      font-size: clamp(48px, 6vw, 72px);
+      line-height: 0.9;
+      font-weight: 1000;
+      letter-spacing: -0.07em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .stamp .note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.25;
+      text-transform: uppercase;
+    }
+
+    .locked-strip {
+      display: grid;
+      grid-template-columns: 1.1fr 1.15fr 1fr 1.18fr;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .lock-card {
+      position: relative;
+      min-height: 96px;
+      padding: 14px 14px 12px;
+      border: 2px solid var(--ink);
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .lock-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 11px;
+      background: var(--team);
+    }
+
+    .lock-card::after {
+      content: "";
+      position: absolute;
+      right: -18px;
+      top: -22px;
+      width: 86px;
+      height: 86px;
+      background: var(--accent, var(--team));
+      opacity: 0.18;
+      border-radius: 50%;
+    }
+
+    .lock-card h2,
+    .panel-title h2,
+    .scenario-card h3 {
+      margin: 0;
+      text-transform: uppercase;
+    }
+
+    .lock-card h2 {
+      padding-left: 12px;
+      font-size: 20px;
+      line-height: 0.95;
+      letter-spacing: -0.035em;
+    }
+
+    .lock-card p {
+      padding-left: 12px;
+      margin: 9px 0 0;
+      color: var(--ink-soft);
+      font-size: 13px;
+      font-weight: 850;
+      line-height: 1.16;
+    }
+
+    .seed-tag {
+      display: inline-flex;
+      align-items: center;
+      margin-left: 12px;
+      margin-bottom: 10px;
+      padding: 5px 8px;
+      color: #fff;
+      background: var(--team);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    .content-grid {
+      display: grid;
+      grid-template-columns: minmax(520px, 0.96fr) minmax(420px, 1.04fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      border: 2px solid var(--ink);
+      background: rgba(255, 250, 240, 0.84);
+    }
+
+    .panel-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      padding: 13px 15px;
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .panel-title h2 {
+      font-size: 18px;
+      letter-spacing: -0.025em;
+    }
+
+    .panel-title span {
+      color: rgba(246, 244, 239, 0.72);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: 0.13em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .seed-matrix {
+      display: grid;
+    }
+
+    .matrix-row {
+      display: grid;
+      grid-template-columns: 112px repeat(5, minmax(48px, 1fr));
+      min-height: 52px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .matrix-row:first-child {
+      border-top: 0;
+    }
+
+    .matrix-head {
+      min-height: 38px;
+      background: #ebe5d8;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 950;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .matrix-cell,
+    .team-cell {
+      display: flex;
+      align-items: center;
+      border-left: 1px solid var(--rule);
+    }
+
+    .team-cell {
+      gap: 8px;
+      padding: 9px 10px;
+      border-left: 0;
+      font-size: 13px;
+      font-weight: 950;
+      letter-spacing: -0.015em;
+      text-transform: uppercase;
+    }
+
+    .team-dot {
+      width: 10px;
+      height: 30px;
+      flex: 0 0 auto;
+      background: var(--team);
+      box-shadow: inset 0 -8px 0 var(--accent, rgba(255,255,255,0.3));
+    }
+
+    .matrix-cell {
+      justify-content: flex-end;
+      padding: 9px 8px;
+      font-size: 15px;
+      font-weight: 950;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .matrix-cell.empty {
+      color: rgba(22, 23, 26, 0.18);
+    }
+
+    .matrix-cell.out {
+      color: var(--muted);
+      background: rgba(22, 23, 26, 0.035);
+    }
+
+    .scenario-stack {
+      display: grid;
+      gap: 10px;
+    }
+
+    .scenario-card {
+      position: relative;
+      display: grid;
+      grid-template-columns: 90px minmax(0, 1fr);
+      gap: 12px;
+      align-items: stretch;
+      min-height: 104px;
+      border: 2px solid var(--ink);
+      background: var(--white);
+      overflow: hidden;
+    }
+
+    .scenario-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 10px;
+      background: var(--team);
+    }
+
+    .scenario-score {
+      display: grid;
+      place-items: center;
+      padding-left: 10px;
+      color: #fff;
+      background: var(--team);
+      text-align: center;
+    }
+
+    .scenario-score strong {
+      display: block;
+      font-size: 26px;
+      line-height: 0.92;
+      font-weight: 1000;
+      letter-spacing: -0.06em;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .scenario-score span {
+      display: block;
+      margin-top: 4px;
+      font-size: 10px;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .scenario-body {
+      padding: 13px 14px 13px 0;
+    }
+
+    .scenario-card h3 {
+      font-size: 21px;
+      line-height: 0.96;
+      letter-spacing: -0.045em;
+    }
+
+    .scenario-card p {
+      margin: 7px 0 0;
+      color: var(--ink-soft);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.22;
+    }
+
+    .scenario-card.long-shot {
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0) 0 72%, rgba(27, 138, 90, 0.09)),
+        var(--white);
+      border-style: dashed;
+    }
+
+    .scenario-card.long-shot h3::after {
+      content: " Exact Path";
+      display: inline-block;
+      margin-left: 7px;
+      padding: 4px 6px 3px;
+      vertical-align: middle;
+      color: #fff;
+      background: #1b8a5a;
+      font-size: 10px;
+      letter-spacing: 0.08em;
+    }
+
+    .chaos {
+      margin-top: 18px;
+      border: 2px solid var(--ink);
+      background: var(--white);
+    }
+
+    .chaos-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: center;
+      padding: 14px 16px;
+      border-bottom: 2px solid var(--ink);
+      background: #ebe5d8;
+    }
+
+    .chaos-head h2 {
+      margin: 0;
+      font-size: clamp(24px, 3vw, 40px);
+      line-height: 0.9;
+      letter-spacing: -0.055em;
+      text-transform: uppercase;
+    }
+
+    .chaos-head p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 950;
+      letter-spacing: 0.12em;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    .meter-list {
+      display: grid;
+      gap: 10px;
+      padding: 14px 16px 16px;
+    }
+
+    .meter-row {
+      display: grid;
+      grid-template-columns: 105px minmax(0, 1fr) 104px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .meter-name {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .meter-name::before {
+      content: "";
+      width: 9px;
+      height: 24px;
+      background: var(--team);
+    }
+
+    .meter-track {
+      position: relative;
+      height: 28px;
+      border: 1px solid var(--ink);
+      background: var(--paper-deep);
+      overflow: hidden;
+    }
+
+    .meter-fill {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: var(--pct);
+      background: var(--team);
+    }
+
+    .meter-fill::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(135deg, rgba(255,255,255,0.22) 0 8px, transparent 8px 16px);
+    }
+
+    .meter-count {
+      font-size: 14px;
+      font-weight: 950;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      padding: 16px 2px 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .footer strong {
+      color: var(--ink);
+    }
+
+    @media (max-width: 1120px) {
+      .masthead,
+      .content-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stamp {
+        min-height: 0;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .stamp .number {
+        margin: 0;
+      }
+
+      .locked-strip {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: min(100% - 20px, 520px);
+        padding: 10px 0;
+      }
+
+      .inner {
+        padding: 14px;
+      }
+
+      .title-block {
+        min-height: 210px;
+        padding: 19px;
+      }
+
+      .stamp {
+        display: block;
+      }
+
+      .locked-strip {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-title,
+      .chaos-head,
+      .footer {
+        display: block;
+      }
+
+      .panel-title span,
+      .chaos-head p {
+        display: block;
+        margin-top: 6px;
+        text-align: left;
+      }
+
+      .seed-matrix {
+        overflow-x: auto;
+      }
+
+      .matrix-row {
+        width: 650px;
+      }
+
+      .scenario-card {
+        grid-template-columns: 72px minmax(0, 1fr);
+      }
+
+      .scenario-score strong {
+        font-size: 20px;
+      }
+
+      .meter-row {
+        grid-template-columns: 86px minmax(0, 1fr);
+      }
+
+      .meter-count {
+        grid-column: 2;
+        text-align: left;
+      }
+    }
+
+    @media print {
+      body {
+        background: var(--paper);
+      }
+
+      main {
+        width: 100%;
+        padding: 0;
+      }
+
+      .poster {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <article class="poster" aria-labelledby="page-title">
+      <div class="inner">
+        <header class="masthead">
+          <section class="title-block">
+            <div>
+              <div class="kicker-row">
+                <span class="red-chip">S4 Week 17</span>
+                <span>NFC playoff picture</span>
+              </div>
+              <h1 id="page-title">NFC Playoff Race</h1>
+            </div>
+            <p class="subtitle">Updated with Falcons, Saints, Titans, Cardinals locked as Week 17 winners.</p>
+          </section>
+          <aside class="stamp" aria-label="Remaining scenario count">
+            <div>
+              <div class="label">Remaining scenarios</div>
+              <div class="number">2,048</div>
+            </div>
+            <p class="note">Every count below is out of the full simulation board.</p>
+          </aside>
+        </header>
+
+        <section class="locked-strip" aria-label="Locked playoff statuses">
+          <article class="lock-card" style="--team: var(--seahawks); --accent: var(--seahawks-accent);">
+            <span class="seed-tag">#1 locked</span>
+            <h2>Seahawks</h2>
+            <p>Top seed is sealed in all 2,048 remaining branches.</p>
+          </article>
+          <article class="lock-card" style="--team: var(--saints); --accent: var(--cowboys);">
+            <span class="seed-tag">#2 / #3 fight</span>
+            <h2>Saints / Cowboys</h2>
+            <p>Saints lead the #2 track 1,536 to 512; Cowboys invert at #3.</p>
+          </article>
+          <article class="lock-card" style="--team: var(--lions); --accent: var(--lions-silver);">
+            <span class="seed-tag">#4 locked</span>
+            <h2>Lions</h2>
+            <p>Division slot is fixed: seed 4 in every scenario.</p>
+          </article>
+          <article class="lock-card" style="--team: var(--commanders); --accent: var(--commanders-gold);">
+            <span class="seed-tag">Wildcard clinched</span>
+            <h2>Commanders</h2>
+            <p>Alive for #5, #6, and #7 with no elimination branch.</p>
+          </article>
+        </section>
+
+        <div class="content-grid">
+          <section class="panel" aria-labelledby="matrix-title">
+            <div class="panel-title">
+              <h2 id="matrix-title">Seed count matrix</h2>
+              <span>2,048 remaining scenarios</span>
+            </div>
+            <div class="seed-matrix" role="table" aria-label="Seed probabilities and counts">
+              <div class="matrix-row matrix-head" role="row">
+                <div class="team-cell" role="columnheader">Team</div>
+                <div class="matrix-cell" role="columnheader">#1</div>
+                <div class="matrix-cell" role="columnheader">#2 / #3</div>
+                <div class="matrix-cell" role="columnheader">#4 / #5</div>
+                <div class="matrix-cell" role="columnheader">#6 / #7</div>
+                <div class="matrix-cell" role="columnheader">Out</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--seahawks); --accent: var(--seahawks-accent);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Seahawks</div>
+                <div class="matrix-cell" role="cell">2048</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--saints); --accent: #000000;">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Saints</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">2: 1536 · 3: 512</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--cowboys); --accent: #b0b7bc;">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Cowboys</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">2: 512 · 3: 1536</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--lions); --accent: var(--lions-silver);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Lions</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">4: 2048</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--commanders); --accent: var(--commanders-gold);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Commanders</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">5: 896</div>
+                <div class="matrix-cell" role="cell">6: 1024 · 7: 128</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--eagles);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Eagles</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">5: 896</div>
+                <div class="matrix-cell" role="cell">6: 512 · 7: 320</div>
+                <div class="matrix-cell out" role="cell">320</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--vikings);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Vikings</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">5: 256</div>
+                <div class="matrix-cell" role="cell">6: 392 · 7: 568</div>
+                <div class="matrix-cell out" role="cell">832</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--rams); --accent: var(--rams-gold);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Rams</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">6: 56 · 7: 496</div>
+                <div class="matrix-cell out" role="cell">1496</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--falcons); --accent: #000000;">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Falcons</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">6: 64 · 7: 376</div>
+                <div class="matrix-cell out" role="cell">1608</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--panthers); --accent: #101820;">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Panthers</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">7: 128</div>
+                <div class="matrix-cell out" role="cell">1920</div>
+              </div>
+              <div class="matrix-row" role="row" style="--team: var(--packers); --accent: var(--packers-gold);">
+                <div class="team-cell" role="cell"><span class="team-dot"></span>Packers</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell empty" role="cell">—</div>
+                <div class="matrix-cell" role="cell">7: 32</div>
+                <div class="matrix-cell out" role="cell">2016</div>
+              </div>
+            </div>
+          </section>
+
+          <section class="scenario-stack" aria-label="Bubble team playoff scenarios">
+            <article class="scenario-card" style="--team: var(--eagles);">
+              <div class="scenario-score"><div><strong>1728</strong><span>/2048 in</span></div></div>
+              <div class="scenario-body">
+                <h3>Eagles</h3>
+                <p>“Win one and done.” Beat Vikings OR beat Lions.</p>
+              </div>
+            </article>
+            <article class="scenario-card" style="--team: var(--vikings);">
+              <div class="scenario-score"><div><strong>1216</strong><span>/2048 in</span></div></div>
+              <div class="scenario-body">
+                <h3>Vikings</h3>
+                <p>“Win both and done; split = chaos; lose both = out.”</p>
+              </div>
+            </article>
+            <article class="scenario-card" style="--team: var(--rams);">
+              <div class="scenario-score"><div><strong>552</strong><span>/2048 in</span></div></div>
+              <div class="scenario-body">
+                <h3>Rams</h3>
+                <p>“Must beat Cardinals; losing nearly kills them.”</p>
+              </div>
+            </article>
+            <article class="scenario-card" style="--team: var(--falcons);">
+              <div class="scenario-score"><div><strong>440</strong><span>/2048 in</span></div></div>
+              <div class="scenario-body">
+                <h3>Falcons</h3>
+                <p>“Must beat Saints + Panthers lose.”</p>
+              </div>
+            </article>
+            <article class="scenario-card long-shot" style="--team: var(--panthers);">
+              <div class="scenario-score"><div><strong>128</strong><span>/2048 in</span></div></div>
+              <div class="scenario-body">
+                <h3>Panthers</h3>
+                <p>Panthers beat Bears, Eagles beat Vikings, Cowboys beat Vikings, Cardinals beat Rams.</p>
+              </div>
+            </article>
+            <article class="scenario-card long-shot" style="--team: var(--packers); --accent: var(--packers-gold);">
+              <div class="scenario-score"><div><strong>32</strong><span>/2048 in</span></div></div>
+              <div class="scenario-body">
+                <h3>Packers</h3>
+                <p>Packers beat Texans, Eagles beat Vikings, Cowboys beat Vikings, Cardinals beat Rams, Bears beat Panthers, Saints beat Falcons. Via conference record.</p>
+              </div>
+            </article>
+          </section>
+        </div>
+
+        <section class="chaos" aria-labelledby="chaos-title">
+          <div class="chaos-head">
+            <h2 id="chaos-title">Safest to longest-shot chaos meter</h2>
+            <p>Clinching likelihood by surviving scenario count</p>
+          </div>
+          <div class="meter-list">
+            <div class="meter-row" style="--team: var(--eagles); --pct: 84.375%;">
+              <div class="meter-name">Eagles</div>
+              <div class="meter-track"><span class="meter-fill"></span></div>
+              <div class="meter-count">1728/2048</div>
+            </div>
+            <div class="meter-row" style="--team: var(--vikings); --pct: 59.375%;">
+              <div class="meter-name">Vikings</div>
+              <div class="meter-track"><span class="meter-fill"></span></div>
+              <div class="meter-count">1216/2048</div>
+            </div>
+            <div class="meter-row" style="--team: var(--rams); --pct: 26.953125%;">
+              <div class="meter-name">Rams</div>
+              <div class="meter-track"><span class="meter-fill"></span></div>
+              <div class="meter-count">552/2048</div>
+            </div>
+            <div class="meter-row" style="--team: var(--falcons); --pct: 21.484375%;">
+              <div class="meter-name">Falcons</div>
+              <div class="meter-track"><span class="meter-fill"></span></div>
+              <div class="meter-count">440/2048</div>
+            </div>
+            <div class="meter-row" style="--team: var(--panthers); --pct: 6.25%;">
+              <div class="meter-name">Panthers</div>
+              <div class="meter-track"><span class="meter-fill"></span></div>
+              <div class="meter-count">128/2048</div>
+            </div>
+            <div class="meter-row" style="--team: var(--packers); --pct: 1.5625%;">
+              <div class="meter-name">Packers</div>
+              <div class="meter-track"><span class="meter-fill"></span></div>
+              <div class="meter-count">32/2048</div>
+            </div>
+          </div>
+        </section>
+
+        <footer class="footer">
+          <span><strong>No ties included.</strong> Simulated from repo CSVs with NFL-style tiebreakers.</span>
+          <span>NFC Playoff Race — S4 Week 17</span>
+        </footer>
+      </div>
+    </article>
+  </main>
+</body>
+</html>
