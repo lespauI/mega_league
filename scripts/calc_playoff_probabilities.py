@@ -655,6 +655,8 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
     if not remaining_games:
         return None
     
+    team_wins = stats[team_name]['W']
+
     worst_case_games = []
     for game in remaining_games:
         home, away = game['home'], game['away']
@@ -673,7 +675,7 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
             elif home_is_rival and away_is_rival:
                 home_wins = stats.get(home, {}).get('W', 0)
                 away_wins = stats.get(away, {}).get('W', 0)
-                if home_wins >= away_wins:
+                if abs(home_wins - team_wins) <= abs(away_wins - team_wins):
                     winner, loser = home, away
                 else:
                     winner, loser = away, home
@@ -703,10 +705,10 @@ def check_mathematical_certainty(team_name, teams_info, stats, games):
             elif home_is_rival and away_is_rival:
                 home_wins = stats.get(home, {}).get('W', 0)
                 away_wins = stats.get(away, {}).get('W', 0)
-                if home_wins >= away_wins:
-                    winner, loser = home, away
-                else:
+                if abs(home_wins - team_wins) <= abs(away_wins - team_wins):
                     winner, loser = away, home
+                else:
+                    winner, loser = home, away
             else:
                 winner, loser = home, away
         best_case_games.append({'home': home, 'away': away, 'winner': winner, 'loser': loser})
