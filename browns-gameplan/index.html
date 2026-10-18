@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#311d15">
+  <meta name="description" content="A compact offensive call sheet for the MEGA Browns, using the Washington Commanders playbook in Madden NFL 27.">
+  <title>Browns Offensive Call Sheet · Madden NFL 27</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #251f1b;
+      --muted: #665d55;
+      --paper: #f6f4ef;
+      --line: #dcd7ce;
+      --brown: #311d15;
+      --orange: #de6424;
+      --run: #1b7837;
+      --run-tint: #e7f3e8;
+      --pass: #2166ac;
+      --pass-tint: #e8f0fa;
+      --boot: #7b3294;
+      --boot-tint: #f1e8f6;
+      --screen: #c46a00;
+      --screen-tint: #fff0d9;
+      --option: #007f86;
+      --option-tint: #dff3f2;
+      --rpo: #a67800;
+      --rpo-tint: #fff6cc;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 11rem; }
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 16px;
+      line-height: 1.4;
+      -webkit-text-size-adjust: 100%;
+    }
+    a { color: inherit; text-underline-offset: .2em; }
+    a:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--pass);
+      outline-offset: 3px;
+    }
+    .sheet { width: min(100%, 42rem); margin: 0 auto; }
+    .masthead {
+      padding: 1.25rem 1rem 1rem;
+      color: #fffaf4;
+      background: var(--brown);
+      border-top: 5px solid var(--orange);
+    }
+    .eyebrow {
+      margin: 0 0 .3rem;
+      color: #e7c9b4;
+      font-size: .7rem;
+      font-weight: 700;
+      letter-spacing: .13em;
+    }
+    h1 { margin: 0; font-size: clamp(1.55rem, 6vw, 2rem); line-height: 1.12; }
+    .book { margin: .4rem 0 0; font-size: .85rem; color: #eadfd6; }
+    .guide { margin: 0; padding: .85rem 1rem; font-size: .85rem; color: var(--muted); }
+    .guide strong { color: var(--ink); }
+    .situations {
+      position: sticky;
+      z-index: 1;
+      top: 0;
+      padding: .55rem .75rem;
+      background: #f6f4ef;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .situations ul {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: .3rem;
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .situations a {
+      display: flex;
+      min-height: 2.75rem;
+      align-items: center;
+      justify-content: center;
+      padding: .35rem .2rem;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: .3rem;
+      font-size: .75rem;
+      font-weight: 650;
+      line-height: 1.15;
+      text-align: center;
+      text-decoration: none;
+    }
+    .situations a:hover { border-color: var(--brown); }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .4rem .8rem;
+      margin: 0;
+      padding: .85rem 1rem .15rem;
+      list-style: none;
+      font-size: .73rem;
+      color: #4d453e;
+    }
+    .legend li { display: inline-flex; align-items: center; gap: .3rem; }
+    .swatch { width: .65rem; height: .65rem; background: var(--accent); border-radius: 2px; }
+    .run { --accent: var(--run); --tint: var(--run-tint); }
+    .pass { --accent: var(--pass); --tint: var(--pass-tint); }
+    .boot { --accent: var(--boot); --tint: var(--boot-tint); }
+    .screen { --accent: var(--screen); --tint: var(--screen-tint); }
+    .option { --accent: var(--option); --tint: var(--option-tint); }
+    .rpo { --accent: var(--rpo); --tint: var(--rpo-tint); }
+    main { padding: .15rem .75rem 0; }
+    .situation { margin: 1rem 0 1.3rem; scroll-margin-top: .5rem; }
+    h2 { margin: 0 0 .55rem; padding-left: .15rem; font-size: 1.03rem; line-height: 1.3; }
+    h2 span { color: var(--muted); font-size: .83rem; font-weight: 500; }
+    table { width: 100%; table-layout: fixed; border-collapse: collapse; background: #fff; }
+    col:first-child { width: 44%; }
+    col:last-child { width: 56%; }
+    thead { background: #eae6de; }
+    th {
+      padding: .4rem .65rem;
+      color: #65594e;
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: .05em;
+      text-align: left;
+      text-transform: uppercase;
+    }
+    td {
+      padding: .7rem .65rem;
+      background: var(--tint);
+      border-bottom: 2px solid var(--paper);
+      vertical-align: middle;
+      overflow-wrap: anywhere;
+      font-size: .92rem;
+      line-height: 1.35;
+    }
+    td:first-child { border-left: 5px solid var(--accent); color: #49423c; font-size: .84rem; }
+    td:last-child { font-weight: 650; }
+    footer { padding: .2rem 1rem 1.5rem; color: var(--muted); font-size: .75rem; }
+    footer > a { display: inline-block; padding: .5rem 0; font-weight: 600; }
+    details { margin-top: .7rem; border-top: 1px solid var(--line); padding-top: .75rem; }
+    summary { cursor: pointer; width: fit-content; }
+    details p { margin: .6rem 0; }
+    .sources { padding-left: 1.15rem; }
+    .sources li { margin: .4rem 0; }
+    @media (min-width: 36rem) {
+      .masthead { padding: 1.5rem 1.25rem 1.2rem; }
+      .guide, .legend { padding-left: 1.25rem; padding-right: 1.25rem; }
+      main { padding-left: 1rem; padding-right: 1rem; }
+      td { font-size: 1rem; }
+      td:first-child { font-size: .92rem; }
+    }
+    @media print {
+      .situations, details, footer > a { display: none; }
+      .sheet { width: 100%; }
+      .situation { break-inside: avoid; }
+      body, td { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sheet">
+    <header class="masthead">
+      <p class="eyebrow">MEGA · MADDEN NFL 27</p>
+      <h1>Browns call sheet</h1>
+      <p class="book">Offense · Washington Commanders playbook</p>
+    </header>
+    <p class="guide"><strong>Preferred call first.</strong> Use a field-position or clock group when it applies; otherwise use down and distance.</p>
+    <nav class="situations" id="situations" aria-label="Jump to situation">
+      <ul>
+        <li><a href="#normal">Normal downs</a></li>
+        <li><a href="#short">Short · 1–2</a></li>
+        <li><a href="#medium">3rd · 3–6</a></li>
+        <li><a href="#long">3rd · 7+</a></li>
+        <li><a href="#backed-up">Own 1–5</a></li>
+        <li><a href="#red-zone">Red zone</a></li>
+        <li><a href="#goal-line">Goal / 2-point</a></li>
+        <li><a href="#two-minute">Two-minute</a></li>
+        <li><a href="#four-minute">Protect lead</a></li>
+      </ul>
+    </nav>
+    <ul class="legend" aria-label="Play type colors">
+      <li class="run"><span class="swatch" aria-hidden="true"></span>Run</li>
+      <li class="pass"><span class="swatch" aria-hidden="true"></span>Pass</li>
+      <li class="boot"><span class="swatch" aria-hidden="true"></span>Bootleg</li>
+      <li class="screen"><span class="swatch" aria-hidden="true"></span>Screen</li>
+      <li class="option"><span class="swatch" aria-hidden="true"></span>QB run/option</li>
+      <li class="rpo"><span class="swatch" aria-hidden="true"></span>RPO</li>
+    </ul>
+    <main>
+      <section class="situation" id="normal" aria-labelledby="normal-heading">
+        <h2 id="normal-heading">Normal downs <span>· 1st / 2nd</span></h2>
+        <table aria-labelledby="normal-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="run"><td>Gun Bunch Str Offset</td><td>Inside Zone</td></tr>
+            <tr class="option"><td>Pistol Double Hip</td><td>Read Option</td></tr>
+            <tr class="boot"><td>Pistol Double Hip</td><td>Mtn PA Boot Fork</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Slant Spacing</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="short" aria-labelledby="short-heading">
+        <h2 id="short-heading">Short yardage <span>· 1–2 yards</span></h2>
+        <table aria-labelledby="short-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="run"><td>I Form Y Off Close</td><td>HB Iso</td></tr>
+            <tr class="run"><td>Gun Bunch Str Offset</td><td>Duo</td></tr>
+            <tr class="option"><td>Pistol Double Hip</td><td>Read Option</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Slant Spacing</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="medium" aria-labelledby="medium-heading">
+        <h2 id="medium-heading">3rd &amp; medium <span>· 3–6 yards</span></h2>
+        <table aria-labelledby="medium-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Slant Spacing</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Y Trail</td></tr>
+            <tr class="pass"><td>Pistol Double Hip</td><td>Mesh Rail</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="long" aria-labelledby="long-heading">
+        <h2 id="long-heading">3rd &amp; long <span>· 7+ yards</span></h2>
+        <table aria-labelledby="long-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Flood</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Y Trail</td></tr>
+            <tr class="screen"><td>Pistol Double Hip</td><td>Mtn HB Slip Screen</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="backed-up" aria-labelledby="backed-heading">
+        <h2 id="backed-heading">Backed up <span>· own 1–5</span></h2>
+        <table aria-labelledby="backed-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="run"><td>I Form Y Off Close</td><td>Zone WK</td></tr>
+            <tr class="run"><td>Gun Bunch Str Offset</td><td>Inside Zone</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Slant Spacing</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="red-zone" aria-labelledby="red-heading">
+        <h2 id="red-heading">Red zone <span>· opponent 20–6</span></h2>
+        <table aria-labelledby="red-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Y Trail</td></tr>
+            <tr class="run"><td>Gun Bunch Str Offset</td><td>Inside Zone</td></tr>
+            <tr class="rpo"><td>Pistol Double Hip</td><td>RPO Alert Jet Slant</td></tr>
+            <tr class="boot"><td>Pistol Double Hip</td><td>Mtn PA Boot Fork</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="goal-line" aria-labelledby="goal-heading">
+        <h2 id="goal-heading">Goal line / two-point <span>· opponent 5 or closer</span></h2>
+        <table aria-labelledby="goal-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="run"><td>I Form Y Off Close</td><td>HB Iso</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Slant Spacing</td></tr>
+            <tr class="option"><td>Pistol Double Hip</td><td>Read Option</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="two-minute" aria-labelledby="two-heading">
+        <h2 id="two-heading">Two-minute offense</h2>
+        <table aria-labelledby="two-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Flood</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Slant Spacing</td></tr>
+            <tr class="pass"><td>Gun Bunch Str Offset</td><td>Y Trail</td></tr>
+          </tbody>
+        </table>
+      </section>
+      <section class="situation" id="four-minute" aria-labelledby="four-heading">
+        <h2 id="four-heading">Protect the lead <span>· four-minute offense</span></h2>
+        <table aria-labelledby="four-heading">
+          <colgroup><col><col></colgroup>
+          <thead><tr><th scope="col">Formation</th><th scope="col">Play name</th></tr></thead>
+          <tbody>
+            <tr class="run"><td>I Form Y Off Close</td><td>Zone WK</td></tr>
+            <tr class="run"><td>Gun Bunch Str Offset</td><td>Duo</td></tr>
+            <tr class="run"><td>I Form Y Off Close</td><td>Mtn Counter Solid</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+    <footer>
+      <a href="#situations">Back to situations ↑</a>
+      <details>
+        <summary>Playbook sources</summary>
+        <p>Washington-specific Madden 27 menus, checked 18 October 2026. Roster: MEGA Browns snapshot from the same date.</p>
+        <ul class="sources">
+          <li><a href="https://huddle.gg/27/playbooks/commanders-off/gun-bunch-str-offset/">Gun Bunch Str Offset</a></li>
+          <li><a href="https://huddle.gg/27/playbooks/commanders-off/pistol-double-hip/">Pistol Double Hip</a></li>
+          <li><a href="https://huddle.gg/27/playbooks/commanders-off/i-form-y-off-close/">I Form Y Off Close</a></li>
+        </ul>
+      </details>
+    </footer>
+  </div>
+</body>
+</html>
