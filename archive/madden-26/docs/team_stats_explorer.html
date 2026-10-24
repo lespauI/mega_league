@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Team Statistics Explorer — Universal Win% Correlations</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body { margin: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #f7f7f7; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 16px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .panel { margin: 12px 0 14px; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; }
+    .panel > summary { padding: 10px 14px; background: #f5f7fa; border-bottom: 1px solid #ebeff5; font-weight: 600; cursor: pointer; user-select: none; list-style: none; }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
+    .chart-wrap { padding: 8px 8px 0; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 0 10px 10px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+    .avg { background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb; }
+    .red { background: var(--red); opacity: .5; }
+    .blue { background: var(--blue); opacity: .5; }
+    .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; }
+    .correlation-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .corr-strong { background: #dcfce7; color: #166534; }
+    .corr-moderate { background: #fef3c7; color: #854d0e; }
+    .corr-weak { background: #fee2e2; color: #991b1b; }
+    .help-icon { display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; color: white; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 8px; cursor: help; vertical-align: middle; }
+    .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
+  </style>
+  <script>
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function toPct(x) { return d3.format('.1%')(x); }
+    function fmt2(x) { return d3.format('.2f')(x); }
+    function fmt3(x) { return d3.format('.3f')(x); }
+
+    function regression(points) {
+      let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
+      for (const [x0, y0] of points) {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        n++; sx += x; sy += y; sxy += x*y; sxx += x*x; syy += y*y;
+      }
+      if (n < 2) return { m: 0, b: sy / (n || 1), r2: 0 };
+      const denom = n * sxx - sx * sx;
+      const m = denom !== 0 ? (n * sxy - sx * sy) / denom : 0;
+      const b = (sy - m * sx) / n;
+      
+      const ssr = points.reduce((sum, [x0, y0]) => {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return sum;
+        return sum + Math.pow(y - (m * x + b), 2);
+      }, 0);
+      const sst = syy - (sy * sy) / n;
+      const r2 = sst !== 0 ? Math.max(0, 1 - ssr / sst) : 0;
+      
+      return { m, b, r2 };
+    }
+
+    const METRICS = [
+      { key: 'pass_yds_per_att', label: 'Pass Yards per Attempt', format: fmt2, higherBetter: true, help: 'Средние ярды за попытку паса. Измеряет эффективность пасовой игры - чем выше, тем лучше качество передач.', quadrantHelp: { topRight: 'High pass Y/A + high win%: Elite passing efficiency driving victories. QB and receivers in sync with consistent explosive plays. Defense must respect vertical threat. Modern offensive success formula', topLeft: 'High pass Y/A but low win%: Passing efficiency not translating to wins. Potential issues include poor defense, red zone struggles, or inability to sustain drives despite explosive plays', bottomLeft: 'Low pass Y/A + low win%: Ineffective passing attack correlating with losses. Limited deep threat allows defense to compress field. Third down conversion issues. Offense lacks explosive capability', bottomRight: 'Low pass Y/A but high win%: Winning through defense and running game. Play-action effectiveness on limited attempts. Time of possession control compensates for passing limitations' } },
+      { key: 'rush_yds_per_att', label: 'Rush Yards per Attempt', format: fmt2, higherBetter: true, help: 'Средние ярды за вынос. Показывает эффективность беговой игры и качество линии нападения.', quadrantHelp: { topRight: '🏆 Танковая дивизия: 4.5+ Y/A и победы = O-line открывает дыры размером с грузовик. RB всегда падает вперёд, 2nd&short обычная ситуация. Защита устаёт к 4-й четверти от постоянных ударов. Контроль времени и field position', topLeft: '🤔 Бег в никуда: 5+ Y/A но проигрывают = RB набирает ярды, но это не конвертируется. Возможно abandon the run слишком рано, или не могут забить в красной зоне. Turnovers убивают хорошие драйвы', bottomLeft: '😔 Стена впереди: <3.5 Y/A и поражения = O-line проигрывает в окопах. RB танцует за линией, ища дыру которой нет. 3rd&long каждая серия, predictable passing situations. Защита теснит', bottomRight: '💪 Air raid компенсирует: Побеждают с <4 Y/A = кому нужен бег когда QB бросает 40 TD? Quick passing game нейтрализует pass rush, RB используется как приёмник. Современный подход' } },
+      { key: 'qb_rating', label: 'QB Rating', format: fmt2, higherBetter: true, help: 'Комплексный рейтинг QB (0-158). Учитывает completion%, ярды, TD и INT. Выше 100 = отлично, ниже 80 = плохо.', quadrantHelp: { topRight: '🏆 Франчайз QB: Рейтинг 105+ и победы = QB играет на MVP уровне. Читает защиту как книгу, audibles всегда правильные. TD/INT ratio 3:1 или лучше. Clutch в 2-minute drill. Это лицо франшизы', topLeft: '🤔 QB в клетке: Рейтинг 100+ но проигрывают = QB делает всё правильно, но один в поле не воин. Защита даёт 30+ очков сопернику, или special teams проваливается. QB frustration растёт, может потребовать трейд', bottomLeft: '😔 Позиция №1 проблема: Рейтинг <80 и поражения = QB не видит поле, держит мяч слишком долго, принимает плохие решения. Много batted balls, fumbles, delay of game. Нужен новый QB или полная перестройка схемы', bottomRight: '💪 Defense wins championships: Побеждают с рейтингом <90 = game manager QB достаточно когда защита даёт 3 турновера за игру. Короткие безопасные пасы, никаких героических бросков. Boring but effective football' } },
+      { key: 'pass_int_pct', label: 'Interception Rate (%)', format: fmt2, higherBetter: false, help: 'Процент перехватов от попыток передач. Низкий процент = хорошая защита мяча, высокий = рискованные решения.', quadrantHelp: { topRight: '⚠️ Русская рулетка: INT% >3% но побеждают = gunslinger менталитет. QB бросает в tight windows, 50/50 balls. Когда работает - spectacular, когда нет - pick-six. Фанаты на нервах каждую игру', topLeft: '😔 Санта Клаус защите: INT% >3.5% и проигрывают = QB раздаёт подарки. Stare down receivers, телеграфирует броски, не видит robber в зоне. Каждый drive - потенциальный turnover. Bench warming future', bottomLeft: '🤔 Слишком осторожно?: INT% <1.5% но проигрывают = QB играет scared football. Только checkdowns и безопасные броски. Никаких рисков = никаких big plays. 3rd&long conversions редкость', bottomRight: '🏆 Хирургическая точность: INT% <2% и победы = QB защищает мяч как сокровище. Бросает только на открытых, выбрасывает за границу при давлении. Ball security = job security. Скучно но эффективно' } },
+      { key: 'sack_rate', label: 'Sack Rate (%)', format: fmt2, higherBetter: false, help: 'Процент сэков от (попытки + сэки). Измеряет качество защиты линии нападения и мобильность QB.', quadrantHelp: { topRight: '⚠️ Houdini QB: Sack% >8% но побеждают = QB как escape artist или схема компенсирует. Много scrambles, broken plays превращаются в big gains. O-line держится на честном слове, но somehow it works', topLeft: '😔 QB под осадой: Sack% >9% и проигрывают = pocket коллапсирует за 2 секунды. QB видит больше травы чем неба, jersey грязный к halftime. Strip sacks, injuries waiting to happen. O-line нужна полная перестройка', bottomLeft: '🤔 Fortress без побед: Sack% <4% но проигрывают = O-line даёт время, но QB не использует. Возможно holds the ball слишком долго или WR не открываются. Clean pocket wasted', bottomRight: '🏆 Великая стена: Sack% <5% и победы = O-line как бункер. QB имеет время на чай в pocket. Play action deadly, 7-step drops возможны. Защита frustrated, не может добраться' } },
+      { key: 'turnover_diff', label: 'Turnover Differential', format: fmt2, higherBetter: true, help: 'Разница между отборами и отдачами мяча. Самый сильный предсказатель побед - положительный diff = больше побед.', quadrantHelp: { topRight: '🏆 Математика побед: +1.0 TO diff и победы = формула чемпионов. Защита создаёт 2-3 турновера, offense защищает мяч. Short fields для offense, длинные для соперника. Это winning culture', topLeft: '🤔 Аномалия статистики: +TO diff но проигрывают = крайне редко. Возможно турноверы происходят в garbage time, или не конвертируются в очки. Red zone efficiency проблема или special teams disasters', bottomLeft: '😔 Щедрость убивает: -TO diff и поражения = классическая корреляция. Дарят мяч сопернику, не могут отобрать. Каждая игра uphill battle. Фундаментальные проблемы с ball security', bottomRight: '💪 Чудо дисциплины: Побеждают с -TO diff = статистическая аномалия. Либо невероятная explosive offense (TD каждые 4 plays), либо defense даёт <10 очков за игру. Unsustainable модель' } },
+      { key: 'td_per_play', label: 'TD per Play', format: fmt3, higherBetter: true, help: 'Тачдауны на розыгрыш. Измеряет эффективность красной зоны - способность финишировать драйвы TD вместо FG.', quadrantHelp: { topRight: '🏆 TD фабрика: 0.06+ TD/play и победы = explosive offense. Каждые 17 plays = touchdown. Red zone автоматический, big plays регулярны. Defense деморализована, scoreboards работают overtime', topLeft: '🤔 Очки без побед: Высокий TD rate но проигрывают = забивают 35, пропускают 40. Защита как швейцарский сыр, или special teams disasters. Захватывающие игры, но L в колонке', bottomLeft: '😔 Offensive анемия: <0.03 TD/play и поражения = не могут попасть в endzone. Драйвы умирают в red zone, settling for FG. Много 3-and-outs. Фанаты засыпают на трибунах', bottomRight: '💪 Bend don\'t break: Низкий TD rate но побеждают = defense и field position. Забивают 17, дают 14. Ugly wins still count. Ball control и clock management мастерство' } },
+      { key: 'yds_per_play', label: 'Yards per Play', format: fmt2, higherBetter: true, help: 'Средние ярды за розыгрыш (пас + бег). Общая эффективность нападения - 5.5+ = хорошо, 6.0+ = отлично.', quadrantHelp: { topRight: '🏆 Offensive машина: 6.0+ Y/P и победы = каждый snap опасен. 1st down = автоматический, 3rd&short норма. Chunks of yards регулярно, defense на пятках. Sustained drives изматывают соперника, TOP доминирование', topLeft: '🤔 Empty calories: 5.8+ Y/P но проигрывают = между 20s машина, в red zone заглохает. Много ярдов, мало очков. False starts, holdings убивают драйвы. Или defense даёт 400+ ярдов сопернику', bottomLeft: '😔 3-and-out festival: <5.0 Y/P и поражения = offense как в грязи. Negative plays регулярны, 3rd&10+ стандарт. Punter MVP команды. Defense на поле 40+ минут, exhausted к 4-й четверти', bottomRight: '💪 Efficiency > Volume: Побеждают с <5.5 Y/P = не нужны 400 ярдов когда defense создаёт 3 TO. Short fields, время владения, field goals. Boring but winning. Defense и special teams несут команду' } },
+      { key: 'def_sacks_per_game', label: 'Defensive Sacks per Game', format: fmt2, higherBetter: true, help: 'Сэки защиты за игру. Показывает давление на QB соперника - 2.5+ = хороший pass rush, 3.0+ = отличный.', quadrantHelp: { topRight: '🏆 Кошмар для QB: 3.5+ сэков/игра и победы = pass rush неостановим. 4-man rush достаточно, blitz редкий. QB соперника нервничает pre-snap, happy feet в pocket. Strip sacks меняют игры. Edge rushers в Pro Bowl', topLeft: '🤔 Wasted pressure: 3+ сэков но проигрывают = добираются до QB, но coverage bust регулярно. Или offense 3-and-out после каждого сэка. Momentum не используется. Frustrating для D-line', bottomLeft: '😔 QB в джакузи: <2 сэка/игра и поражения = QB соперника может читать книгу в pocket. Max protect не нужен, 5 receivers out каждый down. D-line invisible, blitz telegraphed. Secondary exhausted', bottomRight: '💪 Coverage sacks: Побеждают с <2.5 сэков = lockdown coverage делает работу. QB держит мяч, некуда бросить. Disguised coverages, zone discipline. Не spectacular, но effective. Bend don\'t break' } },
+      { key: 'def_ints_per_game', label: 'Defensive INTs per Game', format: fmt2, higherBetter: true, help: 'Перехваты защиты за игру. Создание турноверов - ключ к победам. 1.0+ = хорошо, 1.5+ = elite defense.', quadrantHelp: { topRight: '🏆 No-fly zone: 1.5+ INT/игра и победы = secondary как хищники. Ball hawk mentality, disguised coverages работают. QB соперника боится бросать downfield. Pick-six potential каждую игру. DBs в confidence', topLeft: '🤔 Wasted opportunities: 1.3+ INT но проигрывают = defense создаёт турноверы, offense не конвертирует. 3-and-out после INT деморализует. Или offense отдаёт мяч обратно immediately. Momentum killer', bottomLeft: '😔 Hands of stone: <0.7 INT/игра и поражения = dropped INTs haunting. DBs не могут поймать cold. QB соперника comfortable, 50/50 balls становятся 80/20. No game-changing plays от defense', bottomRight: '💪 Другие пути: Побеждают с <1 INT/игра = fumbles forced, 4th down stops, field position. Не нужны INTs когда offense контролирует TOP. Red zone defense lockdown компенсирует' } },
+      { key: 'pass_ints_per_game', label: 'INTs Thrown per Game', format: fmt2, higherBetter: false, help: 'Отданные перехваты за игру. Низкий показатель = хорошая защита мяча. <1.0 = хорошо, <0.7 = отлично.', quadrantHelp: { topRight: '⚠️ Living dangerously: 1.5+ INT/игра но побеждают = high risk/reward philosophy. Explosive plays компенсируют турноверы. Defense bails out QB регулярно. Cardiac games каждую неделю. Unsustainable', topLeft: '😔 Gift wrapped losses: 1.8+ INT/игра и поражения = QB как Oprah с мячом. Forcing into coverage, panic throws, tipped balls. Momentum killers постоянно. Confidence shattered, benching discussions', bottomLeft: '🤔 Safe но бесполезно: <0.8 INT/игра но проигрывают = Captain Checkdown. Никаких рисков, никаких rewards. Dink and dunk не stretches field. Defense sits on short routes. Predictable и ineffective', bottomRight: '🏆 Ball security wins: <0.7 INT/игра и победы = decision making elite. Throw it away > force it. Live for next down mentality. Trust the process. Boring critics, happy coaches. Championship formula' } },
+      { key: 'sacks_allowed_per_game', label: 'Sacks Allowed per Game', format: fmt2, higherBetter: false, help: 'Полученные сэки за игру. Измеряет качество защиты O-line. <2.0 = хорошо, <1.5 = elite protection.', quadrantHelp: { topRight: '⚠️ Магия QB спасает: 3+ сэка/игра но побеждают = QB как Houdini или quick passing game. Hot routes, rollouts, RPO нейтрализуют rush. O-line turnstiles, но схема компенсирует. Ice на коленях QB после игры', topLeft: '😔 Вращающаяся дверь: 3.5+ сэка/игра и поражения = O-line как воздух. Blindside hits регулярны, QB PTSD развивается. Medical staff busy, backup QB warming up. Нужен complete overhaul линии', bottomLeft: '🤔 Protection без production: <1.5 сэка но проигрывают = O-line даёт all day, но QB не delivers. Holds ball forever, misses reads. Perfect protection wasted. Или WR не separation создают', bottomRight: '🏆 Форт Нокс: <1.5 сэка/игра и победы = O-line как бетонная стена. QB clean jersey после игры. 7-step drops, deep developing routes возможны. Pass rushers деморализованы, схемы не работают' } },
+      { key: 'punts_per_game', label: 'Punts per Game', format: fmt2, higherBetter: false, help: 'Панты за игру. Низкий показатель = эффективное нападение с sustained drives. <4.0 = хорошо, <3.5 = отлично.', quadrantHelp: { topRight: '⚠️ Special teams спасает: 5+ пантов но побеждают = defense elite или field position мастерство. Punter внутри 20 regularly, defense creates short fields. Ugly но winning football. Punter для Pro Bowl', topLeft: '😔 Punt fest: 6+ пантов и поражения = offense не может sustain drives. 3-and-out специальность дома. Punter устал к halftime. Defense exhausted от постоянной работы. Offensive coordinator на горячем стуле', bottomLeft: '🤔 Движение без финиша: <3.5 панта но проигрывают = между 20s хорошо, red zone disaster. Или turnovers убивают длинные драйвы. Moving ball но не scoring. Frustrating для фанатов', bottomRight: '🏆 Offensive контроль: <3 панта/игра и победы = sustained drives норма. Converting 3rd downs, controlling clock. Defense соперника на поле редко. TOP dominance, физическое изматывание. Punter самый отдохнувший игрок' } },
+      { key: 'explosive_plays_per_game', label: '20+ Yard Plays per Game', format: fmt2, higherBetter: true, help: 'Розыгрыши 20+ ярдов за игру. Взрывные моменты поддерживают драйвы. 5+ = хорошо, 7+ = elite playmakers.', quadrantHelp: { topRight: '🏆 Home run hitters: 7+ explosive/игра и победы = defense не может всё покрыть. Speed kills, схема creates mismatches. Каждый drive угроза для TD в один play. Momentum swings регулярны. Highlight reel команда', topLeft: '🤔 Fireworks без финиша: 6+ explosive но проигрывают = big plays не конвертируются. После 40-yard gain - fumble или INT. Или defense даёт ещё больше explosive plays. All sizzle, no steak', bottomLeft: '😔 Death by thousand cuts: <4 explosive и поражения = никакой способности stretch field. Defense сжимает поле, 8 в коробке. Predictable, plodding offense. Фанаты проверяют телефоны during drives', bottomRight: '💪 Systematic success: Побеждают с <5 explosive = methodical approach работает. 4 yards cloud of dust, ball control. Не spectacular но effective. Defense rested, clock controlled. Old school winning' } },
+      { key: 'rush_broken_tackle_rate', label: 'Broken Tackles per Rush', format: fmt3, higherBetter: true, help: 'Процент сломанных захватов при выносе. Измеряет силу и ловкость RB. 0.10+ = хорошо, 0.15+ = elite power.', quadrantHelp: { topRight: '🏆 Человек-танк: 0.15+ broken tackles и победы = RB как wrecking ball. Arm tackles = extra yards. Defenders bounce off, need gang tackling. 4th quarter dominance когда defense tired. Physical intimidation', topLeft: '🤔 Сила в вакууме: 0.13+ BT но проигрывают = RB breaks tackles но нет блоков впереди. Individual effort не хватает. Или fumbles после breaking tackles. Talent wasted в плохой схеме', bottomLeft: '😔 Падают при касании: <0.08 BT и поражения = RB как перышко. First contact = down. No YAC, no power. Defense не боится, arm tackles достаточно. Нужен power back срочно', bottomRight: '💪 Scheme > Power: Побеждают с <0.10 BT = не нужно ломать tackles когда holes огромные. Zone blocking создаёт lanes, RB untouched до second level. Speed и vision важнее power' } },
+      { key: 'rush_yac_pct', label: 'Rush YAC %', format: fmt2, higherBetter: true, help: 'Процент ярдов после контакта при беге. Показывает физическую игру RB. 30%+ = хорошо, 35%+ = мощный runner.', quadrantHelp: { topRight: '🏆 Неостановимая сила: 35%+ YAC и победы = RB как бульдозер. Первый контакт = разминка. Pile pushing, second effort постоянно. К 4-й четверти defense не хочет tackle. Физическое доминирование деморализует', topLeft: '🤔 Герой без поддержки: 33%+ YAC но проигрывают = RB fights за каждый ярд, но O-line не создаёт начальных дыр. Contact в backfield постоянно. Individual brilliance в losing effort. Trade candidate', bottomLeft: '😔 Мягкий бег: <25% YAC и поражения = RB падает при первом касании. No fight, no drive. Defense arm tackles с confidence. 3rd&short не automatic. Нужен bruiser back немедленно', bottomRight: '💪 Чистые дыры: Побеждают с <30% YAC = O-line настолько доминирует, RB untouched до второго уровня. Не нужен YAC когда 5 yards до контакта. Perfect blocking schemes, RB как горячий нож через масло' } },
+      { key: 'rec_yac_pct', label: 'Receiving YAC %', format: fmt2, higherBetter: true, help: 'Процент ярдов после приёма (YAC). Способность приёмников создавать ярды после catch. 40%+ = динамичные WR.', quadrantHelp: { topRight: '🏆 YAC monsters: 45%+ YAC и победы = WR превращают 5-yard slants в 20-yard gains. Missed tackles постоянно, ankles broken regularly. Screens и crosses deadly. Defense должна gang tackle receivers. Game breakers', topLeft: '🤔 YAC но не W: 42%+ YAC но проигрывают = receivers создают после catch, но QB не accurate или схема predictable. Great individual efforts в проигрывающей системе. YAC yards в garbage time не помогают', bottomLeft: '😔 Catch и падение: <35% YAC и поражения = WR ловят и immediately down. No moves, no power. Defense plays tight knowing no threat после catch. Possession receivers без possession wins', bottomRight: '💪 Вертикальная угроза: Побеждают с <38% YAC = deep balls где YAC не нужен. Catching в stride для TDs. Go routes и posts dominate. Не нужен YAC когда мяч в endzone. Stretching field вертикально' } },
+      { key: 'pass_comp_pct', label: 'Completion %', format: fmt2, higherBetter: true, help: 'Процент завершённых передач. Точность QB и схема offense. 65%+ = хорошо, 70%+ = elite accuracy.', quadrantHelp: { topRight: '🏆 Хирургическая точность: 70%+ completion и победы = QB как surgeon. Ball placement идеальное, timing impeccable. WR не должны adjust. Rhythm passing at its best. Defense не может disrupt timing. Machine-like efficiency', topLeft: '🤔 Empty completions: 68%+ но проигрывают = dink and dunk не stretches defense. 3-yard passes на 3rd&8. Stat padding без impact. Defense gives underneath, takes away explosive. High percentage, low impact', bottomLeft: '😔 Spray and pray: <58% completion и поражения = QB и WR не на одной волне. Balls sailing, bouncing, behind receivers. Timing off, chemistry absent. Drive killers постоянно. QB coach working overtime', bottomRight: '💪 Boom или bust: Побеждают с <62% = low percentage но high reward. Deep shots work enough. 3 incompletions затем 60-yard TD. Defense не может sit on routes. Explosive > Efficient в этой системе' } },
+      { key: 'pass_td_pct', label: 'TD Rate (%)', format: fmt2, higherBetter: true, help: 'Процент тачдаунов от попыток передач. Эффективность красной зоны через воздух. 5%+ = хорошо, 6%+ = elite scoring.', quadrantHelp: { topRight: '🏆 Red zone assassins: 6.5%+ TD rate и победы = каждый drive угроза для 6 points. Red zone = automatic. Fade routes, back shoulders money. QB-WR chemistry в endzone elite. Defense панически в red zone', topLeft: '🤔 TDs без результата: 6%+ TD rate но проигрывают = offense scores но defense hemorrhages points. Или special teams disasters. Scoring 35, allowing 40. Exciting games, disappointing results. No complementary football', bottomLeft: '😔 FG brigade: <3.5% TD rate и поражения = settling для 3 постоянно. Red zone = FG zone. Не могут punch it in. Fade routes incomplete, slants covered. Kicker busiest player. Points left на поле', bottomRight: '💪 Rush TD dominance: Побеждают с <4.5% TD rate = ground game в red zone unstoppable. Power formations, QB sneaks. Не нужны passing TDs когда RB punches в с 5 yards. Physical dominance в scoring zone' } },
+      { key: 'drop_rate', label: 'Drop Rate (%)', format: fmt2, higherBetter: false, help: 'Процент потерянных передач. Надёжность receiving corps. <5% = хорошие руки, <3% = elite hands.', quadrantHelp: { topRight: '⚠️ Побеждают вопреки дропам: 6%+ drops но побеждают = volume passing компенсирует. QB бросает 40+ раз, некоторые drops inevitable. Или defense создаёт short fields постоянно. Playing through adversity', topLeft: '😔 Butterfingers epidemic: 7%+ drops и поражения = WR room disaster. Drive-killing drops, 3rd down drops, red zone drops. QB теряет доверие, начинает forcing в tight windows. Jugs machine overtime needed', bottomLeft: '🤔 Glue hands без побед: <3% drops но проигрывают = WR ловят всё, но мало opportunities. QB не accurate или O-line не даёт время. Perfect hands wasted в broken system', bottomRight: '🏆 Reliable weapons: <3.5% drops и победы = trust между QB и WR absolute. Contested catches made, tough catches routine. QB знает - если WR touched it, он caught it. Championship reliability' } },
+      { key: 'pass_rush_ratio', label: 'Pass/Rush Ratio', format: fmt2, higherBetter: null, help: 'Соотношение пасов к выносам. 1.5 = сбалансированно. >2.0 = pass-heavy, <1.2 = run-heavy offense.', quadrantHelp: { topRight: '🏈 Air raid champions: Ratio >2.2 и победы = modern passing attack dominates. 65/35 split working. Defense не может stack box. Quick game, RPO, spread formations. Passing to set up run', topLeft: '🤔 Abandoned balance: Ratio >2.5 но проигрывают = playing from behind постоянно. Forced to pass, defense knows it. Rush yards <80/game. Predictable, one-dimensional. O-line exhausted от pass blocking', bottomLeft: '💪 Ground pound struggle: Ratio <1.2 и поражения = trying to establish run но failing. 8-9 в box, nowhere to run. QB не trusted или injured. Stone age football без success', bottomRight: '🏆 Smashmouth winners: Ratio <1.3 и победы = old school dominance. 200+ rush yards/game. Controlling clock, wearing down defense. 4th quarter belongs to them. Power football still works' } },
+      { key: 'off_yds_per_game', label: 'Offensive Yards per Game', format: fmt2, higherBetter: true, help: 'Общие ярды нападения за игру. 350+ = хорошо, 400+ = elite offense. Объём производства.', quadrantHelp: { topRight: '🏆 Yardage machine: 400+ yards/game и победы = offense unstoppable. Moving chains at will, defense всегда на пятках. Multiple 100-yard receivers/rushers. Total domination between 20s и в red zone', topLeft: '🤔 Empty yards: 380+ yards но проигрывают = между 20s gods, red zone peasants. Или defense allows 450+. Moving ball everywhere except где matters. FGs instead TDs. Frustrating productivity', bottomLeft: '😔 Offensive desert: <300 yards и поражения = cannot move ball consistently. Multiple 3-and-outs, field position battles lost. Defense на поле 35+ минут. Offensive coordinator resume updating', bottomRight: '💪 Bend don\'t break wins: Побеждают с <330 yards = efficiency over volume. Short fields от turnovers, не нужны 80-yard drives. Defense dominates, special teams excellent. Points > Yards philosophy' } },
+      { key: 'punt_avg', label: 'Punt Average (Yards)', format: fmt2, higherBetter: true, help: 'Средняя дальность панта. Сила ноги панкера. 45+ = хорошо, 47+ = elite leg.', quadrantHelp: { topRight: '🏆 Weapon punter: 47+ avg и победы = field position weapon. Flipping field regularly, 60+ yarders when needed. Coverage team excellent too. hidden yardage champion. Special teams coordinator genius', topLeft: '🤔 Wasted leg: 46+ avg но проигрывают = great punter, terrible offense. Punting from own 20 constantly. Long punts но defense не holds. Individual excellence в losing cause. Trade value high', bottomLeft: '😔 Weak leg problems: <42 avg и поражения = giving away field position. Short punts, poor hang time. Returns killing team. Net average even worse. Punter tryouts needed immediately', bottomRight: '💪 Rarely punt anyway: Побеждают с <43 avg = who cares about punt average when punting 2 times/game? Going for it on 4th, scoring TDs. Punter freshest player. Offensive efficiency makes punting irrelevant' } },
+      { key: 'punt_net_avg', label: 'Punt Net Average (Yards)', format: fmt2, higherBetter: true, help: 'Чистая средняя (с учётом возвратов). Реальное влияние на field position. 40+ = хорошо, 42+ = elite placement.', quadrantHelp: { topRight: '🏆 hidden yardage wins: 42+ net и победы = punt team excellence. Punter bombs it, coverage swarms, no returns. Opponent starts inside 20 regularly. Field position как 12-й игрок. Special teams pride', topLeft: '🤔 Great punting wasted: 41+ net но проигрывают = punter и coverage отличные, но пантуют 7+ раз. Offense не может sustain drives. Defense сдаёт длинные поля anyway. Individual unit success в team failure', bottomLeft: '😔 Return disaster: <37 net и поражения = punts короткие или returns убивают. Coverage team медленная, lanes открыты. Giving up 10+ yards per return. hidden yardage hemorrhaging. Special teams coach fired', bottomRight: '💪 Score instead punt: Побеждают с <38 net = кто заботится о net punting когда идут на 4th down? Редко пантуют, часто в opponent territory. Aggressive philosophy работает. Punter loneliest player' } },
+      { key: 'punts_in_20_pct', label: 'Punts Inside 20 (%)', format: fmt2, higherBetter: true, help: 'Процент пантов внутрь 20 ярдов. Точность размещения - coffin corner punting. 40%+ = хорошо, 50%+ = elite.', quadrantHelp: { topRight: '🏆 Coffin corner artist: 50%+ inside 20 и победы = punter surgeon с ball placement. Corner kicks, backspin mastery. Opponent начинает backed up постоянно. Safety potential каждая серия. Weapon not just leg', topLeft: '🤔 Precision без purpose: 45%+ inside 20 но проигрывают = great touch но пантуют из собственной территории. Long field пантов мало. Defense не capitalizes на field position. Wasted skill', bottomLeft: '😔 Touchback machine: <30% inside 20 и поражения = punter только power, no touch. Sailing в endzone, opponent на 20 автоматически. No pin potential. Directional punting не существует. Coaching issue', bottomRight: '💪 TD > Punts: Побеждают с <35% inside 20 = редко пантуют и обычно из глубины. Going for it на 4th в opponent territory. Не нужен coffin corner когда scoring TDs. Aggressive wins' } },
+      { key: 'fg_pct', label: 'Field Goal %', format: fmt2, higherBetter: true, help: 'Процент попаданий field goals. Надёжность киккера. 85%+ = хорошо, 90%+ = elite kicker.', quadrantHelp: { topRight: '🏆 Automatic kicker: 90%+ FG и победы = money в clutch. Любая distance в range = 3 points. Defense знает - нельзя давать past 35. Confidence absolute, holder-kicker chemistry perfect. Difference maker', topLeft: '🤔 Kicker excellence squandered: 88%+ FG но проигрывают = kicker perfect но мало attempts. Offense не может get в range или goes 3-and-out. Или red zone = TD для opponent. Individual brilliance не хватает', bottomLeft: '😔 Points left everywhere: <75% FG и поражения = missed chip shots, missed game winners. Confidence shattered, holder-kicker issues. Every attempt adventure. Losing games by FG margin. Tryouts Monday', bottomRight: '💪 TDs not FGs: Побеждают с <80% FG = кто needs FG когда scoring TDs? Red zone = 7 points. Редко settling для 3. FG attempts только long distance desperation. Kicker rust от неиспользования' } },
+      { key: 'fg_50plus_pct', label: '50+ Yard FG %', format: fmt2, higherBetter: true, help: 'Процент попаданий с 50+ ярдов. Сила ноги на дальних расстояниях. 50%+ = хорошо, 70%+ = elite range.', quadrantHelp: { topRight: '🏆 Long range sniper: 70%+ с 50+ и победы = weapon не just kicker. Changes defensive strategy - must defend до 40 yard line. End of half/game attempts automatic. Wind не factor. Psychological advantage', topLeft: '🤔 Distance без wins: 60%+ с 50+ но проигрывают = great leg но редко в position. Или makes long FGs но opponent scores TDs. Impressive skill в losing effort. Highlight reel без scoreboard impact', bottomLeft: '😔 No range: <30% с 50+ и поражения = не trust beyond 45. Conservative play calling near midfield. Punting instead attempting. Leaving points когда desperate. Limited offensive possessions', bottomRight: '💪 Close range dominance: Побеждают с <40% с 50+ = не need long FGs когда offense efficient. Всегда closer than 45 yards или scoring TDs. Short fields от defense/ST. Distance kicking irrelevant' } },
+      { key: 'xp_pct', label: 'Extra Point %', format: fmt2, higherBetter: true, help: 'Процент попаданий extra points. Должно быть 95%+. Ниже = проблемы под давлением или техника.', quadrantHelp: { topRight: '🏆 PAT machine: 98%+ XP и победы = automatic после TDs. Never leave point на table. Operation smooth - snap, hold, kick как clockwork. Mental edge - opponent знает no free points. Championship details', topLeft: '🤔 Perfect но pointless: 97%+ XP но проигрывают = kicker perfect но мало TD для convert. Или opponent scores больше. Making XPs в garbage time. Individual consistency в team inconsistency', bottomLeft: '😔 Yips crisis: <92% XP и поражения = missing gimmes. Losing by 1-2 points regularly. Snap/hold/kick timing off. Mental block developed. Going для 2 чаще от desperation. Monday tryouts incoming', bottomRight: '💪 Wins ugly: Побеждают с <94% XP = missed XPs но winning by 10+. Defense или offense так dominant что missed points не matter. Или going для 2 successfully. Margin для error exists' } },
+    ];
+
+    async function loadData() {
+      const stats = await tryCsv([
+        '../output/team_aggregated_stats.csv',
+        'output/team_aggregated_stats.csv',
+        '/output/team_aggregated_stats.csv'
+      ]);
+
+      for (const row of stats) {
+        row.logoUrl = (row.logoId !== '' && row.logoId != null) ? 
+          `https://cdn.neonsportz.com/teamlogos/256/${row.logoId}.png` : null;
+      }
+
+      return stats;
+    }
+
+    function drawScatter(holder, rows, metric) {
+      const metricKey = metric.key;
+
+      const data = rows.filter(d => 
+        Number.isFinite(+d.win_pct) && 
+        Number.isFinite(+d[metricKey])
+      );
+
+      if (data.length < 2) return;
+
+      const panel = holder.append('details').attr('class', 'panel').attr('open', true);
+      const summary = panel.append('summary');
+      summary.append('span').text(`${metric.label} vs Win%`);
+      
+      if (metric.help) {
+        const helpIcon = summary.append('span').attr('class', 'help-icon').text('?');
+        const metricTip = d3.select('body').append('div').attr('class', 'metric-tooltip').style('display', 'none');
+        helpIcon.on('mouseenter', function(evt) {
+          metricTip.style('display', 'block').html('<strong>' + metric.label + ':</strong><br>' + metric.help);
+        }).on('mousemove', (evt) => {
+          metricTip.style('left', (evt.pageX + 12) + 'px').style('top', (evt.pageY - 28) + 'px');
+        }).on('mouseleave', () => {
+          metricTip.style('display', 'none');
+        });
+      }
+
+      const margin = { top: 20, right: 24, bottom: 46, left: 70 };
+      const width = 1080, height = 480;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      const wrap = panel.append('div').attr('class', 'chart-wrap');
+      const svg = wrap.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const yVals = data.map(d => +d[metricKey]);
+      const yMin = d3.min(yVals), yMax = d3.max(yVals);
+      const yRange = yMax - yMin;
+      const yPad = yRange * 0.15 || 0.5;
+      const y = d3.scaleLinear()
+        .domain([yMin - yPad, yMax + yPad])
+        .range([innerH, 0]);
+
+      const xVals = data.map(d => +d.win_pct);
+      const xMin = d3.min(xVals), xMax = d3.max(xVals);
+      const xPad = (xMax - xMin) * 0.1 || 0.05;
+      const x = d3.scaleLinear()
+        .domain([Math.max(0, xMin - xPad), Math.min(1, xMax + xPad)])
+        .range([0, innerW]);
+
+      const tickValues = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9].filter(v =>
+        v >= x.domain()[0] && v <= x.domain()[1]
+      );
+
+      g.append('g').attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).tickValues(tickValues).tickFormat(toPct).tickSize(-innerH).tickPadding(8))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#e2e2e2'))
+        .call(s => s.select('.domain').attr('stroke', '#9aa0a6'));
+
+      const yTickCount = 10;
+      g.append('g')
+        .call(d3.axisLeft(y).ticks(yTickCount).tickFormat(metric.format).tickSize(-innerW).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+      const yAvg = d3.mean(yVals), xAvg = d3.mean(xVals);
+      g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(yAvg)).attr('y2', y(yAvg))
+        .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('line').attr('x1', x(xAvg)).attr('x2', x(xAvg)).attr('y1', 0).attr('y2', innerH)
+        .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('text').attr('x', 6).attr('y', y(yAvg)-6).attr('fill', '#555').attr('font-size', 11)
+        .text('Avg Y: ' + metric.format(yAvg));
+      g.append('text').attr('x', x(xAvg)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11)
+        .text('Avg X: ' + toPct(xAvg));
+
+      const { m, b, r2 } = regression(data.map(d => [+d.win_pct, +d[metricKey]]));
+      const xRange = [d3.min(xVals), d3.max(xVals)];
+      g.append('line')
+        .attr('x1', x(xRange[0])).attr('y1', y(m*xRange[0] + b))
+        .attr('x2', x(xRange[1])).attr('y2', y(m*xRange[1] + b))
+        .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
+
+      const tip = d3.select('body').append('div').attr('class', 'tooltip').style('display', 'none');
+
+      const size = 30;
+      const node = g.selectAll('.team').data(data, d => d.team).join('g').attr('class', 'team')
+        .attr('transform', d => `translate(${x(d.win_pct)},${y(d[metricKey])})`)
+        .on('mouseenter', function(evt, d){
+          const trend = m * d.win_pct + b;
+          const res = d[metricKey] - trend;
+          let html = `<strong>${d.team}</strong><br>`;
+          html += `${metric.label}: ${metric.format(d[metricKey])}<br>`;
+          html += `Win%: ${toPct(d.win_pct)}<br>`;
+          html += `Δ vs trend: ${(res>=0?'+':'') + metric.format(res)}<br>`;
+          
+          const qx = +d.win_pct >= xAvg;
+          const qy = +d[metricKey] >= yAvg;
+          let quadrant = '';
+          
+          if (metric.quadrantHelp) {
+            if (qx && qy) quadrant = '<em>' + metric.quadrantHelp.topRight + '</em>';
+            else if (!qx && qy) quadrant = '<em>' + metric.quadrantHelp.topLeft + '</em>';
+            else if (!qx && !qy) quadrant = '<em>' + metric.quadrantHelp.bottomLeft + '</em>';
+            else quadrant = '<em>' + metric.quadrantHelp.bottomRight + '</em>';
+          } else if (metric.higherBetter === true) {
+            if (qx && qy) quadrant = '<em>✅ Побеждают + хороший показатель метрика</em>';
+            else if (!qx && qy) quadrant = '<em>🤔 Хороший метрик, но мало побед - не хватает чего-то ещё</em>';
+            else if (!qx && !qy) quadrant = '<em>😔 Проигрывают + слабый метрик - нужны улучшения</em>';
+            else quadrant = '<em>💪 Побеждают несмотря на слабый метрик - компенсируют в других зонах</em>';
+          } else if (metric.higherBetter === false) {
+            if (qx && qy) quadrant = '<em>⚠️ Побеждают несмотря на высокий негативный показатель</em>';
+            else if (!qx && qy) quadrant = '<em>😔 Высокий негативный показатель + мало побед - двойная проблема</em>';
+            else if (!qx && !qy) quadrant = '<em>🤔 Низкий негатив, но побед мало - проблемы в другом</em>';
+            else quadrant = '<em>✅ Низкий негатив + много побед - правильный подход</em>';
+          } else {
+            if (qx && qy) quadrant = '<em>Правый верхний: высокий Win%, высокий метрик</em>';
+            else if (!qx && qy) quadrant = '<em>Левый верхний: низкий Win%, высокий метрик</em>';
+            else if (!qx && !qy) quadrant = '<em>Левый нижний: низкий Win%, низкий метрик</em>';
+            else quadrant = '<em>Правый нижний: высокий Win%, низкий метрик</em>';
+          }
+          html += quadrant;
+          
+          tip.style('display','block').html(html);
+        })
+        .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+        .on('mouseleave', ()=> tip.style('display','none'));
+
+      node.append('rect')
+        .attr('x', -(size/2 + 2)).attr('y', -(size/2 + 2))
+        .attr('width', size + 4).attr('height', size + 4)
+        .attr('rx', 4).attr('ry', 4)
+        .attr('fill', d => {
+          const predicted = m * d.win_pct + b;
+          const above = +d[metricKey] >= predicted;
+          return (metric.higherBetter !== false && above) || (metric.higherBetter === false && !above) ? 
+            'var(--red)' : 'var(--blue)';
+        })
+        .attr('opacity', .16);
+
+      node.append('image')
+        .attr('href', d => d.logoUrl || null)
+        .attr('x', -size/2).attr('y', -size/2)
+        .attr('width', size).attr('height', size)
+        .attr('opacity', .95);
+
+      svg.append('text').attr('x', margin.left + innerW/2).attr('y', height-10)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text('Win Percentage');
+      svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text(metric.label);
+
+      const legend = panel.append('div').attr('class', 'legend');
+      legend.append('span').html(`<span class="swatch red"></span> Better than trend`);
+      legend.append('span').html(`<span class="swatch blue"></span> Worse than trend`);
+      legend.append('span').html(`<span class="swatch avg"></span> Average Lines`);
+
+      let corrClass = 'corr-weak', corrLabel = 'Weak';
+      if (r2 >= 0.5) { corrClass = 'corr-strong'; corrLabel = 'Strong'; }
+      else if (r2 >= 0.25) { corrClass = 'corr-moderate'; corrLabel = 'Moderate'; }
+      
+      summary.append('span').attr('class', `correlation-badge ${corrClass}`)
+        .style('margin-left', '12px')
+        .html(`R²=${fmt3(r2)} (${corrLabel})`);
+    }
+
+    function render() {
+      loadData().then(allRows => {
+        const root = d3.select('#root');
+        
+        METRICS.forEach(metric => {
+          drawScatter(root, allRows, metric);
+        });
+      }).catch(err => {
+        d3.select('#root').append('div').style('color','crimson').text('Failed to load data: '+err);
+        console.error(err);
+      });
+    }
+
+    window.addEventListener('DOMContentLoaded', render);
+  </script>
+</head>
+<body>
+  <div class="container">
+    <h1>Team Statistics Explorer — Win% Correlations</h1>
+    <div class="subtitle">
+      28 comprehensive graphs showing how different team metrics correlate with winning percentage. 
+      Red squares = better than expected for their win%, Blue = worse than expected.
+      R² shows correlation strength (0=none, 1=perfect).
+    </div>
+    <div id="root"></div>
+    <div class="subtitle">Data: output/team_aggregated_stats.csv (aggregated from MEGA_*.csv files)</div>
+  </div>
+</body>
+</html>

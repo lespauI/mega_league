@@ -229,13 +229,35 @@ def run_aggregation_script():
             print(f"⚠ {name} aggregation script not found, skipping")
 
 def main():
-    run_aggregation_script()
-    
-    categories = categorize_files()
-    
-    sections = []
-    for category, files in categories.items():
-        sections.append(generate_section(category, files))
+    # An archived cycle intentionally has no active exports. Do not create
+    # misleading empty aggregates or advertise dashboards until data arrives.
+    required_inputs = ('MEGA_teams.csv', 'MEGA_games.csv', 'MEGA_players.csv')
+    missing_inputs = [name for name in required_inputs if not (ROOT_DIR / name).is_file()]
+    categories = {}
+    if missing_inputs:
+        sections = ['''        <div class="section">
+            <h2>Madden 27 — awaiting league data</h2>
+            <p>The Madden 26 league data and reports have been archived.
+            Current dashboards will be available after the new league exports
+            are imported and the analysis is generated.</p>
+            <div class="resource-list">
+                <a href="README.md" class="resource-item">
+                    <div class="resource-title">Madden 27 setup</div>
+                    <div class="resource-desc">Data imports and calculation settings for the new cycle</div>
+                </a>
+                <a href="archive/madden-26/README.md" class="resource-item">
+                    <div class="resource-title">Madden 26 archive</div>
+                    <div class="resource-desc">Historical data and reports from the previous game</div>
+                </a>
+            </div>
+        </div>''']
+        print('Awaiting active exports: ' + ', '.join(missing_inputs))
+    else:
+        run_aggregation_script()
+        categories = categorize_files()
+        sections = []
+        for category, files in categories.items():
+            sections.append(generate_section(category, files))
     
     html_content = HTML_TEMPLATE.format(sections='\n        \n'.join(sections))
     

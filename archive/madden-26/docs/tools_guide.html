@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MEGA Tools Guide & How‑To</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+      color: #0f172a;
+    }
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 32px 28px 36px;
+      box-shadow: 0 18px 45px rgba(15,23,42,0.35);
+    }
+    h1 {
+      text-align: center;
+      font-size: 2.3rem;
+      margin-bottom: 8px;
+      color: #111827;
+    }
+    .subtitle {
+      text-align: center;
+      font-size: 0.98rem;
+      color: #6b7280;
+      margin-bottom: 28px;
+    }
+    .intro {
+      background: #eff6ff;
+      border-radius: 12px;
+      padding: 14px 16px;
+      border-left: 4px solid #3b82f6;
+      font-size: 0.95rem;
+      color: #1e293b;
+      margin-bottom: 24px;
+    }
+    .section-title {
+      font-size: 1.2rem;
+      margin: 18px 0 12px;
+      color: #0f172a;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 6px;
+    }
+    .tools-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-bottom: 10px;
+    }
+    .tool-card {
+      background: #f8fafc;
+      border-radius: 14px;
+      padding: 16px 16px 14px;
+      border: 1px solid #e5e7eb;
+      box-shadow: 0 4px 12px rgba(148,163,184,0.25);
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .tool-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 22px rgba(30,64,175,0.25);
+      border-color: #6366f1;
+    }
+    .tool-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    .tool-name {
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: #111827;
+    }
+    .tool-link {
+      font-size: 0.86rem;
+      color: #2563eb;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .tool-link::after {
+      content: " ↗";
+      font-size: 0.85em;
+    }
+    .tool-desc {
+      font-size: 0.9rem;
+      color: #4b5563;
+      margin-bottom: 8px;
+    }
+    .how-title {
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+      margin: 6px 0 2px;
+      font-weight: 600;
+    }
+    .how-list {
+      font-size: 0.88rem;
+      color: #4b5563;
+      padding-left: 18px;
+      margin-bottom: 4px;
+    }
+    .how-list li { margin-bottom: 3px; }
+    .best-for {
+      font-size: 0.8rem;
+      color: #6b7280;
+      margin-top: 4px;
+    }
+    .footer {
+      margin-top: 22px;
+      padding-top: 14px;
+      border-top: 1px solid #e5e7eb;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>MEGA Tools Guide</h1>
+    <p class="subtitle">Quick overview of the interactive CSV‑powered tools and how to use them.</p>
+
+    <div class="intro">
+      This page is a human‑friendly map of the MEGA League tools. Each card links to an HTML report that is
+      fully driven by the CSV exports in this repo – pick a tool, follow the “How to use” steps, and explore.
+    </div>
+
+    <h2 class="section-title">Game Planning & Matchups</h2>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Matchup Gameplan Advisor</div>
+          <a href="matchup_gameplan.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Compare any two teams using season‑long and recent‑form stats, with automatic strength/weakness labels
+          and rule‑based suggestions for how to attack, protect, and defend.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Select your team and opponent from the dropdowns.</li>
+          <li>Optionally switch to the “Last 4 games” window for recent form.</li>
+          <li>Read the overview, matchup panels, and suggestions to shape your weekly gameplan.</li>
+        </ul>
+        <div class="best-for">Best for: weekly opponent scouting and play‑calling ideas.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Week 18 Playoff Simulator</div>
+          <a href="week18_simulator.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Interactive what‑if simulator for the final week of the season that uses team and game CSVs to
+          recompute standings and playoff outcomes as you change results.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Open the simulator and locate each Week 18 matchup.</li>
+          <li>Toggle winners/losers and ties for the games you want to explore.</li>
+          <li>Watch the live updates to standings and playoff berths.</li>
+        </ul>
+        <div class="best-for">Best for: exploring clinching scenarios and tiebreakers.</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Team Identity & Efficiency</h2>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Stats Dashboard Hub</div>
+          <a href="stats_dashboard.html" class="tool-link">Open hub</a>
+        </div>
+        <p class="tool-desc">
+          Visual landing page that connects all major analytics views built from the team‑level CSV exports.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Start here when you’re not sure which visualization you want.</li>
+          <li>Hover each card to see what metrics it covers.</li>
+          <li>Click through to open the detailed explorer pages.</li>
+        </ul>
+        <div class="best-for">Best for: discovering which tools are available.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Team Stats Explorer</div>
+          <a href="team_stats_explorer.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Scatter‑plot explorer that shows how different offensive and defensive metrics correlate with win
+          percentage across the league.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Pick a metric on the X‑axis to compare against win%.</li>
+          <li>Hover points to see the specific team and values.</li>
+          <li>Use the trend line and quadrants to understand which styles actually win.</li>
+        </ul>
+        <div class="best-for">Best for: testing “what really matters to winning” theories.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Cross‑Metric Correlations</div>
+          <a href="team_stats_correlations.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Pre‑built correlation views that compare offense vs defense, passing vs rushing, and other metric pairs.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Browse the list of correlation charts down the page.</li>
+          <li>Open the view that matches the question you care about (e.g., pressure vs coverage).</li>
+          <li>Scan the R² and slopes to see which relationships are strongest.</li>
+        </ul>
+        <div class="best-for">Best for: deeper statistical research and presentation slides.</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Player Usage, Trades & Roster Context</h2>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Player Usage Distribution</div>
+          <a href="team_player_usage.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Breaks down how each team allocates targets and touches across WRs, TEs, and RBs using the
+          player‑level CSV exports.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Select a team from the controls at the top.</li>
+          <li>Study target share bars for WR/TE/RB and red‑zone usage.</li>
+          <li>Compare concentrated vs spread usage and how it ties to turnovers and sacks.</li>
+        </ul>
+        <div class="best-for">Best for: understanding where an offense actually flows.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Trades & Multi‑Team Players</div>
+          <a href="trade_dashboard.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Highlights players who logged stats for multiple teams and shows how their production is split
+          across each stint.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Filter to a team or player of interest.</li>
+          <li>Review yards, TDs, and efficiency for each team stint.</li>
+          <li>Use it to quantify how much trades changed a team’s offense.</li>
+        </ul>
+        <div class="best-for">Best for: analyzing trade impact and rental players.</div>
+      </div>
+
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Rankings Explorer</div>
+          <a href="rankings_explorer.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Combines power rankings, cap data, and performance metrics to show team philosophies and
+          balance between offense and defense.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Switch between views for offensive vs defensive rank, volatility, and cap efficiency.</li>
+          <li>Look for teams that over‑ or under‑perform their underlying metrics.</li>
+          <li>Use the patterns to spot buy‑low or sell‑high opportunities.</li>
+        </ul>
+        <div class="best-for">Best for: big‑picture roster and franchise strategy.</div>
+      </div>
+    </div>
+
+    <h2 class="section-title">Schedule & Playoff Context</h2>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="tool-header">
+          <div class="tool-name">Strength of Schedule Analysis</div>
+          <a href="sos_graphs.html" class="tool-link">Open tool</a>
+        </div>
+        <p class="tool-desc">
+          Visualizes completed and remaining strength of schedule, tying opponent difficulty back to win%
+          and playoff odds.
+        </p>
+        <div class="how-title">How to use</div>
+        <ul class="how-list">
+          <li>Choose the SoS view you care about (completed, remaining, or total).</li>
+          <li>Hover points to see which teams had the toughest and easiest paths.</li>
+          <li>Use it alongside playoff race views to explain over‑ and under‑achievers.</li>
+        </ul>
+        <div class="best-for">Best for: context around records and playoff resumes.</div>
+      </div>
+    </div>
+
+    <div class="footer">
+      All tools read directly from the CSV exports in this repo. Regenerate them with
+      <code>python3 scripts/run_all_stats.py</code> before a new season or data refresh.
+    </div>
+  </div>
+</body>
+</html>
+

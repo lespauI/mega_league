@@ -1,0 +1,1686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Matchup Gameplan Advisor</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body {
+      margin: 16px;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      color: var(--text);
+      background: #f7f7f7;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: #fff;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      padding: 12px 16px 22px;
+      box-shadow: 0 1px 3px rgba(0,0,0,.06);
+    }
+    h1 { margin: 0 0 8px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px 18px;
+      align-items: center;
+      margin: 8px 0 10px;
+      font-size: 13px;
+    }
+    .controls label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    select {
+      font-size: 13px;
+      padding: 4px 6px;
+      border-radius: 6px;
+      border: 1px solid #cbd5e1;
+    }
+    button {
+      font-size: 13px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: #f8fafc;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #e5edff;
+      border-color: #818cf8;
+    }
+    .info {
+      background: #f3f6fa;
+      border: 1px solid #e1e7ef;
+      border-radius: 8px;
+      padding: 10px 14px;
+      color: #243246;
+      font-size: 13px;
+      margin: 4px 0 10px;
+    }
+    .panel {
+      margin: 12px 0 14px;
+      border: 1px solid #e5e5e5;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .panel > summary {
+      padding: 9px 14px;
+      background: #f5f7fa;
+      border-bottom: 1px solid #ebeff5;
+      font-weight: 600;
+      cursor: pointer;
+      user-select: none;
+      list-style: none;
+      font-size: 13px;
+    }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
+    .panel-body {
+      padding: 10px 14px 12px;
+      font-size: 13px;
+    }
+    .teams-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 18px;
+      align-items: stretch;
+    }
+    .team-card {
+      flex: 1 1 260px;
+      border-radius: 10px;
+      border: 1px solid #e5e7eb;
+      padding: 10px 12px;
+      background: #f9fafb;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .team-card.opponent {
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+    .team-logo {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: #e5e7eb;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    .team-logo img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+    .team-meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .team-name {
+      font-weight: 600;
+      font-size: 14px;
+      margin-bottom: 2px;
+    }
+    .team-sub {
+      font-size: 12px;
+      color: #6b7280;
+      margin-bottom: 3px;
+    }
+    .team-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      color: #374151;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      padding: 1px 8px;
+      border-radius: 999px;
+      background: #e5edff;
+      color: #1e3a8a;
+      font-size: 11px;
+    }
+    .pill.light {
+      background: #f3f4f6;
+      color: #374151;
+    }
+    .pill.red {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .edge-summary {
+      margin-top: 10px;
+      padding-top: 8px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 13px;
+      color: #111827;
+    }
+    .edge-highlight {
+      font-weight: 600;
+    }
+    .edge-secondary {
+      display: block;
+      font-size: 12px;
+      color: #6b7280;
+      margin-top: 2px;
+    }
+    .empty-state {
+      font-size: 13px;
+      color: #6b7280;
+      padding: 6px 0 2px;
+    }
+    .muted {
+      color: #9ca3af;
+    }
+    .metric-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+    .metric-col {
+      flex: 1 1 260px;
+      border-radius: 8px;
+      border: 1px dashed #e5e7eb;
+      padding: 8px 10px;
+      background: #f9fafb;
+    }
+    .metric-col h4 {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #111827;
+    }
+    .metric-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 6px;
+      margin: 2px 0;
+      font-size: 12px;
+    }
+    .metric-label {
+      color: #4b5563;
+    }
+    .metric-values {
+      text-align: right;
+      white-space: nowrap;
+    }
+    .metric-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 6px;
+      margin-left: 4px;
+      border-radius: 999px;
+      background: #e5edff;
+      color: #1e3a8a;
+      font-size: 10px;
+    }
+    .metric-note {
+      margin-top: 4px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+    .tendencies-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 18px;
+    }
+    .tendencies-team {
+      flex: 1 1 260px;
+      border-radius: 8px;
+      border: 1px solid #e5e7eb;
+      padding: 8px 10px;
+      background: #f9fafb;
+    }
+    .tendencies-team h4 {
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .tendencies-line {
+      font-size: 12px;
+      color: #374151;
+      margin: 2px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Matchup Gameplan Advisor</h1>
+    <p class="subtitle">
+      Built from <code>output/team_rankings_stats.csv</code>,
+      <code>output/team_aggregated_stats.csv</code>, and
+      <code>output/team_player_usage.csv</code>. Run
+      <code>python3 scripts/run_all_stats.py</code> to refresh.
+    </p>
+
+    <div class="controls">
+      <label>
+        My team:
+        <select id="my-team-select">
+          <option value="">Select team…</option>
+        </select>
+      </label>
+      <label>
+        Opponent:
+        <select id="opp-team-select">
+          <option value="">Select team…</option>
+        </select>
+      </label>
+      <button type="button" id="swap-teams-btn">Swap</button>
+      <label>
+        View:
+        <label>
+          <input type="radio" name="window-mode" value="season" checked />
+          Full season
+        </label>
+        <label>
+          <input type="radio" name="window-mode" value="recent4" />
+          Last 4 games
+        </label>
+      </label>
+      <span class="muted">
+        Choose any two teams to see a quick identity & edge summary.
+      </span>
+    </div>
+
+    <div class="info">
+      This page normalizes team rankings, efficiency metrics, and player usage into a unified
+      <strong>TeamProfile</strong> view. The overview panel below compares records, ELO/rank,
+      and high-level efficiency with simple league-context labels (e.g. "Major Strength" or "Weakness").
+      Later phases will drill into specific matchup panels and rule-based gameplan suggestions.
+    </div>
+
+    <details class="panel" open>
+      <summary>Matchup Overview</summary>
+      <div class="panel-body" id="matchup-overview">
+        <div class="empty-state">
+          Select both <em>My team</em> and <em>Opponent</em> to see the matchup overview.
+        </div>
+      </div>
+    </details>
+
+    <!-- Placeholders for later phases so the layout is ready -->
+    <details class="panel" open>
+      <summary>Your Offense vs Their Defense</summary>
+      <div class="panel-body" id="offense-vs-defense">
+        <div class="empty-state muted">
+          Detailed offense/defense matchup panels will appear here in Phase 2.
+        </div>
+      </div>
+    </details>
+
+    <details class="panel" open>
+      <summary>Your Defense vs Their Offense</summary>
+      <div class="panel-body" id="defense-vs-offense">
+        <div class="empty-state muted">
+          Defensive matchup breakdowns will be added in Phase 2.
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Tendencies & Usage</summary>
+      <div class="panel-body" id="tendencies">
+        <div class="empty-state muted">
+          Player usage and identity summaries will be wired up in Phase 2.
+        </div>
+      </div>
+    </details>
+
+    <details class="panel">
+      <summary>Gameplan Suggestions</summary>
+      <div class="panel-body" id="suggestions">
+        <div class="empty-state muted">
+          Rule-based gameplan suggestions will be generated here in Phase 3.
+        </div>
+      </div>
+    </details>
+  </div>
+
+  <script>
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    function safeNum(v) {
+      const x = +v;
+      return Number.isFinite(x) ? x : null;
+    }
+
+    function pickFirst(...vals) {
+      for (const v of vals) {
+        if (v !== undefined && v !== null && v !== '') return v;
+      }
+      return null;
+    }
+
+    async function loadAllData() {
+      const [rankings, aggregated, usage] = await Promise.all([
+        tryCsv([
+          '../output/team_rankings_stats.csv',
+          'output/team_rankings_stats.csv',
+          '/output/team_rankings_stats.csv'
+        ]),
+        tryCsv([
+          '../output/team_aggregated_stats.csv',
+          'output/team_aggregated_stats.csv',
+          '/output/team_aggregated_stats.csv'
+        ]),
+        tryCsv([
+          '../output/team_player_usage.csv',
+          'output/team_player_usage.csv',
+          '/output/team_player_usage.csv'
+        ])
+      ]);
+      let games = [];
+      try {
+        games = await tryCsv([
+          '../MEGA_games.csv',
+          'MEGA_games.csv',
+          '/MEGA_games.csv'
+        ]);
+      } catch (e) {
+        console.warn('MEGA_games.csv not found or failed to load. Recent-form view will be disabled.', e);
+      }
+      return { rankings, aggregated, usage, games };
+    }
+
+    function buildTeamProfiles(rankings, aggregated, usage) {
+      const aggByTeam = new Map();
+      aggregated.forEach(r => {
+        if (r.team) aggByTeam.set(r.team, r);
+      });
+
+      const usageByTeam = new Map();
+      usage.forEach(r => {
+        if (r.team) usageByTeam.set(r.team, r);
+      });
+
+      const profiles = [];
+      const byTeam = new Map();
+
+      for (const r of rankings) {
+        const team = r.team;
+        if (!team) continue;
+        const agg = aggByTeam.get(team) || {};
+        const use = usageByTeam.get(team) || {};
+
+        const logoId = pickFirst(r.logoId, agg.logoId, use.logoId);
+        const logoUrl = logoId != null && logoId !== ''
+          ? `https://cdn.neonsportz.com/teamlogos/256/${logoId}.png`
+          : null;
+
+        const wins = pickFirst(r.totalWins, r.wins, agg.totalWins, use.wins);
+        const losses = pickFirst(r.totalLosses, r.losses, agg.totalLosses, use.losses);
+        const ties = pickFirst(r.totalTies, r.ties, agg.totalTies, use.ties);
+        const winPct = pickFirst(safeNum(r.win_pct), safeNum(r.winPct), safeNum(agg.win_pct), safeNum(use.win_pct));
+
+        const profile = {
+          team,
+          conference: pickFirst(r.conference, agg.conference, use.conference) || '',
+          division: pickFirst(r.division, agg.division, use.division) || '',
+          logoId,
+          logoUrl,
+          record: {
+            wins: safeNum(wins) ?? 0,
+            losses: safeNum(losses) ?? 0,
+            ties: safeNum(ties) ?? 0,
+            win_pct: winPct
+          },
+          rankings: {
+            rank: safeNum(r.rank),
+            offRank: safeNum(r.offTotalYdsRank),
+            defRank: safeNum(r.defTotalYdsRank),
+            elo: safeNum(r.eloIndex)
+          },
+          offense: {
+            yardsPerPlay: safeNum(pickFirst(agg.yds_per_play, use.yds_per_play)),
+            tdPerPlay: safeNum(pickFirst(agg.td_per_play, use.td_per_play)),
+            passYdsPerAtt: safeNum(pickFirst(agg.pass_yds_per_att, use.pass_yds_per_att)),
+            rushYdsPerAtt: safeNum(pickFirst(agg.rush_yds_per_att, use.rush_yds_per_att)),
+            pointsPerGame: safeNum(agg.ptsForPg),
+            totalYdsPerGame: safeNum(agg.offTotalYdsPg)
+          },
+          defense: {
+            pointsPerGame: safeNum(agg.ptsAgainstPg),
+            totalYdsPerGame: safeNum(agg.defTotalYdsPg)
+          },
+          indices: {
+            offenseIndexZ: safeNum(agg.offenseIndexZ),
+            defenseIndexZ: safeNum(agg.defenseIndexZ),
+            teamStrengthIndex: safeNum(agg.teamStrengthIndex)
+          },
+          rawRankings: r,
+          rawAggregates: agg,
+          rawUsage: use
+        };
+
+        profiles.push(profile);
+        byTeam.set(team, profile);
+      }
+
+      profiles.sort((a, b) => {
+        const ar = a.rankings.rank ?? 999;
+        const br = b.rankings.rank ?? 999;
+        if (ar !== br) return ar - br;
+        return d3.ascending(a.team, b.team);
+      });
+
+      return { profiles, byTeam };
+    }
+
+    function buildLeagueStats(profiles) {
+      const metricDefs = {
+        win_pct: p => p.record.win_pct,
+        ptsForPg: p => p.offense.pointsPerGame,
+        ptsAgainstPg: p => p.defense.pointsPerGame,
+        yds_per_play: p => p.offense.yardsPerPlay,
+        td_per_play: p => p.offense.tdPerPlay,
+        pass_yds_per_att: p => p.offense.passYdsPerAtt,
+        rush_yds_per_att: p => p.offense.rushYdsPerAtt,
+        offTotalYdsPg: p => p.offense.totalYdsPerGame,
+        defTotalYdsPg: p => p.defense.totalYdsPerGame,
+        teamStrengthIndex: p => p.indices.teamStrengthIndex
+      };
+
+      const config = {
+        win_pct: { higherIsBetter: true },
+        ptsForPg: { higherIsBetter: true },
+        ptsAgainstPg: { higherIsBetter: false },
+        yds_per_play: { higherIsBetter: true },
+        td_per_play: { higherIsBetter: true },
+        pass_yds_per_att: { higherIsBetter: true },
+        rush_yds_per_att: { higherIsBetter: true },
+        offTotalYdsPg: { higherIsBetter: true },
+        defTotalYdsPg: { higherIsBetter: false },
+        teamStrengthIndex: { higherIsBetter: true }
+      };
+
+      const metrics = {};
+      for (const [name, acc] of Object.entries(metricDefs)) {
+        const values = profiles
+          .map(acc)
+          .filter(v => Number.isFinite(v));
+        if (!values.length) continue;
+        const mean = d3.mean(values);
+        const std = d3.deviation(values) || 0;
+        const sorted = values.slice().sort((a, b) => a - b);
+        metrics[name] = { name, mean, std, values: sorted };
+      }
+
+      function getZ(metricName, metricValue) {
+        const s = metrics[metricName];
+        const v = safeNum(metricValue);
+        if (!s || v === null) return null;
+        if (!s.std || s.std === 0) return 0;
+        return (v - s.mean) / s.std;
+      }
+
+      function getPercentile(metricName, metricValue) {
+        const s = metrics[metricName];
+        const v = safeNum(metricValue);
+        if (!s || v === null) return null;
+        const values = s.values;
+        let count = 0;
+        for (let i = 0; i < values.length; i++) {
+          if (values[i] <= v) count++;
+          else break;
+        }
+        return (count / values.length) * 100;
+      }
+
+      function strengthLabel(metricValue, metricName) {
+        const v = safeNum(metricValue);
+        if (v === null) return 'N/A';
+        const conf = config[metricName] || { higherIsBetter: true };
+        const rawZ = getZ(metricName, v);
+        if (rawZ === null) return 'N/A';
+        const adjZ = conf.higherIsBetter ? rawZ : -rawZ;
+        const abs = Math.abs(adjZ);
+        if (abs >= 1.5) return adjZ > 0 ? 'Major Strength' : 'Major Weakness';
+        if (abs >= 0.75) return adjZ > 0 ? 'Strength' : 'Weakness';
+        return 'Neutral';
+      }
+
+      return {
+        metrics,
+        config,
+        getZ,
+        getPercentile,
+        strengthLabel
+      };
+    }
+
+    function attachRecentForm(profiles, games, leagueStats, windowSize = 4) {
+      if (!games || !games.length || !profiles || !profiles.length) return;
+
+      const parsedGames = games
+        .map((g, idx) => ({
+          ...g,
+          _idx: idx,
+          seasonIndex: safeNum(g.seasonIndex),
+          stageIndex: safeNum(g.stageIndex),
+          weekIndex: safeNum(g.weekIndex),
+          status: g.status
+        }))
+        .filter(g => g.homeTeam && g.awayTeam);
+
+      if (!parsedGames.length) return;
+
+      const finalGames = parsedGames.filter(g => {
+        const s = g.status;
+        if (s === undefined || s === null || s === '') return false;
+        const n = safeNum(s);
+        if (Number.isFinite(n)) return n === 3;
+        const str = String(s).toLowerCase();
+        return str === '3' || str === 'final' || str === 'completed';
+      });
+
+      if (!finalGames.length) return;
+
+      const maxSeason = d3.max(
+        finalGames.map(g => (Number.isFinite(g.seasonIndex) ? g.seasonIndex : 0))
+      );
+      const seasonGames = finalGames.filter(g => {
+        const s = Number.isFinite(g.seasonIndex) ? g.seasonIndex : 0;
+        return s === maxSeason;
+      });
+
+      if (!seasonGames.length) return;
+
+      const perTeam = new Map();
+
+      function pushGame(team, pf, pa, result, sortKey) {
+        if (!team || !Number.isFinite(pf) || !Number.isFinite(pa)) return;
+        let arr = perTeam.get(team);
+        if (!arr) {
+          arr = [];
+          perTeam.set(team, arr);
+        }
+        arr.push({ pf, pa, result, sortKey });
+      }
+
+      seasonGames.forEach(g => {
+        const homeScore = safeNum(g.homeScore);
+        const awayScore = safeNum(g.awayScore);
+        if (!Number.isFinite(homeScore) || !Number.isFinite(awayScore)) return;
+
+        const season = Number.isFinite(g.seasonIndex) ? g.seasonIndex : 0;
+        const stage = Number.isFinite(g.stageIndex) ? g.stageIndex : 0;
+        const week = Number.isFinite(g.weekIndex) ? g.weekIndex : 0;
+        const sortKey = season * 10000 + stage * 100 + week * 10 + (g._idx || 0);
+
+        let homeResult = 0;
+        if (homeScore > awayScore) homeResult = 1;
+        else if (homeScore < awayScore) homeResult = -1;
+        const awayResult = -homeResult;
+
+        pushGame(g.homeTeam, homeScore, awayScore, homeResult, sortKey);
+        pushGame(g.awayTeam, awayScore, homeScore, awayResult, sortKey);
+      });
+
+      const recentByTeam = new Map();
+
+      perTeam.forEach((gamesList, team) => {
+        gamesList.sort((a, b) => a.sortKey - b.sortKey);
+        const window = gamesList.slice(-windowSize);
+        if (!window.length) return;
+
+        let wins = 0;
+        let losses = 0;
+        let ties = 0;
+        let ptsFor = 0;
+        let ptsAgainst = 0;
+
+        window.forEach(g => {
+          if (g.result > 0) wins += 1;
+          else if (g.result < 0) losses += 1;
+          else ties += 1;
+          ptsFor += g.pf;
+          ptsAgainst += g.pa;
+        });
+
+        const gamesPlayed = window.length;
+        const win_pct = gamesPlayed ? (wins + 0.5 * ties) / gamesPlayed : null;
+        const ptsForPerGame = gamesPlayed ? ptsFor / gamesPlayed : null;
+        const ptsAgainstPerGame = gamesPlayed ? ptsAgainst / gamesPlayed : null;
+
+        recentByTeam.set(team, {
+          team,
+          games: gamesPlayed,
+          wins,
+          losses,
+          ties,
+          win_pct,
+          ptsForPerGame,
+          ptsAgainstPerGame,
+          offTrend: null,
+          defTrend: null
+        });
+      });
+
+      if (leagueStats && leagueStats.getZ) {
+        profiles.forEach(p => {
+          const recent = recentByTeam.get(p.team);
+          if (!recent) return;
+
+          const seasonOff = p.offense || {};
+          const seasonDef = p.defense || {};
+
+          if (Number.isFinite(recent.ptsForPerGame) && Number.isFinite(seasonOff.pointsPerGame)) {
+            const seasonZ = leagueStats.getZ('ptsForPg', seasonOff.pointsPerGame);
+            const recentZ = leagueStats.getZ('ptsForPg', recent.ptsForPerGame);
+            if (seasonZ !== null && recentZ !== null) {
+              const delta = recentZ - seasonZ;
+              if (delta > 0.8) recent.offTrend = 'up';
+              else if (delta < -0.8) recent.offTrend = 'down';
+            }
+          }
+
+          if (Number.isFinite(recent.ptsAgainstPerGame) && Number.isFinite(seasonDef.pointsPerGame)) {
+            const seasonZ = leagueStats.getZ('ptsAgainstPg', seasonDef.pointsPerGame);
+            const recentZ = leagueStats.getZ('ptsAgainstPg', recent.ptsAgainstPerGame);
+            if (seasonZ !== null && recentZ !== null) {
+              const delta = seasonZ - recentZ;
+              if (delta > 0.8) recent.defTrend = 'up';
+              else if (delta < -0.8) recent.defTrend = 'down';
+            }
+          }
+        });
+      }
+
+      profiles.forEach(p => {
+        p.recentForm = recentByTeam.get(p.team) || null;
+      });
+    }
+
+    function formatRecord(rec) {
+      const w = rec.wins ?? 0;
+      const l = rec.losses ?? 0;
+      const t = rec.ties ?? 0;
+      const base = `${w}-${l}`;
+      return t ? `${base}-${t}` : base;
+    }
+
+    function fmtOne(v) {
+      return d3.format('.1f')(v);
+    }
+
+    function fmtPct(v) {
+      return d3.format('.1%')(v);
+    }
+
+    function computeSuggestions(myTeam, oppTeam, leagueStats) {
+      const suggestions = [];
+      if (!myTeam || !oppTeam || !leagueStats) return suggestions;
+
+      const myOff = myTeam.offense || {};
+      const oppOff = oppTeam.offense || {};
+      const myDef = myTeam.defense || {};
+      const oppDef = oppTeam.defense || {};
+      const myAgg = myTeam.rawAggregates || {};
+      const oppAgg = oppTeam.rawAggregates || {};
+      const myUse = myTeam.rawUsage || {};
+      const oppUse = oppTeam.rawUsage || {};
+
+      const metrics = leagueStats.metrics || {};
+      const seenKeys = new Set();
+
+      function metricMean(name) {
+        const m = metrics[name];
+        return m && Number.isFinite(m.mean) ? m.mean : null;
+      }
+
+      function rawZ(name, value) {
+        const v = safeNum(value);
+        if (!Number.isFinite(v) || !leagueStats.getZ) return null;
+        return leagueStats.getZ(name, v);
+      }
+
+      function adjZ(name, value) {
+        const v = safeNum(value);
+        if (!Number.isFinite(v) || !leagueStats.getZ) return null;
+        const base = leagueStats.getZ(name, v);
+        if (base === null) return null;
+        const conf = leagueStats.config && leagueStats.config[name];
+        const higherIsBetter = conf ? conf.higherIsBetter !== false : true;
+        return higherIsBetter ? base : -base;
+      }
+
+      function severityFromZ(zStrong, zWeak) {
+        const abs = Math.max(Math.abs(zStrong || 0), Math.abs(zWeak || 0));
+        if (abs >= 1.4) return 'major';
+        if (abs >= 0.8) return 'moderate';
+        return null;
+      }
+
+      function addSuggestion(category, key, severity, text) {
+        if (!text || !severity) return;
+        const sig = category + '|' + key;
+        if (seenKeys.has(sig)) return;
+        seenKeys.add(sig);
+        suggestions.push({ category, severity, text });
+      }
+
+      // --- Attack Weaknesses ---
+
+      // Run game vs softer overall defense.
+      if (Number.isFinite(myOff.rushYdsPerAtt) && Number.isFinite(oppDef.totalYdsPerGame)) {
+        const myRushZ = adjZ('rush_yds_per_att', myOff.rushYdsPerAtt);
+        const oppDefTotalZ = adjZ('defTotalYdsPg', oppDef.totalYdsPerGame);
+        const sev = severityFromZ(myRushZ, oppDefTotalZ != null ? -oppDefTotalZ : null);
+        if (sev && myRushZ > 0.5 && oppDefTotalZ < -0.3) {
+          const leagueRush = metricMean('rush_yds_per_att');
+          const txtParts = [
+            'Attack: Lean into the ground game vs their softer run defense.',
+            `Your rush efficiency is ${fmtOne(myOff.rushYdsPerAtt)} YPC` +
+              (Number.isFinite(leagueRush) ? ` vs league ~${fmtOne(leagueRush)}.` : '.'),
+            Number.isFinite(oppDef.totalYdsPerGame)
+              ? `They allow ${fmtOne(oppDef.totalYdsPerGame)} yards per game on defense.`
+              : null
+          ].filter(Boolean);
+          addSuggestion('Attack', 'run-focus', sev, txtParts.join(' '));
+        }
+      }
+
+      // Passing attack vs light pass rush / ball hawks.
+      if (Number.isFinite(myOff.passYdsPerAtt)) {
+        const myPassZ = adjZ('pass_yds_per_att', myOff.passYdsPerAtt);
+        const oppDefIntsZ = Number.isFinite(oppAgg.def_ints_per_game)
+          ? adjZ('def_ints_per_game', oppAgg.def_ints_per_game)
+          : null;
+        const oppDefSacksZ = Number.isFinite(oppAgg.def_sacks_per_game)
+          ? adjZ('def_sacks_per_game', oppAgg.def_sacks_per_game)
+          : null;
+        const sev = severityFromZ(myPassZ, Math.min(oppDefIntsZ ?? 0, oppDefSacksZ ?? 0));
+        if (sev && myPassZ > 0.6 && ((oppDefIntsZ != null && oppDefIntsZ < 0.2) || (oppDefSacksZ != null && oppDefSacksZ < 0.2))) {
+          const leaguePass = metricMean('pass_yds_per_att');
+          const txtParts = [
+            'Attack: Lean into efficient passing against a defense that creates less disruption.',
+            `You average ${fmtOne(myOff.passYdsPerAtt)} yards per attempt` +
+              (Number.isFinite(leaguePass) ? ` vs league ~${fmtOne(leaguePass)}.` : '.'),
+            Number.isFinite(oppAgg.def_sacks_per_game)
+              ? `They generate only ${fmtOne(oppAgg.def_sacks_per_game)} sacks per game`
+              : null,
+            Number.isFinite(oppAgg.def_ints_per_game)
+              ? `and ${fmtOne(oppAgg.def_ints_per_game)} INTs per game.`
+              : null
+          ].filter(Boolean);
+          addSuggestion('Attack', 'pass-focus', sev, txtParts.join(' '));
+        }
+      }
+
+      // --- Protect the Ball / QB ---
+
+      // Turnover risk vs ball-hawking defense.
+      if (Number.isFinite(myAgg.pass_ints_per_game) && Number.isFinite(oppAgg.def_ints_per_game)) {
+        const myIntsZ = rawZ('pass_ints_per_game', myAgg.pass_ints_per_game);
+        const oppBallHawkZ = adjZ('def_ints_per_game', oppAgg.def_ints_per_game);
+        const sev = severityFromZ(myIntsZ, oppBallHawkZ);
+        if (sev && myIntsZ > 0.6 && oppBallHawkZ > 0.6) {
+          const leagueInts = metricMean('pass_ints_per_game');
+          const txtParts = [
+            'Protect: Emphasize ball security against a takeaway-focused defense.',
+            `You throw ${fmtOne(myAgg.pass_ints_per_game)} INTs per game` +
+              (Number.isFinite(leagueInts) ? ` vs league ~${fmtOne(leagueInts)}.` : '.'),
+            `They average ${fmtOne(oppAgg.def_ints_per_game)} defensive INTs per game.`
+          ];
+          addSuggestion('Protect', 'turnovers', sev, txtParts.join(' '));
+        }
+      }
+
+      // Sack risk vs strong pass rush.
+      if (Number.isFinite(myAgg.sacks_allowed_per_game) && Number.isFinite(oppAgg.def_sacks_per_game)) {
+        const mySacksZ = rawZ('sacks_allowed_per_game', myAgg.sacks_allowed_per_game);
+        const oppRushZ = adjZ('def_sacks_per_game', oppAgg.def_sacks_per_game);
+        const sev = severityFromZ(mySacksZ, oppRushZ);
+        if (sev && mySacksZ > 0.6 && oppRushZ > 0.6) {
+          const leagueSacksAllowed = metricMean('sacks_allowed_per_game');
+          const txtParts = [
+            'Protect: Keep the QB clean versus a strong pass rush.',
+            `You allow ${fmtOne(myAgg.sacks_allowed_per_game)} sacks per game` +
+              (Number.isFinite(leagueSacksAllowed) ? ` vs league ~${fmtOne(leagueSacksAllowed)}.` : '.'),
+            `They record ${fmtOne(oppAgg.def_sacks_per_game)} sacks per game on defense.`
+          ];
+          addSuggestion('Protect', 'sacks', sev, txtParts.join(' '));
+        }
+      }
+
+      // --- Defensive Priorities ---
+
+      // Opponent elite passing vs shaky pass defense proxy.
+      if (Number.isFinite(oppOff.passYdsPerAtt) && Number.isFinite(myDef.pointsPerGame)) {
+        const oppPassZ = adjZ('pass_yds_per_att', oppOff.passYdsPerAtt);
+        const myDefPtsZ = adjZ('ptsAgainstPg', myDef.pointsPerGame);
+        const sev = severityFromZ(oppPassZ, myDefPtsZ != null ? -myDefPtsZ : null);
+        if (sev && oppPassZ > 0.8 && myDefPtsZ < 0.2) {
+          addSuggestion(
+            'Defend',
+            'pass-defense',
+            sev,
+            'Defend: Prioritize coverage against their strong passing attack — lean on split-safety looks, disguise coverages, and limit explosive plays.'
+          );
+        }
+      }
+
+      // Opponent strong rushing vs soft run defense proxy.
+      if (Number.isFinite(oppOff.rushYdsPerAtt) && Number.isFinite(myDef.totalYdsPerGame)) {
+        const oppRushZ = adjZ('rush_yds_per_att', oppOff.rushYdsPerAtt);
+        const myDefTotalZ = adjZ('defTotalYdsPg', myDef.totalYdsPerGame);
+        const sev = severityFromZ(oppRushZ, myDefTotalZ != null ? -myDefTotalZ : null);
+        if (sev && oppRushZ > 0.8 && myDefTotalZ < 0.2) {
+          addSuggestion(
+            'Defend',
+            'run-defense',
+            sev,
+            'Defend: Commit extra bodies to the run on early downs — load the box, fit aggressively, and force them into obvious passing situations.'
+          );
+        }
+      }
+
+      // --- Usage-Driven Suggestions (opponent tendencies) ---
+
+      if (Number.isFinite(oppUse.wr1_share) && Number.isFinite(oppUse.top3_share)) {
+        const wr1Share = oppUse.wr1_share;
+        const top3Share = oppUse.top3_share;
+        if (wr1Share >= 28 && top3Share >= 65) {
+          const sev = wr1Share >= 32 && top3Share >= 70 ? 'major' : 'moderate';
+          const wr1Name = oppUse.wr1_name || 'their WR1';
+          addSuggestion(
+            'Defend',
+            'wr1-bracket',
+            sev,
+            `Defend: Build the gameplan around slowing ${wr1Name} — they funnel ${fmtOne(wr1Share)}% of targets to WR1 and ${fmtOne(top3Share)}% to the top three options. Use brackets and dedicated help.`
+          );
+        }
+      }
+
+      if (Number.isFinite(oppUse.te_target_share) && oppUse.te_target_share >= 24) {
+        const sev = oppUse.te_target_share >= 30 ? 'major' : 'moderate';
+        const teName = oppUse.te1_name || 'their TE1';
+        addSuggestion(
+          'Defend',
+          'te-usage',
+          sev,
+          `Defend: Respect the tight end — ${teName} is heavily featured with ${fmtOne(oppUse.te_target_share)}% of targets. Prioritize seam and middle-of-field coverage.`
+        );
+      }
+
+      if (Number.isFinite(oppUse.rb1_share)) {
+        const rbbcFlag = String(oppUse.rbbc).toLowerCase() === 'true';
+        if (!rbbcFlag && oppUse.rb1_share >= 65) {
+          const sev = oppUse.rb1_share >= 75 ? 'major' : 'moderate';
+          const rb1Name = oppUse.rb1_name || 'their RB1';
+          addSuggestion(
+            'Defend',
+            'bellcow-rb',
+            sev,
+            `Defend: Expect a bellcow back — ${rb1Name} handles ${fmtOne(oppUse.rb1_share)}% of team rushes. Fit the run with him as the primary focus.`
+          );
+        } else if (rbbcFlag && oppUse.rb1_share >= 35 && Number.isFinite(oppUse.rb2_share) && oppUse.rb2_share >= 25) {
+          const sev = 'moderate';
+          addSuggestion(
+            'Defend',
+            'rbbc',
+            sev,
+            'Defend: They use a RB committee — plan for multiple backs with different styles and adjust personnel packages accordingly.'
+          );
+        }
+      }
+
+      // Fallback: if nothing triggered, still provide at least a light guidance item.
+      if (!suggestions.length && Number.isFinite(myTeam.indices.teamStrengthIndex) && Number.isFinite(oppTeam.indices.teamStrengthIndex)) {
+        const myStr = myTeam.indices.teamStrengthIndex;
+        const oppStr = oppTeam.indices.teamStrengthIndex;
+        const labelMy = leagueStats.strengthLabel(myStr, 'teamStrengthIndex');
+        const labelOpp = leagueStats.strengthLabel(oppStr, 'teamStrengthIndex');
+        suggestions.push({
+          category: 'Attack',
+          severity: 'moderate',
+          text: `Overall: You profile as a ${labelMy.toLowerCase()} team vs their ${labelOpp.toLowerCase()} profile — lean into what you already do well and avoid overcomplicating the plan.`
+        });
+      }
+
+      return suggestions;
+    }
+
+    function renderMatchupOverview(root, myTeam, oppTeam, leagueStats, windowMode) {
+      root.html('');
+      if (!myTeam || !oppTeam) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Select both My team and Opponent to see the matchup overview.');
+        return;
+      }
+      if (myTeam.team === oppTeam.team) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Choose two different teams to compare.');
+        return;
+      }
+
+      const teamsRow = root.append('div').attr('class', 'teams-row');
+
+      function formatRecentRecord(rec) {
+        if (!rec) return '';
+        const w = rec.wins ?? 0;
+        const l = rec.losses ?? 0;
+        const t = rec.ties ?? 0;
+        const base = `${w}-${l}`;
+        return t ? `${base}-${t}` : base;
+      }
+
+      function addTeamCard(holder, team, isOpponent) {
+        const card = holder.append('div')
+          .attr('class', 'team-card' + (isOpponent ? ' opponent' : ''));
+
+        const logo = card.append('div').attr('class', 'team-logo');
+        if (team.logoUrl) {
+          logo.append('img').attr('src', team.logoUrl).attr('alt', team.team + ' logo');
+        } else {
+          logo.append('span').text(team.team[0] || '?');
+        }
+
+        const meta = card.append('div').attr('class', 'team-meta');
+        meta.append('div')
+          .attr('class', 'team-name')
+          .text(team.team);
+
+        const rec = team.record || {};
+        const rank = team.rankings || {};
+        const recent = team.recentForm || null;
+        const subParts = [];
+        subParts.push(`Record: ${formatRecord(rec)}${Number.isFinite(rec.win_pct) ? ` (${d3.format('.1%')(rec.win_pct)})` : ''}`);
+        if (Number.isFinite(rank.rank)) subParts.push(`Rank: #${rank.rank}`);
+        if (Number.isFinite(rank.elo)) subParts.push(`ELO: ${d3.format('.1f')(rank.elo)}`);
+
+        meta.append('div')
+          .attr('class', 'team-sub')
+          .text(subParts.join(' • '));
+
+        const tags = meta.append('div').attr('class', 'team-tags');
+        if (team.conference || team.division) {
+          tags.append('span')
+            .attr('class', 'pill light')
+            .text(`${team.conference || ''}${team.conference && team.division ? ' • ' : ''}${team.division || ''}`);
+        }
+
+        const strengthIndex = team.indices.teamStrengthIndex;
+        if (Number.isFinite(strengthIndex) && leagueStats) {
+          const label = leagueStats.strengthLabel(strengthIndex, 'teamStrengthIndex');
+          tags.append('span')
+            .attr('class', 'pill')
+            .text(`Team strength: ${label}`);
+        } else if (leagueStats && Number.isFinite(rec.win_pct)) {
+          const label = leagueStats.strengthLabel(rec.win_pct, 'win_pct');
+          tags.append('span')
+            .attr('class', 'pill')
+            .text(`Win profile: ${label}`);
+        }
+
+        if (Number.isFinite(team.offense.pointsPerGame)) {
+          tags.append('span')
+            .attr('class', 'pill light')
+            .text(`Off PPG: ${d3.format('.1f')(team.offense.pointsPerGame)}`);
+        }
+        if (Number.isFinite(team.defense.pointsPerGame)) {
+          tags.append('span')
+            .attr('class', 'pill light red')
+            .text(`Def PPG allowed: ${d3.format('.1f')(team.defense.pointsPerGame)}`);
+        }
+
+        if (windowMode === 'recent4' && recent && recent.games) {
+          tags.append('span')
+            .attr('class', 'pill light')
+            .text(
+              `Last ${recent.games} g: ${formatRecentRecord(recent)}` +
+              (Number.isFinite(recent.win_pct) ? ` (${d3.format('.1%')(recent.win_pct)})` : '')
+            );
+
+          if (recent.offTrend === 'up') {
+            tags.append('span')
+              .attr('class', 'pill')
+              .text('Offense trending up');
+          } else if (recent.offTrend === 'down') {
+            tags.append('span')
+              .attr('class', 'pill red')
+              .text('Offense trending down');
+          }
+
+          if (recent.defTrend === 'up') {
+            tags.append('span')
+              .attr('class', 'pill')
+              .text('Defense trending up');
+          } else if (recent.defTrend === 'down') {
+            tags.append('span')
+              .attr('class', 'pill red')
+              .text('Defense trending down');
+          }
+        }
+      }
+
+      addTeamCard(teamsRow, myTeam, false);
+      addTeamCard(teamsRow, oppTeam, true);
+
+      const edge = root.append('div').attr('class', 'edge-summary');
+
+      const myWin = myTeam.record.win_pct;
+      const oppWin = oppTeam.record.win_pct;
+      const myStrength = myTeam.indices.teamStrengthIndex;
+      const oppStrength = oppTeam.indices.teamStrengthIndex;
+
+      let headline = 'On paper this looks like a fairly even matchup.';
+      let who = 'Even';
+
+      const winDiff = (Number.isFinite(myWin) && Number.isFinite(oppWin)) ? (myWin - oppWin) : 0;
+      const strengthDiff = (Number.isFinite(myStrength) && Number.isFinite(oppStrength))
+        ? (myStrength - oppStrength)
+        : 0;
+
+      const combined = (winDiff * 3) + (strengthDiff / 2);
+
+      if (combined > 0.8) {
+        headline = 'Your team has a clear overall edge in this matchup.';
+        who = 'Strong edge: Your team';
+      } else if (combined > 0.25) {
+        headline = 'Your team has a slight but noticeable edge.';
+        who = 'Slight edge: Your team';
+      } else if (combined < -0.8) {
+        headline = 'The opponent holds a clear advantage on paper.';
+        who = 'Strong edge: Opponent';
+      } else if (combined < -0.25) {
+        headline = 'The opponent has a small statistical edge.';
+        who = 'Slight edge: Opponent';
+      }
+
+      edge.append('span')
+        .attr('class', 'edge-highlight')
+        .text(who);
+
+      edge.append('span')
+        .attr('class', 'edge-secondary')
+        .text(headline);
+
+      const detail = [];
+      const fmtWinPct = d3.format('.1%');
+      if (Number.isFinite(myWin) && Number.isFinite(oppWin)) {
+        detail.push(`Season win%: ${fmtWinPct(myWin)} vs ${fmtWinPct(oppWin)}`);
+      }
+      if (Number.isFinite(myStrength) && Number.isFinite(oppStrength)) {
+        const labelMy = leagueStats ? leagueStats.strengthLabel(myStrength, 'teamStrengthIndex') : '';
+        const labelOpp = leagueStats ? leagueStats.strengthLabel(oppStrength, 'teamStrengthIndex') : '';
+        detail.push(`Team strength index: ${d3.format('.2f')(myStrength)} (${labelMy}) vs ${d3.format('.2f')(oppStrength)} (${labelOpp})`);
+      }
+      if (Number.isFinite(myTeam.offense.pointsPerGame) && Number.isFinite(oppTeam.offense.pointsPerGame)) {
+        detail.push(`Offense PPG: ${d3.format('.1f')(myTeam.offense.pointsPerGame)} vs ${d3.format('.1f')(oppTeam.offense.pointsPerGame)}`);
+      }
+      if (Number.isFinite(myTeam.defense.pointsPerGame) && Number.isFinite(oppTeam.defense.pointsPerGame)) {
+        detail.push(`Defense PPG allowed: ${d3.format('.1f')(myTeam.defense.pointsPerGame)} vs ${d3.format('.1f')(oppTeam.defense.pointsPerGame)}`);
+      }
+
+      const myRecent = myTeam.recentForm || null;
+      const oppRecent = oppTeam.recentForm || null;
+      if (windowMode === 'recent4' && myRecent && oppRecent && myRecent.games && oppRecent.games) {
+        if (Number.isFinite(myRecent.win_pct) && Number.isFinite(oppRecent.win_pct)) {
+          detail.push(
+            `Last ${Math.min(myRecent.games, oppRecent.games)} games win%: ` +
+            `${fmtWinPct(myRecent.win_pct)} vs ${fmtWinPct(oppRecent.win_pct)}`
+          );
+        }
+        if (Number.isFinite(myRecent.ptsForPerGame) && Number.isFinite(oppRecent.ptsForPerGame)) {
+          detail.push(
+            `Recent PPG (last ${Math.min(myRecent.games, oppRecent.games)}): ` +
+            `${d3.format('.1f')(myRecent.ptsForPerGame)} vs ${d3.format('.1f')(oppRecent.ptsForPerGame)}`
+          );
+        }
+        if (Number.isFinite(myRecent.ptsAgainstPerGame) && Number.isFinite(oppRecent.ptsAgainstPerGame)) {
+          detail.push(
+            `Recent PPG allowed (last ${Math.min(myRecent.games, oppRecent.games)}): ` +
+            `${d3.format('.1f')(myRecent.ptsAgainstPerGame)} vs ${d3.format('.1f')(oppRecent.ptsAgainstPerGame)}`
+          );
+        }
+      }
+
+      if (detail.length) {
+        edge.append('span')
+          .attr('class', 'edge-secondary')
+          .text(detail.join(' • '));
+      }
+    }
+
+    function renderOffenseVsDefense(root, myTeam, oppTeam, leagueStats, windowMode) {
+      root.html('');
+      if (!myTeam || !oppTeam) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Select both My team and Opponent to see how your offense stacks up against their defense.');
+        return;
+      }
+      if (myTeam.team === oppTeam.team) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Choose two different teams to see matchup tendencies.');
+        return;
+      }
+
+      const off = myTeam.offense || {};
+      const myAgg = myTeam.rawAggregates || {};
+      const oppDef = oppTeam.defense || {};
+      const oppAgg = oppTeam.rawAggregates || {};
+      const myRecent = myTeam.recentForm || null;
+      const oppRecent = oppTeam.recentForm || null;
+
+      const grid = root.append('div').attr('class', 'metric-grid');
+
+      const effCol = grid.append('div').attr('class', 'metric-col');
+      effCol.append('h4').text('Efficiency');
+
+      function addRow(col, label, myVal, myMetric, oppVal, oppMetric, opts = {}) {
+        const row = col.append('div').attr('class', 'metric-row');
+        row.append('div').attr('class', 'metric-label').text(label);
+        const right = row.append('div').attr('class', 'metric-values');
+
+        const parts = [];
+        if (Number.isFinite(myVal)) {
+          const base = opts.format ? opts.format(myVal) : fmtOne(myVal);
+          let text = `You: ${base}`;
+          if (leagueStats && myMetric) {
+            const lbl = leagueStats.strengthLabel(myVal, myMetric);
+            text += ` (${lbl})`;
+          }
+          parts.push(text);
+        }
+
+        if (Number.isFinite(oppVal)) {
+          const base = opts.format ? opts.format(oppVal) : fmtOne(oppVal);
+          let text = `Them: ${base}`;
+          if (leagueStats && oppMetric) {
+            const lbl = leagueStats.strengthLabel(oppVal, oppMetric);
+            text += ` (${lbl})`;
+          }
+          parts.push(text);
+        }
+
+        right.text(parts.length ? parts.join(' • ') : 'N/A');
+      }
+
+      addRow(
+        effCol,
+        'Pass yards per attempt',
+        off.passYdsPerAtt,
+        'pass_yds_per_att',
+        null,
+        null,
+        { format: fmtOne }
+      );
+      addRow(
+        effCol,
+        'Rush yards per attempt',
+        off.rushYdsPerAtt,
+        'rush_yds_per_att',
+        null,
+        null,
+        { format: fmtOne }
+      );
+      addRow(
+        effCol,
+        'Yards per play vs def yards / game',
+        off.yardsPerPlay,
+        'yds_per_play',
+        oppDef.totalYdsPerGame,
+        'defTotalYdsPg',
+        { format: fmtOne }
+      );
+
+      const scoringCol = grid.append('div').attr('class', 'metric-col');
+      scoringCol.append('h4').text('Scoring & Explosiveness');
+
+      addRow(
+        scoringCol,
+        'Offensive PPG vs def PPG allowed',
+        off.pointsPerGame,
+        'ptsForPg',
+        oppDef.pointsPerGame,
+        'ptsAgainstPg',
+        { format: fmtOne }
+      );
+      if (windowMode === 'recent4' && myRecent && oppRecent) {
+        addRow(
+          scoringCol,
+          'Recent PPG vs recent PPG allowed (last 4)',
+          safeNum(myRecent.ptsForPerGame),
+          null,
+          safeNum(oppRecent.ptsAgainstPerGame),
+          null,
+          { format: fmtOne }
+        );
+      }
+      addRow(
+        scoringCol,
+        'Explosive plays per game',
+        safeNum(myAgg.explosive_plays_per_game),
+        null,
+        safeNum(oppAgg.explosive_plays_per_game),
+        null,
+        { format: fmtOne }
+      );
+
+      const turnoverCol = grid.append('div').attr('class', 'metric-col');
+      turnoverCol.append('h4').text('Turnovers & Pressure');
+
+      addRow(
+        turnoverCol,
+        'Turnover differential',
+        safeNum(myAgg.turnover_diff),
+        null,
+        safeNum(oppAgg.turnover_diff),
+        null,
+        { format: v => d3.format('+.1f')(v) }
+      );
+      addRow(
+        turnoverCol,
+        'INTs thrown vs def INTs / game',
+        safeNum(myAgg.pass_ints_per_game),
+        null,
+        safeNum(oppAgg.def_ints_per_game),
+        null,
+        { format: fmtOne }
+      );
+      addRow(
+        turnoverCol,
+        'Sacks allowed vs def sacks / game',
+        safeNum(myAgg.sacks_allowed_per_game),
+        null,
+        safeNum(oppAgg.def_sacks_per_game),
+        null,
+        { format: fmtOne }
+      );
+
+      root.append('div')
+        .attr('class', 'metric-note')
+        .text('League-context labels show whether each side is a strength, weakness, or roughly league average. Use the Last 4 games view to see recent scoring trends.');
+    }
+
+    function renderDefenseVsOffense(root, myTeam, oppTeam, leagueStats, windowMode) {
+      root.html('');
+      if (!myTeam || !oppTeam) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Select both teams to compare your defense against their offense.');
+        return;
+      }
+      if (myTeam.team === oppTeam.team) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Choose two different teams to see matchup tendencies.');
+        return;
+      }
+
+      const myDef = myTeam.defense || {};
+      const myAgg = myTeam.rawAggregates || {};
+      const oppOff = oppTeam.offense || {};
+      const oppAgg = oppTeam.rawAggregates || {};
+      const myRecent = myTeam.recentForm || null;
+      const oppRecent = oppTeam.recentForm || null;
+
+      const grid = root.append('div').attr('class', 'metric-grid');
+
+      const effCol = grid.append('div').attr('class', 'metric-col');
+      effCol.append('h4').text('Efficiency');
+
+      function addRow(col, label, myVal, myMetric, oppVal, oppMetric, opts = {}) {
+        const row = col.append('div').attr('class', 'metric-row');
+        row.append('div').attr('class', 'metric-label').text(label);
+        const right = row.append('div').attr('class', 'metric-values');
+
+        const parts = [];
+        if (Number.isFinite(myVal)) {
+          const base = opts.format ? opts.format(myVal) : fmtOne(myVal);
+          let text = `You: ${base}`;
+          if (leagueStats && myMetric) {
+            const lbl = leagueStats.strengthLabel(myVal, myMetric);
+            text += ` (${lbl})`;
+          }
+          parts.push(text);
+        }
+
+        if (Number.isFinite(oppVal)) {
+          const base = opts.format ? opts.format(oppVal) : fmtOne(oppVal);
+          let text = `Them: ${base}`;
+          if (leagueStats && oppMetric) {
+            const lbl = leagueStats.strengthLabel(oppVal, oppMetric);
+            text += ` (${lbl})`;
+          }
+          parts.push(text);
+        }
+
+        right.text(parts.length ? parts.join(' • ') : 'N/A');
+      }
+
+      addRow(
+        effCol,
+        'Yards per play allowed vs offense yds / play',
+        myDef.totalYdsPerGame,
+        'defTotalYdsPg',
+        oppOff.yardsPerPlay,
+        'yds_per_play',
+        { format: fmtOne }
+      );
+      addRow(
+        effCol,
+        'Points allowed vs offense PPG',
+        myDef.pointsPerGame,
+        'ptsAgainstPg',
+        oppOff.pointsPerGame,
+        'ptsForPg',
+        { format: fmtOne }
+      );
+      if (windowMode === 'recent4' && myRecent && oppRecent) {
+        addRow(
+          effCol,
+          'Recent PPG allowed vs recent PPG (last 4)',
+          safeNum(myRecent.ptsAgainstPerGame),
+          null,
+          safeNum(oppRecent.ptsForPerGame),
+          null,
+          { format: fmtOne }
+        );
+      }
+
+      const havocCol = grid.append('div').attr('class', 'metric-col');
+      havocCol.append('h4').text('Havoc & Takeaways');
+
+      addRow(
+        havocCol,
+        'Def sacks vs sacks allowed / game',
+        safeNum(myAgg.def_sacks_per_game),
+        null,
+        safeNum(oppAgg.sacks_allowed_per_game),
+        null,
+        { format: fmtOne }
+      );
+      addRow(
+        havocCol,
+        'Def INTs vs INTs thrown / game',
+        safeNum(myAgg.def_ints_per_game),
+        null,
+        safeNum(oppAgg.pass_ints_per_game),
+        null,
+        { format: fmtOne }
+      );
+      addRow(
+        havocCol,
+        'Turnover differential comparison',
+        safeNum(myAgg.turnover_diff),
+        null,
+        safeNum(oppAgg.turnover_diff),
+        null,
+        { format: v => d3.format('+.1f')(v) }
+      );
+
+      root.append('div')
+        .attr('class', 'metric-note')
+        .text('Look for defenses with strong havoc numbers matched up against offenses that give the ball away or take a lot of sacks.');
+    }
+
+    function describePassStyle(usageRow) {
+      if (!usageRow) return '';
+      const ratio = safeNum(usageRow.pass_rush_ratio);
+      if (!Number.isFinite(ratio)) return '';
+      if (ratio >= 1.8) return 'Very pass-heavy';
+      if (ratio >= 1.4) return 'Pass leaning';
+      if (ratio <= 0.75) return 'Very run-heavy';
+      if (ratio <= 0.95) return 'Run leaning';
+      return 'Balanced';
+    }
+
+    function renderTendencies(root, myTeam, oppTeam) {
+      root.html('');
+      if (!myTeam || !oppTeam) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Select both teams to see pass/run distribution, key skill players, and usage concentration.');
+        return;
+      }
+      if (myTeam.team === oppTeam.team) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Choose two different teams to compare tendencies.');
+        return;
+      }
+
+      const grid = root.append('div').attr('class', 'tendencies-grid');
+
+      function addTeamBlock(team, heading) {
+        const usage = team.rawUsage || {};
+        const box = grid.append('div').attr('class', 'tendencies-team');
+        box.append('h4').text(heading + ': ' + team.team);
+
+        const ratio = safeNum(usage.pass_rush_ratio);
+        if (Number.isFinite(ratio)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(`Pass / rush ratio: ${fmtOne(ratio)} (${describePassStyle(usage)})`);
+        }
+
+        const wrShare = safeNum(usage.wr_target_share);
+        const teShare = safeNum(usage.te_target_share);
+        const rbShare = safeNum(usage.rb_target_share);
+        if (Number.isFinite(wrShare) || Number.isFinite(teShare) || Number.isFinite(rbShare)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(
+              'Target split WR / TE / RB: ' +
+              [wrShare, teShare, rbShare].map(v => Number.isFinite(v) ? fmtOne(v) + '%' : '—').join(' / ')
+            );
+        }
+
+        const top3 = safeNum(usage.top3_share);
+        const passConc = safeNum(usage.pass_concentration);
+        const rushConc = safeNum(usage.rush_concentration);
+        if (Number.isFinite(top3)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(`Top 3 receivers share: ${fmtOne(top3)}%`);
+        }
+        if (Number.isFinite(passConc)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(`Pass distribution concentration: ${fmtOne(passConc)}`);
+        }
+        if (Number.isFinite(rushConc)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(`Rush distribution concentration: ${fmtOne(rushConc)}`);
+        }
+
+        const wr1 = usage.wr1_name;
+        const wr1Share = safeNum(usage.wr1_share);
+        if (wr1 && Number.isFinite(wr1Share)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(`WR1: ${wr1} (${fmtOne(wr1Share)}% of targets)`);
+        }
+
+        const rb1 = usage.rb1_name;
+        const rb1Share = safeNum(usage.rb1_share);
+        if (rb1 && Number.isFinite(rb1Share)) {
+          box.append('div')
+            .attr('class', 'tendencies-line')
+            .text(`RB1: ${rb1} (${fmtOne(rb1Share)}% of rushes)`);
+        }
+      }
+
+      addTeamBlock(myTeam, 'Your team');
+      addTeamBlock(oppTeam, 'Opponent');
+    }
+
+    function renderSuggestions(root, myTeam, oppTeam, leagueStats) {
+      root.html('');
+      if (!myTeam || !oppTeam) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Select both teams to generate rule-based gameplan suggestions.');
+        return;
+      }
+      if (myTeam.team === oppTeam.team) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('Choose two different teams to see matchup-specific suggestions.');
+        return;
+      }
+
+      const suggestions = computeSuggestions(myTeam, oppTeam, leagueStats);
+      if (!suggestions.length) {
+        root.append('div')
+          .attr('class', 'empty-state')
+          .text('No strong statistical edges detected — play a balanced, opponent-agnostic gameplan.');
+        return;
+      }
+
+      const grouped = d3.group(suggestions, d => d.category);
+      const order = ['Attack', 'Protect', 'Defend'];
+
+      order.forEach(category => {
+        const list = grouped.get(category);
+        if (!list || !list.length) return;
+
+        const section = root.append('div').style('margin-bottom', '8px');
+        section.append('div')
+          .style('font-weight', '600')
+          .style('margin-bottom', '2px')
+          .text(category === 'Attack' ? 'Attack their weaknesses' :
+                category === 'Protect' ? 'Protect the ball & QB' :
+                'Defensive priorities');
+
+        const ul = section.append('ul').style('margin', '2px 0 4px 18px').style('padding', '0');
+        list.forEach(s => {
+          const li = ul.append('li');
+          const sevLabel = s.severity === 'major' ? 'High priority: ' :
+                           s.severity === 'moderate' ? 'Notable: ' : '';
+          li.text(sevLabel + s.text);
+        });
+      });
+    }
+
+    function render() {
+      const overviewRoot = d3.select('#matchup-overview');
+      const mySelect = d3.select('#my-team-select');
+      const oppSelect = d3.select('#opp-team-select');
+      const swapBtn = d3.select('#swap-teams-btn');
+      const windowModeInputs = d3.selectAll('input[name="window-mode"]');
+      const offenseRoot = d3.select('#offense-vs-defense');
+      const defenseRoot = d3.select('#defense-vs-offense');
+      const tendenciesRoot = d3.select('#tendencies');
+      const suggestionsRoot = d3.select('#suggestions');
+
+      let windowMode = 'season';
+
+      loadAllData().then(({ rankings, aggregated, usage, games }) => {
+        const { profiles, byTeam } = buildTeamProfiles(rankings, aggregated, usage);
+        const leagueStats = buildLeagueStats(profiles);
+        if (games && games.length) {
+          attachRecentForm(profiles, games, leagueStats, 4);
+        }
+        // Expose for later phases
+        window.leagueStats = leagueStats;
+        window.teamProfiles = profiles;
+
+        const options = profiles.map(p => ({
+          value: p.team,
+          label: (p.rankings.rank ? `#${p.rankings.rank} ` : '') + p.team
+        }));
+
+        function fillSelect(sel) {
+          sel.selectAll('option.team-opt').remove();
+          sel.selectAll('option.team-opt')
+            .data(options)
+            .enter()
+            .append('option')
+            .attr('class', 'team-opt')
+            .attr('value', d => d.value)
+            .text(d => d.label);
+        }
+
+        fillSelect(mySelect);
+        fillSelect(oppSelect);
+
+        function getSelectedProfiles() {
+          const myTeamName = mySelect.property('value');
+          const oppTeamName = oppSelect.property('value');
+          const myTeam = byTeam.get(myTeamName) || null;
+          const oppTeam = byTeam.get(oppTeamName) || null;
+          return { myTeam, oppTeam };
+        }
+
+        function update() {
+          const { myTeam, oppTeam } = getSelectedProfiles();
+          renderMatchupOverview(overviewRoot, myTeam, oppTeam, leagueStats, windowMode);
+          renderOffenseVsDefense(offenseRoot, myTeam, oppTeam, leagueStats, windowMode);
+          renderDefenseVsOffense(defenseRoot, myTeam, oppTeam, leagueStats, windowMode);
+          renderTendencies(tendenciesRoot, myTeam, oppTeam);
+          renderSuggestions(suggestionsRoot, myTeam, oppTeam, leagueStats);
+        }
+
+        mySelect.on('change', update);
+        oppSelect.on('change', update);
+
+        swapBtn.on('click', () => {
+          const myVal = mySelect.property('value');
+          const oppVal = oppSelect.property('value');
+          mySelect.property('value', oppVal);
+          oppSelect.property('value', myVal);
+          update();
+        });
+
+        windowModeInputs.on('change', function () {
+          const val = this && this.value;
+          if (val === 'recent4' || val === 'season') {
+            windowMode = val;
+            update();
+          }
+        });
+
+        // If there is a clear top-ranked team, preselect it as opponent
+        if (profiles.length) {
+          const top = profiles[0];
+          oppSelect.property('value', top.team);
+        }
+
+        update();
+      }).catch(err => {
+        console.error(err);
+        overviewRoot.html('');
+        overviewRoot.append('div')
+          .attr('class', 'empty-state')
+          .text('Error loading matchup data. Make sure you have run scripts/run_all_stats.py and that CSV files exist in output/.');
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
+</body>
+</html>

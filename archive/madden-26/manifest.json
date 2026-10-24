@@ -1,0 +1,3214 @@
+{
+  "game": "Madden 26",
+  "archived_on": "2026-10-24",
+  "new_cycle": "Madden 27",
+  "source_commit": "4a5ee61fc7e88a26ec24eb5871afb055ca246096",
+  "entries": [
+    {
+      "source": ".zenflow/tasks/add-punts-vs-ints-thrown-3c02/plan.md",
+      "path": ".zenflow/tasks/add-punts-vs-ints-thrown-3c02/plan.md",
+      "action": "moved",
+      "bytes": 1678,
+      "sha256": "1a454b68293f154e533468640dac06acb27132e53ebb0012e7ea5f2834ae56a1"
+    },
+    {
+      "source": ".zenflow/tasks/add-tests-for-roster-management-312a/plan.md",
+      "path": ".zenflow/tasks/add-tests-for-roster-management-312a/plan.md",
+      "action": "moved",
+      "bytes": 11272,
+      "sha256": "0794c35070eacfa7e5ff6f080c4cad95329c50e9950dd9682a5d97403c1660f1"
+    },
+    {
+      "source": ".zenflow/tasks/add-tests-for-roster-management-312a/requirements.md",
+      "path": ".zenflow/tasks/add-tests-for-roster-management-312a/requirements.md",
+      "action": "moved",
+      "bytes": 8957,
+      "sha256": "8ac70b115a4b32fed9371c311023ee4d4546d8484e738f1542a9ff8fe1a56980"
+    },
+    {
+      "source": ".zenflow/tasks/add-tests-for-roster-management-312a/spec.md",
+      "path": ".zenflow/tasks/add-tests-for-roster-management-312a/spec.md",
+      "action": "moved",
+      "bytes": 11555,
+      "sha256": "a325aa198c485660194427d491d82a306d7d59f257aed546160cddc01764a5f0"
+    },
+    {
+      "source": ".zenflow/tasks/adjust-contracts-f53f/plan.md",
+      "path": ".zenflow/tasks/adjust-contracts-f53f/plan.md",
+      "action": "moved",
+      "bytes": 15767,
+      "sha256": "4f522ec30ba060ac1b6c961d93b6d0c81d80c8b6d8c5fb2dafb6f6301ff461ce"
+    },
+    {
+      "source": ".zenflow/tasks/adjust-contracts-f53f/requirements.md",
+      "path": ".zenflow/tasks/adjust-contracts-f53f/requirements.md",
+      "action": "moved",
+      "bytes": 4870,
+      "sha256": "35deb0ee9a1569f21bb7c89d70ff1b6324c9b59e26469d871a021913265ce07d"
+    },
+    {
+      "source": ".zenflow/tasks/adjust-contracts-f53f/spec.md",
+      "path": ".zenflow/tasks/adjust-contracts-f53f/spec.md",
+      "action": "moved",
+      "bytes": 7522,
+      "sha256": "59d0b762943f351ac99e79817d3984e73538bcb144db9a25acd801add69254fd"
+    },
+    {
+      "source": ".zenflow/tasks/calc-playoff-probabilities-b53e/plan.md",
+      "path": ".zenflow/tasks/calc-playoff-probabilities-b53e/plan.md",
+      "action": "moved",
+      "bytes": 3330,
+      "sha256": "55ed6b91e2bba452661d9073bff772fb7256edeb4cc4a6a40c7357b36eaca9ec"
+    },
+    {
+      "source": ".zenflow/tasks/calc-playoff-probabilities-b53e/report.md",
+      "path": ".zenflow/tasks/calc-playoff-probabilities-b53e/report.md",
+      "action": "moved",
+      "bytes": 2932,
+      "sha256": "24c8a639b6fd96ec633833a84030d6630ba5a885124f3900197946d8ed38b167"
+    },
+    {
+      "source": ".zenflow/tasks/calc-playoff-probabilities-b53e/spec.md",
+      "path": ".zenflow/tasks/calc-playoff-probabilities-b53e/spec.md",
+      "action": "moved",
+      "bytes": 7054,
+      "sha256": "29fbfafc0f6cd2a088f8f2df6904d5edf3608a7b502d97cccf69d2730be24319"
+    },
+    {
+      "source": ".zenflow/tasks/calculate-sos-fo-0696/plan.md",
+      "path": ".zenflow/tasks/calculate-sos-fo-0696/plan.md",
+      "action": "moved",
+      "bytes": 11229,
+      "sha256": "792877e4ff09249c131ab58773082b10ed2559f62aaa640d79639c48c73acf64"
+    },
+    {
+      "source": ".zenflow/tasks/calculate-sos-fo-0696/requirements.md",
+      "path": ".zenflow/tasks/calculate-sos-fo-0696/requirements.md",
+      "action": "moved",
+      "bytes": 6522,
+      "sha256": "1f4b9e4ccab3ac71735e2d707342196f0e135cae7c0a65cd6d1b93ef018c356b"
+    },
+    {
+      "source": ".zenflow/tasks/calculate-sos-fo-0696/spec.md",
+      "path": ".zenflow/tasks/calculate-sos-fo-0696/spec.md",
+      "action": "moved",
+      "bytes": 10915,
+      "sha256": "8bbfbcb3d02d092399d35886b955edffcc588cbb8204c0c1f9c75bffc2e5b024"
+    },
+    {
+      "source": ".zenflow/tasks/change-schetter-1192/plan.md",
+      "path": ".zenflow/tasks/change-schetter-1192/plan.md",
+      "action": "moved",
+      "bytes": 1665,
+      "sha256": "54f1b2fece1789705f63fb089531a850714d77421bd9ceaea7a70524fc5e8505"
+    },
+    {
+      "source": ".zenflow/tasks/cleeanup-the-project-8f73/plan.md",
+      "path": ".zenflow/tasks/cleeanup-the-project-8f73/plan.md",
+      "action": "moved",
+      "bytes": 9514,
+      "sha256": "2d666f46069144515ef9688b64c1c16f89cb2739f8c907b505de5c1af91f480d"
+    },
+    {
+      "source": ".zenflow/tasks/cleeanup-the-project-8f73/requirements.md",
+      "path": ".zenflow/tasks/cleeanup-the-project-8f73/requirements.md",
+      "action": "moved",
+      "bytes": 20885,
+      "sha256": "9ba344d11343624da693262f931e07411740ab4070c2882e34b42b0e9e369338"
+    },
+    {
+      "source": ".zenflow/tasks/cleeanup-the-project-8f73/spec.md",
+      "path": ".zenflow/tasks/cleeanup-the-project-8f73/spec.md",
+      "action": "moved",
+      "bytes": 22171,
+      "sha256": "f37d6f0fd91a38f3acba015bd482cb57c74b9d59b517eae83ba029349e0a8035"
+    },
+    {
+      "source": ".zenflow/tasks/cut-penalty-change-a84f/implementation.md",
+      "path": ".zenflow/tasks/cut-penalty-change-a84f/implementation.md",
+      "action": "moved",
+      "bytes": 1798,
+      "sha256": "5c11026a8fa62e71e22ffab9bc72056df96a9bdcd4ae8fc526eb7771108e9f03"
+    },
+    {
+      "source": ".zenflow/tasks/cut-penalty-change-a84f/investigation.md",
+      "path": ".zenflow/tasks/cut-penalty-change-a84f/investigation.md",
+      "action": "moved",
+      "bytes": 4172,
+      "sha256": "469b6987eeb1cc3bfb41342e32e1869a38dfefc794f5bf8a24dce6d175372a1c"
+    },
+    {
+      "source": ".zenflow/tasks/cut-penalty-change-a84f/plan.md",
+      "path": ".zenflow/tasks/cut-penalty-change-a84f/plan.md",
+      "action": "moved",
+      "bytes": 1695,
+      "sha256": "393b15fa4d8b3d596739e159303a1ea676a514a277cf27e012a2dcad54c03eb4"
+    },
+    {
+      "source": ".zenflow/tasks/cut-penalty-change-a84f/solution.md",
+      "path": ".zenflow/tasks/cut-penalty-change-a84f/solution.md",
+      "action": "moved",
+      "bytes": 3849,
+      "sha256": "e9075e513d180758d25af83e25cc3bea415cb95b2fd4c0586c64bd158ee0f795"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-9781/plan.md",
+      "path": ".zenflow/tasks/depth-chart-management-9781/plan.md",
+      "action": "moved",
+      "bytes": 3199,
+      "sha256": "d3d2d44b72fdd920dc3c149d57ff811b3bedf1ba1399c0738bb7fec983bf4d25"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-9781/report.md",
+      "path": ".zenflow/tasks/depth-chart-management-9781/report.md",
+      "action": "moved",
+      "bytes": 1476,
+      "sha256": "96ddc088ab3e5baa6da3507f0826442e9eeec1f6a9a4cde6331064ad8cb431a2"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-9781/spec.md",
+      "path": ".zenflow/tasks/depth-chart-management-9781/spec.md",
+      "action": "moved",
+      "bytes": 2600,
+      "sha256": "998dddb6ebb4454c5c51a001f80d060f39c3ad9f1c5e595cb734ecf2f701a565"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-ce01/plan.md",
+      "path": ".zenflow/tasks/depth-chart-management-ce01/plan.md",
+      "action": "moved",
+      "bytes": 4633,
+      "sha256": "5524de3f4272796fc82ce9ea08ed95c8f78dbfd4b4dec8ce89dc482ebf2f45bb"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-ce01/report.md",
+      "path": ".zenflow/tasks/depth-chart-management-ce01/report.md",
+      "action": "moved",
+      "bytes": 2331,
+      "sha256": "0e8e5ce25f8ed92bd8b869ff717e4395a2da3211725a9ea9f4b4fd408dbd78e0"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-ce01/review.md",
+      "path": ".zenflow/tasks/depth-chart-management-ce01/review.md",
+      "action": "moved",
+      "bytes": 5239,
+      "sha256": "34345a577b1ce54235de419d8ff076670ff608592c2992fbc1f9505608f34dce"
+    },
+    {
+      "source": ".zenflow/tasks/depth-chart-management-ce01/spec.md",
+      "path": ".zenflow/tasks/depth-chart-management-ce01/spec.md",
+      "action": "moved",
+      "bytes": 6143,
+      "sha256": "b4c0eeac402ea2722a3a0bc8fa2bfca6d12aae4f2e4eafc80d905a2d7576bd80"
+    },
+    {
+      "source": ".zenflow/tasks/depth-management-tool-cb27/plan.md",
+      "path": ".zenflow/tasks/depth-management-tool-cb27/plan.md",
+      "action": "moved",
+      "bytes": 9910,
+      "sha256": "168fdcf6ee9cd3d1ce09f5393e90cb4948ce84a39e25158f7a8ef1321c69a6d9"
+    },
+    {
+      "source": ".zenflow/tasks/depth-management-tool-cb27/requirements.md",
+      "path": ".zenflow/tasks/depth-management-tool-cb27/requirements.md",
+      "action": "moved",
+      "bytes": 14336,
+      "sha256": "15dad46bbfa270678f49cdcd214ef18b5b3e926cf956674ef7e17e94189c743c"
+    },
+    {
+      "source": ".zenflow/tasks/depth-management-tool-cb27/spec.md",
+      "path": ".zenflow/tasks/depth-management-tool-cb27/spec.md",
+      "action": "moved",
+      "bytes": 24099,
+      "sha256": "fde480bbaf1b10da36d7ed335711b89a8599055f9f46b2a2abb0201145515b4b"
+    },
+    {
+      "source": ".zenflow/tasks/draft-picks-on-top-364c/plan.md",
+      "path": ".zenflow/tasks/draft-picks-on-top-364c/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "26d54ebfa61269ce0a69340b8f3711f6d6e68768619fcef37baa936e678cefda"
+    },
+    {
+      "source": ".zenflow/tasks/draft-picks-on-top-364c/report.md",
+      "path": ".zenflow/tasks/draft-picks-on-top-364c/report.md",
+      "action": "moved",
+      "bytes": 643,
+      "sha256": "a7bf61526f3b589661077d1ff88b924e6d6c7bf202682591f8e39d9105ed1a5e"
+    },
+    {
+      "source": ".zenflow/tasks/generate-all-team-scenarios-py-7a83/plan.md",
+      "path": ".zenflow/tasks/generate-all-team-scenarios-py-7a83/plan.md",
+      "action": "moved",
+      "bytes": 2865,
+      "sha256": "68b308725d7d706e8226085446ac46c1ef88d915d4bf28bd0d3098f69e6a025f"
+    },
+    {
+      "source": ".zenflow/tasks/generate-all-team-scenarios-py-7a83/report.md",
+      "path": ".zenflow/tasks/generate-all-team-scenarios-py-7a83/report.md",
+      "action": "moved",
+      "bytes": 3091,
+      "sha256": "f1ebf107d963692c13676499883111060236a5cc0b1414e012cf363d49537132"
+    },
+    {
+      "source": ".zenflow/tasks/generate-all-team-scenarios-py-7a83/spec.md",
+      "path": ".zenflow/tasks/generate-all-team-scenarios-py-7a83/spec.md",
+      "action": "moved",
+      "bytes": 6183,
+      "sha256": "2a44eb1cf5b0ef21616bd00df7b57f837161f54d2206d29ea86ac0bc5537b1ab"
+    },
+    {
+      "source": ".zenflow/tasks/graphs-scroll-mobile-bd3b/investigation.md",
+      "path": ".zenflow/tasks/graphs-scroll-mobile-bd3b/investigation.md",
+      "action": "moved",
+      "bytes": 5580,
+      "sha256": "617cb32cced59e18dbb4164069682e7a4edec20c9170b515a2116dcf2bb5b3c0"
+    },
+    {
+      "source": ".zenflow/tasks/graphs-scroll-mobile-bd3b/plan.md",
+      "path": ".zenflow/tasks/graphs-scroll-mobile-bd3b/plan.md",
+      "action": "moved",
+      "bytes": 3811,
+      "sha256": "f2272b4b6971104d58eaa60da322685b69a7e8758690ba20f274c69962f3da39"
+    },
+    {
+      "source": ".zenflow/tasks/kak-schitaiutsia-shansy-na-plei-6379/plan.md",
+      "path": ".zenflow/tasks/kak-schitaiutsia-shansy-na-plei-6379/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "aea4ec0fc41d0d90387a55d12f2a24c2eee73bfe4df6091c8c689707cc09cdbd"
+    },
+    {
+      "source": ".zenflow/tasks/kak-schitaiutsia-shansy-na-plei-6379/report.md",
+      "path": ".zenflow/tasks/kak-schitaiutsia-shansy-na-plei-6379/report.md",
+      "action": "moved",
+      "bytes": 750,
+      "sha256": "e41b8cf2305783e89de011d540daab37b07f2f703809940325737ccdbededc19"
+    },
+    {
+      "source": ".zenflow/tasks/lets-find-a-new-cool-feature-d7bb/plan.md",
+      "path": ".zenflow/tasks/lets-find-a-new-cool-feature-d7bb/plan.md",
+      "action": "moved",
+      "bytes": 10123,
+      "sha256": "2aae760c0e9b4ac743082e62bfa8b68e28dd069da8835e47926e3ed19239642f"
+    },
+    {
+      "source": ".zenflow/tasks/lets-find-a-new-cool-feature-d7bb/requirements.md",
+      "path": ".zenflow/tasks/lets-find-a-new-cool-feature-d7bb/requirements.md",
+      "action": "moved",
+      "bytes": 12750,
+      "sha256": "36b0892fc3b6d8d2c724893416e40a54584b2101423e4f536cc8f16df9362cff"
+    },
+    {
+      "source": ".zenflow/tasks/lets-find-a-new-cool-feature-d7bb/spec.md",
+      "path": ".zenflow/tasks/lets-find-a-new-cool-feature-d7bb/spec.md",
+      "action": "moved",
+      "bytes": 15147,
+      "sha256": "709f0998cf584e12fa6146806ec7d5bb02dccc82e0ec39c110285b174d718dc4"
+    },
+    {
+      "source": ".zenflow/tasks/link-table-3856/plan.md",
+      "path": ".zenflow/tasks/link-table-3856/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "124f2e7551418160ca3517ea84e800f4fa1d7c477372321d76fd96c9a356d587"
+    },
+    {
+      "source": ".zenflow/tasks/link-table-3856/report.md",
+      "path": ".zenflow/tasks/link-table-3856/report.md",
+      "action": "moved",
+      "bytes": 1159,
+      "sha256": "2625c3826f403bbde62ae194f41f7b73556c110d0216aa44f39169a7e087fade"
+    },
+    {
+      "source": ".zenflow/tasks/mega-elo-schema-change-7473/plan.md",
+      "path": ".zenflow/tasks/mega-elo-schema-change-7473/plan.md",
+      "action": "moved",
+      "bytes": 2798,
+      "sha256": "5b8ab71305bda473ffcc85d1a68e86a294e8eec2f7bbfee9088f90020445ab54"
+    },
+    {
+      "source": ".zenflow/tasks/mega-elo-schema-change-7473/report.md",
+      "path": ".zenflow/tasks/mega-elo-schema-change-7473/report.md",
+      "action": "moved",
+      "bytes": 6738,
+      "sha256": "527ae282dbfcbcfa4f6ead621f70c7984f4cacc1750e3313e39cb641e987dbfe"
+    },
+    {
+      "source": ".zenflow/tasks/mega-elo-schema-change-7473/spec.md",
+      "path": ".zenflow/tasks/mega-elo-schema-change-7473/spec.md",
+      "action": "moved",
+      "bytes": 6873,
+      "sha256": "f0651ddf8ed66b085386d7f87a242a622711587dd06ad074dfb6bf866a949901"
+    },
+    {
+      "source": ".zenflow/tasks/mega-elo-schema-change-cdc3/plan.md",
+      "path": ".zenflow/tasks/mega-elo-schema-change-cdc3/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "952a295a92888482bc2dbabc0e182f7976eb53768dda4a7b919bba49d42633e2"
+    },
+    {
+      "source": ".zenflow/tasks/mega-elo-schema-change-cdc3/report.md",
+      "path": ".zenflow/tasks/mega-elo-schema-change-cdc3/report.md",
+      "action": "moved",
+      "bytes": 2020,
+      "sha256": "fcf61cb384c58b549bdfcbe0735ede366aeb40d8a11e2d7e6b317dafaa241045"
+    },
+    {
+      "source": ".zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/plan.md",
+      "path": ".zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/plan.md",
+      "action": "moved",
+      "bytes": 6330,
+      "sha256": "149c4dfe2357b356affa7e44cc336ee07d539cd71b4383ea0f1563726363721f"
+    },
+    {
+      "source": ".zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/report.md",
+      "path": ".zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/report.md",
+      "action": "moved",
+      "bytes": 3206,
+      "sha256": "fe4bcae0ba8f20447950498fbfce9cc8ea3f195529e7ce5db1c46fe6479bd5f1"
+    },
+    {
+      "source": ".zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/spec.md",
+      "path": ".zenflow/tasks/mega-playoff-season-3-dashboard-bc5e/spec.md",
+      "action": "moved",
+      "bytes": 9449,
+      "sha256": "8f4ed5ded3e42a7c631e3bab3a09c2cc01ab5cf5377535722446cd6b243b5174"
+    },
+    {
+      "source": ".zenflow/tasks/new-task-3679/plan.md",
+      "path": ".zenflow/tasks/new-task-3679/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "c5dbe19acc7a1395c2a5913a21e689740747d66142868583ce036c096b24f524"
+    },
+    {
+      "source": ".zenflow/tasks/new-task-3679/report.md",
+      "path": ".zenflow/tasks/new-task-3679/report.md",
+      "action": "moved",
+      "bytes": 763,
+      "sha256": "03f7573354dfcc8f9ce3087232688ebbf8671c1685e8b815535759688d88e8bc"
+    },
+    {
+      "source": ".zenflow/tasks/new-task-8bf8/plan.md",
+      "path": ".zenflow/tasks/new-task-8bf8/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "144bcaa44c9287da3b1d4d59ef54380d0f98baf6168571e5169e2c9fc52594a6"
+    },
+    {
+      "source": ".zenflow/tasks/new-task-8bf8/report.md",
+      "path": ".zenflow/tasks/new-task-8bf8/report.md",
+      "action": "moved",
+      "bytes": 584,
+      "sha256": "6a56caf54d8ba68f4778857b9a4200e25f1ee5d8652f632543ebe6c1cdde25ec"
+    },
+    {
+      "source": ".zenflow/tasks/new-task-e879/plan.md",
+      "path": ".zenflow/tasks/new-task-e879/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "28baa1aaa75f5805ea90e8be5b6db6fdfff6c6f493384ef2ca6620af20035e6f"
+    },
+    {
+      "source": ".zenflow/tasks/new-task-e879/report.md",
+      "path": ".zenflow/tasks/new-task-e879/report.md",
+      "action": "moved",
+      "bytes": 1988,
+      "sha256": "9b6985407e7fe40c27d9f6e908535d0e25a49af02958e4839d895425ce2ccfb8"
+    },
+    {
+      "source": ".zenflow/tasks/playof-probabilities-270a/plan.md",
+      "path": ".zenflow/tasks/playof-probabilities-270a/plan.md",
+      "action": "moved",
+      "bytes": 7085,
+      "sha256": "124897dcb6e9fd429734a5506f1e276bffdc6eeaf60635b3017c54b19abe804e"
+    },
+    {
+      "source": ".zenflow/tasks/playof-probabilities-270a/report.md",
+      "path": ".zenflow/tasks/playof-probabilities-270a/report.md",
+      "action": "moved",
+      "bytes": 2009,
+      "sha256": "ee4faa623e033598ac0ac54159fe3765d842223c722e3366024ff865844508f7"
+    },
+    {
+      "source": ".zenflow/tasks/playof-probabilities-270a/spec.md",
+      "path": ".zenflow/tasks/playof-probabilities-270a/spec.md",
+      "action": "moved",
+      "bytes": 5088,
+      "sha256": "6503d7f00bc8ca4a18c180416f48238787e40da74401fffa84a3ed3fb9867ab2"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-chances-when-0-games-rem-5909/investigation.md",
+      "path": ".zenflow/tasks/playoff-chances-when-0-games-rem-5909/investigation.md",
+      "action": "moved",
+      "bytes": 8688,
+      "sha256": "d61578233bb39afce87c735c73d25dff4c79cc3d6cc02a89e405f5dd023343ee"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-chances-when-0-games-rem-5909/plan.md",
+      "path": ".zenflow/tasks/playoff-chances-when-0-games-rem-5909/plan.md",
+      "action": "moved",
+      "bytes": 2137,
+      "sha256": "2ab69a247321ce1a21cc45c8489469c593e2aa0d4f34d6589ba53263b868806f"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-chances-when-0-games-rem-5909/tiebreaker_test.md",
+      "path": ".zenflow/tasks/playoff-chances-when-0-games-rem-5909/tiebreaker_test.md",
+      "action": "moved",
+      "bytes": 4901,
+      "sha256": "e9e68c84ccea9254e10e05f73418c6a28f6be65bd6892b59a2dbc2c74fe1e661"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-c827/plan.md",
+      "path": ".zenflow/tasks/playoff-race-c827/plan.md",
+      "action": "moved",
+      "bytes": 5648,
+      "sha256": "3594f6a66448994f126ea7391e827ebbf9e6a6e9941c77acd37c78b960fb42a6"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-c827/report.md",
+      "path": ".zenflow/tasks/playoff-race-c827/report.md",
+      "action": "moved",
+      "bytes": 4480,
+      "sha256": "c6e6f4b080c1f6b7e4e311030babab1d2f183cf3f7e1bf6ae108c7221e699386"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-c827/spec.md",
+      "path": ".zenflow/tasks/playoff-race-c827/spec.md",
+      "action": "moved",
+      "bytes": 6195,
+      "sha256": "45e1734b1b789e0c23e7fb33409e6d58740343c29734f308cca5377d2abcfaba"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-elo-4fcc/plan.md",
+      "path": ".zenflow/tasks/playoff-race-elo-4fcc/plan.md",
+      "action": "moved",
+      "bytes": 2798,
+      "sha256": "356ca7e98ffb4157d6eb9d5c106ba045577810b799de474de972e0c9ca5b6f9f"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-elo-4fcc/report.md",
+      "path": ".zenflow/tasks/playoff-race-elo-4fcc/report.md",
+      "action": "moved",
+      "bytes": 1870,
+      "sha256": "9022eb360c2fbcbe5e9456d5b71e1b3b9eb3d8ae2bf31f820f839425e83d1588"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-elo-4fcc/spec.md",
+      "path": ".zenflow/tasks/playoff-race-elo-4fcc/spec.md",
+      "action": "moved",
+      "bytes": 4140,
+      "sha256": "6890afb4049c45c9261f2ce3fc3a4f7e78e91e0fe0b2c6f2d8c4ae66b955333c"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-update-for-season-2-d231/plan.md",
+      "path": ".zenflow/tasks/playoff-race-update-for-season-2-d231/plan.md",
+      "action": "moved",
+      "bytes": 3456,
+      "sha256": "efe76ca3311ad7bf3355130654364a364d579f753521582434c35013a7836fb6"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-update-for-season-2-d231/report.md",
+      "path": ".zenflow/tasks/playoff-race-update-for-season-2-d231/report.md",
+      "action": "moved",
+      "bytes": 1572,
+      "sha256": "1c8b928a8c651505b0fe43fdd21b9d5b3c9e9ecab6ba575537e5a1bcf081d52b"
+    },
+    {
+      "source": ".zenflow/tasks/playoff-race-update-for-season-2-d231/spec.md",
+      "path": ".zenflow/tasks/playoff-race-update-for-season-2-d231/spec.md",
+      "action": "moved",
+      "bytes": 4184,
+      "sha256": "63497463e1ff289426eaf2a3c52c863c59ce60eacedfc9d506f9ac89fce0b358"
+    },
+    {
+      "source": ".zenflow/tasks/possitions-to-center-611e/plan.md",
+      "path": ".zenflow/tasks/possitions-to-center-611e/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "34978d90ca8b321026289ee22e1f80a3a488ba4f46c64ff6de5a1aed07ceed62"
+    },
+    {
+      "source": ".zenflow/tasks/possitions-to-center-611e/report.md",
+      "path": ".zenflow/tasks/possitions-to-center-611e/report.md",
+      "action": "moved",
+      "bytes": 530,
+      "sha256": "66e79fe8cafd68ac8defdab6e80012a6c5d2b00bf08d237b1e146a54ae5e6ded"
+    },
+    {
+      "source": ".zenflow/tasks/possitions-to-center-e365/plan.md",
+      "path": ".zenflow/tasks/possitions-to-center-e365/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "2185c7afc7d644af620180f3273077ba7729d14dab230f150c8963c25bc1667a"
+    },
+    {
+      "source": ".zenflow/tasks/possitions-to-center-e365/report.md",
+      "path": ".zenflow/tasks/possitions-to-center-e365/report.md",
+      "action": "moved",
+      "bytes": 416,
+      "sha256": "cfdee76e30fbabdbea76b80b8079269306e341886583e0c220e9856d679bc7da"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-b-df6a/fixtures/README.md",
+      "path": ".zenflow/tasks/power-rankings-b-df6a/fixtures/README.md",
+      "action": "moved",
+      "bytes": 1654,
+      "sha256": "e53ed9bd3bffaa5e15d182cd8ce72fe722f5c5d00f347b4fb79a979ed82e9249"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-b-df6a/fixtures/tiny_MEGA_players.csv",
+      "path": ".zenflow/tasks/power-rankings-b-df6a/fixtures/tiny_MEGA_players.csv",
+      "action": "moved",
+      "bytes": 785,
+      "sha256": "79bf9e0b3dc446464b59d37fe3a03949ea343b5ccc5aa1193bf5ddc1e79eed3c"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-b-df6a/fixtures/tiny_MEGA_teams.csv",
+      "path": ".zenflow/tasks/power-rankings-b-df6a/fixtures/tiny_MEGA_teams.csv",
+      "action": "moved",
+      "bytes": 229,
+      "sha256": "dd95b0071bd3f2a277a321ba1564d46f33ba33a63733d4b837e4374ec927c0e2"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-b-df6a/plan.md",
+      "path": ".zenflow/tasks/power-rankings-b-df6a/plan.md",
+      "action": "moved",
+      "bytes": 21110,
+      "sha256": "7c496e49c89c7c75f8f8ae2bd911b6dd8ec9118375f1bb835e88874918dcf047"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-b-df6a/requirements.md",
+      "path": ".zenflow/tasks/power-rankings-b-df6a/requirements.md",
+      "action": "moved",
+      "bytes": 9748,
+      "sha256": "92996fe1f54db82a421e6aabefb40c14bb2afe8ecd6f21d60fe25d68c154a8dd"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-b-df6a/spec.md",
+      "path": ".zenflow/tasks/power-rankings-b-df6a/spec.md",
+      "action": "moved",
+      "bytes": 23592,
+      "sha256": "23e9cde202c06fb36446dc49c5f81c3dbfe8f9cc7d97100562e879f0fd1900dc"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-r-4e6b/implementation.md",
+      "path": ".zenflow/tasks/power-rankings-r-4e6b/implementation.md",
+      "action": "moved",
+      "bytes": 3722,
+      "sha256": "5f31528af93fc09a476d1a96247b6ac44b7f9c8c28e5e2628774b1d1c509722c"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-r-4e6b/investigation.md",
+      "path": ".zenflow/tasks/power-rankings-r-4e6b/investigation.md",
+      "action": "moved",
+      "bytes": 2463,
+      "sha256": "3e1d25adea49c56f089dcce0814a01caafa9527cef737a91a37fc17d2094e4d6"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-r-4e6b/plan.md",
+      "path": ".zenflow/tasks/power-rankings-r-4e6b/plan.md",
+      "action": "moved",
+      "bytes": 1460,
+      "sha256": "2a772826fc32abb9f0d8e2446a1443d25c9ca0353ceb2f4f2fc867c60949db3a"
+    },
+    {
+      "source": ".zenflow/tasks/power-rankings-r-4e6b/solution.md",
+      "path": ".zenflow/tasks/power-rankings-r-4e6b/solution.md",
+      "action": "moved",
+      "bytes": 7905,
+      "sha256": "a82567629c22d28049e7b1f6c3cf49be9f50a61b66316dece781ff6f876ae2b0"
+    },
+    {
+      "source": ".zenflow/tasks/refactor-plan-03c3/plan.md",
+      "path": ".zenflow/tasks/refactor-plan-03c3/plan.md",
+      "action": "moved",
+      "bytes": 5990,
+      "sha256": "6f2733499f926f3d9c9205916d695105362a3a96d5d8d0a5e1b3a1d72634eca1"
+    },
+    {
+      "source": ".zenflow/tasks/refactor-plan-03c3/refactor_evaluation.md",
+      "path": ".zenflow/tasks/refactor-plan-03c3/refactor_evaluation.md",
+      "action": "moved",
+      "bytes": 18608,
+      "sha256": "13b6c027151afd341581c1ceaedca27991d20e2bfe2a158cc307203664959a04"
+    },
+    {
+      "source": ".zenflow/tasks/refactor-plan-03c3/refactor_safety_guide.md",
+      "path": ".zenflow/tasks/refactor-plan-03c3/refactor_safety_guide.md",
+      "action": "moved",
+      "bytes": 16120,
+      "sha256": "c84e142d483c8359904ce24eaba4dfd67eb41a6a0aac77969a3697c03c66330e"
+    },
+    {
+      "source": ".zenflow/tasks/release-management-tool-988b/plan.md",
+      "path": ".zenflow/tasks/release-management-tool-988b/plan.md",
+      "action": "moved",
+      "bytes": 2228,
+      "sha256": "bfbf4fd89f48b388de4ae97a8ba026812d4ab56fb4b03cc4993ace1fa537292c"
+    },
+    {
+      "source": ".zenflow/tasks/remember-the-state-a807/plan.md",
+      "path": ".zenflow/tasks/remember-the-state-a807/plan.md",
+      "action": "moved",
+      "bytes": 2798,
+      "sha256": "025d0669ca6cebc78128d4cea966a7394031a5d44249e6e3903cbdc1325aebcb"
+    },
+    {
+      "source": ".zenflow/tasks/remember-the-state-a807/report.md",
+      "path": ".zenflow/tasks/remember-the-state-a807/report.md",
+      "action": "moved",
+      "bytes": 3279,
+      "sha256": "288be53d17f22feea9525ab57c343971d5c2a531a7d868e05545bf265d8059ff"
+    },
+    {
+      "source": ".zenflow/tasks/remember-the-state-a807/spec.md",
+      "path": ".zenflow/tasks/remember-the-state-a807/spec.md",
+      "action": "moved",
+      "bytes": 4347,
+      "sha256": "1c8a9165e1af42883f96932e58c4fd9d7d0e5b372912614b7e76560e5ec97366"
+    },
+    {
+      "source": ".zenflow/tasks/remove-doubled-stats-issue-4434/plan.md",
+      "path": ".zenflow/tasks/remove-doubled-stats-issue-4434/plan.md",
+      "action": "moved",
+      "bytes": 9117,
+      "sha256": "f81abba5cc91eaea694a923ff786784c036be7f6409186508305f6e9bc9caf6f"
+    },
+    {
+      "source": ".zenflow/tasks/remove-doubled-stats-issue-4434/requirements.md",
+      "path": ".zenflow/tasks/remove-doubled-stats-issue-4434/requirements.md",
+      "action": "moved",
+      "bytes": 16153,
+      "sha256": "c9a87c216830bda1df9d7d6654ce21841a6044112e8ccecdef8a014f27e81cd3"
+    },
+    {
+      "source": ".zenflow/tasks/remove-doubled-stats-issue-4434/spec.md",
+      "path": ".zenflow/tasks/remove-doubled-stats-issue-4434/spec.md",
+      "action": "moved",
+      "bytes": 20800,
+      "sha256": "c43eef9efe4d6690428e1b2efb2ba1ce8e1b2c189c5f56d51413a90b3a3e957d"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-2916/plan.md",
+      "path": ".zenflow/tasks/rookies-data-ana-2916/plan.md",
+      "action": "moved",
+      "bytes": 11436,
+      "sha256": "716d37cff18edf2d370854d4552fc176571818cce9dd209343ef90ccf74eeea2"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-2916/requirements.md",
+      "path": ".zenflow/tasks/rookies-data-ana-2916/requirements.md",
+      "action": "moved",
+      "bytes": 6324,
+      "sha256": "f6bf838f716cf6da50c1aed4cd5471b1c6a90aeeae1190bafd42634faab6ec4d"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-2916/spec.md",
+      "path": ".zenflow/tasks/rookies-data-ana-2916/spec.md",
+      "action": "moved",
+      "bytes": 9137,
+      "sha256": "befba51c7066dde75e99621c56ea5b3942ff75757429ca2a565302f1626ddde1"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-5340/plan.md",
+      "path": ".zenflow/tasks/rookies-data-ana-5340/plan.md",
+      "action": "moved",
+      "bytes": 1873,
+      "sha256": "e57ff294dae997d788bba8c8266b08276f3a37328402b5768381c88bed5d873a"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-53e5/plan.md",
+      "path": ".zenflow/tasks/rookies-data-ana-53e5/plan.md",
+      "action": "moved",
+      "bytes": 12008,
+      "sha256": "64c9064badeddeff431259507df883f3b4d40d80c5fc9613499c5adc3d2f2faa"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-53e5/requirements.md",
+      "path": ".zenflow/tasks/rookies-data-ana-53e5/requirements.md",
+      "action": "moved",
+      "bytes": 7979,
+      "sha256": "a71fb50519f018abf6266190a108e7218b8c1fb48504e687ddb5c9fc47d123ef"
+    },
+    {
+      "source": ".zenflow/tasks/rookies-data-ana-53e5/spec.md",
+      "path": ".zenflow/tasks/rookies-data-ana-53e5/spec.md",
+      "action": "moved",
+      "bytes": 9394,
+      "sha256": "dd6703ba012ed16d6f9588d60e5402492706acdde7353a2dfaaa2a4bb82b8aaf"
+    },
+    {
+      "source": ".zenflow/tasks/roster-cap-tool-8d39/implementation.md",
+      "path": ".zenflow/tasks/roster-cap-tool-8d39/implementation.md",
+      "action": "moved",
+      "bytes": 2687,
+      "sha256": "1c187fb46e1cb90f3124f222ebd8fdab50cd21e8c08ab166876e7b97c3bd0bdc"
+    },
+    {
+      "source": ".zenflow/tasks/roster-cap-tool-8d39/investigation.md",
+      "path": ".zenflow/tasks/roster-cap-tool-8d39/investigation.md",
+      "action": "moved",
+      "bytes": 3374,
+      "sha256": "73055b70f6e78b8f4bc5554957e71addf937325bbd36f497c18fb5c84a0385ba"
+    },
+    {
+      "source": ".zenflow/tasks/roster-cap-tool-8d39/plan.md",
+      "path": ".zenflow/tasks/roster-cap-tool-8d39/plan.md",
+      "action": "moved",
+      "bytes": 1474,
+      "sha256": "0ea5b5780430dd5db7ef6ab3c5aca810b4852e10f94a3c517c9c3eb5953234e3"
+    },
+    {
+      "source": ".zenflow/tasks/roster-cap-tool-8d39/solution.md",
+      "path": ".zenflow/tasks/roster-cap-tool-8d39/solution.md",
+      "action": "moved",
+      "bytes": 6595,
+      "sha256": "e7a5cb4f649cf0f7ddb2b88a5dc6c752133a539f4d91a0ad501265b091706233"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-6c99/plan.md",
+      "path": ".zenflow/tasks/roster-management-6c99/plan.md",
+      "action": "moved",
+      "bytes": 12144,
+      "sha256": "c8eef3fa1181e74110eab26f8e2c20d053fd92a2dbcf10f56d944557b02f04de"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-6c99/requirements.md",
+      "path": ".zenflow/tasks/roster-management-6c99/requirements.md",
+      "action": "moved",
+      "bytes": 8844,
+      "sha256": "1b35491ea917e2ae9f9c59fd8cb7c46e0c8f71dded6a147fe36f5856f9604193"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-6c99/spec.md",
+      "path": ".zenflow/tasks/roster-management-6c99/spec.md",
+      "action": "moved",
+      "bytes": 10335,
+      "sha256": "72f5f44b53024fae0efa23790c362fec0d193587a9b227732548db63d71dcd7c"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-bug-fixes-ad26/implementation.md",
+      "path": ".zenflow/tasks/roster-management-bug-fixes-ad26/implementation.md",
+      "action": "moved",
+      "bytes": 2649,
+      "sha256": "61f7ad48885eb2eee6db5021a8f5060bc9344f32655da498bdf190aaed0e6852"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-bug-fixes-ad26/investigation.md",
+      "path": ".zenflow/tasks/roster-management-bug-fixes-ad26/investigation.md",
+      "action": "moved",
+      "bytes": 6526,
+      "sha256": "2cf02f23ec5f7b93d5d8049f3687123359eb440643f0b602b4e2d812697cc83c"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-bug-fixes-ad26/plan.md",
+      "path": ".zenflow/tasks/roster-management-bug-fixes-ad26/plan.md",
+      "action": "moved",
+      "bytes": 1699,
+      "sha256": "888d88da5092cf16d280b5842118329c126be177f455461aab6a5e0f3181f9a6"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-bug-fixes-ad26/solution.md",
+      "path": ".zenflow/tasks/roster-management-bug-fixes-ad26/solution.md",
+      "action": "moved",
+      "bytes": 6342,
+      "sha256": "8410ad02e249eaff2734c9df9b803bd6e31a794c6aac8709457ea16795fc61b1"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-eade/plan.md",
+      "path": ".zenflow/tasks/roster-management-eade/plan.md",
+      "action": "moved",
+      "bytes": 26781,
+      "sha256": "e192a0e6f474faf64b9b48b38588addc743a952a3740867d4bce0ab107f0f2f6"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-eade/requirements.md",
+      "path": ".zenflow/tasks/roster-management-eade/requirements.md",
+      "action": "moved",
+      "bytes": 10953,
+      "sha256": "c5c71a1186fb89cecc99c1574b18dc25d1ebf93760fde4ebea4d768937757195"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-eade/spec.md",
+      "path": ".zenflow/tasks/roster-management-eade/spec.md",
+      "action": "moved",
+      "bytes": 13373,
+      "sha256": "c489d2292fbe41ffcc9c8c4011a479b8d2b6b23c3254e3c1ce8ab5f66760875c"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/implementation.md",
+      "path": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/implementation.md",
+      "action": "moved",
+      "bytes": 2393,
+      "sha256": "790f573a00fe0f94e99abb40b635f6ddd69f328da18f2fd1eb61b2f119f74a84"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/investigation.md",
+      "path": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/investigation.md",
+      "action": "moved",
+      "bytes": 5503,
+      "sha256": "414a052e167fd205f020895a73ddf6fc9d05064219f9209369cbca0f3d30f0c5"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/plan.md",
+      "path": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/plan.md",
+      "action": "moved",
+      "bytes": 1462,
+      "sha256": "9527e1be39e8f7c13509d9d9d0ebfdf2a73e6550cabbb8fab4ab67c84a06d52a"
+    },
+    {
+      "source": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/solution.md",
+      "path": ".zenflow/tasks/roster-management-wrong-cut-logi-16ba/solution.md",
+      "action": "moved",
+      "bytes": 6784,
+      "sha256": "ae0c56b2175293e48c8adf40249171dfeb3c3eb12d99e9c2f46ada8a2723b1ce"
+    },
+    {
+      "source": ".zenflow/tasks/running-scripts-1958/plan.md",
+      "path": ".zenflow/tasks/running-scripts-1958/plan.md",
+      "action": "moved",
+      "bytes": 1166,
+      "sha256": "a4cd218d7880e053e3193fbf53b6bc9560d6361c1ff9fa73db8d518d79d92487"
+    },
+    {
+      "source": ".zenflow/tasks/running-scripts-1958/report.md",
+      "path": ".zenflow/tasks/running-scripts-1958/report.md",
+      "action": "moved",
+      "bytes": 912,
+      "sha256": "7e68298b2c2885c151ab00091defa749cb64ccd4507c9bd73d965a144b8e2f20"
+    },
+    {
+      "source": ".zenflow/tasks/season-2-sos-eve-0fc8/plan.md",
+      "path": ".zenflow/tasks/season-2-sos-eve-0fc8/plan.md",
+      "action": "moved",
+      "bytes": 1533,
+      "sha256": "b3ce3b3fa95c6e7074d4ed515e08cb898a4a67382671c824a350c07f61ae56a1"
+    },
+    {
+      "source": ".zenflow/tasks/season-2-sos-eve-7c18/plan.md",
+      "path": ".zenflow/tasks/season-2-sos-eve-7c18/plan.md",
+      "action": "moved",
+      "bytes": 1582,
+      "sha256": "35dedd6dc3649b2af47ac94fa2fd2dca8247c8431ca13fb37ed573f3ac91f932"
+    },
+    {
+      "source": ".zenflow/tasks/season-3-playoff-chances-be7f/plan.md",
+      "path": ".zenflow/tasks/season-3-playoff-chances-be7f/plan.md",
+      "action": "moved",
+      "bytes": 3677,
+      "sha256": "8b335711e533f39ef2c870c125ac7b1256700bd9744f312ad7776fd8b5afc68f"
+    },
+    {
+      "source": ".zenflow/tasks/season-3-playoff-chances-be7f/spec.md",
+      "path": ".zenflow/tasks/season-3-playoff-chances-be7f/spec.md",
+      "action": "moved",
+      "bytes": 4484,
+      "sha256": "506ec9c76f22b54fe4c0a36326daaabaf2fede673af7d46655fd6c708ec28db9"
+    },
+    {
+      "source": ".zenflow/tasks/season-3-stats-4136/plan.md",
+      "path": ".zenflow/tasks/season-3-stats-4136/plan.md",
+      "action": "moved",
+      "bytes": 3476,
+      "sha256": "08468a036276b91d62fa83285f1cc2c37da2d3d3e0efb142ebfc091bb62362c7"
+    },
+    {
+      "source": ".zenflow/tasks/season-3-stats-4136/report.md",
+      "path": ".zenflow/tasks/season-3-stats-4136/report.md",
+      "action": "moved",
+      "bytes": 1506,
+      "sha256": "fd3fb0bc329428caa849daf9d798ebaad13be25c49758853c44276f4d115191f"
+    },
+    {
+      "source": ".zenflow/tasks/season-3-stats-4136/spec.md",
+      "path": ".zenflow/tasks/season-3-stats-4136/spec.md",
+      "action": "moved",
+      "bytes": 5080,
+      "sha256": "1b5ef92625313934e3b49131ca83ceee23a85351f8794d9c610d8d027e95976c"
+    },
+    {
+      "source": ".zenflow/tasks/seson-3-stats-0297/plan.md",
+      "path": ".zenflow/tasks/seson-3-stats-0297/plan.md",
+      "action": "moved",
+      "bytes": 1323,
+      "sha256": "5fda827bc30f37b056fff89f04bae95a9f6354a00240393e283ea65b440b3cef"
+    },
+    {
+      "source": ".zenflow/tasks/statistic-coresponding-with-elo-84d3/plan.md",
+      "path": ".zenflow/tasks/statistic-coresponding-with-elo-84d3/plan.md",
+      "action": "moved",
+      "bytes": 2935,
+      "sha256": "409ad1612eac64f8114ddbf8bb861ea9bfaff1f5fecbbc156532a1e511c544b2"
+    },
+    {
+      "source": ".zenflow/tasks/statistic-coresponding-with-elo-84d3/report.md",
+      "path": ".zenflow/tasks/statistic-coresponding-with-elo-84d3/report.md",
+      "action": "moved",
+      "bytes": 4350,
+      "sha256": "718e61572e26d4905b752567779a1ee5d0431142f80da7e754f7c8b262050e0f"
+    },
+    {
+      "source": ".zenflow/tasks/statistic-coresponding-with-elo-84d3/spec.md",
+      "path": ".zenflow/tasks/statistic-coresponding-with-elo-84d3/spec.md",
+      "action": "moved",
+      "bytes": 8498,
+      "sha256": "ad2eb1101d28078a4ae8b04044fae0a1c7af45f7a43295604f421cf790632f61"
+    },
+    {
+      "source": ".zenflow/tasks/stats-season-3-team-missing-9f3a/investigation.md",
+      "path": ".zenflow/tasks/stats-season-3-team-missing-9f3a/investigation.md",
+      "action": "moved",
+      "bytes": 4119,
+      "sha256": "47cf960f1070baf99fcc72880c47406b4cb2724b57447dbb7d83ffaf45da7bcd"
+    },
+    {
+      "source": ".zenflow/tasks/stats-season-3-team-missing-9f3a/plan.md",
+      "path": ".zenflow/tasks/stats-season-3-team-missing-9f3a/plan.md",
+      "action": "moved",
+      "bytes": 1276,
+      "sha256": "75b73d95d1f5c7bd200cef7575c31f2c41fe029563e470f8b48e27819cf1117d"
+    },
+    {
+      "source": ".zenflow/tasks/style-refactor-contract-distribu-36a5/plan.md",
+      "path": ".zenflow/tasks/style-refactor-contract-distribu-36a5/plan.md",
+      "action": "moved",
+      "bytes": 2057,
+      "sha256": "905b2466139953463665633a6e556784c218f238f31e3669f925b9e0c9d1ba24"
+    },
+    {
+      "source": ".zenflow/tasks/table-scroll-on-0db0/implementation.md",
+      "path": ".zenflow/tasks/table-scroll-on-0db0/implementation.md",
+      "action": "moved",
+      "bytes": 1900,
+      "sha256": "5100ca13b76fc71b8074d066de840f3a6eb8eaff3d8c1c7bd69e337bcca1d55d"
+    },
+    {
+      "source": ".zenflow/tasks/table-scroll-on-0db0/investigation.md",
+      "path": ".zenflow/tasks/table-scroll-on-0db0/investigation.md",
+      "action": "moved",
+      "bytes": 1660,
+      "sha256": "192fb95513fb4cec1e2efcfc3645607331b42d045e3d0bc38881bbdcd1967331"
+    },
+    {
+      "source": ".zenflow/tasks/table-scroll-on-0db0/plan.md",
+      "path": ".zenflow/tasks/table-scroll-on-0db0/plan.md",
+      "action": "moved",
+      "bytes": 1460,
+      "sha256": "06d1cb9ebaa5d73dc2380418645ddb9ad845f2d68d0ffa7e91586a353531afc4"
+    },
+    {
+      "source": ".zenflow/tasks/table-scroll-on-0db0/solution.md",
+      "path": ".zenflow/tasks/table-scroll-on-0db0/solution.md",
+      "action": "moved",
+      "bytes": 4018,
+      "sha256": "8714c26ce270d1b7d5f2b0fd7bb467a91e6091473691f065fdab44051acea6b4"
+    },
+    {
+      "source": ".zenflow/tasks/update-scatter-v-765c/plan.md",
+      "path": ".zenflow/tasks/update-scatter-v-765c/plan.md",
+      "action": "moved",
+      "bytes": 1750,
+      "sha256": "27cde97fabf4faeed86187c8a1189f65e786c9a6b67104a6536f6a8c5cdec837"
+    },
+    {
+      "source": ".zenflow/tasks/update-the-draft-a86d/plan.md",
+      "path": ".zenflow/tasks/update-the-draft-a86d/plan.md",
+      "action": "moved",
+      "bytes": 10698,
+      "sha256": "adc34e1194a3ab4ed645dd2106a56638d241b879cc93fd7b394b648d6ef575b8"
+    },
+    {
+      "source": ".zenflow/tasks/update-the-draft-a86d/requirements.md",
+      "path": ".zenflow/tasks/update-the-draft-a86d/requirements.md",
+      "action": "moved",
+      "bytes": 9326,
+      "sha256": "1eb2b4b9ff192995f32a5f25da5130fa7d5e1523bd14ff91599c805377eb7968"
+    },
+    {
+      "source": ".zenflow/tasks/update-the-draft-a86d/spec.md",
+      "path": ".zenflow/tasks/update-the-draft-a86d/spec.md",
+      "action": "moved",
+      "bytes": 12071,
+      "sha256": "feacf359ca5733abec7365ebc5eebedf71f71829f208708cd70383b94d7a70ba"
+    },
+    {
+      "source": ".zenflow/tasks/week-numbers-bug-205f/investigation.md",
+      "path": ".zenflow/tasks/week-numbers-bug-205f/investigation.md",
+      "action": "moved",
+      "bytes": 7650,
+      "sha256": "bd9dadab890119c7be59ec97fd7951fa44d92f5ac6ecf9fe8b70063f3f571127"
+    },
+    {
+      "source": ".zenflow/tasks/week-numbers-bug-205f/plan.md",
+      "path": ".zenflow/tasks/week-numbers-bug-205f/plan.md",
+      "action": "moved",
+      "bytes": 1138,
+      "sha256": "511d4325d309051a58a31a48a1893f10cf58167f2dcd85515e27a72e4b9ad305"
+    },
+    {
+      "source": "MEGA_defense.csv",
+      "path": "MEGA_defense.csv",
+      "action": "moved",
+      "bytes": 59986,
+      "sha256": "3c25971451383dc7668de8ea826236c3eccabba561f40926700c1cd58d7d6311"
+    },
+    {
+      "source": "MEGA_draft.csv",
+      "path": "MEGA_draft.csv",
+      "action": "moved",
+      "bytes": 38833,
+      "sha256": "25718df110b397979f096e205276cf55f64d9dfab70c1f010bd1fc8e7a25ec8c"
+    },
+    {
+      "source": "MEGA_games.csv",
+      "path": "MEGA_games.csv",
+      "action": "moved",
+      "bytes": 128992,
+      "sha256": "5acc3ce20a914a4e917705112a51e96b9e9d37faf705f261c92a39156db54f87"
+    },
+    {
+      "source": "MEGA_kicking.csv",
+      "path": "MEGA_kicking.csv",
+      "action": "moved",
+      "bytes": 4271,
+      "sha256": "12b7755cf09c020b804976eef1f8ecc3ca59eb73259c3fb09900a8a498f806ef"
+    },
+    {
+      "source": "MEGA_passing.csv",
+      "path": "MEGA_passing.csv",
+      "action": "moved",
+      "bytes": 6845,
+      "sha256": "3b898cfcd5fd5978eeee9a6f98656d483d9155b6d1103240280370080d1365bf"
+    },
+    {
+      "source": "MEGA_players.csv",
+      "path": "MEGA_players.csv",
+      "action": "moved",
+      "bytes": 2486950,
+      "sha256": "be080c82d81f191f6976b461e051d15231f9d722882124bba477255b7f8b3f41"
+    },
+    {
+      "source": "MEGA_punting.csv",
+      "path": "MEGA_punting.csv",
+      "action": "moved",
+      "bytes": 3109,
+      "sha256": "8b428b46d486f731b82679cca7781ddc176cbf45c2d8944a76714c2b8a171850"
+    },
+    {
+      "source": "MEGA_rankings.csv",
+      "path": "MEGA_rankings.csv",
+      "action": "moved",
+      "bytes": 202422,
+      "sha256": "d50a8e276278bbc82398dc608841d309ccd000d720b546564ae03e99a311731c"
+    },
+    {
+      "source": "MEGA_receiving.csv",
+      "path": "MEGA_receiving.csv",
+      "action": "moved",
+      "bytes": 31686,
+      "sha256": "17c1d0fc757230d9e0ec218c26239c3699cefa7f036e8ae4fa0e4db94d10decc"
+    },
+    {
+      "source": "MEGA_rushing.csv",
+      "path": "MEGA_rushing.csv",
+      "action": "moved",
+      "bytes": 30373,
+      "sha256": "66145f0b0fcc4019dc7d6595dbcf2c16bef17a19a145b8c36294636684aa93cc"
+    },
+    {
+      "source": "MEGA_teams.csv",
+      "path": "MEGA_teams.csv",
+      "action": "moved",
+      "bytes": 10688,
+      "sha256": "bd027a19bdc0d8d12b7302143f027bea03036048ffec77ec593e01e744dbda31"
+    },
+    {
+      "source": "MEGA_trades.csv",
+      "path": "MEGA_trades.csv",
+      "action": "moved",
+      "bytes": 77,
+      "sha256": "c47c8d7b4d4c548fba278adb200db6ac86cd84e2550a16fcca58cc4a8c5a3c2c"
+    },
+    {
+      "source": "docs/Afc_total_sos.png",
+      "path": "docs/Afc_total_sos.png",
+      "action": "moved",
+      "bytes": 534282,
+      "sha256": "06e2d9684b9f64a50c96ff284fa8510bb6b8b58b018c923d08768d271ed127df"
+    },
+    {
+      "source": "docs/README.md",
+      "path": "docs/README.md",
+      "action": "copied",
+      "bytes": 6651,
+      "sha256": "d68fffab18e47879ad273460c40d4e6f137f8b0f3a589b7fe157a0eac11a5e62"
+    },
+    {
+      "source": "docs/Screenshot 2025-11-19 at 11.14.26.png",
+      "path": "docs/Screenshot 2025-11-19 at 11.14.26.png",
+      "action": "moved",
+      "bytes": 45773,
+      "sha256": "da8cecc0d82c59b47859f6cce63bcc4ce824518f60f0f7d8c3c9b8e66d0fef50"
+    },
+    {
+      "source": "docs/Tot_sos.png",
+      "path": "docs/Tot_sos.png",
+      "action": "moved",
+      "bytes": 561292,
+      "sha256": "66e9f4ac3c716743361b99b8ebf4056f6f095009c5676136af5d4da41d5f8480"
+    },
+    {
+      "source": "docs/afc_compl.png",
+      "path": "docs/afc_compl.png",
+      "action": "moved",
+      "bytes": 503256,
+      "sha256": "242ab38185de7fa7a2be140a65e6c1633cd352456ee6292b348a383bdcfbdbf9"
+    },
+    {
+      "source": "docs/afc_race.png",
+      "path": "docs/afc_race.png",
+      "action": "moved",
+      "bytes": 492968,
+      "sha256": "3d0f00850dc8e42fe5fd9cdacdb98583e4ad05d154232768f04e0253f85e6827"
+    },
+    {
+      "source": "docs/data/MEGA_teams.csv",
+      "path": "docs/data/MEGA_teams.csv",
+      "action": "moved",
+      "bytes": 9844,
+      "sha256": "b4b23f6add459e0131df99f5a769a08eafe5268be9a89c65ae368b69e1bc3109"
+    },
+    {
+      "source": "docs/data/analytics.json",
+      "path": "docs/data/analytics.json",
+      "action": "moved",
+      "bytes": 82881,
+      "sha256": "0066ea1b515ac59dd6138b03db19f3f71c45a042b7cd6cb786f3db01ea821c07"
+    },
+    {
+      "source": "docs/data/mega_elo.csv",
+      "path": "docs/data/mega_elo.csv",
+      "action": "moved",
+      "bytes": 1177,
+      "sha256": "6423baf9bade45c18536fdaafd26f1fe91a2bce77d031e6bf66a804cf7fc67ce"
+    },
+    {
+      "source": "docs/data/playoff_dashboard.json",
+      "path": "docs/data/playoff_dashboard.json",
+      "action": "moved",
+      "bytes": 34216,
+      "sha256": "b6f3793e39d670369b7662e08b47d277ac34aa16f39a4980b933ddead37d92b1"
+    },
+    {
+      "source": "docs/data/playoff_probabilities.json",
+      "path": "docs/data/playoff_probabilities.json",
+      "action": "moved",
+      "bytes": 16665,
+      "sha256": "957f94af2fa03cb560c0ddc490b11c21e26de935e16333b7a6120729b53bd645"
+    },
+    {
+      "source": "docs/data/ranked_sos_by_conference_season3.csv",
+      "path": "docs/data/ranked_sos_by_conference_season3.csv",
+      "action": "moved",
+      "bytes": 1600,
+      "sha256": "6fede23227d1af4ba0617c03d62754573b1e1cbf6bfa8a1efbdbaadcf090d17f"
+    },
+    {
+      "source": "docs/data/ranked_sos_by_conference_season4.csv",
+      "path": "docs/data/ranked_sos_by_conference_season4.csv",
+      "action": "moved",
+      "bytes": 1560,
+      "sha256": "ec80a6179fa53424cfc0d2d5c0dbe7a538483198c07a9c0c452e283a93fad15b"
+    },
+    {
+      "source": "docs/data/schedules_season2.json",
+      "path": "docs/data/schedules_season2.json",
+      "action": "moved",
+      "bytes": 90819,
+      "sha256": "2582cac0695b40903131f9c7c66c3cced63be126d810df3e8ec02951523616ad"
+    },
+    {
+      "source": "docs/data/schedules_season3.json",
+      "path": "docs/data/schedules_season3.json",
+      "action": "moved",
+      "bytes": 90815,
+      "sha256": "30026ce700272bbedbf644508ee830f429ec934532e0b5dc4c7f5f2cd49a05d8"
+    },
+    {
+      "source": "docs/data/schedules_season4.json",
+      "path": "docs/data/schedules_season4.json",
+      "action": "moved",
+      "bytes": 86868,
+      "sha256": "29d46ce1ae27c1bd81690174ba0d4bb61ae66cf4ea88e4174d39aa691ff055dc"
+    },
+    {
+      "source": "docs/data/season2_elo.csv",
+      "path": "docs/data/season2_elo.csv",
+      "action": "moved",
+      "bytes": 3342,
+      "sha256": "b9473e995ab29e029a0e2170bf6cab4e26afbdfd84606fbea05de3dc68b6c5df"
+    },
+    {
+      "source": "docs/data/season3_elo.csv",
+      "path": "docs/data/season3_elo.csv",
+      "action": "moved",
+      "bytes": 3351,
+      "sha256": "190b44a04d51aad14abf8a35d7bdcb4cd6dfbef824187cdb93ab048d09e02a8e"
+    },
+    {
+      "source": "docs/data/season4_elo.csv",
+      "path": "docs/data/season4_elo.csv",
+      "action": "moved",
+      "bytes": 3118,
+      "sha256": "fee643f6be49099fbf4841d619c470c09a7f4c44451fcf6c4feff8a4a52213e4"
+    },
+    {
+      "source": "docs/depth_chart/css/styles.css",
+      "path": "docs/depth_chart/css/styles.css",
+      "action": "copied",
+      "bytes": 17897,
+      "sha256": "3b60974989c3f22555a69f3f7e3a782e8d7000effe25991f2cb89a339524be75"
+    },
+    {
+      "source": "docs/depth_chart/index.html",
+      "path": "docs/depth_chart/index.html",
+      "action": "copied",
+      "bytes": 1038,
+      "sha256": "21079a21c811088048a87a11b3c4fa8ece26aa9d972e82ac25e26b2a63b7cc6b"
+    },
+    {
+      "source": "docs/depth_chart/js/csv.js",
+      "path": "docs/depth_chart/js/csv.js",
+      "action": "copied",
+      "bytes": 1169,
+      "sha256": "55370c171222bb385bab497e6044cf0e61559564fe69910e5a137316954b08b0"
+    },
+    {
+      "source": "docs/depth_chart/js/csvExport.js",
+      "path": "docs/depth_chart/js/csvExport.js",
+      "action": "copied",
+      "bytes": 4761,
+      "sha256": "ac5c2cf309f7fbe34d48ef351b5e691de9f020f4c97ee58aa8bb937089f9d8a1"
+    },
+    {
+      "source": "docs/depth_chart/js/draftPicks.js",
+      "path": "docs/depth_chart/js/draftPicks.js",
+      "action": "copied",
+      "bytes": 2138,
+      "sha256": "e88a2b7b429e705688024abb1e9da4ec1f7cb734ef5c33ae6f7e0f6b3710f7f6"
+    },
+    {
+      "source": "docs/depth_chart/js/main.js",
+      "path": "docs/depth_chart/js/main.js",
+      "action": "copied",
+      "bytes": 719,
+      "sha256": "ca7e9412a1ac72e668edf8801794598c64c65235faaf3282aeca45dc6ea671ef"
+    },
+    {
+      "source": "docs/depth_chart/js/slots.js",
+      "path": "docs/depth_chart/js/slots.js",
+      "action": "copied",
+      "bytes": 3671,
+      "sha256": "a49af3f03a6f8d8bc4485221f55c1baf130daf023148c12df8abad808980a0d6"
+    },
+    {
+      "source": "docs/depth_chart/js/state.js",
+      "path": "docs/depth_chart/js/state.js",
+      "action": "copied",
+      "bytes": 18896,
+      "sha256": "e3ac0afbadbc3c230da55bef9c5e7191b0a5a967c97a73882ca1386f03a0753f"
+    },
+    {
+      "source": "docs/depth_chart/js/ui/depthChart.js",
+      "path": "docs/depth_chart/js/ui/depthChart.js",
+      "action": "copied",
+      "bytes": 14427,
+      "sha256": "d9943cb40f2c4d2b23a12aef60d3e29ff131478bc7384bf745ebbb6323a708b0"
+    },
+    {
+      "source": "docs/depth_chart/js/ui/playerFormatting.js",
+      "path": "docs/depth_chart/js/ui/playerFormatting.js",
+      "action": "copied",
+      "bytes": 2166,
+      "sha256": "082c05d6620f9ec2b6a6e2a0401213b7182432358e8ce0d8d8850031caa646bd"
+    },
+    {
+      "source": "docs/depth_chart/js/ui/rosterPanel.js",
+      "path": "docs/depth_chart/js/ui/rosterPanel.js",
+      "action": "copied",
+      "bytes": 6853,
+      "sha256": "caf062b9498d25d878f2ef5ad286a5a82db0eca1c6226a95e5e46c07ea62a412"
+    },
+    {
+      "source": "docs/depth_chart/js/ui/slotEditor.js",
+      "path": "docs/depth_chart/js/ui/slotEditor.js",
+      "action": "copied",
+      "bytes": 14848,
+      "sha256": "3741c06cf50f0ac4245042a2dba44844f9abf7cb7c77b7ac8b44178ee5ff9fe0"
+    },
+    {
+      "source": "docs/depth_chart/js/ui/teamSelector.js",
+      "path": "docs/depth_chart/js/ui/teamSelector.js",
+      "action": "copied",
+      "bytes": 747,
+      "sha256": "b5ff88ee9257a675390d5fc95f909d7919b0fad686f6e0f92bc7d0f5aace9575"
+    },
+    {
+      "source": "docs/draft_class_2026.html",
+      "path": "docs/draft_class_2026.html",
+      "action": "moved",
+      "bytes": 196738,
+      "sha256": "1066de1f6e08bc6f6863d78eb6cef958d6822a3aa94768afa808f56408351088"
+    },
+    {
+      "source": "docs/draft_class_2026_nointro.html",
+      "path": "docs/draft_class_2026_nointro.html",
+      "action": "moved",
+      "bytes": 102046,
+      "sha256": "f4d9c6c572ddd97d82b7069e70b712dc8d60eccdbd4a505e733912a95e83fffd"
+    },
+    {
+      "source": "docs/draft_class_2027.html",
+      "path": "docs/draft_class_2027.html",
+      "action": "moved",
+      "bytes": 190275,
+      "sha256": "ddb9957915b78be91e9e998758f92da66791aa0f257fcb71f67af667b776aa05"
+    },
+    {
+      "source": "docs/draft_class_2028.html",
+      "path": "docs/draft_class_2028.html",
+      "action": "moved",
+      "bytes": 222036,
+      "sha256": "c958c53a97886cf13d25139f5112b760397d06a7964a32940991e377e5dc374f"
+    },
+    {
+      "source": "docs/draft_class_2028_nointro.html",
+      "path": "docs/draft_class_2028_nointro.html",
+      "action": "moved",
+      "bytes": 219885,
+      "sha256": "6b2797516f5b6ff54af6e894b46912386c6c2d5fcd0b7e504010da065ad585ed"
+    },
+    {
+      "source": "docs/draft_mock.md",
+      "path": "docs/draft_mock.md",
+      "action": "moved",
+      "bytes": 29159,
+      "sha256": "551b01daef703488c6c0f27f993bb3c21ecfb703610d3b8eeda0c96ee0dd9d60"
+    },
+    {
+      "source": "docs/draft_mock_2027.md",
+      "path": "docs/draft_mock_2027.md",
+      "action": "moved",
+      "bytes": 24124,
+      "sha256": "9cd7d076b4b38016761416b4f33ce36a40b4861234f3d2c936afd3c84dc94f14"
+    },
+    {
+      "source": "docs/draft_mock_2028.md",
+      "path": "docs/draft_mock_2028.md",
+      "action": "moved",
+      "bytes": 16778,
+      "sha256": "9cb94d56fe0c8ee1d038baf44ae0fcb7d9d2c25e5cc01112f876a84c3fde421b"
+    },
+    {
+      "source": "docs/draft_rounds_1_7_2027.html",
+      "path": "docs/draft_rounds_1_7_2027.html",
+      "action": "moved",
+      "bytes": 384961,
+      "sha256": "d22c2ed9481250723af465279c4dbd4e3dc4f05bd351a1281417f38de0ac526b"
+    },
+    {
+      "source": "docs/draft_rounds_1_7_2028.html",
+      "path": "docs/draft_rounds_1_7_2028.html",
+      "action": "moved",
+      "bytes": 386192,
+      "sha256": "f2ddb6615cf30d596d4b1b6e08b67efec1db4bea81390b6417d308061d598354"
+    },
+    {
+      "source": "docs/matchup_gameplan.html",
+      "path": "docs/matchup_gameplan.html",
+      "action": "copied",
+      "bytes": 58212,
+      "sha256": "46ba2dcd9979c4b896bc7cedd7558ce6fd720f1a27936251463e5d601272252f"
+    },
+    {
+      "source": "docs/nfc_compl.png",
+      "path": "docs/nfc_compl.png",
+      "action": "moved",
+      "bytes": 501602,
+      "sha256": "58c215b587c352e4f0df55ff8fb117d9eaa3ff50e8a6208ff6de069306f1a70a"
+    },
+    {
+      "source": "docs/nfc_race.png",
+      "path": "docs/nfc_race.png",
+      "action": "moved",
+      "bytes": 491252,
+      "sha256": "9d61125b6f739cce4887fd523867fa987bf37ae38e4fa57f81a012c8e54c8e9e"
+    },
+    {
+      "source": "docs/nfc_total.png",
+      "path": "docs/nfc_total.png",
+      "action": "moved",
+      "bytes": 519313,
+      "sha256": "f666e397f9aa4fa5255f3015a79007186cb15f4f73b38ab11f016e6edce3e1c7"
+    },
+    {
+      "source": "docs/nfl_playoff_tie.txt",
+      "path": "docs/nfl_playoff_tie.txt",
+      "action": "copied",
+      "bytes": 6114,
+      "sha256": "f16ff144a2f5bb7eeea2543eff575ae9e2bd25d1ceb14746a2eef4c736aff5a4"
+    },
+    {
+      "source": "docs/playoff_dashboard.html",
+      "path": "docs/playoff_dashboard.html",
+      "action": "copied",
+      "bytes": 49506,
+      "sha256": "661a6c82a9e32ab0214173988b4a3a50e5a27aa100a3a7cd49927dd2fd16a848"
+    },
+    {
+      "source": "docs/playoff_race.html",
+      "path": "docs/playoff_race.html",
+      "action": "moved",
+      "bytes": 59336,
+      "sha256": "879eea49b865082248987d4db41698de7892aa99e694b7848c9fb9ce2bd67548"
+    },
+    {
+      "source": "docs/playoff_race.png",
+      "path": "docs/playoff_race.png",
+      "action": "moved",
+      "bytes": 392612,
+      "sha256": "e32496ccadd68053b777debc365ef2a89e72af73867ea2e35a43d53fe829aaf0"
+    },
+    {
+      "source": "docs/playoff_race_analysis.md",
+      "path": "docs/playoff_race_analysis.md",
+      "action": "moved",
+      "bytes": 14799,
+      "sha256": "ce61008f6103ff3eff7f706dd20af325dd058b457c14e5b85a1e39fe2913bfe0"
+    },
+    {
+      "source": "docs/playoff_race_table.html",
+      "path": "docs/playoff_race_table.html",
+      "action": "moved",
+      "bytes": 122394,
+      "sha256": "9eeb73eb2efc9b453d22b337da559ada95b47f6f4dd30309a8aad1c29bd69850"
+    },
+    {
+      "source": "docs/power_rankings_roster.html",
+      "path": "docs/power_rankings_roster.html",
+      "action": "moved",
+      "bytes": 871811,
+      "sha256": "cf2c5b551f81323a4dbf03a11c1d992249be67a3773a4d7e130412e204bf267f"
+    },
+    {
+      "source": "docs/power_rankings_roster_charts.html",
+      "path": "docs/power_rankings_roster_charts.html",
+      "action": "copied",
+      "bytes": 18070,
+      "sha256": "4b9f300923a5da6927a8ab3a1381c17901f95bb00dbf232fa32152584d633640"
+    },
+    {
+      "source": "docs/rankings_explorer.html",
+      "path": "docs/rankings_explorer.html",
+      "action": "copied",
+      "bytes": 25773,
+      "sha256": "871714fd80b441b43914703658310b9ac894cc029d2f49384dd5a774ae8e0ce4"
+    },
+    {
+      "source": "docs/remaning_race_sos.png",
+      "path": "docs/remaning_race_sos.png",
+      "action": "moved",
+      "bytes": 186036,
+      "sha256": "a392fd5937efe8e549d35a3384ae9be4f756aa9b90e9ca558198b5eddf275bea"
+    },
+    {
+      "source": "docs/remaning_race_sos2.png",
+      "path": "docs/remaning_race_sos2.png",
+      "action": "moved",
+      "bytes": 186036,
+      "sha256": "a392fd5937efe8e549d35a3384ae9be4f756aa9b90e9ca558198b5eddf275bea"
+    },
+    {
+      "source": "docs/roster_cap_tool/USAGE.md",
+      "path": "docs/roster_cap_tool/USAGE.md",
+      "action": "copied",
+      "bytes": 6491,
+      "sha256": "640c324152334c27f86a17e4da21b3948b0dc9fe8d54a4d98f6d6bc55608183b"
+    },
+    {
+      "source": "docs/roster_cap_tool/css/styles.css",
+      "path": "docs/roster_cap_tool/css/styles.css",
+      "action": "copied",
+      "bytes": 10644,
+      "sha256": "9c311da7057fd4fac5e000951a9fbf6cab144b96fbf5615d0d8b59911b4ed54c"
+    },
+    {
+      "source": "docs/roster_cap_tool/index.html",
+      "path": "docs/roster_cap_tool/index.html",
+      "action": "copied",
+      "bytes": 3099,
+      "sha256": "00a9c0e4ed54826900340c48db42a4943bc10519079553e5e5132b9b44d1d2d7"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/capMath.js",
+      "path": "docs/roster_cap_tool/js/capMath.js",
+      "action": "copied",
+      "bytes": 31509,
+      "sha256": "3f095975974b4ef6778ad7d4b3d3b0c4261ba0617c66bd16fab0a64ae47b8e14"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/context.js",
+      "path": "docs/roster_cap_tool/js/context.js",
+      "action": "copied",
+      "bytes": 7492,
+      "sha256": "028a032df40a541d13c53a959fece5d846d3dfe1b5c55a116a35f8c165878b22"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/contractUtils.js",
+      "path": "docs/roster_cap_tool/js/contractUtils.js",
+      "action": "copied",
+      "bytes": 2499,
+      "sha256": "86e0f605235790c091e4bc481d5b3d742677d00d498d04d3c4c111c5817c128a"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/csv.js",
+      "path": "docs/roster_cap_tool/js/csv.js",
+      "action": "copied",
+      "bytes": 1116,
+      "sha256": "5a728c71d8ed2466594b0e37a39f6c7134691282afabe7475c209e8031354b85"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/format.js",
+      "path": "docs/roster_cap_tool/js/format.js",
+      "action": "copied",
+      "bytes": 1088,
+      "sha256": "7010801a64db8fcf5244af1b8e87e8f1811f02f18e25959d513afc36a15bb11c"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/main.js",
+      "path": "docs/roster_cap_tool/js/main.js",
+      "action": "copied",
+      "bytes": 3804,
+      "sha256": "66ab4b4bac2d52410a25115abd7c890bc6d73cb10e16797f7a855359ded17d2a"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/models.js",
+      "path": "docs/roster_cap_tool/js/models.js",
+      "action": "copied",
+      "bytes": 3040,
+      "sha256": "6709a9a6f48d22b19f5908e181fb920d413c9ca6b7d4c66e2dfdf68ede0b31bc"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/package.json",
+      "path": "docs/roster_cap_tool/js/package.json",
+      "action": "copied",
+      "bytes": 24,
+      "sha256": "39517fb4e03a6b6e65adc29c0ec0e400ba3286a76f312ca1ee70b4e117b5ec77"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/state.js",
+      "path": "docs/roster_cap_tool/js/state.js",
+      "action": "copied",
+      "bytes": 21818,
+      "sha256": "4818e344e287fc3b675a0d12bee0ce37e0de8a71a19a2fa2b62db1b65a098c1e"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/a11y.js",
+      "path": "docs/roster_cap_tool/js/ui/a11y.js",
+      "action": "copied",
+      "bytes": 2647,
+      "sha256": "17f1002ca127b5697397cfbcd7aed771455da91a057960bf773024c115e6ca5f"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/capSummary.js",
+      "path": "docs/roster_cap_tool/js/ui/capSummary.js",
+      "action": "copied",
+      "bytes": 7983,
+      "sha256": "d88ffc641646e18666649a28da7dde4ba712ea205e7b8d752a20e91e9449c838"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/deadMoneyTable.js",
+      "path": "docs/roster_cap_tool/js/ui/deadMoneyTable.js",
+      "action": "copied",
+      "bytes": 7290,
+      "sha256": "f05e05c859db4dfc5b0cb130943854a0d1543c93052f37171b5b8d3cad2c3b96"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/draftPicks.js",
+      "path": "docs/roster_cap_tool/js/ui/draftPicks.js",
+      "action": "copied",
+      "bytes": 4448,
+      "sha256": "3d66a3a8cb8c49a15ba91219def53ce1073e454f8034dabd9c72ed7e7857cdd4"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/confirmDialog.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/confirmDialog.js",
+      "action": "copied",
+      "bytes": 3528,
+      "sha256": "c1613ae80ade84a160a00a1c2e8fbbbf9400a76dc2ec49bcef6ccee6b462fadd"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/contractEditor.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/contractEditor.js",
+      "action": "copied",
+      "bytes": 8308,
+      "sha256": "05dc9921eba8c47a7cb910af40b9ce7d667dd88c860416a3d29dd8c90e6e30d7"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/conversionModal.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/conversionModal.js",
+      "action": "copied",
+      "bytes": 8952,
+      "sha256": "0ca1c63597c7324025c19fcf2bf296b3818a6fde40a95e718da4980a8f01779f"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/extensionModal.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/extensionModal.js",
+      "action": "copied",
+      "bytes": 7295,
+      "sha256": "f055bc1302c3fca4a033f97737bf3f21ffd5879dc8620d1a49808ba5701c3d2e"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/offerModal.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/offerModal.js",
+      "action": "copied",
+      "bytes": 7538,
+      "sha256": "d61f691254fb0ae183160d5bddfc6436e19bfa407309b106063184851401f048"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/releaseModal.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/releaseModal.js",
+      "action": "copied",
+      "bytes": 5347,
+      "sha256": "374e6c7c49962d5e15f90e8d77208b250263b0b14cc7009418a3bc9406825ec5"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/scenarioModals.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/scenarioModals.js",
+      "action": "copied",
+      "bytes": 7973,
+      "sha256": "dac2d78f98081ad1907df9f7888ce4167135d788f7ed66672232e7566b4c0dfa"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/modals/tradeInModal.js",
+      "path": "docs/roster_cap_tool/js/ui/modals/tradeInModal.js",
+      "action": "copied",
+      "bytes": 7383,
+      "sha256": "797a3d1794e34aa3fcbae369868903d0d949c4d6d2cc0397c84c8caa58790344"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/playerTable.js",
+      "path": "docs/roster_cap_tool/js/ui/playerTable.js",
+      "action": "copied",
+      "bytes": 15851,
+      "sha256": "9a05716b9506eb8f1373de42cfdb9a5cd2b9d4a1c364610f8070f781d60c082a"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/projections.js",
+      "path": "docs/roster_cap_tool/js/ui/projections.js",
+      "action": "copied",
+      "bytes": 6360,
+      "sha256": "346ed3e9973753ec179b4a8cc80f871f716a5779db8173147e26ba8bef6912ef"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/rosterTabs.js",
+      "path": "docs/roster_cap_tool/js/ui/rosterTabs.js",
+      "action": "copied",
+      "bytes": 5053,
+      "sha256": "37be631ffd93e5b611c13c1cfe38fcaaafda34b56a6a398d039e96deb4194ec9"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/scenarioControls.js",
+      "path": "docs/roster_cap_tool/js/ui/scenarioControls.js",
+      "action": "copied",
+      "bytes": 3516,
+      "sha256": "28d9ef73bd8ef87ef112e2117bdb7c64404e32d8b5cc98c367780222dcc20607"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/teamSelector.js",
+      "path": "docs/roster_cap_tool/js/ui/teamSelector.js",
+      "action": "copied",
+      "bytes": 977,
+      "sha256": "5ed52902046e1ed72658f22fcabc6bb00730366222e5517d0c77c358c279dcab"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/ui/yearContext.js",
+      "path": "docs/roster_cap_tool/js/ui/yearContext.js",
+      "action": "copied",
+      "bytes": 1601,
+      "sha256": "91dd2177454276c4598fcb6851cda338be32b14746b6266ed158dab00ee0bfea"
+    },
+    {
+      "source": "docs/roster_cap_tool/js/validation.js",
+      "path": "docs/roster_cap_tool/js/validation.js",
+      "action": "copied",
+      "bytes": 4882,
+      "sha256": "62ce21c5e30ae93f02541a807c7b008d920ea25fb074d864483b3c1cfff257b9"
+    },
+    {
+      "source": "docs/roster_cap_tool/test.html",
+      "path": "docs/roster_cap_tool/test.html",
+      "action": "copied",
+      "bytes": 9148,
+      "sha256": "3b30709e9e9415f86946e4b3af4dd3753f3caf46fcde53bcebb83a08d8af3511"
+    },
+    {
+      "source": "docs/sos_graphs.html",
+      "path": "docs/sos_graphs.html",
+      "action": "copied",
+      "bytes": 21530,
+      "sha256": "d3c295bcc1316f95b6b6deca4b5cbded933003b0801176c469190f4bbfd6a42c"
+    },
+    {
+      "source": "docs/sos_graphs_season3.html",
+      "path": "docs/sos_graphs_season3.html",
+      "action": "copied",
+      "bytes": 22278,
+      "sha256": "d7e810b7bdbba79ed0f2ab73a3142047bc81d4a0e798ac7378bd89317e7f4407"
+    },
+    {
+      "source": "docs/sos_graphs_season4.html",
+      "path": "docs/sos_graphs_season4.html",
+      "action": "copied",
+      "bytes": 22278,
+      "sha256": "04bbd7fb41872776cc3334a85da7afb8d552de08ecb7e90c75c5b74d3d1a5ba8"
+    },
+    {
+      "source": "docs/sos_season2.html",
+      "path": "docs/sos_season2.html",
+      "action": "copied",
+      "bytes": 37066,
+      "sha256": "acb3315a63510a989fa5f1f9887f42b6de40b5e15798202372de51eb6851924c"
+    },
+    {
+      "source": "docs/sos_season3.html",
+      "path": "docs/sos_season3.html",
+      "action": "copied",
+      "bytes": 46717,
+      "sha256": "58ab525b79a00205105470dad748ec42abb184cf64b265f8e6e2668471e269bc"
+    },
+    {
+      "source": "docs/sos_season4.html",
+      "path": "docs/sos_season4.html",
+      "action": "copied",
+      "bytes": 46865,
+      "sha256": "a91169ea006b48b88e7de6c9b16c58a0c05a2e9ddf5efcb20bc319947c322eec"
+    },
+    {
+      "source": "docs/stats_dashboard.html",
+      "path": "docs/stats_dashboard.html",
+      "action": "copied",
+      "bytes": 16234,
+      "sha256": "ce3d61ba0fbda2a22383169dbdb39401117fe5d9338c099d013a98750af600e1"
+    },
+    {
+      "source": "docs/team_elo_correlations.html",
+      "path": "docs/team_elo_correlations.html",
+      "action": "copied",
+      "bytes": 32191,
+      "sha256": "ce7bd3bfaea0243319b3851b05bc9ea4af8100ac6b443da7cb2f2841d1db160c"
+    },
+    {
+      "source": "docs/team_player_usage.html",
+      "path": "docs/team_player_usage.html",
+      "action": "copied",
+      "bytes": 60715,
+      "sha256": "fa9bd8dd398b760a666278f8daa1e3f094a97c429b0867644046beafd302e879"
+    },
+    {
+      "source": "docs/team_scenarios/49ers.md",
+      "path": "docs/team_scenarios/49ers.md",
+      "action": "moved",
+      "bytes": 6327,
+      "sha256": "7361ef859c85571e4d54e9c3bb3c11b4c7342a771d8fcfc1488c6e5cafd0d13c"
+    },
+    {
+      "source": "docs/team_scenarios/Bears.md",
+      "path": "docs/team_scenarios/Bears.md",
+      "action": "moved",
+      "bytes": 6262,
+      "sha256": "93e5bb1abc4a64fd4a772dff0337f3aa2bf7690186ac5e7f8f8a9e259ecd0b50"
+    },
+    {
+      "source": "docs/team_scenarios/Bengals.md",
+      "path": "docs/team_scenarios/Bengals.md",
+      "action": "moved",
+      "bytes": 5840,
+      "sha256": "52838f1a250f8f18d6cad8dd229f213d55b7ddc6680f735c034904f520240418"
+    },
+    {
+      "source": "docs/team_scenarios/Bills.md",
+      "path": "docs/team_scenarios/Bills.md",
+      "action": "moved",
+      "bytes": 6147,
+      "sha256": "656f2718659266c837be417ab6d4b6202726be0d7b7c4765e93fb714b832805f"
+    },
+    {
+      "source": "docs/team_scenarios/Broncos.md",
+      "path": "docs/team_scenarios/Broncos.md",
+      "action": "moved",
+      "bytes": 6360,
+      "sha256": "77d090e84418273e4766a1a029e8c506b3b7a141622fda6231f90abbeb555507"
+    },
+    {
+      "source": "docs/team_scenarios/Browns.md",
+      "path": "docs/team_scenarios/Browns.md",
+      "action": "moved",
+      "bytes": 6289,
+      "sha256": "7568a674c10e8953c7e29919e4b81b943ed7d580af3fd529495d4a98bdd8163a"
+    },
+    {
+      "source": "docs/team_scenarios/Buccaneers.md",
+      "path": "docs/team_scenarios/Buccaneers.md",
+      "action": "moved",
+      "bytes": 6121,
+      "sha256": "badf74a140464512ddd37701c7945c55ae9e5b4cf99c6ae296741e4dc079fa7a"
+    },
+    {
+      "source": "docs/team_scenarios/Cardinals.md",
+      "path": "docs/team_scenarios/Cardinals.md",
+      "action": "moved",
+      "bytes": 6092,
+      "sha256": "2a4f6ac4432fb494b959f612f1bf88529b5c86d2029271dc96c808984363e137"
+    },
+    {
+      "source": "docs/team_scenarios/Chargers.md",
+      "path": "docs/team_scenarios/Chargers.md",
+      "action": "moved",
+      "bytes": 5685,
+      "sha256": "5a2b4de4c3f0ecedfe841a14d72f1ddaf18d4ff4717419f1b2ffe61d788bb514"
+    },
+    {
+      "source": "docs/team_scenarios/Chiefs.md",
+      "path": "docs/team_scenarios/Chiefs.md",
+      "action": "moved",
+      "bytes": 5454,
+      "sha256": "23f9dc179b7c0fd55dd396e0488ae5bf5cb457d382a1599ba05f4ac0d844c655"
+    },
+    {
+      "source": "docs/team_scenarios/Colts.md",
+      "path": "docs/team_scenarios/Colts.md",
+      "action": "moved",
+      "bytes": 6350,
+      "sha256": "638035acd158e218acd61a6801d3f19ddbea20ebfad272fa5abbd30340a2f3e8"
+    },
+    {
+      "source": "docs/team_scenarios/Commanders.md",
+      "path": "docs/team_scenarios/Commanders.md",
+      "action": "moved",
+      "bytes": 6019,
+      "sha256": "6aefb578aec06705233a536a97ed9868c61c0814eaf233def48f4e339c7bda47"
+    },
+    {
+      "source": "docs/team_scenarios/Cowboys.md",
+      "path": "docs/team_scenarios/Cowboys.md",
+      "action": "moved",
+      "bytes": 5969,
+      "sha256": "c0ad9e19d126f2406c7948c5a0f991b8a088fdd66ea703a863727370afef8914"
+    },
+    {
+      "source": "docs/team_scenarios/Dolphins.md",
+      "path": "docs/team_scenarios/Dolphins.md",
+      "action": "moved",
+      "bytes": 5353,
+      "sha256": "d3fbeed5bf66a87c6250a02c9d18e7b1220b790c2368091fb841644d0b35ba2f"
+    },
+    {
+      "source": "docs/team_scenarios/Eagles.md",
+      "path": "docs/team_scenarios/Eagles.md",
+      "action": "moved",
+      "bytes": 6346,
+      "sha256": "ccf3aaac35da98cfcec1d1681e33fa83afeea03fa74c5ee3192e7b75308e3620"
+    },
+    {
+      "source": "docs/team_scenarios/Falcons.md",
+      "path": "docs/team_scenarios/Falcons.md",
+      "action": "moved",
+      "bytes": 6139,
+      "sha256": "0a6028c33a2f9b248b6603ef56bd551ebde34580ddbd81ac71e3ce57f5002a83"
+    },
+    {
+      "source": "docs/team_scenarios/Giants.md",
+      "path": "docs/team_scenarios/Giants.md",
+      "action": "moved",
+      "bytes": 5989,
+      "sha256": "8c0ca6dd63335d33f4102599b1b47ccd4b47d9ecb0e3dbca88710e9df380871b"
+    },
+    {
+      "source": "docs/team_scenarios/Jaguars.md",
+      "path": "docs/team_scenarios/Jaguars.md",
+      "action": "moved",
+      "bytes": 6300,
+      "sha256": "152d0fe7342140606d575a2c6ee9058436f03f74111085a71e07ec94a112c486"
+    },
+    {
+      "source": "docs/team_scenarios/Jets.md",
+      "path": "docs/team_scenarios/Jets.md",
+      "action": "moved",
+      "bytes": 6149,
+      "sha256": "3f056e6846ab2ffad0f35b19fcbe061210e5ddef73e57665888ed65881a34490"
+    },
+    {
+      "source": "docs/team_scenarios/Lions.md",
+      "path": "docs/team_scenarios/Lions.md",
+      "action": "moved",
+      "bytes": 6230,
+      "sha256": "608ba2b8d8b4e5326d9406b81d03127393e1b815b06ec27965c207c1efd89f4b"
+    },
+    {
+      "source": "docs/team_scenarios/Packers.md",
+      "path": "docs/team_scenarios/Packers.md",
+      "action": "moved",
+      "bytes": 5975,
+      "sha256": "fe518695fd72edd1e56c01b44f6a101668c1674383182a5525f46463c066715e"
+    },
+    {
+      "source": "docs/team_scenarios/Panthers.md",
+      "path": "docs/team_scenarios/Panthers.md",
+      "action": "moved",
+      "bytes": 5572,
+      "sha256": "4b804c4fcc2d0d3d6b4a3711ef649530cc3f6d55628634ca95bf0b9e0c64d6aa"
+    },
+    {
+      "source": "docs/team_scenarios/Patriots.md",
+      "path": "docs/team_scenarios/Patriots.md",
+      "action": "moved",
+      "bytes": 5570,
+      "sha256": "265dd43b4e147d887010c4a0dcdf7f12d5dd0c1eee2470ad41c508f5e9dc7ee2"
+    },
+    {
+      "source": "docs/team_scenarios.html",
+      "path": "docs/team_scenarios.html",
+      "action": "moved",
+      "bytes": 55269,
+      "sha256": "0e7c2749f833ccda4cd8a228509f07355638298668646897769f2ceec304649d"
+    },
+    {
+      "source": "docs/team_stats_correlations.html",
+      "path": "docs/team_stats_correlations.html",
+      "action": "copied",
+      "bytes": 73115,
+      "sha256": "21d5e2eb35b8a5c931e7c26458f0bf33f4fb442a58b0e10ffc13a2ab884f4f3b"
+    },
+    {
+      "source": "docs/team_stats_explorer.html",
+      "path": "docs/team_stats_explorer.html",
+      "action": "copied",
+      "bytes": 52320,
+      "sha256": "01f6fbdf18244982e2629305b9ab15c8433df9bb8f8bac44370f2ddbcfb2cd5e"
+    },
+    {
+      "source": "docs/tools_guide.html",
+      "path": "docs/tools_guide.html",
+      "action": "copied",
+      "bytes": 11832,
+      "sha256": "375280c780a45921d20fd817aef66b1a415de5423240f133d5d8f201b5c67488"
+    },
+    {
+      "source": "docs/trade_dashboard.html",
+      "path": "docs/trade_dashboard.html",
+      "action": "copied",
+      "bytes": 15157,
+      "sha256": "b67dc0dfdea85d4cc24ce92bf03d15d13b06e969db59a031f4e37517fe356848"
+    },
+    {
+      "source": "docs/week18_simulator.html",
+      "path": "docs/week18_simulator.html",
+      "action": "moved",
+      "bytes": 84343,
+      "sha256": "6eaca33a4c501f08b525d6ef0bc795f5d3e7ab9945f1e047f4ad7d99b2a14fd8"
+    },
+    {
+      "source": "filtered_defense.csv",
+      "path": "filtered_defense.csv",
+      "action": "moved",
+      "bytes": 4034,
+      "sha256": "80a8b6a91df9fc3bc27187f99bcccf20b21880195c5a410282ea22b7058c25aa"
+    },
+    {
+      "source": "filtered_games.csv",
+      "path": "filtered_games.csv",
+      "action": "moved",
+      "bytes": 14830,
+      "sha256": "5e3bc4773e2e92521d2d96c052153fef1d3ae43df6306488919c1bae9d8d5682"
+    },
+    {
+      "source": "filtered_passing.csv",
+      "path": "filtered_passing.csv",
+      "action": "moved",
+      "bytes": 335,
+      "sha256": "1c3f66452cef2bc5d9eb7a405bf491b364fd50724129a1982838a4b32234a85c"
+    },
+    {
+      "source": "filtered_receiving.csv",
+      "path": "filtered_receiving.csv",
+      "action": "moved",
+      "bytes": 2160,
+      "sha256": "07bf168381c0425ae16795c1875c63dcc4e01261533704ab97357541973d67d3"
+    },
+    {
+      "source": "filtered_rushing.csv",
+      "path": "filtered_rushing.csv",
+      "action": "moved",
+      "bytes": 2055,
+      "sha256": "58b09f0d9de17d77969871b6eb1b2b4d0948e10ca6918f9866912d335fb39eda"
+    },
+    {
+      "source": "index.html",
+      "path": "index.html",
+      "action": "copied",
+      "bytes": 16630,
+      "sha256": "976d360f9d3e629dc60ad6194f52e1e44ac77afb3b1d732c899948337c71d734"
+    },
+    {
+      "source": "mega_elo.csv",
+      "path": "mega_elo.csv",
+      "action": "moved",
+      "bytes": 1177,
+      "sha256": "6423baf9bade45c18536fdaafd26f1fe91a2bce77d031e6bf66a804cf7fc67ce"
+    },
+    {
+      "source": "mockups/designs/nfc_playoff_infographic/index.html",
+      "path": "mockups/designs/nfc_playoff_infographic/index.html",
+      "action": "moved",
+      "bytes": 28383,
+      "sha256": "49e9c34a28dee783737d31f4fa22057b553f2b330796443c642e13c93c1c337c"
+    },
+    {
+      "source": "output/attributes.md",
+      "path": "output/attributes.md",
+      "action": "copied",
+      "bytes": 2661,
+      "sha256": "70d80f31853c1dea72abcff501853941a45830b88d905ac254108ee0412d546e"
+    },
+    {
+      "source": "output/cap_tool_verification.json",
+      "path": "output/cap_tool_verification.json",
+      "action": "moved",
+      "bytes": 12048,
+      "sha256": "c4ad773acdacccfb1b80cb11681a7107f9b64981d8c41bc99645ac52ab931bf3"
+    },
+    {
+      "source": "output/draft_class_2026_test.html",
+      "path": "output/draft_class_2026_test.html",
+      "action": "moved",
+      "bytes": 102392,
+      "sha256": "21d2c8334e146a79a5c0e736d16bcffc064484e41461eebe1f30cb7a6a73fe1f"
+    },
+    {
+      "source": "output/draft_race/draft_race_report.md",
+      "path": "output/draft_race/draft_race_report.md",
+      "action": "moved",
+      "bytes": 2727,
+      "sha256": "06d6ae336fe9e42fa553c2a351077b7cf3bcb65d4649e8411c2fc57e0cd5e329"
+    },
+    {
+      "source": "output/individual_position_formulas.txt",
+      "path": "output/individual_position_formulas.txt",
+      "action": "copied",
+      "bytes": 23705,
+      "sha256": "d8ceee7287d2ee342165c5e771786ae9fbd70ed82df3e78cc0f17e5080743443"
+    },
+    {
+      "source": "output/player_team_stints.csv",
+      "path": "output/player_team_stints.csv",
+      "action": "moved",
+      "bytes": 276060,
+      "sha256": "c9366d645bc4e534f4cd45e00fac1484871d69ce54bd716c9e31ceab680ae67a"
+    },
+    {
+      "source": "output/playoff_probabilities.json",
+      "path": "output/playoff_probabilities.json",
+      "action": "moved",
+      "bytes": 16137,
+      "sha256": "fb758f06372daf54ed67215ff8f243ddc57aeb07046c7d61dbe88dfd228c186e"
+    },
+    {
+      "source": "output/positions/C.csv",
+      "path": "output/positions/C.csv",
+      "action": "moved",
+      "bytes": 6478,
+      "sha256": "9a6ed6a3afdc963b954c18983590261fc914ab0833e336fec7f60322da8d32c2"
+    },
+    {
+      "source": "output/positions/CB.csv",
+      "path": "output/positions/CB.csv",
+      "action": "moved",
+      "bytes": 21659,
+      "sha256": "9e6806b70c1091c873a01d9bfd6c76d96972c44ed8e73c7ee448ed1ae0acd6b1"
+    },
+    {
+      "source": "output/positions/DT.csv",
+      "path": "output/positions/DT.csv",
+      "action": "moved",
+      "bytes": 16562,
+      "sha256": "276737015d5105c81f05125d5cad3f154c7d3fbbc822639f22109ee1c8d2c738"
+    },
+    {
+      "source": "output/positions/FB.csv",
+      "path": "output/positions/FB.csv",
+      "action": "moved",
+      "bytes": 2958,
+      "sha256": "cbf0a212ee6427e2d3c0d5625209a47276970faf6e5af8d0eb35335440a37261"
+    },
+    {
+      "source": "output/positions/FS.csv",
+      "path": "output/positions/FS.csv",
+      "action": "moved",
+      "bytes": 8979,
+      "sha256": "f4af193913ac92ddab52f92185dc9f29562434666248df5e4448d8356c7037b3"
+    },
+    {
+      "source": "output/positions/G.csv",
+      "path": "output/positions/G.csv",
+      "action": "moved",
+      "bytes": 12897,
+      "sha256": "82162e1d65a10a6549e0c3f42afc5397c373a1b7423f278021212de4b45f3ba7"
+    },
+    {
+      "source": "output/positions/HB.csv",
+      "path": "output/positions/HB.csv",
+      "action": "moved",
+      "bytes": 15096,
+      "sha256": "6c499001f653cfdfdb9b84a6da286d881e80347f37cef8f94d0256f2be4143ee"
+    },
+    {
+      "source": "output/positions/K.csv",
+      "path": "output/positions/K.csv",
+      "action": "moved",
+      "bytes": 2153,
+      "sha256": "959080b46970d9d3d41938029d5b96f423589b67fd39b150d19ee167d7b05578"
+    },
+    {
+      "source": "output/positions/LEDGE.csv",
+      "path": "output/positions/LEDGE.csv",
+      "action": "moved",
+      "bytes": 9945,
+      "sha256": "69ecf8d4045af2ac5cace79cd951258c077c031602a0fb4facca4eac3e1937a5"
+    },
+    {
+      "source": "output/positions/LG.csv",
+      "path": "output/positions/LG.csv",
+      "action": "moved",
+      "bytes": 6453,
+      "sha256": "b62842a57a1d95cb5540f5609c50a9f62dd0deb9c684f640163caa9223570cf2"
+    },
+    {
+      "source": "output/positions/LS.csv",
+      "path": "output/positions/LS.csv",
+      "action": "moved",
+      "bytes": 1403,
+      "sha256": "e38d9d1ef05846775efdad4e839ab5639a84865a6ab40b772501efbe60ab51ea"
+    },
+    {
+      "source": "output/positions/LT.csv",
+      "path": "output/positions/LT.csv",
+      "action": "moved",
+      "bytes": 6934,
+      "sha256": "93baead6b9aec6fe35cc7d563b32dfae960619d0f67d18962d594ff1aaaebd0c"
+    },
+    {
+      "source": "output/positions/MIKE.csv",
+      "path": "output/positions/MIKE.csv",
+      "action": "moved",
+      "bytes": 9674,
+      "sha256": "9d8a4f7c45d45691d7ced22aea663679ed86d6428d6a87697766dec32c7b2580"
+    },
+    {
+      "source": "output/positions/P.csv",
+      "path": "output/positions/P.csv",
+      "action": "moved",
+      "bytes": 1892,
+      "sha256": "d7d84daa95f195718872685e227d637f129e80015858f12d5d572c9d7f844f28"
+    },
+    {
+      "source": "output/positions/QB.csv",
+      "path": "output/positions/QB.csv",
+      "action": "moved",
+      "bytes": 7018,
+      "sha256": "330884794e8703a93d921764d9c148c9d0f6e474999fc9b28ea564464e357766"
+    },
+    {
+      "source": "output/positions/REDGE.csv",
+      "path": "output/positions/REDGE.csv",
+      "action": "moved",
+      "bytes": 11385,
+      "sha256": "67ce1fdaaa1ec9d16842e32a6aa7d624b70789179b01cbcef6d8a1cda314f802"
+    },
+    {
+      "source": "output/positions/RG.csv",
+      "path": "output/positions/RG.csv",
+      "action": "moved",
+      "bytes": 6897,
+      "sha256": "ab9ff4076b64f8bf496962a080955c99973cf3fc818a46977359ded4db1d609e"
+    },
+    {
+      "source": "output/positions/RT.csv",
+      "path": "output/positions/RT.csv",
+      "action": "moved",
+      "bytes": 7003,
+      "sha256": "d15dd72464edf5f117e0074946c79d3c62dff2333b6ac2ea38c427918e8f75c1"
+    },
+    {
+      "source": "output/positions/SAM.csv",
+      "path": "output/positions/SAM.csv",
+      "action": "moved",
+      "bytes": 4931,
+      "sha256": "f5d75aae42335a678faefba0bb8062e1483f447e7544ee608041142d9fcf3e80"
+    },
+    {
+      "source": "output/positions/SS.csv",
+      "path": "output/positions/SS.csv",
+      "action": "moved",
+      "bytes": 8733,
+      "sha256": "d8a297648cfb95850be5bb1f0e8cc8d280d575345b79c929d3f3a28fc3112e34"
+    },
+    {
+      "source": "output/positions/TE.csv",
+      "path": "output/positions/TE.csv",
+      "action": "moved",
+      "bytes": 15994,
+      "sha256": "2b424fc300c3c09667c5f5bb4dfd7d7c833416cd5a6759647f0d4e23c86b7aee"
+    },
+    {
+      "source": "output/positions/WILL.csv",
+      "path": "output/positions/WILL.csv",
+      "action": "moved",
+      "bytes": 8018,
+      "sha256": "885e5b2e10d6aef15ccccfd5bed35a79b952c0b7afa5b3c27cafdb68aad8d022"
+    },
+    {
+      "source": "output/positions/WR.csv",
+      "path": "output/positions/WR.csv",
+      "action": "moved",
+      "bytes": 26603,
+      "sha256": "0d6cc1f120cf10df1345230b37e102d8ea5cbe509e4541911505409b26b0b1dd"
+    },
+    {
+      "source": "output/power_rankings_roster.csv",
+      "path": "output/power_rankings_roster.csv",
+      "action": "moved",
+      "bytes": 5692,
+      "sha256": "aa445f8a178c8be66a40bc2ab7a17c95cc93d61b79528f256299ba9c782d5312"
+    },
+    {
+      "source": "output/ranked_sos_by_conference.csv",
+      "path": "output/ranked_sos_by_conference.csv",
+      "action": "moved",
+      "bytes": 1641,
+      "sha256": "0f28e4d778101493ae73d2bf4f79dd7666fcc613c687c633d265f3528ccdb147"
+    },
+    {
+      "source": "output/ranked_sos_by_conference_season3.csv",
+      "path": "output/ranked_sos_by_conference_season3.csv",
+      "action": "moved",
+      "bytes": 1495,
+      "sha256": "e7b130d92009f8fbe5775f0c21034abdfab41d37499de9e6d402c1b8a7f57726"
+    },
+    {
+      "source": "output/ranked_sos_by_conference_season4.csv",
+      "path": "output/ranked_sos_by_conference_season4.csv",
+      "action": "moved",
+      "bytes": 1642,
+      "sha256": "b00e357600835fed4b28413f823e435ec4ac443f905871493c79c7584527cbed"
+    },
+    {
+      "source": "output/remaining_sos_by_conference.csv",
+      "path": "output/remaining_sos_by_conference.csv",
+      "action": "moved",
+      "bytes": 1526,
+      "sha256": "38b27adfef1c774937409dc18523deb109c67bd71ff9e747d361f464c1e2c759"
+    },
+    {
+      "source": "output/rookies_2026.csv",
+      "path": "output/rookies_2026.csv",
+      "action": "moved",
+      "bytes": 207393,
+      "sha256": "debb7cb1eb6310e7372040699ac94df72add7644df0335ec74c79cde347c17a4"
+    },
+    {
+      "source": "output/rookies_2027.csv",
+      "path": "output/rookies_2027.csv",
+      "action": "moved",
+      "bytes": 182003,
+      "sha256": "107e7e1d28515463683c9e1b9f81fb2527b45e218b012551c389c8104bf73526"
+    },
+    {
+      "source": "output/schedules/season2/all_schedules.json",
+      "path": "output/schedules/season2/all_schedules.json",
+      "action": "moved",
+      "bytes": 90819,
+      "sha256": "042455e51c36a86651d1b54255cd0be236583d048835973ecc15ed133b2b1ea1"
+    },
+    {
+      "source": "output/schedules/season3/all_schedules.json",
+      "path": "output/schedules/season3/all_schedules.json",
+      "action": "moved",
+      "bytes": 90815,
+      "sha256": "509e4c2246840a991573d62aec635e09718bd04b2c98b8a396c215394e38f464"
+    },
+    {
+      "source": "output/schedules/season4/all_schedules.json",
+      "path": "output/schedules/season4/all_schedules.json",
+      "action": "moved",
+      "bytes": 86868,
+      "sha256": "57db01068e82596921aa09ae0a74ef6e6a56fe5c1fda7df79f0dd4453d623089"
+    },
+    {
+      "source": "output/sos/season2_elo.csv",
+      "path": "output/sos/season2_elo.csv",
+      "action": "moved",
+      "bytes": 3375,
+      "sha256": "938cf8b330992161d22d993b2bac866c9fa09e0aa5e980a5c9dbb2536e192c03"
+    },
+    {
+      "source": "output/sos/season2_elo.json",
+      "path": "output/sos/season2_elo.json",
+      "action": "moved",
+      "bytes": 9041,
+      "sha256": "90edb8f565477de017966d6910ad86c1698dc588335ba6daf6a06aac3353e2a8"
+    },
+    {
+      "source": "output/sos/season3_elo.csv",
+      "path": "output/sos/season3_elo.csv",
+      "action": "moved",
+      "bytes": 3384,
+      "sha256": "360666b67e806091fe8163821604bfd9d641c2e9640e06614a397cdb28bb0410"
+    },
+    {
+      "source": "output/sos/season3_elo.json",
+      "path": "output/sos/season3_elo.json",
+      "action": "moved",
+      "bytes": 9050,
+      "sha256": "338fdb328af88d0959f56d25b7e037af4e0fedee7ab72de3de2ec55f2c92443f"
+    },
+    {
+      "source": "output/sos/season4_elo.csv",
+      "path": "output/sos/season4_elo.csv",
+      "action": "moved",
+      "bytes": 3151,
+      "sha256": "e3e765bfea892981b9d655d6a33302ac9fb62993d9681069b1238c12bc535140"
+    },
+    {
+      "source": "output/sos/season4_elo.json",
+      "path": "output/sos/season4_elo.json",
+      "action": "moved",
+      "bytes": 8817,
+      "sha256": "6d662aa6e5a32440f120b53a16c747c4b98b7ddf7d148a61adcb3d87b84d9189"
+    },
+    {
+      "source": "output/team_aggregated_stats.csv",
+      "path": "output/team_aggregated_stats.csv",
+      "action": "moved",
+      "bytes": 23159,
+      "sha256": "5bf89e8b223d5a816a16ab4095769d16f2bf0b71084d75c5477c0e42c8ac26bd"
+    },
+    {
+      "source": "output/team_player_usage.csv",
+      "path": "output/team_player_usage.csv",
+      "action": "moved",
+      "bytes": 21272,
+      "sha256": "ff7833e67a8c1ff55dece97104900496bfbe38c92c431bf695f8687535a50340"
+    },
+    {
+      "source": "output/team_rankings_stats.csv",
+      "path": "output/team_rankings_stats.csv",
+      "action": "moved",
+      "bytes": 43565,
+      "sha256": "1c95a8dfd383e095a0afd11e7755ffd799986e5df6fee6db8f638065ecf2db5f"
+    },
+    {
+      "source": "output/team_rosters/ARI.csv",
+      "path": "output/team_rosters/ARI.csv",
+      "action": "moved",
+      "bytes": 48184,
+      "sha256": "9e0584b7f4a5cadcbf510ef562e974552253144730ebc75bfef12e3d035109b1"
+    },
+    {
+      "source": "output/team_rosters/ARI_Defense.csv",
+      "path": "output/team_rosters/ARI_Defense.csv",
+      "action": "moved",
+      "bytes": 20296,
+      "sha256": "01189ebfd67b737ecfc1c4111bf71ead5d73e27618592efe98aa7d0dd798553f"
+    },
+    {
+      "source": "output/team_rosters/ARI_Offense.csv",
+      "path": "output/team_rosters/ARI_Offense.csv",
+      "action": "moved",
+      "bytes": 28151,
+      "sha256": "8928bf5dcd8363fe0d43de8a1a0372305652d21ed99d27f16dbfd221a49dae48"
+    },
+    {
+      "source": "output/team_rosters/ATL.csv",
+      "path": "output/team_rosters/ATL.csv",
+      "action": "moved",
+      "bytes": 68516,
+      "sha256": "a7d8a113c0978e9b121b4904042c5afa7d970dd8db6818f60b8d6e80aa40c436"
+    },
+    {
+      "source": "output/team_rosters/ATL_Defense.csv",
+      "path": "output/team_rosters/ATL_Defense.csv",
+      "action": "moved",
+      "bytes": 33967,
+      "sha256": "613d7979187f8113959374f5664a4d08c9297cf1ef89b588bb3ea942d0b5a056"
+    },
+    {
+      "source": "output/team_rosters/ATL_Offense.csv",
+      "path": "output/team_rosters/ATL_Offense.csv",
+      "action": "moved",
+      "bytes": 33710,
+      "sha256": "76ad515627fb45a9c7d246ed5736b82b42959ae2f2e1bee2050efa57cec67295"
+    },
+    {
+      "source": "output/team_rosters/BAL.csv",
+      "path": "output/team_rosters/BAL.csv",
+      "action": "moved",
+      "bytes": 66767,
+      "sha256": "6fb7c2a04141d5fc5001722d5caf3f28dbc85615099c98d5994e3ac1c6531a9c"
+    },
+    {
+      "source": "output/team_rosters/BAL_Defense.csv",
+      "path": "output/team_rosters/BAL_Defense.csv",
+      "action": "moved",
+      "bytes": 32769,
+      "sha256": "b8669244f63339a4f973a9900a22dadd374b2af59138ecf94fed2d63b6320522"
+    },
+    {
+      "source": "output/team_rosters/BAL_Offense.csv",
+      "path": "output/team_rosters/BAL_Offense.csv",
+      "action": "moved",
+      "bytes": 34316,
+      "sha256": "91c15245b6cc0477d5fde03b84c7b4ccd06ad6cf98a4266e91d815b7da0def34"
+    },
+    {
+      "source": "output/team_rosters/BUF.csv",
+      "path": "output/team_rosters/BUF.csv",
+      "action": "moved",
+      "bytes": 43656,
+      "sha256": "526232843b75a8cb8a60f126c311027ead6617a69d3c6d57e3450c6770bedace"
+    },
+    {
+      "source": "output/team_rosters/BUF_Defense.csv",
+      "path": "output/team_rosters/BUF_Defense.csv",
+      "action": "moved",
+      "bytes": 20647,
+      "sha256": "71021538725b2e42a74bac885c535a3d2a6fd4897740a33b89c6c1bd91924844"
+    },
+    {
+      "source": "output/team_rosters/BUF_Offense.csv",
+      "path": "output/team_rosters/BUF_Offense.csv",
+      "action": "moved",
+      "bytes": 22776,
+      "sha256": "421660fe1e5eefce7b0b83ef92341e68cbfb7f0902d81fcacfe51189ede72875"
+    },
+    {
+      "source": "output/team_rosters/CAR.csv",
+      "path": "output/team_rosters/CAR.csv",
+      "action": "moved",
+      "bytes": 61232,
+      "sha256": "4407a7a1eb0d8ac952fecf8c4e737c086f5718af37162ac7110395fbed026f55"
+    },
+    {
+      "source": "output/team_rosters/CAR_Defense.csv",
+      "path": "output/team_rosters/CAR_Defense.csv",
+      "action": "moved",
+      "bytes": 34018,
+      "sha256": "1f1ab6be397d34de19d0e6db44be12705d8146aa410bc22b837998763c02ba22"
+    },
+    {
+      "source": "output/team_rosters/CAR_Offense.csv",
+      "path": "output/team_rosters/CAR_Offense.csv",
+      "action": "moved",
+      "bytes": 26961,
+      "sha256": "78b2bbe092df57aaaf721abd3da1d3f3ef25ca87d4a10b29b5de576c4c910d3c"
+    },
+    {
+      "source": "output/team_rosters/CHI.csv",
+      "path": "output/team_rosters/CHI.csv",
+      "action": "moved",
+      "bytes": 60001,
+      "sha256": "5b51b1292e82b2c8b0b6651def4dad138159ed5652e0f08be634228c3628a793"
+    },
+    {
+      "source": "output/team_rosters/CHI_Defense.csv",
+      "path": "output/team_rosters/CHI_Defense.csv",
+      "action": "moved",
+      "bytes": 26440,
+      "sha256": "3347ed8defb202b4f64fb00309ced46ce078efabd10f64ba440d7693515983eb"
+    },
+    {
+      "source": "output/team_rosters/CHI_Offense.csv",
+      "path": "output/team_rosters/CHI_Offense.csv",
+      "action": "moved",
+      "bytes": 33860,
+      "sha256": "d5135c3b94de331b29c4030b93b383254501541133a829d74f5f3657cd21b9dc"
+    },
+    {
+      "source": "output/team_rosters/CIN.csv",
+      "path": "output/team_rosters/CIN.csv",
+      "action": "moved",
+      "bytes": 70742,
+      "sha256": "3756bd3d4314cbb26e227b5e5fee0e869d22113262ce599d07d1858523637bd1"
+    },
+    {
+      "source": "output/team_rosters/CIN_Defense.csv",
+      "path": "output/team_rosters/CIN_Defense.csv",
+      "action": "moved",
+      "bytes": 33631,
+      "sha256": "d81606d829f036c640ac3d3dd0f5be3f22f24154c8df43771213d53b52f318c6"
+    },
+    {
+      "source": "output/team_rosters/CIN_Offense.csv",
+      "path": "output/team_rosters/CIN_Offense.csv",
+      "action": "moved",
+      "bytes": 37398,
+      "sha256": "4df55ddaf0100e06d1d38c3cb8aa6dc25434b35c5cf66c6939df2952cfdebe82"
+    },
+    {
+      "source": "output/team_rosters/CLE.csv",
+      "path": "output/team_rosters/CLE.csv",
+      "action": "moved",
+      "bytes": 72111,
+      "sha256": "68e02c1de80a7a87d929fb9c973391f9483c80d9512396749d66b6be688b8e68"
+    },
+    {
+      "source": "output/team_rosters/CLE_Defense.csv",
+      "path": "output/team_rosters/CLE_Defense.csv",
+      "action": "moved",
+      "bytes": 33822,
+      "sha256": "fe34a21a56f78984be5d7b0aed5dadabc8e1a34f4282bdacfd3d44ac42ec9680"
+    },
+    {
+      "source": "output/team_rosters/CLE_Offense.csv",
+      "path": "output/team_rosters/CLE_Offense.csv",
+      "action": "moved",
+      "bytes": 36887,
+      "sha256": "4a5babc3479e7cba2a8e0aac2f16b98b2b32d5d576669fe9a1e2d99851fe61b3"
+    },
+    {
+      "source": "output/team_rosters/DAL.csv",
+      "path": "output/team_rosters/DAL.csv",
+      "action": "moved",
+      "bytes": 60112,
+      "sha256": "2461eb06899d78aa62e8fbd053d9bb11a7716d1d0a397ce2505c07c7a43114f3"
+    },
+    {
+      "source": "output/team_rosters/DAL_Defense.csv",
+      "path": "output/team_rosters/DAL_Defense.csv",
+      "action": "moved",
+      "bytes": 30249,
+      "sha256": "e97446b7ab1ca939359ca5f928424476af4c138a6f420e453b9a54c7bc807163"
+    },
+    {
+      "source": "output/team_rosters/DAL_Offense.csv",
+      "path": "output/team_rosters/DAL_Offense.csv",
+      "action": "moved",
+      "bytes": 28330,
+      "sha256": "7b90ef24913473f99fb7ba51f2f7b0cc34ea47fd9e1dd18650dc3b5431a4f13a"
+    },
+    {
+      "source": "output/team_rosters/DEN.csv",
+      "path": "output/team_rosters/DEN.csv",
+      "action": "moved",
+      "bytes": 61396,
+      "sha256": "cc8a581ec1b0ba530477cc1f13725c02343f0db00ea6142744fc62d817647758"
+    },
+    {
+      "source": "output/team_rosters/DEN_Defense.csv",
+      "path": "output/team_rosters/DEN_Defense.csv",
+      "action": "moved",
+      "bytes": 26705,
+      "sha256": "f9e11061fad30b61c93b040675ebb9d0c76a41d5e6930f461b89467c10e10f6f"
+    },
+    {
+      "source": "output/team_rosters/DEN_Offense.csv",
+      "path": "output/team_rosters/DEN_Offense.csv",
+      "action": "moved",
+      "bytes": 34958,
+      "sha256": "8a205639fe143336cd741ab3b8591cee44659d3930d6802be83202b5922817a6"
+    },
+    {
+      "source": "output/team_rosters/DET.csv",
+      "path": "output/team_rosters/DET.csv",
+      "action": "moved",
+      "bytes": 45423,
+      "sha256": "02e2aa55240b79677a7e499b82a4b9ddc5f18bf799cfb9b12c7f1f924c957642"
+    },
+    {
+      "source": "output/team_rosters/DET_Defense.csv",
+      "path": "output/team_rosters/DET_Defense.csv",
+      "action": "moved",
+      "bytes": 22376,
+      "sha256": "3cea9dc09e590f843b1a465d2a1498ffa86be667d2b6609a9d140fc8ebff30c4"
+    },
+    {
+      "source": "output/team_rosters/DET_Offense.csv",
+      "path": "output/team_rosters/DET_Offense.csv",
+      "action": "moved",
+      "bytes": 22778,
+      "sha256": "1bbadcae0a86f6487c7c2f08c61e5d0bf0b72b1a48b1f43f42808703caa82901"
+    },
+    {
+      "source": "output/team_rosters/GB.csv",
+      "path": "output/team_rosters/GB.csv",
+      "action": "moved",
+      "bytes": 49593,
+      "sha256": "bfa03ee661104ac64738fd3ddbe42fb83f6d62f7f1023173758cefa4c1cf6aa7"
+    },
+    {
+      "source": "output/team_rosters/GB_Defense.csv",
+      "path": "output/team_rosters/GB_Defense.csv",
+      "action": "moved",
+      "bytes": 27545,
+      "sha256": "12273483644df55bb49cb3db693be65e0f090c25b19e4ef6f7e7465bc1b2f6e6"
+    },
+    {
+      "source": "output/team_rosters/GB_Offense.csv",
+      "path": "output/team_rosters/GB_Offense.csv",
+      "action": "moved",
+      "bytes": 22329,
+      "sha256": "22a22d5ad5ac911d8b282411288e957c4c81a891f1082db28b64809b04348afe"
+    },
+    {
+      "source": "output/team_rosters/HOU.csv",
+      "path": "output/team_rosters/HOU.csv",
+      "action": "moved",
+      "bytes": 65567,
+      "sha256": "87a13e29520977790f7c25744428fe8783615157ab5fdfab08fcc39cb9402dfd"
+    },
+    {
+      "source": "output/team_rosters/HOU_Defense.csv",
+      "path": "output/team_rosters/HOU_Defense.csv",
+      "action": "moved",
+      "bytes": 36710,
+      "sha256": "3e809aeb1765c6059535d02467d251b7d6ce06b20cf8c038a0886d50678161d0"
+    },
+    {
+      "source": "output/team_rosters/HOU_Offense.csv",
+      "path": "output/team_rosters/HOU_Offense.csv",
+      "action": "moved",
+      "bytes": 29189,
+      "sha256": "9106db16b7926a8f22504e99c0eac1afa12914a5db6d9a696027985a1e9f13b8"
+    },
+    {
+      "source": "output/team_rosters/IND.csv",
+      "path": "output/team_rosters/IND.csv",
+      "action": "moved",
+      "bytes": 58702,
+      "sha256": "d975af7176febc60eee8795ac4012656cd77da8b5ac69750a025ec88205eed8b"
+    },
+    {
+      "source": "output/team_rosters/IND_Defense.csv",
+      "path": "output/team_rosters/IND_Defense.csv",
+      "action": "moved",
+      "bytes": 31012,
+      "sha256": "b62dc7affa6b6388aa2bc55f77c453ca6d578674a19d6fdf184e3ac7ffd2fa0c"
+    },
+    {
+      "source": "output/team_rosters/IND_Offense.csv",
+      "path": "output/team_rosters/IND_Offense.csv",
+      "action": "moved",
+      "bytes": 27968,
+      "sha256": "9793a48a3bbb47579a4e89c1eb61cdbdd671f849458a346cfc52254bb08acd97"
+    },
+    {
+      "source": "output/team_rosters/JAX.csv",
+      "path": "output/team_rosters/JAX.csv",
+      "action": "moved",
+      "bytes": 58437,
+      "sha256": "0b4feb6ae424ab3d295aabc7868b0cc1e2dde0545cf26238bb50ebf857ac6dc0"
+    },
+    {
+      "source": "output/team_rosters/JAX_Defense.csv",
+      "path": "output/team_rosters/JAX_Defense.csv",
+      "action": "moved",
+      "bytes": 28687,
+      "sha256": "bf37de5c4143f43a69530df8ab7edfa8967c203e725d39232c73340626402706"
+    },
+    {
+      "source": "output/team_rosters/JAX_Offense.csv",
+      "path": "output/team_rosters/JAX_Offense.csv",
+      "action": "moved",
+      "bytes": 30045,
+      "sha256": "ca1f1526aa82d087374712a6b476fcb158b688356048fba3ebb3b78ab4fdd0e2"
+    },
+    {
+      "source": "output/team_rosters/KC.csv",
+      "path": "output/team_rosters/KC.csv",
+      "action": "moved",
+      "bytes": 66801,
+      "sha256": "1f8d638459a31cf91d2c75c21089e5aa4e27561eeb0b83a75550f6b2c31f14b0"
+    },
+    {
+      "source": "output/team_rosters/KC_Defense.csv",
+      "path": "output/team_rosters/KC_Defense.csv",
+      "action": "moved",
+      "bytes": 29250,
+      "sha256": "3228c6b5a312692a2183c68be842eadfff5c3134aaf59e2eaf291def485f8b0e"
+    },
+    {
+      "source": "output/team_rosters/KC_Offense.csv",
+      "path": "output/team_rosters/KC_Offense.csv",
+      "action": "moved",
+      "bytes": 36586,
+      "sha256": "b2d1424c5c53d8bd0681e5e97212208637322e97a559eb84e380196dc8fd9751"
+    },
+    {
+      "source": "output/team_rosters/LAC.csv",
+      "path": "output/team_rosters/LAC.csv",
+      "action": "moved",
+      "bytes": 58724,
+      "sha256": "a5b379358fab48d4ecca20a4a190db12412ae98cd15f63ec3f888ef0199d7178"
+    },
+    {
+      "source": "output/team_rosters/LAC_Defense.csv",
+      "path": "output/team_rosters/LAC_Defense.csv",
+      "action": "moved",
+      "bytes": 29419,
+      "sha256": "3f742713cf31c1567e476d90f33e43894eb248dd49bdb876fa8157f94cd840a3"
+    },
+    {
+      "source": "output/team_rosters/LAC_Offense.csv",
+      "path": "output/team_rosters/LAC_Offense.csv",
+      "action": "moved",
+      "bytes": 29018,
+      "sha256": "746f58373bd489f031740dea718f1f452b6ddb18f025dac09b0a38202d15be93"
+    },
+    {
+      "source": "output/team_rosters/LAR.csv",
+      "path": "output/team_rosters/LAR.csv",
+      "action": "moved",
+      "bytes": 55432,
+      "sha256": "0da3d0d0b06a4a0bfb5eca42aa0827e1bd5ef9000d9cb7e61485b394a1e196ba"
+    },
+    {
+      "source": "output/team_rosters/LAR_Defense.csv",
+      "path": "output/team_rosters/LAR_Defense.csv",
+      "action": "moved",
+      "bytes": 29959,
+      "sha256": "8de4fa1133fbdf1057f6c0ee67cf37326232e16889e1a2a061a019b6bb0a3d51"
+    },
+    {
+      "source": "output/team_rosters/LAR_Offense.csv",
+      "path": "output/team_rosters/LAR_Offense.csv",
+      "action": "moved",
+      "bytes": 24298,
+      "sha256": "316c749a53382b26de72fbda0473be6b0d52fd1df6e81468c3fdeecdfa510e99"
+    },
+    {
+      "source": "output/team_rosters/LV.csv",
+      "path": "output/team_rosters/LV.csv",
+      "action": "moved",
+      "bytes": 60631,
+      "sha256": "7e1a7d8781faa908155cf261583cfa348863ef87dc4a44e163f71ccb7eb0b478"
+    },
+    {
+      "source": "output/team_rosters/LV_Defense.csv",
+      "path": "output/team_rosters/LV_Defense.csv",
+      "action": "moved",
+      "bytes": 31392,
+      "sha256": "af72495e49a69f38c778bf559bfdc12e236dc1d2cfe9304b937f92e4cebced4b"
+    },
+    {
+      "source": "output/team_rosters/LV_Offense.csv",
+      "path": "output/team_rosters/LV_Offense.csv",
+      "action": "moved",
+      "bytes": 29558,
+      "sha256": "8a9ec2824c0c80cf15d5a0c883eb39bd888462bfb02c3743c1a3f63a81fc5307"
+    },
+    {
+      "source": "output/team_rosters/MIA.csv",
+      "path": "output/team_rosters/MIA.csv",
+      "action": "moved",
+      "bytes": 62117,
+      "sha256": "1b5ac0e2410df67711ff1842c23c7417a214cf1434c91a32a0a5f52d2adb8dfb"
+    },
+    {
+      "source": "output/team_rosters/MIA_Defense.csv",
+      "path": "output/team_rosters/MIA_Defense.csv",
+      "action": "moved",
+      "bytes": 28444,
+      "sha256": "12155ef73b608f2ec8a7a1eac59fef82713950f27a454222425e190cec9f7b3c"
+    },
+    {
+      "source": "output/team_rosters/MIA_Offense.csv",
+      "path": "output/team_rosters/MIA_Offense.csv",
+      "action": "moved",
+      "bytes": 33954,
+      "sha256": "8000b7974e9fae4d8f3f582c324189e437930f300adb9dc86ebc613573b9c02d"
+    },
+    {
+      "source": "output/team_rosters/MIN.csv",
+      "path": "output/team_rosters/MIN.csv",
+      "action": "moved",
+      "bytes": 48106,
+      "sha256": "0c7e9be4909c3d9f3c080ca7901ff2626729cdc9247d4cfbe34dd09459341940"
+    },
+    {
+      "source": "output/team_rosters/MIN_Defense.csv",
+      "path": "output/team_rosters/MIN_Defense.csv",
+      "action": "moved",
+      "bytes": 27216,
+      "sha256": "635d12e143f5648a45fdf84e9e5db0da97df7355b989b7d3fa5407e8d4a70278"
+    },
+    {
+      "source": "output/team_rosters/MIN_Offense.csv",
+      "path": "output/team_rosters/MIN_Offense.csv",
+      "action": "moved",
+      "bytes": 21759,
+      "sha256": "3d68fcd126962d462e4bc82def16f1f4f3fa8ae0633d7cb888584f910b6c840c"
+    },
+    {
+      "source": "output/team_rosters/NE.csv",
+      "path": "output/team_rosters/NE.csv",
+      "action": "moved",
+      "bytes": 62987,
+      "sha256": "707300c214beb588691f6f48377fc064b076532ff44fd6869b46333c1707fe7e"
+    },
+    {
+      "source": "output/team_rosters/NE_Defense.csv",
+      "path": "output/team_rosters/NE_Defense.csv",
+      "action": "moved",
+      "bytes": 36037,
+      "sha256": "15c0f5ba46f7ea13003b626e1bece1ee3fd3261a345883b6a4d53fefb9677241"
+    },
+    {
+      "source": "output/team_rosters/NE_Offense.csv",
+      "path": "output/team_rosters/NE_Offense.csv",
+      "action": "moved",
+      "bytes": 27224,
+      "sha256": "4753853314215ea81d70c08d2cba2ac9816fa244d3c0b71a198272eae0c85e2d"
+    },
+    {
+      "source": "output/team_rosters/NO.csv",
+      "path": "output/team_rosters/NO.csv",
+      "action": "moved",
+      "bytes": 62276,
+      "sha256": "f6c08b758958e8d2dd3cedb6e01944aa021012458040293d56f6c9349503f33e"
+    },
+    {
+      "source": "output/team_rosters/NO_Defense.csv",
+      "path": "output/team_rosters/NO_Defense.csv",
+      "action": "moved",
+      "bytes": 26003,
+      "sha256": "fdcaecc3c583de4acf43922284f3f15032182841c42677990fca4216c05425ac"
+    },
+    {
+      "source": "output/team_rosters/NO_Offense.csv",
+      "path": "output/team_rosters/NO_Offense.csv",
+      "action": "moved",
+      "bytes": 36600,
+      "sha256": "cf99f69882c6cc8764795e0574d5039fc84ec67f3ad02a9cb3c54660c07ddb5b"
+    },
+    {
+      "source": "output/team_rosters/NYG.csv",
+      "path": "output/team_rosters/NYG.csv",
+      "action": "moved",
+      "bytes": 54339,
+      "sha256": "0f4bc665b42365e154678df6f0e724583339ed251ef4783c6c4fdde2eed4dcef"
+    },
+    {
+      "source": "output/team_rosters/NYG_Defense.csv",
+      "path": "output/team_rosters/NYG_Defense.csv",
+      "action": "moved",
+      "bytes": 26022,
+      "sha256": "a6f910dc479dc6b5efa3d6d6527d5c7d6cbb55f7db84d6a12d5075d295de2fd7"
+    },
+    {
+      "source": "output/team_rosters/NYG_Offense.csv",
+      "path": "output/team_rosters/NYG_Offense.csv",
+      "action": "moved",
+      "bytes": 26909,
+      "sha256": "275095d548bcc5d577c435003fa01bcda4284bfa9f5c1061e95bc1f72968b397"
+    },
+    {
+      "source": "output/team_rosters/NYJ.csv",
+      "path": "output/team_rosters/NYJ.csv",
+      "action": "moved",
+      "bytes": 43891,
+      "sha256": "486e9872080025c1518a59e884f5da664b0d6f7ccfca0a592d392c333f90ab0e"
+    },
+    {
+      "source": "output/team_rosters/NYJ_Defense.csv",
+      "path": "output/team_rosters/NYJ_Defense.csv",
+      "action": "moved",
+      "bytes": 20771,
+      "sha256": "e2c02fcd9b6823e80aeaa3fb41a6cb24ab45318a3e037af5d95f707f5d4d50c8"
+    },
+    {
+      "source": "output/team_rosters/NYJ_Offense.csv",
+      "path": "output/team_rosters/NYJ_Offense.csv",
+      "action": "moved",
+      "bytes": 25161,
+      "sha256": "d76924b68670f09abd989f7519d961df38122c70fcbfccc7f8c57acef181c1cb"
+    },
+    {
+      "source": "output/team_rosters/PHI.csv",
+      "path": "output/team_rosters/PHI.csv",
+      "action": "moved",
+      "bytes": 56712,
+      "sha256": "85df5c0df7bb39d067b3c903b78fe7d5338c825e5a63b599f9bbf2e8270b2346"
+    },
+    {
+      "source": "output/team_rosters/PHI_Defense.csv",
+      "path": "output/team_rosters/PHI_Defense.csv",
+      "action": "moved",
+      "bytes": 27631,
+      "sha256": "8879263081db85ab2fbcef8b2fd110a0c905061907780374e5283fabe1f05b76"
+    },
+    {
+      "source": "output/team_rosters/PHI_Offense.csv",
+      "path": "output/team_rosters/PHI_Offense.csv",
+      "action": "moved",
+      "bytes": 28787,
+      "sha256": "eea0906424af0079285ee86aa08649fabe681c428dc8e5be9bda82253c6bf397"
+    },
+    {
+      "source": "output/team_rosters/PIT.csv",
+      "path": "output/team_rosters/PIT.csv",
+      "action": "moved",
+      "bytes": 50266,
+      "sha256": "92acde78483eebe347b9d81ff03490d33526cc5d1897c5b8d184fd6af478426d"
+    },
+    {
+      "source": "output/team_rosters/PIT_Defense.csv",
+      "path": "output/team_rosters/PIT_Defense.csv",
+      "action": "moved",
+      "bytes": 25403,
+      "sha256": "64ea8cab6908fe47203fce61a5d7b65c85f19748e74151a81379c75a76188f91"
+    },
+    {
+      "source": "output/team_rosters/PIT_Offense.csv",
+      "path": "output/team_rosters/PIT_Offense.csv",
+      "action": "moved",
+      "bytes": 24000,
+      "sha256": "994bbcf1c04d595b0e91fdc58fb1ba673702d11fef399c960e2dab389768a4dd"
+    },
+    {
+      "source": "output/team_rosters/SEA.csv",
+      "path": "output/team_rosters/SEA.csv",
+      "action": "moved",
+      "bytes": 61993,
+      "sha256": "9098e10ae44c72c55593bbbab2bf6498f26e8fa52875d3d0447e292ed368249a"
+    },
+    {
+      "source": "output/team_rosters/SEA_Defense.csv",
+      "path": "output/team_rosters/SEA_Defense.csv",
+      "action": "moved",
+      "bytes": 32374,
+      "sha256": "253ebd723780948a27e0b3cbae06a53be327aa30b81c53a3488175b3147a59f8"
+    },
+    {
+      "source": "output/team_rosters/SEA_Offense.csv",
+      "path": "output/team_rosters/SEA_Offense.csv",
+      "action": "moved",
+      "bytes": 29305,
+      "sha256": "967c27853cc351d018285ff71c4283e4e76178eff83d537ec5ff567946ec9c05"
+    },
+    {
+      "source": "output/team_rosters/SF.csv",
+      "path": "output/team_rosters/SF.csv",
+      "action": "moved",
+      "bytes": 58149,
+      "sha256": "3c8209798fcd2ac339e3865f0397649a8e29f7dc9460a28cdd5beeba21139bdb"
+    },
+    {
+      "source": "output/team_rosters/SF_Defense.csv",
+      "path": "output/team_rosters/SF_Defense.csv",
+      "action": "moved",
+      "bytes": 24064,
+      "sha256": "4aa3858f7e8a57a71aa8af9e1ad172445f076d6f287c8ceb60d2f397f3219a58"
+    },
+    {
+      "source": "output/team_rosters/SF_Offense.csv",
+      "path": "output/team_rosters/SF_Offense.csv",
+      "action": "moved",
+      "bytes": 34384,
+      "sha256": "0473ae14cf93f0380a9e080e537819111da2f8261514242814ad905886cde39e"
+    },
+    {
+      "source": "output/team_rosters/TB.csv",
+      "path": "output/team_rosters/TB.csv",
+      "action": "moved",
+      "bytes": 87214,
+      "sha256": "9fe5ced2671245437dee3cc65436c18ee63cd6a5a57a16da9110d8bf3f8e32f2"
+    },
+    {
+      "source": "output/team_rosters/TB_Defense.csv",
+      "path": "output/team_rosters/TB_Defense.csv",
+      "action": "moved",
+      "bytes": 38698,
+      "sha256": "3dedb210aae7a0baa548e1425c5d7ac594092310f4edafffd4e6e6f72d132603"
+    },
+    {
+      "source": "output/team_rosters/TB_Offense.csv",
+      "path": "output/team_rosters/TB_Offense.csv",
+      "action": "moved",
+      "bytes": 47090,
+      "sha256": "dd8bf0b902783e70a0be2fe6c09e752a369a8a68a80f445934306607cd981c19"
+    },
+    {
+      "source": "output/team_rosters/TEN.csv",
+      "path": "output/team_rosters/TEN.csv",
+      "action": "moved",
+      "bytes": 67138,
+      "sha256": "26114dc8978cc8c8da061e7b6cfc2bc73daca0b25582c36a10919cf18aba98cb"
+    },
+    {
+      "source": "output/team_rosters/TEN_Defense.csv",
+      "path": "output/team_rosters/TEN_Defense.csv",
+      "action": "moved",
+      "bytes": 29313,
+      "sha256": "960534f8da96de9903dcae2e9d686f6bdae76ab9acf27790a86c31b6cced8b17"
+    },
+    {
+      "source": "output/team_rosters/TEN_Offense.csv",
+      "path": "output/team_rosters/TEN_Offense.csv",
+      "action": "moved",
+      "bytes": 38142,
+      "sha256": "9e86d2b14ef27b5146c7f717f85c07507de2424483367b6c6c599ba124e947de"
+    },
+    {
+      "source": "output/team_rosters/WAS.csv",
+      "path": "output/team_rosters/WAS.csv",
+      "action": "moved",
+      "bytes": 62924,
+      "sha256": "1c06739f42447d191436c40bd8455b1994ff7f84856bc216f3b7a8bf222c898d"
+    },
+    {
+      "source": "output/team_rosters/WAS_Defense.csv",
+      "path": "output/team_rosters/WAS_Defense.csv",
+      "action": "moved",
+      "bytes": 32939,
+      "sha256": "85c8bc7e543a27e273171adca0105acdfe852a0ce393c8fab891f31cebd5ddcf"
+    },
+    {
+      "source": "output/team_rosters/WAS_Offense.csv",
+      "path": "output/team_rosters/WAS_Offense.csv",
+      "action": "moved",
+      "bytes": 30269,
+      "sha256": "c8cd2e34031468d1fc36beb201a7845d69036f12a6bc7839bcea86d4253ddc8e"
+    },
+    {
+      "source": "output/team_scenarios.json",
+      "path": "output/team_scenarios.json",
+      "action": "moved",
+      "bytes": 58426,
+      "sha256": "8cc3b280b04b6f0d042be0e7c94039ec5dcb7fca7d23d27ed81360a347d7ac9a"
+    },
+    {
+      "source": "output/test_draft_2026.html",
+      "path": "output/test_draft_2026.html",
+      "action": "moved",
+      "bytes": 102046,
+      "sha256": "f4d9c6c572ddd97d82b7069e70b712dc8d60eccdbd4a505e733912a95e83fffd"
+    },
+    {
+      "source": "output/test_draft_2026_r1.html",
+      "path": "output/test_draft_2026_r1.html",
+      "action": "moved",
+      "bytes": 136823,
+      "sha256": "39b47b955407c3d94bdb9cfb49af785fa3d1bd8e02e94ef949564fb276b75bc2"
+    },
+    {
+      "source": "output/test_power_rankings_roster_report.html",
+      "path": "output/test_power_rankings_roster_report.html",
+      "action": "moved",
+      "bytes": 33782,
+      "sha256": "720e2701a4eece30859f9bda39e14ff276780fef35691eab08a61ba926153da2"
+    },
+    {
+      "source": "output/tiny_players.csv",
+      "path": "output/tiny_players.csv",
+      "action": "moved",
+      "bytes": 632,
+      "sha256": "ccd1817b8a33cee7854b65ba16d598bf137759273e6007e2258d29381c04bd28"
+    },
+    {
+      "source": "output/tiny_teams.csv",
+      "path": "output/tiny_teams.csv",
+      "action": "moved",
+      "bytes": 1912,
+      "sha256": "87834542d1d81c5540d0fdf4baedbe35ff283b5f779cde77774e17c80aa804d3"
+    },
+    {
+      "source": "output/traded_players_report.csv",
+      "path": "output/traded_players_report.csv",
+      "action": "moved",
+      "bytes": 1615,
+      "sha256": "def5e466b53a528ff5241362e2fee3a4017aba9512380771de05f7c2e43c1b61"
+    },
+    {
+      "source": "output/trained_models/G.pkl",
+      "path": "output/trained_models/G.pkl",
+      "action": "copied",
+      "bytes": 1582,
+      "sha256": "f5260982eac35d2f1b7d0d21870c7fad942aa7f45ca6aa9f8ff510d59e73d4ca"
+    },
+    {
+      "source": "output/verify_target_2026.html",
+      "path": "output/verify_target_2026.html",
+      "action": "moved",
+      "bytes": 137585,
+      "sha256": "ab6a155c68bb2340625d7beddf782780beb93fa42e083ea26489c30f603bbdfb"
+    },
+    {
+      "source": "plan.md",
+      "path": "plan.md",
+      "action": "moved",
+      "bytes": 170,
+      "sha256": "dcd95833418dae78ac474a2e988d5331ab20e2df85c85e4c15487a10a1d3b378"
+    },
+    {
+      "source": "scripts/fixtures/analytics_2028.md",
+      "path": "scripts/fixtures/analytics_2028.md",
+      "action": "moved",
+      "bytes": 36403,
+      "sha256": "20e9346974a1fdef7bde1320bce0934a626ea2afac5394dbdaaa4504c326f920"
+    },
+    {
+      "source": "scripts/fixtures/section_intros_2028.json",
+      "path": "scripts/fixtures/section_intros_2028.json",
+      "action": "moved",
+      "bytes": 2076,
+      "sha256": "7cf424e567d412448002cb9982cd381a7fe521c9b4f0921b07355dd5861dc7de"
+    },
+    {
+      "source": "wild_card_season_1.md",
+      "path": "wild_card_season_1.md",
+      "action": "moved",
+      "bytes": 33403,
+      "sha256": "3c1e29b705b3cd96a2519729e8bc5cc3d21be8e7a0c534bab17bb1db45de1c4e"
+    },
+    {
+      "source": "README.md",
+      "path": "reference/README.md",
+      "action": "copied",
+      "bytes": 33061,
+      "sha256": "5312e78294b048e808a32f4f0f29c1d0d07dd088de15ddc93158534a0a7a9a53"
+    },
+    {
+      "source": "AGENTS.md",
+      "path": "reference/AGENTS.md",
+      "action": "copied",
+      "bytes": 2978,
+      "sha256": "b6ffe86350946e4e2057f4752fff4360657e8a476f0f23db65b9f16f3fd9df01"
+    },
+    {
+      "source": "CLAUDE.md",
+      "path": "reference/CLAUDE.md",
+      "action": "copied",
+      "bytes": 1609,
+      "sha256": "3db2674733c8b4b4656b491c7bc957f8c45e8fb332bdd4e3e159b54a3a7093d1"
+    },
+    {
+      "source": "BEGINNER_GUIDE.md",
+      "path": "reference/BEGINNER_GUIDE.md",
+      "action": "copied",
+      "bytes": 6923,
+      "sha256": "626098fd7f537bdd066ff43907fb6919a9299f87c0d78b6df3076e4274433151"
+    }
+  ]
+}

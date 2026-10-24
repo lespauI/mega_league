@@ -1,3 +1,5 @@
+> **Madden 27 rollover:** Calculation code is preserved, but current input exports are absent. The full runner includes ELO seasons 2/3/4 and historical row offsets; review season configuration in [AGENTS.md](../AGENTS.md) before running it. `generate_index.py` writes root `index.html` and skips aggregation while core exports are missing.
+
 # Scripts Overview
 
 This folder contains the main command‑line entry points and helpers for the MEGA League analysis project. Most users only need a few core commands; the rest are domain tools, verifiers, and developer helpers.

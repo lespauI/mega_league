@@ -1,3 +1,5 @@
+> **Madden 27 rollover:** No current league exports are loaded. This guide describes retained tools; complete the import and season-configuration steps in [README.md](README.md) before running data pipelines. Madden 26 results are in [the archive](archive/madden-26/README.md).
+
 # 🎓 SUPER SIMPLE GUIDE (For Beginners)
 
 **If you've never used Python or GitHub before, follow these steps exactly:**

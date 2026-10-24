@@ -21,3 +21,16 @@ tests/snapshots/
 /*.png
 /*.jpg
 /*.jpeg
+
+# Preserve reusable formula artifacts while keeping regenerated league output ignored.
+!output/
+output/*
+!output/attributes.md
+!output/individual_position_formulas.txt
+!output/trained_models/
+!output/trained_models/**
+
+# Historical snapshots must remain versionable, including formerly ignored outputs.
+!archive/
+!archive/**/
+!archive/**

@@ -1,0 +1,668 @@
+================================================================================
+MADDEN OVR FORMULA ANALYSIS - INDIVIDUAL POSITIONS
+================================================================================
+
+Position      Samples         R²      MAE     RMSE Model               
+--------------------------------------------------------------------------------
+FB                 29   1.000000    0.000    0.000 Poly2-Ridge1        
+SAM                67   1.000000    0.000    0.000 Poly2-Ridge1        
+TE                175   1.000000    0.000    0.000 Poly2-Ridge1        
+WILL              109   0.999973    0.030    0.041 Poly2-Ridge1        
+MIKE              133   0.999498    0.132    0.180 Poly2-Ridge1        
+LEDGE             135   0.999464    0.141    0.192 Poly2-Ridge1        
+FS                133   0.999354    0.159    0.202 Poly2-Ridge1        
+REDGE             157   0.999270    0.163    0.214 Poly2-Ridge1        
+SS                129   0.999128    0.171    0.228 Poly2-Ridge1        
+C                 106   0.998611    0.249    0.332 Poly2-Ridge1        
+P                  53   0.998455    0.175    0.214 Poly2-Ridge1        
+CB                325   0.998193    0.255    0.322 Poly2-Ridge1        
+LT                113   0.998087    0.346    0.446 Poly2-Ridge1        
+DT                260   0.998024    0.254    0.327 Poly2-Ridge1        
+RT                113   0.997808    0.297    0.395 Poly2-Ridge1        
+K                  61   0.997784    0.203    0.258 Poly2-Ridge1        
+WR                338   0.996328    0.351    0.453 Poly2-Ridge1        
+HB                207   0.995111    0.468    0.586 Poly2-Ridge1        
+QB                130   0.992844    0.706    0.946 Poly2-Ridge1        
+G                 217   0.991880    0.536    0.706 Poly2-Ridge1        
+LS                 38   0.444068    3.888    5.404 Poly2-Ridge1        
+
+
+================================================================================
+DETAILED FORMULAS BY POSITION
+================================================================================
+
+
+================================================================================
+C (R² = 0.998611)
+================================================================================
+Sample: 106 players | OVR: 56-99 (Avg: 70.8)
+Model: Poly2-Ridge1 | MAE: 0.249 | RMSE: 0.332
+
+OVR = 14.689778
+(Using polynomial features)
+
+Top 20 Features:
+  +0.62310221 * powerMovesRating
+  +0.56958659 * finesseMovesRating
+  -0.47129672 * passBlockPowerRating
+  +0.39067812 * runBlockFinesseRating
+  -0.17702682 * impactBlockRating
+  +0.16869159 * runBlockRating
+  -0.16423358 * passBlockRating
+  +0.12766041 * passBlockPowerRating passBlockRating
+  -0.11066446 * runBlockPowerRating
+  +0.07905510 * strengthRating
+  +0.06799535 * passBlockRating runBlockFinesseRating
+  -0.05332851 * passBlockRating^2
+  -0.05086046 * impactBlockRating passBlockRating
+  +0.04643564 * runBlockRating strengthRating
+  -0.04480600 * passBlockPowerRating runBlockFinesseRating
+  -0.04472268 * runBlockPowerRating runBlockRating
+  +0.03720230 * impactBlockRating passBlockFinesseRating
+  -0.03569051 * passBlockPowerRating^2
+  -0.03465982 * passBlockFinesseRating passBlockPowerRating
+  -0.03301484 * passBlockFinesseRating runBlockRating
+
+
+================================================================================
+CB (R² = 0.998193)
+================================================================================
+Sample: 325 players | OVR: 58-98 (Avg: 73.9)
+Model: Poly2-Ridge1 | MAE: 0.255 | RMSE: 0.322
+
+OVR = -15.480842
+(Using polynomial features)
+
+Top 20 Features:
+  +0.38227376 * tackleRating
+  +0.34721674 * zoneCoverRating
+  -0.29871252 * pursuitRating
+  -0.24621173 * speedRating
+  +0.18307129 * awareRating
+  +0.15066760 * changeOfDirectionRating
+  -0.10707848 * playRecRating
+  +0.04577526 * jumpRating
+  -0.03769117 * accelRating
+  +0.03675880 * hitPowerRating
+  +0.03670525 * manCoverRating
+  +0.03606357 * pressRating
+  +0.02204723 * agilityRating
+  -0.01698908 * manCoverRating zoneCoverRating
+  +0.00948231 * zoneCoverRating^2
+  +0.00869790 * manCoverRating^2
+  -0.00627557 * accelRating jumpRating
+  +0.00582764 * accelRating^2
+  +0.00580892 * agilityRating pursuitRating
+  +0.00564668 * accelRating awareRating
+
+
+================================================================================
+DT (R² = 0.998024)
+================================================================================
+Sample: 260 players | OVR: 59-97 (Avg: 73.7)
+Model: Poly2-Ridge1 | MAE: 0.254 | RMSE: 0.327
+
+OVR = -24.907552
+(Using polynomial features)
+
+Top 20 Features:
+  -0.45318428 * powerMovesRating
+  +0.33539874 * pursuitRating
+  +0.22727061 * finesseMovesRating
+  +0.17642418 * awareRating
+  +0.16571159 * speedRating
+  +0.16313709 * playRecRating
+  +0.13741918 * agilityRating
+  +0.10090802 * blockShedRating
+  +0.07467107 * tackleRating
+  -0.06963035 * strengthRating
+  +0.01355932 * accelRating
+  -0.01019238 * hitPowerRating
+  +0.00982434 * awareRating pursuitRating
+  -0.00842481 * awareRating blockShedRating
+  -0.00708849 * blockShedRating powerMovesRating
+  -0.00689953 * playRecRating pursuitRating
+  -0.00670748 * hitPowerRating speedRating
+  +0.00559502 * blockShedRating^2
+  +0.00550199 * blockShedRating playRecRating
+  +0.00545609 * pursuitRating tackleRating
+
+
+================================================================================
+FB (R² = 1.000000)
+================================================================================
+Sample: 29 players | OVR: 59-83 (Avg: 69.5)
+Model: Poly2-Ridge1 | MAE: 0.000 | RMSE: 0.000
+
+OVR = 22.228801
+(Using polynomial features)
+
+Top 20 Features:
+  -0.00119375 * specCatchRating^2
+  +0.00095600 * accelRating cITRating
+  +0.00087784 * releaseRating^2
+  +0.00077973 * leadBlockRating^2
+  +0.00077693 * breakTackleRating jumpRating
+  +0.00077166 * awareRating leadBlockRating
+  +0.00075350 * cITRating jumpRating
+  +0.00074108 * jumpRating specCatchRating
+  +0.00074006 * awareRating^2
+  +0.00064534 * routeRunDeepRating^2
+  +0.00064141 * awareRating truckRating
+  +0.00063397 * leadBlockRating truckRating
+  -0.00062402 * jumpRating truckRating
+  +0.00060740 * impactBlockRating truckRating
+  +0.00058901 * cITRating speedRating
+  +0.00058503 * passBlockRating truckRating
+  +0.00057191 * accelRating breakTackleRating
+  -0.00055906 * changeOfDirectionRating jumpRating
+  -0.00055609 * accelRating strengthRating
+  +0.00054273 * impactBlockRating passBlockRating
+
+
+================================================================================
+FS (R² = 0.999354)
+================================================================================
+Sample: 133 players | OVR: 59-95 (Avg: 72.8)
+Model: Poly2-Ridge1 | MAE: 0.159 | RMSE: 0.202
+
+OVR = -62.113642
+(Using polynomial features)
+
+Top 20 Features:
+  +0.34660525 * manCoverRating
+  +0.33710305 * playRecRating
+  +0.30793319 * awareRating
+  +0.29297610 * zoneCoverRating
+  +0.18450364 * tackleRating
+  -0.14080265 * pressRating
+  +0.13424534 * agilityRating
+  +0.08235818 * hitPowerRating
+  +0.07112632 * accelRating
+  +0.05728244 * changeOfDirectionRating
+  +0.05048761 * jumpRating
+  -0.03221412 * awareRating playRecRating
+  +0.02593551 * accelRating changeOfDirectionRating
+  +0.02212656 * accelRating tackleRating
+  +0.01792167 * awareRating^2
+  +0.01762599 * agilityRating playRecRating
+  +0.01726739 * accelRating jumpRating
+  -0.01699984 * agilityRating awareRating
+  -0.01691129 * tackleRating zoneCoverRating
+  +0.01628179 * speedRating zoneCoverRating
+
+
+================================================================================
+G (R² = 0.991880)
+================================================================================
+Sample: 217 players | OVR: 57-99 (Avg: 70.9)
+Model: Poly2-Ridge1 | MAE: 0.536 | RMSE: 0.706
+
+OVR = -10.851056
+(Using polynomial features)
+
+Top 20 Features:
+  +0.41283522 * strengthRating
+  +0.35886728 * passBlockFinesseRating
+  +0.28105042 * runBlockPowerRating
+  +0.21567457 * passBlockRating
+  -0.15829754 * awareRating
+  -0.15123780 * runBlockRating
+  -0.12947560 * impactBlockRating
+  -0.11287351 * finesseMovesRating
+  -0.08642357 * powerMovesRating
+  -0.07336652 * runBlockFinesseRating
+  -0.03712113 * runBlockFinesseRating runBlockRating
+  -0.03676227 * passBlockFinesseRating runBlockPowerRating
+  -0.03619684 * passBlockPowerRating runBlockFinesseRating
+  +0.03287573 * passBlockRating runBlockFinesseRating
+  +0.02632377 * runBlockFinesseRating^2
+  +0.02514028 * passBlockFinesseRating runBlockRating
+  -0.02121230 * passBlockFinesseRating passBlockRating
+  +0.02008388 * runBlockRating strengthRating
+  -0.01829452 * passBlockPowerRating
+  +0.01828253 * runBlockRating^2
+
+
+================================================================================
+HB (R² = 0.995111)
+================================================================================
+Sample: 207 players | OVR: 60-99 (Avg: 75.1)
+Model: Poly2-Ridge1 | MAE: 0.468 | RMSE: 0.586
+
+OVR = -76.001310
+(Using polynomial features)
+
+Top 20 Features:
+  -1.28369159 * impactBlockRating
+  +0.87724399 * breakTackleRating
+  +0.52537196 * agilityRating
+  -0.47641461 * runBlockRating
+  -0.45468194 * accelRating
+  +0.39357208 * strengthRating
+  +0.32550016 * speedRating
+  +0.28482611 * bCVRating
+  -0.28256066 * catchRating
+  -0.19296214 * leadBlockRating
+  +0.18746544 * truckRating
+  -0.09860858 * accelRating speedRating
+  +0.07309965 * awareRating
+  +0.07247297 * jukeMoveRating
+  -0.07105050 * passBlockRating
+  +0.06109980 * speedRating^2
+  -0.05742259 * agilityRating speedRating
+  +0.04831343 * accelRating^2
+  +0.04451436 * bCVRating speedRating
+  +0.04016446 * accelRating agilityRating
+
+
+================================================================================
+K (R² = 0.997784)
+================================================================================
+Sample: 61 players | OVR: 63-90 (Avg: 75.0)
+Model: Poly2-Ridge1 | MAE: 0.203 | RMSE: 0.258
+
+OVR = 8.942556
+(Using polynomial features)
+
+Top 20 Features:
+  +0.30550556 * awareRating
+  +0.20959252 * kickAccRating
+  +0.07930938 * kickPowerRating
+  -0.00730396 * kickAccRating kickPowerRating
+  +0.00408396 * kickAccRating^2
+  +0.00394575 * kickPowerRating^2
+  +0.00283575 * awareRating kickPowerRating
+  -0.00197752 * awareRating^2
+  +0.00154971 * awareRating kickAccRating
+
+
+================================================================================
+LEDGE (R² = 0.999464)
+================================================================================
+Sample: 135 players | OVR: 59-97 (Avg: 74.0)
+Model: Poly2-Ridge1 | MAE: 0.141 | RMSE: 0.192
+
+OVR = -0.014667
+(Using polynomial features)
+
+Top 20 Features:
+  +0.26253636 * finesseMovesRating
+  -0.20806728 * zoneCoverRating
+  -0.18451110 * hitPowerRating
+  +0.18272902 * agilityRating
+  +0.16144354 * blockShedRating
+  -0.11368505 * speedRating
+  +0.07838276 * strengthRating
+  -0.06604818 * manCoverRating
+  +0.03412718 * tackleRating
+  +0.02116921 * awareRating
+  +0.02018438 * powerMovesRating
+  -0.01894634 * accelRating
+  +0.01797706 * hitPowerRating zoneCoverRating
+  +0.01791034 * manCoverRating speedRating
+  -0.01764581 * hitPowerRating manCoverRating
+  -0.01662858 * speedRating strengthRating
+  -0.01614478 * pursuitRating
+  +0.01510414 * accelRating hitPowerRating
+  +0.01490982 * accelRating speedRating
+  -0.01429531 * accelRating pursuitRating
+
+
+================================================================================
+LS (R² = 0.444068)
+================================================================================
+Sample: 38 players | OVR: 47-81 (Avg: 66.7)
+Model: Poly2-Ridge1 | MAE: 3.888 | RMSE: 5.404
+
+OVR = -146.065463
+(Using polynomial features)
+
+Top 20 Features:
+  +5.42117662 * strengthRating
+  +0.24090851 * awareRating
+  -0.04303415 * strengthRating^2
+  +0.00916814 * awareRating strengthRating
+  -0.00227505 * awareRating^2
+
+
+================================================================================
+LT (R² = 0.998087)
+================================================================================
+Sample: 113 players | OVR: 59-98 (Avg: 72.0)
+Model: Poly2-Ridge1 | MAE: 0.346 | RMSE: 0.446
+
+OVR = -48.914539
+(Using polynomial features)
+
+Top 20 Features:
+  +0.44162348 * runBlockRating
+  +0.39164380 * impactBlockRating
+  +0.37110891 * runBlockFinesseRating
+  +0.36255746 * strengthRating
+  +0.31285595 * finesseMovesRating
+  +0.27295417 * awareRating
+  +0.20206891 * passBlockFinesseRating
+  -0.19369036 * passBlockPowerRating
+  +0.18762426 * powerMovesRating
+  -0.16606051 * runBlockPowerRating
+  -0.14093693 * passBlockRating
+  -0.07465982 * passBlockFinesseRating passBlockRating
+  -0.04598498 * runBlockFinesseRating runBlockPowerRating
+  +0.04596213 * runBlockFinesseRating runBlockRating
+  -0.04314463 * passBlockPowerRating runBlockFinesseRating
+  +0.03746734 * impactBlockRating passBlockPowerRating
+  +0.03624697 * passBlockRating^2
+  +0.03590323 * passBlockFinesseRating^2
+  +0.03534547 * passBlockFinesseRating runBlockFinesseRating
+  +0.03464316 * runBlockPowerRating strengthRating
+
+
+================================================================================
+MIKE (R² = 0.999498)
+================================================================================
+Sample: 133 players | OVR: 60-98 (Avg: 70.3)
+Model: Poly2-Ridge1 | MAE: 0.132 | RMSE: 0.180
+
+OVR = -35.231349
+(Using polynomial features)
+
+Top 20 Features:
+  +0.43975612 * playRecRating
+  +0.27241608 * zoneCoverRating
+  -0.26009935 * finesseMovesRating
+  +0.21544758 * blockShedRating
+  +0.19968710 * pursuitRating
+  -0.19939588 * speedRating
+  +0.16390696 * tackleRating
+  +0.15754526 * awareRating
+  -0.15322032 * strengthRating
+  -0.07730696 * accelRating
+  +0.07563326 * agilityRating
+  -0.07374530 * powerMovesRating
+  -0.04500932 * manCoverRating
+  -0.02796028 * speedRating zoneCoverRating
+  +0.02550908 * accelRating zoneCoverRating
+  +0.02336775 * playRecRating speedRating
+  -0.02304561 * blockShedRating pursuitRating
+  -0.02091302 * playRecRating tackleRating
+  +0.02016676 * manCoverRating speedRating
+  -0.01995420 * speedRating tackleRating
+
+
+================================================================================
+P (R² = 0.998455)
+================================================================================
+Sample: 53 players | OVR: 64-86 (Avg: 73.9)
+Model: Poly2-Ridge1 | MAE: 0.175 | RMSE: 0.214
+
+OVR = 16.294403
+(Using polynomial features)
+
+Top 20 Features:
+  +0.28476345 * awareRating
+  +0.27314476 * kickAccRating
+  -0.11529692 * kickPowerRating
+  +0.00520291 * kickPowerRating^2
+  -0.00513608 * kickAccRating kickPowerRating
+  +0.00273546 * awareRating kickAccRating
+  +0.00181996 * kickAccRating^2
+  -0.00057347 * awareRating kickPowerRating
+  +0.00015214 * awareRating^2
+
+
+================================================================================
+QB (R² = 0.992844)
+================================================================================
+Sample: 130 players | OVR: 53-99 (Avg: 71.1)
+Model: Poly2-Ridge1 | MAE: 0.706 | RMSE: 0.946
+
+OVR = 1.828885
+(Using polynomial features)
+
+Top 20 Features:
+  -1.00713981 * throwAccMidRating
+  +0.59702061 * awareRating
+  +0.57761839 * throwPowerRating
+  +0.45331275 * speedRating
+  -0.43300527 * throwAccShortRating
+  -0.42599728 * agilityRating
+  -0.12444073 * playActionRating
+  +0.06239821 * throwAccRating
+  +0.03257162 * agilityRating speedRating
+  -0.02196506 * awareRating throwAccShortRating
+  -0.02037030 * speedRating throwAccDeepRating
+  +0.01795130 * throwAccDeepRating throwAccShortRating
+  +0.01731186 * awareRating throwAccDeepRating
+  -0.01565133 * agilityRating^2
+  +0.01474747 * throwAccMidRating^2
+  +0.01431212 * awareRating speedRating
+  +0.01375551 * throwAccDeepRating throwPowerRating
+  -0.01250556 * playActionRating throwAccShortRating
+  -0.01249793 * agilityRating awareRating
+  -0.01191680 * throwAccDeepRating
+
+
+================================================================================
+REDGE (R² = 0.999270)
+================================================================================
+Sample: 157 players | OVR: 60-99 (Avg: 73.3)
+Model: Poly2-Ridge1 | MAE: 0.163 | RMSE: 0.214
+
+OVR = -20.636810
+(Using polynomial features)
+
+Top 20 Features:
+  +0.25198566 * tackleRating
+  +0.24439826 * awareRating
+  +0.17328475 * blockShedRating
+  +0.16252430 * zoneCoverRating
+  +0.15229901 * playRecRating
+  -0.12920186 * hitPowerRating
+  +0.08562943 * manCoverRating
+  -0.06416470 * strengthRating
+  -0.03924506 * speedRating
+  +0.02986659 * finesseMovesRating
+  +0.02136405 * accelRating
+  -0.02069191 * accelRating speedRating
+  +0.01952114 * pursuitRating^2
+  -0.01695932 * accelRating pursuitRating
+  +0.01320849 * speedRating^2
+  +0.01316064 * agilityRating speedRating
+  -0.01291671 * pursuitRating tackleRating
+  +0.01252308 * accelRating^2
+  -0.01233315 * hitPowerRating speedRating
+  -0.01215170 * speedRating zoneCoverRating
+
+
+================================================================================
+RT (R² = 0.997808)
+================================================================================
+Sample: 113 players | OVR: 58-99 (Avg: 70.2)
+Model: Poly2-Ridge1 | MAE: 0.297 | RMSE: 0.395
+
+OVR = 3.394928
+(Using polynomial features)
+
+Top 20 Features:
+  +0.46168841 * powerMovesRating
+  -0.40153643 * finesseMovesRating
+  +0.27488159 * strengthRating
+  +0.26548974 * passBlockRating
+  -0.19895503 * runBlockRating
+  -0.15189862 * passBlockFinesseRating
+  +0.13836801 * passBlockPowerRating
+  +0.12109126 * runBlockPowerRating
+  -0.11718302 * impactBlockRating
+  +0.08209793 * awareRating
+  -0.07728030 * runBlockFinesseRating
+  +0.07558530 * runBlockFinesseRating runBlockRating
+  +0.06020873 * passBlockFinesseRating runBlockFinesseRating
+  +0.04905971 * impactBlockRating runBlockRating
+  -0.04672110 * passBlockRating runBlockFinesseRating
+  +0.03795849 * runBlockPowerRating runBlockRating
+  -0.03563449 * runBlockRating^2
+  -0.03360601 * runBlockRating strengthRating
+  -0.03332186 * impactBlockRating runBlockFinesseRating
+  -0.03088948 * impactBlockRating runBlockPowerRating
+
+
+================================================================================
+SAM (R² = 1.000000)
+================================================================================
+Sample: 67 players | OVR: 57-88 (Avg: 71.6)
+Model: Poly2-Ridge1 | MAE: 0.000 | RMSE: 0.000
+
+OVR = 0.568012
+(Using polynomial features)
+
+Top 20 Features:
+  -0.01019976 * blockShedRating zoneCoverRating
+  +0.00849971 * agilityRating awareRating
+  -0.00830228 * awareRating tackleRating
+  +0.00766894 * hitPowerRating pursuitRating
+  -0.00754059 * agilityRating strengthRating
+  +0.00742277 * finesseMovesRating powerMovesRating
+  -0.00736851 * finesseMovesRating strengthRating
+  +0.00731335 * blockShedRating playRecRating
+  -0.00709667 * accelRating hitPowerRating
+  -0.00706720 * playRecRating powerMovesRating
+  -0.00706380 * awareRating playRecRating
+  -0.00628100 * blockShedRating speedRating
+  +0.00614990 * finesseMovesRating zoneCoverRating
+  -0.00614471 * finesseMovesRating pursuitRating
+  +0.00610556 * playRecRating tackleRating
+  +0.00600830 * hitPowerRating tackleRating
+  +0.00572682 * powerMovesRating speedRating
+  -0.00559416 * accelRating powerMovesRating
+  -0.00545210 * agilityRating hitPowerRating
+  -0.00540642 * finesseMovesRating manCoverRating
+
+
+================================================================================
+SS (R² = 0.999128)
+================================================================================
+Sample: 129 players | OVR: 57-95 (Avg: 73.3)
+Model: Poly2-Ridge1 | MAE: 0.171 | RMSE: 0.228
+
+OVR = -19.566117
+(Using polynomial features)
+
+Top 20 Features:
+  +0.36539346 * tackleRating
+  -0.31468988 * jumpRating
+  +0.29615943 * hitPowerRating
+  +0.24138931 * pursuitRating
+  -0.18671340 * speedRating
+  -0.17027300 * accelRating
+  +0.16839258 * agilityRating
+  +0.15931023 * zoneCoverRating
+  +0.15080571 * playRecRating
+  -0.14167516 * awareRating
+  +0.06872069 * manCoverRating
+  +0.04758526 * pressRating
+  -0.02846478 * accelRating speedRating
+  +0.02462504 * changeOfDirectionRating speedRating
+  +0.02425561 * accelRating zoneCoverRating
+  -0.01864446 * awareRating changeOfDirectionRating
+  -0.01852443 * tackleRating zoneCoverRating
+  +0.01842416 * agilityRating pursuitRating
+  +0.01665987 * accelRating^2
+  -0.01649677 * agilityRating tackleRating
+
+
+================================================================================
+TE (R² = 1.000000)
+================================================================================
+Sample: 175 players | OVR: 57-96 (Avg: 71.2)
+Model: Poly2-Ridge1 | MAE: 0.000 | RMSE: 0.000
+
+OVR = -3.640828
+(Using polynomial features)
+
+Top 20 Features:
+  -0.03030304 * runBlockRating speedRating
+  -0.02599809 * carryRating changeOfDirectionRating
+  +0.02591751 * agilityRating changeOfDirectionRating
+  +0.02373640 * impactBlockRating releaseRating
+  +0.02326980 * routeRunMedRating routeRunShortRating
+  -0.02249321 * carryRating runBlockRating
+  +0.02226367 * routeRunMedRating runBlockRating
+  -0.02217762 * releaseRating routeRunDeepRating
+  -0.02197910 * cITRating speedRating
+  -0.02088998 * releaseRating strengthRating
+  -0.01940719 * passBlockRating truckRating
+  +0.01921514 * breakTackleRating specCatchRating
+  +0.01693258 * cITRating^2
+  +0.01664581 * specCatchRating speedRating
+  -0.01661794 * catchRating changeOfDirectionRating
+  -0.01646875 * carryRating strengthRating
+  +0.01619902 * runBlockRating strengthRating
+  +0.01580244 * awareRating strengthRating
+  +0.01534253 * passBlockRating^2
+  -0.01528339 * catchRating passBlockRating
+
+
+================================================================================
+WILL (R² = 0.999973)
+================================================================================
+Sample: 109 players | OVR: 55-87 (Avg: 70.8)
+Model: Poly2-Ridge1 | MAE: 0.030 | RMSE: 0.041
+
+OVR = 14.197438
+(Using polynomial features)
+
+Top 20 Features:
+  -0.10185352 * blockShedRating
+  -0.08798523 * zoneCoverRating
+  +0.08666662 * hitPowerRating
+  -0.07670792 * manCoverRating
+  -0.07233700 * finesseMovesRating
+  -0.06961319 * speedRating strengthRating
+  +0.05859340 * accelRating zoneCoverRating
+  -0.05246395 * accelRating
+  -0.05151594 * accelRating speedRating
+  +0.04930381 * pursuitRating speedRating
+  -0.04636893 * accelRating pursuitRating
+  -0.04584080 * playRecRating speedRating
+  -0.04518116 * pursuitRating^2
+  -0.04505572 * awareRating
+  +0.04452035 * awareRating speedRating
+  +0.04165356 * agilityRating manCoverRating
+  -0.04011447 * accelRating awareRating
+  +0.03950818 * accelRating playRecRating
+  +0.03785703 * hitPowerRating manCoverRating
+  -0.03623784 * manCoverRating speedRating
+
+
+================================================================================
+WR (R² = 0.996328)
+================================================================================
+Sample: 338 players | OVR: 60-99 (Avg: 74.9)
+Model: Poly2-Ridge1 | MAE: 0.351 | RMSE: 0.453
+
+OVR = -99.618834
+(Using polynomial features)
+
+Top 20 Features:
+  +0.49273781 * speedRating
+  +0.42913574 * releaseRating
+  +0.39281124 * awareRating
+  +0.37898884 * accelRating
+  +0.37339327 * runBlockRating
+  +0.37197307 * jumpRating
+  +0.36386082 * routeRunMedRating
+  +0.25575415 * changeOfDirectionRating
+  -0.24686224 * strengthRating
+  +0.23063761 * catchRating
+  -0.21074103 * specCatchRating
+  -0.18281053 * breakTackleRating
+  -0.11846485 * agilityRating
+  -0.08603041 * routeRunDeepRating
+  +0.07217415 * passBlockRating
+  +0.07180282 * cITRating
+  -0.04491913 * routeRunShortRating
+  -0.03916042 * accelRating specCatchRating
+  +0.02816200 * accelRating speedRating
+  +0.02498631 * accelRating cITRating
+

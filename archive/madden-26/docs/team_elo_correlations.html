@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Team ELO Correlations — Performance vs Rating</title>
+  <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <style>
+    :root {
+      --red: #ef4444;
+      --blue: #0ea5e9;
+      --grid: #e8eaed;
+      --axis: #9aa0a6;
+      --text: #222;
+    }
+    body { margin: 16px; font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; color: var(--text); background: #f7f7f7; }
+    .container { max-width: 1200px; margin: 0 auto; background: #fff; border: 1px solid #e5e5e5; border-radius: 10px; padding: 12px 16px 22px; box-shadow: 0 1px 3px rgba(0,0,0,.06); }
+    h1 { margin: 0 0 10px; font-size: 22px; }
+    .subtitle { color: #666; font-size: 13px; margin: 4px 0 12px; }
+    .controls { display: flex; align-items: center; gap: 10px; margin: 6px 0 8px; }
+    .panel { margin: 12px 0 14px; border: 1px solid #e5e5e5; border-radius: 10px; overflow: hidden; background: #fff; }
+    .panel > summary { padding: 10px 14px; background: #f5f7fa; border-bottom: 1px solid #ebeff5; font-weight: 600; cursor: pointer; user-select: none; list-style: none; }
+    .panel[open] > summary { border-bottom-color: #e6eaf0; }
+    .chart-wrap { padding: 8px 8px 0; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain; }
+    .legend { display: flex; align-items: center; gap: 16px; color: #555; font-size: 12px; padding: 0 10px 10px; }
+    .swatch { display: inline-block; width: 12px; height: 12px; border-radius: 2px; margin-right: 6px; vertical-align: middle; }
+    .avg { background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb; }
+    .red { background: var(--red); opacity: .5; }
+    .blue { background: var(--blue); opacity: .5; }
+    .tooltip { position: absolute; pointer-events: none; background: rgba(0,0,0,.78); color: #fff; padding: 6px 8px; border-radius: 6px; font-size: 12px; z-index: 10; }
+    .info { background: #f3f6fa; border: 1px solid #e1e7ef; border-radius: 8px; padding: 10px 14px; color: #243246; font-size: 14px; margin: 8px 0 12px; }
+    .info summary { font-weight: 600; cursor: pointer; }
+    .correlation-badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; }
+    .corr-strong { background: #dcfce7; color: #166534; }
+    .corr-moderate { background: #fef3c7; color: #854d0e; }
+    .corr-weak { background: #fee2e2; color: #991b1b; }
+    .help-icon { display: inline-block; width: 16px; height: 16px; border-radius: 50%; background: #3b82f6; color: white; text-align: center; line-height: 16px; font-size: 11px; font-weight: bold; margin-left: 8px; cursor: help; vertical-align: middle; }
+    .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
+  </style>
+  <script>
+    async function tryCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
+    }
+
+    async function loadEloCsv(paths) {
+      let lastErr;
+      for (const p of paths) {
+        try {
+          const text = await fetch(p).then(r => r.text());
+          const rows = d3.dsvFormat(',').parse(text);
+          return rows.map(row => ({
+            rank: +row['#'],
+            team: row.Team,
+            elo: parseFloat(row['Week 14+'])
+          }));
+        } catch (e) { lastErr = e; }
+      }
+      throw lastErr || new Error('Unable to load ELO CSV: ' + paths.join(', '));
+    }
+
+    function fmt2(x) { return d3.format('.2f')(x); }
+    function fmt3(x) { return d3.format('.3f')(x); }
+    function toPct(x) { return d3.format('.1%')(x); }
+
+    function regression(points) {
+      let n = 0, sx = 0, sy = 0, sxy = 0, sxx = 0, syy = 0;
+      for (const [x0, y0] of points) {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) continue;
+        n++; sx += x; sy += y; sxy += x*y; sxx += x*x; syy += y*y;
+      }
+      if (n < 2) return { m: 0, b: sy / (n || 1), r2: 0 };
+      const denom = n * sxx - sx * sx;
+      const m = denom !== 0 ? (n * sxy - sx * sy) / denom : 0;
+      const b = (sy - m * sx) / n;
+      
+      const ssr = points.reduce((sum, [x0, y0]) => {
+        const x = +x0, y = +y0;
+        if (!Number.isFinite(x) || !Number.isFinite(y)) return sum;
+        return sum + Math.pow(y - (m * x + b), 2);
+      }, 0);
+      const sst = syy - (sy * sy) / n;
+      const r2 = sst !== 0 ? Math.max(0, 1 - ssr / sst) : 0;
+      
+      return { m, b, r2 };
+    }
+
+    async function loadData() {
+      const stats = await tryCsv([
+        '../output/team_aggregated_stats.csv',
+        'output/team_aggregated_stats.csv',
+        '/output/team_aggregated_stats.csv'
+      ]);
+
+      const eloData = await loadEloCsv([
+        '../MEGA_elo.csv',
+        'MEGA_elo.csv',
+        '/MEGA_elo.csv'
+      ]);
+
+      const eloMap = new Map(eloData.map(d => [d.team, d.elo]));
+
+      for (const row of stats) {
+        row.logoUrl = (row.logoId !== '' && row.logoId != null) ? 
+          `https://cdn.neonsportz.com/teamlogos/256/${row.logoId}.png` : null;
+        row.elo = eloMap.get(row.team) || null;
+      }
+
+      return stats.filter(d => d.elo != null);
+    }
+
+    function drawScatter(holder, rows, cfg) {
+      const data = rows.filter(d => 
+        Number.isFinite(+d[cfg.xKey]) && Number.isFinite(+d[cfg.yKey])
+      );
+
+      if (data.length < 2) return;
+
+      const margin = { top: 20, right: 24, bottom: 46, left: 70 };
+      const width = 1080, height = 480;
+      const innerW = width - margin.left - margin.right;
+      const innerH = height - margin.top - margin.bottom;
+
+      const panel = holder.append('details').attr('class', 'panel').attr('open', true);
+      const summary = panel.append('summary');
+      summary.append('span').text(cfg.title);
+      
+      if (cfg.metricHelp) {
+        const helpIcon = summary.append('span').attr('class', 'help-icon').text('?');
+        const metricTip = d3.select('body').append('div').attr('class', 'metric-tooltip').style('display', 'none');
+        helpIcon.on('mouseenter', function(evt) {
+          metricTip.style('display', 'block').html(cfg.metricHelp);
+        }).on('mousemove', (evt) => {
+          metricTip.style('left', (evt.pageX + 12) + 'px').style('top', (evt.pageY - 28) + 'px');
+        }).on('mouseleave', () => {
+          metricTip.style('display', 'none');
+        });
+      }
+      
+      const wrap = panel.append('div').attr('class', 'chart-wrap');
+      const svg = wrap.append('svg').attr('width', width).attr('height', height);
+      const g = svg.append('g').attr('transform', `translate(${margin.left},${margin.top})`);
+
+      const yVals = data.map(d => +d[cfg.yKey]);
+      const yMin = d3.min(yVals), yMax = d3.max(yVals);
+      const yRange = yMax - yMin;
+      const yPad = yRange * 0.15 || 0.5;
+      const y = d3.scaleLinear()
+        .domain([yMin - yPad, yMax + yPad])
+        .range([innerH, 0]);
+
+      const xVals = data.map(d => +d[cfg.xKey]);
+      const xMin = d3.min(xVals), xMax = d3.max(xVals);
+      const xRange = xMax - xMin;
+      const xPad = xRange * 0.15 || 0.5;
+      const x = d3.scaleLinear()
+        .domain([xMin - xPad, xMax + xPad])
+        .range([0, innerW]);
+
+      g.append('g').attr('transform', `translate(0,${innerH})`)
+        .call(d3.axisBottom(x).ticks(10).tickFormat(cfg.xFormat || fmt2).tickSize(-innerH).tickPadding(8))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#e2e2e2'))
+        .call(s => s.select('.domain').attr('stroke', '#9aa0a6'));
+
+      g.append('g')
+        .call(d3.axisLeft(y).ticks(10).tickFormat(cfg.yFormat || fmt2).tickSize(-innerW).tickPadding(6))
+        .call(s => s.selectAll('.tick line').attr('stroke', '#efefef'))
+        .call(s => s.select('.domain').attr('stroke', '#dcdcdc'));
+
+      const yAvg = d3.mean(yVals), xAvg = d3.mean(xVals);
+      g.append('line').attr('x1', 0).attr('x2', innerW).attr('y1', y(yAvg)).attr('y2', y(yAvg))
+        .attr('stroke', '#999').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('line').attr('x1', x(xAvg)).attr('x2', x(xAvg)).attr('y1', 0).attr('y2', innerH)
+        .attr('stroke', '#9aa0a6').attr('stroke-dasharray', '6,4').attr('stroke-width', 1.5);
+      g.append('text').attr('x', 6).attr('y', y(yAvg)-6).attr('fill', '#555').attr('font-size', 11)
+        .text('Avg Y: ' + (cfg.yFormat || fmt2)(yAvg));
+      g.append('text').attr('x', x(xAvg)+6).attr('y', 12).attr('fill', '#555').attr('font-size', 11)
+        .text('Avg X: ' + (cfg.xFormat || fmt2)(xAvg));
+
+      const { m, b, r2 } = regression(data.map(d => [+d[cfg.xKey], +d[cfg.yKey]]));
+      const xRangePts = [d3.min(xVals), d3.max(xVals)];
+      g.append('line')
+        .attr('x1', x(xRangePts[0])).attr('y1', y(m*xRangePts[0] + b))
+        .attr('x2', x(xRangePts[1])).attr('y2', y(m*xRangePts[1] + b))
+        .attr('stroke', '#777').attr('stroke-width', 2).attr('opacity', .95);
+
+      const tip = d3.select('body').append('div').attr('class', 'tooltip').style('display', 'none');
+
+      const size = 30;
+      const node = g.selectAll('.team').data(data, d => d.team).join('g').attr('class', 'team')
+        .attr('transform', d => `translate(${x(d[cfg.xKey])},${y(d[cfg.yKey])})`)
+        .on('mouseenter', function(evt, d){
+          const trend = m * d[cfg.xKey] + b;
+          const res = d[cfg.yKey] - trend;
+          let html = `<strong>${d.team}</strong><br>`;
+          html += `${cfg.xLabel}: ${(cfg.xFormat || fmt2)(d[cfg.xKey])}<br>`;
+          html += `${cfg.yLabel}: ${(cfg.yFormat || fmt2)(d[cfg.yKey])}<br>`;
+          html += `Win%: ${toPct(d.win_pct)}<br>`;
+          html += `Δ vs trend: ${(res>=0?'+':'') + fmt2(res)}<br>`;
+          
+          const qx = +d[cfg.xKey] >= xAvg;
+          const qy = +d[cfg.yKey] >= yAvg;
+          let quadrant = '';
+          if (cfg.quadrantHelp) {
+            if (qx && qy) quadrant = '<em>' + cfg.quadrantHelp.topRight + '</em>';
+            else if (!qx && qy) quadrant = '<em>' + cfg.quadrantHelp.topLeft + '</em>';
+            else if (!qx && !qy) quadrant = '<em>' + cfg.quadrantHelp.bottomLeft + '</em>';
+            else quadrant = '<em>' + cfg.quadrantHelp.bottomRight + '</em>';
+          } else {
+            if (qx && qy) quadrant = '<em>High X + High Y</em>';
+            else if (!qx && qy) quadrant = '<em>Low X + High Y</em>';
+            else if (!qx && !qy) quadrant = '<em>Low X + Low Y</em>';
+            else quadrant = '<em>High X + Low Y</em>';
+          }
+          html += quadrant;
+          
+          tip.style('display','block').html(html);
+        })
+        .on('mousemove', (evt)=> tip.style('left', (evt.pageX+12)+'px').style('top',(evt.pageY-28)+'px'))
+        .on('mouseleave', ()=> tip.style('display','none'));
+
+      node.append('rect')
+        .attr('x', -(size/2 + 2)).attr('y', -(size/2 + 2))
+        .attr('width', size + 4).attr('height', size + 4)
+        .attr('rx', 4).attr('ry', 4)
+        .attr('fill', d => (+d[cfg.yKey] >= m*+d[cfg.xKey] + b) ? 'var(--red)' : 'var(--blue)')
+        .attr('opacity', .16);
+
+      node.append('image')
+        .attr('href', d => d.logoUrl || null)
+        .attr('x', -size/2).attr('y', -size/2)
+        .attr('width', size).attr('height', size)
+        .attr('opacity', .95);
+
+      svg.append('text').attr('x', margin.left + innerW/2).attr('y', height-10)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text(cfg.xLabel);
+      svg.append('text').attr('transform', `translate(14, ${margin.top + innerH/2}) rotate(-90)`)
+        .attr('text-anchor', 'middle').attr('fill', '#444').attr('font-size', 12)
+        .text(cfg.yLabel);
+
+      const legend = panel.append('div').attr('class', 'legend');
+      legend.append('span').html(`<span class="swatch avg"></span>Avg X & Y`);
+      legend.append('span').html(`<span class="swatch red"></span>Above trend`);
+      legend.append('span').html(`<span class="swatch blue"></span>Below trend`);
+      legend.append('span').style('margin-left','16px').text('Trend line in gray');
+
+      let corrClass = 'corr-weak', corrLabel = 'Weak';
+      if (r2 >= 0.5) { corrClass = 'corr-strong'; corrLabel = 'Strong'; }
+      else if (r2 >= 0.25) { corrClass = 'corr-moderate'; corrLabel = 'Moderate'; }
+      
+      summary.append('span').attr('class', `correlation-badge ${corrClass}`)
+        .style('margin-left', '12px')
+        .html(`R²=${fmt3(r2)} (${corrLabel})`);
+
+      if (cfg.insight) {
+        panel.append('div').style('padding', '8px 14px 10px').style('font-size', '13px')
+          .style('color', '#555').style('font-style', 'italic').text('💡 ' + cfg.insight);
+      }
+    }
+
+    function render() {
+      loadData().then(allRows => {
+        const charts = [
+          {
+            xKey: 'win_pct',
+            yKey: 'elo',
+            xLabel: 'Win Percentage',
+            yLabel: 'ELO Rating',
+            xFormat: toPct,
+            title: 'Win Percentage vs ELO',
+            insight: 'Most fundamental correlation - validates ELO system effectiveness',
+            metricHelp: '<strong>Wins vs ELO:</strong> Win percentage should strongly correlate with ELO rating. Teams above the line have higher ELO than their win% suggests.',
+            quadrantHelp: {
+              topRight: 'High wins + high ELO: Elite teams performing as expected',
+              topLeft: 'Low wins + high ELO: Underperforming teams - may have lost close games or faced tough schedule',
+              bottomLeft: 'Low wins + low ELO: Struggling teams performing as expected',
+              bottomRight: 'High wins + low ELO: Teams overperforming their rating through clutch play or favorable schedule'
+            }
+          },
+          {
+            xKey: 'yds_per_play',
+            yKey: 'elo',
+            xLabel: 'Yards per Play',
+            yLabel: 'ELO Rating',
+            title: 'Offensive Efficiency vs ELO',
+            insight: 'Better teams generate more yards per play through superior execution',
+            metricHelp: '<strong>Efficiency vs ELO:</strong> Tests if more efficient offenses translate to higher ELO ratings.',
+            quadrantHelp: {
+              topRight: 'High efficiency + high ELO: Dominant offensive teams',
+              topLeft: 'Low efficiency + high ELO: Defense-first teams or ball control offenses',
+              bottomLeft: 'Low efficiency + low ELO: Struggling offenses',
+              bottomRight: 'High efficiency + low ELO: High-powered offense held back by defense or turnovers'
+            }
+          },
+          {
+            xKey: 'turnover_diff',
+            yKey: 'elo',
+            xLabel: 'Turnover Differential',
+            yLabel: 'ELO Rating',
+            title: 'Turnover Margin vs ELO',
+            insight: 'Ball security and takeaways strongly correlate with team strength',
+            metricHelp: '<strong>Turnovers vs ELO:</strong> Measures how turnover margin relates to team rating.',
+            quadrantHelp: {
+              topRight: 'Positive turnover margin + high ELO: Complete teams winning the turnover battle',
+              topLeft: 'Negative turnover margin + high ELO: Winning despite turnover disadvantage through other strengths',
+              bottomLeft: 'Negative turnover margin + low ELO: Losing games through giveaways',
+              bottomRight: 'Positive turnover margin + low ELO: Creating turnovers but unable to capitalize'
+            }
+          },
+          {
+            xKey: 'qb_rating',
+            yKey: 'elo',
+            xLabel: 'QB Rating',
+            yLabel: 'ELO Rating',
+            title: 'QB Performance vs ELO',
+            insight: 'Quarterback play is a key driver of team strength',
+            metricHelp: '<strong>QB Rating vs ELO:</strong> Tests quarterback performance impact on overall team rating.',
+            quadrantHelp: {
+              topRight: 'High QB rating + high ELO: QB-led teams dominating',
+              topLeft: 'Low QB rating + high ELO: Teams winning with defense and running game',
+              bottomLeft: 'Low QB rating + low ELO: QB struggles contributing to losses',
+              bottomRight: 'High QB rating + low ELO: Great QB play without team success'
+            }
+          },
+          {
+            xKey: 'def_sacks_per_game',
+            yKey: 'elo',
+            xLabel: 'Defensive Sacks per Game',
+            yLabel: 'ELO Rating',
+            title: 'Pass Rush Effectiveness vs ELO',
+            insight: 'Elite pass rush is a hallmark of strong defenses',
+            metricHelp: '<strong>Sacks vs ELO:</strong> Measures pass rush effectiveness correlation with team strength.',
+            quadrantHelp: {
+              topRight: 'High sacks + high ELO: Dominant pass rush disrupting opponents',
+              topLeft: 'Low sacks + high ELO: Coverage-oriented defense or strong offense compensating',
+              bottomLeft: 'Low sacks + low ELO: Defensive struggles across the board',
+              bottomRight: 'High sacks + low ELO: Strong pass rush but weak in other areas'
+            }
+          },
+          {
+            xKey: 'pass_yds_per_att',
+            yKey: 'elo',
+            xLabel: 'Pass Yards per Attempt',
+            yLabel: 'ELO Rating',
+            title: 'Passing Efficiency vs ELO',
+            insight: 'Efficient passing attacks drive team success',
+            metricHelp: '<strong>Pass Efficiency vs ELO:</strong> Yards per attempt is a key passing efficiency metric.',
+            quadrantHelp: {
+              topRight: 'High Y/A + high ELO: Explosive passing game',
+              topLeft: 'Low Y/A + high ELO: Conservative passing or run-first philosophy',
+              bottomLeft: 'Low Y/A + low ELO: Ineffective passing attack',
+              bottomRight: 'High Y/A + low ELO: Efficient passing but poor overall record'
+            }
+          },
+          {
+            xKey: 'rush_yds_per_att',
+            yKey: 'elo',
+            xLabel: 'Rush Yards per Attempt',
+            yLabel: 'ELO Rating',
+            title: 'Running Game Effectiveness vs ELO',
+            insight: 'Strong running games help control clock and wear down defenses',
+            metricHelp: '<strong>Rush Efficiency vs ELO:</strong> Measures running game effectiveness.',
+            quadrantHelp: {
+              topRight: 'High rush Y/A + high ELO: Dominant ground game',
+              topLeft: 'Low rush Y/A + high ELO: Pass-first teams or playing from behind',
+              bottomLeft: 'Low rush Y/A + low ELO: Unable to establish the run',
+              bottomRight: 'High rush Y/A + low ELO: Good running game but losing anyway'
+            }
+          },
+          {
+            xKey: 'td_per_play',
+            yKey: 'elo',
+            xLabel: 'Touchdowns per Play',
+            yLabel: 'ELO Rating',
+            title: 'Red Zone Efficiency vs ELO',
+            insight: 'Scoring touchdowns instead of field goals separates great teams',
+            metricHelp: '<strong>TD Rate vs ELO:</strong> Measures scoring efficiency in high-leverage situations.',
+            quadrantHelp: {
+              topRight: 'High TD rate + high ELO: Elite red zone execution',
+              topLeft: 'Low TD rate + high ELO: Winning with field position and defense',
+              bottomLeft: 'Low TD rate + low ELO: Struggling to score touchdowns',
+              bottomRight: 'High TD rate + low ELO: Scoring efficiently but not often enough'
+            }
+          },
+          {
+            xKey: 'off_yds_per_game',
+            yKey: 'elo',
+            xLabel: 'Offensive Yards per Game',
+            yLabel: 'ELO Rating',
+            title: 'Total Offensive Production vs ELO',
+            insight: 'Volume matters - more yards typically mean more wins',
+            metricHelp: '<strong>Total Offense vs ELO:</strong> Overall yardage production.',
+            quadrantHelp: {
+              topRight: 'High yards + high ELO: High-powered offenses',
+              topLeft: 'Low yards + high ELO: Efficient or defense-oriented teams',
+              bottomLeft: 'Low yards + low ELO: Offensive struggles',
+              bottomRight: 'High yards + low ELO: Moving the ball but not winning'
+            }
+          },
+          {
+            xKey: 'def_ints_per_game',
+            yKey: 'elo',
+            xLabel: 'Defensive Interceptions per Game',
+            yLabel: 'ELO Rating',
+            title: 'Takeaway Generation vs ELO',
+            insight: 'Creating turnovers is a game-changing skill',
+            metricHelp: '<strong>INTs vs ELO:</strong> Defensive playmaking through interceptions.',
+            quadrantHelp: {
+              topRight: 'High INTs + high ELO: Ball-hawking defense',
+              topLeft: 'Low INTs + high ELO: Rush-oriented defense or strong offense',
+              bottomLeft: 'Low INTs + low ELO: Passive defense unable to create takeaways',
+              bottomRight: 'High INTs + low ELO: Creating turnovers but not capitalizing'
+            }
+          },
+          {
+            xKey: 'pass_comp_pct',
+            yKey: 'elo',
+            xLabel: 'Pass Completion Percentage',
+            yLabel: 'ELO Rating',
+            title: 'Passing Accuracy vs ELO',
+            insight: 'Completion percentage reflects QB accuracy and offensive scheme',
+            metricHelp: '<strong>Completion% vs ELO:</strong> Accuracy and scheme fit indicator.',
+            quadrantHelp: {
+              topRight: 'High completion% + high ELO: Accurate short passing game',
+              topLeft: 'Low completion% + high ELO: Vertical passing or QB under pressure',
+              bottomLeft: 'Low completion% + low ELO: Inaccurate or deep passing approach',
+              bottomRight: 'High completion% + low ELO: Conservative passing without results'
+            }
+          },
+          {
+            xKey: 'explosive_plays_per_game',
+            yKey: 'elo',
+            xLabel: '20+ Yard Plays per Game',
+            yLabel: 'ELO Rating',
+            title: 'Big Play Capability vs ELO',
+            insight: 'Explosive plays change games and drive scoring',
+            metricHelp: '<strong>Explosives vs ELO:</strong> 20+ yard plays indicate big play threat.',
+            quadrantHelp: {
+              topRight: 'High explosives + high ELO: Dynamic offense with big play threat',
+              topLeft: 'Low explosives + high ELO: Consistent short-yardage offense',
+              bottomLeft: 'Low explosives + low ELO: Methodical offense without big plays',
+              bottomRight: 'High explosives + low ELO: Boom-or-bust offense'
+            }
+          },
+          {
+            xKey: 'punts_per_game',
+            yKey: 'elo',
+            xLabel: 'Punts per Game',
+            yLabel: 'ELO Rating',
+            title: 'Drive Sustainability vs ELO',
+            insight: 'Fewer punts means better drive conversion',
+            metricHelp: '<strong>Punts vs ELO:</strong> Lower punts indicate better offensive efficiency.',
+            quadrantHelp: {
+              topRight: 'High punts + high ELO: Defensive-minded or field position battle',
+              topLeft: 'Low punts + high ELO: Efficient offense sustaining drives',
+              bottomLeft: 'Low punts + low ELO: Sustaining drives but not winning',
+              bottomRight: 'High punts + low ELO: Three-and-out problems'
+            }
+          },
+          {
+            xKey: 'pass_rush_ratio',
+            yKey: 'elo',
+            xLabel: 'Pass/Rush Attempt Ratio',
+            yLabel: 'ELO Rating',
+            title: 'Offensive Philosophy vs ELO',
+            insight: 'Game script and team strength affect play calling',
+            metricHelp: '<strong>Pass/Rush vs ELO:</strong> Higher ratio means more pass-heavy approach.',
+            quadrantHelp: {
+              topRight: 'High ratio + high ELO: Pass-first offense or playing with lead',
+              topLeft: 'Low ratio + high ELO: Balanced or run-dominant offense',
+              bottomLeft: 'Low ratio + low ELO: Run-heavy approach not working',
+              bottomRight: 'High ratio + low ELO: Passing out of necessity while trailing'
+            }
+          },
+          {
+            xKey: 'sacks_allowed_per_game',
+            yKey: 'elo',
+            xLabel: 'Sacks Allowed per Game',
+            yLabel: 'ELO Rating',
+            title: 'Pass Protection vs ELO',
+            insight: 'Better teams typically protect their QB better (note: inverse relationship)',
+            metricHelp: '<strong>Sacks Allowed vs ELO:</strong> Lower is better - fewer sacks allowed.',
+            quadrantHelp: {
+              topRight: 'High sacks allowed + high ELO: Winning despite poor protection',
+              topLeft: 'Low sacks allowed + high ELO: Strong offensive line protection',
+              bottomLeft: 'Low sacks allowed + low ELO: Good protection but losing anyway',
+              bottomRight: 'High sacks allowed + low ELO: Pass protection breakdown'
+            }
+          },
+          {
+            xKey: 'def_tackles',
+            yKey: 'elo',
+            xLabel: 'Defensive Tackles',
+            yLabel: 'ELO Rating',
+            title: 'Total Defensive Production vs ELO',
+            insight: 'High tackle counts indicate active, engaged defenses',
+            metricHelp: '<strong>Tackles vs ELO:</strong> Total defensive tackles as a measure of defensive activity and production.',
+            quadrantHelp: {
+              topRight: 'High tackles + high ELO: Dominant defense making plays',
+              topLeft: 'Low tackles + high ELO: Efficient defense or strong offense limiting opponent possessions',
+              bottomLeft: 'Low tackles + low ELO: Defense not getting opportunities or passive play',
+              bottomRight: 'High tackles + low ELO: Defense on field often, allowing long drives'
+            }
+          }
+        ];
+
+        function addRanks(rows, key, rankKey) {
+          const sorted = [...rows].sort((a, b) => (b[key] || 0) - (a[key] || 0));
+          sorted.forEach((row, idx) => { row[rankKey] = idx + 1; });
+        }
+
+        addRanks(allRows, 'elo', 'elo_rank');
+        addRanks(allRows, 'win_pct', 'win_rank');
+        addRanks(allRows, 'off_yds_per_game', 'off_yds_rank');
+        addRanks(allRows, 'yds_per_play', 'yds_per_play_rank');
+        addRanks(allRows, 'qb_rating', 'qb_rating_rank');
+        addRanks(allRows, 'turnover_diff', 'turnover_diff_rank');
+
+        const container = d3.select('body').append('div').attr('class', 'container');
+        container.append('h1').text('Team ELO Correlations');
+        container.append('div').attr('class', 'subtitle')
+          .text(`Analyzing how team statistics correlate with ELO rating across ${allRows.length} teams`);
+
+        charts.forEach(cfg => drawScatter(container, allRows, cfg));
+
+        const rankCharts = [
+          {
+            xKey: 'win_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Win % Rank',
+            yLabel: 'ELO Rank',
+            title: 'Win Rank vs ELO Rank',
+            insight: 'How well does win ranking align with ELO ranking?',
+            metricHelp: '<strong>Win Rank vs ELO Rank:</strong> Perfect correlation would show teams with the same rank in both metrics. Lower rank number = better.',
+            quadrantHelp: {
+              topRight: 'Low win rank + low ELO rank: Bottom teams by both metrics',
+              topLeft: 'High win rank + low ELO rank: Teams winning more than ELO suggests',
+              bottomLeft: 'High win rank + high ELO rank: Elite teams by both metrics',
+              bottomRight: 'Low win rank + high ELO rank: High ELO teams underperforming in wins'
+            }
+          },
+          {
+            xKey: 'off_yds_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Offensive Yards Rank',
+            yLabel: 'ELO Rank',
+            title: 'Offensive Production Rank vs ELO Rank',
+            insight: 'Does offensive production ranking match team strength ranking?',
+            metricHelp: '<strong>Offensive Rank vs ELO Rank:</strong> Compares offensive yardage ranking to overall team rating. Lower rank = better.',
+            quadrantHelp: {
+              topRight: 'Low offense rank + low ELO rank: Weak offense and weak team',
+              topLeft: 'High offense rank + low ELO rank: Strong offense but weak overall team',
+              bottomLeft: 'High offense rank + high ELO rank: Dominant offense on elite team',
+              bottomRight: 'Low offense rank + high ELO rank: Elite team with weaker offense (defense-led)'
+            }
+          },
+          {
+            xKey: 'yds_per_play_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Efficiency Rank',
+            yLabel: 'ELO Rank',
+            title: 'Offensive Efficiency Rank vs ELO Rank',
+            insight: 'Efficiency ranking compared to overall team strength',
+            metricHelp: '<strong>Efficiency Rank vs ELO Rank:</strong> Yards per play efficiency ranking vs team rating. Lower rank = better.',
+            quadrantHelp: {
+              topRight: 'Low efficiency rank + low ELO rank: Inefficient offense on weak team',
+              topLeft: 'High efficiency rank + low ELO rank: Efficient offense but weak team',
+              bottomLeft: 'High efficiency rank + high ELO rank: Elite efficiency on elite team',
+              bottomRight: 'Low efficiency rank + high ELO rank: Elite team with less efficient offense'
+            }
+          },
+          {
+            xKey: 'qb_rating_rank',
+            yKey: 'elo_rank',
+            xLabel: 'QB Rating Rank',
+            yLabel: 'ELO Rank',
+            title: 'QB Performance Rank vs ELO Rank',
+            insight: 'How quarterback ranking correlates with team ranking',
+            metricHelp: '<strong>QB Rank vs ELO Rank:</strong> Quarterback performance ranking vs team strength. Lower rank = better.',
+            quadrantHelp: {
+              topRight: 'Low QB rank + low ELO rank: Poor QB play on weak team',
+              topLeft: 'High QB rank + low ELO rank: Elite QB on weak team',
+              bottomLeft: 'High QB rank + high ELO rank: Elite QB leading elite team',
+              bottomRight: 'Low QB rank + high ELO rank: Elite team with weaker QB (defense-led)'
+            }
+          },
+          {
+            xKey: 'turnover_diff_rank',
+            yKey: 'elo_rank',
+            xLabel: 'Turnover Margin Rank',
+            yLabel: 'ELO Rank',
+            title: 'Turnover Differential Rank vs ELO Rank',
+            insight: 'Turnover margin ranking impact on team ranking',
+            metricHelp: '<strong>Turnover Rank vs ELO Rank:</strong> Turnover differential ranking vs team strength. Lower rank = better margin.',
+            quadrantHelp: {
+              topRight: 'Low TO margin rank + low ELO rank: Poor turnover margin on weak team',
+              topLeft: 'High TO margin rank + low ELO rank: Good turnover margin but weak team',
+              bottomLeft: 'High TO margin rank + high ELO rank: Elite turnover margin on elite team',
+              bottomRight: 'Low TO margin rank + high ELO rank: Elite team with poor turnover margin'
+            }
+          }
+        ];
+
+        container.append('h2').style('margin-top', '40px').style('font-size', '20px').text('📊 Rankings Comparison');
+        container.append('div').attr('class', 'subtitle').style('margin-bottom', '16px')
+          .text('How do statistical rankings compare to ELO rankings?');
+        
+        rankCharts.forEach(cfg => drawScatter(container, allRows, cfg));
+      }).catch(err => {
+        console.error('Failed to load data:', err);
+        d3.select('body').append('div').style('padding', '20px').style('color', 'red')
+          .text('Error loading data: ' + err.message);
+      });
+    }
+
+    document.addEventListener('DOMContentLoaded', render);
+  </script>
+</head>
+<body>
+</body>
+</html>

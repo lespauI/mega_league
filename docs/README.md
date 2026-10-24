@@ -1,3 +1,5 @@
+> **Madden 27 rollover:** This is a catalog of retained applications and generated report types, not a list of currently available results. Madden 26 rendered reports and `docs/data/` moved to [the archive](../archive/madden-26/README.md); fresh exports and regeneration are required. The active landing page is root `index.html`. See [setup instructions](../README.md).
+
 # Docs & Dashboards Overview
 
 The `docs/` folder is the static site for the MEGA League project. All HTML pages can be opened directly (e.g., via `python3 -m http.server 8000`) or served via GitHub Pages. This guide groups the main dashboards by domain and shows which scripts and outputs power each page.

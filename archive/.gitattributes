@@ -1,0 +1,2 @@
+# Preserve snapshot bytes, including original CSV line endings, across checkouts.
+* -text
