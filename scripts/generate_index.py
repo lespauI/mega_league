@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+import json
+import re
 import subprocess
 from pathlib import Path
 
@@ -106,6 +108,8 @@ HTML_TEMPLATE = """<!DOCTYPE html>
 
 def get_file_description(filename):
     descriptions = {
+        'sos_season1.html': 'Season 1 strength of schedule using the supplied ELO ratings',
+        'sos_graphs_season1.html': 'Season 1 rankings-based schedule analysis',
         'playoff_race.html': 'Playoff race visualization and analysis',
         'playoff_race_table.html': 'Detailed playoff race table',
         'team_scenarios.html': '🎲 Monte Carlo Playoff Scenarios - Interactive team-by-team simulation analysis with probability distributions',
@@ -166,6 +170,15 @@ def categorize_files():
             continue
         
         filename = file.name
+        if filename == 'data':
+            continue
+        season_page = re.match(r'sos_(?:graphs_)?season(\d+)\.html$', filename)
+        if season_page:
+            season = season_page.group(1)
+            if not (DOCS_DIR / 'data' / f'season{season}_elo.csv').is_file():
+                continue
+        if filename == 'playoff_dashboard.html' and not (DOCS_DIR / 'data/playoff_dashboard.json').is_file():
+            continue
         
         if filename.endswith('.html'):
             categories['Reports & Visualizations'].append(filename)
@@ -204,8 +217,10 @@ def generate_section(title, files):
 def run_aggregation_script():
     """Run the team stats aggregation scripts to generate CSV data."""
     scripts = [
+        ("stats_scripts/build_player_team_stints.py", "Player/team stints"),
         ("stats_scripts/aggregate_team_stats.py", "Team stats"),
-        ("stats_scripts/aggregate_player_usage.py", "Player usage")
+        ("stats_scripts/aggregate_player_usage.py", "Player usage"),
+        ("stats_scripts/aggregate_rankings_stats.py", "Rankings stats")
     ]
     
     for script_rel, name in scripts:
@@ -258,8 +273,22 @@ def main():
         sections = []
         for category, files in categories.items():
             sections.append(generate_section(category, files))
+        metadata_path = DOCS_DIR / 'data/import_metadata.json'
+        if metadata_path.is_file():
+            metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
+            season = int(metadata['seasonNumber'])
+            week = int(metadata['completedThroughWeek'])
+            elo_week = int(metadata['eloSourceWeek'])
+            sections.insert(0, f'''        <div class="section">
+            <h2>Madden 27 · Season {season} · Through Week {week}</h2>
+            <p>ELO ratings: Week {elo_week}, used with the current league exports.</p>
+            <p><a href="docs/data/MEGA_users.csv">Team / GM / NeonSportz user list</a> ·
+            <a href="docs/data/mega_elo.csv">ELO ratings</a> ·
+            <a href="docs/data/elo_week8.png">Supplied ELO source</a></p>
+        </div>''')
     
     html_content = HTML_TEMPLATE.format(sections='\n        \n'.join(sections))
+    html_content = '\n'.join(line.rstrip() for line in html_content.splitlines()) + '\n'
     
     output_path = ROOT_DIR / "index.html"
     with open(output_path, 'w', encoding='utf-8') as f:

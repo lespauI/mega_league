@@ -52,10 +52,13 @@
         try {
           const text = await fetch(p).then(r => r.text());
           const rows = d3.dsvFormat(',').parse(text);
+          const weekColumn = rows.columns.filter(c => /^Week \d+\+$/.test(c))
+            .sort((a, b) => parseInt(b.slice(5)) - parseInt(a.slice(5)))[0];
+          if (!weekColumn) throw new Error('Missing Week N+ ELO column');
           return rows.map(row => ({
             rank: +row['#'],
             team: row.Team,
-            elo: parseFloat(row['Week 14+'])
+            elo: parseFloat(row[weekColumn])
           }));
         } catch (e) { lastErr = e; }
       }
@@ -97,9 +100,9 @@
       ]);
 
       const eloData = await loadEloCsv([
-        '../MEGA_elo.csv',
-        'MEGA_elo.csv',
-        '/MEGA_elo.csv'
+        '../mega_elo.csv',
+        'mega_elo.csv',
+        '/mega_elo.csv'
       ]);
 
       const eloMap = new Map(eloData.map(d => [d.team, d.elo]));

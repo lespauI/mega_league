@@ -43,6 +43,21 @@ def normalize_team_name(name: str) -> str:
     return s
 
 
+def latest_elo_column(fieldnames):
+    """Select the newest supplied Week N+ rating column by numeric week."""
+    columns = []
+    for name in fieldnames or []:
+        value = (name or '').strip()
+        if value.lower().startswith('week ') and value.endswith('+'):
+            try:
+                columns.append((int(value[5:-1].strip()), name))
+            except ValueError:
+                continue
+    if not columns:
+        raise ValueError('No Week N+ ELO column found')
+    return max(columns)[1]
+
+
 def read_elo_map(elo_csv: str) -> Dict[str, float]:
     """Read team -> ELO map from MEGA_elo.csv (comma delimiter, dot decimal).
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import argparse
 import csv
+from common import latest_elo_column
 import os
 import json
 import random
@@ -30,7 +31,7 @@ GAME_WIN_PROB_MAX = 0.75
 SB_PROB_MAX = 45.0
 
 
-def load_power_rankings(season_index=3):
+def load_power_rankings(season_index=0):
     rankings = {}
     max_week = {}
     with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
@@ -47,11 +48,11 @@ def load_power_rankings(season_index=3):
     return rankings
 
 def load_elo_data():
-    """Load team ELO ratings from MEGA_elo.csv."""
+    """Load team ELO ratings from mega_elo.csv."""
     elo_map = {}
-    with open('MEGA_elo.csv', 'r', encoding='utf-8') as f:
+    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
-        week_col = next((c for c in (reader.fieldnames or []) if c and c.startswith('Week ')), None)
+        week_col = latest_elo_column(reader.fieldnames)
         for row in reader:
             team = row.get('Team', '').strip()
             elo_str = row.get(week_col, '') if week_col else ''
@@ -65,7 +66,7 @@ def load_elo_data():
             elo_map[team] = 1200.0
     return elo_map
 
-def read_standings(season_index=3):
+def read_standings(season_index=0):
     power_rankings = load_power_rankings(season_index=season_index)
     elo_ratings = load_elo_data()
     
@@ -983,7 +984,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
     
     return '\n'.join(html)
 
-def main(season_index=3):
+def main(season_index=0):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
@@ -1010,7 +1011,7 @@ def main(season_index=3):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate playoff race table HTML')
-    parser.add_argument('--season-index', type=int, default=3,
-                        help='Season index to filter games and rankings (default: 3)')
+    parser.add_argument('--season-index', type=int, default=0,
+                        help='Season index to filter games and rankings (default: 0)')
     args = parser.parse_args()
     main(season_index=args.season_index)

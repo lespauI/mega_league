@@ -73,7 +73,7 @@ def get_draft_race(afc_divs, nfc_divs):
 
 def create_markdown_report(bottom_teams):
     report = []
-    report.append("# 📉 NFL MEGA League Draft Pick Race - Week 14")
+    report.append("# 📉 NFL MEGA League Draft Pick Race - Current Standings")
     report.append("")
     report.append("## Current Draft Order (by record)")
     report.append("")

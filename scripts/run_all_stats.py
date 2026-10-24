@@ -13,10 +13,10 @@ def main():
     print("="*80)
     
     scripts = [
+        ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)'),
         ('stats_scripts/aggregate_team_stats.py', 'Team Statistics Aggregation'),
         ('stats_scripts/aggregate_player_usage.py', 'Player Usage Distribution Analysis'),
         ('stats_scripts/aggregate_rankings_stats.py', 'Team Rankings and Stats Aggregation'),
-        ('stats_scripts/build_player_team_stints.py', 'Player/Team Stints Summary (Trade-Aware)'),
         ('scripts/generate_index.py', 'Index Page Generation'),
         ('scripts/verify_trade_stats.py', 'Trade Stats Verification (Multi-Team Invariants)'),
     ]

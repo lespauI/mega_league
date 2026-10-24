@@ -5,7 +5,7 @@ import os
 import json
 from collections import defaultdict
 
-def read_standings(season_index=3):
+def read_standings(season_index=0):
     teams_div = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -179,7 +179,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGA League Playoff Race - Week 10</title>
+    <title>MEGA League Playoff Race - Current Standings</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; 
@@ -519,141 +519,17 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         </div>
         
         <div class="analysis">
-            <h2>🧮 Как считаются шансы на плей-офф? Разбираем формулу</h2>
-            
-            <div class="analysis-item">
-                <p style="margin-bottom: 15px;">Значит так, ребятки, давайте разберёмся как я высчитываю эти проценты шансов. Тут не просто циферка из жопы - используется <strong>метод Монте-Карло</strong>, как у New York Times! Это когда компьютер прогоняет 10,000 симуляций сезона и смотрит, в скольких из них твоя команда попадает в плей-офф.</p>
-                
-                <h3 style="margin-top: 20px;">🎲 Шаг 1: Симулируем оставшиеся игры</h3>
-                <p>Для каждой ещё не сыгранной игры определяем случайный исход на основе силы команд:</p>
-                <ul style="margin: 10px 0 10px 25px;">
-                    <li>Считаем <strong>рейтинг команды</strong> = 70% от Win% + 20% от Past SoS (сложность сыгранных игр) + 10% от SoV (сила побеждённых)</li>
-                    <li><strong>Базовая</strong> вероятность победы хозяев = рейтинг хозяев / (рейтинг хозяев + рейтинг гостей)</li>
-                    <li>Добавляем модификаторы: <strong>+2%</strong> за домашнее поле, <strong>±3%</strong> за серии (3+ побед/поражений)</li>
-                    <li>Если это <strong>дивизионная</strong> игра — чуть тянем к 50/50 (15% регрессия, потому что в дивизионе всегда дичь)</li>
-                    <li>С шансом ~<strong>0.3%</strong> вообще выпадает ничья (и обеим по 0.5 победы)</li>
-                    <li>Ограничиваем итог: минимум 25%, максимум 75% (никаких гарантий в Madden!)</li>
-                    <li>Бросаем виртуальный кубик — если выпало меньше вероятности, хозяева WIN, иначе гости</li>
-                </ul>
-                <p style="background: #fef3c7; padding: 10px; border-radius: 5px; margin: 10px 0;">
-                    <strong>Пример:</strong> Cowboys (Win% 57%, Past SoS 0.48, SoV 0.56, серия +3) играют дома против Chargers (Win% 54%, Past SoS 0.52, SoV 0.50).<br>
-                    Рейтинг Cowboys = (0.57 × 0.70) + (0.48 × 0.20) + (0.56 × 0.10) = 0.551<br>
-                    Рейтинг Chargers = (0.54 × 0.70) + (0.52 × 0.20) + (0.50 × 0.10) = 0.532<br>
-                    База для Cowboys = 0.551 / (0.551 + 0.532) = 50.9%<br>
-                    + Домашнее поле: 50.9% + 2% = 52.9%<br>
-                    + Серия побед (3+): 52.9% + 3% = <strong>55.9%</strong><br>
-                    Кубик выдал 0.38 → 38% < 55.9% → <strong>Cowboys выиграли!</strong>
-                </p>
-                
-                <h3 style="margin-top: 20px;">🏆 Шаг 2: Определяем плей-офф команды</h3>
-                <p>После симуляции всех игр применяем <strong>ОФИЦИАЛЬНЫЕ правила NFL</strong> для определения 7 команд плей-офф в каждой конференции:</p>
-                
-                <p style="margin-top: 15px;"><strong>А) Находим 4 победителей дивизионов:</strong></p>
-                <ol style="margin: 10px 0 10px 25px;">
-                    <li>Сортируем команды в каждом дивизионе по тайбрейкерам NFL:</li>
-                    <ul style="margin-left: 20px;">
-                        <li><strong>1. Win %</strong> - общий процент побед (главное!)</li>
-                        <li><strong>2. Head-to-Head</strong> - личные встречи (кто кого победил)</li>
-                        <li><strong>3. Division %</strong> - процент побед внутри дивизиона</li>
-                        <li><strong>4. Conference %</strong> - процент побед в конференции</li>
-                        <li><strong>5. Strength of Victory</strong> - сила побеждённых команд</li>
-                        <li><strong>6. Strength of Schedule</strong> - сила всех соперников</li>
-                    </ul>
-                    <li>Лидер каждого дивизиона = автоматически в плей-офф!</li>
-                </ol>
-                
-                <p style="margin-top: 15px;"><strong>Б) Выбираем 3 Wild Card команды:</strong></p>
-                <ol style="margin: 10px 0 10px 25px;">
-                    <li>Берём все команды конференции, <strong>не выигравшие дивизион</strong></li>
-                    <li>Сортируем по тем же тайбрейкерам (Win% → H2H → Conf% → SoV → SoS)</li>
-                    <li>Топ-3 из них = Wild Card места!</li>
-                </ol>
-                
-                <p style="background: #dbeafe; padding: 12px; border-radius: 5px; margin: 15px 0;">
-                    <strong>💡 Важно:</strong> В каждой симуляции обновляются H2H рекорды, дивизионные и конференционные победы!<br>
-                    Например, если в симуляции Cowboys побеждают Giants, то H2H Cowboys становится 1-0, а дивизионный рекорд улучшается. Это влияет на тайбрейкеры!
-                </p>
-                
-                <h3 style="margin-top: 20px;">📊 Шаг 3: Считаем вероятности</h3>
-                <p>Прогоняем эту симуляцию <strong>10,000 раз</strong> для каждой команды и считаем три типа вероятностей:</p>
-                
-                <div style="background: #f1f5f9; padding: 15px; border-radius: 8px; margin: 15px 0;">
-                    <p style="margin-bottom: 10px;"><strong>🎯 Плей-офф вероятность:</strong></p>
-                    <code style="background: white; padding: 8px; display: block; border-radius: 4px;">
-                        (Число симуляций с выходом в плей-офф / 10,000) × 100%
-                    </code>
-                    <p style="margin: 10px 0;"><strong>Пример:</strong> Если Lions попали в плей-офф в 9,180 из 10,000 симуляций = <strong>91.8%</strong></p>
-                    
-                    <p style="margin: 15px 0 10px;"><strong>👑 Победа в дивизионе:</strong></p>
-                    <code style="background: white; padding: 8px; display: block; border-radius: 4px;">
-                        (Число симуляций с победой в дивизионе / 10,000) × 100%
-                    </code>
-                    <p style="margin: 10px 0;"><strong>Пример:</strong> Cowboys выиграли NFC East в 4,330 из 10,000 симуляций = <strong>43.3%</strong></p>
-                    
-                    <p style="margin: 15px 0 10px;"><strong>😎 Бай первого раунда (посев #1):</strong></p>
-                    <code style="background: white; padding: 8px; display: block; border-radius: 4px;">
-                        (Число симуляций с лучшим рекордом в конференции / 10,000) × 100%
-                    </code>
-                    <p style="margin: 10px 0;"><strong>Важно:</strong> Только команда с <strong>посевом #1</strong> получает бай! Сортируем победителей дивизионов по рекорду в каждой симуляции.</p>
-                </div>
-                
-                <h3 style="margin-top: 20px;">🔥 Почему Монте-Карло круче формул?</h3>
-                <ol style="margin: 10px 0 15px 25px;">
-                    <li><strong>Учитывает ВСЕ возможные сценарии</strong> - не угадывает, а моделирует реальность</li>
-                    <li><strong>Применяет настоящие тайбрейкеры NFL</strong> - в каждой симуляции!</li>
-                    <li><strong>Показывает взаимосвязи</strong> - если Lions проигрывают, шансы Bears растут автоматически</li>
-                    <li><strong>Точнее при равной борьбе</strong> - две команды 8-5 могут иметь разные шансы из-за расписания</li>
-                    <li><strong>Используется NYT, FiveThirtyEight</strong> - это индустриальный стандарт!</li>
-                </ol>
-                
-                <h3 style="margin-top: 20px;">💡 Разбираем реальный пример - Cowboys 70% плей-офф</h3>
-                <p style="color: #0f172a; font-weight: bold; margin-top: 15px;">🤠 Cowboys (8-6) имеют 70.3% шансов на плей-офф. Как это вышло?</p>
-                
-                <p><strong>Оставшиеся игры Cowboys:</strong></p>
-                <ul style="margin: 10px 0 10px 25px;">
-                    <li>Week 15: vs Chargers (7-6, Past SoS 0.516)</li>
-                    <li>Week 16: @ Commanders (7-6, Past SoS 0.542)</li>
-                    <li>Week 17: @ Giants (8-5, Past SoS 0.558)</li>
-                </ul>
-                
-                <p style="margin-top: 15px;"><strong>Симуляция #1 - Cowboys проходят в плей-офф:</strong></p>
-                <ol style="margin: 10px 0 10px 25px; background: #f0fdf4; padding: 15px; border-radius: 8px;">
-                    <li><strong>vs Chargers:</strong> База 50.9% → +дом поле 2% → +серия 3% = 55.9% → Кубик 0.38 → WIN ✓</li>
-                    <li><strong>@ Commanders:</strong> В гостях домашний бонус уже у Commanders → шанс Cowboys ~48-50% → Кубик 0.62 → LOSE ✗</li>
-                    <li><strong>@ Giants:</strong> Giants сильнее по SoV/SoS, плюс гостевая → шанс Cowboys ~46-48% → Кубик 0.41 → WIN ✓</li>
-                    <li><strong>Итог:</strong> Cowboys 10-7, Giants 9-7, Commanders 8-7</li>
-                    <li><strong>Применяем тайбрейкеры:</strong> Cowboys выигрывают NFC East (H2H 1-0 vs Giants) → ПЛЕЙ-ОФФ! ✓</li>
-                </ol>
-                
-                <p style="margin-top: 15px;"><strong>Симуляция #2 - Cowboys пролетают:</strong></p>
-                <ol style="margin: 10px 0 10px 25px; background: #fef2f2; padding: 15px; border-radius: 8px;">
-                    <li><strong>vs Chargers:</strong> Кубик 0.67 → LOSE ✗</li>
-                    <li><strong>@ Commanders:</strong> Кубик 0.29 → WIN ✓</li>
-                    <li><strong>@ Giants:</strong> Кубик 0.81 → LOSE ✗</li>
-                    <li><strong>Итог:</strong> Cowboys 9-8, Giants 10-7</li>
-                    <li><strong>Проверяем Wild Card:</strong> Cowboys на 8-м месте в NFC → МИМО ПЛЕЙ-ОФФА! ✗</li>
-                </ol>
-                
-                <p style="margin-top: 15px;"><strong>После 10,000 симуляций:</strong> Cowboys прошли в 7,030 раз = <strong>70.3%</strong></p>
-                
-                <p style="color: #dc2626; font-weight: bold; margin-top: 20px;">⚠️ Почему Broncos (12-1) не имеют 100% на #1 сид?</p>
-                <p>Хотя они почти гарантированно в плей-офф:</p>
-                <ul style="margin: 10px 0 10px 25px;">
-                    <li>Шанс на плей-офф = <strong>100%</strong> (попали во всех 10,000 симуляциях)</li>
-                    <li>Шанс на #1 сид = <strong>80.2%</strong> (в 198 симуляциях Titans или Patriots их обогнали!)</li>
-                    <li>Сценарий: Broncos теряют 2 игры И Titans идут 3-0 → рекорды равны → тайбрейкеры решают</li>
-                    <li>Маловероятно, но возможно - вот что показывает Монте-Карло!</li>
-                </ul>
-                
-                <p style="margin-top: 20px; padding: 15px; background: #dbeafe; border-left: 4px solid #3b82f6; border-radius: 4px;">
-                    <strong>📌 Суть метода Монте-Карло:</strong><br>
-                    Не пытаемся предсказать будущее формулой. Вместо этого проигрываем сезон 10,000 раз с разными случайными исходами, но с учётом реальной силы команд (SoV, SoS, дом/гости, серии). Получаем не "что будет", а "что МОЖЕТ быть и с какой вероятностью". Это статистическая магия, чуваки! 🎯✨
-                </p>
-                
-                <p style="margin-top: 15px;">Вот такая движуха, малята. Не формулы и догадки, а чистая математическая симуляция реальности! 🔥</p>
-            </div>
+            <h2>How the probabilities are calculated</h2>
+            <p>The report uses 10,000 Monte Carlo simulations of the remaining schedule.
+            Game probabilities combine the supplied ELO ratings, current win percentage,
+            schedule strength and strength of victory, with the existing home-field,
+            streak and divisional adjustments. The existing tiebreakers determine the
+            playoff teams in each simulation.</p>
+            <p>The tables above show the current export's results.
+            <a href="../Formula.md">Formula reference</a> ·
+            <a href="data/import_metadata.json">Export and ELO provenance</a></p>
         </div>
-        
+
         <div style="text-align: center; color: #64748b; margin-top: 30px; padding: 20px; background: #f8fafc; border-radius: 10px;">
             <p><strong>Методология:</strong> SOS (Strength of Schedule) рассчитывается на основе рейтингов соперников по атаке, защите и общей производительности.</p>
             <p style="margin-top: 10px;">Высокий SOS = Тяжёлое расписание | Низкий SOS = Лёгкий путь в плей-офф</p>
@@ -676,7 +552,7 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
     
     return '\n'.join(html)
 
-def main(season_index=3):
+def main(season_index=0):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
@@ -699,14 +575,13 @@ def main(season_index=3):
     print("\nGenerated files:")
     print("  ✓ docs/playoff_race.html")
     print("\nKey findings:")
-    print("  • AFC: Five teams at 6-7 battling for Wild Card spots")
-    print("  • NFC South: Four teams within one game - complete chaos!")
+    print(f"  • Current CSV seasonIndex: {season_index}")
     print("  • Schedule strength will determine playoff fates")
     print("\nOpen playoff_race.html in your browser to view the full analysis!")
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate playoff race HTML report')
-    parser.add_argument('--season-index', type=int, default=3,
-                        help='Season index to filter games (default: 3)')
+    parser.add_argument('--season-index', type=int, default=0,
+                        help='Season index to filter games (default: 0)')
     args = parser.parse_args()
     main(season_index=args.season_index)

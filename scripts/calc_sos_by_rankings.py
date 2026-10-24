@@ -6,7 +6,7 @@ from collections import defaultdict
 
 from common import to_int, norm_rank, mean_safe
 
-DEFAULT_SEASON_INDEX = 2
+DEFAULT_SEASON_INDEX = 0
 
 
 def compute_strength_score(row, w_off=0.4, w_def=0.4, w_rank=0.2):

@@ -231,15 +231,15 @@ def build_playoff_probabilities_json(teams_info, stats, sos_data, games, team_da
     return results
 
 
-def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=False):
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=False, season_index=0):
     if seed is not None:
         random.seed(seed)
     
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
-    teams_info, games, sos_data = load_data()
+    teams_info, games, sos_data = load_data(season_index=season_index)
     stats = calculate_team_stats(teams_info, games)
-    rankings = load_rankings_data()
+    rankings = load_rankings_data(season_index=season_index)
     
     os.makedirs('output', exist_ok=True)
     
@@ -254,6 +254,8 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=F
     scenarios_json = build_team_scenarios_json(teams_info, stats, sos_data, games, team_data, num_simulations)
     playoff_probabilities = build_playoff_probabilities_json(teams_info, stats, sos_data, games, team_data, num_simulations)
     
+    scenarios_json['season_index'] = season_index
+
     scenarios_path = 'output/team_scenarios.json'
     with open(scenarios_path, 'w', encoding='utf-8') as f:
         json.dump(scenarios_json, f, indent=2)
@@ -305,5 +307,6 @@ if __name__ == "__main__":
     parser.add_argument('--markdown', action='store_true',
                        help='Also generate markdown reports (for backward compatibility)')
     
+    parser.add_argument('--season-index', type=int, default=0, help='Zero-based CSV season index')
     args = parser.parse_args()
-    main(num_simulations=args.simulations, seed=args.seed, generate_markdown=args.markdown)
+    main(num_simulations=args.simulations, seed=args.seed, generate_markdown=args.markdown, season_index=args.season_index)

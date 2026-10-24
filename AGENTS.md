@@ -2,11 +2,11 @@
 
 ## Current cycle and boundaries
 
-- Active game: **Madden 27**. No Madden 27 league exports have been imported yet.
+- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 12. Team/rankings exports have `weekIndex=12`; scheduled games at that index are display Week 13.
 - Madden 26 is archived under `archive/madden-26/` (2026-10-24). See its `README.md` and `manifest.json` for provenance, inventory, and recovery.
 - Treat the archive as immutable historical evidence. Exclude `archive/` from normal searches and data discovery. Read it only for explicit historical work or a deliberate comparison.
 - Never restore Madden 26 CSVs into the active root as a fallback for missing Madden 27 data. Do not create fabricated league data or empty results to make a pipeline appear successful.
-- The rollover preserved calculation source and formula artifacts. Legacy season defaults and model calibration are **not yet validated for Madden 27**; inspect fresh exports before adapting configuration.
+- The rollover preserved calculation source and formula artifacts. Current runners are configured for CSV season 0 and locate the season in the export. OVR model calibration is **not yet validated for Madden 27**; inspect fresh exports before adapting configuration.
 - Preserve formulas, weights, cap math, tiebreakers, OVR coefficients, and trained models unless the user specifically requests changes to those calculations.
 - Preserve unrelated user changes. Untracked `.zenflow/tasks/` work predating the rollover remains user-owned.
 - After fixes, remove temporary review/fix reports and generated test artifacts that are no longer needed. Report outcomes in chat; preserve history in Git. Keep current documentation and explicitly requested archives.
@@ -44,12 +44,12 @@ Reusable references: `Formula.md`, `spec/`, `scripts/README.md`, `docs/README.md
 
 ### Orchestration and rollover traps
 
-- `scripts/run_all.py`: stats, ELO SoS for seasons 2/3/4, rankings SoS, playoff scenarios/reports, draft race, index, and trade verification.
-- `scripts/run_all_stats.py`: four stats producers, index generation, and trade verification.
-- `scripts/run_all_playoff_analysis.py`: rankings SoS, playoff scenarios/reports, and draft race.
+- `scripts/run_all.py --season-index 0`: player/team stints first, then team/usage/rankings aggregation, ELO and rankings SoS for the selected season, playoff scenarios/reports, draft race, roster power rankings, trade verification, browser-data publication and root index. The default is CSV season 0.
+- `scripts/run_all_stats.py`: player/team stints before their dependent team/usage/rankings aggregators, index generation, and trade verification.
+- `scripts/run_all_playoff_analysis.py --season-index 0`: rankings SoS, playoff scenarios/reports, draft race and browser-data publication.
 - `scripts/run_utils.py` launches subprocesses. Main entry points normally change to the repository root.
-- `scripts/generate_index.py` writes **root `index.html`**, despite older docs mentioning `docs/index.html`. With missing core exports it writes an awaiting-data page and does not run aggregation. With inputs present, its existing behavior also runs two stats aggregators.
-- Do not run the full pipeline blindly after the first Madden 27 import: `run_all.py` retains Madden 26 start rows **287/571/872** and season selections; the playoff pipeline and `generate_playoff_dashboard.py` retain `seasonIndex=3` assumptions. ELO's `--season-index` is a human season number, while other tools commonly use zero-based CSV indices. Read each tool's arguments.
+- `scripts/generate_index.py` writes **root `index.html`**, despite older docs mentioning `docs/index.html`. With missing core exports it writes an awaiting-data page and does not run aggregation. With inputs present it refreshes stints, team totals, usage and rankings in dependency order. It hides seasonal SoS pages without current artifacts and the playoff bracket until bracket data exists.
+- `run_utils.season_start_row` finds the first regular-season row for the requested CSV season, replacing fixed offsets in the current runner. ELO's `--season-index` remains a human season number (1 for CSV index 0); the current runner translates it. Legacy season wrappers and the unused `generate_playoff_dashboard.py` still contain older defaults; review before using them.
 - Season-specific SoS HTML and the draft tools/tests contain historical filenames and year assumptions. These are reusable implementations, not current results.
 - `docs/playoff_dashboard.html` contains a legacy community-prediction service configuration. Do not use its Madden 26 remote store for Madden 27; set up a separate store before enabling predictions. Local archival does not archive remote votes.
 - Browser cap/depth-chart scenarios are outside Git. Export them if needed, then reset the relevant app storage or use a fresh browser profile before using new-cycle rosters. Do not automatically delete user browser state.
@@ -57,6 +57,8 @@ Reusable references: `Formula.md`, `spec/`, `scripts/README.md`, `docs/README.md
 ## Data contracts
 
 The user-maintained [export and update workflow](README.md#export-and-update-workflow) is the standard refresh procedure: request **Basic Info** and **Stats** at `https://neonsportz.com/leagues/MEGA/export`, delivered to **lespaul1488@gmail.com**; download the ZIP attachments from both emails, extract the CSVs into the repository root, run and verify the configured pipelines, commit and push a feature branch, then open and merge its pull request. Documenting this procedure does not itself request an export, email access, or Git publication; perform those actions when the user asks to execute the workflow.
+
+The approved ELO snapshot is **Week 8**, used with the Week 12 exports; preserve that source label. `mega_elo.csv` holds all 32 ratings and GM labels, `MEGA_users.csv` also maps the exported NeonSportz usernames, and `docs/data/import_metadata.json` records input hashes and week conventions. Do not overwrite `MEGA_teams.csv` usernames with screenshot GM labels.
 
 See `spec/data_inputs.md` for columns. Import fresh, mutually consistent `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_players.csv`, `MEGA_rankings.csv`, positional stat exports, draft/trade exports as required, and fresh `mega_elo.csv` for ELO analysis. Preserve the lower-case on-disk ELO filename; some older prose uses a different spelling.
 
@@ -71,6 +73,7 @@ Python core uses the standard library. Optional OVR research needs the dependenc
 Data-independent checks, from repository root:
 
 ```bash
+python3 -m unittest discover -s tests -p 'test_current_cycle.py'
 python3 -m unittest discover -s tests -p 'test_index_generation.py'
 python3 -m unittest discover -s tests -p 'test_power_rankings_roster.py'
 python3 scripts/tests/test_week_numbers.py

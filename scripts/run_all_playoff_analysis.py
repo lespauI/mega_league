@@ -1,21 +1,23 @@
 #!/usr/bin/env python3
+import argparse
 import os
 import sys
 
-from run_utils import run_script
+from run_utils import run_script, publish_browser_data
 
-def main():
+def main(season_index=0):
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("\n" + "="*80)
     print("MEGA League Playoff & Draft Analysis - Full Run")
     print("="*80)
     
+    season_args = ['--season-index', str(season_index)]
     scripts = [
-        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, ['--season-index', '3', '--out-csv', 'output/ranked_sos_by_conference.csv']),
-        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, ['--markdown']),
-        ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, None),
-        ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, None),
+        ('scripts/calc_sos_by_rankings.py', 'Strength of Schedule Calculation', False, season_args + ['--out-csv', 'output/ranked_sos_by_conference.csv']),
+        ('scripts/generate_all_team_scenarios.py', 'Team-by-Team Playoff Scenario Analysis (includes playoff probabilities)', False, season_args),
+        ('scripts/playoff_race_table.py', 'Playoff Race Table (AFC/NFC Double-Column)', False, season_args),
+        ('scripts/playoff_race_html.py', 'Playoff Race HTML Report (with embedded table)', False, season_args),
         ('scripts/generate_team_scenario_html.py', 'Team Scenario HTML Viewer', False, None),
         ('scripts/top_pick_race_analysis.py', 'Draft Pick Race Analysis & Visualizations', True, None),
     ]
@@ -36,6 +38,7 @@ def main():
     all_success = all(r[1] for r in results)
     
     if all_success:
+        publish_browser_data(season_index)
         print("\n" + "="*80)
         print("ALL SCRIPTS COMPLETED SUCCESSFULLY!")
         print("="*80)
@@ -57,4 +60,6 @@ def main():
         sys.exit(1)
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="Run playoff analysis for one CSV season")
+    parser.add_argument("--season-index", type=int, default=0, help="Zero-based CSV season index (default: 0)")
+    main(season_index=parser.parse_args().season_index)

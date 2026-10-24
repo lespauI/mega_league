@@ -1,4 +1,4 @@
-> **Madden 27 rollover:** No current league exports are loaded. This guide describes retained tools; complete the import and season-configuration steps in [README.md](README.md) before running data pipelines. Madden 26 results are in [the archive](archive/madden-26/README.md).
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # 🎓 SUPER SIMPLE GUIDE (For Beginners)
 

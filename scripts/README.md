@@ -1,4 +1,4 @@
-> **Madden 27 rollover:** Calculation code is preserved, but current input exports are absent. The full runner includes ELO seasons 2/3/4 and historical row offsets; review season configuration in [AGENTS.md](../AGENTS.md) before running it. `generate_index.py` writes root `index.html` and skips aggregation while core exports are missing.
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # Scripts Overview
 

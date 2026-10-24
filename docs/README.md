@@ -1,4 +1,4 @@
-> **Madden 27 rollover:** This is a catalog of retained applications and generated report types, not a list of currently available results. Madden 26 rendered reports and `docs/data/` moved to [the archive](../archive/madden-26/README.md); fresh exports and regeneration are required. The active landing page is root `index.html`. See [setup instructions](../README.md).
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # Docs & Dashboards Overview
 

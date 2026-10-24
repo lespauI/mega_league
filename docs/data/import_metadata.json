@@ -1,0 +1,70 @@
+{
+  "game": "Madden 27",
+  "seasonIndex": 0,
+  "seasonNumber": 1,
+  "completedThroughWeek": 12,
+  "exportWeekIndex": 12,
+  "nextScheduledWeek": 13,
+  "calendarYear": 2026,
+  "eloSourceWeek": 8,
+  "eloSourceImage": "elo_week8.png",
+  "eloUsage": "Week 8 ratings approved by the user for the Week 12 analysis",
+  "inputs": [
+    {
+      "path": "MEGA_defense.csv",
+      "sha256": "4b30fa7e6c8b23b19c0300ec783585754bac1ccb7b553814d3438043768b11d9"
+    },
+    {
+      "path": "MEGA_draft.csv",
+      "sha256": "5077efb9a1b9215a2241f9c0096c55a07599c0a0cd3959d4a7c6300171b23bda"
+    },
+    {
+      "path": "MEGA_games.csv",
+      "sha256": "6bc5faf579859ca2e6d18abd7ddd561d78340462d06de5d2f73321061b7952ca"
+    },
+    {
+      "path": "MEGA_kicking.csv",
+      "sha256": "86f66c1f4897eccb8df197caadf9b0f4ac39f8fda8ebfe6c4be54dc55df5396a"
+    },
+    {
+      "path": "MEGA_passing.csv",
+      "sha256": "d3b6589308770a048c549c68d59bb4aebc20fb5afd7bac784aa81ae97e0552d3"
+    },
+    {
+      "path": "MEGA_players.csv",
+      "sha256": "a33a510b9db031e3e99f0f171baffa9b3d7e151e5eed4866e1e05b5200cacca0"
+    },
+    {
+      "path": "MEGA_punting.csv",
+      "sha256": "2f3212b10b0351d2a381dc7e0dd17f0b278fce09b81c2035eded34a329aa007e"
+    },
+    {
+      "path": "MEGA_rankings.csv",
+      "sha256": "73d2ff787675c6be4e6dc546ce4a400e6fc6f5b248c53b0c31a01a6588811385"
+    },
+    {
+      "path": "MEGA_receiving.csv",
+      "sha256": "fa77d1f9baef5db00fd75b5edadd18ff7c1bf4af36ef4c42fb758b71fb33e8b6"
+    },
+    {
+      "path": "MEGA_rushing.csv",
+      "sha256": "8c721fcd3a6cee710c6cc3d262422bc3456622d30797c89153c6fe0af24c7019"
+    },
+    {
+      "path": "MEGA_teams.csv",
+      "sha256": "a094cb28ef544bdde5a2abaa443f338f196c153a3281df1c38fc2ded5454295b"
+    },
+    {
+      "path": "MEGA_trades.csv",
+      "sha256": "1621400fd0c3301c1ab06f71fb161105ec65c91e9fa26c82e292ace849c076c2"
+    },
+    {
+      "path": "MEGA_users.csv",
+      "sha256": "11e237a017a96530efe89b7254a6f276e7e1552add4f154cc710e1d71086ddd3"
+    },
+    {
+      "path": "mega_elo.csv",
+      "sha256": "537845b777b6c9495d351bcc1aa69dc4ed565f080c3867c798e9acc48c9c8922"
+    }
+  ]
+}
