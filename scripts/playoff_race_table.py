@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-from common import latest_elo_column
+try:
+    from .common import normalize_team_name, read_elo_map
+except ImportError:
+    from common import normalize_team_name, read_elo_map
 import os
 import json
 import random
@@ -47,28 +50,14 @@ def load_power_rankings(season_index=0):
                 rankings[team] = rank
     return rankings
 
-def load_elo_data():
-    """Load team ELO ratings from mega_elo.csv."""
-    elo_map = {}
-    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        week_col = latest_elo_column(reader.fieldnames)
-        for row in reader:
-            team = row.get('Team', '').strip()
-            elo_str = row.get(week_col, '') if week_col else ''
-            if team and elo_str:
-                try:
-                    elo_map[team] = float(elo_str)
-                except ValueError:
-                    elo_map[team] = 1200.0
-    for team in elo_map:
-        if elo_map[team] == 0:
-            elo_map[team] = 1200.0
-    return elo_map
+def load_elo_data(elo_csv='mega_elo.csv', source_week=None, root=None, season_index=None):
+    """Load declared-cycle ELO ratings; use newest only without metadata."""
+    elo_map = read_elo_map(elo_csv, source_week=source_week, root=root, season_index=season_index)
+    return {team: (1200.0 if rating == 0 else rating) for team, rating in elo_map.items()}
 
-def read_standings(season_index=0):
+def read_standings(season_index=0, elo_source_week=None):
     power_rankings = load_power_rankings(season_index=season_index)
-    elo_ratings = load_elo_data()
+    elo_ratings = load_elo_data(source_week=elo_source_week, season_index=season_index)
     
     teams_div = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
@@ -145,7 +134,7 @@ def read_standings(season_index=0):
             
             win_streak = team_rankings[team]['winLossStreak'] if team in team_rankings else 0
             power_rank = power_rankings.get(team, 16)
-            team_elo = elo_ratings.get(team, 1200.0)
+            team_elo = elo_ratings.get(normalize_team_name(team), 1200.0)
             
             team_data = {
                 'team': team,
@@ -984,7 +973,9 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
     
     return '\n'.join(html)
 
-def main(season_index=0):
+def main(season_index=0, elo_source_week=None, seed=None):
+    if seed is not None:
+        random.seed(seed)
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
     print("Loading playoff probabilities...")
@@ -992,7 +983,9 @@ def main(season_index=0):
         probabilities = json.load(f)
     
     print("Reading standings data...")
-    afc_divs, nfc_divs, teams_div = read_standings(season_index=season_index)
+    afc_divs, nfc_divs, teams_div = read_standings(
+        season_index=season_index, elo_source_week=elo_source_week
+    )
     
     print("Generating NYT-style table...")
     html_output = create_html_table(afc_divs, nfc_divs, probabilities)
@@ -1013,5 +1006,9 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Generate playoff race table HTML')
     parser.add_argument('--season-index', type=int, default=0,
                         help='Season index to filter games and rankings (default: 0)')
+    parser.add_argument('--elo-source-week', type=int, default=None,
+                        help='Declared ELO source week; defaults to active cycle metadata')
+    parser.add_argument('--seed', type=int, default=None,
+                        help='Random seed for reproducible Super Bowl simulations')
     args = parser.parse_args()
-    main(season_index=args.season_index)
+    main(season_index=args.season_index, elo_source_week=args.elo_source_week, seed=args.seed)

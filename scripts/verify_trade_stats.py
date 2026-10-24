@@ -16,7 +16,12 @@ BASE_PATH = Path(__file__).resolve().parent.parent
 
 sys.path.insert(0, str(BASE_PATH / "stats_scripts"))
 
-from stats_common import load_csv, safe_float, normalize_team_display  # type: ignore  # noqa: E402
+try:
+    from csv_io import load_csv  # type: ignore  # noqa: E402
+    from stats_domain import safe_float, normalize_team_display  # type: ignore  # noqa: E402
+except ImportError:
+    from stats_scripts.csv_io import load_csv  # type: ignore  # noqa: E402
+    from stats_scripts.stats_domain import safe_float, normalize_team_display  # type: ignore  # noqa: E402
 
 
 StatFieldMap = Dict[str, str]

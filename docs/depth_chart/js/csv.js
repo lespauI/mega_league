@@ -1,19 +1,8 @@
 import { normalizeTeamRow, normalizePlayerRow } from '../../roster_cap_tool/js/validation.js';
-
-function loadCsv(url) {
-  return new Promise((resolve, reject) => {
-    Papa.parse(url, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: (res) => resolve(res.data || []),
-      error: (err) => reject(err),
-    });
-  });
-}
+import { loadCsvRows } from '../../shared/csv.js';
 
 export async function loadTeams(url) {
-  const raw = await loadCsv(url);
+  const raw = await loadCsvRows(url);
   const teams = [];
   for (const row of raw) {
     const result = normalizeTeamRow(row);
@@ -25,7 +14,7 @@ export async function loadTeams(url) {
 }
 
 export async function loadPlayers(url) {
-  const raw = await loadCsv(url);
+  const raw = await loadCsvRows(url);
   const players = [];
   for (const row of raw) {
     const result = normalizePlayerRow(row);

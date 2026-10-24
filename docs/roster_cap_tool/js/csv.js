@@ -1,24 +1,13 @@
 import { normalizeTeamRow, normalizePlayerRow } from './validation.js';
+import { loadCsvRows } from '../../shared/csv.js';
 
 /**
  * Load a CSV via fetch and PapaParse.
  * @param {string} url
  * @returns {Promise<Array<Object>>}
  */
-function loadCsv(url) {
-  return new Promise((resolve, reject) => {
-    Papa.parse(url, {
-      download: true,
-      header: true,
-      skipEmptyLines: true,
-      complete: (res) => resolve(res.data || []),
-      error: (err) => reject(err),
-    });
-  });
-}
-
 export async function loadTeams(url) {
-  const raw = await loadCsv(url);
+  const raw = await loadCsvRows(url);
   const teams = [];
   let invalid = 0;
   for (const row of raw) {
@@ -30,7 +19,7 @@ export async function loadTeams(url) {
 }
 
 export async function loadPlayers(url) {
-  const raw = await loadCsv(url);
+  const raw = await loadCsvRows(url);
   const players = [];
   let invalid = 0;
   for (const row of raw) {

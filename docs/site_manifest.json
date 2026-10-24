@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "pages": [
+    {"path": "matchup_gameplan.html", "kind": "source"},
+    {"path": "playoff_dashboard.html", "kind": "source", "feature": "community_predictions", "requires": ["docs/data/playoff_dashboard.json"]},
+    {"path": "roster_cap_tool/index.html", "kind": "source"},
+    {"path": "depth_chart/index.html", "kind": "source"},
+    {"path": "playoff_race.html", "kind": "generated", "requires": ["output/playoff_probabilities.json"]},
+    {"path": "playoff_race_table.html", "kind": "generated", "requires": ["output/playoff_probabilities.json"]},
+    {"path": "week18_simulator.html", "kind": "generated", "requires": ["docs/week18_simulator.html"]},
+    {"path": "power_rankings_roster.html", "kind": "generated", "requires": ["output/power_rankings_roster.csv"]},
+    {"path": "power_rankings_roster_charts.html", "kind": "source", "requires": ["output/power_rankings_roster.csv"]},
+    {"path": "rankings_explorer.html", "kind": "source", "requires": ["output/team_rankings_stats.csv"]},
+    {"path": "sos_graphs.html", "kind": "source", "requires": ["output/ranked_sos_by_conference.csv"]},
+    {"path": "sos_graphs_season1.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season1_elo.csv"]},
+    {"path": "sos_graphs_season3.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season3_elo.csv"]},
+    {"path": "sos_graphs_season4.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season4_elo.csv"]},
+    {"path": "sos_season1.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season1_elo.csv", "docs/data/current_elo.csv"]},
+    {"path": "sos_season2.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season2_elo.csv"]},
+    {"path": "sos_season3.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season3_elo.csv"]},
+    {"path": "sos_season4.html", "kind": "source", "seasonScoped": true, "requires": ["output/sos/season4_elo.csv"]},
+    {"path": "stats_dashboard.html", "kind": "source", "requires": ["output/team_aggregated_stats.csv"]},
+    {"path": "team_elo_correlations.html", "kind": "source", "requires": ["output/team_aggregated_stats.csv", "docs/data/current_elo.csv"]},
+    {"path": "team_player_usage.html", "kind": "source", "requires": ["output/team_player_usage.csv"]},
+    {"path": "team_scenarios.html", "kind": "generated", "requires": ["output/team_scenarios.json"]},
+    {"path": "team_stats_correlations.html", "kind": "source", "requires": ["output/team_aggregated_stats.csv"]},
+    {"path": "team_stats_explorer.html", "kind": "source", "requires": ["output/team_aggregated_stats.csv"]},
+    {"path": "tools_guide.html", "kind": "source"},
+    {"path": "trade_dashboard.html", "kind": "source", "requires": ["output/player_team_stints.csv", "output/traded_players_report.csv"]},
+    {"path": "nfl_playoff_tie.txt", "kind": "reference"}
+  ]
+}

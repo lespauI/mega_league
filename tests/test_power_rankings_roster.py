@@ -1,4 +1,6 @@
 import unittest
+import tempfile
+from pathlib import Path
 
 from scripts import power_rankings_roster as prr
 
@@ -195,12 +197,12 @@ class HtmlReportIncludesSorterTests(unittest.TestCase):
             },
         ]
 
-        out_path = "output/test_power_rankings_roster_report.html"
+        with tempfile.TemporaryDirectory() as temp:
+            out_path = Path(temp) / "test_power_rankings_roster_report.html"
+            prr.render_html_report(str(out_path), teams_metrics, config={}, league_context={})
 
-        prr.render_html_report(out_path, teams_metrics, config={}, league_context={})
-
-        with open(out_path, "r", encoding="utf-8") as fh:
-            html = fh.read()
+            with out_path.open("r", encoding="utf-8") as fh:
+                html = fh.read()
 
         # The roster power rankings page should include the simple
         # table sorter script so that clicking headers in the

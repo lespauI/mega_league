@@ -1,0 +1,18 @@
+{
+  "purpose": "Small deterministic simulation fixture; not production export data.",
+  "python_runtime": "Python 3.9",
+  "seed": 20261024,
+  "simulation_count": 10,
+  "outcomes": [
+    {"winner": "Beta", "loser": "Alpha", "winner_score": 19, "loser_score": 11},
+    {"winner": "Beta", "loser": "Alpha", "winner_score": 23, "loser_score": 8},
+    {"winner": "Beta", "loser": "Alpha", "winner_score": 34, "loser_score": 9},
+    {"winner": "Alpha", "loser": "Beta", "winner_score": 33, "loser_score": 27},
+    {"winner": "Alpha", "loser": "Beta", "winner_score": 28, "loser_score": 19},
+    {"winner": "Alpha", "loser": "Beta", "winner_score": 22, "loser_score": 14},
+    {"winner": "Alpha", "loser": "Beta", "winner_score": 32, "loser_score": 25},
+    {"winner": "Beta", "loser": "Alpha", "winner_score": 25, "loser_score": 15},
+    {"winner": "Alpha", "loser": "Beta", "winner_score": 26, "loser_score": 9},
+    {"winner": "Beta", "loser": "Alpha", "winner_score": 30, "loser_score": 8}
+  ]
+}

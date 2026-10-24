@@ -79,13 +79,6 @@
       }
       throw lastErr || new Error('Unable to load JSON: ' + paths.join(', '));
     }
-    async function tryText(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.text(p); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load TEXT: ' + paths.join(', '));
-    }
     function fmt3(x) { return d3.format('.3f')(x); }
     function fmt1(x) { return d3.format('.1f')(x); }
 
@@ -126,21 +119,8 @@
       const sos = await tryCsv(['../output/sos/season1_elo.csv', 'output/sos/season1_elo.csv', '/output/sos/season1_elo.csv']);
       const teams = await tryCsv(['../MEGA_teams.csv', 'MEGA_teams.csv', '/MEGA_teams.csv']);
       const schedules = await tryJson(['../output/schedules/season1/all_schedules.json','output/schedules/season1/all_schedules.json','/output/schedules/season1/all_schedules.json']);
-      // Parse mega_elo.csv (comma separated, dot decimal)
-      let megaEloText = '';
-      try {
-        megaEloText = await tryText(['../mega_elo.csv','mega_elo.csv','/mega_elo.csv']);
-      } catch (_) {}
-      const megaEloMap = new Map();
-      if (megaEloText) {
-        const rows = d3.csvParse(megaEloText);
-        const weekColumn = rows.columns.filter(c => /^Week \d+\+$/.test(c))
-          .sort((a, b) => parseInt(b.slice(5)) - parseInt(a.slice(5)))[0];
-        for (const row of rows) {
-          const rating = Number(row[weekColumn]);
-          if (row.Team && Number.isFinite(rating)) megaEloMap.set(row.Team.trim(), rating);
-        }
-      }
+      const { loadCurrentElo } = await import('./shared/elo.js');
+      const { byTeam: megaEloMap, sourceWeek } = await loadCurrentElo(d3.csvParse);
 
       const teamMeta = new Map();
       for (const t of teams) {
@@ -195,7 +175,7 @@
           scheduleMap.set(normTeam, enriched);
         });
       }
-      return { rows: sos, conferences, divisionsByConf, allDivisions, scheduleMap };
+      return { rows: sos, conferences, divisionsByConf, allDivisions, scheduleMap, sourceWeek };
     }
 
     // TABLE RENDERING
@@ -314,7 +294,9 @@
         activate(t.dataset.tab);
       });
 
-      loadData().then(({ rows: allRows, conferences, divisionsByConf, allDivisions, scheduleMap }) => {
+      loadData().then(({ rows: allRows, conferences, divisionsByConf, allDivisions, scheduleMap, sourceWeek }) => {
+        document.getElementById('elo-source-label').textContent =
+          `Madden 27 Season 1; ELO source: Week ${sourceWeek}+. Data: output/sos/season1_elo.csv + current_elo.csv`;
         // Default active tab
         activate('table-view');
 
@@ -633,7 +615,7 @@
 <body>
   <div class="container">
     <h1>Season 1 Strength of Schedule — Combined</h1>
-    <div class="subtitle">Madden 27 Season 1; ELO from Week 8, used for the Week 12 export. Data: output/sos/season1_elo.csv + MEGA_teams.csv</div>
+    <div class="subtitle" id="elo-source-label">Loading declared ELO source from cycle metadata…</div>
 
     <div class="tabs">
       <div class="tab active" data-tab="table-view">Table</div>

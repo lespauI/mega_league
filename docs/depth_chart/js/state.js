@@ -1,4 +1,5 @@
 import { DEPTH_CHART_SLOTS, getPlayersForSlot } from './slots.js';
+import { configureCycleStorage, getCycleStorage } from '../../shared/cycleStorage.js';
 
 /**
  * @typedef {'existing' | 'faPlayer' | 'draftR1' | 'draftR2' | 'draftR3' | 'draftR4' | 'draftR5' | 'draftR6' | 'draftR7' | 'trade' | 'faPlaceholder'} AcquisitionType
@@ -16,11 +17,12 @@ import { DEPTH_CHART_SLOTS, getPlayersForSlot } from './slots.js';
  */
 
 const STORAGE_PREFIX = 'depthChartPlanner.v1';
-const STORAGE_KEYS = {
+export const STORAGE_NAMESPACE = 'depthChart';
+export const STORAGE_KEYS = Object.freeze({
   rosterEdits: `${STORAGE_PREFIX}.rosterEdits`,
   depthPlans: `${STORAGE_PREFIX}.depthPlans`,
   selectedTeam: `${STORAGE_PREFIX}.selectedTeam`,
-};
+});
 
 const listeners = new Set();
 
@@ -81,7 +83,8 @@ export function setState(partial) {
   emit();
 }
 
-export function initState({ teams, players }) {
+export function initState({ teams, players, cycle }) {
+  if (cycle) configureCycleStorage(cycle);
   state.teams = teams || [];
 
   const normalizedPlayers = normalizePlayersTeams(players || [], state.teams || []);
@@ -525,14 +528,7 @@ function applyRosterEdits(baselinePlayers, rosterEdits) {
 }
 
 function getStorage() {
-  try {
-    if (typeof window !== 'undefined' && window.localStorage) {
-      return window.localStorage;
-    }
-  } catch {
-    // Ignore access errors (e.g., in non-browser environments).
-  }
-  return null;
+  return getCycleStorage(STORAGE_NAMESPACE);
 }
 
 function safeParseJSON(text, fallback) {

@@ -2,6 +2,9 @@
 /** @typedef {import('./models.js').CapSnapshot} CapSnapshot */
 import { calcCapSummary, calcCapSummaryForContext, estimateRookieReserveForPicks } from './capMath.js';
 import { getContextualPlayers } from './context.js';
+import { configureCycleStorage, getCycleStorage } from '../../shared/cycleStorage.js';
+
+const STORAGE_NAMESPACE = 'rosterCap';
 
 const listeners = new Set();
 
@@ -154,7 +157,8 @@ export function getCapSummary() {
   };
 }
 
-export function initState({ teams, players }) {
+export function initState({ teams, players, cycle }) {
+  if (cycle) configureCycleStorage(cycle);
   state.teams = teams;
   // Normalize player.team to team abbrName so filters work
   try {
@@ -172,39 +176,40 @@ export function initState({ teams, players }) {
   if (!state.selectedTeam && teams.length) {
     state.selectedTeam = teams[0].abbrName;
   }
-  // Load draft picks from localStorage once
+  const storage = getCycleStorage(STORAGE_NAMESPACE);
+  // Load draft picks from the current cycle's storage once
   try {
-    const raw = localStorage.getItem('rosterCap.draftPicks');
+    const raw = storage.getItem('rosterCap.draftPicks');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.draftPicksByTeam = parsed;
   } catch {}
   // Load baseline dead money per team from localStorage once
   try {
-    const raw = localStorage.getItem('rosterCap.deadMoneyBaseline');
+    const raw = storage.getItem('rosterCap.deadMoneyBaseline');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.baselineDeadMoneyByTeam = parsed;
   } catch {}
   // Load rollover per team
   try {
-    const raw = localStorage.getItem('rosterCap.rollover');
+    const raw = storage.getItem('rosterCap.rollover');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.rolloverByTeam = parsed;
   } catch {}
   // Load re-sign settings per team
   try {
-    const raw = localStorage.getItem('rosterCap.reSignSettings');
+    const raw = storage.getItem('rosterCap.reSignSettings');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.reSignSettingsByTeam = parsed;
   } catch {}
   // Load Year Context (per team) once
   try {
-    const raw = localStorage.getItem('rosterCap.yearContext');
+    const raw = storage.getItem('rosterCap.yearContext');
     const parsed = raw ? JSON.parse(raw) : {};
     if (parsed && typeof parsed === 'object') state.yearContextByTeam = parsed;
   } catch {}
   // Load position filters from localStorage once
   try {
-    const raw = localStorage.getItem('rosterCap.positionFilters');
+    const raw = storage.getItem('rosterCap.positionFilters');
     const parsed = raw ? JSON.parse(raw) : null;
     if (parsed && typeof parsed === 'object') state.positionFilters = { active: parsed.active || [], fa: parsed.fa || [] };
   } catch {}
@@ -293,7 +298,7 @@ const SCENARIOS_KEY = 'rosterCap.scenarios';
 
 function loadAllScenarios() {
   try {
-    const raw = localStorage.getItem(SCENARIOS_KEY);
+    const raw = getCycleStorage(STORAGE_NAMESPACE).getItem(SCENARIOS_KEY);
     if (!raw) return [];
     const arr = JSON.parse(raw);
     return Array.isArray(arr) ? arr : [];
@@ -301,7 +306,7 @@ function loadAllScenarios() {
 }
 
 function saveAllScenarios(list) {
-  try { localStorage.setItem(SCENARIOS_KEY, JSON.stringify(list)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem(SCENARIOS_KEY, JSON.stringify(list)); } catch {}
 }
 
 /** Compute minimal roster diff from baselinePlayers to current players */
@@ -429,7 +434,7 @@ export function setDraftPicksForSelectedTeam(picksPerRound) {
   }
   next[abbr] = clean;
   state.draftPicksByTeam = next;
-  try { localStorage.setItem('rosterCap.draftPicks', JSON.stringify(next)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.draftPicks', JSON.stringify(next)); } catch {}
   emit();
 }
 
@@ -455,7 +460,7 @@ export function setYearContextForSelectedTeam(offset) {
   const abbr = state.selectedTeam || '';
   const next = { ...(state.yearContextByTeam || {}), [abbr]: Math.max(0, Math.floor(Number(offset) || 0)) };
   state.yearContextByTeam = next;
-  try { localStorage.setItem('rosterCap.yearContext', JSON.stringify(next)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.yearContext', JSON.stringify(next)); } catch {}
   emit();
 }
 
@@ -508,7 +513,7 @@ export function setRolloverForSelectedTeam(amount) {
   const v = Math.max(0, Math.min(35_000_000, Number(amount) || 0));
   const next = { ...(state.rolloverByTeam || {}) , [abbr]: v };
   state.rolloverByTeam = next;
-  try { localStorage.setItem('rosterCap.rollover', JSON.stringify(next)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.rollover', JSON.stringify(next)); } catch {}
   emit();
 }
 
@@ -535,7 +540,7 @@ export function setReSignSettingsForSelectedTeam(partial = {}) {
   };
   const nextAll = { ...(state.reSignSettingsByTeam || {}), [abbr]: nextTeam };
   state.reSignSettingsByTeam = nextAll;
-  try { localStorage.setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
   emit();
 }
 
@@ -552,7 +557,7 @@ export function setReSignInGameForSelectedTeam(amount) {
   const nextTeam = { ...cur, inGameValue: Math.max(0, Number(amount) || 0) };
   const nextAll = { ...(state.reSignSettingsByTeam || {}), [abbr]: nextTeam };
   state.reSignSettingsByTeam = nextAll;
-  try { localStorage.setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.reSignSettings', JSON.stringify(nextAll)); } catch {}
   emit();
 }
 
@@ -576,7 +581,7 @@ export function setBaselineDeadMoney({ year0 = 0, year1 = 0 } = {}) {
   const next = { ...(state.baselineDeadMoneyByTeam || {}) };
   next[abbr] = { year0: Math.max(0, Number(year0) || 0), year1: Math.max(0, Number(year1) || 0) };
   state.baselineDeadMoneyByTeam = next;
-  try { localStorage.setItem('rosterCap.deadMoneyBaseline', JSON.stringify(next)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.deadMoneyBaseline', JSON.stringify(next)); } catch {}
   emit();
 }
 
@@ -595,6 +600,6 @@ export function setPositionFilter(type, positions) {
   const clean = Array.isArray(positions) ? positions.filter(Boolean).map(s => String(s).toUpperCase()) : [];
   const next = { ...(state.positionFilters || {}), [t]: clean };
   state.positionFilters = next;
-  try { localStorage.setItem('rosterCap.positionFilters', JSON.stringify(next)); } catch {}
+  try { getCycleStorage(STORAGE_NAMESPACE).setItem('rosterCap.positionFilters', JSON.stringify(next)); } catch {}
   emit();
 }

@@ -1,7 +1,14 @@
 #!/usr/bin/env python3
 import argparse
 import csv
-from common import latest_elo_column
+try:
+    from .common import normalize_team_name, read_elo_map
+except ImportError:
+    from common import normalize_team_name, read_elo_map
+try:
+    from .standings_domain import calculate_team_stats
+except ImportError:
+    from standings_domain import calculate_team_stats
 import itertools
 from collections import defaultdict
 import json
@@ -21,21 +28,9 @@ SOV_WEIGHT = 0.10
 DEFAULT_ELO = 1200.0
 
 
-def load_elo_data():
-    """Load team ELO ratings from mega_elo.csv."""
-    elo_map = {}
-    with open('mega_elo.csv', 'r', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        week_col = latest_elo_column(reader.fieldnames)
-        for row in reader:
-            team = row.get('Team', '').strip()
-            elo_str = row.get(week_col, '')
-            if team and elo_str:
-                try:
-                    elo_map[team] = float(elo_str)
-                except ValueError:
-                    continue
-    return elo_map
+def load_elo_data(elo_csv='mega_elo.csv', source_week=None, root=None, season_index=None):
+    """Load declared-cycle ELO ratings; use newest only without metadata."""
+    return read_elo_map(elo_csv, source_week=source_week, root=root, season_index=season_index)
 
 
 def load_rankings_data(season_index=0):
@@ -82,7 +77,7 @@ def is_divisional_game(home, away, teams_info):
     return home_div == away_div and home_div != ''
 
 
-def load_data(season_index=0):
+def load_data(season_index=0, elo_source_week=None):
     teams_info = {}
     with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
@@ -130,124 +125,11 @@ def load_data(season_index=0):
         else:
             teams_info[team]['past_sos'] = 0.5
     
-    elo_data = load_elo_data()
+    elo_data = load_elo_data(source_week=elo_source_week, season_index=season_index)
     for team in teams_info:
-        teams_info[team]['elo'] = elo_data.get(team, DEFAULT_ELO)
+        teams_info[team]['elo'] = elo_data.get(normalize_team_name(team), DEFAULT_ELO)
     
     return teams_info, games, sos_data
-
-def calculate_team_stats(teams_info, games):
-    stats = {}
-    
-    for team in teams_info:
-        stats[team] = {
-            'W': 0, 'L': 0, 'T': 0,
-            'conference_W': 0, 'conference_L': 0, 'conference_T': 0,
-            'division_W': 0, 'division_L': 0, 'division_T': 0,
-            'points_for': 0, 'points_against': 0,
-            'conference_points_for': 0, 'conference_points_against': 0,
-            'head_to_head': defaultdict(lambda: {'W': 0, 'L': 0, 'T': 0}),
-            'opponents': [],
-            'defeated_opponents': []
-        }
-    
-    for game in games:
-        if not game['completed']:
-            continue
-        
-        home = game['home']
-        away = game['away']
-        home_score = game['home_score']
-        away_score = game['away_score']
-        
-        if home not in stats or away not in stats:
-            continue
-        
-        stats[home]['opponents'].append(away)
-        stats[away]['opponents'].append(home)
-        
-        stats[home]['points_for'] += home_score
-        stats[home]['points_against'] += away_score
-        stats[away]['points_for'] += away_score
-        stats[away]['points_against'] += home_score
-        
-        home_conf = teams_info[home]['conference']
-        away_conf = teams_info[away]['conference']
-        home_div = teams_info[home]['division']
-        away_div = teams_info[away]['division']
-        
-        if home_score > away_score:
-            stats[home]['W'] += 1
-            stats[away]['L'] += 1
-            stats[home]['defeated_opponents'].append(away)
-            stats[home]['head_to_head'][away]['W'] += 1
-            stats[away]['head_to_head'][home]['L'] += 1
-            
-            if home_conf == away_conf:
-                stats[home]['conference_W'] += 1
-                stats[away]['conference_L'] += 1
-                stats[home]['conference_points_for'] += home_score
-                stats[home]['conference_points_against'] += away_score
-                stats[away]['conference_points_for'] += away_score
-                stats[away]['conference_points_against'] += home_score
-                
-            if home_div == away_div:
-                stats[home]['division_W'] += 1
-                stats[away]['division_L'] += 1
-                
-        elif away_score > home_score:
-            stats[away]['W'] += 1
-            stats[home]['L'] += 1
-            stats[away]['defeated_opponents'].append(home)
-            stats[away]['head_to_head'][home]['W'] += 1
-            stats[home]['head_to_head'][away]['L'] += 1
-            
-            if home_conf == away_conf:
-                stats[away]['conference_W'] += 1
-                stats[home]['conference_L'] += 1
-                stats[home]['conference_points_for'] += home_score
-                stats[home]['conference_points_against'] += away_score
-                stats[away]['conference_points_for'] += away_score
-                stats[away]['conference_points_against'] += home_score
-                
-            if home_div == away_div:
-                stats[away]['division_W'] += 1
-                stats[home]['division_L'] += 1
-        else:
-            stats[home]['T'] += 1
-            stats[away]['T'] += 1
-            stats[home]['head_to_head'][away]['T'] += 1
-            stats[away]['head_to_head'][home]['T'] += 1
-            
-            if home_conf == away_conf:
-                stats[home]['conference_T'] += 1
-                stats[away]['conference_T'] += 1
-    
-    for team in stats:
-        total = stats[team]['W'] + stats[team]['L'] + stats[team]['T']
-        stats[team]['win_pct'] = (stats[team]['W'] + 0.5 * stats[team]['T']) / total if total > 0 else 0
-        
-        conf_total = stats[team]['conference_W'] + stats[team]['conference_L'] + stats[team]['conference_T']
-        stats[team]['conference_pct'] = (stats[team]['conference_W'] + 0.5 * stats[team]['conference_T']) / conf_total if conf_total > 0 else 0
-        
-        div_total = stats[team]['division_W'] + stats[team]['division_L'] + stats[team]['division_T']
-        stats[team]['division_pct'] = (stats[team]['division_W'] + 0.5 * stats[team]['division_T']) / div_total if div_total > 0 else 0
-        
-        defeated_records = []
-        for opp in stats[team]['defeated_opponents']:
-            opp_total = stats[opp]['W'] + stats[opp]['L'] + stats[opp]['T']
-            opp_pct = (stats[opp]['W'] + 0.5 * stats[opp]['T']) / opp_total if opp_total > 0 else 0
-            defeated_records.append(opp_pct)
-        stats[team]['strength_of_victory'] = sum(defeated_records) / len(defeated_records) if defeated_records else 0
-        
-        opponent_records = []
-        for opp in stats[team]['opponents']:
-            opp_total = stats[opp]['W'] + stats[opp]['L'] + stats[opp]['T']
-            opp_pct = (stats[opp]['W'] + 0.5 * stats[opp]['T']) / opp_total if opp_total > 0 else 0
-            opponent_records.append(opp_pct)
-        stats[team]['strength_of_schedule'] = sum(opponent_records) / len(opponent_records) if opponent_records else 0
-    
-    return stats
 
 def compare_head_to_head(teams, stats):
     if len(teams) == 2:
@@ -748,8 +630,8 @@ def cap_simulation_probability(raw_probability):
         return 0.1
     return raw_probability
 
-def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=0):
-    teams_info, games, sos_data = load_data(season_index=season_index)
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=0, elo_source_week=None):
+    teams_info, games, sos_data = load_data(season_index=season_index, elo_source_week=elo_source_week)
     stats = calculate_team_stats(teams_info, games)
     rankings = load_rankings_data(season_index=season_index)
     
@@ -834,10 +716,13 @@ if __name__ == "__main__":
                         help='Random seed for reproducible results (default: None)')
     parser.add_argument('--season-index', type=int, default=0,
                         help='Season index to filter games and rankings (default: 0)')
+    parser.add_argument('--elo-source-week', type=int, default=None,
+                        help='Declared ELO source week; defaults to active cycle metadata')
     args = parser.parse_args()
     
     if args.seed is not None:
         random.seed(args.seed)
         print(f"Using random seed: {args.seed}")
     
-    main(num_simulations=args.num_simulations, season_index=args.season_index)
+    main(num_simulations=args.num_simulations, season_index=args.season_index,
+         elo_source_week=args.elo_source_week)

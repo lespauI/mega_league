@@ -8,6 +8,14 @@ import { mountProjections } from './ui/projections.js';
 import { mountScenarioControls } from './ui/scenarioControls.js';
 import { mountDraftPicks } from './ui/draftPicks.js';
 import { mountYearContext } from './ui/yearContext.js';
+import { loadCycleIdentity } from '../../shared/cycleStorage.js';
+import { mountCycleStorageControls } from '../../shared/cycleStorageControls.js';
+
+const LEGACY_STORAGE_KEYS = [
+  'rosterCap.scenarios', 'rosterCap.draftPicks', 'rosterCap.deadMoneyBaseline',
+  'rosterCap.rollover', 'rosterCap.reSignSettings', 'rosterCap.yearContext',
+  'rosterCap.positionFilters',
+];
 
 // Basic tabs behavior
 function initTabs() {
@@ -76,11 +84,15 @@ async function boot() {
   initTabs();
   mountPlaceholders();
   // Load CSV data from project root
-  const [teams, players] = await Promise.all([
+  const [teams, players, cycle] = await Promise.all([
     loadTeams('../../MEGA_teams.csv'),
     loadPlayers('../../MEGA_players.csv'),
+    loadCycleIdentity(),
   ]);
-  initState({ teams, players });
+  initState({ teams, players, cycle });
+  mountCycleStorageControls('cycle-storage-controls', {
+    namespace: 'rosterCap', legacyKeys: LEGACY_STORAGE_KEYS, title: 'Roster Cap Tool',
+  });
   // Initial mounts
   mountTeamSelector();
   mountYearContext();
@@ -105,4 +117,6 @@ async function boot() {
 
 boot().catch((err) => {
   console.error('Failed to initialize app', err);
+  const notice = document.getElementById('cycle-storage-controls');
+  if (notice) notice.textContent = `The roster tool could not load cycle metadata or its CSV inputs: ${err.message || err}`;
 });

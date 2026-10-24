@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Depth Chart Management</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="icon" href="../favicon.svg" />
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   </head>
   <body>
@@ -19,6 +18,8 @@
     </header>
 
     <main class="container container--roster-collapsed">
+      <div id="cycle-storage-controls" class="cycle-storage-controls" aria-live="polite"></div>
+      <div id="shared-draft-storage-controls" class="cycle-storage-controls" aria-live="polite"></div>
       <section id="depth-chart-container" class="depth-chart-container">
         <div class="depth-chart-grid" id="depth-chart-grid"></div>
       </section>

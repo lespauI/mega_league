@@ -8,7 +8,12 @@ import csv
 from pathlib import Path
 from collections import defaultdict
 
-from stats_common import load_csv, safe_float, normalize_team_display
+try:
+    from .csv_io import load_csv
+    from .stats_domain import safe_float, normalize_team_display
+except ImportError:
+    from csv_io import load_csv
+    from stats_domain import safe_float, normalize_team_display
 
 
 def safe_mean(values):

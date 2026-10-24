@@ -231,13 +231,16 @@ def build_playoff_probabilities_json(teams_info, stats, sos_data, games, team_da
     return results
 
 
-def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=False, season_index=0):
+def main(num_simulations=DEFAULT_NUM_SIMULATIONS, seed=None, generate_markdown=False,
+         season_index=0, elo_source_week=None):
     if seed is not None:
         random.seed(seed)
     
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     
-    teams_info, games, sos_data = load_data(season_index=season_index)
+    teams_info, games, sos_data = load_data(
+        season_index=season_index, elo_source_week=elo_source_week
+    )
     stats = calculate_team_stats(teams_info, games)
     rankings = load_rankings_data(season_index=season_index)
     
@@ -308,5 +311,8 @@ if __name__ == "__main__":
                        help='Also generate markdown reports (for backward compatibility)')
     
     parser.add_argument('--season-index', type=int, default=0, help='Zero-based CSV season index')
+    parser.add_argument('--elo-source-week', type=int, default=None,
+                       help='Declared ELO source week; defaults to active cycle metadata')
     args = parser.parse_args()
-    main(num_simulations=args.simulations, seed=args.seed, generate_markdown=args.markdown, season_index=args.season_index)
+    main(num_simulations=args.simulations, seed=args.seed, generate_markdown=args.markdown,
+         season_index=args.season_index, elo_source_week=args.elo_source_week)

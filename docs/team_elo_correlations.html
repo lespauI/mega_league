@@ -46,25 +46,6 @@
       throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
     }
 
-    async function loadEloCsv(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try {
-          const text = await fetch(p).then(r => r.text());
-          const rows = d3.dsvFormat(',').parse(text);
-          const weekColumn = rows.columns.filter(c => /^Week \d+\+$/.test(c))
-            .sort((a, b) => parseInt(b.slice(5)) - parseInt(a.slice(5)))[0];
-          if (!weekColumn) throw new Error('Missing Week N+ ELO column');
-          return rows.map(row => ({
-            rank: +row['#'],
-            team: row.Team,
-            elo: parseFloat(row[weekColumn])
-          }));
-        } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load ELO CSV: ' + paths.join(', '));
-    }
-
     function fmt2(x) { return d3.format('.2f')(x); }
     function fmt3(x) { return d3.format('.3f')(x); }
     function toPct(x) { return d3.format('.1%')(x); }
@@ -99,21 +80,16 @@
         '/output/team_aggregated_stats.csv'
       ]);
 
-      const eloData = await loadEloCsv([
-        '../mega_elo.csv',
-        'mega_elo.csv',
-        '/mega_elo.csv'
-      ]);
-
-      const eloMap = new Map(eloData.map(d => [d.team, d.elo]));
+      const { loadCurrentElo } = await import('./shared/elo.js');
+      const { byTeam: eloMap, sourceWeek } = await loadCurrentElo(d3.csvParse);
 
       for (const row of stats) {
         row.logoUrl = (row.logoId !== '' && row.logoId != null) ? 
           `https://cdn.neonsportz.com/teamlogos/256/${row.logoId}.png` : null;
-        row.elo = eloMap.get(row.team) || null;
+        row.elo = eloMap.get(row.team) ?? null;
       }
 
-      return stats.filter(d => d.elo != null);
+      return { rows: stats.filter(d => d.elo != null), sourceWeek };
     }
 
     function drawScatter(holder, rows, cfg) {
@@ -267,7 +243,7 @@
     }
 
     function render() {
-      loadData().then(allRows => {
+      loadData().then(({ rows: allRows, sourceWeek }) => {
         const charts = [
           {
             xKey: 'win_pct',
@@ -527,7 +503,7 @@
         const container = d3.select('body').append('div').attr('class', 'container');
         container.append('h1').text('Team ELO Correlations');
         container.append('div').attr('class', 'subtitle')
-          .text(`Analyzing how team statistics correlate with ELO rating across ${allRows.length} teams`);
+          .text(`Analyzing ${allRows.length} teams using the declared Week ${sourceWeek}+ ELO source.`);
 
         charts.forEach(cfg => drawScatter(container, allRows, cfg));
 

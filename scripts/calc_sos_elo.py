@@ -26,29 +26,17 @@ import csv
 import json
 import logging
 import os
-from typing import Any, Dict, List, Tuple
+from pathlib import Path
+from typing import Any, Dict, List
 
 from common import normalize_team_name, read_elo_map, read_team_meta
 
-_DEFAULT_START_ROWS: Dict[int, int] = {
-    2: 287,
-    3: 571,
-    4: 872,
-}
-
-
 def read_games(games_csv: str, start_row: int, season_index: int) -> List[Dict[str, Any]]:
-    """Read the season slice of games from MEGA_games.csv starting near `start_row`.
+    """Read regular-season games by explicit CSV season index.
 
-    Robustness fixes:
-    - Some exports duplicate the header line; DictReader treats the duplicate header as a data row.
-      Relying strictly on a row cut can therefore drop the first real game of the season.
-    - We infer the target `seasonIndex` from the first valid row at or after `start_row`,
-      then include all rows that match that `seasonIndex` (regular season only: stageIndex == 1).
-
-    Notes:
-    - `start_row` is a 1-based index over DATA rows yielded by DictReader (first data row is 1).
-    - Returns a list of dicts preserving file order for deterministic schedules.
+    `season_index` is the one-based display season used by existing ELO artifact
+    names. The CSV season index is therefore `season_index - 1`. `start_row` is
+    retained for callers of the historical API and intentionally ignored.
     """
     needed_cols = {
         "homeTeam",
@@ -60,45 +48,24 @@ def read_games(games_csv: str, start_row: int, season_index: int) -> List[Dict[s
         "weekIndex",
     }
 
-    all_rows: List[Tuple[int, Dict[str, Any]]] = []
+    rows: List[Dict[str, Any]] = []
     with open(games_csv, "r", newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
-        for idx, row in enumerate(reader, start=1):
+        for row in reader:
             normalized = {k: row.get(k, "") for k in row.keys()}
             for col in needed_cols:
                 normalized.setdefault(col, "")
-            all_rows.append((idx, normalized))
-
-    target_season: str | None = None
-    for idx, r in all_rows:
-        if idx >= start_row:
-            si = str(r.get("seasonIndex", "")).strip()
-            if si.isdigit():
-                target_season = si
-                break
-
-    if target_season is None:
-        rows = [r for idx, r in all_rows if idx >= start_row]
-        logging.warning(
-            "Could not infer target seasonIndex at/after row %d; using raw slice with %d rows",
-            start_row,
-            len(rows),
-        )
-        return rows
-
-    rows: List[Dict[str, Any]] = []
-    for idx, r in all_rows:
-        if str(r.get("seasonIndex", "")).strip() == target_season and str(r.get("stageIndex", "")).strip() == "1":
-            rows.append(r)
+            csv_season_index = str(normalized.get("seasonIndex", "")).strip()
+            stage_index = str(normalized.get("stageIndex", "")).strip()
+            if csv_season_index == str(season_index - 1) and stage_index == "1":
+                rows.append(normalized)
 
     logging.info(
-        "Season %d slice: %d games from %s (seasonIndex=%s inferred from row %d; start_row arg=%d)",
+        "Season %d slice: %d regular-season games from %s (CSV seasonIndex=%d)",
         season_index,
         len(rows),
         games_csv,
-        target_season,
-        next((i for i, _ in all_rows if i >= start_row), start_row),
-        start_row,
+        season_index - 1,
     )
     return rows
 
@@ -314,11 +281,15 @@ def _bool_choice(val: str) -> bool:
 
 def build_arg_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(description="SoS via ELO (parameterized by season)")
-    ap.add_argument("--season-index", type=int, required=True, help="Season index to process (e.g. 2 or 3)")
-    ap.add_argument("--start-row", type=int, default=None, help="Row index to start season slice (1-based data row; defaults: season 2=287, season 3=571)")
+    season_group = ap.add_mutually_exclusive_group(required=True)
+    season_group.add_argument("--season-index", type=int, help="Legacy one-based display season (for example 1 for CSV index 0)")
+    season_group.add_argument("--csv-season-index", type=int, help="Zero-based seasonIndex stored in the CSV exports")
+    ap.add_argument("--start-row", type=int, default=None, help="Deprecated; ignored because season selection uses seasonIndex")
     ap.add_argument("--games-csv", default="MEGA_games.csv", help="Path to games CSV (default: MEGA_games.csv)")
     ap.add_argument("--teams-csv", default="MEGA_teams.csv", help="Path to teams CSV (default: MEGA_teams.csv)")
     ap.add_argument("--elo-csv", default="mega_elo.csv", help="Path to ELO CSV (default: mega_elo.csv)")
+    ap.add_argument("--elo-source-week", type=int, default=None,
+                    help="Use exactly Week N+; defaults to cycle metadata when available")
     ap.add_argument(
         "--include-home-advantage",
         type=_bool_choice,
@@ -352,15 +323,32 @@ def main(argv: List[str] | None = None) -> int:
     ap = build_arg_parser()
     args = ap.parse_args(argv)
 
-    season_index: int = args.season_index
-    start_row: int = args.start_row if args.start_row is not None else _DEFAULT_START_ROWS.get(season_index, 1)
+    season_index: int = args.season_index if args.season_index is not None else args.csv_season_index + 1
+    if season_index < 1:
+        ap.error("season must be at least 1")
+    if args.start_row is not None:
+        logging.warning("--start-row is deprecated and ignored; filtering by seasonIndex=%d", season_index - 1)
+    start_row = args.start_row if args.start_row is not None else 1
+
+    elo_source_week = args.elo_source_week
+    if elo_source_week is None:
+        metadata_path = Path("docs/data/import_metadata.json")
+        if metadata_path.is_file():
+            try:
+                metadata = json.loads(metadata_path.read_text(encoding="utf-8"))
+                elo_source_week = int(metadata["eloSourceWeek"])
+            except (OSError, json.JSONDecodeError, KeyError, TypeError, ValueError) as exc:
+                ap.error(f"cannot read declared ELO source week from {metadata_path}: {exc}")
+        else:
+            logging.warning("No cycle metadata found; selecting the newest available Week N+ column")
 
     logging.info("Starting SoS Season %d ELO calculation", season_index)
     logging.info(
-        "Args: games_csv=%s teams_csv=%s elo_csv=%s start_row=%d include_home_advantage=%s hfa_elo_points=%d index_scale=%s out_dir=%s",
+        "Args: games_csv=%s teams_csv=%s elo_csv=%s elo_source_week=%s start_row=%d include_home_advantage=%s hfa_elo_points=%d index_scale=%s out_dir=%s",
         args.games_csv,
         args.teams_csv,
         args.elo_csv,
+        elo_source_week,
         start_row,
         args.include_home_advantage,
         args.hfa_elo_points,
@@ -372,7 +360,7 @@ def main(argv: List[str] | None = None) -> int:
     teams_meta = read_team_meta(args.teams_csv)
     schedules = build_schedules(games_rows, teams_meta)
 
-    elo_map = read_elo_map(args.elo_csv)
+    elo_map = read_elo_map(args.elo_csv, source_week=elo_source_week)
     sos_rows = compute_sos_elo(
         schedules,
         elo_map,

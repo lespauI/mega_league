@@ -1,4 +1,5 @@
 import { enhanceDialog } from '../a11y.js';
+import { getCycleStorage } from '../../../../shared/cycleStorage.js';
 
 /**
  * Show an app-styled confirmation dialog using <dialog> and return a Promise<boolean>.
@@ -27,7 +28,7 @@ export function confirmWithDialog(opts) {
   // If user previously opted to skip this confirm, honor it safely.
   if (rememberKey) {
     try {
-      const raw = localStorage.getItem(rememberKey);
+      const raw = getCycleStorage('rosterCap').getItem(rememberKey);
       if (raw && (raw === 'true' || raw === '1')) {
         return Promise.resolve(true);
       }
@@ -69,7 +70,7 @@ export function confirmWithDialog(opts) {
       btnCancel?.addEventListener('click', () => { cleanup(); resolve(false); });
       btnConfirm?.addEventListener('click', () => {
         if (rememberKey && rememberEl?.checked) {
-          try { localStorage.setItem(rememberKey, 'true'); } catch {}
+          try { getCycleStorage('rosterCap').setItem(rememberKey, 'true'); } catch {}
         }
         cleanup();
         resolve(true);

@@ -1,9 +1,11 @@
-const STORAGE_KEY = 'rosterCap.draftPicks';
+import { getCycleStorage } from '../../shared/cycleStorage.js';
+
+export const DRAFT_PICKS_STORAGE_NAMESPACE = 'rosterCap';
+export const DRAFT_PICKS_STORAGE_KEY = 'rosterCap.draftPicks';
 
 function loadDraftPicksMap() {
   try {
-    if (typeof window === 'undefined' || !window.localStorage) return {};
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = getCycleStorage(DRAFT_PICKS_STORAGE_NAMESPACE).getItem(DRAFT_PICKS_STORAGE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
     if (!parsed || typeof parsed !== 'object' || Array.isArray(parsed)) return {};
     return parsed;
@@ -14,8 +16,7 @@ function loadDraftPicksMap() {
 
 function saveDraftPicksMap(map) {
   try {
-    if (typeof window === 'undefined' || !window.localStorage) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(map || {}));
+    getCycleStorage(DRAFT_PICKS_STORAGE_NAMESPACE).setItem(DRAFT_PICKS_STORAGE_KEY, JSON.stringify(map || {}));
   } catch {
     // ignore
   }

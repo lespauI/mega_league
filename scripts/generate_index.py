@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
-import os
 import json
 import re
-import subprocess
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent.parent
 DOCS_DIR = ROOT_DIR / "docs"
+SITE_MANIFEST_PATH = DOCS_DIR / "site_manifest.json"
+BUILD_MANIFEST_PATH = ROOT_DIR / "output" / "build_manifest.json"
+try:
+    from cycle_context import CycleContext
+except ImportError:  # imported as a package from tests
+    from scripts.cycle_context import CycleContext
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -112,6 +116,7 @@ def get_file_description(filename):
         'sos_graphs_season1.html': 'Season 1 rankings-based schedule analysis',
         'playoff_race.html': 'Playoff race visualization and analysis',
         'playoff_race_table.html': 'Detailed playoff race table',
+        'week18_simulator.html': 'Interactive Week 18 playoff simulator for the active snapshot',
         'team_scenarios.html': '🎲 Monte Carlo Playoff Scenarios - Interactive team-by-team simulation analysis with probability distributions',
         'sos_graphs.html': 'Visual analysis of team schedules and difficulty',
         'sos_season2.html': 'Season 2 SoS — combined sortable table and bar charts',
@@ -154,46 +159,57 @@ def format_title(filename):
     return ' '.join(word.capitalize() for word in name.split())
 
 def categorize_files():
-    if not DOCS_DIR.exists():
+    if not DOCS_DIR.exists() or not SITE_MANIFEST_PATH.is_file():
         return {}
-    
-    categories = {
-        'Reports & Visualizations': [],
-        'Playoff Race Images': [],
-        'Strength of Schedule Images': [],
-        'Documentation': [],
-        'Other Files': []
-    }
-    
-    for file in sorted(DOCS_DIR.iterdir()):
-        if file.name in ['.DS_Store', 'index.html', 'CNAME']:
+
+    site_manifest = json.loads(SITE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    try:
+        build_manifest = json.loads(BUILD_MANIFEST_PATH.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        build_manifest = {}
+    try:
+        import_metadata = json.loads((DOCS_DIR / "data" / "import_metadata.json").read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        import_metadata = {}
+    active_season = import_metadata.get("seasonNumber")
+    try:
+        current_snapshot = CycleContext.from_file(DOCS_DIR / "data" / "import_metadata.json", ROOT_DIR).snapshot_id
+    except (OSError, ValueError):
+        current_snapshot = None
+    snapshot_matches = bool(current_snapshot and build_manifest.get("snapshotId") == current_snapshot)
+
+    categories = {"Reports & Visualizations": [], "Documentation": []}
+    for entry in site_manifest.get("pages", []):
+        filename = entry.get("path", "")
+        if not filename or not (DOCS_DIR / filename).is_file():
             continue
-        
-        filename = file.name
-        if filename == 'data':
+        if entry.get("feature") and entry["feature"] not in import_metadata.get("enabledFeatures", []):
             continue
-        season_page = re.match(r'sos_(?:graphs_)?season(\d+)\.html$', filename)
-        if season_page:
-            season = season_page.group(1)
-            if not (DOCS_DIR / 'data' / f'season{season}_elo.csv').is_file():
+        if entry.get("seasonScoped"):
+            match = re.search(r"season(\d+)", filename)
+            if not match or active_season is None or int(match.group(1)) != int(active_season):
                 continue
-        if filename == 'playoff_dashboard.html' and not (DOCS_DIR / 'data/playoff_dashboard.json').is_file():
-            continue
-        
-        if filename.endswith('.html'):
-            categories['Reports & Visualizations'].append(filename)
-        elif 'race' in filename.lower() and filename.endswith('.png'):
-            categories['Playoff Race Images'].append(filename)
-        elif 'compl' in filename.lower() and filename.endswith('.png'):
-            categories['Playoff Race Images'].append(filename)
-        elif 'sos' in filename.lower() and filename.endswith('.png'):
-            categories['Strength of Schedule Images'].append(filename)
-        elif filename.endswith(('.md', '.txt')):
-            categories['Documentation'].append(filename)
-        else:
-            categories['Other Files'].append(filename)
-    
-    return {k: v for k, v in categories.items() if v}
+        requirements = entry.get("requires", [])
+        if requirements:
+            artifacts = build_manifest.get("artifacts", {})
+            if not snapshot_matches:
+                continue
+            if any(
+                path not in artifacts
+                or not (ROOT_DIR / path).is_file()
+                or _sha256(ROOT_DIR / path) != artifacts[path]
+                for path in requirements
+            ):
+                continue
+        category = "Documentation" if entry.get("kind") == "reference" else "Reports & Visualizations"
+        categories[category].append(filename)
+
+    return {key: sorted(files) for key, files in categories.items() if files}
+
+
+def _sha256(path):
+    import hashlib
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
 
 def generate_section(title, files):
     items = []
@@ -213,35 +229,6 @@ def generate_section(title, files):
         </div>"""
     
     return section
-
-def run_aggregation_script():
-    """Run the team stats aggregation scripts to generate CSV data."""
-    scripts = [
-        ("stats_scripts/build_player_team_stints.py", "Player/team stints"),
-        ("stats_scripts/aggregate_team_stats.py", "Team stats"),
-        ("stats_scripts/aggregate_player_usage.py", "Player usage"),
-        ("stats_scripts/aggregate_rankings_stats.py", "Rankings stats")
-    ]
-    
-    for script_rel, name in scripts:
-        script_path = ROOT_DIR / script_rel
-        if script_path.exists():
-            print(f"Running {name} aggregation script...")
-            try:
-                result = subprocess.run(
-                    ["python3", str(script_path)],
-                    cwd=str(ROOT_DIR),
-                    capture_output=True,
-                    text=True
-                )
-                if result.returncode == 0:
-                    print(f"✓ {name} aggregated successfully")
-                else:
-                    print(f"⚠ {name} aggregation warning: {result.stderr}")
-            except Exception as e:
-                print(f"⚠ Could not run {name} aggregation: {e}")
-        else:
-            print(f"⚠ {name} aggregation script not found, skipping")
 
 def main():
     # An archived cycle intentionally has no active exports. Do not create
@@ -268,7 +255,6 @@ def main():
         </div>''']
         print('Awaiting active exports: ' + ', '.join(missing_inputs))
     else:
-        run_aggregation_script()
         categories = categorize_files()
         sections = []
         for category, files in categories.items():

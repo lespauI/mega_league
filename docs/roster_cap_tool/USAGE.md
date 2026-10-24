@@ -105,6 +105,10 @@ Core formulas and edge‑cases come from: `spec/Salary Cap Works in Madden.md`.
 - Cap math mismatch: run `scripts/verify_cap_math.py` and review `output/cap_tool_verification.json`
 - Pages not updating: ensure CSVs were committed and Pages deployed
 
+## Saved data and cycle scope
+
+Saved scenarios, draft picks, year context, rollover, dead-money baselines, and filters are stored per game edition, CSV season, and calendar year. The tool reads the cycle identity from `docs/data/import_metadata.json` before it opens storage. Existing unscoped entries remain in the browser and are not applied automatically. Use the storage panel to export a backup, explicitly copy legacy entries into this cycle, or import a backup. Copy/import keeps the original legacy values and skips values already saved for this cycle.
+
 ## Example Flow
 1) Select a team in the header
 2) Release a player → modal previews Dead Cap, Savings, and New Cap Space

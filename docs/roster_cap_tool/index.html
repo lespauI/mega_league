@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Madden Roster Cap Management</title>
     <link rel="stylesheet" href="css/styles.css" />
-    <link rel="icon" href="../favicon.svg" />
     <!-- PapaParse CDN for CSV parsing -->
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
   </head>
@@ -31,6 +30,7 @@
     </header>
 
     <main class="container">
+      <div id="cycle-storage-controls" aria-live="polite"></div>
       <div id="projections-top" class="projections-top"></div>
       <nav class="tabs" id="tabs">
         <button class="tab is-active" data-tab="active-roster" data-testid="tab-active-roster">Active Roster</button>
