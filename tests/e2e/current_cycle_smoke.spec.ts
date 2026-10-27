@@ -3,6 +3,16 @@ import { test, expect } from './fixtures';
 // These checks derive their cycle and team expectations from the current import,
 // rather than relying on a player, team assignment, or franchise calendar year.
 test.describe('Current-cycle publication', () => {
+  test('playoff table labels the active snapshot week', async ({ page, request }) => {
+    const response = await request.get('/docs/data/import_metadata.json');
+    const metadata = await response.json();
+    await page.goto('/docs/playoff_race_table.html');
+    await expect(page.locator('.subtitle')).toHaveText(
+      `Week ${metadata.completedThroughWeek} Standings & Playoff Probabilities`
+    );
+    await expect(page).toHaveTitle(`MEGA League Playoff Race - Week ${metadata.completedThroughWeek}`);
+  });
+
   for (const dashboard of [
     'team_stats_explorer', 'team_stats_correlations', 'team_player_usage',
     'rankings_explorer', 'power_rankings_roster_charts', 'team_elo_correlations',
