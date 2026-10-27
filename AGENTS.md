@@ -120,4 +120,13 @@ Playwright config serves port 8000 with Chromium projects for cleared/persisted 
 
 ## Git and maintenance
 
+### Refresh completion and live publication
+
+- A user request to refresh NeonSportz data and push/publish the update authorizes the complete README export workflow: import, full build, validation, feature-branch push, PR review/merge, and live-site verification. Honor an explicit branch-only or PR-only restriction. Do not stop after pushing a feature branch for an ordinary refresh.
+- GitHub Pages currently serves `master`, path `/`, at `https://lespaui.github.io/mega_league/`. Verify the hosting configuration before publication; merge the validated update into the configured publishing branch through a PR. A feature-branch push is not deployment.
+- Before merging, check regenerated page titles, visible week labels, and update timestamps against the active snapshot. Derive week labels from cycle metadata; never hard-code a week in a reusable generator. A timestamp labeled ET must use `America/New_York`, including daylight saving time.
+- Wait for both the Pages build and deployment for the merged commit to succeed. Build success alone is insufficient. If deployment is queued, waiting, or failed, continue investigating and report its actual state; do not say the update is live.
+- After deployment, read the public landing page and `docs/playoff_race_table.html`. Confirm the active week, update date, and representative standings; compare the public `docs/data/import_metadata.json` snapshot ID with the local snapshot. Use a commit-specific cache-busting query if needed. Local tests and repository files do not prove the public site updated.
+- Report completion with the verified public URL and merged commit/PR. If external deployment or authentication prevents completion, state what remains pending. Preserve the existing six known cap-test failures separately from new failures.
+
 Keep commits short and descriptive. Follow the repository's `mega-<feature>-<short-id>` branch naming convention when a branch is needed. Never commit fresh exports or generated results into the historical archive. For the current repository-root hosting model, keep `output/build_manifest.json`, `docs/data/build_manifest.json`, and `docs/data/data_manifest.json` with the generated publication they describe. Existing tracked outputs remain versioned; add new generated outputs only when their registered artifact paths are required by the site. Temporary builds, logs, test reports, and optional research output remain ignored. Do not commit/push unless the user requests it. Update current documentation when changing entry points or data contracts; older instructions under `archive/` are historical only.
