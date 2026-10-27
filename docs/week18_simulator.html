@@ -1,0 +1,1273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week 18 Playoff Simulator</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            text-align: center;
+            color: #1e293b;
+            margin-bottom: 10px;
+            font-size: 2.8em;
+        }
+        .subtitle {
+            text-align: center;
+            color: #64748b;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        .games-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+        }
+        .games-section h2 {
+            color: #0f172a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #3b82f6;
+        }
+        .game-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .game-matchup {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .team {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #1e293b;
+        }
+        .team-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+        }
+        .team-logo-small {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+        .at {
+            color: #94a3b8;
+            font-size: 0.9em;
+        }
+        .game-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .game-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .game-btn:hover {
+            background: #f1f5f9;
+            transform: scale(1.02);
+        }
+        .game-btn.selected {
+            background: #3b82f6;
+            color: white;
+            border-color: #3b82f6;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin: 30px 0;
+        }
+        .btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 1.1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .btn-primary {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-primary:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+        .btn-secondary {
+            background: #64748b;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background: #475569;
+            transform: translateY(-2px);
+        }
+        .results-section {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+        }
+        .results-section h2 {
+            color: #0f172a;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #10b981;
+        }
+        .conference-results {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+        .conference {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+        }
+        .conference h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+        .seed-team {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            background: #f8fafc;
+            border-left: 5px solid #3b82f6;
+        }
+        .seed-1 { border-left-color: #3b82f6; }
+        .seed-2 { border-left-color: #60a5fa; }
+        .seed-3 { border-left-color: #93c5fd; }
+        .seed-4 { border-left-color: #bfdbfe; }
+        .seed-wc { border-left-color: #22c55e; }
+        .seed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+        .seed-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 0.85em;
+            background: #3b82f6;
+            color: white;
+        }
+        .team-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #1e293b;
+        }
+        .team-record {
+            font-size: 0.95em;
+            color: #64748b;
+            font-weight: 600;
+        }
+        .tiebreaker-info {
+            margin-top: 8px;
+            padding: 8px;
+            background: #fef3c7;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #92400e;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
+        .qualification-info {
+            margin-top: 8px;
+            padding: 8px;
+            background: #d1fae5;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #065f46;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
+        .elimination-info {
+            margin-top: 8px;
+            padding: 8px;
+            background: #fee2e2;
+            border-radius: 5px;
+            font-size: 0.85em;
+            color: #991b1b;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.5;
+        }
+        .eliminated-team {
+            border-left-color: #ef4444 !important;
+            opacity: 0.85;
+        }
+        .division-label {
+            font-size: 0.8em;
+            color: #64748b;
+            font-style: italic;
+        }
+        @media (max-width: 1024px) {
+            .main-grid, .conference-results {
+                grid-template-columns: 1fr;
+            }
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏈 Week 18 Playoff Simulator</h1>
+        <div class="subtitle">Select game outcomes to see playoff seeding with tiebreaker explanations</div>
+        
+        
+        <div class="main-grid">
+            <div class="games-section">
+                <h2>AFC Week 18 Games</h2>
+                <div id="afc-games"></div>
+            </div>
+            
+            <div class="games-section">
+                <h2>NFC Week 18 Games</h2>
+                <div id="nfc-games"></div>
+            </div>
+        </div>
+        
+        <div class="action-buttons">
+            <button class="btn btn-primary" onclick="simulatePlayoffs()">Calculate Playoff Seeding</button>
+            <button class="btn btn-secondary" onclick="randomizeGames()">Randomize All Games</button>
+            <button class="btn btn-secondary" onclick="resetGames()">Reset Selections</button>
+        </div>
+        
+        <div id="results" class="results-section hidden">
+            <h2>Playoff Seeding Results</h2>
+            <div class="conference-results">
+                <div class="conference">
+                    <h3>AFC Playoffs</h3>
+                    <div id="afc-results"></div>
+                </div>
+                <div class="conference">
+                    <h3>NFC Playoffs</h3>
+                    <div id="nfc-results"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const week18Games = [{"id": "31604559", "home": "Commanders", "away": "Cowboys"}, {"id": "31604570", "home": "Saints", "away": "Buccaneers"}, {"id": "31604573", "home": "Packers", "away": "Lions"}, {"id": "31604572", "home": "Cardinals", "away": "49ers"}, {"id": "31604571", "home": "Giants", "away": "Eagles"}, {"id": "31604560", "home": "Rams", "away": "Seahawks"}, {"id": "31604561", "home": "Bills", "away": "Jets"}, {"id": "31604562", "home": "Bengals", "away": "Browns"}, {"id": "31604563", "home": "Colts", "away": "Jaguars"}, {"id": "31604564", "home": "Chiefs", "away": "Raiders"}, {"id": "31604565", "home": "Ravens", "away": "Steelers"}, {"id": "31604566", "home": "Texans", "away": "Titans"}, {"id": "31604567", "home": "Panthers", "away": "Falcons"}, {"id": "31604568", "home": "Vikings", "away": "Bears"}, {"id": "31604569", "home": "Patriots", "away": "Dolphins"}, {"id": "31604558", "home": "Broncos", "away": "Chargers"}];
+        const teamsInfo = {"49ers": {"division": "NFC West", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/14.png"}, "Bears": {"division": "NFC North", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/0.png"}, "Bengals": {"division": "AFC North", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/1.png"}, "Bills": {"division": "AFC East", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/2.png"}, "Broncos": {"division": "AFC West", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/3.png"}, "Browns": {"division": "AFC North", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/4.png"}, "Buccaneers": {"division": "NFC South", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/5.png"}, "Cardinals": {"division": "NFC West", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/6.png"}, "Chargers": {"division": "AFC West", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/7.png"}, "Chiefs": {"division": "AFC West", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/8.png"}, "Colts": {"division": "AFC South", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/9.png"}, "Commanders": {"division": "NFC East", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/25.png"}, "Cowboys": {"division": "NFC East", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/10.png"}, "Dolphins": {"division": "AFC East", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/11.png"}, "Eagles": {"division": "NFC East", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/12.png"}, "Falcons": {"division": "NFC South", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/13.png"}, "Giants": {"division": "NFC East", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/15.png"}, "Jaguars": {"division": "AFC South", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/16.png"}, "Jets": {"division": "AFC East", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/17.png"}, "Lions": {"division": "NFC North", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/18.png"}, "Packers": {"division": "NFC North", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/19.png"}, "Panthers": {"division": "NFC South", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/20.png"}, "Patriots": {"division": "AFC East", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/21.png"}, "Raiders": {"division": "AFC West", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/22.png"}, "Rams": {"division": "NFC West", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/23.png"}, "Ravens": {"division": "AFC North", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/24.png"}, "Saints": {"division": "NFC South", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/26.png"}, "Seahawks": {"division": "NFC West", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/27.png"}, "Steelers": {"division": "AFC North", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/28.png"}, "Texans": {"division": "AFC South", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/31.png"}, "Titans": {"division": "AFC South", "conference": "AFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/29.png"}, "Vikings": {"division": "NFC North", "conference": "NFC", "logo_url": "https://cdn.neonsportz.com/teamlogos/256/30.png"}};
+        const completedGames = [{"home": "Steelers", "away": "Falcons", "home_score": 24, "away_score": 30}, {"home": "Chargers", "away": "Cardinals", "home_score": 21, "away_score": 14}, {"home": "Bengals", "away": "Buccaneers", "home_score": 21, "away_score": 27}, {"home": "Seahawks", "away": "Patriots", "home_score": 35, "away_score": 22}, {"home": "Rams", "away": "49ers", "home_score": 21, "away_score": 7}, {"home": "Texans", "away": "Bills", "home_score": 37, "away_score": 34}, {"home": "Giants", "away": "Cowboys", "home_score": 0, "away_score": 24}, {"home": "Vikings", "away": "Packers", "home_score": 26, "away_score": 18}, {"home": "Raiders", "away": "Dolphins", "home_score": 24, "away_score": 17}, {"home": "Jaguars", "away": "Browns", "home_score": 24, "away_score": 17}, {"home": "Eagles", "away": "Commanders", "home_score": 13, "away_score": 19}, {"home": "Colts", "away": "Ravens", "home_score": 52, "away_score": 15}, {"home": "Chiefs", "away": "Broncos", "home_score": 30, "away_score": 7}, {"home": "Titans", "away": "Jets", "home_score": 7, "away_score": 39}, {"home": "Panthers", "away": "Bears", "home_score": 23, "away_score": 3}, {"home": "Lions", "away": "Saints", "home_score": 28, "away_score": 14}, {"home": "Cowboys", "away": "Commanders", "home_score": 37, "away_score": 9}, {"home": "Buccaneers", "away": "Browns", "home_score": 17, "away_score": 31}, {"home": "Chiefs", "away": "Colts", "home_score": 24, "away_score": 20}, {"home": "Rams", "away": "Giants", "home_score": 3, "away_score": 17}, {"home": "Chargers", "away": "Raiders", "home_score": 31, "away_score": 21}, {"home": "Broncos", "away": "Jaguars", "home_score": 10, "away_score": 31}, {"home": "Falcons", "away": "Panthers", "home_score": 17, "away_score": 21}, {"home": "Bears", "away": "Vikings", "home_score": 11, "away_score": 6}, {"home": "Titans", "away": "Eagles", "home_score": 17, "away_score": 12}, {"home": "Patriots", "away": "Steelers", "home_score": 24, "away_score": 7}, {"home": "Jets", "away": "Packers", "home_score": 41, "away_score": 14}, {"home": "Texans", "away": "Bengals", "home_score": 7, "away_score": 17}, {"home": "Bills", "away": "Lions", "home_score": 14, "away_score": 42}, {"home": "Cardinals", "away": "Seahawks", "home_score": 21, "away_score": 45}, {"home": "Ravens", "away": "Saints", "home_score": 17, "away_score": 34}, {"home": "49ers", "away": "Dolphins", "home_score": 42, "away_score": 14}, {"home": "Lions", "away": "Jets", "home_score": 20, "away_score": 7}, {"home": "Buccaneers", "away": "Vikings", "home_score": 14, "away_score": 23}, {"home": "49ers", "away": "Cardinals", "home_score": 20, "away_score": 21}, {"home": "Bears", "away": "Eagles", "home_score": 21, "away_score": 3}, {"home": "Broncos", "away": "Rams", "home_score": 17, "away_score": 27}, {"home": "Saints", "away": "Raiders", "home_score": 40, "away_score": 14}, {"home": "Cowboys", "away": "Ravens", "home_score": 21, "away_score": 20}, {"home": "Jaguars", "away": "Patriots", "home_score": 17, "away_score": 21}, {"home": "Commanders", "away": "Seahawks", "home_score": 13, "away_score": 23}, {"home": "Steelers", "away": "Bengals", "home_score": 35, "away_score": 0}, {"home": "Giants", "away": "Titans", "home_score": 48, "away_score": 13}, {"home": "Dolphins", "away": "Chiefs", "home_score": 7, "away_score": 14}, {"home": "Colts", "away": "Texans", "home_score": 26, "away_score": 16}, {"home": "Browns", "away": "Panthers", "home_score": 27, "away_score": 20}, {"home": "Bills", "away": "Chargers", "home_score": 28, "away_score": 31}, {"home": "Packers", "away": "Falcons", "home_score": 27, "away_score": 26}, {"home": "Giants", "away": "Cardinals", "home_score": 38, "away_score": 35}, {"home": "Bengals", "away": "Jaguars", "home_score": 13, "away_score": 27}, {"home": "Raiders", "away": "Chiefs", "home_score": 28, "away_score": 31}, {"home": "Ravens", "away": "Titans", "home_score": 17, "away_score": 14}, {"home": "Texans", "away": "Cowboys", "home_score": 14, "away_score": 35}, {"home": "49ers", "away": "Broncos", "home_score": 14, "away_score": 21}, {"home": "Eagles", "away": "Rams", "home_score": 21, "away_score": 35}, {"home": "Vikings", "away": "Dolphins", "home_score": 34, "away_score": 12}, {"home": "Bears", "away": "Jets", "home_score": 13, "away_score": 32}, {"home": "Bills", "away": "Patriots", "home_score": 6, "away_score": 23}, {"home": "Commanders", "away": "Colts", "home_score": 19, "away_score": 12}, {"home": "Browns", "away": "Steelers", "home_score": 10, "away_score": 27}, {"home": "Saints", "away": "Falcons", "home_score": 20, "away_score": 28}, {"home": "Panthers", "away": "Lions", "home_score": 27, "away_score": 35}, {"home": "Buccaneers", "away": "Packers", "home_score": 24, "away_score": 31}, {"home": "Seahawks", "away": "Chargers", "home_score": 20, "away_score": 27}, {"home": "Falcons", "away": "Ravens", "home_score": 31, "away_score": 28}, {"home": "Seahawks", "away": "49ers", "home_score": 41, "away_score": 6}, {"home": "Patriots", "away": "Raiders", "home_score": 34, "away_score": 12}, {"home": "Dolphins", "away": "Bengals", "home_score": 24, "away_score": 29}, {"home": "Titans", "away": "Texans", "home_score": 0, "away_score": 26}, {"home": "Jaguars", "away": "Eagles", "home_score": 48, "away_score": 14}, {"home": "Jets", "away": "Browns", "home_score": 35, "away_score": 31}, {"home": "Commanders", "away": "Giants", "home_score": 31, "away_score": 49}, {"home": "Steelers", "away": "Colts", "home_score": 31, "away_score": 6}, {"home": "Cowboys", "away": "Buccaneers", "home_score": 28, "away_score": 31}, {"home": "Chargers", "away": "Broncos", "home_score": 28, "away_score": 21}, {"home": "Packers", "away": "Bears", "home_score": 27, "away_score": 16}, {"home": "Saints", "away": "Vikings", "home_score": 3, "away_score": 10}, {"home": "Cardinals", "away": "Lions", "home_score": 6, "away_score": 24}, {"home": "Rams", "away": "Bills", "home_score": 20, "away_score": 16}, {"home": "Buccaneers", "away": "Steelers", "home_score": 23, "away_score": 20}, {"home": "Jaguars", "away": "Texans", "home_score": 31, "away_score": 19}, {"home": "Eagles", "away": "Panthers", "home_score": 0, "away_score": 24}, {"home": "Rams", "away": "Cardinals", "home_score": 14, "away_score": 17}, {"home": "Falcons", "away": "Bears", "home_score": 14, "away_score": 28}, {"home": "Patriots", "away": "Jets", "home_score": 34, "away_score": 27}, {"home": "Giants", "away": "Saints", "home_score": 27, "away_score": 16}, {"home": "Colts", "away": "Titans", "home_score": 30, "away_score": 12}, {"home": "Chiefs", "away": "Chargers", "home_score": 35, "away_score": 21}, {"home": "49ers", "away": "Commanders", "home_score": 6, "away_score": 35}, {"home": "Broncos", "away": "Seahawks", "home_score": 10, "away_score": 14}, {"home": "Packers", "away": "Cowboys", "home_score": 14, "away_score": 31}, {"home": "Browns", "away": "Ravens", "home_score": 13, "away_score": 14}, {"home": "Raiders", "away": "Bills", "home_score": 31, "away_score": 7}, {"home": "Eagles", "away": "Cowboys", "home_score": 3, "away_score": 17}, {"home": "Texans", "away": "Giants", "home_score": 25, "away_score": 31}, {"home": "Vikings", "away": "Colts", "home_score": 20, "away_score": 0}, {"home": "Jets", "away": "Dolphins", "home_score": 41, "away_score": 12}, {"home": "Panthers", "away": "Buccaneers", "home_score": 16, "away_score": 38}, {"home": "Ravens", "away": "Bengals", "home_score": 7, "away_score": 14}, {"home": "Seahawks", "away": "Chiefs", "home_score": 16, "away_score": 38}, {"home": "Falcons", "away": "49ers", "home_score": 34, "away_score": 6}, {"home": "Saints", "away": "Steelers", "home_score": 24, "away_score": 34}, {"home": "Bears", "away": "Patriots", "home_score": 26, "away_score": 41}, {"home": "Cardinals", "away": "Broncos", "home_score": 34, "away_score": 3}, {"home": "Titans", "away": "Browns", "home_score": 7, "away_score": 41}, {"home": "Raiders", "away": "Rams", "home_score": 30, "away_score": 38}, {"home": "Lions", "away": "Packers", "home_score": 14, "away_score": 21}, {"home": "Bengals", "away": "Titans", "home_score": 23, "away_score": 17}, {"home": "Packers", "away": "Panthers", "home_score": 42, "away_score": 12}, {"home": "Rams", "away": "Chargers", "home_score": 29, "away_score": 32}, {"home": "Broncos", "away": "Chiefs", "home_score": 14, "away_score": 30}, {"home": "Seahawks", "away": "Bears", "home_score": 40, "away_score": 27}, {"home": "Dolphins", "away": "Patriots", "home_score": 13, "away_score": 42}, {"home": "Buccaneers", "away": "Falcons", "home_score": 35, "away_score": 42}, {"home": "Jaguars", "away": "Colts", "home_score": 40, "away_score": 14}, {"home": "Commanders", "away": "Eagles", "home_score": 21, "away_score": 19}, {"home": "Steelers", "away": "Browns", "home_score": 10, "away_score": 3}, {"home": "Jets", "away": "Raiders", "home_score": 7, "away_score": 17}, {"home": "Lions", "away": "Vikings", "home_score": 29, "away_score": 13}, {"home": "Cowboys", "away": "Cardinals", "home_score": 52, "away_score": 24}, {"home": "Bills", "away": "Ravens", "home_score": 13, "away_score": 14}, {"home": "Seahawks", "away": "Cardinals", "home_score": 34, "away_score": 32}, {"home": "Bears", "away": "Buccaneers", "home_score": 32, "away_score": 19}, {"home": "Vikings", "away": "Bills", "home_score": 16, "away_score": 7}, {"home": "Chargers", "away": "Texans", "home_score": 27, "away_score": 14}, {"home": "Panthers", "away": "Broncos", "home_score": 24, "away_score": 27}, {"home": "Patriots", "away": "Packers", "home_score": 6, "away_score": 41}, {"home": "49ers", "away": "Raiders", "home_score": 19, "away_score": 17}, {"home": "Dolphins", "away": "Lions", "home_score": 20, "away_score": 31}, {"home": "Saints", "away": "Browns", "home_score": 14, "away_score": 28}, {"home": "Chiefs", "away": "Jets", "home_score": 36, "away_score": 30}, {"home": "Colts", "away": "Cowboys", "home_score": 9, "away_score": 14}, {"home": "Falcons", "away": "Bengals", "home_score": 7, "away_score": 21}, {"home": "Ravens", "away": "Jaguars", "home_score": 0, "away_score": 6}, {"home": "Eagles", "away": "Giants", "home_score": 13, "away_score": 42}, {"home": "Commanders", "away": "Rams", "home_score": 28, "away_score": 27}, {"home": "Falcons", "away": "Chiefs", "home_score": 17, "away_score": 52}, {"home": "Lions", "away": "Patriots", "home_score": 31, "away_score": 35}, {"home": "Giants", "away": "Commanders", "home_score": 49, "away_score": 42}, {"home": "Browns", "away": "Texans", "home_score": 24, "away_score": 14}, {"home": "Packers", "away": "Vikings", "home_score": 31, "away_score": 34}, {"home": "Titans", "away": "Jaguars", "home_score": 6, "away_score": 41}, {"home": "Colts", "away": "Dolphins", "home_score": 16, "away_score": 38}, {"home": "Bengals", "away": "Steelers", "home_score": 9, "away_score": 35}, {"home": "Cowboys", "away": "49ers", "home_score": 16, "away_score": 6}, {"home": "Saints", "away": "Panthers", "home_score": 28, "away_score": 7}, {"home": "Raiders", "away": "Seahawks", "home_score": 27, "away_score": 13}, {"home": "Cardinals", "away": "Rams", "home_score": 0, "away_score": 35}, {"home": "Jets", "away": "Bills", "home_score": 45, "away_score": 14}, {"home": "Ravens", "away": "Chargers", "home_score": 17, "away_score": 24}, {"home": "Texans", "away": "Colts", "home_score": 45, "away_score": 19}, {"home": "Bills", "away": "Dolphins", "home_score": 34, "away_score": 47}, {"home": "Chiefs", "away": "Cardinals", "home_score": 39, "away_score": 35}, {"home": "Giants", "away": "Jaguars", "home_score": 27, "away_score": 21}, {"home": "Commanders", "away": "Bengals", "home_score": 7, "away_score": 27}, {"home": "Eagles", "away": "Steelers", "home_score": 30, "away_score": 20}, {"home": "49ers", "away": "Vikings", "home_score": 24, "away_score": 35}, {"home": "Bears", "away": "Saints", "home_score": 24, "away_score": 28}, {"home": "Chargers", "away": "Jets", "home_score": 56, "away_score": 48}, {"home": "Cowboys", "away": "Titans", "home_score": 28, "away_score": 5}, {"home": "Panthers", "away": "Ravens", "home_score": 31, "away_score": 28}, {"home": "Lions", "away": "Buccaneers", "home_score": 28, "away_score": 21}, {"home": "Broncos", "away": "Raiders", "home_score": 12, "away_score": 37}, {"home": "Chargers", "away": "Patriots", "home_score": 27, "away_score": 19}, {"home": "Dolphins", "away": "Jets", "home_score": 34, "away_score": 20}, {"home": "Vikings", "away": "Falcons", "home_score": 23, "away_score": 24}, {"home": "Texans", "away": "Ravens", "home_score": 23, "away_score": 21}, {"home": "Rams", "away": "Packers", "home_score": 6, "away_score": 7}, {"home": "Lions", "away": "Bears", "home_score": 20, "away_score": 14}, {"home": "Cowboys", "away": "Eagles", "home_score": 24, "away_score": 0}, {"home": "Bills", "away": "Chiefs", "home_score": 13, "away_score": 34}, {"home": "Steelers", "away": "Broncos", "home_score": 12, "away_score": 3}, {"home": "Bengals", "away": "Saints", "home_score": 28, "away_score": 35}, {"home": "Browns", "away": "Raiders", "home_score": 33, "away_score": 30}, {"home": "Colts", "away": "Giants", "home_score": 3, "away_score": 28}, {"home": "49ers", "away": "Seahawks", "home_score": 12, "away_score": 44}, {"home": "Cardinals", "away": "Commanders", "home_score": 25, "away_score": 23}, {"home": "Jaguars", "away": "Titans", "home_score": 42, "away_score": 7}, {"home": "Buccaneers", "away": "Panthers", "home_score": 27, "away_score": 24}, {"home": "Rams", "away": "Chiefs", "home_score": 38, "away_score": 35}, {"home": "Steelers", "away": "Texans", "home_score": 28, "away_score": 17}, {"home": "Falcons", "away": "Lions", "home_score": 27, "away_score": 20}, {"home": "Bears", "away": "Jaguars", "home_score": 14, "away_score": 21}, {"home": "Browns", "away": "Bengals", "home_score": 36, "away_score": 12}, {"home": "Saints", "away": "Packers", "home_score": 17, "away_score": 21}, {"home": "Giants", "away": "49ers", "home_score": 48, "away_score": 14}, {"home": "Buccaneers", "away": "Chargers", "home_score": 21, "away_score": 0}, {"home": "Vikings", "away": "Panthers", "home_score": 14, "away_score": 17}, {"home": "Cardinals", "away": "Eagles", "home_score": 43, "away_score": 14}];
+        const currentStandings = {"49ers": {"W": 2, "L": 10, "T": 0, "win_pct": 0.16666666666666666}, "Bears": {"W": 4, "L": 8, "T": 0, "win_pct": 0.3333333333333333}, "Bengals": {"W": 6, "L": 6, "T": 0, "win_pct": 0.5}, "Bills": {"W": 0, "L": 11, "T": 0, "win_pct": 0.0}, "Broncos": {"W": 2, "L": 9, "T": 0, "win_pct": 0.18181818181818182}, "Browns": {"W": 7, "L": 5, "T": 0, "win_pct": 0.5833333333333334}, "Buccaneers": {"W": 6, "L": 6, "T": 0, "win_pct": 0.5}, "Cardinals": {"W": 5, "L": 8, "T": 0, "win_pct": 0.38461538461538464}, "Chargers": {"W": 10, "L": 2, "T": 0, "win_pct": 0.8333333333333334}, "Chiefs": {"W": 11, "L": 1, "T": 0, "win_pct": 0.9166666666666666}, "Colts": {"W": 3, "L": 9, "T": 0, "win_pct": 0.25}, "Commanders": {"W": 5, "L": 6, "T": 0, "win_pct": 0.45454545454545453}, "Cowboys": {"W": 11, "L": 1, "T": 0, "win_pct": 0.9166666666666666}, "Dolphins": {"W": 3, "L": 8, "T": 0, "win_pct": 0.2727272727272727}, "Eagles": {"W": 1, "L": 11, "T": 0, "win_pct": 0.08333333333333333}, "Falcons": {"W": 7, "L": 5, "T": 0, "win_pct": 0.5833333333333334}, "Giants": {"W": 11, "L": 1, "T": 0, "win_pct": 0.9166666666666666}, "Jaguars": {"W": 10, "L": 2, "T": 0, "win_pct": 0.8333333333333334}, "Jets": {"W": 6, "L": 6, "T": 0, "win_pct": 0.5}, "Lions": {"W": 9, "L": 3, "T": 0, "win_pct": 0.75}, "Packers": {"W": 8, "L": 4, "T": 0, "win_pct": 0.6666666666666666}, "Panthers": {"W": 5, "L": 7, "T": 0, "win_pct": 0.4166666666666667}, "Patriots": {"W": 8, "L": 3, "T": 0, "win_pct": 0.7272727272727273}, "Raiders": {"W": 5, "L": 7, "T": 0, "win_pct": 0.4166666666666667}, "Rams": {"W": 7, "L": 5, "T": 0, "win_pct": 0.5833333333333334}, "Ravens": {"W": 3, "L": 9, "T": 0, "win_pct": 0.25}, "Saints": {"W": 5, "L": 7, "T": 0, "win_pct": 0.4166666666666667}, "Seahawks": {"W": 8, "L": 3, "T": 0, "win_pct": 0.7272727272727273}, "Steelers": {"W": 8, "L": 4, "T": 0, "win_pct": 0.6666666666666666}, "Texans": {"W": 4, "L": 8, "T": 0, "win_pct": 0.3333333333333333}, "Titans": {"W": 1, "L": 10, "T": 0, "win_pct": 0.09090909090909091}, "Vikings": {"W": 8, "L": 4, "T": 0, "win_pct": 0.6666666666666666}};
+        
+        let gameSelections = {};
+        
+        function initializeGames() {
+            const afcGames = document.getElementById('afc-games');
+            const nfcGames = document.getElementById('nfc-games');
+            
+            week18Games.forEach(game => {
+                const homeConf = teamsInfo[game.home].conference;
+                const container = homeConf === 'AFC' ? afcGames : nfcGames;
+                
+                const awayLogo = teamsInfo[game.away].logo_url;
+                const homeLogo = teamsInfo[game.home].logo_url;
+                
+                const gameCard = document.createElement('div');
+                gameCard.className = 'game-card';
+                gameCard.innerHTML = `
+                    <div class="game-matchup">
+                        <span class="team">
+                            <img src="${awayLogo}" class="team-logo" alt="${game.away}">
+                            ${game.away}
+                        </span>
+                        <span class="at">@</span>
+                        <span class="team">
+                            <img src="${homeLogo}" class="team-logo" alt="${game.home}">
+                            ${game.home}
+                        </span>
+                    </div>
+                    <div class="game-buttons">
+                        <button class="game-btn" onclick="selectWinner('${game.id}', '${game.away}')">
+                            <img src="${awayLogo}" class="team-logo-small" alt="${game.away}">
+                            ${game.away} Wins
+                        </button>
+                        <button class="game-btn" onclick="selectWinner('${game.id}', '${game.home}')">
+                            <img src="${homeLogo}" class="team-logo-small" alt="${game.home}">
+                            ${game.home} Wins
+                        </button>
+                    </div>
+                `;
+                container.appendChild(gameCard);
+            });
+        }
+        
+        function selectWinner(gameId, winner) {
+            gameSelections[gameId] = winner;
+            
+            const buttons = document.querySelectorAll(`[onclick*="${gameId}"]`);
+            buttons.forEach(btn => {
+                btn.classList.remove('selected');
+                if (btn.textContent.includes(winner)) {
+                    btn.classList.add('selected');
+                }
+            });
+        }
+        
+        function randomizeGames() {
+            week18Games.forEach(game => {
+                const winner = Math.random() > 0.5 ? game.home : game.away;
+                selectWinner(game.id, winner);
+            });
+        }
+        
+        function resetGames() {
+            gameSelections = {};
+            document.querySelectorAll('.game-btn').forEach(btn => {
+                btn.classList.remove('selected');
+            });
+            document.getElementById('results').classList.add('hidden');
+        }
+        
+        function simulatePlayoffs() {
+            const allGamesSelected = week18Games.every(g => gameSelections[g.id]);
+            if (!allGamesSelected) {
+                alert('Please select a winner for all Week 18 games first!');
+                return;
+            }
+            
+            const finalStats = calculateFinalStats();
+            const { playoffs, eliminated } = determinePlayoffSeeding(finalStats);
+            
+            displayResults(playoffs, eliminated, finalStats);
+            document.getElementById('results').classList.remove('hidden');
+        }
+        
+        function calculateFinalStats() {
+            const stats = {};
+            
+            for (let team in teamsInfo) {
+                if (!currentStandings[team]) {
+                    console.error('Missing standings for team:', team);
+                    continue;
+                }
+                stats[team] = {
+                    W: currentStandings[team].W,
+                    L: currentStandings[team].L,
+                    T: currentStandings[team].T,
+                    win_pct: currentStandings[team].win_pct,
+                    conference_W: 0,
+                    conference_L: 0,
+                    division_W: 0,
+                    division_L: 0,
+                    points_for: 0,
+                    points_against: 0,
+                    conference_points_for: 0,
+                    conference_points_against: 0,
+                    touchdowns: 0,
+                    head_to_head: {},
+                    opponents: [],
+                    defeated_opponents: [],
+                    game_results: []
+                };
+            }
+            
+            completedGames.forEach(game => {
+                processGame(stats, game.home, game.away, game.home_score, game.away_score);
+            });
+            
+            week18Games.forEach(game => {
+                const winner = gameSelections[game.id];
+                if (winner) {
+                    const isHomeWin = winner === game.home;
+                    const home_score = isHomeWin ? 24 : 17;
+                    const away_score = isHomeWin ? 17 : 24;
+                    processGame(stats, game.home, game.away, home_score, away_score, true);
+                }
+            });
+            
+            for (let team in stats) {
+                const total = stats[team].W + stats[team].L + stats[team].T;
+                stats[team].win_pct = total > 0 ? (stats[team].W + 0.5 * stats[team].T) / total : 0;
+                
+                const conf_total = stats[team].conference_W + stats[team].conference_L;
+                stats[team].conference_pct = conf_total > 0 ? stats[team].conference_W / conf_total : 0;
+                
+                const div_total = stats[team].division_W + stats[team].division_L;
+                stats[team].division_pct = div_total > 0 ? stats[team].division_W / div_total : 0;
+                
+                stats[team].strength_of_victory = 0;
+                if (stats[team].defeated_opponents.length > 0) {
+                    const sum = stats[team].defeated_opponents.reduce((acc, opp) => acc + stats[opp].win_pct, 0);
+                    stats[team].strength_of_victory = sum / stats[team].defeated_opponents.length;
+                }
+                
+                stats[team].strength_of_schedule = 0;
+                if (stats[team].opponents.length > 0) {
+                    const sum = stats[team].opponents.reduce((acc, opp) => acc + stats[opp].win_pct, 0);
+                    stats[team].strength_of_schedule = sum / stats[team].opponents.length;
+                }
+            }
+            
+            return stats;
+        }
+        
+        function processGame(stats, home, away, home_score, away_score, isWeek18 = false) {
+            if (isWeek18) {
+                if (home_score > away_score) {
+                    stats[home].W++;
+                    stats[away].L++;
+                } else {
+                    stats[away].W++;
+                    stats[home].L++;
+                }
+            }
+            
+            stats[home].game_results.push({ opponent: away, pf: home_score, pa: away_score });
+            stats[away].game_results.push({ opponent: home, pf: away_score, pa: home_score });
+            
+            stats[home].points_for += home_score;
+            stats[home].points_against += away_score;
+            stats[away].points_for += away_score;
+            stats[away].points_against += home_score;
+            
+            stats[home].touchdowns += Math.floor(home_score / 7);
+            stats[away].touchdowns += Math.floor(away_score / 7);
+            
+            stats[home].opponents.push(away);
+            stats[away].opponents.push(home);
+            
+            const home_conf = teamsInfo[home].conference;
+            const away_conf = teamsInfo[away].conference;
+            const home_div = teamsInfo[home].division;
+            const away_div = teamsInfo[away].division;
+            
+            if (home_score > away_score) {
+                stats[home].defeated_opponents.push(away);
+                
+                if (!stats[home].head_to_head[away]) stats[home].head_to_head[away] = { W: 0, L: 0, T: 0 };
+                if (!stats[away].head_to_head[home]) stats[away].head_to_head[home] = { W: 0, L: 0, T: 0 };
+                stats[home].head_to_head[away].W++;
+                stats[away].head_to_head[home].L++;
+                
+                if (home_conf === away_conf) {
+                    stats[home].conference_W++;
+                    stats[away].conference_L++;
+                    stats[home].conference_points_for += home_score;
+                    stats[home].conference_points_against += away_score;
+                    stats[away].conference_points_for += away_score;
+                    stats[away].conference_points_against += home_score;
+                }
+                
+                if (home_div === away_div) {
+                    stats[home].division_W++;
+                    stats[away].division_L++;
+                }
+            } else if (away_score > home_score) {
+                stats[away].defeated_opponents.push(home);
+                
+                if (!stats[home].head_to_head[away]) stats[home].head_to_head[away] = { W: 0, L: 0, T: 0 };
+                if (!stats[away].head_to_head[home]) stats[away].head_to_head[home] = { W: 0, L: 0, T: 0 };
+                stats[away].head_to_head[home].W++;
+                stats[home].head_to_head[away].L++;
+                
+                if (home_conf === away_conf) {
+                    stats[away].conference_W++;
+                    stats[home].conference_L++;
+                    stats[home].conference_points_for += home_score;
+                    stats[home].conference_points_against += away_score;
+                    stats[away].conference_points_for += away_score;
+                    stats[away].conference_points_against += home_score;
+                }
+                
+                if (home_div === away_div) {
+                    stats[away].division_W++;
+                    stats[home].division_L++;
+                }
+            }
+        }
+        
+        function breakTwoTeamDivisionTie(teams, stats) {
+            const [team1, team2] = teams;
+            
+            const h2h1 = stats[team1].head_to_head[team2] || { W: 0, L: 0, T: 0 };
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return { winner: team1, tiebreaker: `Head-to-head: won ${h2h1.W}-${h2h1.L}` };
+                if (h2h2Pct > h2h1Pct) return { winner: team2, tiebreaker: `Head-to-head: won ${h2h1.L}-${h2h1.W}` };
+            }
+            
+            if (stats[team1].division_pct > stats[team2].division_pct) {
+                return { winner: team1, tiebreaker: `Division record: ${stats[team1].division_W}-${stats[team1].division_L}` };
+            }
+            if (stats[team2].division_pct > stats[team1].division_pct) {
+                return { winner: team2, tiebreaker: `Division record: ${stats[team2].division_W}-${stats[team2].division_L}` };
+            }
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common1T = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common1Total = common1W + common1L + common1T;
+                const common1Pct = common1Total > 0 ? (common1W + 0.5 * common1T) / common1Total : 0;
+                
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2T = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common2Total = common2W + common2L + common2T;
+                const common2Pct = common2Total > 0 ? (common2W + 0.5 * common2T) / common2Total : 0;
+                
+                if (common1Pct > common2Pct) {
+                    return { winner: team1, tiebreaker: `Common games: ${common1W}-${common1L}-${common1T}` };
+                }
+                if (common2Pct > common1Pct) {
+                    return { winner: team2, tiebreaker: `Common games: ${common2W}-${common2L}-${common2T}` };
+                }
+            }
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {
+                return { winner: team1, tiebreaker: `Conference record: ${stats[team1].conference_W}-${stats[team1].conference_L}` };
+            }
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {
+                return { winner: team2, tiebreaker: `Conference record: ${stats[team2].conference_W}-${stats[team2].conference_L}` };
+            }
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {
+                return { winner: team1, tiebreaker: `Strength of victory: ${stats[team1].strength_of_victory.toFixed(3)}` };
+            }
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {
+                return { winner: team2, tiebreaker: `Strength of victory: ${stats[team2].strength_of_victory.toFixed(3)}` };
+            }
+            
+            if (stats[team1].strength_of_schedule > stats[team2].strength_of_schedule) {
+                return { winner: team1, tiebreaker: `Strength of schedule: ${stats[team1].strength_of_schedule.toFixed(3)}` };
+            }
+            if (stats[team2].strength_of_schedule > stats[team1].strength_of_schedule) {
+                return { winner: team2, tiebreaker: `Strength of schedule: ${stats[team2].strength_of_schedule.toFixed(3)}` };
+            }
+            
+            const commonNet1 = stats[team1].game_results.filter(g => commonOpps.has(g.opponent)).reduce((sum, g) => sum + (g.pf - g.pa), 0);
+            const commonNet2 = stats[team2].game_results.filter(g => commonOpps.has(g.opponent)).reduce((sum, g) => sum + (g.pf - g.pa), 0);
+            if (commonNet1 > commonNet2) {
+                return { winner: team1, tiebreaker: `Net points in common games: +${commonNet1}` };
+            }
+            if (commonNet2 > commonNet1) {
+                return { winner: team2, tiebreaker: `Net points in common games: +${commonNet2}` };
+            }
+            
+            const net1 = stats[team1].points_for - stats[team1].points_against;
+            const net2 = stats[team2].points_for - stats[team2].points_against;
+            if (net1 > net2) {
+                return { winner: team1, tiebreaker: `Net points in all games: +${net1}` };
+            }
+            if (net2 > net1) {
+                return { winner: team2, tiebreaker: `Net points in all games: +${net2}` };
+            }
+            
+            if (stats[team1].touchdowns > stats[team2].touchdowns) {
+                return { winner: team1, tiebreaker: `Net touchdowns: ${stats[team1].touchdowns}` };
+            }
+            if (stats[team2].touchdowns > stats[team1].touchdowns) {
+                return { winner: team2, tiebreaker: `Net touchdowns: ${stats[team2].touchdowns}` };
+            }
+            
+            return { winner: team1, tiebreaker: 'Coin toss' };
+        }
+        
+        function breakMultiTeamDivisionTie(teams, stats) {
+            let remaining = [...teams];
+            
+            const h2hRecords = {};
+            for (const team of remaining) {
+                let h2hW = 0, h2hL = 0, h2hT = 0;
+                for (const opp of remaining) {
+                    if (team !== opp) {
+                        const h2h = stats[team].head_to_head[opp] || { W: 0, L: 0, T: 0 };
+                        h2hW += h2h.W;
+                        h2hL += h2h.L;
+                        h2hT += h2h.T;
+                    }
+                }
+                const h2hTotal = h2hW + h2hL + h2hT;
+                h2hRecords[team] = h2hTotal > 0 ? (h2hW + 0.5 * h2hT) / h2hTotal : 0;
+            }
+            
+            const uniqueH2HPercentages = new Set(Object.values(h2hRecords));
+            if (uniqueH2HPercentages.size === remaining.length) {
+                remaining.sort((a, b) => h2hRecords[b] - h2hRecords[a]);
+                return { ranked: remaining, tiebreaker: 'Head-to-head record' };
+            }
+            
+            remaining.sort((a, b) => stats[b].division_pct - stats[a].division_pct);
+            if (stats[remaining[0]].division_pct > stats[remaining[1]].division_pct) {
+                const winner = remaining[0];
+                const rest = remaining.slice(1);
+                const tiebreaker = `Division record: ${stats[winner].division_W}-${stats[winner].division_L}`;
+                if (rest.length === 1) {
+                    return { ranked: [winner, rest[0]], tiebreaker };
+                } else if (rest.length === 2) {
+                    const result = breakTwoTeamDivisionTie(rest, stats);
+                    return { ranked: [winner, result.winner, rest.find(t => t !== result.winner)], tiebreaker };
+                } else {
+                    const subResult = breakMultiTeamDivisionTie(rest, stats);
+                    return { ranked: [winner, ...subResult.ranked], tiebreaker };
+                }
+            }
+            
+            remaining.sort((a, b) => stats[b].conference_pct - stats[a].conference_pct);
+            if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {
+                const winner = remaining[0];
+                const rest = remaining.slice(1);
+                const tiebreaker = `Conference record: ${stats[winner].conference_W}-${stats[winner].conference_L}`;
+                if (rest.length === 1) {
+                    return { ranked: [winner, rest[0]], tiebreaker };
+                } else if (rest.length === 2) {
+                    const result = breakTwoTeamDivisionTie(rest, stats);
+                    return { ranked: [winner, result.winner, rest.find(t => t !== result.winner)], tiebreaker };
+                } else {
+                    const subResult = breakMultiTeamDivisionTie(rest, stats);
+                    return { ranked: [winner, ...subResult.ranked], tiebreaker };
+                }
+            }
+            
+            remaining.sort((a, b) => {
+                if (stats[b].strength_of_victory !== stats[a].strength_of_victory) {
+                    return stats[b].strength_of_victory - stats[a].strength_of_victory;
+                }
+                return stats[b].win_pct - stats[a].win_pct;
+            });
+            return { ranked: remaining, tiebreaker: `Strength of victory (${stats[remaining[0]].strength_of_victory.toFixed(3)})` };
+        }
+        
+        function breakTwoTeamWildcardTie(teams, stats) {
+            const [team1, team2] = teams;
+            
+            const h2h1 = stats[team1].head_to_head[team2] || { W: 0, L: 0, T: 0 };
+            const h2hTotal = h2h1.W + h2h1.L + h2h1.T;
+            if (h2hTotal > 0) {
+                const h2h1Pct = (h2h1.W + 0.5 * h2h1.T) / h2hTotal;
+                const h2h2Pct = (h2h1.L + 0.5 * h2h1.T) / h2hTotal;
+                if (h2h1Pct > h2h2Pct) return { winner: team1, tiebreaker: `Head-to-head: won ${h2h1.W}-${h2h1.L}` };
+                if (h2h2Pct > h2h1Pct) return { winner: team2, tiebreaker: `Head-to-head: won ${h2h1.L}-${h2h1.W}` };
+            }
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {
+                return { winner: team1, tiebreaker: `Conference record: ${stats[team1].conference_W}-${stats[team1].conference_L}` };
+            }
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {
+                return { winner: team2, tiebreaker: `Conference record: ${stats[team2].conference_W}-${stats[team2].conference_L}` };
+            }
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common1T = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common1Total = common1W + common1L + common1T;
+                const common1Pct = common1Total > 0 ? (common1W + 0.5 * common1T) / common1Total : 0;
+                
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2T = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf === g.pa).length;
+                const common2Total = common2W + common2L + common2T;
+                const common2Pct = common2Total > 0 ? (common2W + 0.5 * common2T) / common2Total : 0;
+                
+                if (common1Pct > common2Pct) {
+                    return { winner: team1, tiebreaker: `Common games: ${common1W}-${common1L}-${common1T}` };
+                }
+                if (common2Pct > common1Pct) {
+                    return { winner: team2, tiebreaker: `Common games: ${common2W}-${common2L}-${common2T}` };
+                }
+            }
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {
+                return { winner: team1, tiebreaker: `Strength of victory: ${stats[team1].strength_of_victory.toFixed(3)}` };
+            }
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {
+                return { winner: team2, tiebreaker: `Strength of victory: ${stats[team2].strength_of_victory.toFixed(3)}` };
+            }
+            
+            if (stats[team1].strength_of_schedule > stats[team2].strength_of_schedule) {
+                return { winner: team1, tiebreaker: `Strength of schedule: ${stats[team1].strength_of_schedule.toFixed(3)}` };
+            }
+            if (stats[team2].strength_of_schedule > stats[team1].strength_of_schedule) {
+                return { winner: team2, tiebreaker: `Strength of schedule: ${stats[team2].strength_of_schedule.toFixed(3)}` };
+            }
+            
+            const confNet1 = stats[team1].conference_points_for - stats[team1].conference_points_against;
+            const confNet2 = stats[team2].conference_points_for - stats[team2].conference_points_against;
+            if (confNet1 > confNet2) {
+                return { winner: team1, tiebreaker: `Net points in conference: +${confNet1}` };
+            }
+            if (confNet2 > confNet1) {
+                return { winner: team2, tiebreaker: `Net points in conference: +${confNet2}` };
+            }
+            
+            const net1 = stats[team1].points_for - stats[team1].points_against;
+            const net2 = stats[team2].points_for - stats[team2].points_against;
+            if (net1 > net2) {
+                return { winner: team1, tiebreaker: `Net points in all games: +${net1}` };
+            }
+            if (net2 > net1) {
+                return { winner: team2, tiebreaker: `Net points in all games: +${net2}` };
+            }
+            
+            if (stats[team1].touchdowns > stats[team2].touchdowns) {
+                return { winner: team1, tiebreaker: `Net touchdowns: ${stats[team1].touchdowns}` };
+            }
+            if (stats[team2].touchdowns > stats[team1].touchdowns) {
+                return { winner: team2, tiebreaker: `Net touchdowns: ${stats[team2].touchdowns}` };
+            }
+            
+            return { winner: team1, tiebreaker: 'Coin toss' };
+        }
+        
+        function breakMultiTeamWildcardTie(teams, stats) {
+            let remaining = [...teams];
+            
+            const divisions = {};
+            for (const team of remaining) {
+                const div = teamsInfo[team].division;
+                if (!divisions[div]) divisions[div] = [];
+                divisions[div].push(team);
+            }
+            
+            const divWinners = {};
+            for (const [div, divTeams] of Object.entries(divisions)) {
+                if (divTeams.length > 1) {
+                    const result = applyDivisionTiebreaker(divTeams, stats);
+                    divWinners[div] = result.ranked[0];
+                } else {
+                    divWinners[div] = divTeams[0];
+                }
+            }
+            
+            remaining = Object.values(divWinners);
+            
+            if (remaining.length === 1) return { ranked: remaining, tiebreaker: null };
+            if (remaining.length === 2) {
+                const result = breakTwoTeamWildcardTie(remaining, stats);
+                return { ranked: [result.winner, remaining.find(t => t !== result.winner)], tiebreaker: result.tiebreaker };
+            }
+            
+            let h2hSweep = null;
+            for (const team of remaining) {
+                const beatsAll = remaining.every(opp => {
+                    if (opp === team) return true;
+                    const h2h = stats[team].head_to_head[opp] || { W: 0 };
+                    return h2h.W > 0;
+                });
+                if (beatsAll) {
+                    h2hSweep = team;
+                    break;
+                }
+            }
+            
+            if (h2hSweep) {
+                const rest = remaining.filter(t => t !== h2hSweep);
+                if (rest.length === 1) {
+                    return { ranked: [h2hSweep, rest[0]], tiebreaker: 'Head-to-head sweep' };
+                } else {
+                    const subResult = breakMultiTeamWildcardTie(rest, stats);
+                    return { ranked: [h2hSweep, ...subResult.ranked], tiebreaker: 'Head-to-head sweep' };
+                }
+            }
+            
+            remaining.sort((a, b) => stats[b].conference_pct - stats[a].conference_pct);
+            if (stats[remaining[0]].conference_pct > stats[remaining[1]].conference_pct) {
+                const winner = remaining[0];
+                const rest = remaining.slice(1);
+                const tiebreaker = `Conference record: ${stats[winner].conference_W}-${stats[winner].conference_L}`;
+                if (rest.length === 1) {
+                    return { ranked: [winner, rest[0]], tiebreaker };
+                } else if (rest.length === 2) {
+                    const result = breakTwoTeamWildcardTie(rest, stats);
+                    return { ranked: [winner, result.winner, rest.find(t => t !== result.winner)], tiebreaker };
+                } else {
+                    const subResult = breakMultiTeamWildcardTie(rest, stats);
+                    return { ranked: [winner, ...subResult.ranked], tiebreaker };
+                }
+            }
+            
+            remaining.sort((a, b) => {
+                if (stats[b].strength_of_victory !== stats[a].strength_of_victory) {
+                    return stats[b].strength_of_victory - stats[a].strength_of_victory;
+                }
+                return stats[b].win_pct - stats[a].win_pct;
+            });
+            return { ranked: remaining, tiebreaker: `Strength of victory (${stats[remaining[0]].strength_of_victory.toFixed(3)})` };
+        }
+        
+        function applyDivisionTiebreaker(tiedTeams, stats) {
+            if (tiedTeams.length === 0) return { ranked: [], tiebreaker: null };
+            if (tiedTeams.length === 1) return { ranked: tiedTeams, tiebreaker: null };
+            
+            if (tiedTeams.length === 2) {
+                const result = breakTwoTeamDivisionTie(tiedTeams, stats);
+                return { ranked: [result.winner], tiebreaker: result.tiebreaker };
+            } else {
+                return breakMultiTeamDivisionTie(tiedTeams, stats);
+            }
+        }
+        
+        function applyWildcardTiebreaker(tiedTeams, stats) {
+            if (tiedTeams.length === 0) return { ranked: [], tiebreaker: null };
+            if (tiedTeams.length === 1) return { ranked: tiedTeams, tiebreaker: null };
+            
+            const sameDivision = tiedTeams.every(t => teamsInfo[t].division === teamsInfo[tiedTeams[0]].division);
+            if (sameDivision) {
+                return applyDivisionTiebreaker(tiedTeams, stats);
+            }
+            
+            if (tiedTeams.length === 2) {
+                const result = breakTwoTeamWildcardTie(tiedTeams, stats);
+                const loser = tiedTeams.find(t => t !== result.winner);
+                return { ranked: [result.winner, loser], tiebreaker: result.tiebreaker };
+            } else {
+                return breakMultiTeamWildcardTie(tiedTeams, stats);
+            }
+        }
+        
+        function getSeedingTiebreaker(team1, team2, stats) {
+            if (stats[team1].win_pct > stats[team2].win_pct) {
+                return `Better record (${stats[team1].W}-${stats[team1].L} vs ${stats[team2].W}-${stats[team2].L})`;
+            }
+            
+            const h2h1 = stats[team1].head_to_head[team2];
+            if (h2h1) {
+                const h2hTotal = h2h1.W + h2h1.L + (h2h1.T || 0);
+                if (h2hTotal > 0) {
+                    const h2h1Pct = (h2h1.W + 0.5 * (h2h1.T || 0)) / h2hTotal;
+                    const h2h2Pct = (h2h1.L + 0.5 * (h2h1.T || 0)) / h2hTotal;
+                    if (h2h1Pct > h2h2Pct) return `Head-to-head (${h2h1.W}-${h2h1.L})`;
+                    if (h2h2Pct > h2h1Pct) return null;
+                }
+            }
+            
+            if (stats[team1].conference_pct > stats[team2].conference_pct) {
+                return `Conference record (${stats[team1].conference_W}-${stats[team1].conference_L} vs ${stats[team2].conference_W}-${stats[team2].conference_L})`;
+            }
+            if (stats[team2].conference_pct > stats[team1].conference_pct) {
+                return null;
+            }
+            
+            const commonOpps = new Set(stats[team1].opponents.filter(o => stats[team2].opponents.includes(o)));
+            if (commonOpps.size >= 4) {
+                const common1W = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common1L = stats[team1].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                const common2W = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf > g.pa).length;
+                const common2L = stats[team2].game_results.filter(g => commonOpps.has(g.opponent) && g.pf < g.pa).length;
+                
+                const common1Pct = common1W / (common1W + common1L) || 0;
+                const common2Pct = common2W / (common2W + common2L) || 0;
+                
+                if (common1Pct > common2Pct) {
+                    return `Common games (${common1W}-${common1L} vs ${common2W}-${common2L})`;
+                }
+                if (common2Pct > common1Pct) {
+                    return null;
+                }
+            }
+            
+            if (stats[team1].strength_of_victory > stats[team2].strength_of_victory) {
+                return `Strength of victory (${stats[team1].strength_of_victory.toFixed(3)} vs ${stats[team2].strength_of_victory.toFixed(3)})`;
+            }
+            if (stats[team2].strength_of_victory > stats[team1].strength_of_victory) {
+                return null;
+            }
+            
+            if (stats[team1].strength_of_schedule > stats[team2].strength_of_schedule) {
+                return `Strength of schedule (${stats[team1].strength_of_schedule.toFixed(3)} vs ${stats[team2].strength_of_schedule.toFixed(3)})`;
+            }
+            if (stats[team2].strength_of_schedule > stats[team1].strength_of_schedule) {
+                return null;
+            }
+            
+            const confNet1 = stats[team1].conference_points_for - stats[team1].conference_points_against;
+            const confNet2 = stats[team2].conference_points_for - stats[team2].conference_points_against;
+            if (confNet1 > confNet2) {
+                return `Conference net points (+${confNet1} vs +${confNet2})`;
+            }
+            if (confNet2 > confNet1) {
+                return null;
+            }
+            
+            const net1 = stats[team1].points_for - stats[team1].points_against;
+            const net2 = stats[team2].points_for - stats[team2].points_against;
+            if (net1 > net2) {
+                return `Net points (+${net1} vs +${net2})`;
+            }
+            
+            return null;
+        }
+        
+        function determinePlayoffSeeding(stats) {
+            const results = { AFC: [], NFC: [] };
+            const eliminated = { AFC: [], NFC: [] };
+            
+            ['AFC', 'NFC'].forEach(conf => {
+                const confTeams = Object.keys(teamsInfo).filter(t => teamsInfo[t].conference === conf);
+                
+                const divisions = {};
+                confTeams.forEach(team => {
+                    const div = teamsInfo[team].division;
+                    if (!divisions[div]) divisions[div] = [];
+                    divisions[div].push(team);
+                });
+                
+                const divisionWinners = [];
+                
+                for (let div in divisions) {
+                    const divTeams = divisions[div];
+                    divTeams.sort((a, b) => {
+                        if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
+                        return stats[b].W - stats[a].W;
+                    });
+                    
+                    const sameRecordTeams = [divTeams[0]];
+                    for (let i = 1; i < divTeams.length; i++) {
+                        if (Math.abs(stats[divTeams[i]].win_pct - stats[sameRecordTeams[0]].win_pct) < 0.001) {
+                            sameRecordTeams.push(divTeams[i]);
+                        } else {
+                            break;
+                        }
+                    }
+                    
+                    let winner, tiebreaker = null;
+                    if (sameRecordTeams.length > 1) {
+                        const result = applyDivisionTiebreaker(sameRecordTeams, stats);
+                        winner = result.ranked[0];
+                        tiebreaker = result.tiebreaker;
+                    } else {
+                        winner = sameRecordTeams[0];
+                    }
+                    
+                    let qualification = 'Division winner';
+                    if (tiebreaker) {
+                        qualification = `Division winner (won tiebreaker: ${tiebreaker})`;
+                    }
+                    
+                    divisionWinners.push({
+                        team: winner,
+                        record: `${stats[winner].W}-${stats[winner].L}-${stats[winner].T}`,
+                        division: div,
+                        qualification: qualification,
+                        divRecord: `${stats[winner].division_W}-${stats[winner].division_L}`,
+                        confRecord: `${stats[winner].conference_W}-${stats[winner].conference_L}`
+                    });
+                }
+                
+                divisionWinners.sort((a, b) => {
+                    if (stats[b.team].win_pct !== stats[a.team].win_pct) {
+                        return stats[b.team].win_pct - stats[a.team].win_pct;
+                    }
+                    
+                    const h2h_a = stats[a.team].head_to_head[b.team];
+                    if (h2h_a) {
+                        const h2hTotal = h2h_a.W + h2h_a.L + (h2h_a.T || 0);
+                        if (h2hTotal > 0) {
+                            const h2h_a_pct = (h2h_a.W + 0.5 * (h2h_a.T || 0)) / h2hTotal;
+                            if (h2h_a_pct > 0.5) return -1;
+                            if (h2h_a_pct < 0.5) return 1;
+                        }
+                    }
+                    
+                    if (stats[a.team].conference_pct !== stats[b.team].conference_pct) {
+                        return stats[b.team].conference_pct - stats[a.team].conference_pct;
+                    }
+                    
+                    if (stats[a.team].strength_of_victory !== stats[b.team].strength_of_victory) {
+                        return stats[b.team].strength_of_victory - stats[a.team].strength_of_victory;
+                    }
+                    
+                    if (stats[a.team].strength_of_schedule !== stats[b.team].strength_of_schedule) {
+                        return stats[b.team].strength_of_schedule - stats[a.team].strength_of_schedule;
+                    }
+                    
+                    const confNet_a = stats[a.team].conference_points_for - stats[a.team].conference_points_against;
+                    const confNet_b = stats[b.team].conference_points_for - stats[b.team].conference_points_against;
+                    if (confNet_a !== confNet_b) {
+                        return confNet_b - confNet_a;
+                    }
+                    
+                    const net_a = stats[a.team].points_for - stats[a.team].points_against;
+                    const net_b = stats[b.team].points_for - stats[b.team].points_against;
+                    return net_b - net_a;
+                });
+                
+                let wildCardPool = confTeams.filter(t => !divisionWinners.find(dw => dw.team === t));
+                wildCardPool.sort((a, b) => {
+                    if (stats[b].win_pct !== stats[a].win_pct) return stats[b].win_pct - stats[a].win_pct;
+                    return stats[b].W - stats[a].W;
+                });
+                
+                const wildCards = [];
+                const qualifiedTeams = new Set(divisionWinners.map(dw => dw.team));
+                
+                while (wildCards.length < 3 && wildCardPool.length > 0) {
+                    const currentTeam = wildCardPool[0];
+                    const currentWinPct = stats[currentTeam].win_pct;
+                    
+                    const tiedTeams = wildCardPool.filter(t => 
+                        Math.abs(stats[t].win_pct - currentWinPct) < 0.001
+                    );
+                    
+                    let rankedTeams, tiebreakerInfo = null;
+                    if (tiedTeams.length > 1) {
+                        const result = applyWildcardTiebreaker(tiedTeams, stats);
+                        rankedTeams = result.ranked;
+                        tiebreakerInfo = result.tiebreaker;
+                    } else {
+                        rankedTeams = tiedTeams;
+                    }
+                    
+                    const spotsRemaining = 3 - wildCards.length;
+                    const teamsToAdd = rankedTeams.slice(0, spotsRemaining);
+                    
+                    teamsToAdd.forEach((t, idx) => {
+                        let qualification = 'Wild card';
+                        
+                        if (idx === 0 && tiebreakerInfo && tiedTeams.length > 1) {
+                            qualification = `Wild card (won tiebreaker: ${tiebreakerInfo})`;
+                        } else if (idx === 0 && tiedTeams.length > 2 && !tiebreakerInfo) {
+                            qualification = `Wild card (won ${tiedTeams.length}-team tiebreaker)`;
+                        }
+                        
+                        wildCards.push({
+                            team: t,
+                            record: `${stats[t].W}-${stats[t].L}-${stats[t].T}`,
+                            division: teamsInfo[t].division,
+                            qualification: qualification,
+                            divRecord: `${stats[t].division_W}-${stats[t].division_L}`,
+                            confRecord: `${stats[t].conference_W}-${stats[t].conference_L}`
+                        });
+                        
+                        qualifiedTeams.add(t);
+                    });
+                    
+                    wildCardPool = wildCardPool.filter(t => !qualifiedTeams.has(t));
+                }
+                
+                const playoffTeamNames = new Set([
+                    ...divisionWinners.map(d => d.team),
+                    ...wildCards.map(w => w.team)
+                ]);
+                
+                confTeams.forEach(team => {
+                    if (!playoffTeamNames.has(team)) {
+                        let reason = '';
+                        const teamDiv = teamsInfo[team].division;
+                        const divWinner = divisionWinners.find(dw => dw.division === teamDiv);
+                        
+                        if (divWinner && divWinner.team !== team) {
+                            if (Math.abs(stats[team].win_pct - stats[divWinner.team].win_pct) < 0.001) {
+                                const qualMatch = divWinner.qualification.match(/won tiebreaker: (.+)\)/);
+                                if (qualMatch) {
+                                    reason = `Lost division to ${divWinner.team} (${qualMatch[1]})`;
+                                } else {
+                                    reason = `Lost division to ${divWinner.team}`;
+                                }
+                            } else {
+                                const winDiff = stats[divWinner.team].W - stats[team].W;
+                                reason = `${winDiff} game${winDiff !== 1 ? 's' : ''} behind ${divWinner.team} in division`;
+                            }
+                        }
+                        
+                        if (wildCards.length > 0) {
+                            const lastWC = wildCards[wildCards.length - 1];
+                            const wcWinPct = stats[lastWC.team].win_pct;
+                            
+                            if (stats[team].win_pct < wcWinPct) {
+                                const winDiff = stats[lastWC.team].W - stats[team].W;
+                                if (reason) reason += '; ';
+                                reason += `${winDiff} game${winDiff !== 1 ? 's' : ''} behind wild card (${lastWC.team}: ${lastWC.record})`;
+                            } else if (Math.abs(stats[team].win_pct - wcWinPct) < 0.001) {
+                                if (reason) reason += '; ';
+                                reason += `Lost wild card tiebreaker`;
+                            }
+                        }
+                        
+                        if (!reason) {
+                            reason = 'Insufficient record for playoffs';
+                        }
+                        
+                        eliminated[conf].push({
+                            team: team,
+                            record: `${stats[team].W}-${stats[team].L}-${stats[team].T}`,
+                            reason: reason,
+                            divRecord: `${stats[team].division_W}-${stats[team].division_L}`,
+                            confRecord: `${stats[team].conference_W}-${stats[team].conference_L}`
+                        });
+                    }
+                });
+                
+                results[conf] = [
+                    ...divisionWinners.slice(0, 4),
+                    ...wildCards
+                ];
+                
+                for (let i = 0; i < results[conf].length; i++) {
+                    if (i < results[conf].length - 1) {
+                        const currentSeed = results[conf][i];
+                        const nextSeed = results[conf][i + 1];
+                        const reason = getSeedingTiebreaker(currentSeed.team, nextSeed.team, stats);
+                        if (reason) {
+                            currentSeed.seedingReason = reason;
+                        }
+                    }
+                }
+                
+                if (results[conf].length > 0 && eliminated[conf].length > 0) {
+                    const lastSeed = results[conf][results[conf].length - 1];
+                    
+                    eliminated[conf].sort((a, b) => {
+                        if (stats[b.team].win_pct !== stats[a.team].win_pct) return stats[b.team].win_pct - stats[a.team].win_pct;
+                        return stats[b.team].W - stats[a.team].W;
+                    });
+                    
+                    const firstEliminated = eliminated[conf][0];
+                    const reason = getSeedingTiebreaker(lastSeed.team, firstEliminated.team, stats);
+                    if (reason) {
+                        lastSeed.seedingReason = reason;
+                    }
+                }
+            });
+            
+            return { playoffs: results, eliminated };
+        }
+        
+        function displayResults(playoffSeeds, eliminated, stats) {
+            ['AFC', 'NFC'].forEach(conf => {
+                const container = document.getElementById(`${conf.toLowerCase()}-results`);
+                container.innerHTML = '';
+                
+                const playoffHeader = document.createElement('h4');
+                playoffHeader.style.marginBottom = '15px';
+                playoffHeader.style.color = '#10b981';
+                playoffHeader.textContent = '✓ Playoff Teams';
+                container.appendChild(playoffHeader);
+                
+                playoffSeeds[conf].forEach((seed, index) => {
+                    const seedNum = index + 1;
+                    const seedClass = seedNum <= 4 ? `seed-${seedNum}` : 'seed-wc';
+                    const seedLabel = `Seed ${seedNum}`;
+                    
+                    const divLabel = seed.division ? ` • ${seed.division.replace(conf + ' ', '')}` : '';
+                    const teamLogo = teamsInfo[seed.team].logo_url;
+                    
+                    const seedDiv = document.createElement('div');
+                    seedDiv.className = `seed-team ${seedClass}`;
+                    
+                    let seedingReasonHtml = '';
+                    if (seed.seedingReason) {
+                        seedingReasonHtml = `<div class="tiebreaker-info" style="margin-top: 8px;">🏆 Seed ${seedNum}: ${seed.seedingReason}</div>`;
+                    }
+                    
+                    seedDiv.innerHTML = `
+                        <div class="seed-header">
+                            <span class="seed-badge">${seedLabel}</span>
+                            <span class="team-record">${seed.record}</span>
+                        </div>
+                        <div class="team-name">
+                            <img src="${teamLogo}" class="team-logo" alt="${seed.team}">
+                            <span>${seed.team}${divLabel}</span>
+                        </div>
+                        <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+                            Div: ${seed.divRecord} | Conf: ${seed.confRecord}
+                        </div>
+                        <div class="qualification-info">✓ ${seed.qualification || 'Qualified'}</div>
+                        ${seedingReasonHtml}
+                    `;
+                    container.appendChild(seedDiv);
+                });
+                
+                if (eliminated[conf].length > 0) {
+                    const elimHeader = document.createElement('h4');
+                    elimHeader.style.marginTop = '25px';
+                    elimHeader.style.marginBottom = '15px';
+                    elimHeader.style.color = '#ef4444';
+                    elimHeader.textContent = '✗ Eliminated Teams';
+                    container.appendChild(elimHeader);
+                    
+                    eliminated[conf].sort((a, b) => {
+                        return stats[b.team].win_pct - stats[a.team].win_pct;
+                    });
+                    
+                    eliminated[conf].forEach(team => {
+                        const teamLogo = teamsInfo[team.team].logo_url;
+                        
+                        const elimDiv = document.createElement('div');
+                        elimDiv.className = 'seed-team eliminated-team';
+                        elimDiv.innerHTML = `
+                            <div class="seed-header">
+                                <span class="team-record">${team.record}</span>
+                            </div>
+                            <div class="team-name">
+                                <img src="${teamLogo}" class="team-logo" alt="${team.team}">
+                                <span>${team.team}</span>
+                            </div>
+                            <div style="font-size: 11px; color: #64748b; margin-top: 4px;">
+                                Div: ${team.divRecord} | Conf: ${team.confRecord}
+                            </div>
+                            <div class="elimination-info">❌ ${team.reason}</div>
+                        `;
+                        container.appendChild(elimDiv);
+                    });
+                }
+            });
+        }
+        
+        initializeGames();
+    </script>
+</body>
+</html>

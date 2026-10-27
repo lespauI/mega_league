@@ -9,27 +9,38 @@ const csvParse = (text) => {
   ));
 };
 
+const validRows = 'Team,GM,ELO,sourceWeek\nAlpha,GM A,1000,8\nBeta,GM B,1001,8\n';
+let csv = validRows;
 const requests = [];
-const fetchWeekEight = async (url) => {
-  requests.push(new URL(url).pathname);
-  const text = new URL(url).pathname.endsWith('import_metadata.json')
-    ? '{"eloSourceWeek":8}'
-    : 'Team,GM,ELO,sourceWeek\nAlpha,GM A,1000,8\nBeta,GM B,1001,8\n';
-  return { ok: true, text: async () => text };
+const previousLoader = globalThis.MegaData;
+globalThis.MegaData = {
+  async getManifest() {
+    requests.push('manifest');
+    return { cycle: { eloSourceWeek: 8 } };
+  },
+  async loadCsv(key, parseCsv) {
+    requests.push(key);
+    return parseCsv(csv);
+  },
 };
 
-const current = await loadCurrentElo(csvParse, fetchWeekEight);
-assert.equal(current.sourceWeek, 8);
-assert.equal(current.byTeam.get('Alpha'), 1000);
-assert.deepEqual(requests.map((path) => path.split('/').at(-1)), [
-  'import_metadata.json', 'current_elo.csv',
-]);
+try {
+  const current = await loadCurrentElo(csvParse);
+  assert.equal(current.sourceWeek, 8);
+  assert.equal(current.byTeam.get('Alpha'), 1000);
+  assert.deepEqual(requests, ['manifest', 'elo']);
 
-await assert.rejects(() => loadCurrentElo(csvParse, async (url) => ({
-  ok: true,
-  text: async () => new URL(url).pathname.endsWith('import_metadata.json')
-    ? '{"eloSourceWeek":8}'
-    : 'Team,GM,ELO,sourceWeek\nAlpha,GM A,1200,12\n',
-})), /does not match metadata Week 8/);
+  csv = 'Team,GM,ELO,sourceWeek\nAlpha,GM A,1200,12\n';
+  await assert.rejects(() => loadCurrentElo(csvParse), /does not match manifest Week 8/);
+
+  csv = 'Team,GM,ELO,sourceWeek\nAlpha,GM A,1000,8\nAlpha,GM B,1001,8\n';
+  await assert.rejects(() => loadCurrentElo(csvParse), /duplicate team Alpha/);
+
+  csv = 'Team,GM,ELO,sourceWeek\n,GM A,not-an-elo,8\n';
+  await assert.rejects(() => loadCurrentElo(csvParse), /invalid team rating/);
+} finally {
+  if (previousLoader === undefined) delete globalThis.MegaData;
+  else globalThis.MegaData = previousLoader;
+}
 
 console.log('Current ELO browser source checks passed.');

@@ -2,7 +2,7 @@
 
 ## Current cycle and boundaries
 
-- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 12. Team/rankings exports have `weekIndex=12`; scheduled games at that index are display Week 13.
+- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 12 plus completed Week 13 games. Team/rankings exports have `weekIndex=12`; scheduled games at that index are display Week 13.
 - Madden 26 is archived under `archive/madden-26/` (2026-10-24). See its `README.md` and `manifest.json` for provenance, inventory, and recovery.
 - Treat the archive as immutable historical evidence. Exclude `archive/` from normal searches and data discovery. Read it only for explicit historical work or a deliberate comparison.
 - Never restore Madden 26 CSVs into the active root as a fallback for missing Madden 27 data. Do not create fabricated league data or empty results to make a pipeline appear successful.
@@ -31,12 +31,12 @@ archive/madden-26/ → isolated historical data/site, never active inputs
 | Domain | Implementation | Outputs / consumers |
 | --- | --- | --- |
 | Playoff probabilities, standings, tiebreakers, draft race | `calc_playoff_probabilities.py`, `team_scenario_report.py`, `generate_all_team_scenarios.py`, `calc_remaining_sos.py`, `calc_sos_by_rankings.py`, `top_pick_race_analysis.py` in `scripts/` | `output/playoff_probabilities.json`, `output/team_scenarios.json`, SoS tables, draft-race reports; HTML renderers in `scripts/` |
-| Team/player statistics and trades | `stats_scripts/aggregate_team_stats.py`, `aggregate_player_usage.py`, `aggregate_rankings_stats.py`, `build_player_team_stints.py`; CSV contracts in `csv_io.py`, pure helpers in `stats_domain.py`, compatibility exports in `stats_common.py` | Team aggregation, usage, rankings, player/team stint and traded-player CSVs; stats/trade dashboards |
+| Team/player statistics and trades | `stats_scripts/aggregate_team_stats.py`, `aggregate_player_usage.py`, `aggregate_rankings_stats.py`, `build_player_team_stints.py`; implementations in `mega/stats/`, CSV/cycle/identity contracts in `mega/inputs/`, compatibility exports in `stats_scripts/` | Team aggregation, usage, rankings, player/team stint and traded-player CSVs; stats/trade dashboards |
 | ELO strength of schedule | `scripts/calc_sos_elo.py`, season 2/3/4 wrappers, `scripts/common.py` | Reads the declared cycle ELO week; produces `output/sos/`, `output/schedules/`, and a one-week `docs/data/current_elo.csv` browser view while retaining the raw multiweek source copy |
 | Roster rankings and draft analysis | `scripts/power_rankings_roster.py`, `generate_draft_class*.py`, `generate_draft_rounds_recap.py`, `export_rookies.py` | Roster scores/exports, rookie CSVs, generated draft and roster HTML reports |
 | Cap management | `docs/roster_cap_tool/js/` | Vanilla ES modules: `csv.js`/`models.js` parse inputs; `capMath.js`/`contractUtils.js` calculate; `context.js` handles year offsets; `state.js` owns scenarios; `ui/` renders controls |
 | Depth charts | `docs/depth_chart/js/` | Vanilla JS roster/slot editing, draft picks, CSV export; `state.js` and browser storage hold edits |
-| Shared standings rules | `scripts/standings_domain.py` | Pure completed-game records, conference/division results, and strength metrics shared by playoff probabilities and the Week 18 simulator |
+| Shared standings rules | `mega/standings/records.py` (`scripts/standings_domain.py` compatibility import) | Pure completed-game records, conference/division results, and strength metrics shared by playoff probabilities and the Week 18 simulator |
 | OVR research | `scripts/players_ovr/` | Optional ML workflow, per-position training exports, coefficients and serialized models |
 
 `docs/` mixes source applications with generated output. Do not archive or delete all HTML indiscriminately. Stats, SoS, playoff-bracket and roster-chart readers are source; draft reports, playoff-race tables, team scenarios, week-18 simulator output, and roster-ranking reports embed a particular dataset and must be regenerated.
@@ -46,10 +46,11 @@ Reusable references: `Formula.md`, `spec/`, `scripts/README.md`, `docs/README.md
 ### Orchestration and rollover traps
 
 - `scripts/run_all.py --season-index 0`: player/team stints first, then team/usage/rankings aggregation, ELO and rankings SoS for the selected season, playoff scenarios/reports, the Week 18 simulator, draft race, roster power rankings, trade verification, browser-data publication and root index. The default is CSV season 0.
-- `scripts/pipeline_tasks.py` owns the dependency graph selected by `run_all.py`, `run_all_stats.py`, and `run_all_playoff_analysis.py`. Playoff Monte Carlo tasks use seed 0 and record it in the build manifest. Tasks stop after the first failure. The full runner builds in a clean temporary workspace, validates required outputs and SoS artifacts, records `output/build_manifest.json`, then publishes changed files with rollback on a publication error. Subset builds require a complete manifest for the same input snapshot.
+- `mega/pipeline/execution.py` owns the dependency graph; `scripts/pipeline_tasks.py` preserves its compatible API, selected by `run_all.py`, `run_all_stats.py`, and `run_all_playoff_analysis.py`. Playoff Monte Carlo tasks use seed 0 and record it in the build manifest. Tasks stop after the first failure. The full runner builds in a clean temporary workspace, validates required outputs and SoS artifacts, records `output/build_manifest.json`, then publishes changed files with rollback on a publication error. Subset builds require a complete manifest for the same input snapshot.
 - `scripts/run_all_stats.py`: player/team stints before dependent aggregations, trade verification, and navigation rendering.
 - `scripts/run_all_playoff_analysis.py --season-index 0`: ELO and rankings SoS, playoff scenarios/reports, draft race, browser-data publication and navigation rendering.
 - `scripts/run_utils.py` launches subprocesses. Optional-step failures are failures; only a task explicitly disabled by configuration is skipped.
+- `mega/pipeline/artifacts.py` centrally registers generated outputs, ownership, and logical browser datasets. `docs/data/data_manifest.json` maps those dataset keys to URLs relative to the manifest. `scripts/verify_site.py` validates enabled pages, data, local assets and snapshot hashes; staged builds run it before publication. Maintain `requires` and `requiresData` in `docs/site_manifest.json` when adding consumers.
 - `scripts/generate_index.py` writes **root `index.html`**, despite older docs mentioning `docs/index.html`. It renders navigation only, using the declared `docs/site_manifest.json` inventory and the active snapshot's build manifest. Missing or mismatched artifacts are not linked.
 - `scripts/calc_sos_elo.py` now selects rows by the CSV `seasonIndex` and regular-season `stageIndex`. The legacy one-based `--season-index` argument and row flags remain adapters; current runners pass `--csv-season-index`.
 - `scripts/validate_import.py` validates Basic Info and Stats ZIPs, the ELO CSV, and the separately maintained `MEGA_users.csv` map before activation. Validation-only is the default; `--activate` installs the fully validated CSV set and metadata with rollback on a failed file replacement. The NeonSportz ZIPs do not contain the user map, so pass it with `--users-csv`.
@@ -62,7 +63,7 @@ Reusable references: `Formula.md`, `spec/`, `scripts/README.md`, `docs/README.md
 
 The user-maintained [export and update workflow](README.md#export-and-update-workflow) is the standard refresh procedure: request **Basic Info** and **Stats** at `https://neonsportz.com/leagues/MEGA/export`, delivered to **lespaul1488@gmail.com**; download the ZIP attachments from both emails, extract the CSVs into the repository root, run and verify the configured pipelines, commit and push a feature branch, then open and merge its pull request. Documenting this procedure does not itself request an export, email access, or Git publication; perform those actions when the user asks to execute the workflow.
 
-The approved ELO snapshot is **Week 8**, used with the Week 12 exports; preserve that source label. `mega_elo.csv` holds the source ratings and GM labels, `MEGA_users.csv` maps exported NeonSportz usernames separately, and `docs/data/import_metadata.json` records source-byte and normalized working-file hashes plus week conventions. Current playoff calculations and browser charts must use the declared metadata week; `docs/data/current_elo.csv` is the one-week browser view. Do not overwrite `MEGA_teams.csv` usernames with screenshot GM labels.
+The approved ELO snapshot is **Week 8**, used with the exports refreshed on 2026-10-27 (including completed Week 13 games); preserve that source label. `mega_elo.csv` holds the source ratings and GM labels, `MEGA_users.csv` maps exported NeonSportz usernames separately, and `docs/data/import_metadata.json` records source-byte and normalized working-file hashes plus week conventions. Current playoff calculations and browser charts must use the declared metadata week; `docs/data/current_elo.csv` is the one-week browser view. Do not overwrite `MEGA_teams.csv` usernames with screenshot GM labels.
 
 See `spec/data_inputs.md` for columns. Import fresh, mutually consistent `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_players.csv`, `MEGA_rankings.csv`, positional stat exports, draft/trade exports as required, and fresh `mega_elo.csv` for ELO analysis. Preserve the lower-case on-disk ELO filename; some older prose uses a different spelling.
 
@@ -72,9 +73,13 @@ Player statistics CSVs contain season totals, not individual game box scores. Fo
 
 ## Development and validation
 
+Reusable Python code lives in `mega/inputs/`, `mega/standings/`, `mega/stats/`, `mega/roster/`, `mega/draft/`, `mega/reporting/`, and `mega/pipeline/`. Existing script and stats-script paths are compatibility entry points. Keep new calculation code in the package and retain explicit input/output paths; package imports must not change the working directory.
+
 Python core uses the standard library. Optional OVR research needs the dependencies in `scripts/players_ovr/requirements.txt`; plotting may also need optional libraries. Follow existing coding style. Frontend is vanilla JS; cap-tool modules declare ESM in their local `package.json`.
 
-Fixture-based and data-independent checks, from repository root:
+Use `python3 scripts/check.py` for all fixture and Node checks. Its default exit code includes the recorded cap B/C/D failures. `--allow-known-cap-failures` permits only that exact six-assertion baseline; other failures remain fatal. Add `--build` for a full staged build without publication, `--site` for read-only validation of the current publication, and `--browser` for current-cycle browser smoke tests after installing Playwright.
+
+Individual fixture-based and data-independent checks, from repository root:
 
 ```bash
 python3 -m unittest discover -s tests -p 'test_current_cycle.py'
@@ -92,6 +97,7 @@ python3 scripts/tests/test_week_numbers.py
 node scripts/tests/test_cycle_storage.mjs
 node scripts/tests/test_current_elo.mjs
 node scripts/tests/test_shared_csv.mjs
+node scripts/tests/test_data_manifest.mjs
 node scripts/tests/test_year_context.mjs
 node scripts/tests/test_cap_tool.mjs
 ```
@@ -106,11 +112,12 @@ After data import/configuration, use the appropriate pipeline and `scripts/verif
 python3 -m http.server 8000  # serve repository root, open /index.html
 npm install
 npm run pw:install
-npm run test:e2e
+npm run test:e2e:smoke  # current-cycle manifest and browser-tool checks
+npm run test:e2e        # broader historical fixtures require deliberate review
 ```
 
 Playwright config serves port 8000 with Chromium projects for cleared/persisted storage. Avoid serving just `docs/` for tools that read root CSVs and `output/`.
 
 ## Git and maintenance
 
-Keep commits short and descriptive. Follow the repository's `mega-<feature>-<short-id>` branch naming convention when a branch is needed. Never commit fresh exports or generated results into the historical archive. Do not commit/push unless the user requests it. Update current documentation when changing entry points or data contracts; older instructions under `archive/` are historical only.
+Keep commits short and descriptive. Follow the repository's `mega-<feature>-<short-id>` branch naming convention when a branch is needed. Never commit fresh exports or generated results into the historical archive. For the current repository-root hosting model, keep `output/build_manifest.json`, `docs/data/build_manifest.json`, and `docs/data/data_manifest.json` with the generated publication they describe. Existing tracked outputs remain versioned; add new generated outputs only when their registered artifact paths are required by the site. Temporary builds, logs, test reports, and optional research output remain ignored. Do not commit/push unless the user requests it. Update current documentation when changing entry points or data contracts; older instructions under `archive/` are historical only.

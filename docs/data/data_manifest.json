@@ -1,0 +1,29 @@
+{
+  "cycle": {
+    "calendarYear": 2026,
+    "completedThroughWeek": 13,
+    "csvSeasonIndex": 0,
+    "displaySeason": 1,
+    "edition": "Madden 27",
+    "eloSourceWeek": 8,
+    "exportWeekIndex": 12
+  },
+  "data": {
+    "elo": "current_elo.csv",
+    "elo_sos": "season1_elo.csv",
+    "games": "../../MEGA_games.csv",
+    "player_usage": "../../output/team_player_usage.csv",
+    "players": "../../MEGA_players.csv",
+    "playoffs": "playoff_probabilities.json",
+    "rankings_sos": "../../output/ranked_sos_by_conference.csv",
+    "rankings_stats": "../../output/team_rankings_stats.csv",
+    "roster_rankings": "../../output/power_rankings_roster.csv",
+    "schedules": "schedules_season1.json",
+    "stints": "../../output/player_team_stints.csv",
+    "team_stats": "../../output/team_aggregated_stats.csv",
+    "teams": "../../MEGA_teams.csv",
+    "trades": "../../output/traded_players_report.csv"
+  },
+  "schemaVersion": 1,
+  "snapshotId": "0369b7343553771a"
+}

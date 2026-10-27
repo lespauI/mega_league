@@ -1,3 +1,4 @@
+import hashlib
 import unittest
 import tempfile
 from pathlib import Path
@@ -201,8 +202,15 @@ class HtmlReportIncludesSorterTests(unittest.TestCase):
             out_path = Path(temp) / "test_power_rankings_roster_report.html"
             prr.render_html_report(str(out_path), teams_metrics, config={}, league_context={})
 
-            with out_path.open("r", encoding="utf-8") as fh:
-                html = fh.read()
+            html_bytes = out_path.read_bytes()
+            html = html_bytes.decode("utf-8")
+
+        # Captured from the original monolithic renderer before extraction.
+        # This locks the generated report bytes for this fixed fixture.
+        self.assertEqual(
+            hashlib.sha256(html_bytes).hexdigest(),
+            "720e2701a4eece30859f9bda39e14ff276780fef35691eab08a61ba926153da2",
+        )
 
         # The roster power rankings page should include the simple
         # table sorter script so that clicking headers in the

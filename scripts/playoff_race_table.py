@@ -10,6 +10,7 @@ import json
 import random
 from collections import defaultdict
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 NUM_TEAMS = 32
 
@@ -378,8 +379,8 @@ def get_rank_class(rank):
     else:
         return 'rank-weak'
 
-def create_html_table(afc_divs, nfc_divs, probabilities):
-    now = datetime.now()
+def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
+    now = datetime.now(ZoneInfo("America/New_York"))
     html = []
     
     html.append('''<!DOCTYPE html>
@@ -387,7 +388,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEGA League Playoff Race - Week 10</title>
+    <title>MEGA League Playoff Race - ''' + (f'Week {week}' if week is not None else 'Current Standings') + '''</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
@@ -762,7 +763,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities):
     <div class="container">
         <div class="header">
             <h1>🏈 MEGA League Playoff Race</h1>
-            <div class="subtitle">Week 10 Standings & Playoff Probabilities</div>
+            <div class="subtitle">''' + (f'Week {week}' if week is not None else 'Current') + ''' Standings & Playoff Probabilities</div>
             <div class="updated">Updated ''' + now.strftime('%b %d, %Y at %I:%M %p ET') + '''</div>
         </div>
 
@@ -988,7 +989,12 @@ def main(season_index=0, elo_source_week=None, seed=None):
     )
     
     print("Generating NYT-style table...")
-    html_output = create_html_table(afc_divs, nfc_divs, probabilities)
+    from cycle_context import CycleContext
+    from pathlib import Path
+    context = CycleContext.from_file(Path('docs/data/import_metadata.json'))
+    html_output = create_html_table(
+        afc_divs, nfc_divs, probabilities, week=context.completed_through_week
+    )
     
     os.makedirs('docs', exist_ok=True)
     

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import json
 import re
+import sys
 from pathlib import Path
 
 ROOT_DIR = Path(__file__).parent.parent
@@ -11,6 +12,12 @@ try:
     from cycle_context import CycleContext
 except ImportError:  # imported as a package from tests
     from scripts.cycle_context import CycleContext
+
+try:
+    from mega.pipeline.manifests import validate_browser_data
+except ModuleNotFoundError:  # direct script invocation puts scripts/ first on sys.path
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    from mega.pipeline.manifests import validate_browser_data
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="en">
@@ -176,7 +183,19 @@ def categorize_files():
         current_snapshot = CycleContext.from_file(DOCS_DIR / "data" / "import_metadata.json", ROOT_DIR).snapshot_id
     except (OSError, ValueError):
         current_snapshot = None
-    snapshot_matches = bool(current_snapshot and build_manifest.get("snapshotId") == current_snapshot)
+    browser_manifest_matches = True
+    browser_data = None
+    browser_manifest_path = DOCS_DIR / "data" / "data_manifest.json"
+    if browser_manifest_path.is_file():
+        try:
+            browser_data = validate_browser_data(ROOT_DIR)
+        except (OSError, ValueError):
+            browser_manifest_matches = False
+    snapshot_matches = bool(
+        current_snapshot
+        and build_manifest.get("snapshotId") == current_snapshot
+        and browser_manifest_matches
+    )
 
     categories = {"Reports & Visualizations": [], "Documentation": []}
     for entry in site_manifest.get("pages", []):
@@ -189,6 +208,13 @@ def categorize_files():
             match = re.search(r"season(\d+)", filename)
             if not match or active_season is None or int(match.group(1)) != int(active_season):
                 continue
+        required_data = entry.get("requiresData", [])
+        if required_data and (
+            not browser_manifest_matches
+            or not browser_data
+            or any(key not in browser_data.get("data", {}) for key in required_data)
+        ):
+            continue
         requirements = entry.get("requires", [])
         if requirements:
             artifacts = build_manifest.get("artifacts", {})

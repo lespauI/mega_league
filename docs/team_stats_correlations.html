@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Team Statistics — Interesting Correlations</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="shared/data.js"></script>
   <style>
     :root {
       --red: #ef4444;
@@ -38,13 +39,7 @@
     .metric-tooltip { position: absolute; pointer-events: none; background: rgba(30,64,175,.95); color: #fff; padding: 8px 12px; border-radius: 6px; font-size: 12px; z-index: 100; max-width: 350px; line-height: 1.5; box-shadow: 0 4px 6px rgba(0,0,0,.3); }
   </style>
   <script>
-    async function tryCsv(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
-    }
+    function tryCsv(key) { return MegaData.loadCsv(key, text => d3.csvParse(text, d3.autoType)); }
 
     function fmt2(x) { return d3.format('.2f')(x); }
     function fmt3(x) { return d3.format('.3f')(x); }
@@ -74,11 +69,7 @@
     }
 
     async function loadData() {
-      const stats = await tryCsv([
-        '../output/team_aggregated_stats.csv',
-        'output/team_aggregated_stats.csv',
-        '/output/team_aggregated_stats.csv'
-      ]);
+      const stats = await tryCsv('team_stats');
 
       for (const row of stats) {
         row.logoUrl = (row.logoId !== '' && row.logoId != null) ? 

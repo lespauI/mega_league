@@ -1,8 +1,14 @@
 import { normalizeTeamRow, normalizePlayerRow } from '../../roster_cap_tool/js/validation.js';
-import { loadCsvRows } from '../../shared/csv.js';
+import { parseCsvRows } from '../../shared/csv.js';
 
-export async function loadTeams(url) {
-  const raw = await loadCsvRows(url);
+function loadRows(key) {
+  const loader = globalThis.MegaData;
+  if (!loader) throw new Error('The shared browser data loader did not load.');
+  return loader.loadCsv(key, (text) => parseCsvRows(text));
+}
+
+export async function loadTeams(key = 'teams') {
+  const raw = await loadRows(key);
   const teams = [];
   for (const row of raw) {
     const result = normalizeTeamRow(row);
@@ -13,8 +19,8 @@ export async function loadTeams(url) {
   return teams;
 }
 
-export async function loadPlayers(url) {
-  const raw = await loadCsvRows(url);
+export async function loadPlayers(key = 'players') {
+  const raw = await loadRows(key);
   const players = [];
   for (const row of raw) {
     const result = normalizePlayerRow(row);

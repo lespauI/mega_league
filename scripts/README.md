@@ -1,12 +1,12 @@
-> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12 plus completed Week 13 games, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # Scripts Overview
 
-This folder contains the main command‑line entry points and helpers for the MEGA League analysis project. Most users only need a few core commands; the rest are domain tools, verifiers, and developer helpers.
+This folder contains compatible command-line entry points and helpers for the MEGA League analysis project. Extracted implementations live under `mega/`: `inputs/`, `standings/`, `stats/`, `roster/`, `draft/`, `reporting/`, and `pipeline/`. Most users only need a few core commands; the rest are domain tools, verifiers, and developer helpers.
 
 ## Entry points (recommended)
 
-Run these from the repo root:
+Run these from the repo root (runner and extracted CLI imports also work from other directories using absolute script paths):
 
 - `python3 scripts/validate_import.py --basic-info-zip BASIC.zip --stats-zip STATS.zip --elo-csv mega_elo.csv --users-csv MEGA_users.csv --season-index 0 --elo-source-week 8` – validate a candidate import. The GM/username map is a separate, provenance-tracked input because it is not included in NeonSportz ZIPs. Add `--activate` only after reviewing the report.
 - `python3 scripts/run_all.py --season-index 0` – full staged pipeline: stats, ELO and rankings SoS, scenarios/reports, roster rankings, browser data, and root navigation. Scenario simulations use seed 0, which the build manifest records.
@@ -16,7 +16,7 @@ Run these from the repo root:
 - `python3 scripts/verify_sos_elo.py --season-index 1` – verify schedules and ELO SoS for one-based display season 1.
 - `python3 scripts/generate_index.py` – render root `index.html` from the declared site and artifact manifests; it does not run calculations.
 
-The full pipeline stages files before publication and rolls back if a publish step fails. Stats-only and playoff-only runs require a complete build manifest for the same input snapshot. See the root README for the weekly workflow.
+The full pipeline stages files before publication, validates active pages and browser datasets, and rolls back if a publish step fails. `mega/pipeline/artifacts.py` owns producer outputs and browser data URLs. `docs/data/data_manifest.json` supplies logical dataset keys to the frontend. Stats-only and playoff-only runs require a complete build manifest for the same input snapshot. See the root README for the weekly workflow.
 
 ## Python domain tools
 
@@ -25,7 +25,7 @@ Domain‑specific scripts that can be run directly or via the entry points:
 - **Playoff / draft / SoS (rankings‑based)**  
   `calc_sos_by_rankings.py`, `calc_remaining_sos.py`, `calc_playoff_probabilities.py`,  
   `generate_all_team_scenarios.py`, `playoff_race_table.py`, `playoff_race_html.py`,  
-  `generate_team_scenario_html.py`, `top_pick_race_analysis.py`, `generate_index.py`; standings logic is shared in `standings_domain.py`.
+  `generate_team_scenario_html.py`, `top_pick_race_analysis.py`, `generate_index.py`; standings logic is shared in `mega/standings/records.py`, with `standings_domain.py` retained as a compatibility import.
 - **ELO SoS**
   `calc_sos_elo.py` and compatibility season wrappers; old start-row flags are accepted but ignored in favor of `seasonIndex`/`stageIndex` filtering. `verify_sos_elo.py` validates actual schedule and SoS contracts.
 - **Draft & rookies**  
@@ -42,6 +42,10 @@ Domain‑specific scripts that can be run directly or via the entry points:
 For most workflows you should prefer the entry‑point scripts; the domain tools are useful for one‑off debugging or experimentation.
 
 ## Verifiers
+
+Run `python3 scripts/check.py` for the Python/Node suite; `--build`, `--site`, and `--browser` add staged-build, assembled-publication, and current-cycle browser checks. The default command reports the existing cap B/C/D failures; `--allow-known-cap-failures` accepts only their exact six-assertion baseline.
+
+`python3 scripts/verify_site.py [--root PATH]` is a read-only assembled-site gate. It checks active snapshot hashes, enabled pages and their data requirements, local assets, and nested JS module imports.
 
 Verification scripts are named `verify_*.py`. The SoS verifier is read-only; some domain verifiers intentionally write reports under `output/`:
 
@@ -84,7 +88,7 @@ bash scripts/smoke/smoke_roster_cap_tool.sh
 
 When adding new code:
 
-- **Analysis scripts** that read `MEGA_*.csv` and produce CSV/JSON should live under `scripts/` (or `stats_scripts/` if they extend the stats pipeline). Prefer descriptive names: `calc_*`, `generate_*`, `*_analysis.py`.
+- **Calculation implementations** belong in the relevant `mega/` domain package. Keep `scripts/` and `stats_scripts/` as compatible CLI adapters; do not introduce working-directory changes or `sys.path` changes inside package implementations.
 - **Entry points** that orchestrate several steps should start with `run_all_` and live at the top level of `scripts/`.
 - **Verifiers** should be named `verify_*.py` and placed at the top level of `scripts/`, near the workflow they validate.
 - **Smoke tests** belong in `scripts/smoke/` and are typically small shell scripts that call existing Python tools.

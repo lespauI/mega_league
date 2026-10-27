@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Matchup Gameplan Advisor</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="shared/data.js"></script>
   <style>
     :root {
       --red: #ef4444;
@@ -357,13 +358,7 @@
   </div>
 
   <script>
-    async function tryCsv(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
-    }
+    function tryCsv(key) { return MegaData.loadCsv(key, text => d3.csvParse(text, d3.autoType)); }
 
     function safeNum(v) {
       const x = +v;
@@ -379,32 +374,11 @@
 
     async function loadAllData() {
       const [rankings, aggregated, usage] = await Promise.all([
-        tryCsv([
-          '../output/team_rankings_stats.csv',
-          'output/team_rankings_stats.csv',
-          '/output/team_rankings_stats.csv'
-        ]),
-        tryCsv([
-          '../output/team_aggregated_stats.csv',
-          'output/team_aggregated_stats.csv',
-          '/output/team_aggregated_stats.csv'
-        ]),
-        tryCsv([
-          '../output/team_player_usage.csv',
-          'output/team_player_usage.csv',
-          '/output/team_player_usage.csv'
-        ])
+        tryCsv('rankings_stats'),
+        tryCsv('team_stats'),
+        tryCsv('player_usage')
       ]);
-      let games = [];
-      try {
-        games = await tryCsv([
-          '../MEGA_games.csv',
-          'MEGA_games.csv',
-          '/MEGA_games.csv'
-        ]);
-      } catch (e) {
-        console.warn('MEGA_games.csv not found or failed to load. Recent-form view will be disabled.', e);
-      }
+      const games = await tryCsv('games');
       return { rankings, aggregated, usage, games };
     }
 
@@ -1676,7 +1650,7 @@
         overviewRoot.html('');
         overviewRoot.append('div')
           .attr('class', 'empty-state')
-          .text('Error loading matchup data. Make sure you have run scripts/run_all_stats.py and that CSV files exist in output/.');
+          .text('Error loading matchup data. Check that the active data manifest and its declared input files are available.');
       });
     }
 

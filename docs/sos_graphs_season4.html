@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Strength of Schedule (Season 4) — Win% vs SoS</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="shared/data.js"></script>
   <style>
     :root {
       --red: #ef4444;
@@ -33,14 +34,8 @@
   </style>
   <!-- Serve from repo root: python3 -m http.server 8000 -->
   <script>
-    // Small helper: robust CSV loader trying multiple relative paths
-    async function tryCsv(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
-    }
+    // Shared manifest-backed CSV access.
+    function tryCsv(key) { return MegaData.loadCsv(key, text => d3.csvParse(text, d3.autoType)); }
 
     function toPct(x) { return d3.format('.1%')(x); }
     function fmt3(x) { return d3.format('.3f')(x); }
@@ -61,20 +56,9 @@
     }
 
     async function loadData() {
-      const teams = await tryCsv([
-        '../MEGA_teams.csv',
-        'MEGA_teams.csv',
-        '/MEGA_teams.csv',
-        'data/MEGA_teams.csv',
-        '../docs/data/MEGA_teams.csv'
-      ]);
-      const sos = await tryCsv([
-        '../output/ranked_sos_by_conference_season4.csv',
-        'output/ranked_sos_by_conference_season4.csv',
-        '/output/ranked_sos_by_conference_season4.csv',
-        'data/ranked_sos_by_conference_season4.csv',
-        '../docs/data/ranked_sos_by_conference_season4.csv'
-      ]);
+      await MegaData.assertCycle({ displaySeason: 4 });
+      const teams = await tryCsv('teams');
+      const sos = await tryCsv('rankings_sos');
 
       const teamMap = new Map();
       for (const t of teams) {
@@ -102,18 +86,7 @@
     }
 
     async function loadPlayoffData(teamMap) {
-      const paths = [
-        '../output/playoff_probabilities.json',
-        'output/playoff_probabilities.json',
-        '/output/playoff_probabilities.json',
-        'data/playoff_probabilities.json',
-        '../docs/data/playoff_probabilities.json'
-      ];
-      let data;
-      for (const p of paths) {
-        try { data = await d3.json(p); break; } catch (e) { }
-      }
-      if (!data) throw new Error('Unable to load playoff probabilities');
+      const data = await MegaData.loadJson('playoffs');
 
       const playoffTeams = [];
       for (const [name, stats] of Object.entries(data)) {
@@ -403,7 +376,7 @@
       </ul>
     </details>
     <div id="root"></div>
-    <div class="subtitle">Data: output/ranked_sos_by_conference_season4.csv + MEGA_teams.csv + output/playoff_probabilities.json</div>
+    <div class="subtitle">Data: the active data manifest</div>
   </div>
 </body>
 </html>

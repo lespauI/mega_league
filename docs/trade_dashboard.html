@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Trades & Multi‑Team Players Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="shared/data.js"></script>
   <style>
     :root {
       --red: #ef4444;
@@ -183,24 +184,14 @@
   </div>
 
   <script>
-    async function tryCsv(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
-    }
+    function tryCsv(key) { return MegaData.loadCsv(key, text => d3.csvParse(text, d3.autoType)); }
 
     function fmt0(x) { return d3.format('.0f')(x || 0); }
     function fmt1(x) { return d3.format('.1f')(x || 0); }
     function toPct1(x) { return d3.format('.1%')(x || 0); }
 
     async function loadData() {
-      const traded = await tryCsv([
-        '../output/traded_players_report.csv',
-        'output/traded_players_report.csv',
-        '/output/traded_players_report.csv'
-      ]);
+      const traded = await tryCsv('trades');
       return traded;
     }
 

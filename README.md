@@ -1,6 +1,6 @@
 # MEGA League analytics — Madden 27
 
-Current data: **Madden 27, season 1 (`seasonIndex=0`), results through Week 12**. The team/rankings export has `weekIndex=12`; scheduled games at that index are display Week 13. The supplied **Week 8 ELO** ratings are used for this analysis with the user's approval.
+Current data: **Madden 27, season 1 (`seasonIndex=0`), results through Week 12 plus completed Week 13 games**. The team/rankings export has `weekIndex=12`; scheduled games at that index are display Week 13. The supplied **Week 8 ELO** ratings are used for this analysis with the user's approval.
 
 All 12 NeonSportz CSV exports are imported. [ELO and GM labels](mega_elo.csv), [GM-to-NeonSportz user mapping](MEGA_users.csv), and [source metadata](docs/data/import_metadata.json) preserve their provenance. The original screenshot is [available here](docs/data/elo_week8.png). Raw export usernames are unchanged.
 
@@ -20,14 +20,16 @@ scripts/generate_index.py → root index.html
 archive/madden-26/ → historical snapshot, isolated from current inputs
 ```
 
-`scripts/pipeline_tasks.py` defines the shared task graph. Pipeline commands build in a clean staging workspace and publish only after output validation. `output/build_manifest.json` identifies the input snapshot and hashes the generated artifacts. `docs/site_manifest.json` declares the pages that the root index may advertise.
+Reusable implementations live in the `mega/` Python package. `scripts/` and `stats_scripts/` retain compatible commands and import paths. The package separates input contracts, standings, stats, roster/draft calculations, reporting, and pipeline infrastructure.
+
+`mega/pipeline/execution.py` defines the shared task graph, and `mega/pipeline/artifacts.py` registers generated files and browser datasets. Pipeline commands build in a clean staging workspace and publish only after output and site validation. `output/build_manifest.json` identifies the input snapshot and hashes generated artifacts; its browser copy is `docs/data/build_manifest.json`. `docs/site_manifest.json` declares pages and their artifact/data requirements. `docs/data/data_manifest.json` resolves browser dataset keys to concrete URLs for the active cycle.
 
 | Area | Main code | Purpose |
 | --- | --- | --- |
-| Playoff and draft race | `scripts/run_all_playoff_analysis.py`, `scripts/standings_domain.py` | Monte Carlo probabilities, shared completed-game standings, schedule strength, team scenarios, draft order |
-| Stats and trades | `scripts/run_all_stats.py`, `stats_scripts/` | Team statistics, player usage, rankings, trade-aware team stints |
+| Playoff and draft race | `scripts/run_all_playoff_analysis.py`, `mega/standings/` | Monte Carlo probabilities, shared completed-game standings, schedule strength, team scenarios, draft order |
+| Stats and trades | `scripts/run_all_stats.py`, `mega/stats/` | Team statistics, player usage, rankings, trade-aware team stints |
 | ELO SoS | `scripts/calc_sos_elo.py` and season wrappers | Opponent ELO, schedules, strength-of-schedule tables |
-| Roster and draft reports | `scripts/power_rankings_roster.py`, `scripts/generate_draft_class_analytics.py` | Roster scores, draft classes, player exports |
+| Roster and draft reports | `mega/roster/`, `mega/draft/`, `mega/reporting/` | Roster scores, draft classes, player exports |
 | Salary cap | `docs/roster_cap_tool/` | Contracts, releases, trades, cap projections, saved scenarios |
 | Depth charts | `docs/depth_chart/` | Roster edits, positional slots, draft picks and export |
 | OVR research | `scripts/players_ovr/` | Position formulas, model training, position-change analysis |
@@ -55,7 +57,7 @@ See [AGENTS.md](AGENTS.md) for module responsibilities, data contracts, rollover
 
    Validation does not change active files. `MEGA_users.csv` is maintained separately from the NeonSportz ZIPs; it preserves approved GM labels and raw exported usernames and is checked against `MEGA_teams.csv.userName`. After reviewing the reported season/week, run the same command with `--activate`. It installs the canonical CSVs and matching metadata together. Leave `archive/madden-26/` unchanged.
 6. Run `python3 scripts/run_all.py --season-index 0` from the repository root. The runner stages calculations, validates SoS and required outputs, then publishes the complete generated set. Inspect the refreshed dashboards.
-7. Commit the updated inputs and intended generated results on a feature branch, then push the branch to Git. Review the staged files before committing; required files under the ignored `output/` directory may need to be added explicitly.
+7. Commit the updated inputs and intended generated results on a feature branch, then push the branch to Git. Review the staged files before committing. The full build manifests, browser data manifest, existing published results, and generated pages belong to the publication. The registered publication output families are explicitly versionable; the artifact registry defines which generated files belong in the site. See the publication policy below.
 8. Open a pull request, review the changes and checks, then **merge the pull request**.
 
 ## Start Madden 27
@@ -79,33 +81,47 @@ The shared task graph runs each prerequisite once, stops after a failure, and va
 
 Cap and depth-chart saved data live in browser storage, outside this repository. Both tools now scope new data by edition, CSV season, and calendar year. They do not automatically apply old unscoped data. The in-page storage controls can export a backup, copy legacy entries into the selected cycle after confirmation, or import a backup without overwriting existing cycle values; legacy keys remain intact. The playoff dashboard's community-prediction integration still needs a separate Madden 27 store before use; remote Madden 26 votes were not migrated by this archive.
 
-## Verification without league data
+## Verification
+
+Run the fixture suite and Node checks from any working directory by passing the absolute script path, or from the repository root:
 
 ```bash
-python3 -m unittest discover -s tests -p 'test_current_cycle.py'
-python3 -m unittest discover -s tests -p 'test_index_generation.py'
-python3 -m unittest discover -s tests -p 'test_power_rankings_roster.py'
-python3 -m unittest discover -s tests -p 'test_import_validation.py'
-python3 -m unittest discover -s tests -p 'test_pipeline_tasks.py'
-python3 -m unittest discover -s tests -p 'test_sos_verifier.py'
-python3 -m unittest tests/test_snapshots.py
-python3 scripts/tests/test_week_numbers.py
-node scripts/tests/test_year_context.mjs
-node scripts/tests/test_cycle_storage.mjs
-node scripts/tests/test_shared_csv.mjs
-node scripts/tests/test_cap_tool.mjs
+python3 scripts/check.py
 ```
 
-`test_cap_tool.mjs` has recorded projection expectation failures in scenarios B/C/D; the rollover leaves those calculations untouched. Fixture tests write only to temporary directories.
-
-`tests/test_snapshots.py` is now safe to import and run; it uses fixtures for traded players, empty trades, ties, season/stage selection, and seeded simulation behavior. `tests/test_site_manifest.py` checks declared page links and local frontend module imports. Node checks cover cycle-scoped browser storage and shared CSV loading. Data-dependent Playwright E2E tests still need fresh generated pages and deliberate fixture updates.
-
-For browser tests once those prerequisites are ready:
+The legacy cap projection test currently fails six assertions in scenarios B/C/D. The default check command reports failure. During structural refactoring, this explicit option accepts only that exact known failure set; any new failure still fails the run:
 
 ```bash
-npm install
-npm run pw:install
-npm run test:e2e
+python3 scripts/check.py --allow-known-cap-failures
 ```
+
+For a full staged build, including active-page and browser-data validation without changing published files:
+
+```bash
+python3 scripts/check.py --build --allow-known-cap-failures
+```
+
+After a full build has published locally, validate the assembled tree and run the current-cycle browser smoke suite:
+
+```bash
+python3 scripts/verify_site.py
+npm ci
+npx playwright install chromium
+npm run test:e2e:smoke
+```
+
+An installed Chrome can be used explicitly with `PLAYWRIGHT_CHROMIUM_CHANNEL=chrome npm run test:e2e:smoke`.
+
+`python3 scripts/check.py --site --browser --allow-known-cap-failures` combines fixture, Node, current-site and browser checks. The broader `npm run test:e2e` suite retains historical fixtures and is not the current-cycle smoke gate. The legacy draft KPI verifier also has expectations that need separate review; structural extraction preserves its original output.
+
+## Publication policy
+
+The repository root remains the hosting surface: `index.html`, maintained `docs/` applications, generated reports, root CSV inputs, and browser-consumed `output/` files. Do not serve only `docs/`. Publishing a site externally or changing hosting configuration is a separate operation.
+
+Registered generated text files are normalized to LF before hashing, matching `.gitattributes`; committing and checking out the publication therefore preserves manifest hashes. Raw inputs and protected assets are not changed by this assembly step.
+
+Each full build emits `output/build_manifest.json`, `docs/data/build_manifest.json`, and `docs/data/data_manifest.json`. Keep both build manifests and the data manifest with the generated files they describe when committing a refresh. Existing tracked publication files remain tracked. The registered publication output families are allowed by `.gitignore`; optional research output and temporary files remain ignored. When adding a new artifact family, update its registry entry and the publication allowlist together. Stage only intended files listed in the build manifest’s `artifacts` map. Protected formulas/models are versioned separately and never treated as disposable build output.
+
+Subset builds require a complete same-snapshot full build. All manifest-listed files must still match their hashes. Navigation rendering runs no calculations. A failed build leaves the previous publication intact; successful builds clean only registry-owned obsolete files for the same snapshot.
 
 Core Python calculations use the standard library; optional OVR/plotting workflows have additional dependencies. Frontend applications use vanilla JavaScript and browser storage.

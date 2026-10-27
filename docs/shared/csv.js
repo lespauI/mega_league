@@ -1,4 +1,19 @@
 /** Shared PapaParse-backed CSV transport for the browser tools. */
+export function parseCsvRows(text, parser = globalThis.Papa) {
+  if (!parser || typeof parser.parse !== 'function') {
+    throw new Error('The CSV parser did not load.');
+  }
+  const result = parser.parse(text, {
+    header: true,
+    skipEmptyLines: true,
+  });
+  const errors = Array.isArray(result?.errors) ? result.errors : [];
+  if (errors.length) {
+    throw new Error(`CSV parse failed: ${errors.map((entry) => entry.message || entry.code || 'invalid row').join('; ')}`);
+  }
+  return Array.isArray(result?.data) ? result.data : [];
+}
+
 export function loadCsvRows(url, parser = globalThis.Papa) {
   if (!parser || typeof parser.parse !== 'function') {
     return Promise.reject(new Error('The CSV parser did not load.'));

@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <title>Roster Cap Tool Smoke Tests</title>
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+    <script src="../shared/data.js"></script>
   </head>
   <body>
     <h1>Smoke Tests</h1>
@@ -36,8 +37,8 @@
       // CSV load smoke
       try {
         const [teams, players] = await Promise.all([
-          loadTeams('../../MEGA_teams.csv'),
-          loadPlayers('../../MEGA_players.csv'),
+          loadTeams('teams'),
+          loadPlayers('players'),
         ]);
         assert('teams loaded > 0', (teams?.length || 0) > 0);
         assert('players loaded > 0', (players?.length || 0) > 0);

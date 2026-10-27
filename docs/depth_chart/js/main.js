@@ -9,8 +9,8 @@ import { DEPTH_CHART_STORAGE_CONTROLS, SHARED_DRAFT_PICKS_STORAGE_CONTROLS } fro
 
 async function boot() {
   const [teams, players, cycle] = await Promise.all([
-    loadTeams('../../MEGA_teams.csv'),
-    loadPlayers('../../MEGA_players.csv'),
+    loadTeams('teams'),
+    loadPlayers('players'),
     loadCycleIdentity(),
   ]);
 

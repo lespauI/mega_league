@@ -1,13 +1,19 @@
 import { normalizeTeamRow, normalizePlayerRow } from './validation.js';
-import { loadCsvRows } from '../../shared/csv.js';
+import { parseCsvRows } from '../../shared/csv.js';
+
+function loadRows(key) {
+  const loader = globalThis.MegaData;
+  if (!loader) throw new Error('The shared browser data loader did not load.');
+  return loader.loadCsv(key, (text) => parseCsvRows(text));
+}
 
 /**
- * Load a CSV via fetch and PapaParse.
- * @param {string} url
+ * Load normalized team rows using a manifest data key.
+ * @param {string} key
  * @returns {Promise<Array<Object>>}
  */
-export async function loadTeams(url) {
-  const raw = await loadCsvRows(url);
+export async function loadTeams(key = 'teams') {
+  const raw = await loadRows(key);
   const teams = [];
   let invalid = 0;
   for (const row of raw) {
@@ -18,8 +24,8 @@ export async function loadTeams(url) {
   return teams;
 }
 
-export async function loadPlayers(url) {
-  const raw = await loadCsvRows(url);
+export async function loadPlayers(key = 'players') {
+  const raw = await loadRows(key);
   const players = [];
   let invalid = 0;
   for (const row of raw) {
