@@ -4,7 +4,9 @@
   "private": true,
   "description": "Playwright E2E harness for the Roster Cap Tool",
   "scripts": {
+    "check": "python3 scripts/check.py",
     "test:e2e": "playwright test",
+    "test:e2e:smoke": "playwright test tests/e2e/current_cycle_smoke.spec.ts --project=chromium --workers=2",
     "test:e2e:headed": "playwright test --headed",
     "test:e2e:ui": "playwright test --ui",
     "pw:install": "playwright install --with-deps",

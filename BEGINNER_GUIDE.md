@@ -1,253 +1,63 @@
-> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
+# Getting started with MEGA League analytics
 
-# 🎓 SUPER SIMPLE GUIDE (For Beginners)
+The current cycle is Madden 27, season 1 (`seasonIndex=0`), with results through Week 12 plus completed Week 13 games and approved Week 8 ELO ratings. Madden 26 history stays under `archive/madden-26/`.
 
-**If you've never used Python or GitHub before, follow these steps exactly:**
+## Setup
 
----
+Install Python 3 and download or clone this repository. Open a terminal in its root folder. Core analytics use the Python standard library; Node.js is needed for JavaScript checks, and Playwright is needed only for browser tests.
 
-## Step 1: Install Python
+## Import league data
 
-1. Go to https://www.python.org/downloads/
-2. Click the big yellow "Download Python" button
-3. Run the installer
-4. ✅ **IMPORTANT:** Check the box "Add Python to PATH" during installation
-5. Click "Install Now"
+Follow the complete [export and update workflow](README.md#export-and-update-workflow). Request **Basic Info** and **Stats** from the NeonSportz export page, download both emailed ZIP attachments, and obtain the matching ELO CSV plus the separately maintained user map. Do not manually assemble a partial set of three CSVs or copy archived exports into the active root.
 
----
+Validate before activation:
 
-## Step 2: Download This Project
-
-**Option A - If you have Git:**
 ```bash
-git clone https://github.com/[your-username]/MEGA_neonsportz_stats.git
-cd MEGA_neonsportz_stats
+python3 scripts/validate_import.py \
+  --basic-info-zip /path/to/basic-info.zip \
+  --stats-zip /path/to/stats.zip \
+  --elo-csv /path/to/mega_elo.csv \
+  --users-csv /path/to/MEGA_users.csv \
+  --season-index 0 --elo-source-week 8
 ```
 
-**Option B - No Git (easier):**
-1. Click the green "Code" button on GitHub
-2. Click "Download ZIP"
-3. Unzip the file to your Desktop
-4. Remember where you saved it!
+Review the reported season/week. Run the same command with `--activate` to install the fully validated snapshot. Use the actual metadata when the cycle changes.
 
----
+## Build and view
 
-## Step 3: Get Your League Data
+The first build for a new import must be the full pipeline:
 
-1. Go to your Neon Sports league
-2. Use the **Neon Export** feature to download CSV files
-3. You'll get 3 files:
-   - `[YourLeagueName]_teams.csv`
-   - `[YourLeagueName]_games.csv`
-   - `[YourLeagueName]_rankings.csv`
-4. **Rename them** to:
-   - `MEGA_teams.csv`
-   - `MEGA_games.csv`
-   - `MEGA_rankings.csv`
-5. Put these 3 files in the project folder (same folder as README.md)
-
----
-
-## Step 4: Run the Script
-
-**On Windows:**
-1. Open the project folder
-2. Hold `Shift` and right-click in the empty space
-3. Click "Open PowerShell window here" or "Open Command Prompt here"
-4. Type this command and press Enter:
-   ```bash
-   python scripts/run_all_playoff_analysis.py
-   ```
-
-**On Mac:**
-1. Open Terminal (search for "Terminal" in Spotlight)
-2. Type `cd ` (with a space after cd)
-3. Drag the project folder into Terminal and press Enter
-4. Type this command and press Enter:
-   ```bash
-   python3 scripts/run_all_playoff_analysis.py
-   ```
-
-5. Wait for it to finish (you'll see "ALL SCRIPTS COMPLETED SUCCESSFULLY!")
-
----
-
-## Step 5: Check Your Results
-
-1. Open the `docs` folder in your project
-2. Double-click `playoff_race.html`
-3. It will open in your web browser
-4. 🎉 You did it!
-
----
-
-# 🌐 Publishing to the Internet (GitHub Pages)
-
-## Step 1: Create GitHub Account (if you don't have one)
-
-1. Go to https://github.com
-2. Click "Sign up"
-3. Follow the instructions
-
----
-
-## Step 2: Upload Your Project to GitHub
-
-1. Go to https://github.com/new
-2. Name your repository (example: `mega_league`)
-3. Click "Create repository"
-4. Follow the instructions to upload your files
-
-**Easy way (using GitHub Desktop):**
-1. Download GitHub Desktop: https://desktop.github.com
-2. Install it and sign in
-3. Click "Add" → "Add existing repository"
-4. Select your project folder
-5. Click "Publish repository"
-
----
-
-## Step 3: Enable GitHub Pages
-
-1. Go to your repository on GitHub
-2. Click "Settings" (top menu)
-3. Click "Pages" (left sidebar)
-4. Under "Source", select "Deploy from a branch"
-5. Under "Branch", select `main` and `/root` (or `/docs`)
-6. Click "Save"
-7. Wait 1-2 minutes
-
----
-
-## Step 4: Find Your Website URL
-
-Your website will be at:
-```
-https://[your-username].github.io/[repository-name]/docs/playoff_race.html
+```bash
+python3 scripts/run_all.py --season-index 0
+python3 scripts/verify_site.py
+python3 -m http.server 8000
 ```
 
-Example:
-```
-https://lespaui.github.io/mega_league/docs/playoff_race.html
-```
+Open [the local landing page](http://localhost:8000/index.html). Serve the repository root, because browser datasets include root CSVs and files under `output/`. The build validates a complete temporary site before publishing locally. On failure, read the first error; do not substitute historical data or create empty outputs.
 
-📖 **Full GitHub Pages Guide:** https://docs.github.com/en/pages
+After a completed full build, the same snapshot supports smaller refreshes:
 
----
-
-# 📰 Embedding in Neon Sports News
-
-Once your page is published on GitHub Pages, you can embed it in Neon Sports:
-
-## Step 1: Create News Article in Neon Sports
-
-1. Go to your Neon Sports league
-2. Click "Create News" or "Add Article"
-3. Switch to HTML/Code editor mode (<> button)
-
----
-
-## Step 2: Add Embed Code
-
-Paste this code (replace the URL with YOUR GitHub Pages URL):
-
-```html
-<iframe
-    src="https://[your-username].github.io/[repository-name]/docs/playoff_race.html"
-    title="Mega League Playoff Race"
-    style="width: 100%; height: 380vh; border: 0;"
-    loading="lazy"
-    referrerpolicy="no-referrer"
-    sandbox="allow-scripts allow-same-origin allow-popups">
-</iframe>
+```bash
+python3 scripts/run_all_stats.py
+python3 scripts/run_all_playoff_analysis.py --season-index 0
 ```
 
-**Important:** Change `https://[your-username].github.io/[repository-name]/docs/playoff_race.html` to YOUR URL!
+Use `--validate-only` on a runner to check a staged build without updating published files. A changed input snapshot requires another full build.
 
----
+## Check changes
 
-## Step 3: Publish the Article
-
-1. Scroll to the bottom of the article editor
-2. Change status to **"Publish"**
-3. Click "Publish"
-4. The article will appear on your league's homepage!
-
----
-
-## Weekly Updates
-
-Every week:
-1. Export new CSV files from Neon Sports
-2. Replace the old CSV files in your project folder
-3. Run `python3 scripts/run_all_playoff_analysis.py` again
-4. Upload the new `docs/playoff_race.html` to GitHub
-5. Your embedded page will automatically update!
-
----
-
-# ❓ Common Questions
-
-**Q: Do I need to pay for GitHub?**  
-A: No! GitHub and GitHub Pages are free.
-
-**Q: How do I update my page every week?**  
-A: Just run the script again with new CSV files, then push to GitHub.
-
-**Q: Can I customize the colors/design?**  
-A: Yes! Edit the HTML files in the `docs` folder.
-
-**Q: What if I get an error?**  
-A: Check the Troubleshooting section in README.md, or make sure your CSV files are in the right place.
-
-**Q: Do I need to know programming?**  
-A: No! Just follow these steps exactly.
-
----
-
-# 🎯 Quick Reference Card
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  WEEKLY WORKFLOW (After Initial Setup)                  │
-├─────────────────────────────────────────────────────────┤
-│  1. Export CSV files from Neon Sports                   │
-│  2. Replace old CSV files in project folder             │
-│  3. Run: python3 scripts/run_all_playoff_analysis.py    │
-│  4. Push to GitHub (or upload new files)                │
-│  5. Done! Your page updates automatically               │
-└─────────────────────────────────────────────────────────┘
+```bash
+python3 scripts/check.py
 ```
 
----
+The existing cap-tool test has six known B/C/D projection assertions. The default command reports them as failures. `--allow-known-cap-failures` accepts only that exact known set, while continuing to fail on other errors. This does not change cap calculations.
 
-# 📸 Visual Guide
+For browser smoke checks after building:
 
-## What Your Folder Should Look Like:
-
-```
-MEGA_neonsportz_stats/
-├── MEGA_teams.csv          ← Put your CSV files here
-├── MEGA_games.csv          ← Put your CSV files here
-├── MEGA_rankings.csv       ← Put your CSV files here
-├── README.md
-├── BEGINNER_GUIDE.md       ← You are here!
-├── scripts/
-│   └── run_all_playoff_analysis.py
-└── docs/
-    └── playoff_race.html   ← This is what you'll publish!
+```bash
+npm ci
+npx playwright install chromium
+npm run test:e2e:smoke
 ```
 
----
-
-# 🆘 Need Help?
-
-1. **Read the error message carefully** - it usually tells you what's wrong
-2. **Check that your CSV files are in the right place** - they should be in the main folder
-3. **Make sure Python is installed** - type `python --version` in Terminal/PowerShell
-4. **Verify file names are correct** - must be exactly `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_rankings.csv`
-5. **Check the main README.md** - it has a detailed Troubleshooting section
-
----
-
-**Good luck! 🚀**
+See the [main README](README.md) for the publication/Git workflow and the [script guide](scripts/README.md) for individual commands. Cap and depth-chart scenarios are saved in your browser, scoped to the active cycle. Export a backup through the in-page controls before deliberate migration; do not clear storage during refreshes.

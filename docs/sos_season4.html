@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Season 4 Strength of Schedule — Table + Bars + Opponents</title>
   <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+  <script src="shared/data.js"></script>
   <style>
     :root {
       --bg: #f7f7f7;
@@ -65,27 +66,6 @@
   <!-- Serve from repo root: python3 -m http.server 8000 -->
   <script>
     // Shared helpers
-    async function tryCsv(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.csv(p, d3.autoType); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load CSV: ' + paths.join(', '));
-    }
-    async function tryJson(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.json(p); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load JSON: ' + paths.join(', '));
-    }
-    async function tryText(paths) {
-      let lastErr;
-      for (const p of paths) {
-        try { return await d3.text(p); } catch (e) { lastErr = e; }
-      }
-      throw lastErr || new Error('Unable to load TEXT: ' + paths.join(', '));
-    }
     function fmt3(x) { return d3.format('.3f')(x); }
     function fmt1(x) { return d3.format('.1f')(x); }
 
@@ -127,134 +107,13 @@
     }
 
     async function loadData() {
-      const sos = await tryCsv([
-        '../output/sos/season4_elo.csv',
-        'output/sos/season4_elo.csv',
-        '/output/sos/season4_elo.csv',
-        'data/season4_elo.csv',
-        '../docs/data/season4_elo.csv'
-      ]);
-      const teams = await tryCsv([
-        '../MEGA_teams.csv',
-        'MEGA_teams.csv',
-        '/MEGA_teams.csv',
-        'data/MEGA_teams.csv',
-        '../docs/data/MEGA_teams.csv'
-      ]);
-      const schedules = await tryJson([
-        '../output/schedules/season4/all_schedules.json',
-        'output/schedules/season4/all_schedules.json',
-        '/output/schedules/season4/all_schedules.json',
-        'data/schedules_season4.json',
-        '../docs/data/schedules_season4.json'
-      ]);
-      // Parse MEGA_elo.csv (comma separated, dot decimal)
-      let megaEloText = '';
-      try {
-        megaEloText = await tryText([
-          '../MEGA_elo.csv',
-          'MEGA_elo.csv',
-          '/MEGA_elo.csv',
-          'data/MEGA_elo.csv',
-          '../docs/data/MEGA_elo.csv',
-          '../mega_elo.csv',
-          'mega_elo.csv',
-          '/mega_elo.csv',
-          'data/mega_elo.csv',
-          '../docs/data/mega_elo.csv'
-        ]);
-      } catch (_) {}
-      const megaEloMap = new Map();
-      if (megaEloText) {
-        megaEloText.split(/\r?\n/).forEach(line => {
-          if (!line || line.startsWith('#')) return;
-          const parts = line.split(',');
-          if (parts.length < 5) return;
-          const team = parts[2] && parts[2].trim();
-          let ratingStr = parts[4] ? parts[4].trim() : '';
-          const rating = parseFloat(ratingStr);
-          if (team && !isNaN(rating)) megaEloMap.set(team, rating);
-        });
-      }
-
-      const teamMeta = new Map();
-      for (const t of teams) {
-        if (!t.displayName) continue;
-        teamMeta.set(String(t.displayName).trim(), {
-          logoId: t.logoId,
-          conference: t.conferenceName || t.conference,
-          division: t.divName || t.divisionName || t.division,
-        });
-      }
-
-      for (const r of sos) {
-        const name = String(r.team).trim();
-        const meta = teamMeta.get(name);
-        if (meta) {
-          r.conference = r.conference || meta.conference || null;
-          r.division = r.division || meta.division || null;
-          if (meta.logoId !== undefined && meta.logoId !== null && meta.logoId !== '') {
-            r.logoUrl = `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`;
-          }
-        }
-        // Attach own ELO from MEGA_elo.csv if available
-        if (megaEloMap.has(name)) {
-          r.own_elo = +megaEloMap.get(name);
-        }
-      }
-
-      const conferences = Array.from(new Set(sos.map(r => (r.conference||'').toUpperCase()).filter(Boolean))).sort();
-      const divisionsByConf = new Map();
-      for (const conf of conferences) {
-        const divs = Array.from(new Set(
-          sos.filter(r => (r.conference||'').toUpperCase()===conf).map(r => r.division).filter(Boolean)
-        )).sort();
-        divisionsByConf.set(conf, divs);
-      }
-
-      const allDivisions = Array.from(new Set(sos.map(r => r.division).filter(Boolean))).sort();
-      // Build schedules map with opponent ELO inferred when missing
-      const scheduleMap = new Map();
-      if (schedules && typeof schedules === 'object') {
-        Object.entries(schedules).forEach(([team, rec]) => {
-          const list = (rec && rec.schedule) ? rec.schedule : [];
-          const normTeam = String(team).trim();
-          const enriched = list.map((g, idx) => {
-            const opp = String(g.opponent).trim();
-            let elo = g.oppElo;
-            if (elo == null && megaEloMap.has(opp)) elo = megaEloMap.get(opp);
-            const meta = teamMeta.get(opp) || {};
-            const logoUrl = (meta.logoId!==undefined && meta.logoId!==null && meta.logoId!=='') ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null;
-            return { week: idx, opponent: opp, elo: elo, homeAway: g.homeAway || '', gameId: g.gameId || '', logoUrl };
-          });
-          scheduleMap.set(normTeam, enriched);
-        });
-      }
-      return { rows: sos, conferences, divisionsByConf, allDivisions, scheduleMap };
+      const { loadEloSosData } = await import('./shared/elo_sos.js');
+      return loadEloSosData(4, text => d3.csvParse(text, d3.autoType));
     }
 
     async function loadRosterPower() {
-      const text = await tryText([
-        '../docs/power_rankings_roster.html',
-        'power_rankings_roster.html',
-        '../power_rankings_roster.html',
-        '/docs/power_rankings_roster.html',
-        'data/power_rankings_roster.json',
-        '../docs/data/power_rankings_roster.json'
-      ]);
-      const trimmed = text.trim();
-      let payload;
-      if (trimmed.startsWith('{')) {
-        payload = JSON.parse(trimmed);
-      } else {
-        const doc = new DOMParser().parseFromString(text, 'text/html');
-        const script = doc.querySelector('#teams-data');
-        if (!script) {
-          throw new Error('Unable to locate teams-data JSON in power_rankings_roster.html');
-        }
-        payload = JSON.parse(script.textContent.trim());
-      }
-      return (payload && payload.teams) ? payload.teams : [];
+      await MegaData.assertCycle({ displaySeason: 4 });
+      return MegaData.loadCsv('roster_rankings', text => d3.csvParse(text, d3.autoType));
     }
 
     // TABLE RENDERING
@@ -373,10 +232,7 @@
         activate(t.dataset.tab);
       });
 
-      Promise.all([loadData(), loadRosterPower().catch(err => {
-        console.warn('Roster power data not available:', err);
-        return [];
-      })]).then(([{ rows: allRows, conferences, divisionsByConf, allDivisions, scheduleMap }, powerTeams]) => {
+      Promise.all([loadData(), loadRosterPower()]).then(([{ rows: allRows, conferences, divisionsByConf, allDivisions, scheduleMap }, powerTeams]) => {
         // Default active tab
         activate('table-view');
 
@@ -835,7 +691,7 @@
 <body>
   <div class="container">
     <h1>Season 4 Strength of Schedule — Combined</h1>
-    <div class="subtitle">One page with both a sortable table and D3 bar charts. Data: output/sos/season4_elo.csv + MEGA_teams.csv</div>
+    <div class="subtitle">One page with both a sortable table and D3 bar charts. Data: the active data manifest</div>
 
     <div class="tabs">
       <div class="tab active" data-tab="table-view">Table</div>
@@ -968,7 +824,7 @@
         <span><span class="swatch" style="background: repeating-linear-gradient(90deg, #bbb, #bbb 2px, transparent 2px, transparent 6px); border: 1px solid #bbb;"></span>League averages</span>
       </div>
       <div id="power-root"></div>
-      <div class="subtitle" style="margin-top:8px">X: Team ELO, Y: Overall roster power score (0–100) from power_rankings_roster.html. Dotted lines = league averages; gray line = trend.</div>
+      <div class="subtitle" style="margin-top:8px">X: Team ELO, Y: Overall roster power score (0–100) from roster rankings. Dotted lines = league averages; gray line = trend.</div>
     </div>
   </div>
 </body>

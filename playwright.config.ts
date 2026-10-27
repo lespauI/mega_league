@@ -16,6 +16,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     baseURL: 'http://127.0.0.1:8000',
+    channel: process.env.PLAYWRIGHT_CHROMIUM_CHANNEL,
     trace: 'on-first-retry',
     actionTimeout: 15_000,
     navigationTimeout: 20_000,

@@ -85,8 +85,8 @@ async function boot() {
   mountPlaceholders();
   // Load CSV data from project root
   const [teams, players, cycle] = await Promise.all([
-    loadTeams('../../MEGA_teams.csv'),
-    loadPlayers('../../MEGA_players.csv'),
+    loadTeams('teams'),
+    loadPlayers('players'),
     loadCycleIdentity(),
   ]);
   initState({ teams, players, cycle });

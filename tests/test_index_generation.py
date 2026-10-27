@@ -44,6 +44,8 @@ class EmptyCycleIndexTests(unittest.TestCase):
             output.mkdir()
             (docs / 'source.html').write_text('source')
             (docs / 'report.html').write_text('generated')
+            (docs / 'playoff_dashboard.html').write_text('disabled feature')
+            (data / 'data_manifest.json').write_text('{}')
             artifact = output / 'ready.csv'
             artifact.write_text('value\n1\n')
             digest = hashlib.sha256(artifact.read_bytes()).hexdigest()
@@ -64,7 +66,9 @@ class EmptyCycleIndexTests(unittest.TestCase):
             (docs / 'site_manifest.json').write_text(json.dumps({
                 'pages': [
                     {'path': 'source.html', 'kind': 'source'},
-                    {'path': 'report.html', 'kind': 'generated', 'requires': ['output/ready.csv']},
+                    {'path': 'report.html', 'kind': 'generated', 'requires': ['output/ready.csv'], 'requiresData': ['team_stats']},
+                    {'path': 'playoff_dashboard.html', 'kind': 'source', 'feature': 'community_predictions',
+                     'requires': ['docs/data/playoff_dashboard.json'], 'requiresData': ['playoffs']},
                 ],
             }))
             (output / 'build_manifest.json').write_text(json.dumps({
@@ -74,7 +78,8 @@ class EmptyCycleIndexTests(unittest.TestCase):
             with patch.object(generate_index, 'ROOT_DIR', root), \
                  patch.object(generate_index, 'DOCS_DIR', docs), \
                  patch.object(generate_index, 'SITE_MANIFEST_PATH', docs / 'site_manifest.json'), \
-                 patch.object(generate_index, 'BUILD_MANIFEST_PATH', output / 'build_manifest.json'):
+                 patch.object(generate_index, 'BUILD_MANIFEST_PATH', output / 'build_manifest.json'), \
+                 patch.object(generate_index, 'validate_browser_data', return_value={'data': {'team_stats': '../../output/team_aggregated_stats.csv'}}):
                 self.assertEqual(generate_index.categorize_files()['Reports & Visualizations'], ['report.html', 'source.html'])
 
                 artifact.write_text('tampered\n')

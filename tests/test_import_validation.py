@@ -78,6 +78,26 @@ def make_export_zips(directory: Path):
 
 
 class ImportValidationTests(unittest.TestCase):
+    def test_completed_games_in_current_export_week_are_valid(self):
+        with tempfile.TemporaryDirectory() as temp:
+            basic_zip, stats_zip, elo, users = make_export_zips(Path(temp))
+            with zipfile.ZipFile(basic_zip) as archive:
+                files = {name: archive.read(name) for name in archive.namelist()}
+            name = "export/MEGA_games.csv"
+            rows = list(csv.DictReader(io.StringIO(files[name].decode("utf-8"))))
+            rows[0]["weekIndex"] = "12"
+            files[name] = csv_bytes(list(rows[0]), rows)
+            with zipfile.ZipFile(basic_zip, "w") as archive:
+                for name, data in files.items():
+                    archive.writestr(name, data)
+            _, metadata = validate_snapshot(basic_zip, stats_zip, elo, users, season_index=0, elo_source_week=8)
+            self.assertEqual(metadata["completedThroughWeek"], 13)
+            self.assertEqual(metadata["exportWeekIndex"], 12)
+            metadata["completedThroughWeek"] = 14
+            metadata["nextScheduledWeek"] = 15
+            with self.assertRaisesRegex(ValueError, "exported display week"):
+                CycleContext.from_metadata(metadata, Path(temp))
+
     def test_valid_fixture_creates_separate_source_and_working_hashes(self):
         with tempfile.TemporaryDirectory() as temp:
             basic_zip, stats_zip, elo, users = make_export_zips(Path(temp))
@@ -153,6 +173,11 @@ class ImportValidationTests(unittest.TestCase):
                     {"team": "Alpha", "past_ranked_sos_avg": "0.5"},
                     {"team": "Beta", "past_ranked_sos_avg": "0.5"},
                 ])
+            for name in (
+                "team_aggregated_stats.csv", "team_player_usage.csv", "team_rankings_stats.csv",
+                "player_team_stints.csv", "traded_players_report.csv", "power_rankings_roster.csv",
+            ):
+                (output / name).write_text("team\nAlpha\n", encoding="utf-8")
             (output / "playoff_probabilities.json").write_text("{}", encoding="utf-8")
             sos_dir = output / "sos"
             sos_dir.mkdir()
@@ -167,6 +192,10 @@ class ImportValidationTests(unittest.TestCase):
             self.assertEqual([row["ELO"] for row in browser_rows], ["1000", "1001"])
             self.assertEqual([row["sourceWeek"] for row in browser_rows], ["8", "8"])
             self.assertIn("Week 12+", (active / "docs/data/mega_elo.csv").read_text(encoding="utf-8"))
+            browser_manifest = json.loads((active / "docs/data/data_manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(browser_manifest["snapshotId"], metadata["snapshotId"][:16])
+            self.assertEqual(browser_manifest["data"]["players"], "../../MEGA_players.csv")
+            self.assertEqual(browser_manifest["data"]["elo"], "current_elo.csv")
 
             previous = Path.cwd()
             try:

@@ -4,6 +4,12 @@
 # CSV files should have LF endings
 *.csv text eol=lf
 
+# Published site files and manifests must hash identically after checkout.
+*.html text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.css text eol=lf
+
 # Python files should have LF endings
 *.py text eol=lf
 

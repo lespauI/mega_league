@@ -1,3 +1,5 @@
+> Current operating contracts: [root README](../README.md), [agent guide](../AGENTS.md), [data inputs](data_inputs.md), and [orchestration](orchestration.md). Documents named `*PLAN.md` and exploratory proposals are design history; check the implementation before treating their task lists or season examples as current requirements. Formula references remain authoritative for their documented calculations.
+
 # MEGA League Project Specs
 
 This folder contains concise specifications for each feature in the MEGA League NFL Stats Analysis project. Each spec outlines purpose, inputs, outputs, behavior, run commands, and acceptance criteria.
@@ -24,6 +26,6 @@ Index:
  - spec/add_metric_helps.md — Docs helper script
 
 Conventions:
-- Run scripts from repo root (`os.getcwd()` expectations)
+- Use explicit paths in package code. Run compatibility commands from the repository root unless supplying absolute script/input/output paths.
 - Inputs live in repo root as `MEGA_*.csv`
 - Primary outputs: `output/` (data) and `docs/` (HTML/visuals)

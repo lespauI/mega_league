@@ -1,8 +1,8 @@
-> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 12 plus completed Week 13 games, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # Docs & Dashboards Overview
 
-The `docs/` folder is the static site for the MEGA League project. The maintained page inventory is `docs/site_manifest.json`; the root navigation checks it against `output/build_manifest.json` before linking artifact-backed pages. HTML pages can be served from the repository root with `python3 -m http.server 8000`.
+The `docs/` folder is the static site for the MEGA League project. The maintained page inventory is `docs/site_manifest.json`; the root navigation checks it against `output/build_manifest.json` before linking artifact-backed pages. HTML pages can be served from the repository root with `python3 -m http.server 8000`. Maintained dashboards use `shared/data.js` and logical keys from `data/data_manifest.json`; URLs resolve relative to that manifest, including when hosted under a project subpath. Missing manifests or datasets produce explicit errors.
 
 ## Playoff & SoS
 
@@ -12,7 +12,7 @@ The `docs/` folder is the static site for the MEGA League project. The maintaine
 | `playoff_race_table.html`    | Generated AFC/NFC playoff probabilities and remaining SoS   | Shared pipeline task; checks the active artifact manifest      |
 | `sos_season1.html`           | Season 1 SoS (ELO) table and charts                         | Uses current SoS outputs and the declared-week `docs/data/current_elo.csv`; old season pages remain available by URL |
 | `sos_graphs.html`            | Rankings-based SoS visualizations                            | Uses the active rankings SoS output                            |
-| `sos_season2.html`, `sos_season3.html`, `sos_season4.html` | Preserved season-specific pages | Retained for compatibility; root navigation shows only the active season |
+| `sos_season2.html`, `sos_season3.html`, `sos_season4.html` | Preserved season-specific pages | Retained for compatibility; a mismatched active season shows a clear error. Shared ELO data loading preserves the extra roster-power views in seasons 3/4; rankings SoS remains a separate model |
 | `week18_simulator.html`      | Week 18 matchup simulator for the active snapshot           | Full/playoff pipeline, or `python3 scripts/week18_simulator.py --season-index 0` |
 | `playoff_dashboard.html`     | Legacy bracket and community-prediction page             | Not enabled for Madden 27; configure a separate prediction store before generating current data |
 
@@ -39,13 +39,13 @@ python3 scripts/run_all_stats.py
 
 | Page                                   | Purpose                                                | How to (re)generate / update data                                                 |
 |----------------------------------------|--------------------------------------------------------|-----------------------------------------------------------------------------------|
-| `roster_cap_tool/index.html`          | Interactive Spotrac‑style roster & cap manager         | Static JS app; loads CSVs directly from project root          |
+| `roster_cap_tool/index.html`          | Interactive Spotrac‑style roster & cap manager         | Static JS app; resolves current root CSVs through the browser data manifest          |
 | `power_rankings_roster.html`          | Generated roster power rankings report (table + narrative) | `python3 scripts/run_all.py --season-index 0` (writes CSV + HTML in staging) |
 | `power_rankings_roster_charts.html`   | X/Y scatter charts from roster power scores            | Reads `output/power_rankings_roster.csv` produced by `scripts/power_rankings_roster.py` |
 
 For full details on the roster cap tool, see `docs/roster_cap_tool/USAGE.md`.
 
-Cap and depth-chart browser storage is still edition- and season-unscoped. Existing browser data is left untouched. Do not clear it as part of a site refresh; a deliberate export/import migration remains separate work.
+Cap and depth-chart browser storage is scoped by game edition, CSV season, and franchise calendar year. The in-page controls allow deliberate copying or backup import of legacy entries without overwriting existing cycle data. Legacy entries remain intact. Do not clear browser storage during a site refresh.
 
 ## Misc & Utilities
 
@@ -61,3 +61,9 @@ If you add a new dashboard under `docs/`, consider:
 - Which CSV/JSON outputs it reads from.
 - Which orchestrator or stats script should be mentioned as the primary way to refresh its data.
 - Adding a short entry to the appropriate domain table above.
+
+## Source and generated files
+
+Maintained HTML/JS stays under `docs/` for existing URLs. Generated pages are explicitly registered in `mega/pipeline/artifacts.py`; their Python renderers live under `mega/reporting/` where extracted. Never delete all HTML or all `output/` files as cleanup. `docs/shared/elo_sos.js` and `sos_elo_season.js` share season-aware ELO data preparation without combining it with rankings-based SoS.
+
+Run `python3 scripts/verify_site.py` after a local full build. It validates enabled pages, declared datasets, local script/module dependencies, and artifact hashes for the active snapshot. The staged pipeline runs the same gate before publication.
