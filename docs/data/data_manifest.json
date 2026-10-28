@@ -1,12 +1,12 @@
 {
   "cycle": {
     "calendarYear": 2026,
-    "completedThroughWeek": 13,
+    "completedThroughWeek": 14,
     "csvSeasonIndex": 0,
     "displaySeason": 1,
     "edition": "Madden 27",
     "eloSourceWeek": 8,
-    "exportWeekIndex": 12
+    "exportWeekIndex": 13
   },
   "data": {
     "elo": "current_elo.csv",
@@ -25,5 +25,5 @@
     "trades": "../../output/traded_players_report.csv"
   },
   "schemaVersion": 1,
-  "snapshotId": "0369b7343553771a"
+  "snapshotId": "7de3db2befd122b2"
 }

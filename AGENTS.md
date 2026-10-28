@@ -2,7 +2,7 @@
 
 ## Current cycle and boundaries
 
-- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 12 plus completed Week 13 games. Team/rankings exports have `weekIndex=12`; scheduled games at that index are display Week 13.
+- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 13 plus completed Week 14 games. Team/rankings exports have `weekIndex=13`; scheduled games at that index are display Week 14.
 - Madden 26 is archived under `archive/madden-26/` (2026-10-24). See its `README.md` and `manifest.json` for provenance, inventory, and recovery.
 - Treat the archive as immutable historical evidence. Exclude `archive/` from normal searches and data discovery. Read it only for explicit historical work or a deliberate comparison.
 - Never restore Madden 26 CSVs into the active root as a fallback for missing Madden 27 data. Do not create fabricated league data or empty results to make a pipeline appear successful.
@@ -63,7 +63,7 @@ Reusable references: `Formula.md`, `spec/`, `scripts/README.md`, `docs/README.md
 
 The user-maintained [export and update workflow](README.md#export-and-update-workflow) is the standard refresh procedure: request **Basic Info** and **Stats** at `https://neonsportz.com/leagues/MEGA/export`, delivered to **lespaul1488@gmail.com**; download the ZIP attachments from both emails, extract the CSVs into the repository root, run and verify the configured pipelines, commit and push a feature branch, then open and merge its pull request. Documenting this procedure does not itself request an export, email access, or Git publication; perform those actions when the user asks to execute the workflow.
 
-The approved ELO snapshot is **Week 8**, used with the exports refreshed on 2026-10-27 (including completed Week 13 games); preserve that source label. `mega_elo.csv` holds the source ratings and GM labels, `MEGA_users.csv` maps exported NeonSportz usernames separately, and `docs/data/import_metadata.json` records source-byte and normalized working-file hashes plus week conventions. Current playoff calculations and browser charts must use the declared metadata week; `docs/data/current_elo.csv` is the one-week browser view. Do not overwrite `MEGA_teams.csv` usernames with screenshot GM labels.
+The approved ELO snapshot is **Week 8**, used with the exports refreshed on 2026-10-28 (including completed Week 14 games); preserve that source label. `mega_elo.csv` holds the source ratings and GM labels, `MEGA_users.csv` maps exported NeonSportz usernames separately, and `docs/data/import_metadata.json` records source-byte and normalized working-file hashes plus week conventions. Current playoff calculations and browser charts must use the declared metadata week; `docs/data/current_elo.csv` is the one-week browser view. Do not overwrite `MEGA_teams.csv` usernames with screenshot GM labels.
 
 See `spec/data_inputs.md` for columns. Import fresh, mutually consistent `MEGA_teams.csv`, `MEGA_games.csv`, `MEGA_players.csv`, `MEGA_rankings.csv`, positional stat exports, draft/trade exports as required, and fresh `mega_elo.csv` for ELO analysis. Preserve the lower-case on-disk ELO filename; some older prose uses a different spelling.
 

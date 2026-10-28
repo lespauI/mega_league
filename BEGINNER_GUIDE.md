@@ -1,6 +1,6 @@
 # Getting started with MEGA League analytics
 
-The current cycle is Madden 27, season 1 (`seasonIndex=0`), with results through Week 12 plus completed Week 13 games and approved Week 8 ELO ratings. Madden 26 history stays under `archive/madden-26/`.
+The current cycle is Madden 27, season 1 (`seasonIndex=0`), with results through Week 13 plus completed Week 14 games and approved Week 8 ELO ratings. Madden 26 history stays under `archive/madden-26/`.
 
 ## Setup
 
