@@ -1,4 +1,4 @@
-> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 13 plus completed Week 14 games, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 14, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # Scripts Overview
 

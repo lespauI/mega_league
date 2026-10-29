@@ -1,21 +1,21 @@
 id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_gotw,gotw_reason,seasonIndex,stageIndex,weekIndex,status,simmed,is_superseded,home_fw,away_fw,concession,scheduled_date_time,home_team_spread,away_team_spread,spread_source,spread_locked,gotw_pickem_deadline,game_summary,game_preview,discord_channel_id,availability_message_id,rivalry,rivalry_label
-31604236,545783882,MEGA M27,Chargers,Cardinals,14,21,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604232,545783878,MEGA M27,Texans,Bills,34,37,False,False,,0,1,0,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
-31604230,545783876,MEGA M27,Panthers,Bears,3,23,False,False,,0,1,0,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
 31604229,545783875,MEGA M27,Steelers,Falcons,30,24,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604234,545783880,MEGA M27,Vikings,Packers,18,26,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604233,545783879,MEGA M27,Raiders,Dolphins,17,24,False,False,,0,1,0,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
+31604230,545783876,MEGA M27,Panthers,Bears,3,23,False,False,,0,1,0,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
 31604231,545783877,MEGA M27,Jaguars,Browns,17,24,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604235,545783881,MEGA M27,Eagles,Commanders,19,13,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604232,545783878,MEGA M27,Texans,Bills,34,37,False,False,,0,1,0,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
 31604237,545783883,MEGA M27,Giants,Cowboys,24,0,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604228,545783874,MEGA M27,Colts,Ravens,15,52,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604227,545783873,MEGA M27,Titans,Jets,39,7,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604226,545783872,MEGA M27,Lions,Saints,14,28,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604225,545783871,MEGA M27,Bengals,Buccaneers,27,21,False,False,,0,1,0,2,False,False,False,True,,,0.0,0.0,legacy,True,,,,,,,
-31604235,545783881,MEGA M27,Eagles,Commanders,19,13,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604238,545783884,MEGA M27,Chiefs,Broncos,7,30,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604223,545783869,MEGA M27,Seahawks,Patriots,22,35,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604224,545783870,MEGA M27,Rams,49ers,7,21,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604251,545783897,MEGA M27,Cardinals,Seahawks,45,21,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604236,545783882,MEGA M27,Chargers,Cardinals,14,21,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604247,545783893,MEGA M27,Texans,Bengals,17,7,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604253,545783899,MEGA M27,Chiefs,Colts,20,24,False,False,,0,1,1,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604254,545783900,MEGA M27,Rams,Giants,17,3,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604248,545783894,MEGA M27,Broncos,Jaguars,31,10,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
@@ -27,50 +27,50 @@ id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_go
 31604245,545783891,MEGA M27,Buccaneers,Browns,31,17,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604246,545783892,MEGA M27,Ravens,Saints,34,17,False,False,,0,1,1,2,False,False,False,True,,,0.0,0.0,legacy,True,,,,,,,
 31604239,545783885,MEGA M27,Bills,Lions,42,14,False,False,,0,1,1,2,False,False,False,True,,,0.0,0.0,legacy,True,,,,,,,
-31604247,545783893,MEGA M27,Texans,Bengals,17,7,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604252,545783898,MEGA M27,49ers,Dolphins,14,42,False,False,,0,1,1,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
 31604249,545783895,MEGA M27,Chargers,Raiders,21,31,False,False,,0,1,1,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604250,545783896,MEGA M27,Cowboys,Commanders,9,37,False,False,,0,1,1,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604252,545783898,MEGA M27,49ers,Dolphins,14,42,False,False,,0,1,1,3,False,False,True,False,,,0.0,0.0,legacy,True,,,,,,,
-31604268,545783914,MEGA M27,Saints,Raiders,14,40,False,False,,0,1,2,3,False,False,False,False,,,-1.5,1.5,legacy,True,,,,,,,
-31604258,545783904,MEGA M27,Lions,Jets,7,20,False,False,,0,1,2,3,False,False,False,False,,,4.5,-4.5,legacy,True,,,,,,,
-31604265,545783911,MEGA M27,49ers,Cardinals,21,20,False,False,,0,1,2,2,False,False,False,False,,,-6.5,6.5,legacy,True,,,,,,,
-31604269,545783915,MEGA M27,Broncos,Rams,27,17,False,False,,0,1,2,2,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
-31604266,545783912,MEGA M27,Buccaneers,Vikings,23,14,False,False,,0,1,2,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604251,545783897,MEGA M27,Cardinals,Seahawks,45,21,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604270,545783916,MEGA M27,Bears,Eagles,3,21,False,False,,0,1,2,3,False,False,False,False,,,4.5,-4.5,legacy,True,,,,,,,
-31604267,545783913,MEGA M27,Cowboys,Ravens,20,21,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604269,545783915,MEGA M27,Broncos,Rams,27,17,False,False,,0,1,2,2,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
+31604265,545783911,MEGA M27,49ers,Cardinals,21,20,False,False,,0,1,2,2,False,False,False,False,,,-6.5,6.5,legacy,True,,,,,,,
+31604266,545783912,MEGA M27,Buccaneers,Vikings,23,14,False,False,,0,1,2,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604257,545783903,MEGA M27,Browns,Panthers,20,27,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604256,545783902,MEGA M27,Bills,Chargers,31,28,False,False,,0,1,2,2,False,False,False,True,,,1.5,-1.5,legacy,True,,,,,,,
 31604264,545783910,MEGA M27,Jaguars,Patriots,21,17,True,True,,0,1,2,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604267,545783913,MEGA M27,Cowboys,Ravens,20,21,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604268,545783914,MEGA M27,Saints,Raiders,14,40,False,False,,0,1,2,3,False,False,False,False,,,-1.5,1.5,legacy,True,,,,,,,
 31604263,545783909,MEGA M27,Commanders,Seahawks,23,13,False,False,,0,1,2,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604262,545783908,MEGA M27,Steelers,Bengals,0,35,False,False,,0,1,2,3,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
 31604261,545783907,MEGA M27,Giants,Titans,13,48,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604260,545783906,MEGA M27,Dolphins,Chiefs,14,7,False,False,,0,1,2,2,False,False,False,True,,,11.5,-11.5,legacy,True,,,,,,,
 31604259,545783905,MEGA M27,Colts,Texans,16,26,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604256,545783902,MEGA M27,Bills,Chargers,31,28,False,False,,0,1,2,2,False,False,False,True,,,1.5,-1.5,legacy,True,,,,,,,
+31604258,545783904,MEGA M27,Lions,Jets,7,20,False,False,,0,1,2,3,False,False,False,False,,,4.5,-4.5,legacy,True,,,,,,,
 31604255,545783901,MEGA M27,Packers,Falcons,26,27,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604285,545783931,MEGA M27,Panthers,Lions,35,27,False,False,,0,1,3,2,False,False,False,False,,,8.5,-8.5,legacy,True,,,,,,,
-31604271,545783917,MEGA M27,Browns,Steelers,27,10,False,False,,0,1,3,2,False,False,False,False,,,-2.5,2.5,legacy,True,,,,,,,
-31604275,545783921,MEGA M27,Bengals,Jaguars,27,13,False,False,,0,1,3,2,False,False,False,False,,,11.5,-11.5,legacy,True,,,,,,,
-31604276,545783922,MEGA M27,Giants,Cardinals,35,38,False,False,,0,1,3,3,False,False,False,False,,,-2.5,2.5,legacy,True,,,,,,,
-31604278,545783924,MEGA M27,Buccaneers,Packers,31,24,False,False,,0,1,3,2,False,False,False,False,,,1.5,-1.5,legacy,True,,,,,,,
-31604283,545783929,MEGA M27,49ers,Broncos,21,14,False,False,,0,1,3,2,False,False,False,False,,,-11.5,11.5,legacy,True,,,,,,,
-31604282,545783928,MEGA M27,Raiders,Chiefs,31,28,False,False,,0,1,3,2,False,False,False,False,,,2.5,-2.5,legacy,True,,,,,,,
-31604272,545783918,MEGA M27,Commanders,Colts,12,19,False,False,,0,1,3,3,False,False,False,False,,,18.5,-18.5,legacy,True,,,,,,,
-31604273,545783919,MEGA M27,Bills,Patriots,23,6,False,False,,0,1,3,2,False,False,False,True,,,-2.5,2.5,legacy,True,,,,,,,
-31604274,545783920,MEGA M27,Bears,Jets,32,13,False,False,,0,1,3,2,False,False,False,False,,,17.5,-17.5,legacy,True,,,,,,,
-31604281,545783927,MEGA M27,Vikings,Dolphins,12,34,False,False,,0,1,3,3,False,False,True,False,,,-5.5,5.5,legacy,True,,,,,,,
-31604280,545783926,MEGA M27,Texans,Cowboys,35,14,False,False,,0,1,3,2,False,False,False,False,,,6.5,-6.5,legacy,True,,,,,,,
-31604279,545783925,MEGA M27,Ravens,Titans,14,17,False,False,,0,1,3,3,False,False,True,False,,,-4.5,4.5,legacy,True,,,,,,,
-31604277,545783923,MEGA M27,Eagles,Rams,35,21,False,False,,0,1,3,2,False,False,False,False,,,7.5,-7.5,legacy,True,,,,,,,
 31604284,545783930,MEGA M27,Seahawks,Chargers,27,20,True,True,,0,1,3,2,False,False,False,False,,2026-09-28 18:00:00,-6.5,6.5,legacy,True,,,,,,,
 31604286,545783932,MEGA M27,Saints,Falcons,28,20,False,False,,0,1,3,2,False,False,False,False,,,-4.5,4.5,legacy,True,,,,,,,
-31604298,545783944,MEGA M27,Cardinals,Lions,24,6,False,False,,0,1,4,2,False,False,False,False,,,8.5,-8.5,legacy,True,,,,,,,
+31604271,545783917,MEGA M27,Browns,Steelers,27,10,False,False,,0,1,3,2,False,False,False,False,,,-2.5,2.5,legacy,True,,,,,,,
+31604283,545783929,MEGA M27,49ers,Broncos,21,14,False,False,,0,1,3,2,False,False,False,False,,,-11.5,11.5,legacy,True,,,,,,,
+31604278,545783924,MEGA M27,Buccaneers,Packers,31,24,False,False,,0,1,3,2,False,False,False,False,,,1.5,-1.5,legacy,True,,,,,,,
+31604275,545783921,MEGA M27,Bengals,Jaguars,27,13,False,False,,0,1,3,2,False,False,False,False,,,11.5,-11.5,legacy,True,,,,,,,
+31604276,545783922,MEGA M27,Giants,Cardinals,35,38,False,False,,0,1,3,3,False,False,False,False,,,-2.5,2.5,legacy,True,,,,,,,
+31604282,545783928,MEGA M27,Raiders,Chiefs,31,28,False,False,,0,1,3,2,False,False,False,False,,,2.5,-2.5,legacy,True,,,,,,,
+31604277,545783923,MEGA M27,Eagles,Rams,35,21,False,False,,0,1,3,2,False,False,False,False,,,7.5,-7.5,legacy,True,,,,,,,
+31604272,545783918,MEGA M27,Commanders,Colts,12,19,False,False,,0,1,3,3,False,False,False,False,,,18.5,-18.5,legacy,True,,,,,,,
+31604281,545783927,MEGA M27,Vikings,Dolphins,12,34,False,False,,0,1,3,3,False,False,True,False,,,-5.5,5.5,legacy,True,,,,,,,
+31604273,545783919,MEGA M27,Bills,Patriots,23,6,False,False,,0,1,3,2,False,False,False,True,,,-2.5,2.5,legacy,True,,,,,,,
+31604274,545783920,MEGA M27,Bears,Jets,32,13,False,False,,0,1,3,2,False,False,False,False,,,17.5,-17.5,legacy,True,,,,,,,
+31604280,545783926,MEGA M27,Texans,Cowboys,35,14,False,False,,0,1,3,2,False,False,False,False,,,6.5,-6.5,legacy,True,,,,,,,
+31604279,545783925,MEGA M27,Ravens,Titans,14,17,False,False,,0,1,3,3,False,False,True,False,,,-4.5,4.5,legacy,True,,,,,,,
+31604285,545783931,MEGA M27,Panthers,Lions,35,27,False,False,,0,1,3,2,False,False,False,False,,,8.5,-8.5,legacy,True,,,,,,,
+31604297,545783943,MEGA M27,Packers,Bears,16,27,False,False,,0,1,4,3,False,False,False,False,,,-9.5,9.5,legacy,True,,,,,,,
 31604292,545783938,MEGA M27,Saints,Vikings,10,3,False,False,,0,1,4,2,False,False,False,False,,2026-09-30 11:00:00,-4.5,4.5,legacy,True,,,,,,,
 31604293,545783939,MEGA M27,Jets,Browns,31,35,True,True,,0,1,4,3,False,False,False,False,,,-7.5,7.5,legacy,True,,,,,,,
 31604294,545783940,MEGA M27,Steelers,Colts,6,31,False,False,,0,1,4,3,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
 31604295,545783941,MEGA M27,Commanders,Giants,49,31,False,False,,0,1,4,2,False,False,False,False,,,9.5,-9.5,legacy,True,,,,,,,
 31604291,545783937,MEGA M27,Patriots,Raiders,12,34,False,False,,0,1,4,3,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
 31604296,545783942,MEGA M27,Chargers,Broncos,21,28,False,False,,0,1,4,3,False,False,False,False,,2026-09-29 18:00:00,-13.5,13.5,legacy,True,,,,,,,
-31604297,545783943,MEGA M27,Packers,Bears,16,27,False,False,,0,1,4,3,False,False,False,False,,,-9.5,9.5,legacy,True,,,,,,,
+31604298,545783944,MEGA M27,Cardinals,Lions,24,6,False,False,,0,1,4,2,False,False,False,False,,,8.5,-8.5,legacy,True,,,,,,,
 31604299,545783945,MEGA M27,Seahawks,49ers,6,41,False,False,,0,1,4,3,False,False,False,False,,2026-09-29 18:00:00,-9.5,9.5,legacy,True,,,,,,,
 31604300,545783946,MEGA M27,Falcons,Ravens,28,31,False,False,,0,1,4,3,False,False,False,False,,,-7.5,7.5,legacy,True,,,,,,,
 31604287,545783933,MEGA M27,Cowboys,Buccaneers,31,28,False,False,,0,1,4,2,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
@@ -78,19 +78,17 @@ id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_go
 31604289,545783935,MEGA M27,Titans,Texans,26,0,False,False,,0,1,4,2,False,False,False,False,,,5.5,-5.5,legacy,True,,,,,,,
 31604290,545783936,MEGA M27,Dolphins,Bengals,29,24,False,False,,0,1,4,2,False,False,False,True,,,0.0,0.0,legacy,True,,,,,,,
 31604301,545783947,MEGA M27,Rams,Bills,16,20,False,False,,0,1,4,3,False,False,True,False,,,-0.5,0.5,legacy,True,,,,,,,
-31604303,545783949,MEGA M27,Jaguars,Texans,19,31,False,False,,0,1,5,3,False,False,False,False,,,-8.5,8.5,legacy,True,,"The Jacksonville Jaguars pulled away from the Houston Texans, 31-19, behind a dominant rushing performance and a balanced offensive attack.
+31604305,545783951,MEGA M27,Browns,Ravens,14,13,False,False,,0,1,5,2,False,False,False,False,,,-3.5,3.5,legacy,True,,"The Baltimore Ravens edged the Cleveland Browns 14-13 in a defensive struggle defined by field position, pressure and a narrow margin for error.
 
-Jacksonville controlled the game on the ground, piling up 172 rushing yards compared with Houston’s 54. Bhayshul Tuten was the catalyst, rushing 16 times for 176 yards and a touchdown. His explosive runs repeatedly flipped field position and helped the Jaguars sustain drives, taking pressure off quarterback Trevor Lawrence. Lawrence completed an efficient performance with 267 passing yards, two touchdowns and no interceptions, while Josh Cameron added four catches for 78 yards and a touchdown. Jakobi Meyers also contributed four receptions for 57 yards.
+Baltimore’s offense produced 201 total yards, including 79 on the ground, while avoiding turnovers throughout the game. Lamar Jackson passed for 186 yards without a touchdown or interception, and his connection with Mark Andrews provided the Ravens’ most consistent big-play threat. Andrews finished with four receptions for 77 yards, while Zay Flowers added a 45-yard catch that helped generate crucial field-position swings. Derrick Henry contributed 37 rushing yards on 13 carries as Baltimore relied on a balanced attack to protect its slim lead.
 
-Houston struggled to generate consistent offense, finishing with only 202 total yards. C.J. Stroud passed for 158 yards and two touchdowns without a turnover, but the Texans’ limited rushing production made it difficult to maintain momentum. ---- Marks managed 38 yards on 11 carries, leaving Houston too one-dimensional for much of the afternoon.
+Cleveland managed only 181 total yards and 40 rushing yards, but remained within striking distance behind Taylen Green, who threw for 148 yards without a touchdown or interception. Quinshon Judkins was the Browns’ leading rusher with 48 yards on 12 attempts. Cleveland’s defense repeatedly disrupted Baltimore’s rhythm, with Jared Verse recording 3.5 sacks and six tackles and Byron Young adding three sacks. Their pressure kept the Ravens from finding the end zone through the air and gave Cleveland opportunities to stay in the contest.
 
-Defensively, the Texans did create pressure. Sheldon Rankins recorded two sacks, and Derek Stingley Jr. led Houston with six total tackles. Jacksonville’s Josh Hines-Allen added a sack, helping disrupt Houston’s passing game at key moments. Caleb Ransaw paced the Jaguars with three tackles.
+Trenton Simpson led Baltimore with six tackles as the Ravens’ defense held firm when it mattered most. Although Cleveland committed the game’s only turnover, neither team recorded an interception or fumble recovery in the defensive statistics provided. Ultimately, Baltimore’s ability to avoid mistakes and make just enough plays offensively proved decisive, allowing the Ravens to preserve a one-point victory in a tightly contested finish.","Baltimore Ravens visit the Cleveland Browns with both teams coming off records below .500: Cleveland is 2-3-0, while Baltimore is 1-4-0. The Ravens hold the edge in total offense, averaging 309 yards per game to Cleveland’s 282, and rushing production, 156 yards to 86. The Browns average more passing yards, 196 to Baltimore’s 154. Both teams average two turnovers per game.
 
-The decisive factor was Jacksonville’s efficiency and explosiveness. The Jaguars amassed 421 total yards—more than twice Houston’s output—and protected the football throughout, with neither team committing a turnover. Jacksonville’s combination of Tuten’s big-play rushing and Lawrence’s accurate passing ultimately overwhelmed the Texans and secured the 12-point victory.","Jacksonville Jaguars host the Houston Texans with a 4-1-0 record, while Houston enters at 2-3-0. Jacksonville holds the statistical edge in season averages, producing 313 total yards per game compared with Houston’s 256. The Jaguars also lead in passing, 210 to 171 yards, and rushing, 103 to 85, while averaging fewer turnovers: one per game compared with Houston’s three.
+Baltimore’s listed performers include Derrick Henry, who has 146 rushing yards and two touchdowns, and Mark Andrews, with 10 receptions, 120 yards, and two touchdowns. Roquan Smith leads the Ravens with 10 tackles, while Jaylinn Hawkins has two interceptions. Cleveland’s Quinshon Judkins has 109 rushing yards, and Harold Fannin Jr has 93 receiving yards and two touchdowns. Jared Verse and Byron Young each have 2.50 sacks, while Grant Delpit has two interceptions and one forced fumble. Cleveland’s listed Taylen Green entries include both a three-interception game and a three-touchdown game.
 
-C.J. Stroud leads Houston’s listed passing performance with 326 yards, three touchdowns, and no interceptions. Trevor Lawrence has 261 yards, three touchdowns, and one interception for Jacksonville. Bhayshul Tuten has 162 rushing yards and three touchdowns for the Jaguars, while David Montgomery has 118 yards and one touchdown for the Texans. Brian Thomas Jr has two receiving touchdowns for Jacksonville, and Kayshon Boutte has 128 receiving yards for Houston. Travis Hunter has two interceptions for Jacksonville. The duplicate sack and turnover entries provide no additional distinct totals.
-
-Prediction: Jacksonville Jaguars 27, Houston Texans 20.",,,,
+Prediction: Baltimore Ravens 27, Cleveland Browns 23.",,,,
 31604306,545783952,MEGA M27,Colts,Titans,12,30,False,False,,0,1,5,3,False,False,False,False,,,-12.5,12.5,legacy,True,,"The Indianapolis Colts turned four Tennessee turnovers into a decisive 30-12 victory over the Titans, overcoming a narrow total-yardage disadvantage to control the game’s most important moments.
 
 Tennessee moved the ball effectively at times, finishing with 283 yards, including 118 on the ground. Tony Pollard led the Titans’ offense with 118 rushing yards and a touchdown on just 18 carries, while Wan’Dale Robinson added nine catches for 78 yards. But the Titans’ drives repeatedly stalled because of mistakes from quarterback Cam Ward, who threw four interceptions despite passing for 198 yards and a touchdown.
@@ -106,62 +104,15 @@ Daniel Jones has 205 passing yards, four touchdowns, and three interceptions for
 Defensively, Kevin Winston Jr. leads Tennessee with seven tackles, while Camryn Bynum has six for Indianapolis. DeForest Buckner and Oluwafemi Oladejo each have 2.00 sacks.
 
 Prediction: Indianapolis Colts 24, Tennessee Titans 17, based on the Colts’ stronger yardage averages and listed performers.",,,,
-31604305,545783951,MEGA M27,Browns,Ravens,14,13,False,False,,0,1,5,2,False,False,False,False,,,-3.5,3.5,legacy,True,,"The Baltimore Ravens edged the Cleveland Browns 14-13 in a defensive struggle defined by field position, pressure and a narrow margin for error.
+31604309,545783955,MEGA M27,Eagles,Panthers,24,0,False,False,,0,1,5,2,False,False,False,False,,,9.5,-9.5,legacy,True,,"The Carolina Panthers turned a low-yardage contest into a decisive 24-0 victory over the Philadelphia Eagles, riding a dominant defensive effort and timely plays from Bryce Young’s offense.
 
-Baltimore’s offense produced 201 total yards, including 79 on the ground, while avoiding turnovers throughout the game. Lamar Jackson passed for 186 yards without a touchdown or interception, and his connection with Mark Andrews provided the Ravens’ most consistent big-play threat. Andrews finished with four receptions for 77 yards, while Zay Flowers added a 45-yard catch that helped generate crucial field-position swings. Derrick Henry contributed 37 rushing yards on 13 carries as Baltimore relied on a balanced attack to protect its slim lead.
+Philadelphia moved the ball at times, finishing with 229 total yards, but four turnovers repeatedly ended promising possessions. Eagles quarterback Jalen Hurts completed enough passes to produce 189 yards, yet his four interceptions proved costly. Carolina defenders Bobby Okereke and Zakee Wheatley each recorded an interception, helping prevent Philadelphia from converting field position into points. Okereke and Mike Jackson also led the Panthers with five total tackles apiece.
 
-Cleveland managed only 181 total yards and 40 rushing yards, but remained within striking distance behind Taylen Green, who threw for 148 yards without a touchdown or interception. Quinshon Judkins was the Browns’ leading rusher with 48 yards on 12 attempts. Cleveland’s defense repeatedly disrupted Baltimore’s rhythm, with Jared Verse recording 3.5 sacks and six tackles and Byron Young adding three sacks. Their pressure kept the Ravens from finding the end zone through the air and gave Cleveland opportunities to stay in the contest.
+Carolina’s offense was hardly explosive overall, generating 180 yards, but it capitalized when opportunities arose. Young threw for 133 yards and two touchdowns despite being intercepted three times. Tetairoa McMillan provided the biggest receiving impact for the Panthers, catching three passes for 76 yards and a touchdown. Jonathon Brooks supplied balance with 71 rushing yards on 14 carries, helping Carolina control the game’s tempo.
 
-Trenton Simpson led Baltimore with six tackles as the Ravens’ defense held firm when it mattered most. Although Cleveland committed the game’s only turnover, neither team recorded an interception or fumble recovery in the defensive statistics provided. Ultimately, Baltimore’s ability to avoid mistakes and make just enough plays offensively proved decisive, allowing the Ravens to preserve a one-point victory in a tightly contested finish.","Baltimore Ravens visit the Cleveland Browns with both teams coming off records below .500: Cleveland is 2-3-0, while Baltimore is 1-4-0. The Ravens hold the edge in total offense, averaging 309 yards per game to Cleveland’s 282, and rushing production, 156 yards to 86. The Browns average more passing yards, 196 to Baltimore’s 154. Both teams average two turnovers per game.
+The Eagles’ best offensive connection came from Dallas Goedert, who caught seven passes for 87 yards, while Saquon Barkley managed 39 rushing yards on 12 attempts. Philadelphia’s defense recorded sacks from Jonathan Greenard and Zack Baun, but could not consistently slow Carolina in the red zone.
 
-Baltimore’s listed performers include Derrick Henry, who has 146 rushing yards and two touchdowns, and Mark Andrews, with 10 receptions, 120 yards, and two touchdowns. Roquan Smith leads the Ravens with 10 tackles, while Jaylinn Hawkins has two interceptions. Cleveland’s Quinshon Judkins has 109 rushing yards, and Harold Fannin Jr has 93 receiving yards and two touchdowns. Jared Verse and Byron Young each have 2.50 sacks, while Grant Delpit has two interceptions and one forced fumble. Cleveland’s listed Taylen Green entries include both a three-interception game and a three-touchdown game.
-
-Prediction: Baltimore Ravens 27, Cleveland Browns 23.",,,,
-31604311,545783957,MEGA M27,Rams,Cardinals,17,14,False,False,,0,1,5,2,False,False,False,False,,,-1.5,1.5,legacy,True,,"The Arizona Cardinals held off the Los Angeles Rams 17-14 in a defensive struggle marked by sharp contrasts in offensive production and several momentum-turning plays.
-
-Arizona’s passing game provided the difference. Cardinals quarterback Carson Beck threw for 302 yards and two touchdowns, overcoming one interception to lead an offense that generated 366 total yards. Tight end Trey McBride was his most productive target, catching five passes for 73 yards and a touchdown, while Marvin Harrison Jr. added four receptions for 58 yards. Arizona also received a strong contribution on the ground from Jeremiyah Love, who ran 15 times for 92 yards.
-
-The Rams moved the ball far less efficiently, finishing with 208 total yards and only 83 passing yards. Their rushing attack kept them competitive, however, as Blake Corum broke loose for 110 yards on just 10 carries. Matthew Stafford threw for 90 yards and a touchdown, but his interception limited Los Angeles’ ability to sustain late pressure.
-
-Both defenses created pivotal takeaways. Rams linebacker Nate Landman intercepted Beck, while Cardinals defensive back Dadrion Taylor-Demerson picked off Stafford. Los Angeles’ pass rush also repeatedly disrupted Arizona, with Aaron Donald recording two sacks and Braden Fiske adding another. Arizona countered with steady coverage and timely stops, led by Marshon Lattimore’s five tackles.
-
-Ultimately, Arizona’s superior passing production and McBride’s touchdown gave the Cardinals enough separation to withstand the Rams’ rushing attack. The one-score finish reflected Los Angeles’ defensive pressure, but Arizona’s balance and ability to capitalize on its offensive opportunities secured the victory.","Los Angeles Rams host the Arizona Cardinals with a 4-1-0 record, while Arizona enters at 1-4-0. The Rams average 253 total yards per game, including 155 passing and 97 rushing, with one turnover. The Cardinals produce more total offense at 327 yards per game, driven by 280 passing yards, but average three turnovers and 47 rushing yards.
-
-Arizona Cardinals quarterback Carson Beck is listed with two passing performances: 350 yards, one touchdown, and one interception, plus 317 yards, one touchdown, and four interceptions. Los Angeles Rams’ Kyren Williams has rushing lines of 103 yards and 99 yards, with one touchdown in each. Arizona Cardinals’ Marvin Harrison Jr has 173 receiving yards and one touchdown, while Los Angeles Rams’ Davante Adams has 148 yards and two touchdowns.
-
-Defensively, Zaven Collins and Aaron Donald each have two sacks. Jaylen Watson and Nate Landman each have two interceptions for the Rams.
-
-Prediction: Los Angeles Rams 24, Arizona Cardinals 20, with the Rams’ stronger record and lower turnover average deciding a close game.",,,,
-31604310,545783956,MEGA M27,Buccaneers,Steelers,20,23,False,False,,0,1,5,3,False,False,False,False,,,1.5,-1.5,legacy,True,,"The Tampa Bay Buccaneers held off the Pittsburgh Steelers 23-20 in a turnover-filled game decided by a narrow late advantage.
-
-Tampa Bay generated 314 total yards, including 239 through the air and 75 on the ground, while Pittsburgh finished with 253 yards. The Steelers found their biggest offensive spark through tight end Pat Freiermuth, who caught six passes for 131 yards and a touchdown. Chris Godwin Jr. was equally influential for the Buccaneers, producing 114 yards and a touchdown on four receptions.
-
-Turnovers shaped the contest. Pittsburgh quarterback Drew Allar threw for 208 yards and a touchdown but was intercepted twice. Tampa Bay quarterback Baker Mayfield passed for 195 yards and a touchdown, though the Buccaneers gave the ball away three times overall. Steelers linebacker Cole Holcomb provided two of Pittsburgh’s takeaways with a pair of interceptions, keeping the game within reach. Tampa Bay cornerback Zyon McCollum answered with an interception of his own.
-
-The Buccaneers also received valuable production from Mayfield on the ground. He rushed six times for 36 yards, while Kenny Gainwell added 37 yards on 12 carries, helping Tampa Bay control enough of the running game to complement its passing attack.
-
-Defensively, Josiah Trotter led the Buccaneers with seven tackles and added a sack, while Steelers defensive tackle Keeanu Benton also recorded a sack. Jalen Ramsey paced Pittsburgh with five tackles.
-
-Despite Pittsburgh’s defensive pressure and Holcomb’s takeaways, Tampa Bay’s greater yardage total and one-turnover edge proved decisive. The Buccaneers’ balanced offensive effort ultimately secured the three-point victory, while Pittsburgh was left to rue missed opportunities in a game where both quarterbacks faced persistent turnover pressure.","Tampa Bay Buccaneers host the Pittsburgh Steelers in a matchup between teams with contrasting records: Tampa Bay is 2-3-0, while Pittsburgh is 3-2-0. The teams average the same total yardage at 284 per game, but Tampa Bay produces more rushing yards, 122 to Pittsburgh’s 101, while Pittsburgh averages more passing yards, 183 to Tampa Bay’s 162. Tampa Bay averages one turnover per game compared with Pittsburgh’s two.
-
-Baker Mayfield leads Tampa Bay’s listed passing performance with 250 yards, two touchdowns, and no interceptions. Pittsburgh’s Drew Allar has 241 yards and two touchdowns but three interceptions. Pittsburgh’s Michael Pittman has 103 receiving yards and three touchdowns, while Tampa Bay’s Ted Hurst III has 136 yards and one touchdown. Tampa Bay’s Vita Vea and Yaya Diaby provide listed sack production, while Pittsburgh’s Patrick Queen and Alex Highsmith each have two interceptions.
-
-Prediction: Pittsburgh Steelers 24, Tampa Bay Buccaneers 21, with Pittsburgh’s record and listed turnover production edging Tampa Bay.",,,,
-31604313,545783959,MEGA M27,Raiders,Bills,7,31,False,False,,0,1,5,3,False,False,False,False,,,0.0,0.0,legacy,True,,"The Las Vegas Raiders turned a defensive struggle into a decisive 31-7 victory over the Buffalo Bills, combining a balanced offense with mistake-free football.
-
-Raiders quarterback Fernando Mendoza completed a steady performance with 181 passing yards and two touchdowns, both coming without an interception. Las Vegas also controlled the game on the ground, rushing for 168 yards. Ashton Jeanty led the way with 80 yards on 17 carries, while Mike Washington Jr. added 68 yards on just seven attempts, including a touchdown that helped the Raiders pull away.
-
-Darius Slayton was Mendoza’s leading receiving target, finishing with seven catches for 63 yards and a touchdown. His production helped Las Vegas sustain drives and capitalize in the red zone, while the Raiders’ ability to distribute the offense kept Buffalo from consistently generating pressure.
-
-Buffalo quarterback Josh Allen threw for 184 yards but did not produce a touchdown, and the Bills’ offense managed only 107 rushing yards. Keon Coleman provided a bright spot with eight receptions for 83 yards, yet Buffalo struggled to turn its yardage into points. Two turnovers further undermined the Bills’ chances, while Las Vegas committed none.
-
-The Raiders’ defense set the tone with timely stops. Nakobe Dean recorded 10 total tackles and added a sack, matching Adam Butler’s sack total. Bradley Chubb paced Buffalo with seven tackles, but the Bills could not create enough disruption to swing momentum.
-
-Ultimately, Las Vegas won by protecting the football, controlling the ground game and finishing drives, while Buffalo’s turnovers and lack of scoring efficiency proved decisive.","Buffalo Bills visit the Las Vegas Raiders in a matchup between teams with 0-5-0 and 1-4-0 records, respectively. Buffalo holds the stronger season averages, producing 342 total yards per game compared with Las Vegas’s 305. The Bills also lead in passing, 213 to 192 yards, and rushing, 130 to 113 yards. Buffalo averages one turnover, while Las Vegas averages two.
-
-Josh Allen has 280 passing yards, one touchdown, and no interceptions for Buffalo. Las Vegas’s Fernando Mendoza has 298 passing yards with no touchdowns or interceptions. On the ground, Las Vegas’s Ashton Jeanty has 147 yards and two touchdowns on 21 attempts, while Buffalo’s James Cook III has 107 yards on 19 attempts. Tre Tucker is listed twice among Las Vegas’s receiving leaders, with 11 receptions for 141 yards and two touchdowns, and nine receptions for 122 yards. Defensive leaders include Buffalo’s Maxwell Hairston with 11 tackles and Las Vegas’s Nakobe Dean with 10.
-
-Prediction: Buffalo Bills 27, Las Vegas Raiders 24.",,,,
+Ultimately, the Panthers won by winning the turnover battle’s consequences: although both teams committed multiple turnovers, Carolina’s defense produced the decisive stops and Philadelphia failed to score. The shutout marked Carolina’s most emphatic statement of the game, as its defense repeatedly erased Eagles drives while Young and McMillan delivered enough offense to secure the 24-point victory.",,,,,
 31604304,545783950,MEGA M27,Falcons,Bears,28,14,False,False,,0,1,5,2,False,False,False,False,,,-13.5,13.5,legacy,True,,"The Chicago Bears turned five Atlanta Falcons turnovers into a 28-14 victory, overcoming a strong rushing performance from Atlanta with timely offense and a dominant defensive effort.
 
 Quarterback Caleb Williams led Chicago with 249 passing yards and three touchdowns, though he also threw one interception. Rome Odunze was his primary target, catching eight passes for 111 yards and a touchdown. The Bears’ passing game helped offset a relatively quiet rushing attack, with D’Andre Swift contributing 74 yards and a touchdown on 14 carries.
@@ -177,30 +128,43 @@ Chicago Bears quarterback Caleb Williams has recorded 269 yards, two touchdowns,
 Defensively, Atlanta Falcons’ Xavier Watts has three interceptions, and A.J. Terrell Jr has two. Chicago Bears’ Montez Sweat and Atlanta Falcons’ Jalon Walker each have 1.50 sacks.
 
 Prediction: Atlanta Falcons 24, Chicago Bears 20, based on Atlanta’s stronger total and rushing averages.",,,,
-31604309,545783955,MEGA M27,Eagles,Panthers,24,0,False,False,,0,1,5,2,False,False,False,False,,,9.5,-9.5,legacy,True,,"The Carolina Panthers turned a low-yardage contest into a decisive 24-0 victory over the Philadelphia Eagles, riding a dominant defensive effort and timely plays from Bryce Young’s offense.
+31604314,545783960,MEGA M27,Packers,Cowboys,31,14,False,False,,0,1,5,2,False,False,False,False,,,5.5,-5.5,legacy,True,,"The Dallas Cowboys turned a turnover-filled matchup into a convincing 31-14 victory over the Green Bay Packers, using timely takeaways and a far more productive passing attack to control the game.
 
-Philadelphia moved the ball at times, finishing with 229 total yards, but four turnovers repeatedly ended promising possessions. Eagles quarterback Jalen Hurts completed enough passes to produce 189 yards, yet his four interceptions proved costly. Carolina defenders Bobby Okereke and Zakee Wheatley each recorded an interception, helping prevent Philadelphia from converting field position into points. Okereke and Mike Jackson also led the Panthers with five total tackles apiece.
+Dallas quarterback Dak Prescott delivered 288 yards and three touchdowns, though his three interceptions kept Green Bay within reach at various points. CeeDee Lamb was his most influential target, catching six passes for 91 yards and two touchdowns. George Pickens matched Lamb’s six receptions and 91 yards while adding a touchdown, giving the Cowboys a difficult one-two punch through the air.
 
-Carolina’s offense was hardly explosive overall, generating 180 yards, but it capitalized when opportunities arose. Young threw for 133 yards and two touchdowns despite being intercepted three times. Tetairoa McMillan provided the biggest receiving impact for the Panthers, catching three passes for 76 yards and a touchdown. Jonathon Brooks supplied balance with 71 rushing yards on 14 carries, helping Carolina control the game’s tempo.
+The decisive stretch came on defense. Dallas intercepted Green Bay quarterback Jordan Love four times, including two interceptions by DeMarvion Overshown and another by Devin Moore. Those takeaways repeatedly halted Packers drives and offset Dallas’ own three turnovers. Dee Winters added 1.5 sacks, while Malachi Lawrence recorded one sack, helping pressure Love throughout the afternoon. Jaishawn Barham led Dallas with five tackles, and DaRon Bland contributed four.
 
-The Eagles’ best offensive connection came from Dallas Goedert, who caught seven passes for 87 yards, while Saquon Barkley managed 39 rushing yards on 12 attempts. Philadelphia’s defense recorded sacks from Jonathan Greenard and Zack Baun, but could not consistently slow Carolina in the red zone.
+Green Bay’s offense struggled to sustain momentum, finishing with just 180 total yards—98 passing and 82 rushing. Josh Jacobs provided the Packers’ most consistent production, rushing 15 times for 82 yards and a touchdown, but the ground game could not overcome Love’s interception total or the team’s four turnovers.
 
-Ultimately, the Panthers won by winning the turnover battle’s consequences: although both teams committed multiple turnovers, Carolina’s defense produced the decisive stops and Philadelphia failed to score. The shutout marked Carolina’s most emphatic statement of the game, as its defense repeatedly erased Eagles drives while Young and McMillan delivered enough offense to secure the 24-point victory.",,,,,
-31604315,545783961,MEGA M27,49ers,Commanders,35,6,False,False,,0,1,5,2,False,False,False,False,,,0.5,-0.5,legacy,True,,"The Washington Commanders overwhelmed the San Francisco 49ers 35-6 behind a balanced offensive attack, timely defensive plays and a dominant rushing performance.
+Dallas generated 301 yards, including 278 through the air, despite managing only 23 rushing yards. Ultimately, the Cowboys won by creating short-field opportunities and capitalizing on their passing efficiency. The four-interception defensive performance was the game’s defining milestone and the clearest turning point in Dallas’ 17-point victory.","Dallas Cowboys visit the Green Bay Packers with the better record, 4-1-0 to Green Bay’s 3-2-0. Dallas also holds the statistical edge in total offense, averaging 300 yards per game compared with Green Bay’s 235. The Cowboys average 202 passing yards and 99 rushing yards, while the Packers average 130 passing yards and 105 rushing yards. Both teams average two turnovers per game.
 
-Washington established control on the ground, finishing with 164 rushing yards and 306 total yards. Jacory Croskey-Merritt was the centerpiece, carrying 19 times for 120 yards and two touchdowns. His production consistently extended drives and helped the Commanders dictate tempo. Quarterback Jayden Daniels added a sharp passing performance, throwing for 156 yards and three touchdowns without an interception. Chigoziem Okonkwo led Washington’s receivers with five catches for 70 yards and a touchdown.
+Dallas has produced several standout performances. Dak Prescott has listed passing lines of 275 yards with two touchdowns and no interceptions, and 268 yards with two touchdowns and one interception. Jaydon Blue has 133 rushing yards and two touchdowns, while George Pickens has 185 receiving yards and two touchdowns. Green Bay’s Josh Jacobs has 140 rushing yards and two touchdowns, and Jayden Reed has 108 receiving yards and one touchdown. Defensive leaders include Dallas’ LT Overton and Elandon Roberts with two sacks each, while Jaishawn Barham and Caleb Downs each have two interceptions.
 
-San Francisco struggled to generate sustained offense, managing just 212 total yards—125 through the air and 87 on the ground. Christian McCaffrey was held to 55 rushing yards on 18 attempts, while Brock Purdy passed for 125 yards, one touchdown and one interception. Washington’s defense capitalized on that mistake when Nick Cross recorded the game’s lone interception, helping prevent the 49ers from building momentum.
+Prediction: Dallas Cowboys 27, Green Bay Packers 20.",,,,
+31604310,545783956,MEGA M27,Buccaneers,Steelers,20,23,False,False,,0,1,5,3,False,False,False,False,,,1.5,-1.5,legacy,True,,"The Tampa Bay Buccaneers held off the Pittsburgh Steelers 23-20 in a turnover-filled game decided by a narrow late advantage.
 
-San Francisco’s defense produced some pressure, with Fred Warner recording a sack and Nick Bosa adding half a sack, but it could not slow Washington’s multi-dimensional attack. Warner led the 49ers with four tackles, while Washington’s Quan Martin paced the Commanders with seven total tackles.
+Tampa Bay generated 314 total yards, including 239 through the air and 75 on the ground, while Pittsburgh finished with 253 yards. The Steelers found their biggest offensive spark through tight end Pat Freiermuth, who caught six passes for 131 yards and a touchdown. Chris Godwin Jr. was equally influential for the Buccaneers, producing 114 yards and a touchdown on four receptions.
 
-The decisive difference was Washington’s efficiency in the red zone and its ability to control possession on the ground. With only one turnover compared with San Francisco’s two, the Commanders turned strong field position and consistent rushing gains into a convincing 29-point victory.","Washington Commanders visit the San Francisco 49ers with a 2-3-0 record, while San Francisco enters at 1-4-0. Washington leads the season averages in total yards, 305 to 242, including a rushing edge of 170 to 119. The Commanders also average more passing yards, 134 to 123, but have three turnovers per game compared with San Francisco’s one.
+Turnovers shaped the contest. Pittsburgh quarterback Drew Allar threw for 208 yards and a touchdown but was intercepted twice. Tampa Bay quarterback Baker Mayfield passed for 195 yards and a touchdown, though the Buccaneers gave the ball away three times overall. Steelers linebacker Cole Holcomb provided two of Pittsburgh’s takeaways with a pair of interceptions, keeping the game within reach. Tampa Bay cornerback Zyon McCollum answered with an interception of his own.
 
-Jayden Daniels has 216 passing yards, two touchdowns, and three interceptions for Washington, while also contributing 199 rushing yards and two touchdowns on 16 attempts. Brock Purdy has 314 passing yards, two touchdowns, and no interceptions for San Francisco. Christian McCaffrey has 142 rushing yards on 28 attempts, and San Francisco’s listed receivers include Ricky Pearsall and Mike Evans, with 123 and 105 receiving yards, respectively.
+The Buccaneers also received valuable production from Mayfield on the ground. He rushed six times for 36 yards, while Kenny Gainwell added 37 yards on 12 carries, helping Tampa Bay control enough of the running game to complement its passing attack.
 
-Defensively, Nick Cross has two interceptions for Washington. Nick Bosa and Mike Sainristil each have one sack.
+Defensively, Josiah Trotter led the Buccaneers with seven tackles and added a sack, while Steelers defensive tackle Keeanu Benton also recorded a sack. Jalen Ramsey paced Pittsburgh with five tackles.
 
-**Prediction:** Washington Commanders 27, San Francisco 24, based on Washington’s yardage advantage despite its higher turnover average.",,,,
+Despite Pittsburgh’s defensive pressure and Holcomb’s takeaways, Tampa Bay’s greater yardage total and one-turnover edge proved decisive. The Buccaneers’ balanced offensive effort ultimately secured the three-point victory, while Pittsburgh was left to rue missed opportunities in a game where both quarterbacks faced persistent turnover pressure.","Tampa Bay Buccaneers host the Pittsburgh Steelers in a matchup between teams with contrasting records: Tampa Bay is 2-3-0, while Pittsburgh is 3-2-0. The teams average the same total yardage at 284 per game, but Tampa Bay produces more rushing yards, 122 to Pittsburgh’s 101, while Pittsburgh averages more passing yards, 183 to Tampa Bay’s 162. Tampa Bay averages one turnover per game compared with Pittsburgh’s two.
+
+Baker Mayfield leads Tampa Bay’s listed passing performance with 250 yards, two touchdowns, and no interceptions. Pittsburgh’s Drew Allar has 241 yards and two touchdowns but three interceptions. Pittsburgh’s Michael Pittman has 103 receiving yards and three touchdowns, while Tampa Bay’s Ted Hurst III has 136 yards and one touchdown. Tampa Bay’s Vita Vea and Yaya Diaby provide listed sack production, while Pittsburgh’s Patrick Queen and Alex Highsmith each have two interceptions.
+
+Prediction: Pittsburgh Steelers 24, Tampa Bay Buccaneers 21, with Pittsburgh’s record and listed turnover production edging Tampa Bay.",,,,
+31604312,545783958,MEGA M27,Chiefs,Chargers,21,35,True,True,,0,1,5,3,False,False,False,False,,,2.5,-2.5,legacy,True,,"The Kansas City Chiefs pulled away from the Los Angeles Chargers, 35-21, behind a dominant rushing performance and a defense that repeatedly capitalized on mistakes.
+
+Kansas City controlled the game on the ground, piling up 249 rushing yards compared with Los Angeles’ 71. Kenneth Walker led the charge for the Chiefs with 184 yards and two touchdowns on just 19 carries, consistently creating explosive plays and keeping the Chargers’ defense off balance. Brashard Smith added 54 yards and a touchdown on two attempts, further underscoring Kansas City’s efficiency in the running game.
+
+Patrick Mahomes was economical through the air, throwing for 135 yards and two touchdowns without an interception. His most notable connection came with Xavier Worthy, who turned his lone reception into a 67-yard touchdown. That big play helped the Chiefs maintain control whenever Los Angeles threatened to rally.
+
+Justin Herbert produced 211 passing yards for the Chargers, with Brenen Thompson providing a bright spot through seven catches for 144 yards. However, Herbert’s three interceptions proved decisive. Kansas City’s Nick Bolton intercepted two passes, while L’Jarius Sneed added another, repeatedly ending Los Angeles possessions and denying potential scoring opportunities.
+
+The Chargers did generate pressure, with Tuli Tuipulotu recording a sack, but Kansas City’s balance and ball security ultimately separated the teams. The Chiefs finished with 384 total yards to Los Angeles’ 282 and committed only one turnover. Kansas City’s rushing efficiency, explosive touchdown plays and opportunistic secondary turned a competitive matchup into a 14-point victory.",,,,,
 31604308,545783954,MEGA M27,Giants,Saints,16,27,False,False,,0,1,5,3,False,False,False,False,,,-7.5,7.5,legacy,True,,"The New York Giants used a dominant ground game and timely defensive pressure to defeat the New Orleans Saints 27-16.
 
 New York controlled the game on the ground, piling up 181 rushing yards compared with just 64 for New Orleans. Cam Skattebo was the centerpiece of that attack, rushing 21 times for 158 yards and a touchdown. His production consistently kept the Giants ahead of schedule and helped New York manage the game late.
@@ -218,19 +182,21 @@ Cam Skattebo leads the listed rushing production for New York with 196 yards and
 Turnovers favor New York’s average of two per game against New Orleans’ three. Defensively, Brian Burns has two sacks for New York, while Martin Emerson Jr and Paulson Adebo each have two interceptions for their respective teams.
 
 Prediction: New York Giants 27, New Orleans Saints 20, based on New York’s stronger record, greater total and rushing production, and lower turnover average.",,,,
-31604307,545783953,MEGA M27,Patriots,Jets,27,34,False,False,,0,1,5,3,False,False,False,False,,,5.5,-5.5,legacy,True,,"The New England Patriots held off the New York Jets 34-27 in an explosive, turnover-filled matchup defined by big plays and timely defensive pressure.
+31604313,545783959,MEGA M27,Raiders,Bills,7,31,False,False,,0,1,5,3,False,False,False,False,,,0.0,0.0,legacy,True,,"The Las Vegas Raiders turned a defensive struggle into a decisive 31-7 victory over the Buffalo Bills, combining a balanced offense with mistake-free football.
 
-Drake Maye powered New England’s offense with 351 passing yards and four touchdowns, connecting repeatedly with Kyle Williams. Williams delivered the game’s standout receiving performance, catching eight passes for 195 yards and three touchdowns. The Patriots also found balance on the ground, with Rhamondre Stevenson rushing for 51 yards and a touchdown on eight attempts, while TreVeyon Henderson added 50 yards on 10 carries.
+Raiders quarterback Fernando Mendoza completed a steady performance with 181 passing yards and two touchdowns, both coming without an interception. Las Vegas also controlled the game on the ground, rushing for 168 yards. Ashton Jeanty led the way with 80 yards on 17 carries, while Mike Washington Jr. added 68 yards on just seven attempts, including a touchdown that helped the Raiders pull away.
 
-New York answered through Cade Klubnik, who threw for 265 yards and three touchdowns. Garrett Wilson provided the Jets’ biggest offensive spark, recording three receptions for 103 yards and a touchdown. However, New York managed just 30 rushing yards, allowing the Patriots to focus on containing the passing game and pressuring Klubnik.
+Darius Slayton was Mendoza’s leading receiving target, finishing with seven catches for 63 yards and a touchdown. His production helped Las Vegas sustain drives and capitalize in the red zone, while the Raiders’ ability to distribute the offense kept Buffalo from consistently generating pressure.
 
-Turnovers proved decisive. Both teams committed three, but New England’s defense made key plays at critical moments. Kevin Byard III intercepted a pass and forced a fumble, while Christian Elliss added another interception. The Patriots’ pass rush also disrupted the Jets’ rhythm, with Dre’Mont Jones recording two sacks and Harold Landry III adding a half-sack.
+Buffalo quarterback Josh Allen threw for 184 yards but did not produce a touchdown, and the Bills’ offense managed only 107 rushing yards. Keon Coleman provided a bright spot with eight receptions for 83 yards, yet Buffalo struggled to turn its yardage into points. Two turnovers further undermined the Bills’ chances, while Las Vegas committed none.
 
-Despite Maye’s two interceptions, New England’s high-volume passing attack and Williams’ three-touchdown performance provided enough separation. The Jets remained within striking distance behind Klubnik and Wilson, but their limited rushing production and inability to capitalize consistently on possessions ultimately swung the game to the Patriots.","New York Jets and New England Patriots meet with identical 4-1-0 records. The Jets hold slight per-game advantages in total yards, 356 to 350; passing yards, 237 to 233; and rushing yards, 119 to 118. New York also averages fewer turnovers, 1 to New England’s 2.
+The Raiders’ defense set the tone with timely stops. Nakobe Dean recorded 10 total tackles and added a sack, matching Adam Butler’s sack total. Bradley Chubb paced Buffalo with seven tackles, but the Bills could not create enough disruption to swing momentum.
 
-Breece Hall leads the listed rushing production for the Jets with entries of 159 yards and one touchdown on 22 attempts, and 134 yards and two touchdowns on 14 attempts. Garrett Wilson has 9 receptions for 133 yards and one touchdown. For New England, Hunter Henry has 8 receptions, 127 yards, and three touchdowns. Drake Maye is listed twice for the Patriots with 269 passing yards, alongside separate touchdown and interception totals. New England’s listed defenders include Harold Landry III and Craig Woodson with six tackles each, while Christian Elliss and Gabe Jacas have two sacks apiece. Turnover leaders are Demario Davis and Carlton Davis III with two interceptions each.
+Ultimately, Las Vegas won by protecting the football, controlling the ground game and finishing drives, while Buffalo’s turnovers and lack of scoring efficiency proved decisive.","Buffalo Bills visit the Las Vegas Raiders in a matchup between teams with 0-5-0 and 1-4-0 records, respectively. Buffalo holds the stronger season averages, producing 342 total yards per game compared with Las Vegas’s 305. The Bills also lead in passing, 213 to 192 yards, and rushing, 130 to 113 yards. Buffalo averages one turnover, while Las Vegas averages two.
 
-Prediction: New York Jets 24, New England Patriots 21, in a tight finish.",,,,
+Josh Allen has 280 passing yards, one touchdown, and no interceptions for Buffalo. Las Vegas’s Fernando Mendoza has 298 passing yards with no touchdowns or interceptions. On the ground, Las Vegas’s Ashton Jeanty has 147 yards and two touchdowns on 21 attempts, while Buffalo’s James Cook III has 107 yards on 19 attempts. Tre Tucker is listed twice among Las Vegas’s receiving leaders, with 11 receptions for 141 yards and two touchdowns, and nine receptions for 122 yards. Defensive leaders include Buffalo’s Maxwell Hairston with 11 tackles and Las Vegas’s Nakobe Dean with 10.
+
+Prediction: Buffalo Bills 27, Las Vegas Raiders 24.",,,,
 31604302,545783948,MEGA M27,Broncos,Seahawks,14,10,False,False,,0,1,5,2,False,False,False,False,,,16.5,-16.5,legacy,True,,"The Seattle Seahawks survived a turnover-filled defensive battle Sunday, edging the Denver Broncos 14-10 despite being outgained 318-181.
 
 Denver controlled much of the yardage battle behind Bo Nix, who threw for 283 yards and a touchdown, and Tyreek Hill, whose seven catches produced 157 yards and a score. RJ Harvey added 40 rushing yards on 13 carries and caught five passes for 60 yards, giving the Broncos consistent production in the passing game. Denver’s defense also generated pressure, with Jonah Elliss and Nik Bonitto recording a sack apiece.
@@ -244,204 +210,238 @@ The Broncos’ 10 points reflected their offensive efficiency between the mistak
 Seattle’s listed performers add significant production. Sam Darnold has entries of 266 yards with 2 touchdowns and no interceptions, and 256 yards with 3 touchdowns and 1 interception. Jadarian Price has recorded 125 rushing yards and 82, while Cooper Kupp has 114 receiving yards and 2 touchdowns. Defensively, DeMarcus Lawrence leads the listed sack totals with 5.50, and Nick Emmanwori has 3 interceptions. Denver’s Alex Singleton has 8 tackles, while Tyler Onyedim has 2.00 sacks.
 
 Prediction: Seattle Seahawks 27, Denver Broncos 13, based on Seattle’s stronger record, higher yardage averages, and turnover advantage.",,,,
-31604312,545783958,MEGA M27,Chiefs,Chargers,21,35,True,True,,0,1,5,3,False,False,False,False,,,2.5,-2.5,legacy,True,,"The Kansas City Chiefs pulled away from the Los Angeles Chargers, 35-21, behind a dominant rushing performance and a defense that repeatedly capitalized on mistakes.
+31604307,545783953,MEGA M27,Patriots,Jets,27,34,False,False,,0,1,5,3,False,False,False,False,,,5.5,-5.5,legacy,True,,"The New England Patriots held off the New York Jets 34-27 in an explosive, turnover-filled matchup defined by big plays and timely defensive pressure.
 
-Kansas City controlled the game on the ground, piling up 249 rushing yards compared with Los Angeles’ 71. Kenneth Walker led the charge for the Chiefs with 184 yards and two touchdowns on just 19 carries, consistently creating explosive plays and keeping the Chargers’ defense off balance. Brashard Smith added 54 yards and a touchdown on two attempts, further underscoring Kansas City’s efficiency in the running game.
+Drake Maye powered New England’s offense with 351 passing yards and four touchdowns, connecting repeatedly with Kyle Williams. Williams delivered the game’s standout receiving performance, catching eight passes for 195 yards and three touchdowns. The Patriots also found balance on the ground, with Rhamondre Stevenson rushing for 51 yards and a touchdown on eight attempts, while TreVeyon Henderson added 50 yards on 10 carries.
 
-Patrick Mahomes was economical through the air, throwing for 135 yards and two touchdowns without an interception. His most notable connection came with Xavier Worthy, who turned his lone reception into a 67-yard touchdown. That big play helped the Chiefs maintain control whenever Los Angeles threatened to rally.
+New York answered through Cade Klubnik, who threw for 265 yards and three touchdowns. Garrett Wilson provided the Jets’ biggest offensive spark, recording three receptions for 103 yards and a touchdown. However, New York managed just 30 rushing yards, allowing the Patriots to focus on containing the passing game and pressuring Klubnik.
 
-Justin Herbert produced 211 passing yards for the Chargers, with Brenen Thompson providing a bright spot through seven catches for 144 yards. However, Herbert’s three interceptions proved decisive. Kansas City’s Nick Bolton intercepted two passes, while L’Jarius Sneed added another, repeatedly ending Los Angeles possessions and denying potential scoring opportunities.
+Turnovers proved decisive. Both teams committed three, but New England’s defense made key plays at critical moments. Kevin Byard III intercepted a pass and forced a fumble, while Christian Elliss added another interception. The Patriots’ pass rush also disrupted the Jets’ rhythm, with Dre’Mont Jones recording two sacks and Harold Landry III adding a half-sack.
 
-The Chargers did generate pressure, with Tuli Tuipulotu recording a sack, but Kansas City’s balance and ball security ultimately separated the teams. The Chiefs finished with 384 total yards to Los Angeles’ 282 and committed only one turnover. Kansas City’s rushing efficiency, explosive touchdown plays and opportunistic secondary turned a competitive matchup into a 14-point victory.",,,,,
-31604314,545783960,MEGA M27,Packers,Cowboys,31,14,False,False,,0,1,5,2,False,False,False,False,,,5.5,-5.5,legacy,True,,"The Dallas Cowboys turned a turnover-filled matchup into a convincing 31-14 victory over the Green Bay Packers, using timely takeaways and a far more productive passing attack to control the game.
+Despite Maye’s two interceptions, New England’s high-volume passing attack and Williams’ three-touchdown performance provided enough separation. The Jets remained within striking distance behind Klubnik and Wilson, but their limited rushing production and inability to capitalize consistently on possessions ultimately swung the game to the Patriots.","New York Jets and New England Patriots meet with identical 4-1-0 records. The Jets hold slight per-game advantages in total yards, 356 to 350; passing yards, 237 to 233; and rushing yards, 119 to 118. New York also averages fewer turnovers, 1 to New England’s 2.
 
-Dallas quarterback Dak Prescott delivered 288 yards and three touchdowns, though his three interceptions kept Green Bay within reach at various points. CeeDee Lamb was his most influential target, catching six passes for 91 yards and two touchdowns. George Pickens matched Lamb’s six receptions and 91 yards while adding a touchdown, giving the Cowboys a difficult one-two punch through the air.
+Breece Hall leads the listed rushing production for the Jets with entries of 159 yards and one touchdown on 22 attempts, and 134 yards and two touchdowns on 14 attempts. Garrett Wilson has 9 receptions for 133 yards and one touchdown. For New England, Hunter Henry has 8 receptions, 127 yards, and three touchdowns. Drake Maye is listed twice for the Patriots with 269 passing yards, alongside separate touchdown and interception totals. New England’s listed defenders include Harold Landry III and Craig Woodson with six tackles each, while Christian Elliss and Gabe Jacas have two sacks apiece. Turnover leaders are Demario Davis and Carlton Davis III with two interceptions each.
 
-The decisive stretch came on defense. Dallas intercepted Green Bay quarterback Jordan Love four times, including two interceptions by DeMarvion Overshown and another by Devin Moore. Those takeaways repeatedly halted Packers drives and offset Dallas’ own three turnovers. Dee Winters added 1.5 sacks, while Malachi Lawrence recorded one sack, helping pressure Love throughout the afternoon. Jaishawn Barham led Dallas with five tackles, and DaRon Bland contributed four.
+Prediction: New York Jets 24, New England Patriots 21, in a tight finish.",,,,
+31604315,545783961,MEGA M27,49ers,Commanders,35,6,False,False,,0,1,5,2,False,False,False,False,,,0.5,-0.5,legacy,True,,"The Washington Commanders overwhelmed the San Francisco 49ers 35-6 behind a balanced offensive attack, timely defensive plays and a dominant rushing performance.
 
-Green Bay’s offense struggled to sustain momentum, finishing with just 180 total yards—98 passing and 82 rushing. Josh Jacobs provided the Packers’ most consistent production, rushing 15 times for 82 yards and a touchdown, but the ground game could not overcome Love’s interception total or the team’s four turnovers.
+Washington established control on the ground, finishing with 164 rushing yards and 306 total yards. Jacory Croskey-Merritt was the centerpiece, carrying 19 times for 120 yards and two touchdowns. His production consistently extended drives and helped the Commanders dictate tempo. Quarterback Jayden Daniels added a sharp passing performance, throwing for 156 yards and three touchdowns without an interception. Chigoziem Okonkwo led Washington’s receivers with five catches for 70 yards and a touchdown.
 
-Dallas generated 301 yards, including 278 through the air, despite managing only 23 rushing yards. Ultimately, the Cowboys won by creating short-field opportunities and capitalizing on their passing efficiency. The four-interception defensive performance was the game’s defining milestone and the clearest turning point in Dallas’ 17-point victory.","Dallas Cowboys visit the Green Bay Packers with the better record, 4-1-0 to Green Bay’s 3-2-0. Dallas also holds the statistical edge in total offense, averaging 300 yards per game compared with Green Bay’s 235. The Cowboys average 202 passing yards and 99 rushing yards, while the Packers average 130 passing yards and 105 rushing yards. Both teams average two turnovers per game.
+San Francisco struggled to generate sustained offense, managing just 212 total yards—125 through the air and 87 on the ground. Christian McCaffrey was held to 55 rushing yards on 18 attempts, while Brock Purdy passed for 125 yards, one touchdown and one interception. Washington’s defense capitalized on that mistake when Nick Cross recorded the game’s lone interception, helping prevent the 49ers from building momentum.
 
-Dallas has produced several standout performances. Dak Prescott has listed passing lines of 275 yards with two touchdowns and no interceptions, and 268 yards with two touchdowns and one interception. Jaydon Blue has 133 rushing yards and two touchdowns, while George Pickens has 185 receiving yards and two touchdowns. Green Bay’s Josh Jacobs has 140 rushing yards and two touchdowns, and Jayden Reed has 108 receiving yards and one touchdown. Defensive leaders include Dallas’ LT Overton and Elandon Roberts with two sacks each, while Jaishawn Barham and Caleb Downs each have two interceptions.
+San Francisco’s defense produced some pressure, with Fred Warner recording a sack and Nick Bosa adding half a sack, but it could not slow Washington’s multi-dimensional attack. Warner led the 49ers with four tackles, while Washington’s Quan Martin paced the Commanders with seven total tackles.
 
-Prediction: Dallas Cowboys 27, Green Bay Packers 20.",,,,
-31604326,545783972,MEGA M27,Lions,Packers,21,14,False,False,,0,1,6,2,False,False,False,False,,,-7.5,7.5,legacy,True,,,,,,,
-31604324,545783970,MEGA M27,Texans,Giants,31,25,False,False,,0,1,6,2,False,False,False,False,,,9.5,-9.5,legacy,True,,,,,,,
-31604316,545783962,MEGA M27,Bears,Patriots,41,26,False,False,,0,1,6,2,False,False,False,False,,2026-10-08 19:00:00,10.5,-10.5,legacy,True,,,,,,,
+The decisive difference was Washington’s efficiency in the red zone and its ability to control possession on the ground. With only one turnover compared with San Francisco’s two, the Commanders turned strong field position and consistent rushing gains into a convincing 29-point victory.","Washington Commanders visit the San Francisco 49ers with a 2-3-0 record, while San Francisco enters at 1-4-0. Washington leads the season averages in total yards, 305 to 242, including a rushing edge of 170 to 119. The Commanders also average more passing yards, 134 to 123, but have three turnovers per game compared with San Francisco’s one.
+
+Jayden Daniels has 216 passing yards, two touchdowns, and three interceptions for Washington, while also contributing 199 rushing yards and two touchdowns on 16 attempts. Brock Purdy has 314 passing yards, two touchdowns, and no interceptions for San Francisco. Christian McCaffrey has 142 rushing yards on 28 attempts, and San Francisco’s listed receivers include Ricky Pearsall and Mike Evans, with 123 and 105 receiving yards, respectively.
+
+Defensively, Nick Cross has two interceptions for Washington. Nick Bosa and Mike Sainristil each have one sack.
+
+**Prediction:** Washington Commanders 27, San Francisco 24, based on Washington’s yardage advantage despite its higher turnover average.",,,,
+31604303,545783949,MEGA M27,Jaguars,Texans,19,31,False,False,,0,1,5,3,False,False,False,False,,,-8.5,8.5,legacy,True,,"The Jacksonville Jaguars pulled away from the Houston Texans, 31-19, behind a dominant rushing performance and a balanced offensive attack.
+
+Jacksonville controlled the game on the ground, piling up 172 rushing yards compared with Houston’s 54. Bhayshul Tuten was the catalyst, rushing 16 times for 176 yards and a touchdown. His explosive runs repeatedly flipped field position and helped the Jaguars sustain drives, taking pressure off quarterback Trevor Lawrence. Lawrence completed an efficient performance with 267 passing yards, two touchdowns and no interceptions, while Josh Cameron added four catches for 78 yards and a touchdown. Jakobi Meyers also contributed four receptions for 57 yards.
+
+Houston struggled to generate consistent offense, finishing with only 202 total yards. C.J. Stroud passed for 158 yards and two touchdowns without a turnover, but the Texans’ limited rushing production made it difficult to maintain momentum. ---- Marks managed 38 yards on 11 carries, leaving Houston too one-dimensional for much of the afternoon.
+
+Defensively, the Texans did create pressure. Sheldon Rankins recorded two sacks, and Derek Stingley Jr. led Houston with six total tackles. Jacksonville’s Josh Hines-Allen added a sack, helping disrupt Houston’s passing game at key moments. Caleb Ransaw paced the Jaguars with three tackles.
+
+The decisive factor was Jacksonville’s efficiency and explosiveness. The Jaguars amassed 421 total yards—more than twice Houston’s output—and protected the football throughout, with neither team committing a turnover. Jacksonville’s combination of Tuten’s big-play rushing and Lawrence’s accurate passing ultimately overwhelmed the Texans and secured the 12-point victory.","Jacksonville Jaguars host the Houston Texans with a 4-1-0 record, while Houston enters at 2-3-0. Jacksonville holds the statistical edge in season averages, producing 313 total yards per game compared with Houston’s 256. The Jaguars also lead in passing, 210 to 171 yards, and rushing, 103 to 85, while averaging fewer turnovers: one per game compared with Houston’s three.
+
+C.J. Stroud leads Houston’s listed passing performance with 326 yards, three touchdowns, and no interceptions. Trevor Lawrence has 261 yards, three touchdowns, and one interception for Jacksonville. Bhayshul Tuten has 162 rushing yards and three touchdowns for the Jaguars, while David Montgomery has 118 yards and one touchdown for the Texans. Brian Thomas Jr has two receiving touchdowns for Jacksonville, and Kayshon Boutte has 128 receiving yards for Houston. Travis Hunter has two interceptions for Jacksonville. The duplicate sack and turnover entries provide no additional distinct totals.
+
+Prediction: Jacksonville Jaguars 27, Houston Texans 20.",,,,
+31604311,545783957,MEGA M27,Rams,Cardinals,17,14,False,False,,0,1,5,2,False,False,False,False,,,-1.5,1.5,legacy,True,,"The Arizona Cardinals held off the Los Angeles Rams 17-14 in a defensive struggle marked by sharp contrasts in offensive production and several momentum-turning plays.
+
+Arizona’s passing game provided the difference. Cardinals quarterback Carson Beck threw for 302 yards and two touchdowns, overcoming one interception to lead an offense that generated 366 total yards. Tight end Trey McBride was his most productive target, catching five passes for 73 yards and a touchdown, while Marvin Harrison Jr. added four receptions for 58 yards. Arizona also received a strong contribution on the ground from Jeremiyah Love, who ran 15 times for 92 yards.
+
+The Rams moved the ball far less efficiently, finishing with 208 total yards and only 83 passing yards. Their rushing attack kept them competitive, however, as Blake Corum broke loose for 110 yards on just 10 carries. Matthew Stafford threw for 90 yards and a touchdown, but his interception limited Los Angeles’ ability to sustain late pressure.
+
+Both defenses created pivotal takeaways. Rams linebacker Nate Landman intercepted Beck, while Cardinals defensive back Dadrion Taylor-Demerson picked off Stafford. Los Angeles’ pass rush also repeatedly disrupted Arizona, with Aaron Donald recording two sacks and Braden Fiske adding another. Arizona countered with steady coverage and timely stops, led by Marshon Lattimore’s five tackles.
+
+Ultimately, Arizona’s superior passing production and McBride’s touchdown gave the Cardinals enough separation to withstand the Rams’ rushing attack. The one-score finish reflected Los Angeles’ defensive pressure, but Arizona’s balance and ability to capitalize on its offensive opportunities secured the victory.","Los Angeles Rams host the Arizona Cardinals with a 4-1-0 record, while Arizona enters at 1-4-0. The Rams average 253 total yards per game, including 155 passing and 97 rushing, with one turnover. The Cardinals produce more total offense at 327 yards per game, driven by 280 passing yards, but average three turnovers and 47 rushing yards.
+
+Arizona Cardinals quarterback Carson Beck is listed with two passing performances: 350 yards, one touchdown, and one interception, plus 317 yards, one touchdown, and four interceptions. Los Angeles Rams’ Kyren Williams has rushing lines of 103 yards and 99 yards, with one touchdown in each. Arizona Cardinals’ Marvin Harrison Jr has 173 receiving yards and one touchdown, while Los Angeles Rams’ Davante Adams has 148 yards and two touchdowns.
+
+Defensively, Zaven Collins and Aaron Donald each have two sacks. Jaylen Watson and Nate Landman each have two interceptions for the Rams.
+
+Prediction: Los Angeles Rams 24, Arizona Cardinals 20, with the Rams’ stronger record and lower turnover average deciding a close game.",,,,
 31604317,545783963,MEGA M27,Saints,Steelers,34,24,False,False,,0,1,6,2,False,False,False,True,,,2.5,-2.5,legacy,True,,,,,,,
-31604322,545783968,MEGA M27,Panthers,Buccaneers,38,16,False,False,,0,1,6,2,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
-31604320,545783966,MEGA M27,Vikings,Colts,0,20,False,False,,0,1,6,3,False,False,False,False,,,4.5,-4.5,legacy,True,,,,,,,
-31604329,545783975,MEGA M27,Eagles,Cowboys,17,3,False,False,,0,1,6,2,False,False,False,True,,,18.5,-18.5,legacy,True,,,,,,,
-31604328,545783974,MEGA M27,Seahawks,Chiefs,38,16,True,False,"playoff race, close seeding, close records",0,1,6,2,False,False,False,False,,,-2.5,2.5,legacy,True,,,,,,,
-31604327,545783973,MEGA M27,Raiders,Rams,38,30,False,False,,0,1,6,2,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
-31604321,545783967,MEGA M27,Jets,Dolphins,12,41,False,False,,0,1,6,3,False,False,True,False,,,-15.5,15.5,legacy,True,,,,,,,
-31604323,545783969,MEGA M27,Ravens,Bengals,14,7,False,False,,0,1,6,2,False,False,False,False,,,-1.5,1.5,legacy,True,,,,,,,
-31604318,545783964,MEGA M27,Falcons,49ers,6,34,False,False,,0,1,6,3,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
-31604319,545783965,MEGA M27,Titans,Browns,41,7,False,False,,0,1,6,2,False,False,False,False,,,10.5,-10.5,legacy,True,,,,,,,
 31604325,545783971,MEGA M27,Cardinals,Broncos,3,34,False,False,,0,1,6,3,False,False,False,False,,,-4.5,4.5,legacy,True,,,,,,,
-31604343,545783989,MEGA M27,Seahawks,Bears,27,40,False,False,,0,1,7,3,False,False,False,False,,,-10.5,10.5,legacy,True,,,,,,,
-31604336,545783982,MEGA M27,Steelers,Browns,3,10,False,False,,0,1,7,3,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
-31604340,545783986,MEGA M27,Broncos,Chiefs,30,14,False,False,,0,1,7,2,False,False,False,False,,,15.5,-15.5,legacy,True,,,,,,,
-31604332,545783978,MEGA M27,Bengals,Titans,17,23,False,False,,0,1,7,3,False,False,True,False,,,-4.5,4.5,legacy,True,,,,,,,
-31604335,545783981,MEGA M27,Jets,Raiders,17,7,False,False,,0,1,7,2,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
+31604319,545783965,MEGA M27,Titans,Browns,41,7,False,False,,0,1,6,2,False,False,False,False,,,10.5,-10.5,legacy,True,,,,,,,
+31604318,545783964,MEGA M27,Falcons,49ers,6,34,False,False,,0,1,6,3,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
+31604329,545783975,MEGA M27,Eagles,Cowboys,17,3,False,False,,0,1,6,2,False,False,False,True,,,18.5,-18.5,legacy,True,,,,,,,
+31604320,545783966,MEGA M27,Vikings,Colts,0,20,False,False,,0,1,6,3,False,False,False,False,,,4.5,-4.5,legacy,True,,,,,,,
+31604321,545783967,MEGA M27,Jets,Dolphins,12,41,False,False,,0,1,6,3,False,False,True,False,,,-15.5,15.5,legacy,True,,,,,,,
+31604322,545783968,MEGA M27,Panthers,Buccaneers,38,16,False,False,,0,1,6,2,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
+31604323,545783969,MEGA M27,Ravens,Bengals,14,7,False,False,,0,1,6,2,False,False,False,False,,,-1.5,1.5,legacy,True,,,,,,,
+31604324,545783970,MEGA M27,Texans,Giants,31,25,False,False,,0,1,6,2,False,False,False,False,,,9.5,-9.5,legacy,True,,,,,,,
+31604326,545783972,MEGA M27,Lions,Packers,21,14,False,False,,0,1,6,2,False,False,False,False,,,-7.5,7.5,legacy,True,,,,,,,
+31604327,545783973,MEGA M27,Raiders,Rams,38,30,False,False,,0,1,6,2,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
+31604328,545783974,MEGA M27,Seahawks,Chiefs,38,16,True,False,"playoff race, close seeding, close records",0,1,6,2,False,False,False,False,,,-2.5,2.5,legacy,True,,,,,,,
+31604316,545783962,MEGA M27,Bears,Patriots,41,26,False,False,,0,1,6,2,False,False,False,False,,2026-10-08 19:00:00,10.5,-10.5,legacy,True,,,,,,,
 31604331,545783977,MEGA M27,Bills,Ravens,14,13,False,False,,0,1,7,2,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
-31604338,545783984,MEGA M27,Jaguars,Colts,14,40,False,False,,0,1,7,3,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
+31604342,545783988,MEGA M27,Commanders,Eagles,19,21,False,False,,0,1,7,3,False,False,True,False,,,-11.5,11.5,legacy,True,,,,,,,
 31604330,545783976,MEGA M27,Packers,Panthers,12,42,False,False,,0,1,7,3,False,False,False,False,,,-3.5,3.5,legacy,True,,,,,,,
 31604337,545783983,MEGA M27,Buccaneers,Falcons,42,35,False,False,,0,1,7,2,False,False,False,False,,,0.5,-0.5,legacy,True,,,,,,,
-31604333,545783979,MEGA M27,Cowboys,Cardinals,24,52,False,False,,0,1,7,3,False,False,False,False,,,-5.5,5.5,legacy,True,,,,,,,
-31604341,545783987,MEGA M27,Dolphins,Patriots,42,13,False,False,,0,1,7,2,False,False,False,False,,,13.5,-13.5,legacy,True,,,,,,,
-31604342,545783988,MEGA M27,Commanders,Eagles,19,21,False,False,,0,1,7,3,False,False,True,False,,,-11.5,11.5,legacy,True,,,,,,,
-31604339,545783985,MEGA M27,Rams,Chargers,32,29,False,False,,0,1,7,2,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
+31604335,545783981,MEGA M27,Jets,Raiders,17,7,False,False,,0,1,7,2,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
 31604334,545783980,MEGA M27,Lions,Vikings,13,29,True,False,"playoff race, close records, division race, two user teams",0,1,7,3,False,False,False,False,,2026-10-10 19:00:00,-7.5,7.5,legacy,True,,,,,,,
-31604347,545783993,MEGA M27,Chiefs,Jets,30,36,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604346,545783992,MEGA M27,Colts,Cowboys,14,9,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604333,545783979,MEGA M27,Cowboys,Cardinals,24,52,False,False,,0,1,7,3,False,False,False,False,,,-5.5,5.5,legacy,True,,,,,,,
+31604336,545783982,MEGA M27,Steelers,Browns,3,10,False,False,,0,1,7,3,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
+31604343,545783989,MEGA M27,Seahawks,Bears,27,40,False,False,,0,1,7,3,False,False,False,False,,,-10.5,10.5,legacy,True,,,,,,,
+31604338,545783984,MEGA M27,Jaguars,Colts,14,40,False,False,,0,1,7,3,False,False,False,False,,,-8.5,8.5,legacy,True,,,,,,,
+31604339,545783985,MEGA M27,Rams,Chargers,32,29,False,False,,0,1,7,2,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
+31604341,545783987,MEGA M27,Dolphins,Patriots,42,13,False,False,,0,1,7,2,False,False,False,False,,,13.5,-13.5,legacy,True,,,,,,,
+31604340,545783986,MEGA M27,Broncos,Chiefs,30,14,False,False,,0,1,7,2,False,False,False,False,,,15.5,-15.5,legacy,True,,,,,,,
+31604332,545783978,MEGA M27,Bengals,Titans,17,23,False,False,,0,1,7,3,False,False,True,False,,,-4.5,4.5,legacy,True,,,,,,,
 31604345,545783991,MEGA M27,Falcons,Bengals,21,7,True,False,"playoff race, close records, two user teams",0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604344,545783990,MEGA M27,Ravens,Jaguars,6,0,False,False,,0,1,8,2,False,False,False,True,,,11.2,-11.2,estimate,False,,,,,,,
-31604353,545783999,MEGA M27,Chargers,Texans,14,27,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604352,545783998,MEGA M27,Panthers,Broncos,27,24,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604355,545784001,MEGA M27,Patriots,Packers,41,6,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604354,545784000,MEGA M27,49ers,Raiders,17,19,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604351,545783997,MEGA M27,Commanders,Rams,27,28,False,False,,0,1,8,3,False,False,False,False,,,2.5,-2.5,estimate,False,,,,,,,
-31604356,545784002,MEGA M27,Seahawks,Cardinals,32,34,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604357,545784003,MEGA M27,Bears,Buccaneers,19,32,False,False,,0,1,8,3,False,False,False,False,,,0.4,-0.4,estimate,False,,,,,,,
-31604358,545784004,MEGA M27,Vikings,Bills,7,16,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604350,545783996,MEGA M27,Eagles,Giants,42,13,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604349,545783995,MEGA M27,Saints,Browns,28,14,False,False,,0,1,8,2,False,False,False,False,,,2.1,-2.1,estimate,False,,,,,,,
+31604346,545783992,MEGA M27,Colts,Cowboys,14,9,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604347,545783993,MEGA M27,Chiefs,Jets,30,36,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604348,545783994,MEGA M27,Dolphins,Lions,31,20,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604371,545784017,MEGA M27,Bengals,Steelers,35,9,False,False,,0,1,9,2,False,False,False,False,,,5.4,-5.4,estimate,False,,,,,,,
+31604349,545783995,MEGA M27,Saints,Browns,28,14,False,False,,0,1,8,2,False,False,False,False,,,2.1,-2.1,estimate,False,,,,,,,
+31604350,545783996,MEGA M27,Eagles,Giants,42,13,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604351,545783997,MEGA M27,Commanders,Rams,27,28,False,False,,0,1,8,3,False,False,False,False,,,2.5,-2.5,estimate,False,,,,,,,
+31604358,545784004,MEGA M27,Vikings,Bills,7,16,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604354,545784000,MEGA M27,49ers,Raiders,17,19,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604355,545784001,MEGA M27,Patriots,Packers,41,6,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604352,545783998,MEGA M27,Panthers,Broncos,27,24,False,False,,0,1,8,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604353,545783999,MEGA M27,Chargers,Texans,14,27,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604357,545784003,MEGA M27,Bears,Buccaneers,19,32,False,False,,0,1,8,3,False,False,False,False,,,0.4,-0.4,estimate,False,,,,,,,
+31604356,545784002,MEGA M27,Seahawks,Cardinals,32,34,False,False,,0,1,8,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604363,545784009,MEGA M27,Packers,Vikings,34,31,True,False,"playoff race, close seeding, close records, division race",0,1,9,2,False,False,False,False,,,0.0,0.0,estimate,False,,,,,,,
-31604367,545784013,MEGA M27,Jets,Bills,14,45,False,False,,0,1,9,3,False,False,False,False,,,-8.0,8.0,estimate,False,,,,,,,
-31604366,545784012,MEGA M27,Saints,Panthers,7,28,False,False,,0,1,9,3,False,False,False,False,,,-0.2,0.2,estimate,False,,,,,,,
-31604372,545784018,MEGA M27,Ravens,Chargers,24,17,False,False,,0,1,9,2,False,False,False,False,,,5.7,-5.7,estimate,False,,,,,,,
-31604368,545784014,MEGA M27,Raiders,Seahawks,13,27,False,False,,0,1,9,3,False,False,False,False,,,5.8,-5.8,estimate,False,,,,,,,
+31604361,545784007,MEGA M27,Falcons,Chiefs,52,17,False,False,,0,1,9,2,False,False,False,False,,,4.7,-4.7,estimate,False,,,,,,,
+31604360,545784006,MEGA M27,Lions,Patriots,35,31,False,False,,0,1,9,2,False,False,False,False,,,-1.8,1.8,estimate,False,,,,,,,
 31604370,545784016,MEGA M27,Cowboys,49ers,6,16,False,False,,0,1,9,3,False,False,False,False,,,-15.1,15.1,estimate,False,,,,,,,
 31604365,545784011,MEGA M27,Colts,Dolphins,38,16,False,False,,0,1,9,2,False,False,False,False,,,-8.3,8.3,estimate,False,,,,,,,
-31604361,545784007,MEGA M27,Falcons,Chiefs,52,17,False,False,,0,1,9,2,False,False,False,False,,,4.7,-4.7,estimate,False,,,,,,,
+31604372,545784018,MEGA M27,Ravens,Chargers,24,17,False,False,,0,1,9,2,False,False,False,False,,,5.7,-5.7,estimate,False,,,,,,,
 31604364,545784010,MEGA M27,Titans,Jaguars,41,6,False,False,,0,1,9,2,False,False,False,False,,,21.9,-21.9,estimate,False,,,,,,,
-31604362,545784008,MEGA M27,Browns,Texans,14,24,False,False,,0,1,9,3,False,False,False,False,,,-4.6,4.6,estimate,False,,,,,,,
-31604360,545784006,MEGA M27,Lions,Patriots,35,31,False,False,,0,1,9,2,False,False,False,False,,,-1.8,1.8,estimate,False,,,,,,,
+31604366,545784012,MEGA M27,Saints,Panthers,7,28,False,False,,0,1,9,3,False,False,False,False,,,-0.2,0.2,estimate,False,,,,,,,
+31604367,545784013,MEGA M27,Jets,Bills,14,45,False,False,,0,1,9,3,False,False,False,False,,,-8.0,8.0,estimate,False,,,,,,,
 31604369,545784015,MEGA M27,Cardinals,Rams,35,0,False,False,,0,1,9,2,False,False,False,False,,,3.7,-3.7,estimate,False,,,,,,,
 31604359,545784005,MEGA M27,Giants,Commanders,42,49,False,False,,0,1,9,3,False,False,False,False,,,-6.2,6.2,estimate,False,,,,,,,
+31604371,545784017,MEGA M27,Bengals,Steelers,35,9,False,False,,0,1,9,2,False,False,False,False,,,5.4,-5.4,estimate,False,,,,,,,
+31604368,545784014,MEGA M27,Raiders,Seahawks,13,27,False,False,,0,1,9,3,False,False,False,False,,,5.8,-5.8,estimate,False,,,,,,,
+31604362,545784008,MEGA M27,Browns,Texans,14,24,False,False,,0,1,9,3,False,False,False,False,,,-4.6,4.6,estimate,False,,,,,,,
 31604380,545784026,MEGA M27,Panthers,Ravens,28,31,True,True,,0,1,10,3,False,False,True,False,,,0.0,0.0,estimate,False,,,,,,,
-31604385,545784031,MEGA M27,Commanders,Bengals,27,7,False,False,,0,1,10,2,False,False,False,False,,,-1.9,1.9,estimate,False,,,,,,,
-31604381,545784027,MEGA M27,Chargers,Jets,48,56,False,False,,0,1,10,3,False,False,False,False,,,1.3,-1.3,estimate,False,,,,,,,
-31604373,545784019,MEGA M27,Texans,Colts,19,45,False,False,,0,1,10,3,False,False,False,False,,,0.8,-0.8,estimate,False,,,,,,,
-31604374,545784020,MEGA M27,Bills,Dolphins,47,34,False,False,,0,1,10,2,False,False,False,False,,,4.6,-4.6,estimate,False,,,,,,,
-31604375,545784021,MEGA M27,Bears,Saints,28,24,False,False,,0,1,10,2,False,False,False,False,,,0.0,0.0,estimate,False,,,,,,,
-31604376,545784022,MEGA M27,Cowboys,Titans,5,28,False,False,,0,1,10,3,False,False,False,False,,,-21.8,21.8,estimate,False,,,,,,,
-31604377,545784023,MEGA M27,Lions,Buccaneers,21,28,False,False,,0,1,10,3,False,False,False,False,,,-5.2,5.2,estimate,False,,,,,,,
 31604378,545784024,MEGA M27,Chiefs,Cardinals,35,39,False,False,,0,1,10,3,False,False,False,False,,,-11.3,11.3,estimate,False,,,,,,,
+31604381,545784027,MEGA M27,Chargers,Jets,48,56,False,False,,0,1,10,3,False,False,False,False,,,1.3,-1.3,estimate,False,,,,,,,
 31604379,545784025,MEGA M27,Giants,Jaguars,21,27,False,False,,0,1,10,3,False,False,False,False,,2026-10-20 06:35:00,3.1,-3.1,estimate,False,,,,,,,
-31604382,545784028,MEGA M27,Broncos,Raiders,37,12,False,False,,0,1,10,2,False,False,False,False,,,2.9,-2.9,estimate,False,,,,,,,
-31604383,545784029,MEGA M27,Eagles,Steelers,20,30,False,False,,0,1,10,3,False,False,False,False,,,15.2,-15.2,estimate,False,,,,,,,
+31604385,545784031,MEGA M27,Commanders,Bengals,27,7,False,False,,0,1,10,2,False,False,False,False,,,-1.9,1.9,estimate,False,,,,,,,
+31604377,545784023,MEGA M27,Lions,Buccaneers,21,28,False,False,,0,1,10,3,False,False,False,False,,,-5.2,5.2,estimate,False,,,,,,,
+31604376,545784022,MEGA M27,Cowboys,Titans,5,28,False,False,,0,1,10,3,False,False,False,False,,,-21.8,21.8,estimate,False,,,,,,,
+31604375,545784021,MEGA M27,Bears,Saints,28,24,False,False,,0,1,10,2,False,False,False,False,,,0.0,0.0,estimate,False,,,,,,,
+31604374,545784020,MEGA M27,Bills,Dolphins,47,34,False,False,,0,1,10,2,False,False,False,False,,,4.6,-4.6,estimate,False,,,,,,,
 31604384,545784030,MEGA M27,49ers,Vikings,35,24,False,False,,0,1,10,2,False,False,False,False,,,9.3,-9.3,estimate,False,,,,,,,
-31604398,545784044,MEGA M27,Cardinals,Commanders,23,25,False,False,,0,1,11,3,False,False,True,False,,,2.2,-2.2,estimate,False,,,,,,,
-31604390,545784036,MEGA M27,Steelers,Broncos,3,12,False,False,,0,1,11,3,False,False,False,False,,,-11.1,11.1,estimate,False,,,,,,,
+31604383,545784029,MEGA M27,Eagles,Steelers,20,30,False,False,,0,1,10,3,False,False,False,False,,,15.2,-15.2,estimate,False,,,,,,,
+31604382,545784028,MEGA M27,Broncos,Raiders,37,12,False,False,,0,1,10,2,False,False,False,False,,,2.9,-2.9,estimate,False,,,,,,,
+31604373,545784019,MEGA M27,Texans,Colts,19,45,False,False,,0,1,10,3,False,False,False,False,,,0.8,-0.8,estimate,False,,,,,,,
 31604389,545784035,MEGA M27,Bills,Chiefs,34,13,False,False,,0,1,11,2,False,False,False,False,,,14.4,-14.4,estimate,False,,,,,,,
+31604390,545784036,MEGA M27,Steelers,Broncos,3,12,False,False,,0,1,11,3,False,False,False,False,,,-11.1,11.1,estimate,False,,,,,,,
+31604391,545784037,MEGA M27,Bengals,Saints,35,28,False,False,,0,1,11,2,False,False,False,False,,,2.7,-2.7,estimate,False,,,,,,,
 31604386,545784032,MEGA M27,Rams,Packers,7,6,False,False,,0,1,11,2,False,False,False,False,,,-1.0,1.0,estimate,False,,,,,,,
+31604392,545784038,MEGA M27,Browns,Raiders,30,33,False,False,,0,1,11,3,False,False,False,False,,,-1.6,1.6,estimate,False,,,,,,,
 31604387,545784033,MEGA M27,Lions,Bears,14,20,False,False,,0,1,11,3,False,False,False,False,,,-4.2,4.2,estimate,False,,,,,,,
 31604388,545784034,MEGA M27,Cowboys,Eagles,0,24,False,False,,0,1,11,3,False,False,False,False,,,-17.2,17.2,estimate,False,,,,,,,
-31604399,545784045,MEGA M27,49ers,Seahawks,44,12,False,False,,0,1,11,2,False,False,False,False,,,9.8,-9.8,estimate,False,,,,,,,
-31604397,545784043,MEGA M27,Jaguars,Titans,7,42,False,False,,0,1,11,3,False,False,False,False,,,-22.2,22.2,estimate,False,,,,,,,
-31604400,545784046,MEGA M27,Chargers,Patriots,19,27,False,False,,0,1,11,3,False,False,False,False,,,0.0,0.0,estimate,False,,,,,,,
-31604401,545784047,MEGA M27,Buccaneers,Panthers,24,27,False,False,,0,1,11,3,False,False,False,False,,,-1.8,1.8,estimate,False,,,,,,,
 31604393,545784039,MEGA M27,Colts,Giants,28,3,False,False,,0,1,11,2,False,False,False,False,,,7.9,-7.9,estimate,False,,,,,,,
 31604394,545784040,MEGA M27,Dolphins,Jets,20,34,False,False,,0,1,11,3,False,False,False,False,,,3.6,-3.6,estimate,False,,,,,,,
-31604396,545784042,MEGA M27,Texans,Ravens,21,23,False,False,,0,1,11,3,False,False,False,False,,,-1.6,1.6,estimate,False,,,,,,,
 31604395,545784041,MEGA M27,Vikings,Falcons,24,23,True,False,"playoff race, close seeding, two user teams",0,1,11,2,False,False,False,False,,,-2.9,2.9,estimate,False,,,,,,,
-31604392,545784038,MEGA M27,Browns,Raiders,30,33,False,False,,0,1,11,3,False,False,False,False,,,-1.6,1.6,estimate,False,,,,,,,
-31604391,545784037,MEGA M27,Bengals,Saints,35,28,False,False,,0,1,11,2,False,False,False,False,,,2.7,-2.7,estimate,False,,,,,,,
-31604419,545784049,MEGA M27,Falcons,Lions,20,27,False,False,,0,1,12,3,False,False,False,False,,,4.4,-4.4,estimate,False,,,,,,,
-31604418,545784048,MEGA M27,Rams,Chiefs,35,38,False,False,,0,1,12,3,False,False,False,False,,,4.0,-4.0,estimate,False,,,,,,,
-31604431,545784061,MEGA M27,Seahawks,Cowboys,36,12,False,False,,0,1,12,2,False,False,False,False,,,3.5,-3.5,estimate,False,,,,,,,
-31604422,545784052,MEGA M27,Titans,Commanders,24,25,False,False,,0,1,12,3,False,False,False,False,,,11.8,-11.8,estimate,False,,,,,,,
-31604428,545784058,MEGA M27,Vikings,Panthers,17,14,False,False,,0,1,12,2,False,False,False,False,,,-5.7,5.7,estimate,False,,,,,,,
-31604429,545784059,MEGA M27,Patriots,Bills,12,37,False,False,,0,1,12,3,False,False,False,False,,,-9.9,9.9,estimate,False,,,,,,,
+31604401,545784047,MEGA M27,Buccaneers,Panthers,24,27,False,False,,0,1,11,3,False,False,False,False,,,-1.8,1.8,estimate,False,,,,,,,
+31604396,545784042,MEGA M27,Texans,Ravens,21,23,False,False,,0,1,11,3,False,False,False,False,,,-1.6,1.6,estimate,False,,,,,,,
+31604397,545784043,MEGA M27,Jaguars,Titans,7,42,False,False,,0,1,11,3,False,False,False,False,,,-22.2,22.2,estimate,False,,,,,,,
+31604398,545784044,MEGA M27,Cardinals,Commanders,23,25,False,False,,0,1,11,3,False,False,True,False,,,2.2,-2.2,estimate,False,,,,,,,
+31604400,545784046,MEGA M27,Chargers,Patriots,19,27,False,False,,0,1,11,3,False,False,False,False,,,0.0,0.0,estimate,False,,,,,,,
+31604399,545784045,MEGA M27,49ers,Seahawks,44,12,False,False,,0,1,11,2,False,False,False,False,,,9.8,-9.8,estimate,False,,,,,,,
+31604421,545784051,MEGA M27,Browns,Bengals,12,36,True,False,"playoff race, close seeding, close records, division race, two user teams",0,1,12,3,False,False,False,False,,,-3.5,3.5,estimate,False,,,,,,,
 31604423,545784053,MEGA M27,Saints,Packers,21,17,False,False,,0,1,12,2,False,False,False,False,,,1.0,-1.0,estimate,False,,,,,,,
 31604424,545784054,MEGA M27,Giants,49ers,14,48,False,False,,0,1,12,3,False,False,False,False,,,-13.7,13.7,estimate,False,,,,,,,
-31604420,545784050,MEGA M27,Bears,Jaguars,21,14,False,False,,0,1,12,2,False,False,False,False,,,8.1,-8.1,estimate,False,,,,,,,
-31604421,545784051,MEGA M27,Browns,Bengals,12,36,True,False,"playoff race, close seeding, close records, division race, two user teams",0,1,12,3,False,False,False,False,,,-3.5,3.5,estimate,False,,,,,,,
 31604425,545784055,MEGA M27,Buccaneers,Chargers,0,21,False,False,,0,1,12,3,False,False,False,False,,,3.6,-3.6,estimate,False,,,,,,,
 31604426,545784056,MEGA M27,Broncos,Dolphins,27,33,False,False,,0,1,12,3,False,False,False,False,,,6.6,-6.6,estimate,False,,,,,,,
+31604428,545784058,MEGA M27,Vikings,Panthers,17,14,False,False,,0,1,12,2,False,False,False,False,,,-5.7,5.7,estimate,False,,,,,,,
 31604430,545784060,MEGA M27,Steelers,Texans,17,28,False,False,,0,1,12,3,False,False,False,False,,,-5.1,5.1,estimate,False,,,,,,,
+31604431,545784061,MEGA M27,Seahawks,Cowboys,36,12,False,False,,0,1,12,2,False,False,False,False,,,3.5,-3.5,estimate,False,,,,,,,
 31604427,545784057,MEGA M27,Cardinals,Eagles,14,43,False,False,,0,1,12,3,False,False,False,False,,,-4.3,4.3,estimate,False,,,,,,,
-31604457,545784071,MEGA M27,Raiders,Chargers,0,0,False,False,,0,1,13,1,False,False,False,False,,,1.1,-1.1,estimate,False,,,,,,,
-31604462,545784076,MEGA M27,Jaguars,Steelers,0,0,False,False,,0,1,13,1,False,False,False,False,,,-3.5,3.5,estimate,False,,,,,,,
-31604458,545784072,MEGA M27,Bengals,Chiefs,0,0,False,False,,0,1,13,1,False,False,False,False,,,9.1,-9.1,estimate,False,,,,,,,
-31604456,545784070,MEGA M27,Ravens,Buccaneers,0,0,False,False,,0,1,13,1,False,False,False,False,,,2.7,-2.7,estimate,False,,,,,,,
-31604448,545784062,MEGA M27,Patriots,Vikings,0,0,False,False,,0,1,13,1,False,False,False,False,,,-0.6,0.6,estimate,False,,,,,,,
-31604449,545784063,MEGA M27,Browns,Falcons,0,0,True,False,"playoff race, close seeding, close records, two user teams",0,1,13,1,False,False,False,False,,,-2.8,2.8,estimate,False,,,,,,,
-31604452,545784066,MEGA M27,Jets,Broncos,0,0,False,False,,0,1,13,1,False,False,False,False,,,-7.4,7.4,estimate,False,,,,,,,
-31604459,545784073,MEGA M27,49ers,Rams,0,0,False,False,,0,1,13,1,False,False,False,False,,,11.4,-11.4,estimate,False,,,,,,,
-31604460,545784074,MEGA M27,Seahawks,Giants,0,0,False,False,,0,1,13,1,False,False,False,False,,,3.6,-3.6,estimate,False,,,,,,,
-31604453,545784067,MEGA M27,Eagles,Colts,31,17,False,False,,0,1,13,2,False,False,False,False,,,4.9,-4.9,estimate,False,,,,,,,
-31604455,545784069,MEGA M27,Panthers,Saints,28,10,False,False,,0,1,13,2,False,False,False,False,,,2.7,-2.7,estimate,False,,,,,,,
-31604451,545784065,MEGA M27,Dolphins,Bears,0,0,False,False,,0,1,13,1,False,False,False,False,,,-0.9,0.9,estimate,False,,,,,,,
-31604450,545784064,MEGA M27,Lions,Titans,0,0,False,False,,0,1,13,1,False,False,False,False,,,-17.8,17.8,estimate,False,,,,,,,
-31604461,545784075,MEGA M27,Packers,Bills,0,0,False,False,,0,1,13,1,False,False,False,False,,,-10.1,10.1,estimate,False,,,,,,,
+31604429,545784059,MEGA M27,Patriots,Bills,12,37,False,False,,0,1,12,3,False,False,False,False,,,-9.9,9.9,estimate,False,,,,,,,
+31604418,545784048,MEGA M27,Rams,Chiefs,35,38,False,False,,0,1,12,3,False,False,False,False,,,4.0,-4.0,estimate,False,,,,,,,
+31604419,545784049,MEGA M27,Falcons,Lions,20,27,False,False,,0,1,12,3,False,False,False,False,,,4.4,-4.4,estimate,False,,,,,,,
+31604420,545784050,MEGA M27,Bears,Jaguars,21,14,False,False,,0,1,12,2,False,False,False,False,,,8.1,-8.1,estimate,False,,,,,,,
+31604422,545784052,MEGA M27,Titans,Commanders,24,25,False,False,,0,1,12,3,False,False,False,False,,,11.8,-11.8,estimate,False,,,,,,,
 31604454,545784068,MEGA M27,Commanders,Texans,0,0,False,False,,0,1,13,1,False,False,False,False,,,0.0,0.0,estimate,False,,,,,,,
-31604489,545784087,MEGA M27,Texans,Jaguars,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604491,545784089,MEGA M27,Raiders,Broncos,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604492,545784090,MEGA M27,Rams,Cowboys,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604493,545784091,MEGA M27,Vikings,Lions,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604494,545784092,MEGA M27,Chiefs,Patriots,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604479,545784077,MEGA M27,Chargers,49ers,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604455,545784069,MEGA M27,Panthers,Saints,28,10,False,False,,0,1,13,2,False,False,False,False,,,2.7,-2.7,estimate,False,,,,,,,
+31604461,545784075,MEGA M27,Packers,Bills,14,31,False,False,,0,1,13,3,False,False,False,False,,,-10.1,10.1,estimate,False,,,,,,,
+31604453,545784067,MEGA M27,Eagles,Colts,31,17,False,False,,0,1,13,2,False,False,False,False,,,4.9,-4.9,estimate,False,,,,,,,
+31604452,545784066,MEGA M27,Jets,Broncos,24,30,False,False,,0,1,13,3,False,False,False,False,,,-7.4,7.4,estimate,False,,,,,,,
+31604448,545784062,MEGA M27,Patriots,Vikings,7,10,False,False,,0,1,13,3,False,False,False,False,,,-0.6,0.6,estimate,False,,,,,,,
+31604449,545784063,MEGA M27,Browns,Falcons,12,37,True,False,"playoff race, close seeding, close records, two user teams",0,1,13,3,False,False,False,False,,,-2.8,2.8,estimate,False,,,,,,,
+31604451,545784065,MEGA M27,Dolphins,Bears,0,0,False,False,,0,1,13,1,False,False,False,False,,,-0.9,0.9,estimate,False,,,,,,,
+31604450,545784064,MEGA M27,Lions,Titans,22,50,False,False,,0,1,13,3,False,False,False,False,,,-17.8,17.8,estimate,False,,,,,,,
+31604462,545784076,MEGA M27,Jaguars,Steelers,0,0,False,False,,0,1,13,1,False,False,False,False,,,-3.5,3.5,estimate,False,,,,,,,
+31604460,545784074,MEGA M27,Seahawks,Giants,38,17,False,False,,0,1,13,2,False,False,False,False,,,3.6,-3.6,estimate,False,,,,,,,
+31604459,545784073,MEGA M27,49ers,Rams,16,8,False,False,,0,1,13,2,False,False,False,False,,,11.4,-11.4,estimate,False,,,,,,,
+31604458,545784072,MEGA M27,Bengals,Chiefs,43,14,False,False,,0,1,13,2,False,False,False,False,,,9.1,-9.1,estimate,False,,,,,,,
+31604457,545784071,MEGA M27,Raiders,Chargers,21,18,False,False,,0,1,13,2,False,False,False,False,,,1.1,-1.1,estimate,False,,,,,,,
+31604456,545784070,MEGA M27,Ravens,Buccaneers,0,0,False,False,,0,1,13,1,False,False,False,False,,,2.7,-2.7,estimate,False,,,,,,,
+31604485,545784083,MEGA M27,Steelers,Ravens,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604484,545784082,MEGA M27,Giants,Browns,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604480,545784078,MEGA M27,Eagles,Seahawks,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604481,545784079,MEGA M27,Bills,Bears,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604482,545784080,MEGA M27,Packers,Dolphins,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604483,545784081,MEGA M27,Titans,Colts,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604488,545784086,MEGA M27,Panthers,Bengals,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604487,545784085,MEGA M27,Commanders,Falcons,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604486,545784084,MEGA M27,Buccaneers,Saints,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604484,545784082,MEGA M27,Giants,Browns,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604485,545784083,MEGA M27,Steelers,Ravens,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604482,545784080,MEGA M27,Packers,Dolphins,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604483,545784081,MEGA M27,Titans,Colts,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604481,545784079,MEGA M27,Bills,Bears,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604494,545784092,MEGA M27,Chiefs,Patriots,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604493,545784091,MEGA M27,Vikings,Lions,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604492,545784090,MEGA M27,Rams,Cowboys,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604491,545784089,MEGA M27,Raiders,Broncos,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604490,545784088,MEGA M27,Cardinals,Jets,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604489,545784087,MEGA M27,Texans,Jaguars,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604479,545784077,MEGA M27,Chargers,49ers,0,0,False,False,,0,1,14,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604508,545784106,MEGA M27,Colts,Bengals,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604509,545784107,MEGA M27,Cowboys,Jaguars,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604501,545784099,MEGA M27,Dolphins,Chargers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604504,545784102,MEGA M27,Ravens,Browns,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604498,545784096,MEGA M27,Seahawks,Rams,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604503,545784101,MEGA M27,Jets,Patriots,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604505,545784103,MEGA M27,Steelers,Panthers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604499,545784097,MEGA M27,Falcons,Buccaneers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604502,545784100,MEGA M27,Saints,Cardinals,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604500,545784098,MEGA M27,Vikings,Commanders,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604495,545784093,MEGA M27,Eagles,Texans,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604503,545784101,MEGA M27,Jets,Patriots,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604501,545784099,MEGA M27,Dolphins,Chargers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604502,545784100,MEGA M27,Saints,Cardinals,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604496,545784094,MEGA M27,Bears,Packers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604497,545784095,MEGA M27,Broncos,Bills,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604506,545784104,MEGA M27,Raiders,Titans,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604500,545784098,MEGA M27,Vikings,Commanders,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604504,545784102,MEGA M27,Ravens,Browns,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604498,545784096,MEGA M27,Seahawks,Rams,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604510,545784108,MEGA M27,Lions,Giants,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604506,545784104,MEGA M27,Raiders,Titans,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604499,545784097,MEGA M27,Falcons,Buccaneers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604507,545784105,MEGA M27,Chiefs,49ers,0,0,False,False,,0,1,15,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604532,545784114,MEGA M27,Cowboys,Giants,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604527,545784109,MEGA M27,Bengals,Ravens,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604528,545784110,MEGA M27,Chargers,Chiefs,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604542,545784124,MEGA M27,Packers,Texans,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604539,545784121,MEGA M27,Bears,Lions,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604541,545784123,MEGA M27,49ers,Eagles,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604540,545784122,MEGA M27,Buccaneers,Rams,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604530,545784112,MEGA M27,Falcons,Saints,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604531,545784113,MEGA M27,Browns,Colts,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604536,545784118,MEGA M27,Panthers,Seahawks,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604537,545784119,MEGA M27,Jaguars,Commanders,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604538,545784120,MEGA M27,Cardinals,Raiders,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604536,545784118,MEGA M27,Panthers,Seahawks,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604529,545784111,MEGA M27,Patriots,Broncos,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604535,545784117,MEGA M27,Jets,Vikings,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604532,545784114,MEGA M27,Cowboys,Giants,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604527,545784109,MEGA M27,Bengals,Ravens,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604538,545784120,MEGA M27,Cardinals,Raiders,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604530,545784112,MEGA M27,Falcons,Saints,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604542,545784124,MEGA M27,Packers,Texans,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604534,545784116,MEGA M27,Dolphins,Bills,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604528,545784110,MEGA M27,Chargers,Chiefs,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604535,545784117,MEGA M27,Jets,Vikings,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604531,545784113,MEGA M27,Browns,Colts,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604533,545784115,MEGA M27,Titans,Steelers,0,0,False,False,,0,1,16,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604560,545784127,MEGA M27,Rams,Seahawks,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604573,545784140,MEGA M27,Packers,Lions,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604570,545784137,MEGA M27,Saints,Buccaneers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604572,545784139,MEGA M27,Cardinals,49ers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604559,545784126,MEGA M27,Commanders,Cowboys,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604558,545784125,MEGA M27,Broncos,Chargers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604567,545784134,MEGA M27,Panthers,Falcons,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604566,545784133,MEGA M27,Texans,Titans,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604570,545784137,MEGA M27,Saints,Buccaneers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604565,545784132,MEGA M27,Ravens,Steelers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604564,545784131,MEGA M27,Chiefs,Raiders,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604563,545784130,MEGA M27,Colts,Jaguars,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604562,545784129,MEGA M27,Bengals,Browns,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604561,545784128,MEGA M27,Bills,Jets,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604573,545784140,MEGA M27,Packers,Lions,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604572,545784139,MEGA M27,Cardinals,49ers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604571,545784138,MEGA M27,Giants,Eagles,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604560,545784127,MEGA M27,Rams,Seahawks,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604569,545784136,MEGA M27,Patriots,Dolphins,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604562,545784129,MEGA M27,Bengals,Browns,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604563,545784130,MEGA M27,Colts,Jaguars,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604564,545784131,MEGA M27,Chiefs,Raiders,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604565,545784132,MEGA M27,Ravens,Steelers,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604566,545784133,MEGA M27,Texans,Titans,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604567,545784134,MEGA M27,Panthers,Falcons,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604568,545784135,MEGA M27,Vikings,Bears,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604569,545784136,MEGA M27,Patriots,Dolphins,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604571,545784138,MEGA M27,Giants,Eagles,0,0,False,False,,0,1,17,1,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
