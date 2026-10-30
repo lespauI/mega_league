@@ -1,13 +1,13 @@
 team__displayName,team__abbrName,team__logoId,team__logo,player__position,player__rosterId,player__fullName,player__yearsPro,player__injuryLength,player__portraitId,player__custom_portrait_url,player__jerseyNum,gamesPlayed,puntsTotalBlocked,puntsTotalIn20,puntTotalLongest,puntTotalTBs,puntAvgNetYdsPerAtt,puntTotalNetYds,puntTotalAtt,puntAvgYdsPerAtt,puntTotalYds
-Ravens,BAL,24,,P,555221738,Ryan Eckley,0,0,11279,,30,12,0,10,68,5,41.17,1894,46,46.04,2118
-Steelers,PIT,28,,P,555222377,Cameron Johnston,8,0,8608,,19,11,0,7,68,9,39.71,1390,35,46.74,1636
+Ravens,BAL,24,,P,555221738,Ryan Eckley,0,0,11279,,30,13,0,10,68,8,40.54,2027,50,46.42,2321
+Steelers,PIT,28,,P,555222377,Cameron Johnston,8,0,8608,,19,12,0,7,68,9,39.21,1490,38,46.50,1767
 Bengals,CIN,1,,P,555223216,Ryan Rehkow,2,0,10223,,8,11,0,5,77,5,40.92,1514,37,46.86,1734
 Browns,CLE,4,,P,555221242,Corey Bojorquez,8,0,9325,,13,13,0,5,63,5,34.68,1075,31,43.26,1341
 Jaguars,JAX,16,,P,555221538,Logan Cooke,8,0,9331,,9,11,0,6,74,6,36.92,886,24,44.54,1069
 Titans,TEN,29,,P,555223697,Tommy Townsend,6,0,620,,3,12,0,13,74,7,45.57,2415,53,49.72,2635
 Texans,HOU,31,,P,555224103,Brett Thorson,0,0,0,,16,12,0,4,63,6,32.53,1041,32,41.44,1326
 Colts,IND,9,,P,555223349,Rigoberto Sanchez,9,0,9282,,8,11,0,2,51,1,21.08,527,25,27.12,678
-Dolphins,MIA,11,,P,555223123,Bradley Pinion,11,0,7281,,48,11,0,9,71,8,44.36,1952,44,49.52,2179
+Dolphins,MIA,11,,P,555223123,Bradley Pinion,11,0,7281,,48,12,0,10,71,8,43.85,2105,48,48.73,2339
 Jets,NYJ,17,,P,555222773,Austin McNamara,2,0,10938,,14,11,0,0,66,6,33.00,429,13,46.46,604
 Patriots,NE,21,,P,555221131,Bryce Baringer,3,0,2645,,17,8,0,4,57,1,28.26,537,19,33.63,639
 Bills,BUF,2,,P,555221687,Tommy Doman Jr,0,0,11104,,39,12,0,13,70,9,44.31,1994,45,46.62,2098
@@ -18,11 +18,11 @@ Chiefs,KC,8,,P,555221073,Matt Araiza,4,0,1140,,14,9,0,6,73,9,43.17,993,23,51.78,
 Lions,DET,18,,P,555221867,Jack Fox,8,0,9460,,3,13,0,9,60,2,41.52,1121,27,45.74,1235
 Packers,GB,19,,P,555223887,Daniel Whelan,3,0,5263,,19,10,0,3,61,6,38.18,1069,28,48.32,1353
 Vikings,MIN,30,,P,555223558,Ryan Stonehouse,4,0,5015,,49,13,0,16,74,6,40.24,1167,29,44.79,1299
-Bears,CHI,0,,P,555223620,Tory Taylor,2,0,10262,,19,9,0,4,63,7,41.12,1028,25,49.48,1237
+Bears,CHI,0,,P,555223620,Tory Taylor,2,0,10262,,19,10,0,6,63,7,41.07,1150,28,49.04,1373
 Falcons,ATL,13,,P,555221108,Jake Bailey,7,0,9373,,16,13,0,7,56,7,34.38,997,29,45.07,1307
 Panthers,CAR,20,,P,555222684,Sam Martin,13,0,6649,,6,12,0,5,65,4,38.26,1186,31,42.65,1322
 Saints,NO,26,,P,555224022,Ryan Wright,4,0,2671,,17,12,0,7,72,4,43.85,1710,39,48.95,1909
-Buccaneers,TB,5,,P,555221682,Riley Dixon,10,0,7978,,9,11,0,5,61,3,32.07,866,27,40.70,1099
+Buccaneers,TB,5,,P,555221682,Riley Dixon,10,0,7978,,9,12,0,5,61,3,31.79,890,28,40.11,1123
 Cowboys,DAL,10,,P,555221066,Bryan Anger,14,0,5023,,5,12,0,9,71,1,39.61,1109,28,45.04,1261
 Eagles,PHI,12,,P,555222669,Braden Mann,6,0,442,,10,13,1,9,73,12,42.53,2084,49,50.24,2462
 Giants,NYG,15,,P,555223559,Jordan Stout,4,0,1957,,15,12,0,6,67,11,30.66,889,29,42.76,1240
