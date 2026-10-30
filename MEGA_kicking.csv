@@ -1,16 +1,16 @@
 team__displayName,team__abbrName,team__logoId,team__logo,player__position,player__rosterId,player__fullName,player__yearsPro,player__injuryLength,player__portraitId,player__custom_portrait_url,player__jerseyNum,gamesPlayed,fantasy_points,fGTotalAtt,fGTotal50PlusAtt,fGTotal50PlusMade,fGTotalLongest,fGTotalMade,fGAvgCompPct,kickoffTotalAtt,kickoffTotalTBs,xPTotalAtt,xPTotalMade,xPAvgCompPct
-Ravens,BAL,24,,K,555222628,Tyler Loop,1,0,10638,,33,12,18.00,11,2,0,49,6,54.55,41,20,21,18,85.71
-Steelers,PIT,28,,K,555221263,Chris Boswell,12,0,6353,,9,12,50.00,21,7,4,50,14,66.67,60,48,31,29,93.55
+Ravens,BAL,24,,K,555222628,Tyler Loop,1,0,10638,,33,13,18.00,12,2,0,49,6,50.00,45,20,24,21,87.50
+Steelers,PIT,28,,K,555221263,Chris Boswell,12,0,6353,,9,13,50.00,21,7,4,50,14,66.67,62,50,32,30,93.75
 Bengals,CIN,1,,K,555222778,Evan McPherson,5,0,1601,,2,13,54.00,21,4,3,56,16,76.19,51,41,22,20,90.91
 Browns,CLE,4,,K,555223148,Matt Prater,19,0,2449,https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/11122.png,15,13,57.00,27,7,3,54,17,62.96,69,45,38,34,89.47
-Jaguars,JAX,16,,K,555222608,Cam Little,2,0,10159,,39,12,42.00,20,4,0,45,14,70.00,69,30,41,41,100.00
+Jaguars,JAX,16,,K,555222608,Cam Little,2,0,10159,,39,13,48.00,23,4,0,45,16,69.57,74,35,44,44,100.00
 Titans,TEN,29,,K,555223460,Joey Slye,7,0,577,,6,12,23.00,15,5,1,55,7,46.67,0,0,16,11,68.75
 Titans,TEN,29,,P,555223697,Tommy Townsend,6,0,620,,3,11,0.00,0,0,0,0,0,0.00,33,18,0,0,0.00
 Texans,HOU,31,,K,555221800,Ka'imi Fairbairn,10,0,8000,,15,12,27.00,14,1,0,46,9,64.29,54,34,28,26,92.86
 Colts,IND,9,,P,555223349,Rigoberto Sanchez,9,0,9282,,8,13,0.00,0,0,0,0,0,0.00,44,6,0,0,0.00
 Colts,IND,9,,K,555223423,Spencer Shrader,2,0,10964,,3,11,9.00,10,1,0,43,3,30.00,0,0,15,5,33.33
-Dolphins,MIA,11,,K,555223069,Riley Patterson,5,0,2110,,47,12,48.00,16,7,6,54,12,75.00,0,0,29,25,86.21
-Dolphins,MIA,11,,P,555223123,Bradley Pinion,11,0,7281,,48,12,0.00,0,0,0,0,0,0.00,57,22,0,0,0.00
+Dolphins,MIA,11,,K,555223069,Riley Patterson,5,0,2110,,47,13,56.00,18,8,7,54,14,77.78,0,0,30,26,86.67
+Dolphins,MIA,11,,P,555223123,Bradley Pinion,11,0,7281,,48,13,0.00,0,0,0,0,0,0.00,61,22,0,0,0.00
 Jets,NYJ,17,,K,555222004,Blake Grupe,3,0,4804,,39,13,18.00,15,3,0,46,6,40.00,73,24,44,38,86.36
 Patriots,NE,21,,P,555221131,Bryce Baringer,3,0,2645,,17,13,0.00,0,0,0,0,0,0.00,66,55,0,0,0.00
 Patriots,NE,21,,K,555221258,Andres Borregales,1,0,10793,,8,13,33.00,17,3,0,41,11,64.71,0,0,39,37,94.87
@@ -26,13 +26,13 @@ Lions,DET,18,,P,555221867,Jack Fox,8,0,9460,,3,13,0.00,0,0,0,0,0,0.00,72,40,0,0,
 Lions,DET,18,,K,555223504,Charlie Smyth,1,0,11401,,13,10,20.00,12,5,1,56,6,50.00,0,0,37,28,75.68
 Packers,GB,19,,K,555223461,Trey Smack,0,0,11244,,28,13,20.00,10,3,1,51,6,60.00,61,17,40,39,97.50
 Vikings,MIN,30,,K,555223217,Will Reichard,2,0,10224,,0,13,45.00,17,0,0,49,15,88.24,56,14,28,26,92.86
-Bears,CHI,0,,K,555223359,Cairo Santos,12,0,6576,,8,12,36.00,15,5,3,57,10,66.67,49,13,22,19,86.36
+Bears,CHI,0,,K,555223359,Cairo Santos,12,0,6576,,8,13,39.00,17,6,3,57,11,64.71,51,13,22,19,86.36
 Falcons,ATL,13,,K,555221848,Nick Folk,18,0,1128,,6,13,37.00,18,6,2,52,11,61.11,62,12,35,32,91.43
 Panthers,CAR,20,,K,555221159,Jake Bates,3,0,10871,,39,8,21.00,12,3,0,43,7,58.33,24,14,22,22,100.00
 Panthers,CAR,20,,K,555221837,Ryan Fitzgerald,1,0,10554,,10,6,15.00,8,0,0,42,5,62.50,26,7,17,14,82.35
 Panthers,CAR,20,,P,555222684,Sam Martin,13,0,6649,,6,1,0.00,0,0,0,0,0,0.00,3,0,1,0,0.00
 Saints,NO,26,,K,555221431,Daniel Carlson,8,0,8838,,10,12,29.00,10,2,1,55,9,90.00,32,15,36,36,100.00
-Buccaneers,TB,5,,K,555222759,Chase McLaughlin,7,0,455,,4,12,56.00,25,9,4,55,16,64.00,60,22,32,31,96.88
+Buccaneers,TB,5,,K,555222759,Chase McLaughlin,7,0,455,,4,13,59.00,26,9,4,55,17,65.38,64,25,33,32,96.97
 Cowboys,DAL,10,,K,555221086,Brandon Aubrey,4,0,10362,,17,13,27.00,14,2,0,45,9,64.29,68,10,45,44,97.78
 Eagles,PHI,12,,K,555221765,Jake Elliott,9,0,8542,,4,13,35.00,21,7,1,52,11,52.38,39,20,17,16,94.12
 Giants,NYG,15,,K,555223351,Jason Sanders,8,0,9349,,16,13,12.00,6,2,0,36,4,66.67,80,20,20,20,100.00
