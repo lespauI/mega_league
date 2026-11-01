@@ -58,7 +58,7 @@ export async function loadEloSosData(displaySeason, parseCsv) {
           ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png`
           : null;
         return {
-          week,
+          week: Number.isInteger(game.weekIndex) ? game.weekIndex : week,
           opponent,
           elo: opponentElo,
           homeAway: game.homeAway || '',

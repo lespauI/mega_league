@@ -18,10 +18,16 @@ MEGA_teams.csv (required columns)
 - Optional fields used by stats aggregation: off*/def* yard/point fields, tODiff, cap fields, etc.
 
 MEGA_games.csv (required columns)
+- id (NeonSportz page identity), gameId (game-source identity)
 - homeTeam, awayTeam
 - homeScore, awayScore
-- status (1=schedule, 2=in progress, 3=final)
+- status (1=scheduled; 2/3/4 are completed under the pipeline contract)
 - weekIndex, seasonIndex, stageIndex
+- home_fw, away_fw, is_superseded (explicit Boolean flags)
+
+Performance calculations also require snapshot-bound game-box-score and historical
+team evidence. See [Force Win exclusion](force_win_exclusion.md). Raw game results
+remain the source for official standings and tiebreakers.
 
 MEGA_rankings.csv (required columns)
 - team, rank, prevRank

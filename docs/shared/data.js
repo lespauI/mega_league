@@ -6,6 +6,7 @@
     'teams', 'players', 'games', 'team_stats', 'player_usage', 'rankings_stats',
     'stints', 'trades', 'roster_rankings', 'rankings_sos', 'elo', 'elo_sos',
     'schedules', 'playoffs',
+    'performance_teams', 'performance_games', 'performance_provenance',
   ]);
   const REQUIRED_CYCLE_FIELDS = [
     'edition', 'csvSeasonIndex', 'displaySeason', 'calendarYear',
@@ -160,5 +161,22 @@
 
   const scriptUrl = global.document?.currentScript?.src;
   const manifestUrl = scriptUrl ? new URL('../data/data_manifest.json', scriptUrl).href : undefined;
-  global.MegaData = Object.assign(createDataLoader({ manifestUrl }), { createDataLoader, validateManifest });
+  function isNumeric(value) {
+    return value !== null && value !== undefined && value !== '' && Number.isFinite(Number(value));
+  }
+  global.MegaData = Object.assign(createDataLoader({ manifestUrl }), { createDataLoader, validateManifest, isNumeric });
+  async function showPerformanceSummary() {
+    const node = global.document?.querySelector?.('[data-performance-summary]');
+    if (!node) return;
+    try {
+      const [provenance, manifest] = await Promise.all([global.MegaData.loadJson('performance_provenance'), global.MegaData.getManifest()]);
+      node.textContent = `Performance excludes ${provenance.excludedGames} Force Win games for both teams. Official standings, playoff tiebreakers and draft results retain them. ELO is an unadjusted external Week ${manifest.cycle.eloSourceWeek} reference. Unavailable metrics are omitted.`;
+      if (provenance.sourceReconciliationNotes?.length) node.textContent += ' Source-level discrepancies are recorded in the provenance.';
+    } catch (error) {
+      node.textContent = `Performance provenance unavailable: ${error.message}`;
+      node.setAttribute('role', 'alert');
+    }
+  }
+  if (global.document?.readyState === 'loading') global.document.addEventListener('DOMContentLoaded', showPerformanceSummary, { once: true });
+  else showPerformanceSummary();
 })(globalThis);

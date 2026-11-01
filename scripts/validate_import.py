@@ -30,12 +30,13 @@ except ImportError:  # package imports used by unit tests
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from common import normalize_team_name  # noqa: E402
+from mega.inputs.games import flag  # noqa: E402
 from cycle_context import CycleContext, HASH_CONTRACT_VERSION, canonical_input_sha256  # noqa: E402
 
 
 BASIC_FILES = {
     "MEGA_teams.csv": {"displayName", "userName", "seasonIndex", "weekIndex", "calendarYear"},
-    "MEGA_games.csv": {"gameId", "homeTeam", "awayTeam", "homeScore", "awayScore", "status", "seasonIndex", "stageIndex", "weekIndex"},
+    "MEGA_games.csv": {"id", "gameId", "homeTeam", "awayTeam", "homeScore", "awayScore", "status", "seasonIndex", "stageIndex", "weekIndex", "home_fw", "away_fw", "is_superseded"},
     "MEGA_players.csv": {"id", "rosterId", "team", "fullName", "position"},
     "MEGA_rankings.csv": {"team", "seasonIndex", "stageIndex", "weekIndex", "rank"},
     "MEGA_draft.csv": {"Year", "Round", "Pick"},
@@ -198,6 +199,12 @@ def validate_snapshot(
     ids: set[str] = set()
     max_completed_display_week = 0
     for row in selected_games:
+        _required(row.get('id', ''), 'NeonSportz game id')
+        for field in ('home_fw', 'away_fw', 'is_superseded'):
+            try:
+                flag(row[field])
+            except ValueError as exc:
+                raise ValueError(f"Game {row['id']} has invalid {field}") from exc
         game_id = _required(row.get("gameId", ""), "gameId")
         if game_id in ids:
             raise ValueError(f"Duplicate gameId in target regular season: {game_id}")

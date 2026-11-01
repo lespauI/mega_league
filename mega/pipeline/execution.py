@@ -24,7 +24,7 @@ from .artifacts import (
     is_owned_artifact,
     task_output_paths,
 )
-from .manifests import _read_build_manifest, validate_browser_data, write_build_manifest
+from .manifests import _read_build_manifest, performance_identity, validate_browser_data, write_build_manifest
 from .publication import publish_staged_changes
 from .staging import _protected_hashes, _sha256, create_staging_workspace
 
@@ -44,14 +44,15 @@ class Task:
 
 
 TASKS: dict[str, Task] = {
-    "stints": Task("stints", "Player/team stints", "stats_scripts/build_player_team_stints.py"),
+    "performance": Task("performance", "Validated performance inputs", "scripts/build_performance.py", dependencies=("inputs",)),
+    "stints": Task("stints", "Player/team stints", "stats_scripts/build_player_team_stints.py", dependencies=("performance",)),
     "team_stats": Task("team_stats", "Team statistics", "stats_scripts/aggregate_team_stats.py", dependencies=("stints",)),
     "usage": Task("usage", "Player usage", "stats_scripts/aggregate_player_usage.py", dependencies=("stints", "team_stats")),
     "rankings_stats": Task("rankings_stats", "Rankings statistics", "stats_scripts/aggregate_rankings_stats.py", dependencies=("stints", "team_stats")),
     "trade_verify": Task("trade_verify", "Trade-aware stats verification", "scripts/verify_trade_stats.py", dependencies=("stints", "team_stats")),
-    "sos_elo": Task("sos_elo", "ELO strength of schedule", "scripts/calc_sos_elo.py", dependencies=("inputs",)),
+    "sos_elo": Task("sos_elo", "ELO strength of schedule", "scripts/calc_sos_elo.py", dependencies=("performance",)),
     "verify_sos_elo": Task("verify_sos_elo", "Verify ELO schedules and SoS", "scripts/verify_sos_elo.py", dependencies=("sos_elo",)),
-    "sos_rankings": Task("sos_rankings", "Rankings strength of schedule", "scripts/calc_sos_by_rankings.py", dependencies=("inputs",)),
+    "sos_rankings": Task("sos_rankings", "Rankings strength of schedule", "scripts/calc_sos_by_rankings.py", dependencies=("performance",)),
     "scenarios": Task("scenarios", "Playoff scenario simulation", "scripts/generate_all_team_scenarios.py", dependencies=("sos_rankings", "verify_sos_elo")),
     "week18_simulator": Task("week18_simulator", "Week 18 playoff simulator", "scripts/week18_simulator.py", dependencies=("inputs",)),
     "playoff_table": Task("playoff_table", "Playoff race table", "scripts/playoff_race_table.py", dependencies=("scenarios",)),
@@ -111,6 +112,8 @@ def task_arguments(task_id: str, season_index: int, context: CycleContext) -> li
     """Build the season and declared-ELO arguments for a task without running it."""
     task = TASKS[task_id]
     arguments = list(task.arguments)
+    if task_id == "performance":
+        arguments.extend(("--season-index", str(season_index)))
     if task_id in {"sos_elo", "verify_sos_elo", "sos_rankings", "scenarios", "playoff_table", "playoff_html", "week18_simulator"}:
         if task_id == "sos_elo":
             arguments.extend(("--csv-season-index", str(season_index),
@@ -124,6 +127,7 @@ def task_arguments(task_id: str, season_index: int, context: CycleContext) -> li
         arguments.extend(("--seed", str(PIPELINE_SIMULATION_SEED)))
     if task_id == "sos_rankings":
         arguments.extend(("--out-csv", "output/ranked_sos_by_conference.csv"))
+        arguments.extend(("--rankings-csv", ".cache/performance/inputs/MEGA_rankings.csv"))
     return arguments
 
 
@@ -185,6 +189,9 @@ def run_pipeline(
         ),
     }[group]
     missing_inputs = [name for name in required_inputs if not (repository_root / name).is_file()]
+    missing_inputs.extend(name for name in ("MEGA_games.csv", "MEGA_passing.csv", "MEGA_rushing.csv", "MEGA_receiving.csv",
+                                            "MEGA_defense.csv", "MEGA_kicking.csv", "MEGA_punting.csv")
+                          if not (repository_root / name).is_file() and name not in missing_inputs)
     if missing_inputs:
         print("Missing required current-cycle inputs: " + ", ".join(missing_inputs))
         return [ScriptResult(ScriptStatus.FAILED, "Input preflight", error="missing: " + ", ".join(missing_inputs))]
@@ -213,6 +220,8 @@ def run_pipeline(
                 return [ScriptResult(ScriptStatus.FAILED, "Build preflight", error="existing manifest has no explicit artifact ownership; run the full pipeline")]
             if previous.get("snapshotId") != context.snapshot_id:
                 return [ScriptResult(ScriptStatus.FAILED, "Build preflight", error="existing artifacts belong to another snapshot; run the full pipeline")]
+            if previous.get("performanceIdentity", {}) != performance_identity(repository_root):
+                return [ScriptResult(ScriptStatus.FAILED, "Build preflight", error="performance policy/evidence changed; run the full pipeline")]
             if "docs/data/data_manifest.json" not in previous.get("artifacts", {}):
                 return [ScriptResult(ScriptStatus.FAILED, "Build preflight", error="existing full build has no browser data manifest; run the full pipeline")]
             try:

@@ -29,8 +29,8 @@ def make_export_zips(directory: Path):
              {"displayName": "Beta", "userName": "beta-user", "seasonIndex": 0, "weekIndex": 12, "calendarYear": 2026}],
         ),
         "MEGA_games.csv": csv_bytes(
-            ["gameId", "homeTeam", "awayTeam", "homeScore", "awayScore", "status", "seasonIndex", "stageIndex", "weekIndex"],
-            [{"gameId": "g1", "homeTeam": "Alpha", "awayTeam": "Beta", "homeScore": 10, "awayScore": 7,
+            ["id", "gameId", "homeTeam", "awayTeam", "homeScore", "awayScore", "status", "seasonIndex", "stageIndex", "weekIndex", "home_fw", "away_fw", "is_superseded"],
+            [{"id": "1", "home_fw": "False", "away_fw": "False", "is_superseded": "False", "gameId": "g1", "homeTeam": "Alpha", "awayTeam": "Beta", "homeScore": 10, "awayScore": 7,
               "status": 2, "seasonIndex": 0, "stageIndex": 1, "weekIndex": 0}],
         ),
         "MEGA_players.csv": csv_bytes(
@@ -166,6 +166,11 @@ class ImportValidationTests(unittest.TestCase):
             activate_snapshot(active, working, metadata)
             output = active / "output"
             output.mkdir()
+            performance = output / 'performance'
+            performance.mkdir()
+            (performance / 'teams.csv').write_text('displayName\nAlpha\n', encoding='utf-8')
+            (performance / 'games.csv').write_text('id\n1\n', encoding='utf-8')
+            (performance / 'manifest.json').write_text('{}', encoding='utf-8')
             with (output / "ranked_sos_by_conference.csv").open("w", newline="", encoding="utf-8") as stream:
                 writer = csv.DictWriter(stream, fieldnames=["team", "past_ranked_sos_avg"])
                 writer.writeheader()

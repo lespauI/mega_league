@@ -24,6 +24,8 @@ except ImportError:
     from stats_scripts.stats_domain import safe_float, normalize_team_display  # type: ignore  # noqa: E402
 
 
+from mega.inputs.performance import load_csv
+
 StatFieldMap = Dict[str, str]
 
 

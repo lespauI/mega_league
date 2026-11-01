@@ -35,13 +35,18 @@ GAME_WIN_PROB_MAX = 0.75
 SB_PROB_MAX = 45.0
 
 
+from pathlib import Path
+from mega.inputs.performance import analytics_path
+
 def load_power_rankings(season_index=0):
     rankings = {}
     max_week = {}
-    with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_rankings.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             if int(row.get('seasonIndex', 0)) != season_index:
+                continue
+            if not row.get('rank'):
                 continue
             team = row['team'].strip()
             week = int(row.get('weekIndex', 0))
@@ -61,7 +66,7 @@ def read_standings(season_index=0, elo_source_week=None):
     elo_ratings = load_elo_data(source_week=elo_source_week, season_index=season_index)
     
     teams_div = {}
-    with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_teams.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()
@@ -72,7 +77,7 @@ def read_standings(season_index=0, elo_source_week=None):
             teams_div[team] = {'division': div, 'conference': conf, 'logo_url': logo_url}
     
     team_rankings = {}
-    with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_teams.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()
@@ -86,7 +91,8 @@ def read_standings(season_index=0, elo_source_week=None):
             team_rankings[team] = {
                 'rank': int(row['rank']) if row.get('rank') else 99,
                 'ovrRating': int(row['ovrRating']) if row.get('ovrRating') else 85,
-                'winLossStreak': streak
+                'winLossStreak': streak,
+                'performanceWinPct': float(row['winPct']) if row.get('winPct') else 0
             }
     
     remaining_opponents = defaultdict(list)
@@ -150,6 +156,7 @@ def read_standings(season_index=0, elo_source_week=None):
                 'past_ranked_sos_avg': float(row['past_ranked_sos_avg']),
                 'win_streak': win_streak,
                 'power_rank': power_rank,
+                'performance_win_pct': team_rankings[team]['performanceWinPct'],
                 'elo': team_elo
             }
             
@@ -826,7 +833,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
                 bye_prob = get_round1_bye_prob(team_name, all_div_leaders, probabilities)
                 quality_of_wins = team_data.get('past_ranked_sos_avg', 0.5)
                 is_top_seed = (team_name == top_bye_team)
-                win_pct = team_data.get('win_pct', 0.5)
+                win_pct = team_data.get('performance_win_pct', team_data.get('win_pct', 0.5))
                 past_sos = quality_of_wins
                 win_streak = team_data.get('win_streak', 0)
                 power_rank = team_data.get('power_rank', 16)

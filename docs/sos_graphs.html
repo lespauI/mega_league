@@ -56,7 +56,7 @@
     }
 
     async function loadData() {
-      const teams = await tryCsv('teams');
+      const teams = await tryCsv('performance_teams');
       const sos = await tryCsv('rankings_sos');
 
       const teamMap = new Map();
@@ -74,7 +74,7 @@
       for (const row of sos) {
         const meta = teamMap.get(String(row.team).trim());
         const W = +row.W, L = +row.L; const g = (Number.isFinite(W)?W:0) + (Number.isFinite(L)?L:0);
-        row.winPct = g>0 ? (W/g) : (meta? meta.winPct : null);
+        row.winPct = meta ? meta.winPct : null;
         row.conference = row.conference || (meta? meta.conf : null);
         row.logoUrl = meta && meta.logoId!=='' && meta.logoId!=null ? `https://cdn.neonsportz.com/teamlogos/256/${meta.logoId}.png` : null;
       }
@@ -90,7 +90,7 @@
           const meta = teamMap.get(name);
           playoffTeams.push({
             team: name,
-            winPct: stats.win_pct,
+            winPct: meta ? meta.winPct : null,
             playoff_probability: stats.playoff_probability,
             remaining_sos: stats.remaining_sos,
             conference: stats.conference,
@@ -108,9 +108,9 @@
       // Filter valid data
       let data;
       if (xKey === 'playoff_probability') {
-        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]) && +d[xKey] > 5 && +d[xKey] < 99.5);
+        data = rows.filter(d => MegaData.isNumeric(d[cfg.key]) && MegaData.isNumeric(d[xKey]) && +d[xKey] > 5 && +d[xKey] < 99.5);
       } else {
-        data = rows.filter(d => Number.isFinite(+d[cfg.key]) && Number.isFinite(+d[xKey]));
+        data = rows.filter(d => MegaData.isNumeric(d[cfg.key]) && MegaData.isNumeric(d[xKey]));
       }
 
       const margin = { top: 20, right: 24, bottom: 46, left: 60 };
@@ -318,6 +318,7 @@
   </script>
 </head>
 <body>
+  <div data-performance-summary role="status" style="margin:12px;padding:10px;border:1px solid #777;border-radius:6px;font:13px system-ui">Loading performance policy…</div>
   <div class="container">
     <h1>Strength of Schedule — Four Graphics</h1>
     <div class="subtitle">Graphs 1-3: X = Win% (10% steps), Y = SoS (fine scale). Graph 4: X = Playoff% (10% steps), Y = Remaining SoS (fine scale). Colored squares: red if above trend (tougher), blue if below. Dashed lines show means. Trend line in gray.</div>

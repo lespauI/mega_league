@@ -30,6 +30,7 @@ from pathlib import Path
 from typing import Any, Dict, List
 
 from common import normalize_team_name, read_elo_map, read_team_meta
+from mega.inputs.performance import excluded_game
 
 def read_games(games_csv: str, start_row: int, season_index: int) -> List[Dict[str, Any]]:
     """Read regular-season games by explicit CSV season index.
@@ -58,7 +59,8 @@ def read_games(games_csv: str, start_row: int, season_index: int) -> List[Dict[s
             csv_season_index = str(normalized.get("seasonIndex", "")).strip()
             stage_index = str(normalized.get("stageIndex", "")).strip()
             if csv_season_index == str(season_index - 1) and stage_index == "1":
-                rows.append(normalized)
+                if not excluded_game(normalized):
+                    rows.append(normalized)
 
     logging.info(
         "Season %d slice: %d regular-season games from %s (CSV seasonIndex=%d)",
@@ -117,6 +119,7 @@ def build_schedules(
                 "homeAway": "home",
                 "date": date,
                 "gameId": game_id,
+                "weekIndex": int(row.get("weekIndex") or 0),
                 "oppElo": None,
             }
         )
@@ -129,6 +132,7 @@ def build_schedules(
                 "homeAway": "away",
                 "date": date,
                 "gameId": game_id,
+                "weekIndex": int(row.get("weekIndex") or 0),
                 "oppElo": None,
             }
         )

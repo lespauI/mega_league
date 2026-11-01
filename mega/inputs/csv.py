@@ -8,7 +8,7 @@ from typing import Any, Dict, List
 
 REQUIRED_HEADERS_BY_NAME = {
     "MEGA_teams.csv": {"displayName", "seasonIndex"},
-    "MEGA_games.csv": {"gameId", "homeTeam", "awayTeam", "seasonIndex", "stageIndex"},
+    "MEGA_games.csv": {"id", "gameId", "homeTeam", "awayTeam", "seasonIndex", "stageIndex", "home_fw", "away_fw", "is_superseded"},
     "MEGA_rankings.csv": {"team", "seasonIndex", "stageIndex", "weekIndex", "rank"},
     "MEGA_passing.csv": {"player__rosterId", "team__displayName", "gamesPlayed", "passTotalYds"},
     "MEGA_rushing.csv": {"player__rosterId", "team__displayName", "gamesPlayed", "rushTotalYds"},

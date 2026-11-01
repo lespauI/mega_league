@@ -4,7 +4,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Any, Dict, Tuple
 
-from mega.inputs.csv import load_csv
+from mega.inputs.performance import enabled as performance_enabled, load_csv
 from mega.inputs.identity import normalize_team_display, safe_float
 
 StintKey = Tuple[str, str, str]  # (seasonIndex, canonical_team, player__rosterId)
@@ -446,7 +446,8 @@ def build_player_team_stints(base_path: Path) -> None:
     # that per-team totals better align with MEGA_teams offensive yardage
     # splits. This keeps raw fields untouched and only scales the adjusted
     # values for traded players.
-    reconcile_offense_with_team_totals(stints, team_map)
+    if not performance_enabled(base_path):
+        reconcile_offense_with_team_totals(stints, team_map)
 
     output_dir = base_path / "output"
     output_dir.mkdir(exist_ok=True, parents=True)

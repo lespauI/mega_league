@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "forceWinPolicy": "exclude_both_teams_from_performance",
+  "officialResults": "retain_for_standings_playoffs_tiebreakers_and_draft",
+  "tradeAttribution": "source_stat_identity_with_historical_team_evidence",
+  "externalElo": "retain_declared_week_as_unadjusted_external_reference",
+  "missingEvidence": "fail_build",
+  "unavailableMetrics": "blank_with_reason"
+}

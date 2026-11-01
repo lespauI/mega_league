@@ -83,7 +83,7 @@
 
     function drawScatter(holder, rows, cfg) {
       rows = rows.filter(d => 
-        Number.isFinite(+d[cfg.xKey]) && Number.isFinite(+d[cfg.yKey])
+        MegaData.isNumeric(d[cfg.xKey]) && MegaData.isNumeric(d[cfg.yKey])
       );
 
       if (rows.length < 2) return;
@@ -721,6 +721,7 @@
   </script>
 </head>
 <body>
+  <div data-performance-summary role="status" style="margin:12px;padding:10px;border:1px solid #777;border-radius:6px;font:13px system-ui">Loading performance policy…</div>
   <div class="container">
     <h1>Team Player Usage Patterns</h1>
     <div class="subtitle">
