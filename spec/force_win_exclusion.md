@@ -14,8 +14,8 @@ labeled as an unadjusted external reference; model weights are unchanged.
 `data/performance_evidence/` contains exactly two versioned inputs:
 `manifest.json` and `snapshot.tar.gz`. The archive contains the complete game and
 history evidence; the manifest binds those records to the raw export byte
-hashes and import metadata. The current API snapshot covers all 214 completed regular-
-season games, including the 23 Force Wins, and the histories of 15 players with
+hashes and import metadata. The first validated API snapshot covered all 214 completed regular-
+season games, including 23 Force Wins, and the histories of 15 players with
 duplicated source-stat identities. Gzip timestamps, tar metadata and member order
 are fixed, so identical evidence produces identical archive bytes. The packed
 snapshot is about 0.5 MB, compared with 7.2 MB / 259,000 lines of expanded JSON.

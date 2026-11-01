@@ -1,6 +1,6 @@
 # Getting started with MEGA League analytics
 
-The current cycle is Madden 27, season 1 (`seasonIndex=0`), with results through Week 14 and approved Week 8 ELO ratings. Madden 26 history stays under `archive/madden-26/`.
+The current cycle is Madden 27, season 1 (`seasonIndex=0`), with results through Week 15 and approved Week 8 ELO ratings. Madden 26 history stays under `archive/madden-26/`.
 
 ## Setup
 
@@ -8,7 +8,7 @@ Install Python 3 and download or clone this repository. Open a terminal in its r
 
 ## Import league data
 
-Follow the complete [export and update workflow](README.md#export-and-update-workflow). Request **Basic Info** and **Stats** from the NeonSportz export page, download both emailed ZIP attachments, and obtain the matching ELO CSV plus the separately maintained user map. Do not manually assemble a partial set of three CSVs or copy archived exports into the active root.
+Follow the complete [export and update workflow](README.md#export-and-update-workflow). Request **Basic Info** and **Stats** from the NeonSportz export page, retrieve both emailed ZIP attachments through the Codex Gmail plugin (use the original MIME message when the attachment reader does not support ZIPs), and obtain the matching ELO CSV plus the separately maintained user map. Do not manually assemble a partial set of three CSVs or copy archived exports into the active root.
 
 Validate before activation:
 
@@ -25,9 +25,10 @@ Review the reported season/week. Run the same command with `--activate` to insta
 
 ## Build and view
 
-The first build for a new import must be the full pipeline:
+After each import, refresh and validate game statistics through the NeonSportz API, then run the full pipeline. The importer is incremental by default; `--full-refresh` deliberately refetches all completed games for historical corrections.
 
 ```bash
+python3 scripts/fetch_performance_evidence.py
 python3 scripts/run_all.py --season-index 0
 python3 scripts/verify_site.py
 python3 -m http.server 8000
