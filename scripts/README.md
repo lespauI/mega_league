@@ -17,7 +17,7 @@ Run these from the repo root (runner and extracted CLI imports also work from ot
 - `python3 scripts/verify_sos_elo.py --season-index 1` – verify schedules and ELO SoS for one-based display season 1.
 - `python3 scripts/generate_index.py` – render root `index.html` from the declared site and artifact manifests; it does not run calculations.
 
-The full pipeline stages files before publication, validates active pages and browser datasets, and rolls back if a publish step fails. `mega/pipeline/artifacts.py` owns producer outputs and browser data URLs. `docs/data/data_manifest.json` supplies logical dataset keys to the frontend. Stats-only and playoff-only runs require a complete build manifest for the same input snapshot. See the root README for the weekly workflow.
+The full pipeline stages files before publication, validates active pages and browser datasets, and rolls back if a publish step fails. `mega/pipeline/artifacts.py` owns producer outputs and browser data URLs. `docs/data/data_manifest.json` supplies logical dataset keys to the frontend. Stats-only and playoff-only runs require a complete build manifest for the same input snapshot. See the root README for the weekly workflow, including Gmail plugin retrieval of export ZIPs from original MIME messages; a ZIP limitation in the attachment reader does not require browser mail access.
 
 ## Python domain tools
 

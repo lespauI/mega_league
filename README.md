@@ -43,7 +43,7 @@ See [AGENTS.md](AGENTS.md) for module responsibilities, data contracts, rollover
 1. Go to the [MEGA export page](https://neonsportz.com/leagues/MEGA/export).
 2. Set the delivery email to **lespaul1488@gmail.com**.
 3. Export both **Basic Info** and **Stats**.
-4. Open that mailbox and download the ZIP attachments from the **two export emails**.
+4. Use the connected **Codex Gmail plugin** to find the **two export emails** addressed to that mailbox. Forwarded delivery to the connected account is valid. For ZIPs marked unsupported by the attachment reader, request the original message with `include_raw_mime=true`, decode `raw_mime_base64url`, and extract the exact ZIP MIME part locally; this plugin route works without Gmail browser automation. Check ZIP integrity and remove temporary MIME files. If neither plugin route is available, explain the specific limitation and ask before using a browser. See [service access policy](AGENTS.md#prefer-codex-plugins-over-browser-automation).
 5. Validate both ZIPs and the matching ELO CSV before changing active files:
 
    ```bash
