@@ -111,8 +111,8 @@
       const metricKey = metric.key;
 
       const data = rows.filter(d => 
-        Number.isFinite(+d.win_pct) && 
-        Number.isFinite(+d[metricKey])
+        MegaData.isNumeric(d.win_pct) &&
+        MegaData.isNumeric(d[metricKey])
       );
 
       if (data.length < 2) return;
@@ -290,6 +290,7 @@
   </script>
 </head>
 <body>
+  <div data-performance-summary role="status" style="margin:12px;padding:10px;border:1px solid #777;border-radius:6px;font:13px system-ui">Loading performance policy…</div>
   <div class="container">
     <h1>Team Statistics Explorer — Win% Correlations</h1>
     <div class="subtitle">

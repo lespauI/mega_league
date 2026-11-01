@@ -5,6 +5,8 @@ import os
 from collections import defaultdict
 
 from common import to_int, norm_rank, mean_safe
+from mega.inputs.performance import analytics_path, excluded_game
+from pathlib import Path
 
 DEFAULT_SEASON_INDEX = 0
 
@@ -44,7 +46,8 @@ def compute_strength_score(row, w_off=0.4, w_def=0.4, w_rank=0.2):
     return sum(s * w for s, w in parts) / total_w
 
 
-def read_latest_rankings(rankings_csv_path, season_index):
+def read_latest_rankings(rankings_csv_path, season_index, *, official=False):
+    rankings_csv_path = Path(rankings_csv_path) if official else analytics_path(Path(rankings_csv_path))
     # Keep latest by (seasonIndex, stageIndex, weekIndex) for target season only
     latest = {}
     with open(rankings_csv_path, newline="", encoding="utf-8") as f:
@@ -76,7 +79,7 @@ def read_latest_rankings(rankings_csv_path, season_index):
     return scores
 
 
-def read_games_split(games_csv_path, season_index):
+def read_games_split(games_csv_path, season_index, *, include_force_wins=False):
     remaining = []
     past = []
     with open(games_csv_path, newline="", encoding="utf-8") as f:
@@ -90,6 +93,8 @@ def read_games_split(games_csv_path, season_index):
             home = (row.get("homeTeam") or "").strip()
             away = (row.get("awayTeam") or "").strip()
             if not home or not away:
+                continue
+            if not include_force_wins and excluded_game(row):
                 continue
             if status == "1":
                 remaining.append((home, away))
@@ -261,6 +266,12 @@ def main(argv=None):
     teams_info = read_teams_info(teams_csv, games_csv, args.season_index)
     results = compute_ranked_sos(teams_info, strength_scores, remaining, past)
     write_output(results, output_csv)
+    # Draft-order reporting retains its prior official-result strength inputs.
+    if Path('spec/performance_policy.json').is_file():
+        official_scores = read_latest_rankings('MEGA_rankings.csv', args.season_index, official=True)
+        official_remaining, official_past = read_games_split(games_csv, args.season_index, include_force_wins=True)
+        official_results = compute_ranked_sos(teams_info, official_scores, official_remaining, official_past)
+        write_output(official_results, 'output/official_ranked_sos_by_conference.csv')
 
     # Console preview
     by_conf = defaultdict(list)

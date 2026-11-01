@@ -3,6 +3,31 @@ import { test, expect } from './fixtures';
 // These checks derive their cycle and team expectations from the current import,
 // rather than relying on a player, team assignment, or franchise calendar year.
 test.describe('Current-cycle publication', () => {
+  test('performance excludes Force Wins and explains the policy', async ({ page }) => {
+    await page.goto('/docs/matchup_gameplan.html');
+    const result = await page.evaluate(async () => {
+      const data = (globalThis as any).MegaData;
+      const d3 = (globalThis as any).d3;
+      const raw = await data.loadCsv('games', (text: string) => d3.csvParse(text));
+      const adjusted = await data.loadCsv('performance_games', (text: string) => d3.csvParse(text));
+      const provenance = await data.loadJson('performance_provenance');
+      const cycle = await data.getManifest();
+      const forceWin = (g: any) => [g.home_fw, g.away_fw].some(v => String(v).toLowerCase() === 'true' || String(v) === '1');
+      const current = raw.filter((g: any) => Number(g.seasonIndex) === cycle.cycle.csvSeasonIndex && Number(g.stageIndex) === 1);
+      return {
+        expected: current.filter((g: any) => !forceWin(g)).map((g: any) => g.id).sort(),
+        actual: adjusted.map((g: any) => g.id).sort(),
+        excluded: provenance.excludedGames,
+        complete: provenance.complete,
+        unavailableZero: data.isNumeric(null) || data.isNumeric(''),
+      };
+    });
+    expect(result.actual).toEqual(result.expected);
+    expect(result.complete).toBe(true);
+    expect(result.unavailableZero).toBe(false);
+    await expect(page.locator('[data-performance-summary]')).toContainText(`excludes ${result.excluded} Force Win games`);
+    await expect(page.locator('[data-performance-summary]')).toContainText('Official standings');
+  });
   test('playoff table labels the active snapshot week', async ({ page, request }) => {
     const response = await request.get('/docs/data/import_metadata.json');
     const metadata = await response.json();

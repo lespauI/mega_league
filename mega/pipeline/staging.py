@@ -69,7 +69,7 @@ def create_staging_workspace(repository_root: Path) -> tuple[Path, Path, dict[st
     def ignore(directory: str, names: list[str]) -> set[str]:
         return {
             name for name in names
-            if name in excluded or name.startswith(".mega-build-") or name.startswith(".mega-import-")
+            if name in excluded or name.startswith((".mega-build-", ".mega-import-", ".performance-api-"))
         }
 
     shutil.copytree(repository_root, workspace, ignore=ignore)

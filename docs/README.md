@@ -67,3 +67,7 @@ If you add a new dashboard under `docs/`, consider:
 Maintained HTML/JS stays under `docs/` for existing URLs. Generated pages are explicitly registered in `mega/pipeline/artifacts.py`; their Python renderers live under `mega/reporting/` where extracted. Never delete all HTML or all `output/` files as cleanup. `docs/shared/elo_sos.js` and `sos_elo_season.js` share season-aware ELO data preparation without combining it with rankings-based SoS.
 
 Run `python3 scripts/verify_site.py` after a local full build. It validates enabled pages, declared datasets, local script/module dependencies, and artifact hashes for the active snapshot. The staged pipeline runs the same gate before publication.
+
+## Performance and official results
+
+Performance charts, recent form, rankings and analytical SoS exclude both teams in Force Win games. The shared policy note explains the exclusion and the unadjusted external ELO reference. Official standings, playoff tiebreakers, the Week 18 simulator and draft ordering retain official results. See [the data contract](../spec/force_win_exclusion.md).

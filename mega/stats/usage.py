@@ -3,7 +3,7 @@ import csv
 from collections import defaultdict
 from pathlib import Path
 
-from mega.inputs.csv import load_csv
+from mega.inputs.performance import load_csv
 from mega.inputs.identity import normalize_team_display, safe_float
 
 def calculate_herfindahl_index(shares):
@@ -166,7 +166,7 @@ def aggregate_player_usage(base_path):
         usage_data['rush_distribution_style'] = 'Bellcow' if usage_data['rb1_share'] > 70 else ('RBBC' if usage_data['rbbc'] else 'Feature Back')
         
         team_stat = stats_map.get(team, {})
-        usage_data['qb_rating'] = safe_float(team_stat.get('qb_rating'))
+        usage_data['qb_rating'] = (safe_float(team_stat['qb_rating']) if team_stat.get('qb_rating') not in (None, '') else None)
         usage_data['pass_int_pct'] = safe_float(team_stat.get('pass_int_pct'))
         usage_data['sack_rate'] = safe_float(team_stat.get('sack_rate'))
         usage_data['pass_td_pct'] = safe_float(team_stat.get('pass_td_pct'))

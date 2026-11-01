@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 import csv
 import os
+from pathlib import Path
 from collections import defaultdict
 
 def read_standings():
@@ -13,7 +14,8 @@ def read_standings():
             conf = row.get('conferenceName', '').strip()
             teams_div[team] = {'division': div, 'conference': conf}
 
-    with open('output/ranked_sos_by_conference.csv', 'r', encoding='utf-8') as f:
+    source = 'output/official_ranked_sos_by_conference.csv' if Path('spec/performance_policy.json').is_file() else 'output/ranked_sos_by_conference.csv'
+    with open(source, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         standings = list(reader)
 

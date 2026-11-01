@@ -29,6 +29,7 @@ GENERATED_BROWSER_DATA = frozenset({
 # Producer ownership is deliberately explicit. The two season-dependent SoS
 # exports and roster CSV family are added as patterns below.
 TASK_OUTPUTS: dict[str, tuple[str, ...]] = {
+    "performance": ("output/performance/teams.csv", "output/performance/games.csv", "output/performance/manifest.json"),
     "stints": ("output/player_team_stints.csv",),
     "team_stats": ("output/team_aggregated_stats.csv",),
     "usage": ("output/team_player_usage.csv",),
@@ -39,7 +40,7 @@ TASK_OUTPUTS: dict[str, tuple[str, ...]] = {
         "output/sos/season{season}_elo.json",
         "output/schedules/season{season}/all_schedules.json",
     ),
-    "sos_rankings": ("output/ranked_sos_by_conference.csv",),
+    "sos_rankings": ("output/ranked_sos_by_conference.csv", "output/official_ranked_sos_by_conference.csv"),
     "scenarios": ("output/team_scenarios.json", "output/playoff_probabilities.json"),
     "playoff_table": ("docs/playoff_race_table.html",),
     "playoff_html": ("docs/playoff_race.html",),
@@ -80,6 +81,9 @@ class BrowserDataArtifact:
 # repository root or output/ are reached with ../../; copied browser files are
 # siblings of the manifest.
 BROWSER_DATA: dict[str, BrowserDataArtifact] = {
+    "performance_teams": BrowserDataArtifact("output/performance/teams.csv", "../../output/performance/teams.csv"),
+    "performance_games": BrowserDataArtifact("output/performance/games.csv", "../../output/performance/games.csv"),
+    "performance_provenance": BrowserDataArtifact("output/performance/manifest.json", "../../output/performance/manifest.json"),
     "teams": BrowserDataArtifact("MEGA_teams.csv", "../../MEGA_teams.csv"),
     "players": BrowserDataArtifact("MEGA_players.csv", "../../MEGA_players.csv"),
     "games": BrowserDataArtifact("MEGA_games.csv", "../../MEGA_games.csv"),

@@ -13,6 +13,8 @@ import itertools
 from collections import defaultdict
 import json
 import random
+from pathlib import Path
+from mega.inputs.performance import analytics_path, excluded_game
 
 DEFAULT_NUM_SIMULATIONS = 10000
 TIE_PROBABILITY = 0.003  # ~0.3% of NFL games end in ties
@@ -36,10 +38,12 @@ def load_elo_data(elo_csv='mega_elo.csv', source_week=None, root=None, season_in
 def load_rankings_data(season_index=0):
     rankings = {}
     max_week = {}
-    with open('MEGA_rankings.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_rankings.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             if int(row.get('seasonIndex', 0)) != season_index:
+                continue
+            if not row.get('rank'):
                 continue
             team = row['team'].strip()
             week = int(row.get('weekIndex', 0))
@@ -79,7 +83,7 @@ def is_divisional_game(home, away, teams_info):
 
 def load_data(season_index=0, elo_source_week=None):
     teams_info = {}
-    with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_teams.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()
@@ -112,6 +116,7 @@ def load_data(season_index=0, elo_source_week=None):
                 'away_score': int(row['awayScore']) if row['awayScore'] else 0,
                 'week': int(row['weekIndex']) if row['weekIndex'] else 0,
                 'status': status,
+                'performance_excluded': excluded_game(row),
                 'completed': status in [2, 3, 4]
             })
     
@@ -129,6 +134,9 @@ def load_data(season_index=0, elo_source_week=None):
     for team in teams_info:
         teams_info[team]['elo'] = elo_data.get(normalize_team_name(team), DEFAULT_ELO)
     
+    performance_stats = calculate_team_stats(teams_info, [g for g in games if not g['performance_excluded']])
+    for team in teams_info:
+        teams_info[team]['performance_stats'] = performance_stats[team]
     return teams_info, games, sos_data
 
 def compare_head_to_head(teams, stats):
@@ -216,8 +224,10 @@ def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
         if home not in stats or away not in stats:
             continue
         
-        home_win_pct = stats[home]['win_pct']
-        away_win_pct = stats[away]['win_pct']
+        home_performance = teams_info[home].get('performance_stats', stats[home])
+        away_performance = teams_info[away].get('performance_stats', stats[away])
+        home_win_pct = home_performance['win_pct']
+        away_win_pct = away_performance['win_pct']
         home_past_sos = teams_info[home]['past_sos']
         away_past_sos = teams_info[away]['past_sos']
         
@@ -226,8 +236,8 @@ def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
         home_elo_norm = max(0, min(1, (home_elo - 1000) / 400))
         away_elo_norm = max(0, min(1, (away_elo - 1000) / 400))
         
-        home_sov = calculate_sov_rating(stats[home]['defeated_opponents'], rankings)
-        away_sov = calculate_sov_rating(stats[away]['defeated_opponents'], rankings)
+        home_sov = calculate_sov_rating(home_performance['defeated_opponents'], rankings)
+        away_sov = calculate_sov_rating(away_performance['defeated_opponents'], rankings)
         
         home_rating = (
             home_elo_norm * ELO_WEIGHT +

@@ -264,6 +264,7 @@
   </style>
 </head>
 <body>
+  <div data-performance-summary role="status" style="margin:12px;padding:10px;border:1px solid #777;border-radius:6px;font:13px system-ui">Loading performance policy…</div>
   <div class="container">
     <h1>Matchup Gameplan Advisor</h1>
     <p class="subtitle">
@@ -361,6 +362,7 @@
     function tryCsv(key) { return MegaData.loadCsv(key, text => d3.csvParse(text, d3.autoType)); }
 
     function safeNum(v) {
+      if (!MegaData.isNumeric(v)) return null;
       const x = +v;
       return Number.isFinite(x) ? x : null;
     }
@@ -378,7 +380,7 @@
         tryCsv('team_stats'),
         tryCsv('player_usage')
       ]);
-      const games = await tryCsv('games');
+      const games = await tryCsv('performance_games');
       return { rankings, aggregated, usage, games };
     }
 
@@ -435,17 +437,17 @@
             tdPerPlay: safeNum(pickFirst(agg.td_per_play, use.td_per_play)),
             passYdsPerAtt: safeNum(pickFirst(agg.pass_yds_per_att, use.pass_yds_per_att)),
             rushYdsPerAtt: safeNum(pickFirst(agg.rush_yds_per_att, use.rush_yds_per_att)),
-            pointsPerGame: safeNum(agg.ptsForPg),
-            totalYdsPerGame: safeNum(agg.offTotalYdsPg)
+            pointsPerGame: safeNum(pickFirst(r.ptsForPg, agg.ptsForPg)),
+            totalYdsPerGame: safeNum(pickFirst(r.offTotalYdsPg, agg.offTotalYdsPg))
           },
           defense: {
-            pointsPerGame: safeNum(agg.ptsAgainstPg),
-            totalYdsPerGame: safeNum(agg.defTotalYdsPg)
+            pointsPerGame: safeNum(pickFirst(r.ptsAgainstPg, agg.ptsAgainstPg)),
+            totalYdsPerGame: safeNum(pickFirst(r.defTotalYdsPg, agg.defTotalYdsPg))
           },
           indices: {
-            offenseIndexZ: safeNum(agg.offenseIndexZ),
-            defenseIndexZ: safeNum(agg.defenseIndexZ),
-            teamStrengthIndex: safeNum(agg.teamStrengthIndex)
+            offenseIndexZ: safeNum(pickFirst(r.offenseIndexZ, agg.offenseIndexZ)),
+            defenseIndexZ: safeNum(pickFirst(r.defenseIndexZ, agg.defenseIndexZ)),
+            teamStrengthIndex: safeNum(pickFirst(r.teamStrengthIndex, agg.teamStrengthIndex))
           },
           rawRankings: r,
           rawAggregates: agg,
@@ -560,7 +562,7 @@
           weekIndex: safeNum(g.weekIndex),
           status: g.status
         }))
-        .filter(g => g.homeTeam && g.awayTeam);
+        .filter(g => g.homeTeam && g.awayTeam && ![true, 1, 'true', '1'].includes(typeof g.home_fw === 'string' ? g.home_fw.toLowerCase() : g.home_fw) && ![true, 1, 'true', '1'].includes(typeof g.away_fw === 'string' ? g.away_fw.toLowerCase() : g.away_fw));
 
       if (!parsedGames.length) return;
 
@@ -568,7 +570,7 @@
         const s = g.status;
         if (s === undefined || s === null || s === '') return false;
         const n = safeNum(s);
-        if (Number.isFinite(n)) return n === 3;
+        if (Number.isFinite(n)) return [2, 3, 4].includes(n);
         const str = String(s).toLowerCase();
         return str === '3' || str === 'final' || str === 'completed';
       });

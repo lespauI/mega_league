@@ -37,7 +37,8 @@ class CurrentCycleTests(unittest.TestCase):
 
     def test_default_rankings_select_season_zero(self):
         content = "team,seasonIndex,weekIndex,rank\nChiefs,3,18,32\nChiefs,0,3,7\nChiefs,0,12,1\n"
-        with patch("builtins.open", return_value=io.StringIO(content)):
+        with tempfile.TemporaryDirectory() as temp, patch.object(playoff, "analytics_path", return_value=Path(temp) / "rankings.csv"):
+            (Path(temp) / "rankings.csv").write_text(content)
             self.assertEqual(playoff.load_rankings_data(), {"Chiefs": 1})
 
     def test_legacy_season_row_helper_still_locates_regular_season(self):
@@ -53,7 +54,8 @@ class CurrentCycleTests(unittest.TestCase):
 
         task_ids = pipeline_tasks._resolve(pipeline_tasks.GROUPS["full"])
         context = CycleContext("Madden 27", 0, 1, 2026, 12, 12, 13, 8, "fixture-snapshot", ())
-        self.assertEqual(task_ids[0], "stints")
+        self.assertEqual(task_ids[0], "performance")
+        self.assertLess(task_ids.index('performance'), task_ids.index('stints'))
         self.assertEqual(len(task_ids), len(set(task_ids)))
         self.assertEqual(
             pipeline_tasks.task_arguments("sos_elo", 0, context),

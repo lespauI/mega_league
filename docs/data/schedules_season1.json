@@ -3,13 +3,14 @@
     "team": "Steelers",
     "conference": "AFC",
     "division": "AFC North",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Falcons",
         "homeAway": "home",
         "date": "",
         "gameId": "545783875",
+        "weekIndex": 0,
         "oppElo": 1015.1
       },
       {
@@ -17,6 +18,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783889",
+        "weekIndex": 1,
         "oppElo": 1046.1
       },
       {
@@ -24,6 +26,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783908",
+        "weekIndex": 2,
         "oppElo": 998.5
       },
       {
@@ -31,6 +34,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783917",
+        "weekIndex": 3,
         "oppElo": 979.7
       },
       {
@@ -38,6 +42,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783940",
+        "weekIndex": 4,
         "oppElo": 981.2
       },
       {
@@ -45,20 +50,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783956",
+        "weekIndex": 5,
         "oppElo": 996.0
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783963",
-        "oppElo": 973.2
       },
       {
         "opponent": "Browns",
         "homeAway": "home",
         "date": "",
         "gameId": "545783982",
+        "weekIndex": 7,
         "oppElo": 979.7
       },
       {
@@ -66,6 +66,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784017",
+        "weekIndex": 9,
         "oppElo": 998.5
       },
       {
@@ -73,6 +74,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784029",
+        "weekIndex": 10,
         "oppElo": 956.7
       },
       {
@@ -80,6 +82,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784036",
+        "weekIndex": 11,
         "oppElo": 953.8
       },
       {
@@ -87,6 +90,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784060",
+        "weekIndex": 12,
         "oppElo": 969.3
       },
       {
@@ -94,6 +98,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784076",
+        "weekIndex": 13,
         "oppElo": 1039.9
       },
       {
@@ -101,6 +106,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784083",
+        "weekIndex": 14,
         "oppElo": 985.5
       },
       {
@@ -108,6 +114,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784103",
+        "weekIndex": 15,
         "oppElo": 980.9
       },
       {
@@ -115,6 +122,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784115",
+        "weekIndex": 16,
         "oppElo": 952.3
       },
       {
@@ -122,6 +130,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784132",
+        "weekIndex": 17,
         "oppElo": 985.5
       }
     ]
@@ -137,6 +146,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783875",
+        "weekIndex": 0,
         "oppElo": 1010.3
       },
       {
@@ -144,6 +154,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783886",
+        "weekIndex": 1,
         "oppElo": 980.9
       },
       {
@@ -151,6 +162,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783901",
+        "weekIndex": 2,
         "oppElo": 1023.0
       },
       {
@@ -158,6 +170,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783932",
+        "weekIndex": 3,
         "oppElo": 973.2
       },
       {
@@ -165,6 +178,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783946",
+        "weekIndex": 4,
         "oppElo": 985.5
       },
       {
@@ -172,6 +186,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783950",
+        "weekIndex": 5,
         "oppElo": 991.3
       },
       {
@@ -179,6 +194,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783964",
+        "weekIndex": 6,
         "oppElo": 946.0
       },
       {
@@ -186,6 +202,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783983",
+        "weekIndex": 7,
         "oppElo": 996.0
       },
       {
@@ -193,6 +210,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783991",
+        "weekIndex": 8,
         "oppElo": 998.5
       },
       {
@@ -200,6 +218,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784007",
+        "weekIndex": 9,
         "oppElo": 1053.2
       },
       {
@@ -207,6 +226,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784041",
+        "weekIndex": 11,
         "oppElo": 1016.5
       },
       {
@@ -214,6 +234,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784049",
+        "weekIndex": 12,
         "oppElo": 1034.9
       },
       {
@@ -221,6 +242,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784063",
+        "weekIndex": 13,
         "oppElo": 979.7
       },
       {
@@ -228,6 +250,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784085",
+        "weekIndex": 14,
         "oppElo": 1001.3
       },
       {
@@ -235,6 +258,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784097",
+        "weekIndex": 15,
         "oppElo": 996.0
       },
       {
@@ -242,6 +266,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784112",
+        "weekIndex": 16,
         "oppElo": 973.2
       },
       {
@@ -249,261 +274,8 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784134",
+        "weekIndex": 17,
         "oppElo": 980.9
-      }
-    ]
-  },
-  "Texans": {
-    "team": "Texans",
-    "conference": "AFC",
-    "division": "AFC South",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Bills",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783878",
-        "oppElo": 988.5
-      },
-      {
-        "opponent": "Bengals",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783893",
-        "oppElo": 998.5
-      },
-      {
-        "opponent": "Colts",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783905",
-        "oppElo": 981.2
-      },
-      {
-        "opponent": "Cowboys",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783926",
-        "oppElo": 1039.5
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783935",
-        "oppElo": 952.3
-      },
-      {
-        "opponent": "Jaguars",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783949",
-        "oppElo": 1039.9
-      },
-      {
-        "opponent": "Giants",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783970",
-        "oppElo": 1042.4
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783999",
-        "oppElo": 1035.8
-      },
-      {
-        "opponent": "Browns",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784008",
-        "oppElo": 979.7
-      },
-      {
-        "opponent": "Colts",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784019",
-        "oppElo": 981.2
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784042",
-        "oppElo": 985.5
-      },
-      {
-        "opponent": "Steelers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784060",
-        "oppElo": 1010.3
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784068",
-        "oppElo": 1001.3
-      },
-      {
-        "opponent": "Jaguars",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784087",
-        "oppElo": 1039.9
-      },
-      {
-        "opponent": "Eagles",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784093",
-        "oppElo": 956.7
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784124",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784133",
-        "oppElo": 952.3
-      }
-    ]
-  },
-  "Bills": {
-    "team": "Bills",
-    "conference": "AFC",
-    "division": "AFC East",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Texans",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783878",
-        "oppElo": 969.3
-      },
-      {
-        "opponent": "Lions",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783885",
-        "oppElo": 1034.9
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783902",
-        "oppElo": 1035.8
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783919",
-        "oppElo": 1046.1
-      },
-      {
-        "opponent": "Rams",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783947",
-        "oppElo": 1002.6
-      },
-      {
-        "opponent": "Raiders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783959",
-        "oppElo": 970.5
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783977",
-        "oppElo": 985.5
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784004",
-        "oppElo": 1016.5
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784013",
-        "oppElo": 1004.0
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784020",
-        "oppElo": 992.2
-      },
-      {
-        "opponent": "Chiefs",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784035",
-        "oppElo": 1053.2
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784059",
-        "oppElo": 1046.1
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784075",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Bears",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784079",
-        "oppElo": 991.3
-      },
-      {
-        "opponent": "Broncos",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784095",
-        "oppElo": 953.8
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784116",
-        "oppElo": 992.2
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784128",
-        "oppElo": 1004.0
       }
     ]
   },
@@ -518,6 +290,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783874",
+        "weekIndex": 0,
         "oppElo": 985.5
       },
       {
@@ -525,6 +298,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783899",
+        "weekIndex": 1,
         "oppElo": 1053.2
       },
       {
@@ -532,6 +306,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783905",
+        "weekIndex": 2,
         "oppElo": 969.3
       },
       {
@@ -539,6 +314,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783918",
+        "weekIndex": 3,
         "oppElo": 1001.3
       },
       {
@@ -546,6 +322,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783940",
+        "weekIndex": 4,
         "oppElo": 1010.3
       },
       {
@@ -553,6 +330,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783952",
+        "weekIndex": 5,
         "oppElo": 952.3
       },
       {
@@ -560,6 +338,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783966",
+        "weekIndex": 6,
         "oppElo": 1016.5
       },
       {
@@ -567,6 +346,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783984",
+        "weekIndex": 7,
         "oppElo": 1039.9
       },
       {
@@ -574,6 +354,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783992",
+        "weekIndex": 8,
         "oppElo": 1039.5
       },
       {
@@ -581,6 +362,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784011",
+        "weekIndex": 9,
         "oppElo": 992.2
       },
       {
@@ -588,6 +370,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784019",
+        "weekIndex": 10,
         "oppElo": 969.3
       },
       {
@@ -595,6 +378,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784039",
+        "weekIndex": 11,
         "oppElo": 1042.4
       },
       {
@@ -602,6 +386,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784067",
+        "weekIndex": 13,
         "oppElo": 956.7
       },
       {
@@ -609,6 +394,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784081",
+        "weekIndex": 14,
         "oppElo": 952.3
       },
       {
@@ -616,6 +402,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784106",
+        "weekIndex": 15,
         "oppElo": 998.5
       },
       {
@@ -623,6 +410,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784113",
+        "weekIndex": 16,
         "oppElo": 979.7
       },
       {
@@ -630,6 +418,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784130",
+        "weekIndex": 17,
         "oppElo": 1039.9
       }
     ]
@@ -638,41 +427,30 @@
     "team": "Ravens",
     "conference": "AFC",
     "division": "AFC North",
-    "games": 17,
+    "games": 13,
     "schedule": [
       {
         "opponent": "Colts",
         "homeAway": "away",
         "date": "",
         "gameId": "545783874",
+        "weekIndex": 0,
         "oppElo": 981.2
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783892",
-        "oppElo": 973.2
       },
       {
         "opponent": "Cowboys",
         "homeAway": "away",
         "date": "",
         "gameId": "545783913",
+        "weekIndex": 2,
         "oppElo": 1039.5
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783925",
-        "oppElo": 952.3
       },
       {
         "opponent": "Falcons",
         "homeAway": "away",
         "date": "",
         "gameId": "545783946",
+        "weekIndex": 4,
         "oppElo": 1015.1
       },
       {
@@ -680,6 +458,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783951",
+        "weekIndex": 5,
         "oppElo": 979.7
       },
       {
@@ -687,6 +466,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783969",
+        "weekIndex": 6,
         "oppElo": 998.5
       },
       {
@@ -694,34 +474,23 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783977",
+        "weekIndex": 7,
         "oppElo": 988.5
-      },
-      {
-        "opponent": "Jaguars",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783990",
-        "oppElo": 1039.9
       },
       {
         "opponent": "Chargers",
         "homeAway": "home",
         "date": "",
         "gameId": "545784018",
+        "weekIndex": 9,
         "oppElo": 1035.8
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784026",
-        "oppElo": 980.9
       },
       {
         "opponent": "Texans",
         "homeAway": "away",
         "date": "",
         "gameId": "545784042",
+        "weekIndex": 11,
         "oppElo": 969.3
       },
       {
@@ -729,6 +498,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784070",
+        "weekIndex": 13,
         "oppElo": 996.0
       },
       {
@@ -736,6 +506,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784083",
+        "weekIndex": 14,
         "oppElo": 1010.3
       },
       {
@@ -743,6 +514,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784102",
+        "weekIndex": 15,
         "oppElo": 979.7
       },
       {
@@ -750,6 +522,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784109",
+        "weekIndex": 16,
         "oppElo": 998.5
       },
       {
@@ -757,6 +530,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784132",
+        "weekIndex": 17,
         "oppElo": 1010.3
       }
     ]
@@ -765,41 +539,30 @@
     "team": "Titans",
     "conference": "AFC",
     "division": "AFC South",
-    "games": 17,
+    "games": 14,
     "schedule": [
       {
         "opponent": "Jets",
         "homeAway": "home",
         "date": "",
         "gameId": "545783873",
+        "weekIndex": 0,
         "oppElo": 1004.0
-      },
-      {
-        "opponent": "Eagles",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783888",
-        "oppElo": 956.7
       },
       {
         "opponent": "Giants",
         "homeAway": "away",
         "date": "",
         "gameId": "545783907",
+        "weekIndex": 2,
         "oppElo": 1042.4
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783925",
-        "oppElo": 985.5
       },
       {
         "opponent": "Texans",
         "homeAway": "home",
         "date": "",
         "gameId": "545783935",
+        "weekIndex": 4,
         "oppElo": 969.3
       },
       {
@@ -807,6 +570,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783952",
+        "weekIndex": 5,
         "oppElo": 981.2
       },
       {
@@ -814,20 +578,15 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783965",
+        "weekIndex": 6,
         "oppElo": 979.7
-      },
-      {
-        "opponent": "Bengals",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783978",
-        "oppElo": 998.5
       },
       {
         "opponent": "Jaguars",
         "homeAway": "home",
         "date": "",
         "gameId": "545784010",
+        "weekIndex": 9,
         "oppElo": 1039.9
       },
       {
@@ -835,6 +594,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784022",
+        "weekIndex": 10,
         "oppElo": 1039.5
       },
       {
@@ -842,6 +602,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784043",
+        "weekIndex": 11,
         "oppElo": 1039.9
       },
       {
@@ -849,6 +610,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784052",
+        "weekIndex": 12,
         "oppElo": 1001.3
       },
       {
@@ -856,6 +618,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784064",
+        "weekIndex": 13,
         "oppElo": 1034.9
       },
       {
@@ -863,6 +626,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784081",
+        "weekIndex": 14,
         "oppElo": 981.2
       },
       {
@@ -870,6 +634,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784104",
+        "weekIndex": 15,
         "oppElo": 970.5
       },
       {
@@ -877,6 +642,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784115",
+        "weekIndex": 16,
         "oppElo": 1010.3
       },
       {
@@ -884,6 +650,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784133",
+        "weekIndex": 17,
         "oppElo": 969.3
       }
     ]
@@ -892,13 +659,14 @@
     "team": "Jets",
     "conference": "AFC",
     "division": "AFC East",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Titans",
         "homeAway": "away",
         "date": "",
         "gameId": "545783873",
+        "weekIndex": 0,
         "oppElo": 952.3
       },
       {
@@ -906,6 +674,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783890",
+        "weekIndex": 1,
         "oppElo": 1023.0
       },
       {
@@ -913,6 +682,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783904",
+        "weekIndex": 2,
         "oppElo": 1034.9
       },
       {
@@ -920,6 +690,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783920",
+        "weekIndex": 3,
         "oppElo": 991.3
       },
       {
@@ -927,6 +698,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783939",
+        "weekIndex": 4,
         "oppElo": 979.7
       },
       {
@@ -934,20 +706,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783953",
+        "weekIndex": 5,
         "oppElo": 1046.1
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783967",
-        "oppElo": 992.2
       },
       {
         "opponent": "Raiders",
         "homeAway": "home",
         "date": "",
         "gameId": "545783981",
+        "weekIndex": 7,
         "oppElo": 970.5
       },
       {
@@ -955,6 +722,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783993",
+        "weekIndex": 8,
         "oppElo": 1053.2
       },
       {
@@ -962,6 +730,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784013",
+        "weekIndex": 9,
         "oppElo": 988.5
       },
       {
@@ -969,6 +738,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784027",
+        "weekIndex": 10,
         "oppElo": 1035.8
       },
       {
@@ -976,6 +746,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784040",
+        "weekIndex": 11,
         "oppElo": 992.2
       },
       {
@@ -983,6 +754,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784066",
+        "weekIndex": 13,
         "oppElo": 953.8
       },
       {
@@ -990,6 +762,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784088",
+        "weekIndex": 14,
         "oppElo": 988.5
       },
       {
@@ -997,6 +770,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784101",
+        "weekIndex": 15,
         "oppElo": 1046.1
       },
       {
@@ -1004,6 +778,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784117",
+        "weekIndex": 16,
         "oppElo": 1016.5
       },
       {
@@ -1011,6 +786,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784128",
+        "weekIndex": 17,
         "oppElo": 988.5
       }
     ]
@@ -1019,27 +795,22 @@
     "team": "Lions",
     "conference": "NFC",
     "division": "NFC North",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Saints",
         "homeAway": "home",
         "date": "",
         "gameId": "545783872",
+        "weekIndex": 0,
         "oppElo": 973.2
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783885",
-        "oppElo": 988.5
       },
       {
         "opponent": "Jets",
         "homeAway": "home",
         "date": "",
         "gameId": "545783904",
+        "weekIndex": 2,
         "oppElo": 1004.0
       },
       {
@@ -1047,6 +818,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783931",
+        "weekIndex": 3,
         "oppElo": 980.9
       },
       {
@@ -1054,6 +826,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783944",
+        "weekIndex": 4,
         "oppElo": 988.5
       },
       {
@@ -1061,6 +834,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783972",
+        "weekIndex": 6,
         "oppElo": 1023.0
       },
       {
@@ -1068,6 +842,7 @@
         "homeAway": "home",
         "date": "2026-10-10 19:00:00",
         "gameId": "545783980",
+        "weekIndex": 7,
         "oppElo": 1016.5
       },
       {
@@ -1075,6 +850,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783994",
+        "weekIndex": 8,
         "oppElo": 992.2
       },
       {
@@ -1082,6 +858,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784006",
+        "weekIndex": 9,
         "oppElo": 1046.1
       },
       {
@@ -1089,6 +866,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784023",
+        "weekIndex": 10,
         "oppElo": 996.0
       },
       {
@@ -1096,6 +874,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784033",
+        "weekIndex": 11,
         "oppElo": 991.3
       },
       {
@@ -1103,6 +882,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784049",
+        "weekIndex": 12,
         "oppElo": 1015.1
       },
       {
@@ -1110,6 +890,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784064",
+        "weekIndex": 13,
         "oppElo": 952.3
       },
       {
@@ -1117,6 +898,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784091",
+        "weekIndex": 14,
         "oppElo": 1016.5
       },
       {
@@ -1124,6 +906,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784108",
+        "weekIndex": 15,
         "oppElo": 1042.4
       },
       {
@@ -1131,6 +914,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784121",
+        "weekIndex": 16,
         "oppElo": 991.3
       },
       {
@@ -1138,6 +922,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784140",
+        "weekIndex": 17,
         "oppElo": 1023.0
       }
     ]
@@ -1146,27 +931,22 @@
     "team": "Saints",
     "conference": "NFC",
     "division": "NFC South",
-    "games": 17,
+    "games": 15,
     "schedule": [
       {
         "opponent": "Lions",
         "homeAway": "away",
         "date": "",
         "gameId": "545783872",
+        "weekIndex": 0,
         "oppElo": 1034.9
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783892",
-        "oppElo": 985.5
       },
       {
         "opponent": "Raiders",
         "homeAway": "home",
         "date": "",
         "gameId": "545783914",
+        "weekIndex": 2,
         "oppElo": 970.5
       },
       {
@@ -1174,6 +954,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783932",
+        "weekIndex": 3,
         "oppElo": 1015.1
       },
       {
@@ -1181,6 +962,7 @@
         "homeAway": "home",
         "date": "2026-09-30 11:00:00",
         "gameId": "545783938",
+        "weekIndex": 4,
         "oppElo": 1016.5
       },
       {
@@ -1188,20 +970,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783954",
+        "weekIndex": 5,
         "oppElo": 1042.4
-      },
-      {
-        "opponent": "Steelers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783963",
-        "oppElo": 1010.3
       },
       {
         "opponent": "Browns",
         "homeAway": "home",
         "date": "",
         "gameId": "545783995",
+        "weekIndex": 8,
         "oppElo": 979.7
       },
       {
@@ -1209,6 +986,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784012",
+        "weekIndex": 9,
         "oppElo": 980.9
       },
       {
@@ -1216,6 +994,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784021",
+        "weekIndex": 10,
         "oppElo": 991.3
       },
       {
@@ -1223,6 +1002,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784037",
+        "weekIndex": 11,
         "oppElo": 998.5
       },
       {
@@ -1230,6 +1010,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784053",
+        "weekIndex": 12,
         "oppElo": 1023.0
       },
       {
@@ -1237,6 +1018,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784069",
+        "weekIndex": 13,
         "oppElo": 980.9
       },
       {
@@ -1244,6 +1026,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784084",
+        "weekIndex": 14,
         "oppElo": 996.0
       },
       {
@@ -1251,6 +1034,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784100",
+        "weekIndex": 15,
         "oppElo": 988.5
       },
       {
@@ -1258,6 +1042,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784112",
+        "weekIndex": 16,
         "oppElo": 1015.1
       },
       {
@@ -1265,515 +1050,8 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784137",
+        "weekIndex": 17,
         "oppElo": 996.0
-      }
-    ]
-  },
-  "Bengals": {
-    "team": "Bengals",
-    "conference": "AFC",
-    "division": "AFC North",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783871",
-        "oppElo": 996.0
-      },
-      {
-        "opponent": "Texans",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783893",
-        "oppElo": 969.3
-      },
-      {
-        "opponent": "Steelers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783908",
-        "oppElo": 1010.3
-      },
-      {
-        "opponent": "Jaguars",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783921",
-        "oppElo": 1039.9
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783936",
-        "oppElo": 992.2
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783969",
-        "oppElo": 985.5
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783978",
-        "oppElo": 952.3
-      },
-      {
-        "opponent": "Falcons",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783991",
-        "oppElo": 1015.1
-      },
-      {
-        "opponent": "Steelers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784017",
-        "oppElo": 1010.3
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784031",
-        "oppElo": 1001.3
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784037",
-        "oppElo": 973.2
-      },
-      {
-        "opponent": "Browns",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784051",
-        "oppElo": 979.7
-      },
-      {
-        "opponent": "Chiefs",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784072",
-        "oppElo": 1053.2
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784086",
-        "oppElo": 980.9
-      },
-      {
-        "opponent": "Colts",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784106",
-        "oppElo": 981.2
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784109",
-        "oppElo": 985.5
-      },
-      {
-        "opponent": "Browns",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784129",
-        "oppElo": 979.7
-      }
-    ]
-  },
-  "Buccaneers": {
-    "team": "Buccaneers",
-    "conference": "NFC",
-    "division": "NFC South",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Bengals",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783871",
-        "oppElo": 998.5
-      },
-      {
-        "opponent": "Browns",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783891",
-        "oppElo": 979.7
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783912",
-        "oppElo": 1016.5
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783924",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Cowboys",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783933",
-        "oppElo": 1039.5
-      },
-      {
-        "opponent": "Steelers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783956",
-        "oppElo": 1010.3
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783968",
-        "oppElo": 980.9
-      },
-      {
-        "opponent": "Falcons",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783983",
-        "oppElo": 1015.1
-      },
-      {
-        "opponent": "Bears",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784003",
-        "oppElo": 991.3
-      },
-      {
-        "opponent": "Lions",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784023",
-        "oppElo": 1034.9
-      },
-      {
-        "opponent": "Panthers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784047",
-        "oppElo": 980.9
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784055",
-        "oppElo": 1035.8
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784070",
-        "oppElo": 985.5
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784084",
-        "oppElo": 973.2
-      },
-      {
-        "opponent": "Falcons",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784097",
-        "oppElo": 1015.1
-      },
-      {
-        "opponent": "Rams",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784122",
-        "oppElo": 1002.6
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784137",
-        "oppElo": 973.2
-      }
-    ]
-  },
-  "Panthers": {
-    "team": "Panthers",
-    "conference": "NFC",
-    "division": "NFC South",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Bears",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783876",
-        "oppElo": 991.3
-      },
-      {
-        "opponent": "Falcons",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783886",
-        "oppElo": 1015.1
-      },
-      {
-        "opponent": "Browns",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783903",
-        "oppElo": 979.7
-      },
-      {
-        "opponent": "Lions",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783931",
-        "oppElo": 1034.9
-      },
-      {
-        "opponent": "Eagles",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783955",
-        "oppElo": 956.7
-      },
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783968",
-        "oppElo": 996.0
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783976",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Broncos",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783998",
-        "oppElo": 953.8
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784012",
-        "oppElo": 973.2
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784026",
-        "oppElo": 985.5
-      },
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784047",
-        "oppElo": 996.0
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784058",
-        "oppElo": 1016.5
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784069",
-        "oppElo": 973.2
-      },
-      {
-        "opponent": "Bengals",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784086",
-        "oppElo": 998.5
-      },
-      {
-        "opponent": "Steelers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784103",
-        "oppElo": 1010.3
-      },
-      {
-        "opponent": "Seahawks",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784118",
-        "oppElo": 1030.9
-      },
-      {
-        "opponent": "Falcons",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784134",
-        "oppElo": 1015.1
-      }
-    ]
-  },
-  "Bears": {
-    "team": "Bears",
-    "conference": "NFC",
-    "division": "NFC North",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Panthers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783876",
-        "oppElo": 980.9
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783887",
-        "oppElo": 1016.5
-      },
-      {
-        "opponent": "Eagles",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783916",
-        "oppElo": 956.7
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783920",
-        "oppElo": 1004.0
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783943",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Falcons",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783950",
-        "oppElo": 1015.1
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "home",
-        "date": "2026-10-08 19:00:00",
-        "gameId": "545783962",
-        "oppElo": 1046.1
-      },
-      {
-        "opponent": "Seahawks",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783989",
-        "oppElo": 1030.9
-      },
-      {
-        "opponent": "Buccaneers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784003",
-        "oppElo": 996.0
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784021",
-        "oppElo": 973.2
-      },
-      {
-        "opponent": "Lions",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784033",
-        "oppElo": 1034.9
-      },
-      {
-        "opponent": "Jaguars",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784050",
-        "oppElo": 1039.9
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784065",
-        "oppElo": 992.2
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784079",
-        "oppElo": 988.5
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784094",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Lions",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784121",
-        "oppElo": 1034.9
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784135",
-        "oppElo": 1016.5
       }
     ]
   },
@@ -1781,13 +1059,14 @@
     "team": "Chiefs",
     "conference": "AFC",
     "division": "AFC West",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Broncos",
         "homeAway": "home",
         "date": "",
         "gameId": "545783884",
+        "weekIndex": 0,
         "oppElo": 953.8
       },
       {
@@ -1795,20 +1074,15 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783899",
+        "weekIndex": 1,
         "oppElo": 981.2
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783906",
-        "oppElo": 992.2
       },
       {
         "opponent": "Raiders",
         "homeAway": "away",
         "date": "",
         "gameId": "545783928",
+        "weekIndex": 3,
         "oppElo": 970.5
       },
       {
@@ -1816,6 +1090,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783958",
+        "weekIndex": 5,
         "oppElo": 1035.8
       },
       {
@@ -1823,6 +1098,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783974",
+        "weekIndex": 6,
         "oppElo": 1030.9
       },
       {
@@ -1830,6 +1106,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783986",
+        "weekIndex": 7,
         "oppElo": 953.8
       },
       {
@@ -1837,6 +1114,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783993",
+        "weekIndex": 8,
         "oppElo": 1004.0
       },
       {
@@ -1844,6 +1122,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784007",
+        "weekIndex": 9,
         "oppElo": 1015.1
       },
       {
@@ -1851,6 +1130,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784024",
+        "weekIndex": 10,
         "oppElo": 988.5
       },
       {
@@ -1858,6 +1138,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784035",
+        "weekIndex": 11,
         "oppElo": 988.5
       },
       {
@@ -1865,6 +1146,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784048",
+        "weekIndex": 12,
         "oppElo": 1002.6
       },
       {
@@ -1872,6 +1154,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784072",
+        "weekIndex": 13,
         "oppElo": 998.5
       },
       {
@@ -1879,6 +1162,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784092",
+        "weekIndex": 14,
         "oppElo": 1046.1
       },
       {
@@ -1886,6 +1170,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784105",
+        "weekIndex": 15,
         "oppElo": 946.0
       },
       {
@@ -1893,6 +1178,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784110",
+        "weekIndex": 16,
         "oppElo": 1035.8
       },
       {
@@ -1900,6 +1186,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784131",
+        "weekIndex": 17,
         "oppElo": 970.5
       }
     ]
@@ -1915,6 +1202,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783884",
+        "weekIndex": 0,
         "oppElo": 1053.2
       },
       {
@@ -1922,6 +1210,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783894",
+        "weekIndex": 1,
         "oppElo": 1039.9
       },
       {
@@ -1929,6 +1218,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783915",
+        "weekIndex": 2,
         "oppElo": 1002.6
       },
       {
@@ -1936,6 +1226,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783929",
+        "weekIndex": 3,
         "oppElo": 946.0
       },
       {
@@ -1943,6 +1234,7 @@
         "homeAway": "away",
         "date": "2026-09-29 18:00:00",
         "gameId": "545783942",
+        "weekIndex": 4,
         "oppElo": 1035.8
       },
       {
@@ -1950,6 +1242,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783948",
+        "weekIndex": 5,
         "oppElo": 1030.9
       },
       {
@@ -1957,6 +1250,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783971",
+        "weekIndex": 6,
         "oppElo": 988.5
       },
       {
@@ -1964,6 +1258,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783986",
+        "weekIndex": 7,
         "oppElo": 1053.2
       },
       {
@@ -1971,6 +1266,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783998",
+        "weekIndex": 8,
         "oppElo": 980.9
       },
       {
@@ -1978,6 +1274,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784028",
+        "weekIndex": 10,
         "oppElo": 970.5
       },
       {
@@ -1985,6 +1282,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784036",
+        "weekIndex": 11,
         "oppElo": 1010.3
       },
       {
@@ -1992,6 +1290,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784056",
+        "weekIndex": 12,
         "oppElo": 992.2
       },
       {
@@ -1999,6 +1298,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784066",
+        "weekIndex": 13,
         "oppElo": 1004.0
       },
       {
@@ -2006,6 +1306,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784089",
+        "weekIndex": 14,
         "oppElo": 970.5
       },
       {
@@ -2013,6 +1314,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784095",
+        "weekIndex": 15,
         "oppElo": 988.5
       },
       {
@@ -2020,6 +1322,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784111",
+        "weekIndex": 16,
         "oppElo": 1046.1
       },
       {
@@ -2027,6 +1330,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784125",
+        "weekIndex": 17,
         "oppElo": 1035.8
       }
     ]
@@ -2035,27 +1339,22 @@
     "team": "Eagles",
     "conference": "NFC",
     "division": "NFC East",
-    "games": 17,
+    "games": 14,
     "schedule": [
       {
         "opponent": "Commanders",
         "homeAway": "home",
         "date": "",
         "gameId": "545783881",
+        "weekIndex": 0,
         "oppElo": 1001.3
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783888",
-        "oppElo": 952.3
       },
       {
         "opponent": "Bears",
         "homeAway": "away",
         "date": "",
         "gameId": "545783916",
+        "weekIndex": 2,
         "oppElo": 991.3
       },
       {
@@ -2063,6 +1362,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783923",
+        "weekIndex": 3,
         "oppElo": 1002.6
       },
       {
@@ -2070,6 +1370,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783934",
+        "weekIndex": 4,
         "oppElo": 1039.9
       },
       {
@@ -2077,27 +1378,15 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783955",
+        "weekIndex": 5,
         "oppElo": 980.9
-      },
-      {
-        "opponent": "Cowboys",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783975",
-        "oppElo": 1039.5
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783988",
-        "oppElo": 1001.3
       },
       {
         "opponent": "Giants",
         "homeAway": "home",
         "date": "",
         "gameId": "545783996",
+        "weekIndex": 8,
         "oppElo": 1042.4
       },
       {
@@ -2105,6 +1394,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784029",
+        "weekIndex": 10,
         "oppElo": 1010.3
       },
       {
@@ -2112,6 +1402,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784034",
+        "weekIndex": 11,
         "oppElo": 1039.5
       },
       {
@@ -2119,6 +1410,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784057",
+        "weekIndex": 12,
         "oppElo": 988.5
       },
       {
@@ -2126,6 +1418,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784067",
+        "weekIndex": 13,
         "oppElo": 981.2
       },
       {
@@ -2133,6 +1426,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784078",
+        "weekIndex": 14,
         "oppElo": 1030.9
       },
       {
@@ -2140,6 +1434,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784093",
+        "weekIndex": 15,
         "oppElo": 969.3
       },
       {
@@ -2147,6 +1442,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784123",
+        "weekIndex": 16,
         "oppElo": 946.0
       },
       {
@@ -2154,6 +1450,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784138",
+        "weekIndex": 17,
         "oppElo": 1042.4
       }
     ]
@@ -2162,13 +1459,14 @@
     "team": "Commanders",
     "conference": "NFC",
     "division": "NFC East",
-    "games": 17,
+    "games": 15,
     "schedule": [
       {
         "opponent": "Eagles",
         "homeAway": "away",
         "date": "",
         "gameId": "545783881",
+        "weekIndex": 0,
         "oppElo": 956.7
       },
       {
@@ -2176,6 +1474,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783896",
+        "weekIndex": 1,
         "oppElo": 1039.5
       },
       {
@@ -2183,6 +1482,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783909",
+        "weekIndex": 2,
         "oppElo": 1030.9
       },
       {
@@ -2190,6 +1490,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783918",
+        "weekIndex": 3,
         "oppElo": 981.2
       },
       {
@@ -2197,6 +1498,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783941",
+        "weekIndex": 4,
         "oppElo": 1042.4
       },
       {
@@ -2204,20 +1506,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783961",
+        "weekIndex": 5,
         "oppElo": 946.0
-      },
-      {
-        "opponent": "Eagles",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783988",
-        "oppElo": 956.7
       },
       {
         "opponent": "Rams",
         "homeAway": "home",
         "date": "",
         "gameId": "545783997",
+        "weekIndex": 8,
         "oppElo": 1002.6
       },
       {
@@ -2225,6 +1522,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784005",
+        "weekIndex": 9,
         "oppElo": 1042.4
       },
       {
@@ -2232,20 +1530,15 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784031",
+        "weekIndex": 10,
         "oppElo": 998.5
-      },
-      {
-        "opponent": "Cardinals",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784044",
-        "oppElo": 988.5
       },
       {
         "opponent": "Titans",
         "homeAway": "away",
         "date": "",
         "gameId": "545784052",
+        "weekIndex": 12,
         "oppElo": 952.3
       },
       {
@@ -2253,6 +1546,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784068",
+        "weekIndex": 13,
         "oppElo": 969.3
       },
       {
@@ -2260,6 +1554,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784085",
+        "weekIndex": 14,
         "oppElo": 1015.1
       },
       {
@@ -2267,6 +1562,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784098",
+        "weekIndex": 15,
         "oppElo": 1016.5
       },
       {
@@ -2274,6 +1570,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784119",
+        "weekIndex": 16,
         "oppElo": 1039.9
       },
       {
@@ -2281,6 +1578,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784126",
+        "weekIndex": 17,
         "oppElo": 1039.5
       }
     ]
@@ -2289,13 +1587,14 @@
     "team": "Chargers",
     "conference": "AFC",
     "division": "AFC West",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Cardinals",
         "homeAway": "home",
         "date": "",
         "gameId": "545783882",
+        "weekIndex": 0,
         "oppElo": 988.5
       },
       {
@@ -2303,20 +1602,15 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783895",
+        "weekIndex": 1,
         "oppElo": 970.5
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783902",
-        "oppElo": 988.5
       },
       {
         "opponent": "Seahawks",
         "homeAway": "away",
         "date": "2026-09-28 18:00:00",
         "gameId": "545783930",
+        "weekIndex": 3,
         "oppElo": 1030.9
       },
       {
@@ -2324,6 +1618,7 @@
         "homeAway": "home",
         "date": "2026-09-29 18:00:00",
         "gameId": "545783942",
+        "weekIndex": 4,
         "oppElo": 953.8
       },
       {
@@ -2331,6 +1626,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783958",
+        "weekIndex": 5,
         "oppElo": 1053.2
       },
       {
@@ -2338,6 +1634,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783985",
+        "weekIndex": 7,
         "oppElo": 1002.6
       },
       {
@@ -2345,6 +1642,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783999",
+        "weekIndex": 8,
         "oppElo": 969.3
       },
       {
@@ -2352,6 +1650,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784018",
+        "weekIndex": 9,
         "oppElo": 985.5
       },
       {
@@ -2359,6 +1658,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784027",
+        "weekIndex": 10,
         "oppElo": 1004.0
       },
       {
@@ -2366,6 +1666,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784046",
+        "weekIndex": 11,
         "oppElo": 1046.1
       },
       {
@@ -2373,6 +1674,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784055",
+        "weekIndex": 12,
         "oppElo": 996.0
       },
       {
@@ -2380,6 +1682,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784071",
+        "weekIndex": 13,
         "oppElo": 970.5
       },
       {
@@ -2387,6 +1690,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784077",
+        "weekIndex": 14,
         "oppElo": 946.0
       },
       {
@@ -2394,6 +1698,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784099",
+        "weekIndex": 15,
         "oppElo": 992.2
       },
       {
@@ -2401,6 +1706,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784110",
+        "weekIndex": 16,
         "oppElo": 1053.2
       },
       {
@@ -2408,6 +1714,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784125",
+        "weekIndex": 17,
         "oppElo": 953.8
       }
     ]
@@ -2416,13 +1723,14 @@
     "team": "Cardinals",
     "conference": "NFC",
     "division": "NFC West",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Chargers",
         "homeAway": "away",
         "date": "",
         "gameId": "545783882",
+        "weekIndex": 0,
         "oppElo": 1035.8
       },
       {
@@ -2430,6 +1738,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783897",
+        "weekIndex": 1,
         "oppElo": 1030.9
       },
       {
@@ -2437,6 +1746,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783911",
+        "weekIndex": 2,
         "oppElo": 946.0
       },
       {
@@ -2444,6 +1754,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783922",
+        "weekIndex": 3,
         "oppElo": 1042.4
       },
       {
@@ -2451,6 +1762,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783944",
+        "weekIndex": 4,
         "oppElo": 1034.9
       },
       {
@@ -2458,6 +1770,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783957",
+        "weekIndex": 5,
         "oppElo": 1002.6
       },
       {
@@ -2465,6 +1778,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783971",
+        "weekIndex": 6,
         "oppElo": 953.8
       },
       {
@@ -2472,6 +1786,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783979",
+        "weekIndex": 7,
         "oppElo": 1039.5
       },
       {
@@ -2479,6 +1794,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784002",
+        "weekIndex": 8,
         "oppElo": 1030.9
       },
       {
@@ -2486,6 +1802,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784015",
+        "weekIndex": 9,
         "oppElo": 1002.6
       },
       {
@@ -2493,20 +1810,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784024",
+        "weekIndex": 10,
         "oppElo": 1053.2
-      },
-      {
-        "opponent": "Commanders",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784044",
-        "oppElo": 1001.3
       },
       {
         "opponent": "Eagles",
         "homeAway": "home",
         "date": "",
         "gameId": "545784057",
+        "weekIndex": 12,
         "oppElo": 956.7
       },
       {
@@ -2514,6 +1826,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784088",
+        "weekIndex": 14,
         "oppElo": 1004.0
       },
       {
@@ -2521,6 +1834,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784100",
+        "weekIndex": 15,
         "oppElo": 973.2
       },
       {
@@ -2528,6 +1842,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784120",
+        "weekIndex": 16,
         "oppElo": 970.5
       },
       {
@@ -2535,6 +1850,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784139",
+        "weekIndex": 17,
         "oppElo": 946.0
       }
     ]
@@ -2543,13 +1859,14 @@
     "team": "Jaguars",
     "conference": "AFC",
     "division": "AFC South",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Browns",
         "homeAway": "home",
         "date": "",
         "gameId": "545783877",
+        "weekIndex": 0,
         "oppElo": 979.7
       },
       {
@@ -2557,6 +1874,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783894",
+        "weekIndex": 1,
         "oppElo": 953.8
       },
       {
@@ -2564,6 +1882,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783910",
+        "weekIndex": 2,
         "oppElo": 1046.1
       },
       {
@@ -2571,6 +1890,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783921",
+        "weekIndex": 3,
         "oppElo": 998.5
       },
       {
@@ -2578,6 +1898,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783934",
+        "weekIndex": 4,
         "oppElo": 956.7
       },
       {
@@ -2585,6 +1906,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783949",
+        "weekIndex": 5,
         "oppElo": 969.3
       },
       {
@@ -2592,20 +1914,15 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783984",
+        "weekIndex": 7,
         "oppElo": 981.2
-      },
-      {
-        "opponent": "Ravens",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783990",
-        "oppElo": 985.5
       },
       {
         "opponent": "Titans",
         "homeAway": "away",
         "date": "",
         "gameId": "545784010",
+        "weekIndex": 9,
         "oppElo": 952.3
       },
       {
@@ -2613,6 +1930,7 @@
         "homeAway": "away",
         "date": "2026-10-20 06:35:00",
         "gameId": "545784025",
+        "weekIndex": 10,
         "oppElo": 1042.4
       },
       {
@@ -2620,6 +1938,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784043",
+        "weekIndex": 11,
         "oppElo": 952.3
       },
       {
@@ -2627,6 +1946,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784050",
+        "weekIndex": 12,
         "oppElo": 991.3
       },
       {
@@ -2634,6 +1954,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784076",
+        "weekIndex": 13,
         "oppElo": 1010.3
       },
       {
@@ -2641,6 +1962,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784087",
+        "weekIndex": 14,
         "oppElo": 969.3
       },
       {
@@ -2648,6 +1970,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784107",
+        "weekIndex": 15,
         "oppElo": 1039.5
       },
       {
@@ -2655,6 +1978,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784119",
+        "weekIndex": 16,
         "oppElo": 1001.3
       },
       {
@@ -2662,6 +1986,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784130",
+        "weekIndex": 17,
         "oppElo": 981.2
       }
     ]
@@ -2677,6 +2002,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783877",
+        "weekIndex": 0,
         "oppElo": 1039.9
       },
       {
@@ -2684,6 +2010,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783891",
+        "weekIndex": 1,
         "oppElo": 996.0
       },
       {
@@ -2691,6 +2018,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783903",
+        "weekIndex": 2,
         "oppElo": 980.9
       },
       {
@@ -2698,6 +2026,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783917",
+        "weekIndex": 3,
         "oppElo": 1010.3
       },
       {
@@ -2705,6 +2034,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783939",
+        "weekIndex": 4,
         "oppElo": 1004.0
       },
       {
@@ -2712,6 +2042,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783951",
+        "weekIndex": 5,
         "oppElo": 985.5
       },
       {
@@ -2719,6 +2050,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783965",
+        "weekIndex": 6,
         "oppElo": 952.3
       },
       {
@@ -2726,6 +2058,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783982",
+        "weekIndex": 7,
         "oppElo": 1010.3
       },
       {
@@ -2733,6 +2066,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783995",
+        "weekIndex": 8,
         "oppElo": 973.2
       },
       {
@@ -2740,6 +2074,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784008",
+        "weekIndex": 9,
         "oppElo": 969.3
       },
       {
@@ -2747,6 +2082,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784038",
+        "weekIndex": 11,
         "oppElo": 970.5
       },
       {
@@ -2754,6 +2090,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784051",
+        "weekIndex": 12,
         "oppElo": 998.5
       },
       {
@@ -2761,6 +2098,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784063",
+        "weekIndex": 13,
         "oppElo": 1015.1
       },
       {
@@ -2768,6 +2106,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784082",
+        "weekIndex": 14,
         "oppElo": 1042.4
       },
       {
@@ -2775,6 +2114,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784102",
+        "weekIndex": 15,
         "oppElo": 985.5
       },
       {
@@ -2782,6 +2122,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784113",
+        "weekIndex": 16,
         "oppElo": 981.2
       },
       {
@@ -2789,261 +2130,8 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784129",
+        "weekIndex": 17,
         "oppElo": 998.5
-      }
-    ]
-  },
-  "Raiders": {
-    "team": "Raiders",
-    "conference": "AFC",
-    "division": "AFC West",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Dolphins",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783879",
-        "oppElo": 992.2
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783895",
-        "oppElo": 1035.8
-      },
-      {
-        "opponent": "Saints",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783914",
-        "oppElo": 973.2
-      },
-      {
-        "opponent": "Chiefs",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783928",
-        "oppElo": 1053.2
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783937",
-        "oppElo": 1046.1
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783959",
-        "oppElo": 988.5
-      },
-      {
-        "opponent": "Rams",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783973",
-        "oppElo": 1002.6
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783981",
-        "oppElo": 1004.0
-      },
-      {
-        "opponent": "49ers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784000",
-        "oppElo": 946.0
-      },
-      {
-        "opponent": "Seahawks",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784014",
-        "oppElo": 1030.9
-      },
-      {
-        "opponent": "Broncos",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784028",
-        "oppElo": 953.8
-      },
-      {
-        "opponent": "Browns",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784038",
-        "oppElo": 979.7
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784071",
-        "oppElo": 1035.8
-      },
-      {
-        "opponent": "Broncos",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784089",
-        "oppElo": 953.8
-      },
-      {
-        "opponent": "Titans",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784104",
-        "oppElo": 952.3
-      },
-      {
-        "opponent": "Cardinals",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784120",
-        "oppElo": 988.5
-      },
-      {
-        "opponent": "Chiefs",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784131",
-        "oppElo": 1053.2
-      }
-    ]
-  },
-  "Dolphins": {
-    "team": "Dolphins",
-    "conference": "AFC",
-    "division": "AFC East",
-    "games": 17,
-    "schedule": [
-      {
-        "opponent": "Raiders",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783879",
-        "oppElo": 970.5
-      },
-      {
-        "opponent": "49ers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783898",
-        "oppElo": 946.0
-      },
-      {
-        "opponent": "Chiefs",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783906",
-        "oppElo": 1053.2
-      },
-      {
-        "opponent": "Vikings",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783927",
-        "oppElo": 1016.5
-      },
-      {
-        "opponent": "Bengals",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783936",
-        "oppElo": 998.5
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783967",
-        "oppElo": 1004.0
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783987",
-        "oppElo": 1046.1
-      },
-      {
-        "opponent": "Lions",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783994",
-        "oppElo": 1034.9
-      },
-      {
-        "opponent": "Colts",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784011",
-        "oppElo": 981.2
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784020",
-        "oppElo": 988.5
-      },
-      {
-        "opponent": "Jets",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784040",
-        "oppElo": 1004.0
-      },
-      {
-        "opponent": "Broncos",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784056",
-        "oppElo": 953.8
-      },
-      {
-        "opponent": "Bears",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784065",
-        "oppElo": 991.3
-      },
-      {
-        "opponent": "Packers",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784080",
-        "oppElo": 1023.0
-      },
-      {
-        "opponent": "Chargers",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784099",
-        "oppElo": 1035.8
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545784116",
-        "oppElo": 988.5
-      },
-      {
-        "opponent": "Patriots",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545784136",
-        "oppElo": 1046.1
       }
     ]
   },
@@ -3051,13 +2139,14 @@
     "team": "Vikings",
     "conference": "NFC",
     "division": "NFC North",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Packers",
         "homeAway": "home",
         "date": "",
         "gameId": "545783880",
+        "weekIndex": 0,
         "oppElo": 1023.0
       },
       {
@@ -3065,6 +2154,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783887",
+        "weekIndex": 1,
         "oppElo": 991.3
       },
       {
@@ -3072,20 +2162,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783912",
+        "weekIndex": 2,
         "oppElo": 996.0
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783927",
-        "oppElo": 992.2
       },
       {
         "opponent": "Saints",
         "homeAway": "away",
         "date": "2026-09-30 11:00:00",
         "gameId": "545783938",
+        "weekIndex": 4,
         "oppElo": 973.2
       },
       {
@@ -3093,6 +2178,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783966",
+        "weekIndex": 6,
         "oppElo": 981.2
       },
       {
@@ -3100,6 +2186,7 @@
         "homeAway": "away",
         "date": "2026-10-10 19:00:00",
         "gameId": "545783980",
+        "weekIndex": 7,
         "oppElo": 1034.9
       },
       {
@@ -3107,6 +2194,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784004",
+        "weekIndex": 8,
         "oppElo": 988.5
       },
       {
@@ -3114,6 +2202,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784009",
+        "weekIndex": 9,
         "oppElo": 1023.0
       },
       {
@@ -3121,6 +2210,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784030",
+        "weekIndex": 10,
         "oppElo": 946.0
       },
       {
@@ -3128,6 +2218,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784041",
+        "weekIndex": 11,
         "oppElo": 1015.1
       },
       {
@@ -3135,6 +2226,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784058",
+        "weekIndex": 12,
         "oppElo": 980.9
       },
       {
@@ -3142,6 +2234,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784062",
+        "weekIndex": 13,
         "oppElo": 1046.1
       },
       {
@@ -3149,6 +2242,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784091",
+        "weekIndex": 14,
         "oppElo": 1034.9
       },
       {
@@ -3156,6 +2250,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784098",
+        "weekIndex": 15,
         "oppElo": 1001.3
       },
       {
@@ -3163,6 +2258,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784117",
+        "weekIndex": 16,
         "oppElo": 1004.0
       },
       {
@@ -3170,6 +2266,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784135",
+        "weekIndex": 17,
         "oppElo": 991.3
       }
     ]
@@ -3185,6 +2282,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783880",
+        "weekIndex": 0,
         "oppElo": 1016.5
       },
       {
@@ -3192,6 +2290,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783890",
+        "weekIndex": 1,
         "oppElo": 1004.0
       },
       {
@@ -3199,6 +2298,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783901",
+        "weekIndex": 2,
         "oppElo": 1015.1
       },
       {
@@ -3206,6 +2306,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783924",
+        "weekIndex": 3,
         "oppElo": 996.0
       },
       {
@@ -3213,6 +2314,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783943",
+        "weekIndex": 4,
         "oppElo": 991.3
       },
       {
@@ -3220,6 +2322,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783960",
+        "weekIndex": 5,
         "oppElo": 1039.5
       },
       {
@@ -3227,6 +2330,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783972",
+        "weekIndex": 6,
         "oppElo": 1034.9
       },
       {
@@ -3234,6 +2338,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783976",
+        "weekIndex": 7,
         "oppElo": 980.9
       },
       {
@@ -3241,6 +2346,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784001",
+        "weekIndex": 8,
         "oppElo": 1046.1
       },
       {
@@ -3248,6 +2354,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784009",
+        "weekIndex": 9,
         "oppElo": 1016.5
       },
       {
@@ -3255,6 +2362,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784032",
+        "weekIndex": 11,
         "oppElo": 1002.6
       },
       {
@@ -3262,6 +2370,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784053",
+        "weekIndex": 12,
         "oppElo": 973.2
       },
       {
@@ -3269,6 +2378,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784075",
+        "weekIndex": 13,
         "oppElo": 988.5
       },
       {
@@ -3276,6 +2386,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784080",
+        "weekIndex": 14,
         "oppElo": 992.2
       },
       {
@@ -3283,6 +2394,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784094",
+        "weekIndex": 15,
         "oppElo": 991.3
       },
       {
@@ -3290,6 +2402,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784124",
+        "weekIndex": 16,
         "oppElo": 969.3
       },
       {
@@ -3297,6 +2410,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784140",
+        "weekIndex": 17,
         "oppElo": 1034.9
       }
     ]
@@ -3305,13 +2419,14 @@
     "team": "Rams",
     "conference": "NFC",
     "division": "NFC West",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "49ers",
         "homeAway": "home",
         "date": "",
         "gameId": "545783870",
+        "weekIndex": 0,
         "oppElo": 946.0
       },
       {
@@ -3319,6 +2434,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783900",
+        "weekIndex": 1,
         "oppElo": 1042.4
       },
       {
@@ -3326,6 +2442,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783915",
+        "weekIndex": 2,
         "oppElo": 953.8
       },
       {
@@ -3333,20 +2450,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783923",
+        "weekIndex": 3,
         "oppElo": 956.7
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783947",
-        "oppElo": 988.5
       },
       {
         "opponent": "Cardinals",
         "homeAway": "home",
         "date": "",
         "gameId": "545783957",
+        "weekIndex": 5,
         "oppElo": 988.5
       },
       {
@@ -3354,6 +2466,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783973",
+        "weekIndex": 6,
         "oppElo": 970.5
       },
       {
@@ -3361,6 +2474,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783985",
+        "weekIndex": 7,
         "oppElo": 1035.8
       },
       {
@@ -3368,6 +2482,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783997",
+        "weekIndex": 8,
         "oppElo": 1001.3
       },
       {
@@ -3375,6 +2490,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784015",
+        "weekIndex": 9,
         "oppElo": 988.5
       },
       {
@@ -3382,6 +2498,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784032",
+        "weekIndex": 11,
         "oppElo": 1023.0
       },
       {
@@ -3389,6 +2506,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784048",
+        "weekIndex": 12,
         "oppElo": 1053.2
       },
       {
@@ -3396,6 +2514,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784073",
+        "weekIndex": 13,
         "oppElo": 946.0
       },
       {
@@ -3403,6 +2522,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784090",
+        "weekIndex": 14,
         "oppElo": 1039.5
       },
       {
@@ -3410,6 +2530,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784096",
+        "weekIndex": 15,
         "oppElo": 1030.9
       },
       {
@@ -3417,6 +2538,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784122",
+        "weekIndex": 16,
         "oppElo": 996.0
       },
       {
@@ -3424,6 +2546,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784127",
+        "weekIndex": 17,
         "oppElo": 1030.9
       }
     ]
@@ -3432,27 +2555,22 @@
     "team": "49ers",
     "conference": "NFC",
     "division": "NFC West",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Rams",
         "homeAway": "away",
         "date": "",
         "gameId": "545783870",
+        "weekIndex": 0,
         "oppElo": 1002.6
-      },
-      {
-        "opponent": "Dolphins",
-        "homeAway": "home",
-        "date": "",
-        "gameId": "545783898",
-        "oppElo": 992.2
       },
       {
         "opponent": "Cardinals",
         "homeAway": "home",
         "date": "",
         "gameId": "545783911",
+        "weekIndex": 2,
         "oppElo": 988.5
       },
       {
@@ -3460,6 +2578,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783929",
+        "weekIndex": 3,
         "oppElo": 953.8
       },
       {
@@ -3467,6 +2586,7 @@
         "homeAway": "away",
         "date": "2026-09-29 18:00:00",
         "gameId": "545783945",
+        "weekIndex": 4,
         "oppElo": 1030.9
       },
       {
@@ -3474,6 +2594,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783961",
+        "weekIndex": 5,
         "oppElo": 1001.3
       },
       {
@@ -3481,6 +2602,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783964",
+        "weekIndex": 6,
         "oppElo": 1015.1
       },
       {
@@ -3488,6 +2610,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784000",
+        "weekIndex": 8,
         "oppElo": 970.5
       },
       {
@@ -3495,6 +2618,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784016",
+        "weekIndex": 9,
         "oppElo": 1039.5
       },
       {
@@ -3502,6 +2626,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784030",
+        "weekIndex": 10,
         "oppElo": 1016.5
       },
       {
@@ -3509,6 +2634,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784045",
+        "weekIndex": 11,
         "oppElo": 1030.9
       },
       {
@@ -3516,6 +2642,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784054",
+        "weekIndex": 12,
         "oppElo": 1042.4
       },
       {
@@ -3523,6 +2650,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784073",
+        "weekIndex": 13,
         "oppElo": 1002.6
       },
       {
@@ -3530,6 +2658,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784077",
+        "weekIndex": 14,
         "oppElo": 1035.8
       },
       {
@@ -3537,6 +2666,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784105",
+        "weekIndex": 15,
         "oppElo": 1053.2
       },
       {
@@ -3544,6 +2674,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784123",
+        "weekIndex": 16,
         "oppElo": 956.7
       },
       {
@@ -3551,6 +2682,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784139",
+        "weekIndex": 17,
         "oppElo": 988.5
       }
     ]
@@ -3566,6 +2698,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783869",
+        "weekIndex": 0,
         "oppElo": 1046.1
       },
       {
@@ -3573,6 +2706,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783897",
+        "weekIndex": 1,
         "oppElo": 988.5
       },
       {
@@ -3580,6 +2714,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783909",
+        "weekIndex": 2,
         "oppElo": 1001.3
       },
       {
@@ -3587,6 +2722,7 @@
         "homeAway": "home",
         "date": "2026-09-28 18:00:00",
         "gameId": "545783930",
+        "weekIndex": 3,
         "oppElo": 1035.8
       },
       {
@@ -3594,6 +2730,7 @@
         "homeAway": "home",
         "date": "2026-09-29 18:00:00",
         "gameId": "545783945",
+        "weekIndex": 4,
         "oppElo": 946.0
       },
       {
@@ -3601,6 +2738,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783948",
+        "weekIndex": 5,
         "oppElo": 953.8
       },
       {
@@ -3608,6 +2746,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783974",
+        "weekIndex": 6,
         "oppElo": 1053.2
       },
       {
@@ -3615,6 +2754,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783989",
+        "weekIndex": 7,
         "oppElo": 991.3
       },
       {
@@ -3622,6 +2762,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784002",
+        "weekIndex": 8,
         "oppElo": 988.5
       },
       {
@@ -3629,6 +2770,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784014",
+        "weekIndex": 9,
         "oppElo": 970.5
       },
       {
@@ -3636,6 +2778,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784045",
+        "weekIndex": 11,
         "oppElo": 946.0
       },
       {
@@ -3643,6 +2786,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784061",
+        "weekIndex": 12,
         "oppElo": 1039.5
       },
       {
@@ -3650,6 +2794,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784074",
+        "weekIndex": 13,
         "oppElo": 1042.4
       },
       {
@@ -3657,6 +2802,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784078",
+        "weekIndex": 14,
         "oppElo": 956.7
       },
       {
@@ -3664,6 +2810,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784096",
+        "weekIndex": 15,
         "oppElo": 1002.6
       },
       {
@@ -3671,6 +2818,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784118",
+        "weekIndex": 16,
         "oppElo": 980.9
       },
       {
@@ -3678,6 +2826,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784127",
+        "weekIndex": 17,
         "oppElo": 1002.6
       }
     ]
@@ -3686,13 +2835,14 @@
     "team": "Patriots",
     "conference": "AFC",
     "division": "AFC East",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Seahawks",
         "homeAway": "away",
         "date": "",
         "gameId": "545783869",
+        "weekIndex": 0,
         "oppElo": 1030.9
       },
       {
@@ -3700,6 +2850,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783889",
+        "weekIndex": 1,
         "oppElo": 1010.3
       },
       {
@@ -3707,20 +2858,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783910",
+        "weekIndex": 2,
         "oppElo": 1039.9
-      },
-      {
-        "opponent": "Bills",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783919",
-        "oppElo": 988.5
       },
       {
         "opponent": "Raiders",
         "homeAway": "home",
         "date": "",
         "gameId": "545783937",
+        "weekIndex": 4,
         "oppElo": 970.5
       },
       {
@@ -3728,6 +2874,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783953",
+        "weekIndex": 5,
         "oppElo": 1004.0
       },
       {
@@ -3735,6 +2882,7 @@
         "homeAway": "away",
         "date": "2026-10-08 19:00:00",
         "gameId": "545783962",
+        "weekIndex": 6,
         "oppElo": 991.3
       },
       {
@@ -3742,6 +2890,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783987",
+        "weekIndex": 7,
         "oppElo": 992.2
       },
       {
@@ -3749,6 +2898,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784001",
+        "weekIndex": 8,
         "oppElo": 1023.0
       },
       {
@@ -3756,6 +2906,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784006",
+        "weekIndex": 9,
         "oppElo": 1034.9
       },
       {
@@ -3763,6 +2914,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784046",
+        "weekIndex": 11,
         "oppElo": 1035.8
       },
       {
@@ -3770,6 +2922,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784059",
+        "weekIndex": 12,
         "oppElo": 988.5
       },
       {
@@ -3777,6 +2930,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784062",
+        "weekIndex": 13,
         "oppElo": 1016.5
       },
       {
@@ -3784,6 +2938,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784092",
+        "weekIndex": 14,
         "oppElo": 1053.2
       },
       {
@@ -3791,6 +2946,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784101",
+        "weekIndex": 15,
         "oppElo": 1004.0
       },
       {
@@ -3798,6 +2954,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784111",
+        "weekIndex": 16,
         "oppElo": 953.8
       },
       {
@@ -3805,6 +2962,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784136",
+        "weekIndex": 17,
         "oppElo": 992.2
       }
     ]
@@ -3820,6 +2978,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783883",
+        "weekIndex": 0,
         "oppElo": 1039.5
       },
       {
@@ -3827,6 +2986,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783900",
+        "weekIndex": 1,
         "oppElo": 1002.6
       },
       {
@@ -3834,6 +2994,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783907",
+        "weekIndex": 2,
         "oppElo": 952.3
       },
       {
@@ -3841,6 +3002,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783922",
+        "weekIndex": 3,
         "oppElo": 988.5
       },
       {
@@ -3848,6 +3010,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783941",
+        "weekIndex": 4,
         "oppElo": 1001.3
       },
       {
@@ -3855,6 +3018,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783954",
+        "weekIndex": 5,
         "oppElo": 973.2
       },
       {
@@ -3862,6 +3026,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783970",
+        "weekIndex": 6,
         "oppElo": 969.3
       },
       {
@@ -3869,6 +3034,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783996",
+        "weekIndex": 8,
         "oppElo": 956.7
       },
       {
@@ -3876,6 +3042,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784005",
+        "weekIndex": 9,
         "oppElo": 1001.3
       },
       {
@@ -3883,6 +3050,7 @@
         "homeAway": "home",
         "date": "2026-10-20 06:35:00",
         "gameId": "545784025",
+        "weekIndex": 10,
         "oppElo": 1039.9
       },
       {
@@ -3890,6 +3058,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784039",
+        "weekIndex": 11,
         "oppElo": 981.2
       },
       {
@@ -3897,6 +3066,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784054",
+        "weekIndex": 12,
         "oppElo": 946.0
       },
       {
@@ -3904,6 +3074,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784074",
+        "weekIndex": 13,
         "oppElo": 1030.9
       },
       {
@@ -3911,6 +3082,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784082",
+        "weekIndex": 14,
         "oppElo": 979.7
       },
       {
@@ -3918,6 +3090,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784108",
+        "weekIndex": 15,
         "oppElo": 1034.9
       },
       {
@@ -3925,6 +3098,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784114",
+        "weekIndex": 16,
         "oppElo": 1039.5
       },
       {
@@ -3932,6 +3106,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784138",
+        "weekIndex": 17,
         "oppElo": 956.7
       }
     ]
@@ -3940,13 +3115,14 @@
     "team": "Cowboys",
     "conference": "NFC",
     "division": "NFC East",
-    "games": 17,
+    "games": 16,
     "schedule": [
       {
         "opponent": "Giants",
         "homeAway": "away",
         "date": "",
         "gameId": "545783883",
+        "weekIndex": 0,
         "oppElo": 1042.4
       },
       {
@@ -3954,6 +3130,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783896",
+        "weekIndex": 1,
         "oppElo": 1001.3
       },
       {
@@ -3961,6 +3138,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783913",
+        "weekIndex": 2,
         "oppElo": 985.5
       },
       {
@@ -3968,6 +3146,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783926",
+        "weekIndex": 3,
         "oppElo": 969.3
       },
       {
@@ -3975,6 +3154,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545783933",
+        "weekIndex": 4,
         "oppElo": 996.0
       },
       {
@@ -3982,20 +3162,15 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783960",
+        "weekIndex": 5,
         "oppElo": 1023.0
-      },
-      {
-        "opponent": "Eagles",
-        "homeAway": "away",
-        "date": "",
-        "gameId": "545783975",
-        "oppElo": 956.7
       },
       {
         "opponent": "Cardinals",
         "homeAway": "home",
         "date": "",
         "gameId": "545783979",
+        "weekIndex": 7,
         "oppElo": 988.5
       },
       {
@@ -4003,6 +3178,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545783992",
+        "weekIndex": 8,
         "oppElo": 981.2
       },
       {
@@ -4010,6 +3186,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784016",
+        "weekIndex": 9,
         "oppElo": 946.0
       },
       {
@@ -4017,6 +3194,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784022",
+        "weekIndex": 10,
         "oppElo": 952.3
       },
       {
@@ -4024,6 +3202,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784034",
+        "weekIndex": 11,
         "oppElo": 956.7
       },
       {
@@ -4031,6 +3210,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784061",
+        "weekIndex": 12,
         "oppElo": 1030.9
       },
       {
@@ -4038,6 +3218,7 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784090",
+        "weekIndex": 14,
         "oppElo": 1002.6
       },
       {
@@ -4045,6 +3226,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784107",
+        "weekIndex": 15,
         "oppElo": 1039.9
       },
       {
@@ -4052,6 +3234,7 @@
         "homeAway": "home",
         "date": "",
         "gameId": "545784114",
+        "weekIndex": 16,
         "oppElo": 1042.4
       },
       {
@@ -4059,7 +3242,1000 @@
         "homeAway": "away",
         "date": "",
         "gameId": "545784126",
+        "weekIndex": 17,
         "oppElo": 1001.3
+      }
+    ]
+  },
+  "Bears": {
+    "team": "Bears",
+    "conference": "NFC",
+    "division": "NFC North",
+    "games": 16,
+    "schedule": [
+      {
+        "opponent": "Vikings",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783887",
+        "weekIndex": 1,
+        "oppElo": 1016.5
+      },
+      {
+        "opponent": "Eagles",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783916",
+        "weekIndex": 2,
+        "oppElo": 956.7
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783920",
+        "weekIndex": 3,
+        "oppElo": 1004.0
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783943",
+        "weekIndex": 4,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Falcons",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783950",
+        "weekIndex": 5,
+        "oppElo": 1015.1
+      },
+      {
+        "opponent": "Patriots",
+        "homeAway": "home",
+        "date": "2026-10-08 19:00:00",
+        "gameId": "545783962",
+        "weekIndex": 6,
+        "oppElo": 1046.1
+      },
+      {
+        "opponent": "Seahawks",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783989",
+        "weekIndex": 7,
+        "oppElo": 1030.9
+      },
+      {
+        "opponent": "Buccaneers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784003",
+        "weekIndex": 8,
+        "oppElo": 996.0
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784021",
+        "weekIndex": 10,
+        "oppElo": 973.2
+      },
+      {
+        "opponent": "Lions",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784033",
+        "weekIndex": 11,
+        "oppElo": 1034.9
+      },
+      {
+        "opponent": "Jaguars",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784050",
+        "weekIndex": 12,
+        "oppElo": 1039.9
+      },
+      {
+        "opponent": "Dolphins",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784065",
+        "weekIndex": 13,
+        "oppElo": 992.2
+      },
+      {
+        "opponent": "Bills",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784079",
+        "weekIndex": 14,
+        "oppElo": 988.5
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784094",
+        "weekIndex": 15,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Lions",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784121",
+        "weekIndex": 16,
+        "oppElo": 1034.9
+      },
+      {
+        "opponent": "Vikings",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784135",
+        "weekIndex": 17,
+        "oppElo": 1016.5
+      }
+    ]
+  },
+  "Panthers": {
+    "team": "Panthers",
+    "conference": "NFC",
+    "division": "NFC South",
+    "games": 15,
+    "schedule": [
+      {
+        "opponent": "Falcons",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783886",
+        "weekIndex": 1,
+        "oppElo": 1015.1
+      },
+      {
+        "opponent": "Browns",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783903",
+        "weekIndex": 2,
+        "oppElo": 979.7
+      },
+      {
+        "opponent": "Lions",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783931",
+        "weekIndex": 3,
+        "oppElo": 1034.9
+      },
+      {
+        "opponent": "Eagles",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783955",
+        "weekIndex": 5,
+        "oppElo": 956.7
+      },
+      {
+        "opponent": "Buccaneers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783968",
+        "weekIndex": 6,
+        "oppElo": 996.0
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783976",
+        "weekIndex": 7,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Broncos",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783998",
+        "weekIndex": 8,
+        "oppElo": 953.8
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784012",
+        "weekIndex": 9,
+        "oppElo": 973.2
+      },
+      {
+        "opponent": "Buccaneers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784047",
+        "weekIndex": 11,
+        "oppElo": 996.0
+      },
+      {
+        "opponent": "Vikings",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784058",
+        "weekIndex": 12,
+        "oppElo": 1016.5
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784069",
+        "weekIndex": 13,
+        "oppElo": 973.2
+      },
+      {
+        "opponent": "Bengals",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784086",
+        "weekIndex": 14,
+        "oppElo": 998.5
+      },
+      {
+        "opponent": "Steelers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784103",
+        "weekIndex": 15,
+        "oppElo": 1010.3
+      },
+      {
+        "opponent": "Seahawks",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784118",
+        "weekIndex": 16,
+        "oppElo": 1030.9
+      },
+      {
+        "opponent": "Falcons",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784134",
+        "weekIndex": 17,
+        "oppElo": 1015.1
+      }
+    ]
+  },
+  "Raiders": {
+    "team": "Raiders",
+    "conference": "AFC",
+    "division": "AFC West",
+    "games": 16,
+    "schedule": [
+      {
+        "opponent": "Chargers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783895",
+        "weekIndex": 1,
+        "oppElo": 1035.8
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783914",
+        "weekIndex": 2,
+        "oppElo": 973.2
+      },
+      {
+        "opponent": "Chiefs",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783928",
+        "weekIndex": 3,
+        "oppElo": 1053.2
+      },
+      {
+        "opponent": "Patriots",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783937",
+        "weekIndex": 4,
+        "oppElo": 1046.1
+      },
+      {
+        "opponent": "Bills",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783959",
+        "weekIndex": 5,
+        "oppElo": 988.5
+      },
+      {
+        "opponent": "Rams",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783973",
+        "weekIndex": 6,
+        "oppElo": 1002.6
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783981",
+        "weekIndex": 7,
+        "oppElo": 1004.0
+      },
+      {
+        "opponent": "49ers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784000",
+        "weekIndex": 8,
+        "oppElo": 946.0
+      },
+      {
+        "opponent": "Seahawks",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784014",
+        "weekIndex": 9,
+        "oppElo": 1030.9
+      },
+      {
+        "opponent": "Broncos",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784028",
+        "weekIndex": 10,
+        "oppElo": 953.8
+      },
+      {
+        "opponent": "Browns",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784038",
+        "weekIndex": 11,
+        "oppElo": 979.7
+      },
+      {
+        "opponent": "Chargers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784071",
+        "weekIndex": 13,
+        "oppElo": 1035.8
+      },
+      {
+        "opponent": "Broncos",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784089",
+        "weekIndex": 14,
+        "oppElo": 953.8
+      },
+      {
+        "opponent": "Titans",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784104",
+        "weekIndex": 15,
+        "oppElo": 952.3
+      },
+      {
+        "opponent": "Cardinals",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784120",
+        "weekIndex": 16,
+        "oppElo": 988.5
+      },
+      {
+        "opponent": "Chiefs",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784131",
+        "weekIndex": 17,
+        "oppElo": 1053.2
+      }
+    ]
+  },
+  "Texans": {
+    "team": "Texans",
+    "conference": "AFC",
+    "division": "AFC South",
+    "games": 16,
+    "schedule": [
+      {
+        "opponent": "Bengals",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783893",
+        "weekIndex": 1,
+        "oppElo": 998.5
+      },
+      {
+        "opponent": "Colts",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783905",
+        "weekIndex": 2,
+        "oppElo": 981.2
+      },
+      {
+        "opponent": "Cowboys",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783926",
+        "weekIndex": 3,
+        "oppElo": 1039.5
+      },
+      {
+        "opponent": "Titans",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783935",
+        "weekIndex": 4,
+        "oppElo": 952.3
+      },
+      {
+        "opponent": "Jaguars",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783949",
+        "weekIndex": 5,
+        "oppElo": 1039.9
+      },
+      {
+        "opponent": "Giants",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783970",
+        "weekIndex": 6,
+        "oppElo": 1042.4
+      },
+      {
+        "opponent": "Chargers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783999",
+        "weekIndex": 8,
+        "oppElo": 1035.8
+      },
+      {
+        "opponent": "Browns",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784008",
+        "weekIndex": 9,
+        "oppElo": 979.7
+      },
+      {
+        "opponent": "Colts",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784019",
+        "weekIndex": 10,
+        "oppElo": 981.2
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784042",
+        "weekIndex": 11,
+        "oppElo": 985.5
+      },
+      {
+        "opponent": "Steelers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784060",
+        "weekIndex": 12,
+        "oppElo": 1010.3
+      },
+      {
+        "opponent": "Commanders",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784068",
+        "weekIndex": 13,
+        "oppElo": 1001.3
+      },
+      {
+        "opponent": "Jaguars",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784087",
+        "weekIndex": 14,
+        "oppElo": 1039.9
+      },
+      {
+        "opponent": "Eagles",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784093",
+        "weekIndex": 15,
+        "oppElo": 956.7
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784124",
+        "weekIndex": 16,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Titans",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784133",
+        "weekIndex": 17,
+        "oppElo": 952.3
+      }
+    ]
+  },
+  "Bengals": {
+    "team": "Bengals",
+    "conference": "AFC",
+    "division": "AFC North",
+    "games": 14,
+    "schedule": [
+      {
+        "opponent": "Texans",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783893",
+        "weekIndex": 1,
+        "oppElo": 969.3
+      },
+      {
+        "opponent": "Steelers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783908",
+        "weekIndex": 2,
+        "oppElo": 1010.3
+      },
+      {
+        "opponent": "Jaguars",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783921",
+        "weekIndex": 3,
+        "oppElo": 1039.9
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783969",
+        "weekIndex": 6,
+        "oppElo": 985.5
+      },
+      {
+        "opponent": "Falcons",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783991",
+        "weekIndex": 8,
+        "oppElo": 1015.1
+      },
+      {
+        "opponent": "Steelers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784017",
+        "weekIndex": 9,
+        "oppElo": 1010.3
+      },
+      {
+        "opponent": "Commanders",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784031",
+        "weekIndex": 10,
+        "oppElo": 1001.3
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784037",
+        "weekIndex": 11,
+        "oppElo": 973.2
+      },
+      {
+        "opponent": "Browns",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784051",
+        "weekIndex": 12,
+        "oppElo": 979.7
+      },
+      {
+        "opponent": "Chiefs",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784072",
+        "weekIndex": 13,
+        "oppElo": 1053.2
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784086",
+        "weekIndex": 14,
+        "oppElo": 980.9
+      },
+      {
+        "opponent": "Colts",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784106",
+        "weekIndex": 15,
+        "oppElo": 981.2
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784109",
+        "weekIndex": 16,
+        "oppElo": 985.5
+      },
+      {
+        "opponent": "Browns",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784129",
+        "weekIndex": 17,
+        "oppElo": 979.7
+      }
+    ]
+  },
+  "Buccaneers": {
+    "team": "Buccaneers",
+    "conference": "NFC",
+    "division": "NFC South",
+    "games": 16,
+    "schedule": [
+      {
+        "opponent": "Browns",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783891",
+        "weekIndex": 1,
+        "oppElo": 979.7
+      },
+      {
+        "opponent": "Vikings",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783912",
+        "weekIndex": 2,
+        "oppElo": 1016.5
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783924",
+        "weekIndex": 3,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Cowboys",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783933",
+        "weekIndex": 4,
+        "oppElo": 1039.5
+      },
+      {
+        "opponent": "Steelers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783956",
+        "weekIndex": 5,
+        "oppElo": 1010.3
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783968",
+        "weekIndex": 6,
+        "oppElo": 980.9
+      },
+      {
+        "opponent": "Falcons",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783983",
+        "weekIndex": 7,
+        "oppElo": 1015.1
+      },
+      {
+        "opponent": "Bears",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784003",
+        "weekIndex": 8,
+        "oppElo": 991.3
+      },
+      {
+        "opponent": "Lions",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784023",
+        "weekIndex": 10,
+        "oppElo": 1034.9
+      },
+      {
+        "opponent": "Panthers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784047",
+        "weekIndex": 11,
+        "oppElo": 980.9
+      },
+      {
+        "opponent": "Chargers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784055",
+        "weekIndex": 12,
+        "oppElo": 1035.8
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784070",
+        "weekIndex": 13,
+        "oppElo": 985.5
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784084",
+        "weekIndex": 14,
+        "oppElo": 973.2
+      },
+      {
+        "opponent": "Falcons",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784097",
+        "weekIndex": 15,
+        "oppElo": 1015.1
+      },
+      {
+        "opponent": "Rams",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784122",
+        "weekIndex": 16,
+        "oppElo": 1002.6
+      },
+      {
+        "opponent": "Saints",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784137",
+        "weekIndex": 17,
+        "oppElo": 973.2
+      }
+    ]
+  },
+  "Bills": {
+    "team": "Bills",
+    "conference": "AFC",
+    "division": "AFC East",
+    "games": 12,
+    "schedule": [
+      {
+        "opponent": "Raiders",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545783959",
+        "weekIndex": 5,
+        "oppElo": 970.5
+      },
+      {
+        "opponent": "Ravens",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783977",
+        "weekIndex": 7,
+        "oppElo": 985.5
+      },
+      {
+        "opponent": "Vikings",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784004",
+        "weekIndex": 8,
+        "oppElo": 1016.5
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784013",
+        "weekIndex": 9,
+        "oppElo": 1004.0
+      },
+      {
+        "opponent": "Dolphins",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784020",
+        "weekIndex": 10,
+        "oppElo": 992.2
+      },
+      {
+        "opponent": "Chiefs",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784035",
+        "weekIndex": 11,
+        "oppElo": 1053.2
+      },
+      {
+        "opponent": "Patriots",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784059",
+        "weekIndex": 12,
+        "oppElo": 1046.1
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784075",
+        "weekIndex": 13,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Bears",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784079",
+        "weekIndex": 14,
+        "oppElo": 991.3
+      },
+      {
+        "opponent": "Broncos",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784095",
+        "weekIndex": 15,
+        "oppElo": 953.8
+      },
+      {
+        "opponent": "Dolphins",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784116",
+        "weekIndex": 16,
+        "oppElo": 992.2
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784128",
+        "weekIndex": 17,
+        "oppElo": 1004.0
+      }
+    ]
+  },
+  "Dolphins": {
+    "team": "Dolphins",
+    "conference": "AFC",
+    "division": "AFC East",
+    "games": 11,
+    "schedule": [
+      {
+        "opponent": "Patriots",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783987",
+        "weekIndex": 7,
+        "oppElo": 1046.1
+      },
+      {
+        "opponent": "Lions",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545783994",
+        "weekIndex": 8,
+        "oppElo": 1034.9
+      },
+      {
+        "opponent": "Colts",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784011",
+        "weekIndex": 9,
+        "oppElo": 981.2
+      },
+      {
+        "opponent": "Bills",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784020",
+        "weekIndex": 10,
+        "oppElo": 988.5
+      },
+      {
+        "opponent": "Jets",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784040",
+        "weekIndex": 11,
+        "oppElo": 1004.0
+      },
+      {
+        "opponent": "Broncos",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784056",
+        "weekIndex": 12,
+        "oppElo": 953.8
+      },
+      {
+        "opponent": "Bears",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784065",
+        "weekIndex": 13,
+        "oppElo": 991.3
+      },
+      {
+        "opponent": "Packers",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784080",
+        "weekIndex": 14,
+        "oppElo": 1023.0
+      },
+      {
+        "opponent": "Chargers",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784099",
+        "weekIndex": 15,
+        "oppElo": 1035.8
+      },
+      {
+        "opponent": "Bills",
+        "homeAway": "home",
+        "date": "",
+        "gameId": "545784116",
+        "weekIndex": 16,
+        "oppElo": 988.5
+      },
+      {
+        "opponent": "Patriots",
+        "homeAway": "away",
+        "date": "",
+        "gameId": "545784136",
+        "weekIndex": 17,
+        "oppElo": 1046.1
       }
     ]
   }

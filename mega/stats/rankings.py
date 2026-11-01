@@ -3,8 +3,10 @@ import csv
 from collections import defaultdict
 from pathlib import Path
 
-from mega.inputs.csv import load_csv
+from mega.inputs.performance import load_csv
 from mega.inputs.identity import normalize_team_display, safe_float
+from mega.inputs.performance import enabled as performance_enabled
+from mega.inputs.elo import normalize_team_name, read_elo_map
 
 def safe_int(value, default=0):
     """Safely convert to int."""
@@ -46,6 +48,11 @@ def aggregate_rankings_stats(base_path):
                 }
     except FileNotFoundError:
         elo_map = {}
+    if performance_enabled(base_path):
+        declared = read_elo_map(base_path / 'mega_elo.csv', root=base_path)
+        elo_map = {name: {'eloIndex': declared.get(normalize_team_name(name)),
+                         'eloStart': declared.get(normalize_team_name(name))}
+                   for name in (row['displayName'] for row in teams)}
     
     # Create team lookup
     teams_map = {}

@@ -16,6 +16,13 @@ DATA_MANIFEST_SCHEMA_VERSION = 1
 BUILD_MANIFEST_SCHEMA_VERSION = 2
 
 
+def performance_identity(root):
+    root = Path(root)
+    paths = ("spec/performance_policy.json", "data/performance_evidence/manifest.json",
+             "data/performance_evidence/snapshot.tar.gz")
+    return {name: sha256_file(root / name) for name in paths if (root / name).is_file()}
+
+
 def browser_data_urls(context: CycleContext) -> dict[str, str]:
     return {
         key: artifact.resolved(context.display_season)[1]
@@ -132,6 +139,8 @@ def write_build_manifest(
             raise ValueError("Existing build manifest predates artifact ownership; run a full build before a subset build")
         if previous.get("snapshotId") != context.snapshot_id:
             raise ValueError("A subset build cannot mix artifacts from a different input snapshot; run the full pipeline")
+        if previous.get("performanceIdentity", {}) != performance_identity(repository_root):
+            raise ValueError("Performance policy/evidence changed; run the full pipeline before a subset build")
 
     artifacts: dict[str, str] = {}
     if group != "full" and previous:
@@ -196,6 +205,7 @@ def write_build_manifest(
     previous_tasks = set(previous.get("taskIds", [])) if previous and previous.get("snapshotId") == context.snapshot_id else set()
     manifest = {
         "schemaVersion": BUILD_MANIFEST_SCHEMA_VERSION,
+        "performanceIdentity": performance_identity(workspace),
         "snapshotId": context.snapshot_id,
         "edition": context.edition,
         "csvSeasonIndex": context.csv_season_index,

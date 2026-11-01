@@ -5,9 +5,14 @@ import os
 import json
 from collections import defaultdict
 
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from mega.inputs.performance import analytics_path
+
 def read_standings(season_index=0):
     teams_div = {}
-    with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_teams.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()
@@ -16,7 +21,7 @@ def read_standings(season_index=0):
             teams_div[team] = {'division': div, 'conference': conf}
     
     team_rankings = {}
-    with open('MEGA_teams.csv', 'r', encoding='utf-8') as f:
+    with analytics_path(Path('MEGA_teams.csv')).open('r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             team = row['displayName'].strip()

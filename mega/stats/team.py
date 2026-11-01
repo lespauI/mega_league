@@ -2,7 +2,7 @@
 import csv
 from collections import defaultdict
 
-from mega.inputs.csv import load_csv
+from mega.inputs.performance import load_csv
 from mega.inputs.identity import normalize_team_display, safe_float
 
 def safe_mean(values):
@@ -100,6 +100,9 @@ def aggregate_team_stats(base_path):
                 if safe_float(p.get("passTotalAtt")) >= 20
             ]
         )
+        if any(safe_float(p.get('passTotalAtt')) >= 20 and p.get('passerAvgRating') in (None, '')
+               for p in team_passing_megarows):
+            team_data['qb_rating'] = None
 
         # Offensive rushing (adjusted)
         team_data["rush_att"] = sum(
@@ -381,6 +384,12 @@ def aggregate_team_stats(base_path):
             else 0
         )
         
+        team_data['performance_games'] = total_games
+        team_data['excluded_games'] = safe_float(team_info.get('excludedGames', 0))
+        if not total_games:
+            for field in team_data:
+                if any(part in field for part in ('_per_game', '_pct', '_rate', '_ratio', '_avg', 'qb_rating')):
+                    team_data[field] = None
         team_stats.append(team_data)
     
     output_dir = base_path / 'output'

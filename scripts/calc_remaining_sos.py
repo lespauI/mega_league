@@ -3,9 +3,14 @@ import csv
 import math
 import os
 from collections import defaultdict
+from pathlib import Path
+import sys
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from mega.inputs.performance import analytics_path, excluded_game
 
 
 def read_teams(teams_csv_path):
+    teams_csv_path = analytics_path(Path(teams_csv_path))
     teams = {}
     with open(teams_csv_path, newline="", encoding="utf-8") as f:
         reader = csv.DictReader(f)
@@ -62,6 +67,8 @@ def read_games_split(games_csv_path):
             home = (row.get("homeTeam") or "").strip()
             away = (row.get("awayTeam") or "").strip()
             if not home or not away:
+                continue
+            if excluded_game(row):
                 continue
             if status == "1":
                 remaining.append((home, away))

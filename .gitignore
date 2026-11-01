@@ -8,6 +8,10 @@ __pycache__/
 dist/
 build/
 .cache/
+data/.performance-api-*/
+data/performance_evidence/games/
+data/performance_evidence/histories/
+data/performance_evidence/.pack-*/
 coverage/
 *.log
 myenv/
@@ -37,6 +41,7 @@ output/*
 !output/team_scenarios.json
 !output/power_rankings_roster.csv
 !output/ranked_sos_by_conference.csv
+!output/official_ranked_sos_by_conference.csv
 !output/sos/
 output/sos/*
 !output/sos/season*_elo.csv
@@ -54,6 +59,13 @@ output/draft_race/*
 !output/draft_race/draft_race_report.md
 !output/trained_models/
 !output/trained_models/**
+
+# Snapshot-bound performance artifacts consumed by the published site.
+!output/performance/
+output/performance/*
+!output/performance/teams.csv
+!output/performance/games.csv
+!output/performance/manifest.json
 
 # Historical snapshots must remain versionable, including formerly ignored outputs.
 !archive/
