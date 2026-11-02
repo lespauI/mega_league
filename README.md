@@ -1,6 +1,6 @@
 # MEGA League analytics — Madden 27
 
-Current data: **Madden 27, season 1 (`seasonIndex=0`), results through Week 15**. The team/rankings export has `weekIndex=14`; scheduled games at that index are display Week 15. The supplied **Week 8 ELO** ratings are used for this analysis with the user's approval.
+Current data: **Madden 27, season 1 (`seasonIndex=0`), results through Week 15**. The team/rankings export has `weekIndex=15`; scheduled games at that index are display Week 16. The supplied **Week 8 ELO** ratings are used for this analysis with the user's approval.
 
 All 12 NeonSportz CSV exports are imported. [ELO and GM labels](mega_elo.csv), [GM-to-NeonSportz user mapping](MEGA_users.csv), and [source metadata](docs/data/import_metadata.json) preserve their provenance. The original screenshot is [available here](docs/data/elo_week8.png). Raw export usernames are unchanged.
 
