@@ -2,7 +2,7 @@
 
 ## Current cycle and boundaries
 
-- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 15. Team/rankings exports have `weekIndex=14`; scheduled games at that index are display Week 15.
+- Active game: **Madden 27, season 1 (`seasonIndex=0`)**, with results through Week 15. Team/rankings exports have `weekIndex=15`; scheduled games at that index are display Week 16.
 - Madden 26 is archived under `archive/madden-26/` (2026-10-24). See its `README.md` and `manifest.json` for provenance, inventory, and recovery.
 - Treat the archive as immutable historical evidence. Exclude `archive/` from normal searches and data discovery. Read it only for explicit historical work or a deliberate comparison.
 - Never restore Madden 26 CSVs into the active root as a fallback for missing Madden 27 data. Do not create fabricated league data or empty results to make a pipeline appear successful.
