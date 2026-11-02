@@ -4,7 +4,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,1,3,Jeremiyah Love,HB,HB,AZ,AZ,84,87,Superstar,Superstar,21,21
 2026,1,4,Carnell Tate,WR,WR,TEN,TEN,78,80,Star,Star,21,21
 2026,1,5,Arvell Reese,WILL,WILL,NYG,NYG,80,82,Superstar,Superstar,21,21
-2026,1,6,Mansoor Delane,CB,CB,KC,KC,82,83,Star,Superstar,22,22
+2026,1,6,Mansoor Delane,CB,CB,KC,KC,82,84,Star,Superstar,22,22
 2026,1,7,Sonny Styles,MIKE,MIKE,WAS,WAS,80,82,Star,Star,21,21
 2026,1,8,Jordyn Tyson,WR,WR,NO,NO,77,82,Star,Star,22,22
 2026,1,9,Spencer Fano,RG,LG,CLE,CLE,82,84,Star,Star,21,21
@@ -13,7 +13,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,1,12,Kadyn Proctor,LG,LG,MIA,MIA,77,79,Star,Star,21,21
 2026,1,13,Ty Simpson,QB,QB,LAR,LAR,75,78,Star,Star,23,23
 2026,1,14,Olaivavega Ioane,RG,RG,BAL,BAL,79,80,Star,Star,22,22
-2026,1,15,Rueben Bain Jr.,LEDGE,LEDGE,TB,TB,83,85,Superstar,Superstar,21,21
+2026,1,15,Rueben Bain Jr.,LEDGE,LEDGE,TB,TB,83,86,Superstar,X-Factor,21,21
 2026,1,16,Kenyon Sadiq,TE,TE,NYJ,NYJ,78,82,Star,Star,21,21
 2026,1,17,Blake Miller,RT,RT,DET,DET,76,77,Star,Star,22,22
 2026,1,18,Caleb Banks,DT,DT,MIN,MIN,79,80,Star,Star,23,23
@@ -69,14 +69,14 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,3,4,Markel Bell,LT,LT,PHI,PHI,75,78,Star,Star,22,22
 2026,3,5,Sam Roush,TE,TE,CHI,CHI,65,65,Normal,Normal,22,22
 2026,3,6,Romello Height,SAM,LEDGE,SF,SF,75,73,Star,Star,25,25
-2026,3,7,Antonio Williams,WR,WR,WAS,WAS,74,77,Star,Star,22,22
+2026,3,7,Antonio Williams,WR,WR,WAS,WAS,74,78,Star,Star,22,22
 2026,3,8,Tacario Davis,CB,CB,CIN,CIN,73,76,Normal,Normal,22,22
 2026,3,9,Oscar Delp,TE,TE,NO,NO,69,72,Star,Star,23,23
 2026,3,10,Malachi Fields,WR,WR,NYG,NYG,75,79,Star,Superstar,23,23
 2026,3,11,Caleb Douglas,WR,WR,MIA,MIA,72,74,Star,Star,22,22
-2026,3,12,Drew Allar,QB,QB,PIT,PIT,73,76,Normal,Normal,22,22
+2026,3,12,Drew Allar,QB,QB,PIT,PIT,73,77,Normal,Normal,22,22
 2026,3,13,Chris McClellan,DT,DT,GB,GB,75,77,Star,Star,22,22
-2026,3,14,A.J. Haulcy,SS,SS,IND,IND,76,77,Star,Star,22,22
+2026,3,14,A.J. Haulcy,SS,SS,IND,IND,76,78,Star,Star,22,22
 2026,3,15,Zachariah Branch,WR,WR,ATL,ATL,75,77,Star,Star,22,22
 2026,3,16,Ja'Kobi Lane,WR,WR,BAL,BAL,75,78,Star,Star,22,22
 2026,3,17,Albert Regis,DT,DT,JAX,JAX,75,80,Star,X-Factor,23,23
@@ -88,7 +88,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,3,23,Will Kacmarek,TE,TE,MIA,MIA,65,68,Star,Star,23,23
 2026,3,24,Emmanuel Pregnon,LG,LG,JAX,JAX,74,77,Star,Star,24,24
 2026,3,25,Zavion Thomas,WR,WR,CHI,CHI,73,75,Normal,Normal,22,22
-2026,3,26,Kaelon Black,HB,HB,SF,SF,72,74,Star,Star,24,24
+2026,3,26,Kaelon Black,HB,HB,SF,SF,72,75,Star,Star,24,24
 2026,3,27,Trey Zuhn III,RT,RT,LV,LV,72,74,Star,Star,23,23
 2026,3,28,Jaishawn Barham,SAM,SAM,DAL,DAL,75,76,Star,Star,22,22
 2026,3,29,Keagen Trost,RT,RT,LAR,LAR,73,76,Star,Star,25,25
@@ -131,7 +131,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,4,30,Trey Moore,LEDGE,LEDGE,MIA,MIA,72,73,Normal,Normal,23,23
 2026,4,31,Genesis Smith,FS,FS,LAC,LAC,75,78,Star,Star,21,21
 2026,4,32,Jeremiah Wright,RG,RG,NO,NO,73,76,Star,Star,24,24
-2026,4,33,Matthew Hibner,TE,TE,BAL,BAL,66,68,Star,Star,24,24
+2026,4,33,Matthew Hibner,TE,TE,BAL,BAL,66,69,Star,Star,24,24
 2026,4,34,Kendal Daniels,WILL,WILL,ATL,ATL,70,73,Normal,Normal,23,23
 2026,4,35,Bryce Boettcher,WILL,WILL,IND,IND,70,71,Normal,Normal,24,24
 2026,4,36,Bryce Lance,WR,WR,NO,NO,70,75,Normal,Normal,24,24
@@ -143,7 +143,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,5,2,Fernando Carmona,RG,RG,TEN,TEN,72,73,Star,Star,24,24
 2026,5,3,Reggie Virgil,WR,WR,AZ,AZ,70,74,Normal,Normal,22,22
 2026,5,4,Sam Hecht,C,C,CAR,CAR,68,69,Normal,Normal,23,23
-2026,5,5,Nick Barrett,DT,DT,LAC,LAC,72,77,Star,Star,23,23
+2026,5,5,Nick Barrett,DT,DT,LAC,LAC,72,78,Star,Star,23,23
 2026,5,6,Parker Brailsford,C,C,CLE,CLE,67,67,Normal,Normal,22,22
 2026,5,7,Joshua Josephs,LEDGE,LEDGE,WAS,WAS,72,72,Normal,Normal,22,22
 2026,5,8,Beau Stephens,RG,RG,SEA,SEA,72,73,Star,Star,23,23
@@ -160,7 +160,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,5,19,Max Bredeson,FB,FB,MIN,MIN,71,71,Normal,Normal,23,23
 2026,5,20,Billy Schrauth,LG,LG,TB,TB,69,71,Normal,Normal,22,22
 2026,5,21,Emmett Johnson,HB,HB,KC,KC,68,69,Normal,Normal,22,22
-2026,5,22,Chandler Rivers,CB,CB,BAL,BAL,71,72,Normal,Normal,22,22
+2026,5,22,Chandler Rivers,CB,CB,BAL,BAL,71,73,Normal,Normal,22,22
 2026,5,23,Charles Demmings,CB,CB,MIN,MIN,69,70,Normal,Normal,23,23
 2026,5,24,Tanner Koziol,TE,TE,JAX,JAX,66,69,Star,Star,23,23
 2026,5,25,Nick Singleton,HB,HB,TEN,TEN,71,72,Normal,Normal,22,22
@@ -207,7 +207,7 @@ Year,Round,Pick,Player,Position,Drafted Position,Drafted Team,Current Team,Draft
 2026,6,25,Alex Harkey,RG,RG,LAC,LAC,68,69,Normal,Normal,25,25
 2026,6,26,Micah Morris,RG,RG,PHI,PHI,68,69,Normal,Normal,23,23
 2026,6,27,Anterio Thompson,DT,DT,ATL,ATL,67,68,Normal,Normal,23,23
-2026,6,28,Matt Gulbin,C,C,WAS,WAS,64,65,Normal,Normal,23,23
+2026,6,28,Matt Gulbin,C,C,WAS,WAS,64,66,Normal,Normal,23,23
 2026,6,29,Gabe Rubio,DT,DT,PIT,PIT,67,67,Normal,Normal,23,23
 2026,6,30,Ryan Eckley,P,P,BAL,BAL,72,74,Normal,Normal,22,22
 2026,6,31,Namdi Obiazor,WILL,WILL,NE,NE,68,68,Normal,Normal,24,24

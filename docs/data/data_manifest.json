@@ -6,7 +6,7 @@
     "displaySeason": 1,
     "edition": "Madden 27",
     "eloSourceWeek": 8,
-    "exportWeekIndex": 14
+    "exportWeekIndex": 15
   },
   "data": {
     "elo": "current_elo.csv",
@@ -28,5 +28,5 @@
     "trades": "../../output/traded_players_report.csv"
   },
   "schemaVersion": 1,
-  "snapshotId": "d9eafa26502f86dd"
+  "snapshotId": "7d5304d3c4af3681"
 }
