@@ -1,5 +1,5 @@
 id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_gotw,gotw_reason,seasonIndex,stageIndex,weekIndex,status,simmed,is_superseded,home_fw,away_fw,concession,scheduled_date_time,home_team_spread,away_team_spread,spread_source,spread_locked,gotw_pickem_deadline,game_summary,game_preview,discord_channel_id,availability_message_id,rivalry,rivalry_label
-31604236,545783882,MEGA M27,Chargers,Cardinals,14,21,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604238,545783884,MEGA M27,Chiefs,Broncos,7,30,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604229,545783875,MEGA M27,Steelers,Falcons,30,24,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604237,545783883,MEGA M27,Giants,Cowboys,24,0,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604223,545783869,MEGA M27,Seahawks,Patriots,22,35,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
@@ -9,8 +9,8 @@ id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_go
 31604227,545783873,MEGA M27,Titans,Jets,39,7,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604226,545783872,MEGA M27,Lions,Saints,14,28,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604231,545783877,MEGA M27,Jaguars,Browns,17,24,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604236,545783882,MEGA M27,Chargers,Cardinals,14,21,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604235,545783881,MEGA M27,Eagles,Commanders,19,13,False,False,,0,1,0,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604238,545783884,MEGA M27,Chiefs,Broncos,7,30,False,False,,0,1,0,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604253,545783899,MEGA M27,Chiefs,Colts,20,24,False,False,,0,1,1,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604251,545783897,MEGA M27,Cardinals,Seahawks,45,21,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604254,545783900,MEGA M27,Rams,Giants,17,3,False,False,,0,1,1,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
@@ -26,9 +26,9 @@ id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_go
 31604259,545783905,MEGA M27,Colts,Texans,16,26,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604255,545783901,MEGA M27,Packers,Falcons,26,27,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604257,545783903,MEGA M27,Browns,Panthers,20,27,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
-31604268,545783914,MEGA M27,Saints,Raiders,14,40,False,False,,0,1,2,3,False,False,False,False,,,-1.5,1.5,legacy,True,,,,,,,
-31604266,545783912,MEGA M27,Buccaneers,Vikings,23,14,False,False,,0,1,2,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604269,545783915,MEGA M27,Broncos,Rams,27,17,False,False,,0,1,2,2,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
+31604266,545783912,MEGA M27,Buccaneers,Vikings,23,14,False,False,,0,1,2,2,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
+31604268,545783914,MEGA M27,Saints,Raiders,14,40,False,False,,0,1,2,3,False,False,False,False,,,-1.5,1.5,legacy,True,,,,,,,
 31604258,545783904,MEGA M27,Lions,Jets,7,20,False,False,,0,1,2,3,False,False,False,False,,,4.5,-4.5,legacy,True,,,,,,,
 31604267,545783913,MEGA M27,Cowboys,Ravens,20,21,False,False,,0,1,2,3,False,False,False,False,,,0.0,0.0,legacy,True,,,,,,,
 31604265,545783911,MEGA M27,49ers,Cardinals,21,20,False,False,,0,1,2,2,False,False,False,False,,,-6.5,6.5,legacy,True,,,,,,,
@@ -58,8 +58,8 @@ id,gameId,league,homeTeam,awayTeam,awayScore,homeScore,isGameOfTheWeek,manual_go
 31604289,545783935,MEGA M27,Titans,Texans,26,0,False,False,,0,1,4,2,False,False,False,False,,,5.5,-5.5,legacy,True,,,,,,,
 31604300,545783946,MEGA M27,Falcons,Ravens,28,31,False,False,,0,1,4,3,False,False,False,False,,,-7.5,7.5,legacy,True,,,,,,,
 31604299,545783945,MEGA M27,Seahawks,49ers,6,41,False,False,,0,1,4,3,False,False,False,False,,2026-09-29 18:00:00,-9.5,9.5,legacy,True,,,,,,,
-31604291,545783937,MEGA M27,Patriots,Raiders,12,34,False,False,,0,1,4,3,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
 31604294,545783940,MEGA M27,Steelers,Colts,6,31,False,False,,0,1,4,3,False,False,False,False,,,3.5,-3.5,legacy,True,,,,,,,
+31604291,545783937,MEGA M27,Patriots,Raiders,12,34,False,False,,0,1,4,3,False,False,False,False,,,-0.5,0.5,legacy,True,,,,,,,
 31604295,545783941,MEGA M27,Commanders,Giants,49,31,False,False,,0,1,4,2,False,False,False,False,,,9.5,-9.5,legacy,True,,,,,,,
 31604293,545783939,MEGA M27,Jets,Browns,31,35,True,True,,0,1,4,3,False,False,False,False,,,-7.5,7.5,legacy,True,,,,,,,
 31604298,545783944,MEGA M27,Cardinals,Lions,24,6,False,False,,0,1,4,2,False,False,False,False,,,8.5,-8.5,legacy,True,,,,,,,
@@ -106,15 +106,6 @@ The decisive factor was Jacksonville’s efficiency and explosiveness. The Jagua
 C.J. Stroud leads Houston’s listed passing performance with 326 yards, three touchdowns, and no interceptions. Trevor Lawrence has 261 yards, three touchdowns, and one interception for Jacksonville. Bhayshul Tuten has 162 rushing yards and three touchdowns for the Jaguars, while David Montgomery has 118 yards and one touchdown for the Texans. Brian Thomas Jr has two receiving touchdowns for Jacksonville, and Kayshon Boutte has 128 receiving yards for Houston. Travis Hunter has two interceptions for Jacksonville. The duplicate sack and turnover entries provide no additional distinct totals.
 
 Prediction: Jacksonville Jaguars 27, Houston Texans 20.",,,,
-31604309,545783955,MEGA M27,Eagles,Panthers,24,0,False,False,,0,1,5,2,False,False,False,False,,,9.5,-9.5,legacy,True,,"The Carolina Panthers turned a low-yardage contest into a decisive 24-0 victory over the Philadelphia Eagles, riding a dominant defensive effort and timely plays from Bryce Young’s offense.
-
-Philadelphia moved the ball at times, finishing with 229 total yards, but four turnovers repeatedly ended promising possessions. Eagles quarterback Jalen Hurts completed enough passes to produce 189 yards, yet his four interceptions proved costly. Carolina defenders Bobby Okereke and Zakee Wheatley each recorded an interception, helping prevent Philadelphia from converting field position into points. Okereke and Mike Jackson also led the Panthers with five total tackles apiece.
-
-Carolina’s offense was hardly explosive overall, generating 180 yards, but it capitalized when opportunities arose. Young threw for 133 yards and two touchdowns despite being intercepted three times. Tetairoa McMillan provided the biggest receiving impact for the Panthers, catching three passes for 76 yards and a touchdown. Jonathon Brooks supplied balance with 71 rushing yards on 14 carries, helping Carolina control the game’s tempo.
-
-The Eagles’ best offensive connection came from Dallas Goedert, who caught seven passes for 87 yards, while Saquon Barkley managed 39 rushing yards on 12 attempts. Philadelphia’s defense recorded sacks from Jonathan Greenard and Zack Baun, but could not consistently slow Carolina in the red zone.
-
-Ultimately, the Panthers won by winning the turnover battle’s consequences: although both teams committed multiple turnovers, Carolina’s defense produced the decisive stops and Philadelphia failed to score. The shutout marked Carolina’s most emphatic statement of the game, as its defense repeatedly erased Eagles drives while Young and McMillan delivered enough offense to secure the 24-point victory.",,,,,
 31604307,545783953,MEGA M27,Patriots,Jets,27,34,False,False,,0,1,5,3,False,False,False,False,,,5.5,-5.5,legacy,True,,"The New England Patriots held off the New York Jets 34-27 in an explosive, turnover-filled matchup defined by big plays and timely defensive pressure.
 
 Drake Maye powered New England’s offense with 351 passing yards and four touchdowns, connecting repeatedly with Kyle Williams. Williams delivered the game’s standout receiving performance, catching eight passes for 195 yards and three touchdowns. The Patriots also found balance on the ground, with Rhamondre Stevenson rushing for 51 yards and a touchdown on eight attempts, while TreVeyon Henderson added 50 yards on 10 carries.
@@ -128,6 +119,15 @@ Despite Maye’s two interceptions, New England’s high-volume passing attack a
 Breece Hall leads the listed rushing production for the Jets with entries of 159 yards and one touchdown on 22 attempts, and 134 yards and two touchdowns on 14 attempts. Garrett Wilson has 9 receptions for 133 yards and one touchdown. For New England, Hunter Henry has 8 receptions, 127 yards, and three touchdowns. Drake Maye is listed twice for the Patriots with 269 passing yards, alongside separate touchdown and interception totals. New England’s listed defenders include Harold Landry III and Craig Woodson with six tackles each, while Christian Elliss and Gabe Jacas have two sacks apiece. Turnover leaders are Demario Davis and Carlton Davis III with two interceptions each.
 
 Prediction: New York Jets 24, New England Patriots 21, in a tight finish.",,,,
+31604309,545783955,MEGA M27,Eagles,Panthers,24,0,False,False,,0,1,5,2,False,False,False,False,,,9.5,-9.5,legacy,True,,"The Carolina Panthers turned a low-yardage contest into a decisive 24-0 victory over the Philadelphia Eagles, riding a dominant defensive effort and timely plays from Bryce Young’s offense.
+
+Philadelphia moved the ball at times, finishing with 229 total yards, but four turnovers repeatedly ended promising possessions. Eagles quarterback Jalen Hurts completed enough passes to produce 189 yards, yet his four interceptions proved costly. Carolina defenders Bobby Okereke and Zakee Wheatley each recorded an interception, helping prevent Philadelphia from converting field position into points. Okereke and Mike Jackson also led the Panthers with five total tackles apiece.
+
+Carolina’s offense was hardly explosive overall, generating 180 yards, but it capitalized when opportunities arose. Young threw for 133 yards and two touchdowns despite being intercepted three times. Tetairoa McMillan provided the biggest receiving impact for the Panthers, catching three passes for 76 yards and a touchdown. Jonathon Brooks supplied balance with 71 rushing yards on 14 carries, helping Carolina control the game’s tempo.
+
+The Eagles’ best offensive connection came from Dallas Goedert, who caught seven passes for 87 yards, while Saquon Barkley managed 39 rushing yards on 12 attempts. Philadelphia’s defense recorded sacks from Jonathan Greenard and Zack Baun, but could not consistently slow Carolina in the red zone.
+
+Ultimately, the Panthers won by winning the turnover battle’s consequences: although both teams committed multiple turnovers, Carolina’s defense produced the decisive stops and Philadelphia failed to score. The shutout marked Carolina’s most emphatic statement of the game, as its defense repeatedly erased Eagles drives while Young and McMillan delivered enough offense to secure the 24-point victory.",,,,,
 31604312,545783958,MEGA M27,Chiefs,Chargers,21,35,True,True,,0,1,5,3,False,False,False,False,,,2.5,-2.5,legacy,True,,"The Kansas City Chiefs pulled away from the Los Angeles Chargers, 35-21, behind a dominant rushing performance and a defense that repeatedly capitalized on mistakes.
 
 Kansas City controlled the game on the ground, piling up 249 rushing yards compared with Los Angeles’ 71. Kenneth Walker led the charge for the Chiefs with 184 yards and two touchdowns on just 19 carries, consistently creating explosive plays and keeping the Chargers’ defense off balance. Brashard Smith added 54 yards and a touchdown on two attempts, further underscoring Kansas City’s efficiency in the running game.
@@ -354,19 +354,19 @@ Prediction: Baltimore Ravens 27, Cleveland Browns 23.",,,,
 31604494,545784092,MEGA M27,Chiefs,Patriots,23,45,False,False,,0,1,14,3,False,False,False,False,,,-3.8,3.8,estimate,False,,,,,,,
 31604492,545784090,MEGA M27,Rams,Cowboys,3,34,False,False,,0,1,14,3,False,False,False,False,,,5.0,-5.0,estimate,False,,,,,,,
 31604482,545784080,MEGA M27,Packers,Dolphins,6,38,False,False,,0,1,14,3,False,False,False,False,,,-0.8,0.8,estimate,False,,,,,,,
-31604498,545784096,MEGA M27,Seahawks,Rams,0,0,False,False,,0,1,15,1,False,False,False,False,,,1.7,-1.7,estimate,False,,,,,,,
+31604498,545784096,MEGA M27,Seahawks,Rams,41,11,False,False,,0,1,15,2,False,False,False,False,,,1.7,-1.7,estimate,False,,,,,,,
 31604503,545784101,MEGA M27,Jets,Patriots,0,0,False,False,,0,1,15,1,False,False,False,False,,,-0.5,0.5,estimate,False,,,,,,,
 31604504,545784102,MEGA M27,Ravens,Browns,0,0,False,False,,0,1,15,1,False,False,False,False,,,6.1,-6.1,estimate,False,,,,,,,
 31604505,545784103,MEGA M27,Steelers,Panthers,0,0,False,False,,0,1,15,1,False,False,False,False,,,-6.9,6.9,estimate,False,,,,,,,
 31604497,545784095,MEGA M27,Broncos,Bills,0,0,False,False,,0,1,15,1,False,False,False,False,,,-3.8,3.8,estimate,False,,,,,,,
-31604496,545784094,MEGA M27,Bears,Packers,0,0,False,False,,0,1,15,1,False,False,False,False,,,2.8,-2.8,estimate,False,,,,,,,
+31604496,545784094,MEGA M27,Bears,Packers,40,21,False,False,,0,1,15,2,False,False,False,False,,,2.8,-2.8,estimate,False,,,,,,,
 31604506,545784104,MEGA M27,Raiders,Titans,0,0,False,False,,0,1,15,1,False,False,False,False,,,-13.3,13.3,estimate,False,,,,,,,
 31604510,545784108,MEGA M27,Lions,Giants,21,14,True,False,"playoff race, close seeding, two user teams",0,1,15,2,False,False,False,False,,,1.4,-1.4,estimate,False,,,,,,,
 31604500,545784098,MEGA M27,Vikings,Commanders,0,0,False,False,,0,1,15,1,False,False,False,False,,,-2.5,2.5,estimate,False,,,,,,,
-31604501,545784099,MEGA M27,Dolphins,Chargers,0,0,False,False,,0,1,15,1,False,False,False,False,,,2.3,-2.3,estimate,False,,,,,,,
+31604501,545784099,MEGA M27,Dolphins,Chargers,41,14,False,False,,0,1,15,2,False,False,False,False,,,2.3,-2.3,estimate,False,,,,,,,
 31604495,545784093,MEGA M27,Eagles,Texans,17,14,False,False,,0,1,15,2,False,False,False,False,,,7.2,-7.2,estimate,False,,,,,,,
 31604499,545784097,MEGA M27,Falcons,Buccaneers,35,14,False,False,,0,1,15,2,False,False,False,False,,,0.1,-0.1,estimate,False,,,,,,,
-31604509,545784107,MEGA M27,Cowboys,Jaguars,0,0,False,False,,0,1,15,1,False,False,False,False,,,1.3,-1.3,estimate,False,,,,,,,
+31604509,545784107,MEGA M27,Cowboys,Jaguars,27,23,False,False,,0,1,15,2,False,False,False,False,,,1.3,-1.3,estimate,False,,,,,,,
 31604508,545784106,MEGA M27,Colts,Bengals,0,0,False,False,,0,1,15,1,False,False,False,False,,,-1.9,1.9,estimate,False,,,,,,,
 31604507,545784105,MEGA M27,Chiefs,49ers,0,0,False,False,,0,1,15,1,False,False,False,False,,,-15.7,15.7,estimate,False,,,,,,,
 31604502,545784100,MEGA M27,Saints,Cardinals,0,0,False,False,,0,1,15,1,False,False,False,False,,,-2.9,2.9,estimate,False,,,,,,,

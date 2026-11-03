@@ -8,12 +8,12 @@
   "nextScheduledWeek": 17,
   "eloSourceWeek": 8,
   "eloUsage": "Week 8 ELO ratings used with the validated export snapshot",
-  "snapshotId": "4b7c9d123bc35e77",
+  "snapshotId": "b2a1bf90395c03b3",
   "hashContractVersion": 3,
   "hashNormalization": "newline-lf-v1",
   "sourceArchives": {
-    "basicInfoZipSha256": "e2d177f6748976049cb69bf3731adde9266362f9358167160dfa355fb3e0e175",
-    "statsZipSha256": "6745eebab71191782a3b4006faab4ca3805098548f1da914ecf88fc4702e7aeb"
+    "basicInfoZipSha256": "c0515b868ead6def0384fd418c242100da64d63eaf65bf67830b13e51653cb44",
+    "statsZipSha256": "0581e3d1d4babaff693893326d6ed805fc349f9f9aed98f35878bd97b79e70cc"
   },
   "independentSourceFiles": {
     "usersCsv": {
@@ -28,69 +28,69 @@
   "inputs": [
     {
       "path": "MEGA_defense.csv",
-      "sourceSha256": "e7046def1ace992e5b04de879bdec706105b38396b70584c4b1d25d1c47f593d",
-      "workingSha256": "1ca4ebc994dbec12ce80d08f9155faf84ee7fd3be7d845c945195fd544ccbb0d",
-      "canonicalSha256": "1ca4ebc994dbec12ce80d08f9155faf84ee7fd3be7d845c945195fd544ccbb0d"
+      "sourceSha256": "5571b455ad0285ce0d1272cc8d058fff0449f01560472d129f9f60bf944a6db5",
+      "workingSha256": "56c6e70ec3fb0c5e11ceae3967d98a72fcfb575ee891b5fbd6ef3195964547c4",
+      "canonicalSha256": "56c6e70ec3fb0c5e11ceae3967d98a72fcfb575ee891b5fbd6ef3195964547c4"
     },
     {
       "path": "MEGA_draft.csv",
-      "sourceSha256": "d45aeed5774b0d51f0856a72f1470568bac47da247c53f8d08eba1655bd14e5e",
-      "workingSha256": "9f97acd1dcb3f9541ce4b3b1384813edd7ea17e63eb5ee4b9e447966e7428798",
-      "canonicalSha256": "9f97acd1dcb3f9541ce4b3b1384813edd7ea17e63eb5ee4b9e447966e7428798"
+      "sourceSha256": "46ac687f198a55926754b039b5c4af511fa57fd2ae88cdd8ef06c6b0140c5c4a",
+      "workingSha256": "639b7c5820a7efb932e0e8b280c26dc16867adf9291b500a744fcecb319d6f0e",
+      "canonicalSha256": "639b7c5820a7efb932e0e8b280c26dc16867adf9291b500a744fcecb319d6f0e"
     },
     {
       "path": "MEGA_games.csv",
-      "sourceSha256": "3ff62eb823a94e3667af5300b23c939f8a43862f4e68c65211e88f118daf242b",
-      "workingSha256": "79cae13570b8fa26a4d38b7d6972df5dc11cb55dee0c2f50176a037c7ea97dcc",
-      "canonicalSha256": "79cae13570b8fa26a4d38b7d6972df5dc11cb55dee0c2f50176a037c7ea97dcc"
+      "sourceSha256": "e94ecc063650cce499e622cc9640ea83b723d0564d09acfae359c794e48e9cea",
+      "workingSha256": "c3a1cbccb47a342b36d9b29b4bb0709b161da366713600d8dae090211708b259",
+      "canonicalSha256": "c3a1cbccb47a342b36d9b29b4bb0709b161da366713600d8dae090211708b259"
     },
     {
       "path": "MEGA_kicking.csv",
-      "sourceSha256": "495952527c56d09008e0e195130a08594ccb40906df0e951aa74a8d7a0c7445c",
-      "workingSha256": "9076068af87ca241d1ff21f2fb04b8e7076ac7a7b43ace8c58a68ed4149c0130",
-      "canonicalSha256": "9076068af87ca241d1ff21f2fb04b8e7076ac7a7b43ace8c58a68ed4149c0130"
+      "sourceSha256": "4519a3d8143ea9c9ccb13064c3910ed701436c11baba19854e89f39f28b2f7db",
+      "workingSha256": "0a6e0ca3c9f89285f4f29318633cf54219361761d332f0532ce55078a4e2173b",
+      "canonicalSha256": "0a6e0ca3c9f89285f4f29318633cf54219361761d332f0532ce55078a4e2173b"
     },
     {
       "path": "MEGA_passing.csv",
-      "sourceSha256": "4a0033a654d896cbebde49e683849abb22e6320c496b2e75becd84fc3a513cc9",
-      "workingSha256": "a202a3c78c2d1a62005831e36d8bbef90a0e6e3e0c15c28ca94985101d6da19c",
-      "canonicalSha256": "a202a3c78c2d1a62005831e36d8bbef90a0e6e3e0c15c28ca94985101d6da19c"
+      "sourceSha256": "5ab04b1190b4f69ea572a9bbd91eb0fa01765c8d6f44f06573f6d6045274147b",
+      "workingSha256": "82fa104a497e52791d37b18a80cbaa95bb9428cdacba6c3d4684610ee9d2116b",
+      "canonicalSha256": "82fa104a497e52791d37b18a80cbaa95bb9428cdacba6c3d4684610ee9d2116b"
     },
     {
       "path": "MEGA_players.csv",
-      "sourceSha256": "c6564fca894bb5958dbd430304a7a792734ec6bbce1fb5436cf7b484ff0c2e4e",
-      "workingSha256": "ad89a8dcf6e88717c922979fcecf7c32be7f84b381729a29df779ce3913ec025",
-      "canonicalSha256": "ad89a8dcf6e88717c922979fcecf7c32be7f84b381729a29df779ce3913ec025"
+      "sourceSha256": "d319ae4a48650b63f4b49dd588b9c5ec5d8e207289b0fe34c33bbc90795939d5",
+      "workingSha256": "cb359dd1995251b6924bd49432868379be41ce0f80d40e5f9c81dc18dd003d1f",
+      "canonicalSha256": "cb359dd1995251b6924bd49432868379be41ce0f80d40e5f9c81dc18dd003d1f"
     },
     {
       "path": "MEGA_punting.csv",
-      "sourceSha256": "1db502a88af2aa1a99bcd8cd4a1c430e0eeb037b80b8e9589bc74319af8090fb",
-      "workingSha256": "551d70aff76150d3c1f93ce893d3a772dafd0fdffacc8277b3c8b787e2b5eb50",
-      "canonicalSha256": "551d70aff76150d3c1f93ce893d3a772dafd0fdffacc8277b3c8b787e2b5eb50"
+      "sourceSha256": "cc9db85ad34ebebbd74f70b96c594366d955e850c4a8433ab07bd42a8e254e6e",
+      "workingSha256": "5ff0d346af4ed608bbe7dc3b72949463043055f07acb0750615b57b05ae61a9b",
+      "canonicalSha256": "5ff0d346af4ed608bbe7dc3b72949463043055f07acb0750615b57b05ae61a9b"
     },
     {
       "path": "MEGA_rankings.csv",
-      "sourceSha256": "c3b55ec4b2599d115d6380a79c2d378d249a23e96c8c4c1ee7a4c865a5caf0bf",
-      "workingSha256": "f05dff00df3cbfb5b99e6216eb065d7ad8264962aa93899126d71efe5617f8a0",
-      "canonicalSha256": "f05dff00df3cbfb5b99e6216eb065d7ad8264962aa93899126d71efe5617f8a0"
+      "sourceSha256": "fefdf5534f35762ef6eed4377511f33024bbfa1ab13ae7489d6075197c46a235",
+      "workingSha256": "4693569c710c0ebba3abf5048d75564747f065e3116904db35651031f4d6de29",
+      "canonicalSha256": "4693569c710c0ebba3abf5048d75564747f065e3116904db35651031f4d6de29"
     },
     {
       "path": "MEGA_receiving.csv",
-      "sourceSha256": "dd87fcd6dfb6fa123387663a0f0e2369dd4bf1c5a64a3efcfe8cf79b05645402",
-      "workingSha256": "dda0dd0611fa16bc7691040aaaacb26548775d007c6a0977da511e21b576e302",
-      "canonicalSha256": "dda0dd0611fa16bc7691040aaaacb26548775d007c6a0977da511e21b576e302"
+      "sourceSha256": "f9e31a09076115771401f92ee838cf308dbe635c318dd2d32508dd059226c750",
+      "workingSha256": "4276d2240d435e9df5aefec93ba03e3874344bb1c9a24edca48539963c247241",
+      "canonicalSha256": "4276d2240d435e9df5aefec93ba03e3874344bb1c9a24edca48539963c247241"
     },
     {
       "path": "MEGA_rushing.csv",
-      "sourceSha256": "ea28d3d389586ec3f7163721b843763d540d0d6d18ce0bb47c94b0f32d73604f",
-      "workingSha256": "3399e259da27c942cc691cdae305d8c0be63d2b94f3351a550cbf968176f51a4",
-      "canonicalSha256": "3399e259da27c942cc691cdae305d8c0be63d2b94f3351a550cbf968176f51a4"
+      "sourceSha256": "5444fccc48ff8e0f49783da579e62d3e1154d60106db2bac60d693f36e8f3fb7",
+      "workingSha256": "9623f6e178d154e9a5885337da19a76fb5d51d7be90bacfcc3907d619fc4cbe5",
+      "canonicalSha256": "9623f6e178d154e9a5885337da19a76fb5d51d7be90bacfcc3907d619fc4cbe5"
     },
     {
       "path": "MEGA_teams.csv",
-      "sourceSha256": "2e2fd166f534afae74cc7c22c9930a43c3440116fa40e9587608aaaceb1f5b90",
-      "workingSha256": "e2a9f01768df1cba86d9c67010993b5f839daefcdf226d5b5e2100ea991dc82e",
-      "canonicalSha256": "e2a9f01768df1cba86d9c67010993b5f839daefcdf226d5b5e2100ea991dc82e"
+      "sourceSha256": "1547e7b80120750665342d7e1d2191358b58eb13d82174e60802469c0cf73427",
+      "workingSha256": "5d4cbae58e67f8f7f69e65660a107b4565e8e4c695e43836edf0898247f53aef",
+      "canonicalSha256": "5d4cbae58e67f8f7f69e65660a107b4565e8e4c695e43836edf0898247f53aef"
     },
     {
       "path": "MEGA_trades.csv",

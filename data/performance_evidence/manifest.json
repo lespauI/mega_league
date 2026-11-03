@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "csvSeasonIndex": 0,
   "calendarYear": 2026,
-  "snapshotId": "4b7c9d123bc35e77",
+  "snapshotId": "b2a1bf90395c03b3",
   "inputHashes": {
-    "MEGA_games.csv": "79cae13570b8fa26a4d38b7d6972df5dc11cb55dee0c2f50176a037c7ea97dcc",
-    "MEGA_teams.csv": "e2a9f01768df1cba86d9c67010993b5f839daefcdf226d5b5e2100ea991dc82e",
-    "MEGA_passing.csv": "a202a3c78c2d1a62005831e36d8bbef90a0e6e3e0c15c28ca94985101d6da19c",
-    "MEGA_rushing.csv": "3399e259da27c942cc691cdae305d8c0be63d2b94f3351a550cbf968176f51a4",
-    "MEGA_receiving.csv": "dda0dd0611fa16bc7691040aaaacb26548775d007c6a0977da511e21b576e302",
-    "MEGA_defense.csv": "1ca4ebc994dbec12ce80d08f9155faf84ee7fd3be7d845c945195fd544ccbb0d",
-    "MEGA_kicking.csv": "9076068af87ca241d1ff21f2fb04b8e7076ac7a7b43ace8c58a68ed4149c0130",
-    "MEGA_punting.csv": "551d70aff76150d3c1f93ce893d3a772dafd0fdffacc8277b3c8b787e2b5eb50",
-    "docs/data/import_metadata.json": "649db678ef4c0adef42645facd99e0064dd056864414990b8b5eed8ac6364334"
+    "MEGA_games.csv": "c3a1cbccb47a342b36d9b29b4bb0709b161da366713600d8dae090211708b259",
+    "MEGA_teams.csv": "5d4cbae58e67f8f7f69e65660a107b4565e8e4c695e43836edf0898247f53aef",
+    "MEGA_passing.csv": "82fa104a497e52791d37b18a80cbaa95bb9428cdacba6c3d4684610ee9d2116b",
+    "MEGA_rushing.csv": "9623f6e178d154e9a5885337da19a76fb5d51d7be90bacfcc3907d619fc4cbe5",
+    "MEGA_receiving.csv": "4276d2240d435e9df5aefec93ba03e3874344bb1c9a24edca48539963c247241",
+    "MEGA_defense.csv": "56c6e70ec3fb0c5e11ceae3967d98a72fcfb575ee891b5fbd6ef3195964547c4",
+    "MEGA_kicking.csv": "0a6e0ca3c9f89285f4f29318633cf54219361761d332f0532ce55078a4e2173b",
+    "MEGA_punting.csv": "5ff0d346af4ed608bbe7dc3b72949463043055f07acb0750615b57b05ae61a9b",
+    "docs/data/import_metadata.json": "f0bf68a91fba7beaf6caf1c12dcb7c031f4b9df6407d8ad0ba926b0fc8f94b2a"
   },
   "evidenceHashes": {
     "games/31604223.json": "9e1fe24995900e31d3650f67c22cec58e1864f6a95848496201aa00e79b97948",
@@ -240,7 +240,11 @@
     "games/31604493.json": "70be08737cb19b0f169a729a8522dfa6f3c9eaece5da6694de39426ba83957de",
     "games/31604494.json": "8cee4df57b15963dfdc3d33f4b465023077b00e17510fedfd69ed9bc2582e37f",
     "games/31604495.json": "f6026b541f459fdebd01b4f72b85e1552e6e8e1ccb97dd0d2ea832aebd47e296",
+    "games/31604496.json": "07a90c97d6b13359c2900e69293527dec813aa4745628c57f3baea28a34dd850",
+    "games/31604498.json": "e3131d414ac6bdb82b62d6b6b4b57bf3520db5cddad83a18584148ac12607225",
     "games/31604499.json": "69297f04e3a46f944fd728be5728e45aa09386d59e40c9c5a4103f3885d21646",
+    "games/31604501.json": "a307ec665f96a12a59e945e745a6915ec1392d69f6df665efce7edc3f2e6cb34",
+    "games/31604509.json": "f9bf404272e1425416117c066ab7fdfd2c3b49945ba035831cb6e0f659bbd6b1",
     "games/31604510.json": "22abb1fd2b2f96332d549f9667921dcb62d0039158f4c8ec4a7720582dce8bdf",
     "histories/555220998.json": "88b1f314d174ccbe15d8b2ab74216e18f59f37665777a854ae2bf90ddd3560b2",
     "histories/555221017.json": "efbadaab9e58db1e807d4c6d3dfb3091daef5ae7f1d5c2cdb78b89c6402006b1",
@@ -262,6 +266,6 @@
   "storage": {
     "format": "tar+gzip",
     "file": "snapshot.tar.gz",
-    "sha256": "d2bcac35c695426f65c69a6fb3ebe3293a751899c08d44f89c230ecde2b4b6d6"
+    "sha256": "8e8b948740c910e1fabf7b5d13b782047f04a99e719a3acb3b8fd5276cb18843"
   }
 }
