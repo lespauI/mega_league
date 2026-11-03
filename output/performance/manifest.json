@@ -12,17 +12,17 @@
     "unavailableMetrics": "blank_with_reason"
   },
   "policyHash": "d057a0c6dd3bdb0fd17c3f2bb9c148231c466c110a5b11e86b7afd0d933c4213",
-  "evidenceManifestHash": "032dfd3609edf76ed80923cfbba68bd4e2b09dcf8029dd16d8857d7b39792c83",
+  "evidenceManifestHash": "498a3ee1063deee72c315d7fafd559337e1af11865e9971c264d90492037054a",
   "inputHashes": {
-    "MEGA_games.csv": "ea17733c2aa1dc9d9c3ea945d487acaefa98b2dc07ccfc439a438dd536e04112",
-    "MEGA_teams.csv": "e79d4bcb34b60e82d6db4a2d291b84d34aecc2382f9553d4ef544f1024b5fab5",
-    "MEGA_passing.csv": "15fa0fdcfaace758b8a553e3de4aacc83dc81c5486943f9e9a1f913bea5f9ddb",
-    "MEGA_rushing.csv": "db87f40e39777ec042c759fa252cee7f97bac4a8b186f7a566ef2e4444cfb791",
-    "MEGA_receiving.csv": "b547a608e193e78d76538b3ee9a931be90aa3b04e5c2766dfad7ef61f5dce065",
-    "MEGA_defense.csv": "c37d3a0018a039422035d95c7dc12c32ae5b702aff0521ea659e92ee879dea54",
-    "MEGA_kicking.csv": "9fa097ec1a3234d9871512f8a16b641a57f738ca45bfe9662b921c39623ba706",
-    "MEGA_punting.csv": "9425196f6300715c93d8645cae8eb7c70d85497a5681c1b396e553e5bfa7d0f7",
-    "docs/data/import_metadata.json": "8a4fa39c36ef6cf8e07ad2a7d97d0614ba5746584cdefd52169e16279cdc83b9"
+    "MEGA_games.csv": "79cae13570b8fa26a4d38b7d6972df5dc11cb55dee0c2f50176a037c7ea97dcc",
+    "MEGA_teams.csv": "e2a9f01768df1cba86d9c67010993b5f839daefcdf226d5b5e2100ea991dc82e",
+    "MEGA_passing.csv": "a202a3c78c2d1a62005831e36d8bbef90a0e6e3e0c15c28ca94985101d6da19c",
+    "MEGA_rushing.csv": "3399e259da27c942cc691cdae305d8c0be63d2b94f3351a550cbf968176f51a4",
+    "MEGA_receiving.csv": "dda0dd0611fa16bc7691040aaaacb26548775d007c6a0977da511e21b576e302",
+    "MEGA_defense.csv": "1ca4ebc994dbec12ce80d08f9155faf84ee7fd3be7d845c945195fd544ccbb0d",
+    "MEGA_kicking.csv": "9076068af87ca241d1ff21f2fb04b8e7076ac7a7b43ace8c58a68ed4149c0130",
+    "MEGA_punting.csv": "551d70aff76150d3c1f93ce893d3a772dafd0fdffacc8277b3c8b787e2b5eb50",
+    "docs/data/import_metadata.json": "649db678ef4c0adef42645facd99e0064dd056864414990b8b5eed8ac6364334"
   },
   "evidenceHashes": {
     "games/31604223.json": "9e1fe24995900e31d3650f67c22cec58e1864f6a95848496201aa00e79b97948",
@@ -249,6 +249,8 @@
     "games/31604492.json": "3738213ec8d512e2c32aa7bc162fac7e039fcec7065a36e2247fea56a93809c2",
     "games/31604493.json": "70be08737cb19b0f169a729a8522dfa6f3c9eaece5da6694de39426ba83957de",
     "games/31604494.json": "8cee4df57b15963dfdc3d33f4b465023077b00e17510fedfd69ed9bc2582e37f",
+    "games/31604495.json": "f6026b541f459fdebd01b4f72b85e1552e6e8e1ccb97dd0d2ea832aebd47e296",
+    "games/31604499.json": "69297f04e3a46f944fd728be5728e45aa09386d59e40c9c5a4103f3885d21646",
     "games/31604510.json": "22abb1fd2b2f96332d549f9667921dcb62d0039158f4c8ec4a7720582dce8bdf",
     "histories/555220998.json": "88b1f314d174ccbe15d8b2ab74216e18f59f37665777a854ae2bf90ddd3560b2",
     "histories/555221017.json": "efbadaab9e58db1e807d4c6d3dfb3091daef5ae7f1d5c2cdb78b89c6402006b1",
@@ -267,7 +269,7 @@
     "histories/555223792.json": "1da7f932d05e0c743f08a12b01aebab62a1843fcf3f49e40509a600cbe9ac65c",
     "histories/555223976.json": "a1d0ce860d0681189460c62c60d1ebe2a7821f1d78b480bdbae02f493faa1ec6"
   },
-  "completedGames": 225,
+  "completedGames": 227,
   "excludedGames": 29,
   "tradeCorrections": [
     {
@@ -588,15 +590,15 @@
     }
   ],
   "outputHashes": {
-    ".cache/performance/inputs/MEGA_defense.csv": "02e355503a772e93e944dcb82fa9daccdbb0d6836349c24c51f74b5601b4c7fe",
-    ".cache/performance/inputs/MEGA_kicking.csv": "879f895dc8893adf6192e2fac915249cc21015ce0d149b65f24bcb4dd401a4ac",
-    ".cache/performance/inputs/MEGA_passing.csv": "44cafe582b63c51f416ee08ccde56e8207bf3acc5f41fc7c530f2cc809964e77",
-    ".cache/performance/inputs/MEGA_punting.csv": "2e0cd7fdf2fae46f6dfc8af322827bf014040edda8cc43a5a02a478c35986036",
-    ".cache/performance/inputs/MEGA_rankings.csv": "67047500a70fa7575086ded70581e78d324c051d878cb699cbe76ed6e9b60f97",
-    ".cache/performance/inputs/MEGA_receiving.csv": "d2da5ad39077a9f3e6f90d81acb4129fa5543a0e3a719e771b84fb5a10f62cb4",
-    ".cache/performance/inputs/MEGA_rushing.csv": "9ce4a935fd5ac75ea45c3bef4bf12846627b62c4289ee087db2fbe575aad3137",
-    ".cache/performance/inputs/MEGA_teams.csv": "2bfd9bacd9a96b58c222d3bf0b56c43eeb52d139d8a4b15363ff0ae59246b28e",
-    "output/performance/games.csv": "fb524fd39493857934dd7cf0ae3ff912ae42436445856c13c7b6a711c5f85370",
-    "output/performance/teams.csv": "2bfd9bacd9a96b58c222d3bf0b56c43eeb52d139d8a4b15363ff0ae59246b28e"
+    ".cache/performance/inputs/MEGA_defense.csv": "f90703b5e64d9bf58e161d6fee1ef93d91c103411f7254e0e4103b9f993d3a24",
+    ".cache/performance/inputs/MEGA_kicking.csv": "deca88021198613e5555309673b2f7f83a63d32aa36a120d88dcdd7e19063847",
+    ".cache/performance/inputs/MEGA_passing.csv": "45af9272e5af23faed4c2d15ae0e8c98c9b42f67caa17f77772279991123dcc0",
+    ".cache/performance/inputs/MEGA_punting.csv": "6c8b7f2efbd3d5a24e8dcd131a5b40f96207d813693b1531f0bc8e56e000a888",
+    ".cache/performance/inputs/MEGA_rankings.csv": "0897e70a601373a7c727b6711d5887c94397cb406f69a71b34009d9699f90e8e",
+    ".cache/performance/inputs/MEGA_receiving.csv": "c9372d9b0ecc268424871324b906af3a694344066486cc510282be799104529a",
+    ".cache/performance/inputs/MEGA_rushing.csv": "9d587b04622650407a7e01678a0f557251fb5caea279c3ccfcdece8275c987f1",
+    ".cache/performance/inputs/MEGA_teams.csv": "dd50168d923c7b4b3ca851ccd176e55a40bfa46a0ac3d4d0be7c62366f1a8417",
+    "output/performance/games.csv": "30dc1bd8f4947609fe5d0684bcd9fca57336a31142f7d9fb9780b41eb834f9a4",
+    "output/performance/teams.csv": "dd50168d923c7b4b3ca851ccd176e55a40bfa46a0ac3d4d0be7c62366f1a8417"
   }
 }
