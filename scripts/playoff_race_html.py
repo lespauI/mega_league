@@ -525,11 +525,16 @@ def create_html_report(afc_divs, afc_leaders, afc_wc, nfc_divs, nfc_leaders, nfc
         
         <div class="analysis">
             <h2>How the probabilities are calculated</h2>
-            <p>The report uses 10,000 Monte Carlo simulations of the remaining schedule.
-            Game probabilities combine the supplied ELO ratings, current win percentage,
-            schedule strength and strength of victory, with the existing home-field,
-            streak and divisional adjustments. The existing tiebreakers determine the
-            playoff teams in each simulation.</p>
+            <p>The report simulates the remaining season 10,000 times. Team strength is
+            70% performance win percentage and 30% past schedule strength, excluding Force Wins.
+            A team's match win probability is its strength divided by the combined strengths,
+            bounded to 25–75%. Official results and the existing tiebreakers determine playoff seeds.</p>
+            <p><strong>MAKE SUPER BOWL means reaching the Super Bowl, not winning it.</strong>
+            Each conference has seven playoff teams and one first-round bye for seed #1,
+            followed by reseeding. In playoff games, home victory odds are multiplied by
+            10^(75/400), approximately 1.54 (the equivalent of +75 ELO); the resulting probability
+            is also bounded to 25–75%. The simulation stops at the conference finals.
+            Appearance probabilities sum to 100% in AFC and 100% in NFC before rounding.</p>
             <p>The tables above show the current export's results.
             <a href="../Formula.md">Formula reference</a> ·
             <a href="data/import_metadata.json">Export and ELO provenance</a></p>
