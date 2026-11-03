@@ -275,38 +275,17 @@ def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
 
 def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, team_elo, 
                           is_top_seed):
-    if sb_prob == 0:
-        return f'''<div class="prob-tooltip">
-            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
-            В 10 000 симуляций команда не вышла в Супербоул.
-        </div>'''
-    
-    seed_text = ""
-    if is_top_seed:
-        seed_text = "Наибольшая вероятность посева #1"
-    elif bye_prob > 30:
-        seed_text = "Претендент на бай"
-    elif div_prob > 50:
-        seed_text = "Лидер дивизиона"
-    
     return f'''<div class="prob-tooltip">
-        <strong>Вероятность выхода в Супербоул: {sb_prob:.1f}%</strong><br><br>
-
-        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
-        • Сетка: 7 команд каждой конференции<br>
-        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
-        • Force Win исключены из показателей силы<br>
-        • В каждой конференции только посев #1 получает бай<br>
-        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
-        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
-        • Выход в СБ = победа в финале конференции<br>
-        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
-        <b>Статус:</b><br>
-        • Плей-офф: {playoff_prob:.0f}%<br>
-        • Победа в див.: {div_prob:.0f}%<br>
-        • Бай 1-го раунда: {bye_prob:.0f}%<br>
-        {f'• {seed_text}<br>' if seed_text else ''}<br>
-        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
+        <strong>Выход в Супербоул: {sb_prob:.1f}%</strong><br><br>
+        Это шанс выиграть свою конференцию и выйти в СБ, а не стать чемпионом лиги.<br><br>
+        <b>10 000 симуляций сезона и плей-офф:</b><br>
+        • Сила = 70% доли побед + 30% сложности сыгранного расписания; Force Win исключены.<br>
+        • Шанс победы в матче = сила команды / сумма сил соперников, в пределах 25–75%.<br>
+        • Дома отношение шансов победы к поражению умножается на 1,54 — эквивалент +75 ELO. Итоговая вероятность также ограничена 25–75%.<br>
+        • В каждой конференции 7 участников; только посев #1 пропускает первый раунд. Затем применяется перепосев.<br>
+        • Победитель финала конференции выходит в СБ. Сам Супербоул не разыгрывается.<br><br>
+        Сумма шансов: 100% в AFC и 100% в NFC (до округления). 0% означает отсутствие выходов в выборке.<br>
+        Это оценка модели, а не гарантия результата.
     </div>'''
 
 def get_rank_class(rank):
@@ -695,6 +674,27 @@ def create_html_table(afc_divs, nfc_divs, probabilities, superbowl_probabilities
                 min-width: 200px;
             }
         }
+        .floating-report-tooltip {
+            position: fixed !important;
+            inset: auto;
+            bottom: auto !important;
+            right: auto !important;
+            transform: none !important;
+            margin: 0 !important;
+            box-sizing: border-box;
+            min-width: 0 !important;
+            width: 360px;
+            overflow: auto;
+            white-space: normal;
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto;
+            border: 0;
+            font: 14px/1.5 -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            text-align: left;
+            z-index: 10000;
+        }
+        .floating-report-tooltip::after { display: none; }
     </style>
 </head>
 <body>
@@ -878,6 +878,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities, superbowl_probabilities
             </div>
         </div>
     </div>
+    <script src="shared/floating_tooltips.js"></script>
     <script>
         function resizeIframe() {
             const height = document.documentElement.scrollHeight;
