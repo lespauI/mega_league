@@ -1,7 +1,7 @@
 {
   "cycle": {
     "calendarYear": 2026,
-    "completedThroughWeek": 15,
+    "completedThroughWeek": 16,
     "csvSeasonIndex": 0,
     "displaySeason": 1,
     "edition": "Madden 27",
@@ -28,5 +28,5 @@
     "trades": "../../output/traded_players_report.csv"
   },
   "schemaVersion": 1,
-  "snapshotId": "7d5304d3c4af3681"
+  "snapshotId": "4b7c9d123bc35e77"
 }
