@@ -14,6 +14,8 @@ from calc_playoff_probabilities import (
     TIE_PROBABILITY
 )
 
+from mega.standings.match_probability import win_probability
+
 DEFAULT_NUM_SIMULATIONS = 10000
 
 def get_remaining_games_for_team(team_name, games):
@@ -34,21 +36,8 @@ def calculate_game_probabilities(team_name, teams_info, stats, remaining_games):
         is_home = (home == team_name)
         opponent = away if is_home else home
         
-        home_win_pct = stats[home]['win_pct']
-        away_win_pct = stats[away]['win_pct']
-        home_past_sos = teams_info[home]['past_sos']
-        away_past_sos = teams_info[away]['past_sos']
-        
-        home_rating = (home_win_pct * 0.7) + (home_past_sos * 0.3)
-        away_rating = (away_win_pct * 0.7) + (away_past_sos * 0.3)
-        
-        if home_rating + away_rating > 0:
-            home_prob = home_rating / (home_rating + away_rating)
-        else:
-            home_prob = 0.5
-        
-        home_prob = max(0.25, min(0.75, home_prob))
-        
+        home_prob = win_probability(home, away, teams_info, stats)
+
         team_win_prob = home_prob if is_home else (1 - home_prob)
         team_win_prob = team_win_prob * (1 - TIE_PROBABILITY)
         tie_prob = TIE_PROBABILITY

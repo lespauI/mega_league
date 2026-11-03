@@ -20,10 +20,10 @@ Outputs
 
 Behavior
 - Builds team stats from completed games (W/L/T, H2H, conference/division splits, SoV/SOS).
-- Simulates remaining games with win prob from 70% team win% + 30% past SoS (capped 25–75%).
+- Simulates remaining games with win prob from the shared `mega/standings/match_probability.py` model: strength = 70% performance Win% + 30% past SoS; probability = own strength / summed strengths (capped 25–75%, or 50% when both are zero). Force Wins are excluded from strength, but retained in official standings. No venue, ELO or streak bonus is added. The same base model drives scenario displays and the postseason; postseason hosts additionally receive the approved +75 ELO equivalent odds multiplier (see playoff_race_table.md).
 - Applies NFL-like tiebreakers: H2H → Division% (if applicable) → Conference% → SoV → SoS.
 - Determines 7 playoff teams per conference (4 division winners + 3 WCs) and bye team (#1 seed).
-- Repeats for 1000 simulations per team; converts counts to probabilities.
+- Repeats for 10,000 simulations per team; converts counts to probabilities.
 
 Run
 - `python3 scripts/calc_playoff_probabilities.py`

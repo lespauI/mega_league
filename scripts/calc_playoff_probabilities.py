@@ -13,6 +13,7 @@ import itertools
 from collections import defaultdict
 import json
 import random
+from mega.standings.match_probability import win_probability
 from pathlib import Path
 from mega.inputs.performance import analytics_path, excluded_game
 
@@ -224,51 +225,8 @@ def simulate_remaining_games(teams_info, stats, sos_data, games, rankings):
         if home not in stats or away not in stats:
             continue
         
-        home_performance = teams_info[home].get('performance_stats', stats[home])
-        away_performance = teams_info[away].get('performance_stats', stats[away])
-        home_win_pct = home_performance['win_pct']
-        away_win_pct = away_performance['win_pct']
-        home_past_sos = teams_info[home]['past_sos']
-        away_past_sos = teams_info[away]['past_sos']
-        
-        home_elo = teams_info[home].get('elo', DEFAULT_ELO)
-        away_elo = teams_info[away].get('elo', DEFAULT_ELO)
-        home_elo_norm = max(0, min(1, (home_elo - 1000) / 400))
-        away_elo_norm = max(0, min(1, (away_elo - 1000) / 400))
-        
-        home_sov = calculate_sov_rating(home_performance['defeated_opponents'], rankings)
-        away_sov = calculate_sov_rating(away_performance['defeated_opponents'], rankings)
-        
-        home_rating = (
-            home_elo_norm * ELO_WEIGHT +
-            home_win_pct * WIN_PCT_WEIGHT +
-            home_past_sos * SOS_WEIGHT +
-            home_sov * SOV_WEIGHT
-        )
-        away_rating = (
-            away_elo_norm * ELO_WEIGHT +
-            away_win_pct * WIN_PCT_WEIGHT +
-            away_past_sos * SOS_WEIGHT +
-            away_sov * SOV_WEIGHT
-        )
-        
-        if home_rating + away_rating > 0:
-            home_prob = home_rating / (home_rating + away_rating)
-        else:
-            home_prob = 0.5
-        
-        home_prob += HOME_FIELD_ADVANTAGE
-        
-        home_streak = teams_info[home].get('win_streak', 0)
-        away_streak = teams_info[away].get('win_streak', 0)
-        home_prob += get_streak_modifier(home_streak)
-        home_prob -= get_streak_modifier(away_streak)
-        
-        if is_divisional_game(home, away, teams_info):
-            home_prob = home_prob + (0.5 - home_prob) * DIVISIONAL_REGRESSION
-        
-        home_prob = max(0.25, min(0.75, home_prob))
-        
+        home_prob = win_probability(home, away, teams_info, stats)
+
         rand_val = random.random()
         if rand_val < TIE_PROBABILITY:
             tie_score = random.randint(10, 27)
@@ -459,7 +417,7 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
         conf_teams = [t for t in teams_info if teams_info[t]['conference'] == conf]
         
         div_leaders = {}
-        for division in set(teams_info[t]['division'] for t in conf_teams):
+        for division in sorted(set(teams_info[t]['division'] for t in conf_teams)):
             div_contenders = [t for t in conf_teams if teams_info[t]['division'] == division]
             ranked_div = rank_teams_with_tiebreakers(div_contenders, sim_stats, teams_info, is_division=True)
             div_leaders[division] = ranked_div[0]
@@ -473,7 +431,7 @@ def determine_playoff_teams(teams_info, stats, simulated_games):
         wc_candidates = [t for t in conf_teams if t not in div_leaders.values()]
         ranked_wc = rank_teams_with_tiebreakers(wc_candidates, sim_stats, teams_info, is_division=False)
         
-        playoff_teams[conf] = list(div_leaders.values()) + ranked_wc[:3]
+        playoff_teams[conf] = ranked_div_leaders + ranked_wc[:3]
     
     return playoff_teams, division_winners, bye_teams
 
@@ -649,11 +607,9 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=0, elo_source_wee
     print("SIMULATING PLAYOFF SCENARIOS")
     print("="*80)
     print(f"Running {num_simulations:,} simulations for each team's playoff chances...")
-    print("Enhanced model: 50% ELO + 25% Win% + 15% SoS + 10% SoV + streak bonus")
-    print(f"Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}%")
-    print(f"Win streak bonus (>={WIN_STREAK_THRESHOLD}): +{WIN_STREAK_BONUS*100:.0f}%")
-    print(f"Divisional regression: {DIVISIONAL_REGRESSION*100:.0f}% toward 50-50\n")
-    
+    print("Match model: 70% performance Win% + 30% past SoS; no venue bonus")
+    print("Force Wins excluded from performance inputs; standings retain them.\n")
+
     results = {}
     
     for conf in ['AFC', 'NFC']:
@@ -692,16 +648,9 @@ def main(num_simulations=DEFAULT_NUM_SIMULATIONS, season_index=0, elo_source_wee
     print("PLAYOFF PROBABILITY CALCULATION COMPLETE!")
     print("="*80)
     print(f"\nUsing Monte Carlo simulation ({num_simulations:,} iterations per team)")
-    print("Features:")
-    print("  ✓ Enhanced rating: 50% ELO + 25% Win% + 15% SoS + 10% SoV")
-    print(f"  ✓ Home field advantage: +{HOME_FIELD_ADVANTAGE*100:.0f}% (slight Madden boost)")
-    print(f"  ✓ Win streak bonus (>={WIN_STREAK_THRESHOLD} wins): +{WIN_STREAK_BONUS*100:.0f}%")
-    print(f"  ✓ Divisional games: {DIVISIONAL_REGRESSION*100:.0f}% regression toward 50-50")
-    print("  ✓ ELO ratings for true team skill (from mega_elo.csv)")
-    print("  ✓ Strength of victories from opponent power rankings")
-    print("  ✓ Win probability capped at 25-75% (realistic variance)")
-    print("  ✓ Proper NFL tiebreakers (H2H, Division%, Conference%, SoV, SoS)")
-    print("  ✓ Mathematical certainty detection (clinched/eliminated)")
+    print("Features: shared regular-season/postseason match probabilities")
+    print("  ✓ 70% performance Win% + 30% past SoS, capped at 25–75%")
+    print("  ✓ Existing standings tiebreakers and Force Win exclusion retained")
     print("\nOutput saved to: output/playoff_probabilities.json")
     print("\nTop AFC Contenders:")
     afc_teams = [(t, r['playoff_probability']) for t, r in results.items() if r['conference'] == 'AFC']
