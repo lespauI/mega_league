@@ -379,7 +379,7 @@
         <div class="header">
             <h1>🏈 MEGA League Playoff Race</h1>
             <div class="subtitle">Week 16 Standings & Playoff Probabilities</div>
-            <div class="updated">Updated Nov 03, 2026 at 11:40 AM ET</div>
+            <div class="updated">Updated Nov 03, 2026 at 12:46 PM ET</div>
         </div>
 
         <div class="conferences-wrapper">
@@ -396,7 +396,7 @@
                         <th>MAKE PLAYOFFS</th>
                         <th>WIN DIVISION</th>
                         <th>ROUND 1 BYE</th>
-                        <th>SUPER BOWL</th>
+                        <th>MAKE SUPER BOWL</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -407,15 +407,15 @@
                         <td class="record-cell"><span class="sos-badge">0.463<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Jets</span><span class="opponent-details rank-elite">#10</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Broncos</span><span class="opponent-details rank-weak">#28</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Dolphins</span><span class="opponent-details rank-mid">#19</span></div></div></span></td>
                         <td class="prob-cell prob-100"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 10-4<br>
         • Осталось игр: 3<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-90-99"><span class="prob-wrapper">98%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 98%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 10-4<br>
             • Лидер дивизиона<br>
             • В 98% симуляций команда выиграла дивизион<br><br>
@@ -423,27 +423,29 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 10 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">10%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 10.2%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1046<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1046<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">13%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 12.8%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
         • Победа в див.: 98%<br>
         • Бай 1-го раунда: 0%<br>
         • Лидер дивизиона<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -451,17 +453,17 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/17.png" class="team-logo" alt="Jets"><span>Jets</span></div></td>
                         <td class="record-cell">8-6</td>
                         <td class="record-cell"><span class="sos-badge">0.550<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Patriots</span><span class="opponent-details rank-mid">#13</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Vikings</span><span class="opponent-details rank-mid">#12</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Bills</span><span class="opponent-details rank-weak">#31</span></div></div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">75%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 75%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">78%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 78%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 8-6<br>
         • Осталось игр: 3<br>
-        • В 75% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 78% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">2%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 2%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 8-6<br>
             • Лидер: Patriots (10-4, 98%)<br>
             • В 2% симуляций команда выиграла дивизион<br><br>
@@ -469,27 +471,29 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 8 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">3%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 3.4%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1004<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1004<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 2.8%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 75%<br>
+        • Плей-офф: 78%<br>
         • Победа в див.: 2%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -499,15 +503,15 @@
                         <td class="record-cell"><span class="sos-badge">0.507<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Chargers</span><span class="opponent-details rank-mid">#11</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Bills</span><span class="opponent-details rank-weak">#31</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Patriots</span><span class="opponent-details rank-mid">#13</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 4-10<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 4-10<br>
             • Лидер: Patriots (10-4, 98%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
@@ -515,14 +519,14 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 4 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -532,15 +536,15 @@
                         <td class="record-cell"><span class="sos-badge">0.463<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Broncos</span><span class="opponent-details rank-weak">#28</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Dolphins</span><span class="opponent-details rank-mid">#19</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Jets</span><span class="opponent-details rank-elite">#10</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 0-14<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 0-14<br>
             • Лидер: Patriots (10-4, 98%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
@@ -548,14 +552,14 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 0 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -563,45 +567,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/4.png" class="team-logo" alt="Browns"><span>Browns</span></div></td>
                         <td class="record-cell">9-5</td>
                         <td class="record-cell"><span class="sos-badge sos-easy">0.405<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Ravens</span><span class="opponent-details rank-weak">#24</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Colts</span><span class="opponent-details rank-weak">#23</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Bengals</span><span class="opponent-details rank-weak">#27</span></div></div></span></td>
-                        <td class="prob-cell prob-90-99"><span class="prob-wrapper">93%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 93%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-90-99"><span class="prob-wrapper">92%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 92%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9-5<br>
         • Осталось игр: 3<br>
-        • В 93% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 92% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">32%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 32%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">27%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 27%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 9-5<br>
             • Лидер дивизиона<br>
-            • В 32% симуляций команда выиграла дивизион<br><br>
+            • В 27% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">3%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 3.2%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 980<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 980<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">6%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 5.5%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 93%<br>
-        • Победа в див.: 32%<br>
+        • Плей-офф: 92%<br>
+        • Победа в див.: 27%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -611,43 +617,45 @@
                         <td class="record-cell"><span class="sos-badge sos-easy">0.272<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Panthers</span><span class="opponent-details rank-weak">#26</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Titans</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Ravens</span><span class="opponent-details rank-weak">#24</span></div></div></span></td>
                         <td class="prob-cell prob-90-99"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9-5<br>
         • Осталось игр: 3<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">68%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 68%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">73%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 73%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 9-5<br>
-            • Лидер: Browns (9-5, 32%)<br>
-            • В 68% симуляций команда выиграла дивизион<br><br>
+            • Лидер: Browns (9-5, 27%)<br>
+            • В 73% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">8%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 7.6%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1010<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1010<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 7.9%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
-        • Победа в див.: 68%<br>
+        • Победа в див.: 73%<br>
         • Бай 1-го раунда: 0%<br>
         • Лидер дивизиона<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -655,45 +663,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/1.png" class="team-logo" alt="Bengals"><span>Bengals</span></div></td>
                         <td class="record-cell">7-7</td>
                         <td class="record-cell"><span class="sos-badge">0.499<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Colts</span><span class="opponent-details rank-weak">#23</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Ravens</span><span class="opponent-details rank-weak">#24</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Browns</span><span class="opponent-details rank-elite">#6</span></div></div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">26%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 26%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">25%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 25%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 7-7<br>
         • Осталось игр: 3<br>
-        • В 26% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 25% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 7-7<br>
-            • Лидер: Browns (9-5, 32%)<br>
+            • Лидер: Browns (9-5, 27%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 7 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">1%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 1.2%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 998<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 998<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-0"><span class="prob-wrapper">1%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 0.6%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 26%<br>
+        • Плей-офф: 25%<br>
         • Победа в див.: 0%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -703,30 +713,30 @@
                         <td class="record-cell"><span class="sos-badge sos-hard">0.604<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Browns</span><span class="opponent-details rank-elite">#6</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Bengals</span><span class="opponent-details rank-weak">#27</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Steelers</span><span class="opponent-details rank-elite">#8</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 4-10<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 4-10<br>
-            • Лидер: Browns (9-5, 32%)<br>
+            • Лидер: Browns (9-5, 27%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 4 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -736,43 +746,45 @@
                         <td class="record-cell"><span class="sos-badge">0.522<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Cowboys</span><span class="opponent-details rank-elite">#3</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Commanders</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Colts</span><span class="opponent-details rank-weak">#23</span></div></div></span></td>
                         <td class="prob-cell prob-100"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 12-2<br>
         • Осталось игр: 3<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-90-99"><span class="prob-wrapper">100%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 100%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 12-2<br>
             • Лидер дивизиона<br>
             • В 100% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">8%<div class="prob-tooltip">
-        <strong>Вероятность первого раунда бай: 8%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">6%<div class="prob-tooltip">
+        <strong>Вероятность первого раунда бай: 6%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 12 побед<br>
-        • В 8% симуляций команда была посевом #1<br><br>
+        • В 6% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">10%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 10.1%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1040<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1040<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">20%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 20.3%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
         • Победа в див.: 100%<br>
-        • Бай 1-го раунда: 8%<br>
+        • Бай 1-го раунда: 6%<br>
         • Лидер дивизиона<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -782,15 +794,15 @@
                         <td class="record-cell"><span class="sos-badge sos-easy">0.384<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 17: Packers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Titans</span><span class="opponent-details rank-weak">#32</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 6-9<br>
         • Осталось игр: 2<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 6-9<br>
             • Лидер: Jaguars (12-2, 100%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
@@ -798,14 +810,14 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 6 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -815,15 +827,15 @@
                         <td class="record-cell"><span class="sos-badge sos-hard">0.674<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Bengals</span><span class="opponent-details rank-weak">#27</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Browns</span><span class="opponent-details rank-elite">#6</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Jaguars</span><span class="opponent-details rank-elite">#1</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5-9<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 5-9<br>
             • Лидер: Jaguars (12-2, 100%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
@@ -831,27 +843,29 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 0.1%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 981<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 981<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 0.0%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 0%<br>
         • Победа в див.: 0%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -861,15 +875,15 @@
                         <td class="record-cell"><span class="sos-badge">0.506<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Raiders</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Steelers</span><span class="opponent-details rank-elite">#8</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Texans</span><span class="opponent-details rank-weak">#21</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 2-12<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 2-12<br>
             • Лидер: Jaguars (12-2, 100%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
@@ -877,14 +891,14 @@
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 2 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -894,43 +908,45 @@
                         <td class="record-cell"><span class="sos-badge sos-easy">0.382<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: 49ers</span><span class="opponent-details rank-weak">#30</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Chargers</span><span class="opponent-details rank-mid">#11</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Raiders</span><span class="opponent-details rank-mid">#18</span></div></div></span></td>
                         <td class="prob-cell prob-100"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 13-1<br>
         • Осталось игр: 3<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">81%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 81%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">82%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 82%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 13-1<br>
             • Лидер дивизиона<br>
-            • В 81% симуляций команда выиграла дивизион<br><br>
+            • В 82% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
-                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">77%<div class="prob-tooltip">
-        <strong>Вероятность первого раунда бай: 77%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">78%<div class="prob-tooltip">
+        <strong>Вероятность первого раунда бай: 78%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 13 побед<br>
-        • В 77% симуляций команда была посевом #1<br><br>
+        • В 78% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">22%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 22.3%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1053<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1053<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">36%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 36.3%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
-        • Победа в див.: 81%<br>
-        • Бай 1-го раунда: 77%<br>
-        • Топ-сид (бай + домашние игры)<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        • Победа в див.: 82%<br>
+        • Бай 1-го раунда: 78%<br>
+        • Наибольшая вероятность посева #1<br><br>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -940,89 +956,93 @@
                         <td class="record-cell"><span class="sos-badge">0.483<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Dolphins</span><span class="opponent-details rank-mid">#19</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Chiefs</span><span class="opponent-details rank-elite">#2</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Broncos</span><span class="opponent-details rank-weak">#28</span></div></div></span></td>
                         <td class="prob-cell prob-100"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 12-2<br>
         • Осталось игр: 3<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">19%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 19%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">18%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 18%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 12-2<br>
-            • Лидер: Chiefs (13-1, 81%)<br>
-            • В 19% симуляций команда выиграла дивизион<br><br>
+            • Лидер: Chiefs (13-1, 82%)<br>
+            • В 18% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-10-24"><span class="prob-wrapper">15%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 15%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 12 побед<br>
         • В 15% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">6%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 6.5%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1036<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1036<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">14%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 13.8%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
-        • Победа в див.: 19%<br>
+        • Победа в див.: 18%<br>
         • Бай 1-го раунда: 15%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
                         <td class="div-cell"></td>
-                        <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/22.png" class="team-logo" alt="Raiders"><span>Raiders</span></div></td>
+                        <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/22.png" class="team-logo" alt="Raiders"><span>Raiders<span class="team-status eliminated">✗</span></span></div></td>
                         <td class="record-cell">6-8</td>
                         <td class="record-cell"><span class="sos-badge sos-easy">0.435<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Titans</span><span class="opponent-details rank-weak">#32</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Cardinals</span><span class="opponent-details rank-weak">#25</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Chiefs</span><span class="opponent-details rank-elite">#2</span></div></div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">6%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 6%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">5%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 5%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 6-8<br>
         • Осталось игр: 3<br>
-        • В 6% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 5% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 6-8<br>
-            • Лидер: Chiefs (13-1, 81%)<br>
+            • Лидер: Chiefs (13-1, 82%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 6 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 0.2%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 970<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 970<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 0.1%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 6%<br>
+        • Плей-офф: 5%<br>
         • Победа в див.: 0%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -1032,30 +1052,30 @@
                         <td class="record-cell"><span class="sos-badge">0.507<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Bills</span><span class="opponent-details rank-weak">#31</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Patriots</span><span class="opponent-details rank-mid">#13</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Chargers</span><span class="opponent-details rank-mid">#11</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 3-11<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 3-11<br>
-            • Лидер: Chiefs (13-1, 81%)<br>
+            • Лидер: Chiefs (13-1, 82%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 3 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                 </tbody>
@@ -1073,7 +1093,7 @@
                         <th>MAKE PLAYOFFS</th>
                         <th>WIN DIVISION</th>
                         <th>ROUND 1 BYE</th>
-                        <th>SUPER BOWL</th>
+                        <th>MAKE SUPER BOWL</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -1084,43 +1104,45 @@
                         <td class="record-cell"><span class="sos-badge">0.530<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 17: Cowboys</span><span class="opponent-details rank-elite">#3</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Eagles</span><span class="opponent-details rank-weak">#29</span></div></div></span></td>
                         <td class="prob-cell prob-100"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 13-2<br>
         • Осталось игр: 2<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">52%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 52%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">54%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 54%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 13-2<br>
             • Лидер дивизиона<br>
-            • В 52% симуляций команда выиграла дивизион<br><br>
+            • В 54% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">52%<div class="prob-tooltip">
-        <strong>Вероятность первого раунда бай: 52%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">54%<div class="prob-tooltip">
+        <strong>Вероятность первого раунда бай: 54%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 13 побед<br>
-        • В 52% симуляций команда была посевом #1<br><br>
+        • В 54% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">21%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 21.4%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1042<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1042<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">28%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 28.0%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
-        • Победа в див.: 52%<br>
-        • Бай 1-го раунда: 52%<br>
-        • Топ-сид (бай + домашние игры)<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        • Победа в див.: 54%<br>
+        • Бай 1-го раунда: 54%<br>
+        • Наибольшая вероятность посева #1<br><br>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1130,43 +1152,45 @@
                         <td class="record-cell"><span class="sos-badge sos-hard">0.694<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Jaguars</span><span class="opponent-details rank-elite">#1</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Giants</span><span class="opponent-details rank-elite">#4</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Commanders</span><span class="opponent-details rank-mid">#20</span></div></div></span></td>
                         <td class="prob-cell prob-100"><span class="prob-wrapper">100%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 100%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 12-2<br>
         • Осталось игр: 3<br>
         • В 100% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">48%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 48%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">46%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 46%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 12-2<br>
-            • Лидер: Giants (13-2, 52%)<br>
-            • В 48% симуляций команда выиграла дивизион<br><br>
+            • Лидер: Giants (13-2, 54%)<br>
+            • В 46% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">48%<div class="prob-tooltip">
-        <strong>Вероятность первого раунда бай: 48%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">46%<div class="prob-tooltip">
+        <strong>Вероятность первого раунда бай: 46%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 12 побед<br>
-        • В 48% симуляций команда была посевом #1<br><br>
+        • В 46% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">23%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 22.7%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1040<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1040<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">25%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 24.6%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 100%<br>
-        • Победа в див.: 48%<br>
-        • Бай 1-го раунда: 48%<br>
+        • Победа в див.: 46%<br>
+        • Бай 1-го раунда: 46%<br>
         • Претендент на бай<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1176,30 +1200,30 @@
                         <td class="record-cell"><span class="sos-badge sos-hard">0.759<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Vikings</span><span class="opponent-details rank-mid">#12</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Jaguars</span><span class="opponent-details rank-elite">#1</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Cowboys</span><span class="opponent-details rank-elite">#3</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5-9<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 5-9<br>
-            • Лидер: Giants (13-2, 52%)<br>
+            • Лидер: Giants (13-2, 54%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -1209,30 +1233,30 @@
                         <td class="record-cell"><span class="sos-badge">0.461<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 17: 49ers</span><span class="opponent-details rank-weak">#30</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Giants</span><span class="opponent-details rank-elite">#4</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 1-14<br>
         • Осталось игр: 2<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 1-14<br>
-            • Лидер: Giants (13-2, 52%)<br>
+            • Лидер: Giants (13-2, 54%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 1 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -1242,43 +1266,45 @@
                         <td class="record-cell"><span class="sos-badge">0.537<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Bears</span><span class="opponent-details rank-mid">#16</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Texans</span><span class="opponent-details rank-weak">#21</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Lions</span><span class="opponent-details rank-elite">#7</span></div></div></span></td>
                         <td class="prob-cell prob-90-99"><span class="prob-wrapper">98%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 98%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 10-4<br>
         • Осталось игр: 3<br>
         • В 98% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">56%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 56%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">52%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 52%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 10-4<br>
             • Лидер дивизиона<br>
-            • В 56% симуляций команда выиграла дивизион<br><br>
+            • В 52% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 10 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">9%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 9.1%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1023<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1023<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">13%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 12.6%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 98%<br>
-        • Победа в див.: 56%<br>
+        • Победа в див.: 52%<br>
         • Бай 1-го раунда: 0%<br>
         • Лидер дивизиона<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1286,45 +1312,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/18.png" class="team-logo" alt="Lions"><span>Lions</span></div></td>
                         <td class="record-cell">10-5</td>
                         <td class="record-cell"><span class="sos-badge sos-hard">0.586<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 17: Bears</span><span class="opponent-details rank-mid">#16</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Packers</span><span class="opponent-details rank-elite">#9</span></div></div></span></td>
-                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">84%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 84%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">85%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 85%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 10-5<br>
         • Осталось игр: 2<br>
-        • В 84% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 85% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">26%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 26%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">28%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 28%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 10-5<br>
-            • Лидер: Packers (10-4, 56%)<br>
-            • В 26% симуляций команда выиграла дивизион<br><br>
+            • Лидер: Packers (10-4, 52%)<br>
+            • В 28% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 10 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">6%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 6.1%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1035<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1035<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">8%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 8.0%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 84%<br>
-        • Победа в див.: 26%<br>
+        • Плей-офф: 85%<br>
+        • Победа в див.: 28%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1332,45 +1360,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/30.png" class="team-logo" alt="Vikings"><span>Vikings</span></div></td>
                         <td class="record-cell">9-5</td>
                         <td class="record-cell"><span class="sos-badge">0.550<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Commanders</span><span class="opponent-details rank-mid">#20</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Jets</span><span class="opponent-details rank-elite">#10</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Bears</span><span class="opponent-details rank-mid">#16</span></div></div></span></td>
-                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">77%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 77%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">78%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 78%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9-5<br>
         • Осталось игр: 3<br>
-        • В 77% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 78% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">18%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 18%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-10-24"><span class="prob-wrapper">20%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 20%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 9-5<br>
-            • Лидер: Packers (10-4, 56%)<br>
-            • В 18% симуляций команда выиграла дивизион<br><br>
+            • Лидер: Packers (10-4, 52%)<br>
+            • В 20% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">5%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 5.0%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1016<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1016<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 5.2%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 77%<br>
-        • Победа в див.: 18%<br>
+        • Плей-офф: 78%<br>
+        • Победа в див.: 20%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -1380,30 +1410,30 @@
                         <td class="record-cell"><span class="sos-badge sos-hard">0.677<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Packers</span><span class="opponent-details rank-elite">#9</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Lions</span><span class="opponent-details rank-elite">#7</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Vikings</span><span class="opponent-details rank-mid">#12</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5-9<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 5-9<br>
-            • Лидер: Packers (10-4, 56%)<br>
+            • Лидер: Packers (10-4, 52%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -1411,45 +1441,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/5.png" class="team-logo" alt="Buccaneers"><span>Buccaneers</span></div></td>
                         <td class="record-cell">8-7</td>
                         <td class="record-cell"><span class="sos-badge sos-hard">0.588<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 17: Rams</span><span class="opponent-details rank-elite">#5</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Saints</span><span class="opponent-details rank-mid">#17</span></div></div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">60%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 60%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">61%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 61%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 8-7<br>
         • Осталось игр: 2<br>
-        • В 60% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 61% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">60%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 60%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">61%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 61%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 8-7<br>
             • Лидер дивизиона<br>
-            • В 60% симуляций команда выиграла дивизион<br><br>
+            • В 61% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 8 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">4%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 4.2%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 996<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 996<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 4.0%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 60%<br>
-        • Победа в див.: 60%<br>
+        • Плей-офф: 61%<br>
+        • Победа в див.: 61%<br>
         • Бай 1-го раунда: 0%<br>
         • Лидер дивизиона<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1457,91 +1489,95 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/13.png" class="team-logo" alt="Falcons"><span>Falcons</span></div></td>
                         <td class="record-cell">8-7</td>
                         <td class="record-cell"><span class="sos-badge sos-easy">0.412<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 17: Saints</span><span class="opponent-details rank-mid">#17</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Panthers</span><span class="opponent-details rank-weak">#26</span></div></div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">41%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 41%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">40%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 40%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 8-7<br>
         • Осталось игр: 2<br>
-        • В 41% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 40% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-25-49"><span class="prob-wrapper">34%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 34%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 8-7<br>
-            • Лидер: Buccaneers (8-7, 60%)<br>
+            • Лидер: Buccaneers (8-7, 61%)<br>
             • В 34% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 8 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">2%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 2.0%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1015<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1015<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">3%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 3.2%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 41%<br>
+        • Плей-офф: 40%<br>
         • Победа в див.: 34%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
                         <td class="div-cell"></td>
-                        <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/26.png" class="team-logo" alt="Saints"><span>Saints</span></div></td>
+                        <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/26.png" class="team-logo" alt="Saints"><span>Saints<span class="team-status eliminated">✗</span></span></div></td>
                         <td class="record-cell">6-8</td>
                         <td class="record-cell"><span class="sos-badge">0.494<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Cardinals</span><span class="opponent-details rank-weak">#25</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Falcons</span><span class="opponent-details rank-weak">#22</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Buccaneers</span><span class="opponent-details rank-mid">#15</span></div></div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">5%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 5%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 6-8<br>
         • Осталось игр: 3<br>
         • В 5% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-1-9"><span class="prob-wrapper">5%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 5%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 6-8<br>
-            • Лидер: Buccaneers (8-7, 60%)<br>
+            • Лидер: Buccaneers (8-7, 61%)<br>
             • В 5% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 6 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 0.1%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 973<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 973<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: 0.2%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: 5%<br>
         • Победа в див.: 5%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -1551,30 +1587,30 @@
                         <td class="record-cell"><span class="sos-badge">0.528<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Steelers</span><span class="opponent-details rank-elite">#8</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Seahawks</span><span class="opponent-details rank-mid">#14</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Falcons</span><span class="opponent-details rank-weak">#22</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5-9<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 5-9<br>
-            • Лидер: Buccaneers (8-7, 60%)<br>
+            • Лидер: Buccaneers (8-7, 61%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="">
@@ -1582,45 +1618,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/23.png" class="team-logo" alt="Rams"><span>Rams</span></div></td>
                         <td class="record-cell">9-5</td>
                         <td class="record-cell"><span class="sos-badge sos-hard">0.581<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Seahawks</span><span class="opponent-details rank-mid">#14</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Buccaneers</span><span class="opponent-details rank-mid">#15</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Seahawks</span><span class="opponent-details rank-mid">#14</span></div></div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">55%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 55%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">53%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 53%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9-5<br>
         • Осталось игр: 3<br>
-        • В 55% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 53% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">36%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 36%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-25-49"><span class="prob-wrapper">34%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 34%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 9-5<br>
             • Лидер дивизиона<br>
-            • В 36% симуляций команда выиграла дивизион<br><br>
+            • В 34% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">2%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 2.4%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1003<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1003<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">5%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 5.1%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 55%<br>
-        • Победа в див.: 36%<br>
+        • Плей-офф: 53%<br>
+        • Победа в див.: 34%<br>
         • Бай 1-го раунда: 0%<br>
         <br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1628,45 +1666,47 @@
                         <td><div class="team-cell"><img src="https://cdn.neonsportz.com/teamlogos/256/27.png" class="team-logo" alt="Seahawks"><span>Seahawks</span></div></td>
                         <td class="record-cell">9-5</td>
                         <td class="record-cell"><span class="sos-badge sos-hard">0.552<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Rams</span><span class="opponent-details rank-elite">#5</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Panthers</span><span class="opponent-details rank-weak">#26</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Rams</span><span class="opponent-details rank-elite">#5</span></div></div></span></td>
-                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">80%<div class="prob-tooltip">
-        <strong>Вероятность выхода в плей-офф: 80%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-75-89"><span class="prob-wrapper">81%<div class="prob-tooltip">
+        <strong>Вероятность выхода в плей-офф: 81%</strong><br><br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9-5<br>
         • Осталось игр: 3<br>
-        • В 80% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        • В 81% симуляций команда попала в топ-7 конференции<br><br>
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
-                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">64%<div class="prob-tooltip">
-            <strong>Вероятность победы в дивизионе: 64%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+                        <td class="prob-cell prob-50-74"><span class="prob-wrapper">66%<div class="prob-tooltip">
+            <strong>Вероятность победы в дивизионе: 66%</strong><br><br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 9-5<br>
-            • Лидер: Rams (9-5, 36%)<br>
-            • В 64% симуляций команда выиграла дивизион<br><br>
+            • Лидер: Rams (9-5, 34%)<br>
+            • В 66% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 9 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
-                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">8%<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: 7.9%</strong><br><br>
-        Аутсайдер<br>
-        ELO рейтинг: 1031<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: 1031<br>
-        • Соперники в плей-офф: 10 команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+                        <td class="prob-cell prob-1-9"><span class="prob-wrapper">9%<div class="prob-tooltip">
+        <strong>Вероятность выхода в Супербоул: 9.1%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
-        • Плей-офф: 80%<br>
-        • Победа в див.: 64%<br>
+        • Плей-офф: 81%<br>
+        • Победа в див.: 66%<br>
         • Бай 1-го раунда: 0%<br>
         • Лидер дивизиона<br><br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div></span></td>
                     </tr>
                     <tr class="">
@@ -1676,30 +1716,30 @@
                         <td class="record-cell"><span class="sos-badge sos-easy">0.373<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Saints</span><span class="opponent-details rank-mid">#17</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Raiders</span><span class="opponent-details rank-mid">#18</span></div><div class="opponent-row"><span class="opponent-name">Week 18: 49ers</span><span class="opponent-details rank-weak">#30</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5-9<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 5-9<br>
-            • Лидер: Rams (9-5, 36%)<br>
+            • Лидер: Rams (9-5, 34%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 5 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                     <tr class="division-group">
@@ -1709,30 +1749,30 @@
                         <td class="record-cell"><span class="sos-badge">0.518<div class="sos-tooltip"><div class="tooltip-title">Remaining Schedule</div><div class="opponent-row"><span class="opponent-name">Week 16: Chiefs</span><span class="opponent-details rank-elite">#2</span></div><div class="opponent-row"><span class="opponent-name">Week 17: Eagles</span><span class="opponent-details rank-weak">#29</span></div><div class="opponent-row"><span class="opponent-name">Week 18: Cardinals</span><span class="opponent-details rank-weak">#25</span></div></div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 2-12<br>
         • Осталось игр: 3<br>
         • В 0% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: 2-12<br>
-            • Лидер: Rams (9-5, 36%)<br>
+            • Лидер: Rams (9-5, 34%)<br>
             • В 0% симуляций команда выиграла дивизион<br><br>
             Учитывается расписание, сила команд и тайбрейкеры.
         </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: 2 побед<br>
         • В 0% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div></span></td>
                         <td class="prob-cell prob-0"><span class="prob-wrapper">0%<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div></span></td>
                     </tr>
                 </tbody>

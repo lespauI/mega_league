@@ -32,7 +32,6 @@ HOME_BONUS_DIV_LEADER = 0.03
 GAME_WIN_PROB_MIN = 0.30
 GAME_WIN_PROB_MAX = 0.75
 
-SB_PROB_MAX = 45.0
 
 
 from pathlib import Path
@@ -179,89 +178,28 @@ def get_division_leader_prob(team_name, div_teams, probabilities):
 def get_round1_bye_prob(team_name, all_div_leaders, probabilities):
     return probabilities.get(team_name, {}).get('bye_probability', 0)
 
-def calculate_superbowl_prob_elo(playoff_prob, team_elo, conf_playoff_elos, is_top_seed, 
-                                  bye_prob, div_prob):
-    """
-    Calculate Super Bowl probability using ELO-based Monte Carlo tournament simulation.
-    
-    Uses standard ELO win probability formula:
-    P(win) = 1 / (1 + 10^((opponent_elo - team_elo) / 400))
-    
-    Monte Carlo simulation:
-    - Simulates 1000 playoff tournaments
-    - Each round uses ELO-based win probabilities
-    - Higher seeds face weaker opponents (seeding advantage)
-    - Home field advantage applied as ELO boost
-    - Tracks how often team wins Super Bowl
-    
-    Returns probability of winning Super Bowl (0-45%).
-    """
-    if playoff_prob == 0:
-        return 0.0
-    
-    if not conf_playoff_elos or team_elo == 0:
-        return 0.1
-    
-    num_simulations = 1000
-    sb_wins = 0
-    
-    conf_playoff_elos_sorted = sorted(conf_playoff_elos, reverse=True)
-    n_playoff_teams = len(conf_playoff_elos_sorted)
-    
-    home_field_elo_boost = 0
-    if is_top_seed:
-        home_field_elo_boost = 75
-        has_bye = True
-    elif bye_prob > 30:
-        home_field_elo_boost = 75
-        has_bye = True
-    elif div_prob > 50:
-        home_field_elo_boost = 40
-        has_bye = False
-    else:
-        home_field_elo_boost = 0
-        has_bye = False
-    
-    for _ in range(num_simulations):
-        team_alive = True
-        current_round = 1 if not has_bye else 2
-        
-        while team_alive and current_round <= 4:
-            if current_round == 1:
-                lower_half_start = min(3, n_playoff_teams - 1)
-                lower_half_end = min(6, n_playoff_teams - 1)
-                opponent_elo = conf_playoff_elos_sorted[random.randint(lower_half_start, lower_half_end)]
-                team_boost = home_field_elo_boost if div_prob > 50 else 0
-            elif current_round == 2:
-                mid_start = min(2, n_playoff_teams - 1)
-                mid_end = min(5, n_playoff_teams - 1)
-                opponent_elo = conf_playoff_elos_sorted[random.randint(mid_start, mid_end)]
-                team_boost = home_field_elo_boost
-            elif current_round == 3:
-                top_teams = min(4, n_playoff_teams)
-                opponent_elo = sum(conf_playoff_elos_sorted[:top_teams]) / top_teams
-                team_boost = home_field_elo_boost
-            else:
-                opponent_elo = sum(conf_playoff_elos) / len(conf_playoff_elos)
-                team_boost = 0
-            
-            adjusted_team_elo = team_elo + team_boost
-            elo_diff = opponent_elo - adjusted_team_elo
-            win_prob = 1.0 / (1.0 + 10 ** (elo_diff / 400.0))
-            
-            if random.random() < win_prob:
-                current_round += 1
-            else:
-                team_alive = False
-        
-        if team_alive:
-            sb_wins += 1
-    
-    sb_prob_raw = (sb_wins / num_simulations) * 100
-    
-    final_prob = (playoff_prob / 100) * sb_prob_raw
-    
-    return round(max(0.1, min(final_prob, SB_PROB_MAX)), 1)
+def calculate_superbowl_probabilities(season_index=0, elo_source_week=None, simulations=10000):
+    try:
+        from . import calc_playoff_probabilities as playoff
+    except ImportError:
+        import calc_playoff_probabilities as playoff
+    from mega.standings.postseason import superbowl_appearance_probabilities
+    from mega.standings.match_probability import postseason_win_probability
+
+    teams, games, sos = playoff.load_data(season_index, elo_source_week)
+    stats = playoff.calculate_team_stats(teams, games)
+    rankings = playoff.load_rankings_data(season_index)
+
+    def draw_field():
+        remaining = playoff.simulate_remaining_games(teams, stats, sos, games, rankings)
+        fields, _, _ = playoff.determine_playoff_teams(teams, stats, remaining)
+        return fields
+
+    return superbowl_appearance_probabilities(
+        teams, draw_field,
+        lambda home, away, neutral=False: postseason_win_probability(home, away, teams, stats, neutral=neutral),
+        random, simulations,
+    )
 
 def get_playoff_tooltip(playoff_prob, team_name, team_data):
     wins = team_data['W']
@@ -273,11 +211,11 @@ def get_playoff_tooltip(playoff_prob, team_name, team_data):
     
     return f'''<div class="prob-tooltip">
         <strong>Вероятность выхода в плей-офф: {playoff_prob:.0f}%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: {record_str}<br>
         • Осталось игр: {remaining}<br>
         • В {playoff_prob:.0f}% симуляций команда попала в топ-7 конференции<br><br>
-        Вероятность побед рассчитывается по формуле: 70% Win% + 30% SoS (сложность сыгранных игр).
+        Сила команды: 70% Win% + 30% SoS (без Force Win). Вероятность — отношение силы команды к сумме сил, в пределах 25–75%.
     </div>'''
 
 def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
@@ -297,7 +235,7 @@ def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
     if position == 1:
         return f'''<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: {div_prob:.0f}%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: {record_str}<br>
             • Лидер дивизиона<br>
             • В {div_prob:.0f}% симуляций команда выиграла дивизион<br><br>
@@ -307,7 +245,7 @@ def get_division_tooltip(div_prob, team_name, div_teams, probabilities):
         gap = leader['win_pct'] - team['win_pct']
         return f'''<div class="prob-tooltip">
             <strong>Вероятность победы в дивизионе: {div_prob:.0f}%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: {record_str}<br>
             • Лидер: {leader_name} ({leader_record_str}, {leader_prob:.0f}%)<br>
             • В {div_prob:.0f}% симуляций команда выиграла дивизион<br><br>
@@ -321,7 +259,7 @@ def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
     if bye_prob == 0:
         return f'''<div class="prob-tooltip">
             <strong>Вероятность первого раунда бай: 0%</strong><br><br>
-            Рассчитано методом Монте-Карло (1000 симуляций):<br>
+            Рассчитано методом Монте-Карло (10 000 симуляций):<br>
             • Текущий счёт: {team_wins} побед<br>
             • В 0% симуляций команда была посевом #1<br><br>
             Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде.
@@ -329,53 +267,46 @@ def get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities):
     
     return f'''<div class="prob-tooltip">
         <strong>Вероятность первого раунда бай: {bye_prob:.0f}%</strong><br><br>
-        Рассчитано методом Монте-Карло (1000 симуляций):<br>
+        Рассчитано методом Монте-Карло (10 000 симуляций):<br>
         • Текущий счёт: {team_wins} побед<br>
         • В {bye_prob:.0f}% симуляций команда была посевом #1<br><br>
         Только команда с лучшим рекордом в конференции (посев #1) получает бай в первом раунде плей-офф.
     </div>'''
 
 def get_superbowl_tooltip(sb_prob, playoff_prob, div_prob, bye_prob, team_elo, 
-                          playoff_field_size, is_top_seed):
-    if playoff_prob == 0:
+                          is_top_seed):
+    if sb_prob == 0:
         return f'''<div class="prob-tooltip">
-            <strong>Вероятность Суперкубка: 0%</strong><br><br>
-            Команда не попадает в плей-офф.
+            <strong>Вероятность выхода в Супербоул: 0%</strong><br><br>
+            В 10 000 симуляций команда не вышла в Супербоул.
         </div>'''
-    
-    if team_elo >= 1280:
-        tier_desc = "Элитная команда"
-    elif team_elo >= 1240:
-        tier_desc = "Сильный претендент"
-    elif team_elo >= 1200:
-        tier_desc = "Претендент на плей-офф"
-    else:
-        tier_desc = "Аутсайдер"
     
     seed_text = ""
     if is_top_seed:
-        seed_text = "Топ-сид (бай + домашние игры)"
+        seed_text = "Наибольшая вероятность посева #1"
     elif bye_prob > 30:
         seed_text = "Претендент на бай"
     elif div_prob > 50:
         seed_text = "Лидер дивизиона"
     
     return f'''<div class="prob-tooltip">
-        <strong>Вероятность Суперкубка: {sb_prob:.1f}%</strong><br><br>
-        {tier_desc}<br>
-        ELO рейтинг: {team_elo:.0f}<br><br>
-        <b>Метод Монте-Карло (1000 симуляций):</b><br>
-        • Рейтинг команды: {team_elo:.0f}<br>
-        • Соперники в плей-офф: {playoff_field_size} команд<br>
-        • Каждый раунд симулируется по ELO<br>
-        • Учитываются преимущества посева<br>
-        • Высокие сиды играют с более слабыми соперниками<br><br>
+        <strong>Вероятность выхода в Супербоул: {sb_prob:.1f}%</strong><br><br>
+
+        <b>Метод Монте-Карло (10 000 общих симуляций):</b><br>
+        • Сетка: 7 команд каждой конференции<br>
+        • Сила: 70% Win% + 30% сложности сыгранного расписания<br>
+        • Force Win исключены из показателей силы<br>
+        • В каждой конференции только посев #1 получает бай<br>
+        • Перепосев после Wild Card; хозяевам эквивалент +75 ELO<br>
+        • Шансы победы хозяев умножаются на 10^(75/400), P ограничена 25–75%<br>
+        • Выход в СБ = победа в финале конференции<br>
+        • Сумма шансов: 100% в AFC и 100% в NFC<br><br>
         <b>Статус:</b><br>
         • Плей-офф: {playoff_prob:.0f}%<br>
         • Победа в див.: {div_prob:.0f}%<br>
         • Бай 1-го раунда: {bye_prob:.0f}%<br>
         {f'• {seed_text}<br>' if seed_text else ''}<br>
-        <i>ELO formula: P = 1 / (1 + 10^((opp_elo - team_elo) / 400))</i>
+        <i>P = сила команды / сумма сил, в пределах 25–75%</i>
     </div>'''
 
 def get_rank_class(rank):
@@ -386,7 +317,7 @@ def get_rank_class(rank):
     else:
         return 'rank-weak'
 
-def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
+def create_html_table(afc_divs, nfc_divs, probabilities, superbowl_probabilities, week=None):
     now = datetime.now(ZoneInfo("America/New_York"))
     html = []
     
@@ -787,13 +718,6 @@ def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
         for div_name in divs:
             all_conf_teams.extend(divs[div_name])
         
-        conf_playoff_elos = []
-        for team_data in all_conf_teams:
-            team_name = team_data['team']
-            playoff_prob = probabilities.get(team_name, {}).get('playoff_probability', 0)
-            if playoff_prob > 0:
-                conf_playoff_elos.append(team_data.get('elo', 1200.0))
-        
         top_bye_team = None
         max_bye_prob = 0
         for team_data in all_conf_teams:
@@ -815,7 +739,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
         html.append('                        <th>MAKE PLAYOFFS</th>')
         html.append('                        <th>WIN DIVISION</th>')
         html.append('                        <th>ROUND 1 BYE</th>')
-        html.append('                        <th>SUPER BOWL</th>')
+        html.append('                        <th>MAKE SUPER BOWL</th>')
         html.append('                    </tr>')
         html.append('                </thead>')
         html.append('                <tbody>')
@@ -839,11 +763,8 @@ def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
                 power_rank = team_data.get('power_rank', 16)
                 team_elo = team_data.get('elo', 1200.0)
                 
-                sb_prob = calculate_superbowl_prob_elo(
-                    playoff_prob, team_elo, conf_playoff_elos, is_top_seed,
-                    bye_prob, div_prob
-                )
-                
+                sb_prob = superbowl_probabilities[team_name]
+
                 sos = team_data['remaining_sos']
                 logo_url = team_data.get('logo_url', '')
                 
@@ -892,7 +813,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
                 bye_tooltip = get_bye_tooltip(bye_prob, team_name, all_div_leaders, probabilities)
                 sb_tooltip = get_superbowl_tooltip(
                     sb_prob, playoff_prob, div_prob, bye_prob, team_elo, 
-                    len(conf_playoff_elos), is_top_seed
+                    is_top_seed
                 )
                 
                 record_display = f'{team_data["W"]}-{team_data["L"]}-{team_data["T"]}' if team_data["T"] > 0 else f'{team_data["W"]}-{team_data["L"]}'
@@ -981,7 +902,7 @@ def create_html_table(afc_divs, nfc_divs, probabilities, week=None):
     
     return '\n'.join(html)
 
-def main(season_index=0, elo_source_week=None, seed=None):
+def main(season_index=0, elo_source_week=None, seed=0):
     if seed is not None:
         random.seed(seed)
     os.chdir(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -995,12 +916,14 @@ def main(season_index=0, elo_source_week=None, seed=None):
         season_index=season_index, elo_source_week=elo_source_week
     )
     
+    print("Simulating 10,000 shared postseason brackets...")
+    superbowl_probabilities = calculate_superbowl_probabilities(season_index, elo_source_week)
     print("Generating NYT-style table...")
     from cycle_context import CycleContext
     from pathlib import Path
     context = CycleContext.from_file(Path('docs/data/import_metadata.json'))
     html_output = create_html_table(
-        afc_divs, nfc_divs, probabilities, week=context.completed_through_week
+        afc_divs, nfc_divs, probabilities, superbowl_probabilities, week=context.completed_through_week
     )
     
     os.makedirs('docs', exist_ok=True)
@@ -1021,7 +944,7 @@ if __name__ == "__main__":
                         help='Season index to filter games and rankings (default: 0)')
     parser.add_argument('--elo-source-week', type=int, default=None,
                         help='Declared ELO source week; defaults to active cycle metadata')
-    parser.add_argument('--seed', type=int, default=None,
+    parser.add_argument('--seed', type=int, default=0,
                         help='Random seed for reproducible Super Bowl simulations')
     args = parser.parse_args()
     main(season_index=args.season_index, elo_source_week=args.elo_source_week, seed=args.seed)
