@@ -6,9 +6,9 @@
   "completedThroughWeek": 16,
   "exportWeekIndex": 15,
   "nextScheduledWeek": 17,
-  "eloSourceWeek": 8,
-  "eloUsage": "Week 8 ELO ratings used with the validated export snapshot",
-  "snapshotId": "825b67cbd513c5bb",
+  "eloSourceWeek": 15,
+  "eloUsage": "Week 15 ELO ratings and GM labels supplied by the user on 2026-11-04, used with the validated Week 16 export snapshot",
+  "snapshotId": "3907e8e2d82f9d0a",
   "hashContractVersion": 3,
   "hashNormalization": "newline-lf-v1",
   "sourceArchives": {
@@ -18,11 +18,11 @@
   "independentSourceFiles": {
     "usersCsv": {
       "path": "MEGA_users.csv",
-      "sha256": "394fceebac5d30497ca3ee08ec0011c24edc93cf438bf739604fc57fbe9d2133"
+      "sha256": "70e7b069f6592e2d7a0f1ce7e869e9acdcf728e168ef474dfdc47f80be754eaa"
     },
     "eloCsv": {
       "path": "mega_elo.csv",
-      "sha256": "3ed1fa75fdb13d2394a89c407b90bfb5003dd6b8e994899f75198c79ad0c3f88"
+      "sha256": "c8cf0c0583b83482b82dda983b2d62dbfb215387726e8ec5942a1c8403a4311c"
     }
   },
   "inputs": [
@@ -100,15 +100,15 @@
     },
     {
       "path": "MEGA_users.csv",
-      "sourceSha256": "394fceebac5d30497ca3ee08ec0011c24edc93cf438bf739604fc57fbe9d2133",
-      "workingSha256": "394fceebac5d30497ca3ee08ec0011c24edc93cf438bf739604fc57fbe9d2133",
-      "canonicalSha256": "394fceebac5d30497ca3ee08ec0011c24edc93cf438bf739604fc57fbe9d2133"
+      "sourceSha256": "70e7b069f6592e2d7a0f1ce7e869e9acdcf728e168ef474dfdc47f80be754eaa",
+      "workingSha256": "70e7b069f6592e2d7a0f1ce7e869e9acdcf728e168ef474dfdc47f80be754eaa",
+      "canonicalSha256": "70e7b069f6592e2d7a0f1ce7e869e9acdcf728e168ef474dfdc47f80be754eaa"
     },
     {
       "path": "mega_elo.csv",
-      "sourceSha256": "3ed1fa75fdb13d2394a89c407b90bfb5003dd6b8e994899f75198c79ad0c3f88",
-      "workingSha256": "3ed1fa75fdb13d2394a89c407b90bfb5003dd6b8e994899f75198c79ad0c3f88",
-      "canonicalSha256": "3ed1fa75fdb13d2394a89c407b90bfb5003dd6b8e994899f75198c79ad0c3f88"
+      "sourceSha256": "c8cf0c0583b83482b82dda983b2d62dbfb215387726e8ec5942a1c8403a4311c",
+      "workingSha256": "c8cf0c0583b83482b82dda983b2d62dbfb215387726e8ec5942a1c8403a4311c",
+      "canonicalSha256": "c8cf0c0583b83482b82dda983b2d62dbfb215387726e8ec5942a1c8403a4311c"
     }
   ]
 }

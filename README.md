@@ -1,8 +1,8 @@
 # MEGA League analytics — Madden 27
 
-Current data: **Madden 27, season 1 (`seasonIndex=0`), results through Week 16**. The team/rankings export has `weekIndex=15`; scheduled games at that index are display Week 16, with Week 17 next on the schedule. The supplied **Week 8 ELO** ratings are used for this analysis with the user's approval.
+Current data: **Madden 27, season 1 (`seasonIndex=0`), results through Week 16**. The team/rankings export has `weekIndex=15`; scheduled games at that index are display Week 16, with Week 17 next on the schedule. The supplied **Week 15 ELO** ratings are used for this analysis.
 
-All 12 NeonSportz CSV exports are imported. [ELO and GM labels](mega_elo.csv), [GM-to-NeonSportz user mapping](MEGA_users.csv), and [source metadata](docs/data/import_metadata.json) preserve their provenance. The original screenshot is [available here](docs/data/elo_week8.png). Raw export usernames are unchanged.
+All 12 NeonSportz CSV exports are imported. [ELO and GM labels](mega_elo.csv), [GM-to-NeonSportz user mapping](MEGA_users.csv), and [source metadata](docs/data/import_metadata.json) preserve their provenance. Week 15 ratings and GM labels come from the user-supplied table on 2026-11-04. Week 8 ratings remain in the ELO history column; their original screenshot is [available here](docs/data/elo_week8.png). Raw export usernames are unchanged.
 
 Madden 26 exports and results remain isolated in [the archive](archive/madden-26/README.md). Calculation formulas, cap math and OVR models are preserved; OVR calibration has not been revalidated for the new game.
 
@@ -52,7 +52,7 @@ See [AGENTS.md](AGENTS.md) for module responsibilities, data contracts, rollover
      --stats-zip /path/to/stats.zip \
      --elo-csv /path/to/mega_elo.csv \
      --users-csv /path/to/MEGA_users.csv \
-     --season-index 0 --elo-source-week 8
+     --season-index 0 --elo-source-week 15
    ```
 
    Validation does not change active files. `MEGA_users.csv` is maintained separately from the NeonSportz ZIPs; it preserves approved GM labels and raw exported usernames and is checked against `MEGA_teams.csv.userName`. After reviewing the reported season/week, run the same command with `--activate`. It installs the canonical CSVs and matching metadata together. Leave `archive/madden-26/` unchanged.
