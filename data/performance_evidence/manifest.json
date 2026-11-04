@@ -2,17 +2,17 @@
   "schemaVersion": 1,
   "csvSeasonIndex": 0,
   "calendarYear": 2026,
-  "snapshotId": "b2a1bf90395c03b3",
+  "snapshotId": "825b67cbd513c5bb",
   "inputHashes": {
-    "MEGA_games.csv": "c3a1cbccb47a342b36d9b29b4bb0709b161da366713600d8dae090211708b259",
-    "MEGA_teams.csv": "5d4cbae58e67f8f7f69e65660a107b4565e8e4c695e43836edf0898247f53aef",
-    "MEGA_passing.csv": "82fa104a497e52791d37b18a80cbaa95bb9428cdacba6c3d4684610ee9d2116b",
-    "MEGA_rushing.csv": "9623f6e178d154e9a5885337da19a76fb5d51d7be90bacfcc3907d619fc4cbe5",
-    "MEGA_receiving.csv": "4276d2240d435e9df5aefec93ba03e3874344bb1c9a24edca48539963c247241",
-    "MEGA_defense.csv": "56c6e70ec3fb0c5e11ceae3967d98a72fcfb575ee891b5fbd6ef3195964547c4",
-    "MEGA_kicking.csv": "0a6e0ca3c9f89285f4f29318633cf54219361761d332f0532ce55078a4e2173b",
-    "MEGA_punting.csv": "5ff0d346af4ed608bbe7dc3b72949463043055f07acb0750615b57b05ae61a9b",
-    "docs/data/import_metadata.json": "f0bf68a91fba7beaf6caf1c12dcb7c031f4b9df6407d8ad0ba926b0fc8f94b2a"
+    "MEGA_games.csv": "f367a3b92ba31406cae77e3a732df9895f94819940bd448725ec2d7e1253f496",
+    "MEGA_teams.csv": "675d79024b0212c3981c226711fca57aea954774f9acf6e80bf0cc6c0ab6a3c5",
+    "MEGA_passing.csv": "8943ab84a795c0b839443ae4904d1b512bef026d23e7ec9937fdd741958eaafa",
+    "MEGA_rushing.csv": "40fb168918896e99a3c422059fb8f7190a93f6aaaa571cfb55361c513036e148",
+    "MEGA_receiving.csv": "af60f6de7fba600c9b5e4441d6f8056fc341399e09e573340a7bd1cf12935071",
+    "MEGA_defense.csv": "7d794ac4a9e8eba005aed26f508802d930a5e7da682ea6fa4ab00fe818967548",
+    "MEGA_kicking.csv": "d7cf755f85f3665b48ba99e3e5546523b4b57c5049fe7f10b02185d893e1bf4f",
+    "MEGA_punting.csv": "49266edfdd971e8d298d2317efe35f8514015777efa156a5c093100297a0517b",
+    "docs/data/import_metadata.json": "9b24d96da7f0bd512a3e7500163918ec842d721fdccc2f2498230d5b3434f9ba"
   },
   "evidenceHashes": {
     "games/31604223.json": "9e1fe24995900e31d3650f67c22cec58e1864f6a95848496201aa00e79b97948",
@@ -243,7 +243,10 @@
     "games/31604496.json": "07a90c97d6b13359c2900e69293527dec813aa4745628c57f3baea28a34dd850",
     "games/31604498.json": "e3131d414ac6bdb82b62d6b6b4b57bf3520db5cddad83a18584148ac12607225",
     "games/31604499.json": "69297f04e3a46f944fd728be5728e45aa09386d59e40c9c5a4103f3885d21646",
+    "games/31604500.json": "864d8bbf9fa19b906facb8777f29d42398512710a0196402caebea07a9cce26d",
     "games/31604501.json": "a307ec665f96a12a59e945e745a6915ec1392d69f6df665efce7edc3f2e6cb34",
+    "games/31604502.json": "4b34561e6061aaa37359385ee46a7444ba6fcc5b0c250fcbe0c9f6cbe00c51e2",
+    "games/31604507.json": "9375ea8423fae2a170333c0ba09c888703c2ad03c72fdbca1b29f6462ffa70c2",
     "games/31604509.json": "f9bf404272e1425416117c066ab7fdfd2c3b49945ba035831cb6e0f659bbd6b1",
     "games/31604510.json": "22abb1fd2b2f96332d549f9667921dcb62d0039158f4c8ec4a7720582dce8bdf",
     "histories/555220998.json": "88b1f314d174ccbe15d8b2ab74216e18f59f37665777a854ae2bf90ddd3560b2",
@@ -252,12 +255,12 @@
     "histories/555221247.json": "45aa8c5e94f64a49ecac7a5cc87c096dea0d061c8051fd239e50206119b6af86",
     "histories/555221285.json": "9446ab5bb828f98ffaab26e16e8fcbd84926e5a45537a01fbee19875ac156b99",
     "histories/555221448.json": "d9c428db3969bce5a5d5ddb8b0565aa0fa0bea5aedf9329e0c85d132032a6261",
-    "histories/555221547.json": "955942f86e6838e62cd428ab12d5cd71c0ed901cd86eeb4d4ea3ae0e3f0fb385",
+    "histories/555221547.json": "0386527964ac939b42ecb2160681e08593b1238a00385bd20becb6fe1044187d",
     "histories/555221653.json": "8c7c2917f9ca6e44df0d7fca2ba01a871f59c8e88132873c7c1cd1f031ec89de",
     "histories/555222151.json": "5124a0792c9e3772c57c21981f0855cc5e3ed96640b1ed717cb8756f5f0b3381",
     "histories/555222192.json": "3a5935fc61278d8dab6883eeb7f942885e2557198b2c5ecf81bd5fcb09fd9caa",
     "histories/555223352.json": "8783ca9901b87e21a546cfd38117af2baaf55f743372b0ae46ebd16900afd03f",
-    "histories/555223444.json": "89d15b5d60f98aca25bbecdc8e0cca6f2afdcae06d16a1980de1df428e3766f2",
+    "histories/555223444.json": "894243a77d3373e1038b5f162256f5f2ac2bcd2a7d2539eb94ac8ef98dfa8625",
     "histories/555223447.json": "acf484e1a383d9efb9792cb0ba969aa524541145c2f04f0227a8e5b997042c4c",
     "histories/555223701.json": "d658a7a2a9851b34a9e79714d13a7060f6aa52b1748c68d4a4af6f144dcdc65d",
     "histories/555223792.json": "1da7f932d05e0c743f08a12b01aebab62a1843fcf3f49e40509a600cbe9ac65c",
@@ -266,6 +269,6 @@
   "storage": {
     "format": "tar+gzip",
     "file": "snapshot.tar.gz",
-    "sha256": "8e8b948740c910e1fabf7b5d13b782047f04a99e719a3acb3b8fd5276cb18843"
+    "sha256": "f5cdd16774b8e2ff37aeb40ecb459d79c82f9dad8ef7b30cd9248c3fe70b6696"
   }
 }
