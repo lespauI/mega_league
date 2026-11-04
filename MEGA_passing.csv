@@ -1,12 +1,12 @@
 team__displayName,team__abbrName,team__logoId,team__logo,player__position,player__rosterId,player__fullName,player__yearsPro,player__injuryLength,player__portraitId,player__custom_portrait_url,player__jerseyNum,gamesPlayed,fantasy_points,passTotalAtt,passTotalComp,passAvgCompPct,passTotalInts,passTotalLongest,passerAvgRating,passTotalSacks,passTotalTDs,passTotalYds,passAvgYdsPerAtt,passAvgYdsPerGame
-Ravens,BAL,24,,QB,555222285,Lamar Jackson,8,0,8940,,8,14,165.56,300,173,57.67,18,78,66.86,57,12,2044,6.81,146.00
+Ravens,BAL,24,,QB,555222285,Lamar Jackson,8,0,8940,,8,15,171.44,320,185,57.81,20,78,66.29,64,13,2191,6.85,146.07
 Steelers,PIT,28,,QB,555221027,Drew Allar,0,0,11303,,16,14,177.80,358,213,59.50,17,79,87.86,30,25,2810,7.85,200.71
-Bengals,CIN,1,,QB,555221390,Joe Burrow,6,0,198,,9,14,153.48,397,244,61.46,28,80,67.81,37,16,2902,7.31,207.29
-Bengals,CIN,1,,QB,555221841,Joe Flacco,18,0,1115,,16,1,0.00,0,0,0.00,0,0,0.00,1,0,0,0.00,0.00
+Bengals,CIN,1,,QB,555221390,Joe Burrow,6,0,198,,9,15,152.48,412,250,60.68,30,80,65.21,40,16,2962,7.19,197.47
+Bengals,CIN,1,,QB,555221841,Joe Flacco,18,0,1115,,16,2,-4.38,22,8,36.36,4,22,11.36,1,0,98,4.45,49.00
 Browns,CLE,4,,WR,555221522,KC Concepcion Jr,0,0,11122,https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/4870653.png,1,1,2.20,0,1,0.00,0,0,0.00,0,0,0,0.00,0.00
-Browns,CLE,4,,WR,555221873,Troy Franklin,2,0,10077,,87,4,37.70,0,5,0.00,0,0,0.00,0,0,0,0.00,0.00
-Browns,CLE,4,,QB,555221993,Taylen Green,0,0,11124,https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/4431325.png&w=350&h=254,4,14,209.40,362,230,63.54,16,62,88.01,16,24,2545,7.03,181.79
-Browns,CLE,4,,HB,555222442,Quinshon Judkins,1,0,10618,,10,10,143.50,0,12,0.00,0,0,0.00,0,0,0,0.00,0.00
+Browns,CLE,4,,WR,555221873,Troy Franklin,2,0,10077,,87,5,45.40,0,6,0.00,0,0,0.00,0,0,0,0.00,0.00
+Browns,CLE,4,,QB,555221993,Taylen Green,0,0,11124,https://a.espncdn.com/combiner/i?img=/i/headshots/nfl/players/full/4431325.png&w=350&h=254,4,15,228.74,381,243,63.78,17,62,88.93,16,26,2701,7.09,180.07
+Browns,CLE,4,,HB,555222442,Quinshon Judkins,1,0,10618,,10,11,161.00,0,13,0.00,0,0,0.00,0,0,0,0.00,0.00
 Browns,CLE,4,,QB,555223355,Shedeur Sanders,1,0,10718,,2,1,-0.30,3,3,100.00,0,7,79.17,0,0,0,0.00,0.00
 Jaguars,JAX,16,,QB,555222572,Trevor Lawrence,5,0,1372,,16,15,241.48,371,261,70.35,9,82,113.07,16,27,3402,9.17,226.80
 Jaguars,JAX,16,,WR,555223841,Parker Washington,3,0,2454,,11,1,3.60,0,1,0.00,0,0,0.00,0,0,0,0.00,0.00
@@ -14,9 +14,9 @@ Titans,TEN,29,,WR,555223290,Wan'Dale Robinson,4,0,1924,,4,6,27.00,0,9,0.00,0,0,0
 Titans,TEN,29,,QB,555223825,Cam Ward,1,0,10768,,1,14,83.40,366,184,50.27,29,67,43.92,26,11,2015,5.51,143.93
 Texans,HOU,31,,WR,555221265,Kayshon Boutte,3,0,1640,,14,2,4.00,0,2,0.00,0,0,0.00,0,0,0,0.00,0.00
 Texans,HOU,31,,QB,555223574,C.J. Stroud,3,0,2417,,7,15,131.94,391,233,59.59,34,59,61.02,32,21,2591,6.63,172.73
-Colts,IND,9,,WR,555221037,Keenan Allen,13,0,5654,,10,2,30.00,0,3,0.00,0,0,0.00,0,0,0,0.00,0.00
+Colts,IND,9,,WR,555221037,Keenan Allen,13,0,5654,,10,3,32.80,0,4,0.00,0,0,0.00,0,0,0,0.00,0.00
 Colts,IND,9,,WR,555221704,Josh Downs,3,0,2117,,2,2,-1.30,0,2,0.00,0,0,0.00,0,0,0,0.00,0.00
-Colts,IND,9,,QB,555222398,Daniel Jones,7,0,9537,,17,14,78.56,324,200,61.73,38,70,60.67,26,16,2354,7.27,168.14
+Colts,IND,9,,QB,555222398,Daniel Jones,7,0,9537,,17,15,99.50,343,214,62.39,38,70,64.42,27,20,2510,7.32,167.33
 Dolphins,MIA,11,,QB,555223950,Malik Willis,4,0,2039,,2,15,228.24,423,264,62.41,23,47,79.32,33,24,2941,6.95,196.07
 Jets,NYJ,17,,QB,555222507,Cade Klubnik,0,0,11230,,10,14,281.80,408,278,68.14,19,80,105.13,19,35,3630,8.90,259.29
 Jets,NYJ,17,,QB,555223479,Geno Smith,13,0,6078,,7,1,0.84,1,1,100.00,0,21,118.75,0,0,21,21.00,21.00
