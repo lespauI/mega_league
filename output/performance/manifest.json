@@ -12,17 +12,17 @@
     "unavailableMetrics": "blank_with_reason"
   },
   "policyHash": "d057a0c6dd3bdb0fd17c3f2bb9c148231c466c110a5b11e86b7afd0d933c4213",
-  "evidenceManifestHash": "3cfc962650b59d680df1eb9e73899b9768f610d49dd11f7dd09f6051555efb25",
+  "evidenceManifestHash": "0713694eac477647ea24cfe3bfa19962088675e99a132c4a20f33e066d47cbd0",
   "inputHashes": {
-    "MEGA_games.csv": "c3a1cbccb47a342b36d9b29b4bb0709b161da366713600d8dae090211708b259",
-    "MEGA_teams.csv": "5d4cbae58e67f8f7f69e65660a107b4565e8e4c695e43836edf0898247f53aef",
-    "MEGA_passing.csv": "82fa104a497e52791d37b18a80cbaa95bb9428cdacba6c3d4684610ee9d2116b",
-    "MEGA_rushing.csv": "9623f6e178d154e9a5885337da19a76fb5d51d7be90bacfcc3907d619fc4cbe5",
-    "MEGA_receiving.csv": "4276d2240d435e9df5aefec93ba03e3874344bb1c9a24edca48539963c247241",
-    "MEGA_defense.csv": "56c6e70ec3fb0c5e11ceae3967d98a72fcfb575ee891b5fbd6ef3195964547c4",
-    "MEGA_kicking.csv": "0a6e0ca3c9f89285f4f29318633cf54219361761d332f0532ce55078a4e2173b",
-    "MEGA_punting.csv": "5ff0d346af4ed608bbe7dc3b72949463043055f07acb0750615b57b05ae61a9b",
-    "docs/data/import_metadata.json": "f0bf68a91fba7beaf6caf1c12dcb7c031f4b9df6407d8ad0ba926b0fc8f94b2a"
+    "MEGA_games.csv": "f367a3b92ba31406cae77e3a732df9895f94819940bd448725ec2d7e1253f496",
+    "MEGA_teams.csv": "675d79024b0212c3981c226711fca57aea954774f9acf6e80bf0cc6c0ab6a3c5",
+    "MEGA_passing.csv": "8943ab84a795c0b839443ae4904d1b512bef026d23e7ec9937fdd741958eaafa",
+    "MEGA_rushing.csv": "40fb168918896e99a3c422059fb8f7190a93f6aaaa571cfb55361c513036e148",
+    "MEGA_receiving.csv": "af60f6de7fba600c9b5e4441d6f8056fc341399e09e573340a7bd1cf12935071",
+    "MEGA_defense.csv": "7d794ac4a9e8eba005aed26f508802d930a5e7da682ea6fa4ab00fe818967548",
+    "MEGA_kicking.csv": "d7cf755f85f3665b48ba99e3e5546523b4b57c5049fe7f10b02185d893e1bf4f",
+    "MEGA_punting.csv": "49266edfdd971e8d298d2317efe35f8514015777efa156a5c093100297a0517b",
+    "docs/data/import_metadata.json": "9b24d96da7f0bd512a3e7500163918ec842d721fdccc2f2498230d5b3434f9ba"
   },
   "evidenceHashes": {
     "games/31604223.json": "9e1fe24995900e31d3650f67c22cec58e1864f6a95848496201aa00e79b97948",
@@ -253,7 +253,10 @@
     "games/31604496.json": "07a90c97d6b13359c2900e69293527dec813aa4745628c57f3baea28a34dd850",
     "games/31604498.json": "e3131d414ac6bdb82b62d6b6b4b57bf3520db5cddad83a18584148ac12607225",
     "games/31604499.json": "69297f04e3a46f944fd728be5728e45aa09386d59e40c9c5a4103f3885d21646",
+    "games/31604500.json": "864d8bbf9fa19b906facb8777f29d42398512710a0196402caebea07a9cce26d",
     "games/31604501.json": "a307ec665f96a12a59e945e745a6915ec1392d69f6df665efce7edc3f2e6cb34",
+    "games/31604502.json": "4b34561e6061aaa37359385ee46a7444ba6fcc5b0c250fcbe0c9f6cbe00c51e2",
+    "games/31604507.json": "9375ea8423fae2a170333c0ba09c888703c2ad03c72fdbca1b29f6462ffa70c2",
     "games/31604509.json": "f9bf404272e1425416117c066ab7fdfd2c3b49945ba035831cb6e0f659bbd6b1",
     "games/31604510.json": "22abb1fd2b2f96332d549f9667921dcb62d0039158f4c8ec4a7720582dce8bdf",
     "histories/555220998.json": "88b1f314d174ccbe15d8b2ab74216e18f59f37665777a854ae2bf90ddd3560b2",
@@ -262,36 +265,27 @@
     "histories/555221247.json": "45aa8c5e94f64a49ecac7a5cc87c096dea0d061c8051fd239e50206119b6af86",
     "histories/555221285.json": "9446ab5bb828f98ffaab26e16e8fcbd84926e5a45537a01fbee19875ac156b99",
     "histories/555221448.json": "d9c428db3969bce5a5d5ddb8b0565aa0fa0bea5aedf9329e0c85d132032a6261",
-    "histories/555221547.json": "955942f86e6838e62cd428ab12d5cd71c0ed901cd86eeb4d4ea3ae0e3f0fb385",
+    "histories/555221547.json": "0386527964ac939b42ecb2160681e08593b1238a00385bd20becb6fe1044187d",
     "histories/555221653.json": "8c7c2917f9ca6e44df0d7fca2ba01a871f59c8e88132873c7c1cd1f031ec89de",
     "histories/555222151.json": "5124a0792c9e3772c57c21981f0855cc5e3ed96640b1ed717cb8756f5f0b3381",
     "histories/555222192.json": "3a5935fc61278d8dab6883eeb7f942885e2557198b2c5ecf81bd5fcb09fd9caa",
     "histories/555223352.json": "8783ca9901b87e21a546cfd38117af2baaf55f743372b0ae46ebd16900afd03f",
-    "histories/555223444.json": "89d15b5d60f98aca25bbecdc8e0cca6f2afdcae06d16a1980de1df428e3766f2",
+    "histories/555223444.json": "894243a77d3373e1038b5f162256f5f2ac2bcd2a7d2539eb94ac8ef98dfa8625",
     "histories/555223447.json": "acf484e1a383d9efb9792cb0ba969aa524541145c2f04f0227a8e5b997042c4c",
     "histories/555223701.json": "d658a7a2a9851b34a9e79714d13a7060f6aa52b1748c68d4a4af6f144dcdc65d",
     "histories/555223792.json": "1da7f932d05e0c743f08a12b01aebab62a1843fcf3f49e40509a600cbe9ac65c",
     "histories/555223976.json": "a1d0ce860d0681189460c62c60d1ebe2a7821f1d78b480bdbae02f493faa1ec6"
   },
-  "completedGames": 231,
+  "completedGames": 234,
   "excludedGames": 29,
   "tradeCorrections": [
     {
-      "playerId": "555223701",
-      "statId": 546702212,
-      "retainedRow": "806978686",
-      "retainedTeam": "Chiefs",
-      "discardedRow": "824654891",
-      "discardedTeam": "Bengals",
-      "weekIndex": 0
-    },
-    {
-      "playerId": "555223792",
-      "statId": 538051667,
-      "retainedRow": "806978216",
-      "retainedTeam": "Broncos",
-      "discardedRow": "842301893",
-      "discardedTeam": "Patriots",
+      "playerId": "555221448",
+      "statId": 546703078,
+      "retainedRow": "806978584",
+      "retainedTeam": "Vikings",
+      "discardedRow": "860193341",
+      "discardedTeam": "Cardinals",
       "weekIndex": 0
     },
     {
@@ -301,24 +295,6 @@
       "retainedTeam": "Broncos",
       "discardedRow": "840091674",
       "discardedTeam": "Vikings",
-      "weekIndex": 0
-    },
-    {
-      "playerId": "555222192",
-      "statId": 546703159,
-      "retainedRow": "806978471",
-      "retainedTeam": "Panthers",
-      "discardedRow": "911778224",
-      "discardedTeam": "Bengals",
-      "weekIndex": 0
-    },
-    {
-      "playerId": "555221159",
-      "statId": 548536437,
-      "retainedRow": "806978227",
-      "retainedTeam": "Lions",
-      "discardedRow": "872175986",
-      "discardedTeam": "Panthers",
       "weekIndex": 0
     },
     {
@@ -340,21 +316,21 @@
       "weekIndex": 0
     },
     {
-      "playerId": "555221448",
-      "statId": 546703078,
-      "retainedRow": "806978584",
-      "retainedTeam": "Vikings",
-      "discardedRow": "860193341",
-      "discardedTeam": "Cardinals",
+      "playerId": "555223701",
+      "statId": 546702212,
+      "retainedRow": "806978686",
+      "retainedTeam": "Chiefs",
+      "discardedRow": "824654891",
+      "discardedTeam": "Bengals",
       "weekIndex": 0
     },
     {
-      "playerId": "555221285",
-      "statId": 546701883,
-      "retainedRow": "806978380",
-      "retainedTeam": "Lions",
-      "discardedRow": "810525755",
-      "discardedTeam": "Browns",
+      "playerId": "555223792",
+      "statId": 538051667,
+      "retainedRow": "806978216",
+      "retainedTeam": "Broncos",
+      "discardedRow": "842301893",
+      "discardedTeam": "Patriots",
       "weekIndex": 0
     },
     {
@@ -367,6 +343,33 @@
       "weekIndex": 0
     },
     {
+      "playerId": "555221285",
+      "statId": 546701883,
+      "retainedRow": "806978380",
+      "retainedTeam": "Lions",
+      "discardedRow": "810525755",
+      "discardedTeam": "Browns",
+      "weekIndex": 0
+    },
+    {
+      "playerId": "555222192",
+      "statId": 546703159,
+      "retainedRow": "806978471",
+      "retainedTeam": "Panthers",
+      "discardedRow": "911778224",
+      "discardedTeam": "Bengals",
+      "weekIndex": 0
+    },
+    {
+      "playerId": "555221159",
+      "statId": 548536437,
+      "retainedRow": "806978227",
+      "retainedTeam": "Lions",
+      "discardedRow": "872175986",
+      "discardedTeam": "Panthers",
+      "weekIndex": 0
+    },
+    {
       "playerId": "555222151",
       "statId": 546703171,
       "retainedRow": "806978351",
@@ -376,21 +379,48 @@
       "weekIndex": 0
     },
     {
+      "playerId": "555221159",
+      "statId": 548536480,
+      "retainedRow": "806979077",
+      "retainedTeam": "Lions",
+      "discardedRow": "872176826",
+      "discardedTeam": "Panthers",
+      "weekIndex": 1
+    },
+    {
+      "playerId": "555221653",
+      "statId": 546702713,
+      "retainedRow": "806979327",
+      "retainedTeam": "Browns",
+      "discardedRow": "810526416",
+      "discardedTeam": "Lions",
+      "weekIndex": 1
+    },
+    {
+      "playerId": "555223976",
+      "statId": 538051082,
+      "retainedRow": "806978882",
+      "retainedTeam": "Giants",
+      "discardedRow": "842302667",
+      "discardedTeam": "Texans",
+      "weekIndex": 1
+    },
+    {
+      "playerId": "555222151",
+      "statId": 546703237,
+      "retainedRow": "806979377",
+      "retainedTeam": "Bengals",
+      "discardedRow": "815560089",
+      "discardedTeam": "Chargers",
+      "weekIndex": 1
+    },
+    {
       "playerId": "555223701",
       "statId": 546701719,
       "retainedRow": "806979508",
       "retainedTeam": "Chiefs",
       "discardedRow": "824655916",
       "discardedTeam": "Bengals",
-      "weekIndex": 1
-    },
-    {
-      "playerId": "555221247",
-      "statId": 546702378,
-      "retainedRow": "806979512",
-      "retainedTeam": "Chiefs",
-      "discardedRow": "846057332",
-      "discardedTeam": "Broncos",
       "weekIndex": 1
     },
     {
@@ -421,12 +451,12 @@
       "weekIndex": 1
     },
     {
-      "playerId": "555223976",
-      "statId": 538051082,
-      "retainedRow": "806978882",
-      "retainedTeam": "Giants",
-      "discardedRow": "842302667",
-      "discardedTeam": "Texans",
+      "playerId": "555221247",
+      "statId": 546702378,
+      "retainedRow": "806979512",
+      "retainedTeam": "Chiefs",
+      "discardedRow": "846057332",
+      "discardedTeam": "Broncos",
       "weekIndex": 1
     },
     {
@@ -463,33 +493,6 @@
       "retainedTeam": "Panthers",
       "discardedRow": "899601006",
       "discardedTeam": "Broncos",
-      "weekIndex": 1
-    },
-    {
-      "playerId": "555221159",
-      "statId": 548536480,
-      "retainedRow": "806979077",
-      "retainedTeam": "Lions",
-      "discardedRow": "872176826",
-      "discardedTeam": "Panthers",
-      "weekIndex": 1
-    },
-    {
-      "playerId": "555221653",
-      "statId": 546702713,
-      "retainedRow": "806979327",
-      "retainedTeam": "Browns",
-      "discardedRow": "810526416",
-      "discardedTeam": "Lions",
-      "weekIndex": 1
-    },
-    {
-      "playerId": "555222151",
-      "statId": 546703237,
-      "retainedRow": "806979377",
-      "retainedTeam": "Bengals",
-      "discardedRow": "815560089",
-      "discardedTeam": "Chargers",
       "weekIndex": 1
     },
     {
@@ -537,19 +540,19 @@
       "treatment": "preserve_independently_reconciled_source_totals"
     },
     {
-      "gameId": "31604382",
-      "team": "Raiders",
-      "comparison": "player_rushing_vs_team_rushing",
-      "playerTotal": 149.0,
-      "referenceTotal": 140.0,
-      "treatment": "preserve_independently_reconciled_source_totals"
-    },
-    {
       "gameId": "31604379",
       "team": "Jaguars",
       "comparison": "receiving_vs_player_passing",
       "playerTotal": 266.0,
       "referenceTotal": 290.0,
+      "treatment": "preserve_independently_reconciled_source_totals"
+    },
+    {
+      "gameId": "31604382",
+      "team": "Raiders",
+      "comparison": "player_rushing_vs_team_rushing",
+      "playerTotal": 149.0,
+      "referenceTotal": 140.0,
       "treatment": "preserve_independently_reconciled_source_totals"
     },
     {
@@ -591,18 +594,26 @@
       "playerTotal": 182.0,
       "referenceTotal": 171.0,
       "treatment": "preserve_independently_reconciled_source_totals"
+    },
+    {
+      "gameId": "31604507",
+      "team": "49ers",
+      "comparison": "player_rushing_vs_team_rushing",
+      "playerTotal": 65.0,
+      "referenceTotal": 68.0,
+      "treatment": "preserve_independently_reconciled_source_totals"
     }
   ],
   "outputHashes": {
-    ".cache/performance/inputs/MEGA_defense.csv": "6b531c0779bdc0040e3e4c3123a94da69828a7172a05ecc74e0e8cabff76b6bd",
-    ".cache/performance/inputs/MEGA_kicking.csv": "f51ddf1980a6cfa1f54ce116c931ada90746f07e0f15c9f302000936c16d3a8f",
-    ".cache/performance/inputs/MEGA_passing.csv": "e078d8673baf447181a7431225323c8f234d3e13937d083e3b78ef3865a235a8",
-    ".cache/performance/inputs/MEGA_punting.csv": "70243a35746c2d55e80ffed0bce97027afe0572cd2fb718be9737733e308e76b",
-    ".cache/performance/inputs/MEGA_rankings.csv": "683cc86b6e7fabc2830877e26ece048414c0374930994abba22b89ffab4669fb",
-    ".cache/performance/inputs/MEGA_receiving.csv": "6e334e416ceb65c15873dddfa7a6678982677e78f1b5d9db7b618d4ce9a372f9",
-    ".cache/performance/inputs/MEGA_rushing.csv": "2729ea6d8cabdad65b76e4973134de83220fec5c5e2fcc819a29d28daaf31795",
-    ".cache/performance/inputs/MEGA_teams.csv": "e414371b321f28956cc457d004629404e88170580ae26bc1bec93dce6bfba1fe",
-    "output/performance/games.csv": "29d4eabe5a94751fc89f7ce262d58b399ef97668aacc4cc02216428cada5f6f8",
-    "output/performance/teams.csv": "e414371b321f28956cc457d004629404e88170580ae26bc1bec93dce6bfba1fe"
+    ".cache/performance/inputs/MEGA_defense.csv": "ffb27b2739a953d869cb35a4566365d6163a502c709e8c4f8469ca6cdb6f5272",
+    ".cache/performance/inputs/MEGA_kicking.csv": "9796d34b70a5f4246c5d087b52b6b17ad5eefe472c946316c54a7c2873f6fa2d",
+    ".cache/performance/inputs/MEGA_passing.csv": "5e30c1e0fd15523646ece023e79ffe58b5351d203f1da617b7d1133e528ce391",
+    ".cache/performance/inputs/MEGA_punting.csv": "92132fc399a67c589086908671f1497fae1602f18cda4e9257cf1a12be595261",
+    ".cache/performance/inputs/MEGA_rankings.csv": "1fe11ce105e858571288fc13483f1fd22965595a6503e2915ab53dfe4fd87129",
+    ".cache/performance/inputs/MEGA_receiving.csv": "3ccc46dfac5725ae7a63c4f4603f64a0afd2d59bee210b3e0dc2246d1a2899c0",
+    ".cache/performance/inputs/MEGA_rushing.csv": "044c79f16b7c500151138857d41b502022f3e5f3a0bbec55e61c4c0c897b7ec5",
+    ".cache/performance/inputs/MEGA_teams.csv": "7c5503c6ff762ab919d61769e1f0b0768d376830c5a16d596a7f8d330200188f",
+    "output/performance/games.csv": "bdfb5b70bad0953bd621804a6511e9bb08c4923d445b54214e09bbf1fd940ef3",
+    "output/performance/teams.csv": "7c5503c6ff762ab919d61769e1f0b0768d376830c5a16d596a7f8d330200188f"
   }
 }
