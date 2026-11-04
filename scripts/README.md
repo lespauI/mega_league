@@ -1,4 +1,4 @@
-> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 15, using the supplied Week 8 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
+> **Madden 27 current cycle:** Season 1 (`seasonIndex=0`), results through Week 16, using the supplied Week 15 ELO ratings. Current runners accept `--season-index 0`. See the root README and AGENTS.md for import details; historical examples below may still refer to Madden 26 seasons.
 
 # Scripts Overview
 
@@ -8,12 +8,12 @@ This folder contains compatible command-line entry points and helpers for the ME
 
 Run these from the repo root (runner and extracted CLI imports also work from other directories using absolute script paths):
 
-- `python3 scripts/validate_import.py --basic-info-zip BASIC.zip --stats-zip STATS.zip --elo-csv mega_elo.csv --users-csv MEGA_users.csv --season-index 0 --elo-source-week 8` – validate a candidate import. The GM/username map is a separate, provenance-tracked input because it is not included in NeonSportz ZIPs. Add `--activate` only after reviewing the report.
+- `python3 scripts/validate_import.py --basic-info-zip BASIC.zip --stats-zip STATS.zip --elo-csv mega_elo.csv --users-csv MEGA_users.csv --season-index 0 --elo-source-week 15` – validate a candidate import. The GM/username map is a separate, provenance-tracked input because it is not included in NeonSportz ZIPs. Add `--activate` only after reviewing the report.
 - `python3 scripts/fetch_performance_evidence.py` – incrementally download new/changed game/stat and required team-history evidence through the public NeonSportz API (`--full-refresh` bypasses the cache), bind it to the CSV snapshot, and reconcile all totals before installing it. No browser or authentication is required. Only the compact manifest and `snapshot.tar.gz` are versioned; expanded evidence is an ignored cache. Then run the full build. `build_performance.py` remains the offline validation/rebuild entry point. See [Force Win policy and input contract](../spec/force_win_exclusion.md).
 - `python3 scripts/run_all.py --season-index 0` – full staged pipeline: stats, ELO and rankings SoS, scenarios/reports, roster rankings, browser data, and root navigation. Scenario simulations use seed 0, which the build manifest records.
 - `python3 scripts/run_all_stats.py` – stats-only selector over the shared task graph.
 - `python3 scripts/run_all_playoff_analysis.py --season-index 0` – playoff-only selector, including ELO schedule validation.
-- `python3 scripts/calc_sos_elo.py --csv-season-index 0 --elo-source-week 8` – direct ELO SoS run using zero-based CSV season selection and the declared Week 8 rating column.
+- `python3 scripts/calc_sos_elo.py --csv-season-index 0 --elo-source-week 15` – direct ELO SoS run using zero-based CSV season selection and the declared Week 15 rating column.
 - `python3 scripts/verify_sos_elo.py --season-index 1` – verify schedules and ELO SoS for one-based display season 1.
 - `python3 scripts/generate_index.py` – render root `index.html` from the declared site and artifact manifests; it does not run calculations.
 

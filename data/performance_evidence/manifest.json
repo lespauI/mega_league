@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "csvSeasonIndex": 0,
   "calendarYear": 2026,
-  "snapshotId": "825b67cbd513c5bb",
+  "snapshotId": "3907e8e2d82f9d0a",
   "inputHashes": {
     "MEGA_games.csv": "f367a3b92ba31406cae77e3a732df9895f94819940bd448725ec2d7e1253f496",
     "MEGA_teams.csv": "675d79024b0212c3981c226711fca57aea954774f9acf6e80bf0cc6c0ab6a3c5",
@@ -12,7 +12,7 @@
     "MEGA_defense.csv": "7d794ac4a9e8eba005aed26f508802d930a5e7da682ea6fa4ab00fe818967548",
     "MEGA_kicking.csv": "d7cf755f85f3665b48ba99e3e5546523b4b57c5049fe7f10b02185d893e1bf4f",
     "MEGA_punting.csv": "49266edfdd971e8d298d2317efe35f8514015777efa156a5c093100297a0517b",
-    "docs/data/import_metadata.json": "9b24d96da7f0bd512a3e7500163918ec842d721fdccc2f2498230d5b3434f9ba"
+    "docs/data/import_metadata.json": "611d2aefc136f4014ed0c9d620a6a482da38faf26f1d3cb9805d0d4f401ca7c3"
   },
   "evidenceHashes": {
     "games/31604223.json": "9e1fe24995900e31d3650f67c22cec58e1864f6a95848496201aa00e79b97948",
