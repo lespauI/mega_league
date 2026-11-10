@@ -12,7 +12,7 @@
     "unavailableMetrics": "blank_with_reason"
   },
   "policyHash": "d057a0c6dd3bdb0fd17c3f2bb9c148231c466c110a5b11e86b7afd0d933c4213",
-  "evidenceManifestHash": "0fc3a63b495bf683aa692915525111f4e87a3690ef20e02b4f399348341879f1",
+  "evidenceManifestHash": "292ebe34a1a99f01c689747ba6ac30c22769fec40521bcf9793606d26cb4284a",
   "inputHashes": {
     "MEGA_games.csv": "8b58a4fc6af1d7c4fd7142dff2c4fca08a2401459f1051054731f598eea96689",
     "MEGA_teams.csv": "2341543c244b58d19303261aaa8e4b080eb10fff7d759d79091a9de768a36d90",
@@ -22,7 +22,7 @@
     "MEGA_defense.csv": "2525852d7cd2533c88a3f8850db2aa93b1f85976c0866edeb63ba85156b1752c",
     "MEGA_kicking.csv": "713bf4eea732649cef3c6c03c527aeec9b65c8510eb48593464d2f9b7e1f3561",
     "MEGA_punting.csv": "b0578f5a90f89168c282b3f1a215fba62768989b022fdf7683f0fbf6c1276df3",
-    "docs/data/import_metadata.json": "c3792152516cc4d1288239987fb0b100b6d513858f554d3d44c48929676eab1e"
+    "docs/data/import_metadata.json": "e1dd32043b565b7f2679d4ef98f998e4f1933f62996fcb134f07c5a7c58cb3d8"
   },
   "evidenceHashes": {
     "games/31604223.json": "9e1fe24995900e31d3650f67c22cec58e1864f6a95848496201aa00e79b97948",

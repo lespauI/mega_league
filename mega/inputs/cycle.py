@@ -83,8 +83,7 @@ class CycleContext:
             raise ValueError("Display season must equal CSV seasonIndex + 1")
         if min(completed_week, export_week, next_week, elo_week) < 0:
             raise ValueError("Cycle weeks must be zero or greater")
-        if next_week != completed_week + 1:
-            raise ValueError("nextScheduledWeek must follow completedThroughWeek")
+        # Unplayed games can remain in a week with completed results, or earlier.
         # Games in the current zero-based export week may already be complete.
         if completed_week > export_week + 1:
             raise ValueError("completedThroughWeek cannot exceed the exported display week")

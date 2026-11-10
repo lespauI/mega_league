@@ -10,7 +10,7 @@
     "docs/data/schedules_season1.json": "e1112f1cdb490dc2c1526b112156a32067931976842fe2f13d418f0a65666d62",
     "docs/data/season1_elo.csv": "ab006eb7721b56542623dbc0d70ce7d74aa9f4a33f58f2b344b5ab4c69de6d97",
     "docs/playoff_race.html": "500ce495eadbeb22c4fe3d9707252991d7f6b493eb0a58d73022d2180855893a",
-    "docs/playoff_race_table.html": "c5a2d4807d090703a5d18746575a9a475784373db87d434a5ff516505977772b",
+    "docs/playoff_race_table.html": "346f994682388c12f6fd4d8869d186718fbfba5a571df8b9c4b5c8aad2f3426d",
     "docs/power_rankings_roster.html": "a255a5dfc09c883c91420a8978f66a02d42bbcdab58fb5991166720a92647715",
     "docs/team_scenarios.html": "2c2f10aff051503ee50f70e0fcdf8ae28677df0e61004b8b73328d8c28568203",
     "docs/week18_simulator.html": "62ea85928113013896fc8424854bd8a49d5a66bfaa8e151809b34231c04ce721",
@@ -18,7 +18,7 @@
     "output/draft_race/draft_race_report.md": "0dff5a28007bb751c582e9222a9c6315e86c3e7acae5b365db26a611ae8ff58a",
     "output/official_ranked_sos_by_conference.csv": "68c41a8be0e70653e2d7e7abe107782c8498db2d8d60da18d5bfe6440531e09a",
     "output/performance/games.csv": "f8f8f32c0fbf1acbabed41b097677f666c3496d85525a2290b7d4447707de028",
-    "output/performance/manifest.json": "4299e68ad81112f0ad588efd4bc3f868c2e593027467360f8de8524c573fdcb2",
+    "output/performance/manifest.json": "6e73cc3cce059ebab8493a88f714cb7b3c5df8c8b529f84c2d3054fbc9fb7539",
     "output/performance/teams.csv": "b074e72771defc67c2dfb679c44eb642a9aacb3aaff0860291f7b0d03ffc38fb",
     "output/player_team_stints.csv": "b7dc12ff1ac97cad7d30985576ad9b71dad5bb5794b4ed5a0a3a671b237865c4",
     "output/playoff_probabilities.json": "6c3f08c9d3fcf0a18548b3ab477a53a355d8c8f1d6fa8f40bbfb36eba2ad156a",
@@ -126,7 +126,7 @@
     "output/team_rosters/WAS.csv": "0cf5f2200b2bd5700e743aac5767d064e36cea2c47eabcc64ff27c43a46f720a",
     "output/team_rosters/WAS_Defense.csv": "8a5c9b32a64f41f1e35d06d690bc4803c14baf49e8a27b21e0d4350e9147aff3",
     "output/team_rosters/WAS_Offense.csv": "2976badb251943b82b0857620d7e4e8c40cd6439da4e4cd78a9252e342c425f3",
-    "output/team_scenarios.json": "b31bf94fff9efc97a899fe26e58938bb29513cf64937b184a75fc018c611f01d",
+    "output/team_scenarios.json": "4abff16bada05aecceac7a60679fac5bf775f001582c8b2b5f950d5b548bc368",
     "output/traded_players_report.csv": "a2c80f1a2954a238aaecb2827013f856f922d666e8bc1c8d63435afcd8ce2a1b"
   },
   "calendarYear": 2026,
@@ -141,7 +141,7 @@
     "full"
   ],
   "performanceIdentity": {
-    "data/performance_evidence/manifest.json": "0fc3a63b495bf683aa692915525111f4e87a3690ef20e02b4f399348341879f1",
+    "data/performance_evidence/manifest.json": "292ebe34a1a99f01c689747ba6ac30c22769fec40521bcf9793606d26cb4284a",
     "data/performance_evidence/snapshot.tar.gz": "2c62e334161c20c9ceefa1adf9f0c3b52fb18841ae8e1fbe937d9be80b8fde32",
     "spec/performance_policy.json": "d057a0c6dd3bdb0fd17c3f2bb9c148231c466c110a5b11e86b7afd0d933c4213"
   },

@@ -78,6 +78,27 @@ def make_export_zips(directory: Path):
 
 
 class ImportValidationTests(unittest.TestCase):
+    def test_next_scheduled_week_includes_unplayed_games_in_current_week(self):
+        with tempfile.TemporaryDirectory() as temp:
+            basic_zip, stats_zip, elo, users = make_export_zips(Path(temp))
+            with zipfile.ZipFile(basic_zip) as archive:
+                files = {name: archive.read(name) for name in archive.namelist()}
+            name = "export/MEGA_games.csv"
+            rows = list(csv.DictReader(io.StringIO(files[name].decode("utf-8"))))
+            rows[0]["weekIndex"] = "12"
+            pending = dict(rows[0], id="2", gameId="g2", status="1")
+            rows.append(pending)
+            files[name] = csv_bytes(list(rows[0]), rows)
+            with zipfile.ZipFile(basic_zip, "w") as archive:
+                for name, data in files.items():
+                    archive.writestr(name, data)
+            working, metadata = validate_snapshot(basic_zip, stats_zip, elo, users, season_index=0, elo_source_week=8)
+            for path, data in working.items():
+                (Path(temp) / path).write_bytes(data)
+            self.assertEqual(metadata["completedThroughWeek"], 13)
+            self.assertEqual(metadata["nextScheduledWeek"], 13)
+            self.assertEqual(CycleContext.from_metadata(metadata, Path(temp)).next_scheduled_week, 13)
+
     def test_completed_games_in_current_export_week_are_valid(self):
         with tempfile.TemporaryDirectory() as temp:
             basic_zip, stats_zip, elo, users = make_export_zips(Path(temp))

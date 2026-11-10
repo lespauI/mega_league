@@ -2,6 +2,8 @@
 
 Current data: **Madden 27, season 1 (`seasonIndex=0`), including Week 18 results**. The team/rankings export has `weekIndex=17`; games at that index are display Week 18, and some remain unplayed. The supplied **Week 15 ELO** ratings are used for this analysis.
 
+In import metadata, `completedThroughWeek` is the latest week with a completed result; `nextScheduledWeek` is the earliest week with an unplayed, non-superseded regular-season game. They can be equal while a week is in progress. When no regular-season games remain, `nextScheduledWeek` uses the latest completed week plus one as a sentinel.
+
 All 12 NeonSportz CSV exports are imported. [ELO and GM labels](mega_elo.csv), [GM-to-NeonSportz user mapping](MEGA_users.csv), and [source metadata](docs/data/import_metadata.json) preserve their provenance. Week 15 ratings and GM labels come from the user-supplied table on 2026-11-04. Week 8 ratings remain in the ELO history column; their original screenshot is [available here](docs/data/elo_week8.png). Raw export usernames are unchanged.
 
 Madden 26 exports and results remain isolated in [the archive](archive/madden-26/README.md). Calculation formulas, cap math and OVR models are preserved; OVR calibration has not been revalidated for the new game.
