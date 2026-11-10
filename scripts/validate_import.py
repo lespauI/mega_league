@@ -198,6 +198,7 @@ def validate_snapshot(
         raise ValueError(f"MEGA_games.csv contains no regular-season games for seasonIndex={season_index}")
     ids: set[str] = set()
     max_completed_display_week = 0
+    scheduled_display_weeks: list[int] = []
     for row in selected_games:
         _required(row.get('id', ''), 'NeonSportz game id')
         for field in ('home_fw', 'away_fw', 'is_superseded'):
@@ -220,6 +221,8 @@ def validate_snapshot(
             raise ValueError(f"Game {game_id} has invalid weekIndex or status") from exc
         if status in (2, 3, 4):
             max_completed_display_week = max(max_completed_display_week, week_index + 1)
+        elif not flag(row['is_superseded']):
+            scheduled_display_weeks.append(week_index + 1)
 
     ranking_rows = parsed["MEGA_rankings.csv"][1]
     selected_rankings = [row for row in ranking_rows
@@ -309,7 +312,7 @@ def validate_snapshot(
         "calendarYear": calendar_year,
         "completedThroughWeek": max_completed_display_week,
         "exportWeekIndex": export_week_index,
-        "nextScheduledWeek": max_completed_display_week + 1,
+        "nextScheduledWeek": min(scheduled_display_weeks, default=max_completed_display_week + 1),
         "eloSourceWeek": elo_source_week,
         "eloUsage": f"Week {elo_source_week} ELO ratings used with the validated export snapshot",
         "snapshotId": snapshot_id,
